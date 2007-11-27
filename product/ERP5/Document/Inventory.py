@@ -97,14 +97,21 @@ class Inventory(Delivery):
     to have our own temp object constructor, this is usefull if we
     want to use some classes with some particular methods
     """
+    sql_catalog_id = kw.pop("sql_catalog_id", None)
+    disable_archive = kw.pop("disable_archive", 0)
+
     if self.getSimulationState() in self.getPortalDraftOrderStateList():
       # this prevent from trying to calculate stock
       # with not all properties defined and thus making
       # request with no condition in mysql
+      object_list = [self]
+      immediate_reindex_archive = sql_catalog_id is not None    
+      self.portal_catalog.catalogObjectList(object_list,
+                                            sql_catalog_id = sql_catalog_id,
+                                            disable_archive=disable_archive,
+                                            immediate_reindex_archive=immediate_reindex_archive)      
       return
     
-    sql_catalog_id = kw.pop("sql_catalog_id", None)
-    disable_archive = kw.pop("disable_archive", 0)
     connection_id = None
     if sql_catalog_id is not None:
       # try to get connection used in the catalog 
