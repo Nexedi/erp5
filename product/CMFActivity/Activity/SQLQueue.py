@@ -268,6 +268,10 @@ class SQLQueue(RAMQueue, SQLBase):
           # same "try" block.
           get_transaction().commit()
         except:
+          # We must make sure that the message is not set as executed.
+          # It is possible that the message is executed but the commit
+          # of the transaction fails
+          value[1].is_executed = 0
           LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % (value, ), error=sys.exc_info())
           try:
             makeMessageListAvailable([value[0]])
