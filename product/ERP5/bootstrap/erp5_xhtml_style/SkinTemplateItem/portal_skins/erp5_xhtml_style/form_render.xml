@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -95,7 +98,7 @@ It is possible to specify a group id and a group title by naming a group followi
           <fieldset tal:condition="python: gid.find(\'hidden\') &lt; 0"\n
                                                                 tal:attributes="class gid;\n
                                                                 id    python: \'fieldset_%s\' % (gid.replace(\' \', \'_\'), );">\n
-            <legend tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></legend>\n
+            <legend i18n:translate="" i18n:domain="ui" tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></legend>\n
             <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
               <tal:block metal:use-macro="field_render" />\n
             </tal:block>\n
