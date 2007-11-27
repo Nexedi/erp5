@@ -322,8 +322,8 @@ class PaySheetTransaction(Invoice):
       variation_slice_list = model_line.getVariationCategoryList(\
                                       base_category_list=['salary_range',])
 
-      for share in variation_share_list:
-        for slice in variation_slice_list:
+      for slice in variation_slice_list:
+        for share in variation_share_list:
           cell = model_line.getCell(slice, share)
           if cell is None:
             LOG('createNotEditablePaySheetLineList : cell is None')
@@ -383,20 +383,19 @@ class PaySheetTransaction(Invoice):
                      }
           cell_list.append(new_cell)
 
-          # update base participation
-          base_participation_list = service.getBaseAmountList(base=1)
-          for base_participation in base_participation_list:
-            if quantity:
-              if base_amount_current_value_dict.has_key(base_participation):
-                old_val = base_amount_current_value_dict[base_participation]
-              else:
-                old_val = 0
-              new_val = old_val + quantity
+        # update base participation
+        base_participation_list = service.getBaseAmountList(base=1)
+        for base_participation in base_participation_list:
+          if quantity:
+            if base_amount_current_value_dict.has_key(base_participation):
+              old_val = base_amount_current_value_dict[base_participation]
+            else:
+              old_val = 0
+            new_val = old_val + quantity
 
-              if price:
-                if old_val != 0:
-                  new_val = round((old_val + quantity*price), precision) 
-              base_amount_current_value_dict[base_participation] = new_val
+            if price:
+              new_val = round((old_val + quantity*price), precision) 
+            base_amount_current_value_dict[base_participation] = new_val
 
       if cell_list:
         # create the PaySheetLine
