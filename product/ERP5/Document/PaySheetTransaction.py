@@ -295,7 +295,6 @@ class PaySheetTransaction(Invoice):
     model_line_list = [line for line in model_line_list if not line.getEditable()]
 
     pay_sheet_line_list = []
-    employee_tax_amount = 0
 
     # main loop : find all informations and create cell and PaySheetLines
     for model_line in model_line_list:
@@ -330,7 +329,6 @@ class PaySheetTransaction(Invoice):
             LOG('createNotEditablePaySheetLineList : cell is None')
             continue
           # get the slice :
-          model_slice = None
           model_slice = model_line.getParentValue().getCell(slice)
           quantity = 0.0
           price = 0.0
@@ -369,7 +367,7 @@ class PaySheetTransaction(Invoice):
           LOG('script_name :', 0, script_name)
           result = calculation_script(\
             base_amount_current_value_dict=base_amount_current_value_dict,
-            share=share,
+            share=share, #XXX
             model_slice_min=model_slice_min, 
             model_slice_max=model_slice_max, 
             cell=cell,)
@@ -384,13 +382,6 @@ class PaySheetTransaction(Invoice):
                        'price'    : price,
                      }
           cell_list.append(new_cell)
-
-          #XXX this is a hack to have the net salary
-          base_list = model_line.getResourceValue().getBaseAmountList()
-          if price is not None and 'employee_share' in share and\
-              ('deductible_tax' in base_list or\
-               'non_deductible_tax' in base_list):
-            employee_tax_amount += round((price * quantity), precision)
 
           # update base participation
           base_participation_list = service.getBaseAmountList(base=1)
@@ -422,9 +413,9 @@ class PaySheetTransaction(Invoice):
 
     # this script is used to add a line that permit to have good accounting 
     # lines
-    localized_add_end_line_script = getattr(self,
+    post_calculation_script = getattr(self,
                                 'PaySheetTransaction_postCalculation', None)
-    if localized_add_end_line_script:
-      localized_add_end_line_script(employee_tax_amount)
+    if post_calculation_script:
+      post_calculation_script()
 
     return pay_sheet_line_list
