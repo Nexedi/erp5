@@ -946,6 +946,9 @@ class ListBoxRenderer:
           if v in (None, '') or hasattr(v, 'read'):
             del params[k]
 
+      # remove some erp5_xhtml_style specific parameters
+      params.pop('saved_form_data', None)
+
     # Set the columns. The idea behind this is that, instead of selecting all columns,
     # ListBox can specify only required columns, in order to reduce the data transferred
     # from a SQL Server to Zope.
