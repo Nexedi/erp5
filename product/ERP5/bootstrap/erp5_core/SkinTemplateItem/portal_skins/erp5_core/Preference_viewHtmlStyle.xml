@@ -53,6 +53,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -141,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Html Style</string> </value>
+            <value> <string>User Interface</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
