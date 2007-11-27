@@ -37,8 +37,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>reject</string>
-                <string>reject_action</string>
+                <string>cancel</string>
+                <string>start_to_cancel_action</string>
                 <string>stop</string>
                 <string>stop_action</string>
               </tuple>
