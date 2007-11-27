@@ -882,6 +882,31 @@ class TestHR(ERP5TypeTestCase):
     email = pers.getDefaultEmailValue()
     self.assertEquals('Default Email', str(email.getTranslatedId()))
     
+  def test_SubordinationAcquisitionAndFunction(self):
+    # function is acquired from the subordination, organisation function are
+    # usually only nodes, and persons functions are leaves.
+    function_node = self.portal.portal_categories.function.newContent(
+         portal_type='Category', id='function_node', title='Function Node')
+    function_leave = function_node.newContent(
+         portal_type='Category', id='function_leave', title='Function Leave')
+    self.portal.portal_caches.clearAllCache()
+    organisation = self.getOrganisationModule().newContent(
+                                  portal_type='Organisation',
+                                  function_value=function_node)
+    person = self.getPersonModule().newContent(portal_type='Person',
+                            career_subordination_value=organisation)
+    # on Organisation_view, the user usually select node for functions:
+    organisation_view_html = organisation.Organisation_view()
+    self.assertTrue('Function Node' in organisation_view_html)
+    # person acquire function from the organisation
+    self.assertEquals(person.getFunctionValue(), function_node)
+    # but the user interface does not show the acquired value in this case
+    person_view_html = person.Person_view()
+    self.assertTrue('Function Leave' in person_view_html)
+    self.assertTrue('value="function_node/function_leave"'
+                               in person_view_html)
+    self.assertTrue('value="function_node"' not in person_view_html)
+
 
 def test_suite():
   suite = unittest.TestSuite()
