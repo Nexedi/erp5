@@ -1353,7 +1353,7 @@ class ERP5Generator(PortalGenerator):
     try:
       from Products.FCKeditor   import fckeditor_globals
       have_fckeditor = 1
-    except:
+    except ImportError:
       have_fckeditor = 0
     ps = getToolByName(p, 'portal_skins')
     addDirectoryViews(ps, 'skins', cmfdefault_globals)
