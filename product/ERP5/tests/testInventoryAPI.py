@@ -1894,6 +1894,31 @@ class TestInventoryDocument(InventoryAPITestCase):
     self._checkInventoryList(inventory, reference_inventory,
                              ordered_check=True)
 
+  def test_13_InventoryAfterModificationInPast(self):
+    """
+    Test inventory after adding a new movement in past and reindex all inventory
+    """
+    movement = self._makeMovement(quantity=self.BASE_QUANTITY*2,
+      start_date=self.INVENTORY_DATE_3 - 2,
+      simulation_state='delivered')
+    # reindex inventory module, although we modified table by hand
+    # everything must be consistent after reindexation
+    inventory_module = self.getPortal().getDefaultModule(portal_type='Inventory')
+    inventory_module.recursiveReindexObject()
+    get_transaction().commit()
+    self.tic()
+    inventory_kw={'node_uid': self.node_uid,
+                  'at_date': self.INVENTORY_DATE_3}
+    value=self.INVENTORY_QUANTITY_3
+    # use optimisation
+    self.assertEquals(value, self.getInventory(**inventory_kw))
+    # without optimisation
+    self.assertEquals(value,
+                      self.getInventory(optimisation__=False,
+                                        **inventory_kw))
+
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInventory))
