@@ -81,7 +81,7 @@ if len(ob.objectValues()) == 0:\n
 \n
 # check price defined\n
 if ob.getSourceTotalAssetPrice() != ob.getTotalPrice(portal_type=\'Incoming Mutilated Banknote Line\', fast=0):\n
-  msg = Message(domain = "ui", message="Amont differ between document and line.")\n
+  msg = Message(domain = "ui", message="Amount differ between document and line.")\n
   raise ValidationFailed, (msg,)\n
 \n
 # check reporter defined\n

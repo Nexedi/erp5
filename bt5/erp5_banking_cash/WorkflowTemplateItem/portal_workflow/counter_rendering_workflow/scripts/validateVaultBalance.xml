@@ -76,7 +76,8 @@ vault = transaction.getSource()\n
 date = transaction.getStartDate()\n
 \n
 # check we don\'t change of user\n
-transaction.Baobab_checkSameUserVault(vault)\n
+if transaction.getSimulationState() == "draft":\n
+  transaction.Baobab_checkSameUserVault(vault)\n
 \n
 # check we are in an opened accounting day\n
 transaction.Baobab_checkCounterDateOpen(site=vault, date=date)\n
