@@ -681,8 +681,12 @@ class TestCMFActivity(ERP5TypeTestCase):
       if self.__class__.current_num_conflict_errors < limit:
         self.__class__.current_num_conflict_errors += 1
         raise ConflictError
+      else:
+        foobar = getattr(self, 'foobar', 0)
+        setattr(self, 'foobar', foobar + 1)
     Organisation.induceConflictErrors = induceConflictErrors
 
+    setattr(o, 'foobar', 0)
     # Test some range of conflict error occurences.
     for i in xrange(10):
       Organisation.current_num_conflict_errors = 0
@@ -690,6 +694,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       get_transaction().commit()
       self.flushAllActivities(silent = 1, loop_size = i + 10)
       self.assertEquals(len(activity_tool.getMessageList()), 0)
+    self.assertEqual(getattr(o, 'foobar', 0), 10)
 
   def TryConflictErrorsWhileValidating(self, activity):
     """Try to execute active objects which may throw conflict errors
