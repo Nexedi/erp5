@@ -1235,7 +1235,7 @@ class Base( CopyContainer,
     """
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
-    if hasattr(aq_self, accessor_name):
+    if getattr(aq_self, accessor_name, None) is not None:
       method = getattr(self, accessor_name)
       if d is not _MARKER:
         try:
@@ -1248,12 +1248,13 @@ class Base( CopyContainer,
       return method(**kw)
     # Try to get a portal_type property (Implementation Dependent)
     aq_key = self._aq_key()
-    if not Base.aq_portal_type.has_key(aq_key):
+    aq_portal_type = Base.aq_portal_type
+    if aq_key not in aq_portal_type:
       try:
         self._aq_dynamic(accessor_name)
       except AttributeError:
         pass
-    if hasattr(Base.aq_portal_type[aq_key], accessor_name):
+    if hasattr(aq_portal_type[aq_key], accessor_name):
       method = getattr(self, accessor_name)
       if d is not _MARKER:
         try:
