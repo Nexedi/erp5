@@ -367,7 +367,6 @@ class PaySheetTransaction(Invoice):
           LOG('script_name :', 0, script_name)
           result = calculation_script(\
             base_amount_current_value_dict=base_amount_current_value_dict,
-            share=share, #XXX
             model_slice_min=model_slice_min, 
             model_slice_max=model_slice_max, 
             cell=cell,)
