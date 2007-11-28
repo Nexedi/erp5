@@ -35,7 +35,6 @@ class TranslationProviderBase:
 
   security = ClassSecurityInfo()
   
-  _property_domain_dict = {}
 
   _translation_form = DTMLFile( 'editToolsTranslation', _dtmldir )
 
@@ -91,7 +90,7 @@ class TranslationProviderBase:
     property_domain_keys = property_domain_dict.keys()
     property_domain_keys.sort()
     original_property_domain_keys.sort()
-    # Only update if required in order to prevent ZODB to grow
+    # Only update if required in order to prevent ZODB from growing
     if property_domain_keys != original_property_domain_keys:
       # Update existing dict
       property_domain_dict.update(original_property_domain_dict)
@@ -103,11 +102,13 @@ class TranslationProviderBase:
     """
     Return all the translation defined by a provider.
     """
-    property_domain_dict = getattr(aq_base(self), '_property_domain_dict', _MARKER)
-    if len(property_domain_dict) is _MARKER:
-      # Force update is not defined
+    property_domain_dict = getattr(aq_base(self),
+                                   '_property_domain_dict', _MARKER)
+    # initialize if needed
+    if property_domain_dict is _MARKER:
       self.updateInitialPropertyTranslationDomainDict()
-    return self._property_domain_dict
+      return self._property_domain_dict
+    return property_domain_dict
 
   #
   #   ZMI methods
