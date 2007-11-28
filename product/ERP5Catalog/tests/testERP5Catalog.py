@@ -562,17 +562,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
-    creation_date = organisation.getCreationDate().ISO()
+    creation_date = organisation.getCreationDate().toZone('UTC').ISO()
+    modification_date = organisation.getModificationDate().toZone('UTC').ISO()
     get_transaction().commit()
     now = DateTime()
     self.tic()
     sql = """select creation_date, modification_date 
              from catalog where uid = %s""" % organisation.getUid()
     result = sql_connection.manage_test(sql)
-    self.assertEquals(creation_date, result[0]['creation_date'].ISO())
-    self.assertEquals(organisation.getModificationDate().ISO(),
-                              result[0]['modification_date'].ISO())
-    self.assertEquals(creation_date, result[0]['modification_date'].ISO())
+    self.assertEquals(creation_date, 
+                      result[0]['creation_date'].ISO())
+    self.assertEquals(modification_date,
+                      result[0]['modification_date'].ISO())
+    self.assertEquals(creation_date, 
+                      result[0]['modification_date'].ISO())
     
     import time; time.sleep(3)
     organisation.edit(title='edited')
@@ -580,13 +583,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     result = sql_connection.manage_test(sql)
     self.assertEquals(creation_date, result[0]['creation_date'].ISO())
-    self.assertNotEquals(organisation.getModificationDate(),
-                              organisation.getCreationDate())
+    modification_date = organisation.getModificationDate().toZone('UTC').ISO()
+    self.assertNotEquals(modification_date,
+                         organisation.getCreationDate())
     # This test was first written with a now variable initialized with
     # DateTime(). But since we are never sure of the time required in
     # order to execute some line of code
-    self.assertEquals(organisation.getModificationDate().ISO(),
-                              result[0]['modification_date'].ISO())
+    self.assertEquals(modification_date,
+                      result[0]['modification_date'].ISO())
     self.assertTrue(organisation.getModificationDate()>now)
     self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
   
