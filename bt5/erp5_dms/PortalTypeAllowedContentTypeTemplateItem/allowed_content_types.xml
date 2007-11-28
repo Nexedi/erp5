@@ -3,19 +3,23 @@
   <item>Spreadsheet</item>
   <item>File</item>
   <item>Text</item>
+  <item>Document Ingestion Message</item>
   <item>Web Page</item>
+  <item>Presentation</item>
   <item>Drawing</item>
   <item>PDF</item>
-  <item>Presentation</item>
   <item>Image</item>
+ </portal_type>
+ <portal_type id="Document Ingestion Module">
+  <item>Document Ingestion Message</item>
  </portal_type>
  <portal_type id="Document Module">
   <item>File</item>
-  <item>Spreadsheet</item>
   <item>Drawing</item>
   <item>PDF</item>
   <item>Text</item>
   <item>Presentation</item>
+  <item>Spreadsheet</item>
  </portal_type>
  <portal_type id="Drawing">
   <item>Role Definition</item>
