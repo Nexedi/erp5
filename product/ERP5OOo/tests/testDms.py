@@ -52,6 +52,7 @@ import time
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 import os
@@ -79,23 +80,12 @@ def printAndLog(msg):
     LOG('Testing... ', 0, msg)
 
 
-class FileUploadTest(file):
-
-  __allow_access_to_unprotected_subobjects__ = 1
-
-  def __init__(self, path, name):
-    self.filename = name
-    file.__init__(self, path)
-    self.headers = {}
-
 
 def makeFilePath(name):
   return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/test_document/' + name
 
-
 def makeFileUpload(name):
-  path = makeFilePath(name)
-  return FileUploadTest(path, name)
+  return FileUpload(makeFilePath(name), name)
 
 class DummyMessageCatalog:
   __allow_access_to_unprotected_subobjects__ = 1
