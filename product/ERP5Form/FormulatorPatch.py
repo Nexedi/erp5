@@ -776,9 +776,14 @@ class PatchedDateTimeWidget(DateTimeWidget):
         "Defines wether hidden day means, you want the last day of the month"
         "Else it will be the first day"),
                                   default=0)
-
+                          
+    timezone_style = fields.CheckBoxField('timezone_style',
+                                     title="Display timezone",
+                                     description=("Display timezone"),
+                                     default=0)
+    
     property_names = old_date_time_widget_property_names \
-        + ['hide_day', 'hidden_day_is_last_day']
+        + ['timezone_style', 'hide_day', 'hidden_day_is_last_day']
 
     def getInputOrder(self, field):
       input_order = field.get_value('input_order')
@@ -813,10 +818,11 @@ class PatchedDateTimeWidget(DateTimeWidget):
 
     def render(self, field, key, value, REQUEST):
         use_ampm = field.get_value('ampm_time_style')
+        use_timezone = field.get_value('timezone_style')
         # FIXME: backwards compatibility hack:
         if not hasattr(field, 'sub_form'):
             field.sub_form = create_datetime_text_sub_form()
-
+            
         # Is it still usefull to test the None value,
         # as DateTimeField should be considerer as the other field
         # and get an empty string as default value?
@@ -832,6 +838,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
         hour   = None
         minute = None
         ampm   = None
+        timezone = None
         if isinstance(value, DateTime):
             year = "%04d" % value.year()
             month = "%02d" % value.month()
@@ -842,6 +849,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
                 hour = "%02d" % value.hour()
             minute = "%02d" % value.minute()
             ampm = value.ampm()
+            timezone = value.timezone()
         input_order = self.getInputOrder(field)
         if input_order == 'ymd':
             order = [('year', year),
@@ -878,7 +886,9 @@ class PatchedDateTimeWidget(DateTimeWidget):
             if use_ampm:
                 time_result += '&nbsp;' + field.render_sub_field('ampm',
                                                             ampm, REQUEST, key=key)
-
+            if use_timezone:
+                time_result += '&nbsp;' + field.render_sub_field('timezone',
+                                                            timezone, REQUEST, key=key)
             return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
         else:
             return date_result
@@ -891,6 +901,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
             return ''
 
         use_ampm = field.get_value('ampm_time_style')
+        use_timezone = field.get_value('timezone_style')
 
         year = "%04d" % value.year()
         month = "%02d" % value.month()
@@ -901,6 +912,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
             hour = "%02d" % value.hour()
         minute = "%02d" % value.minute()
         ampm = value.ampm()
+        timezone = value.timezone()
 
         order = self.getInputOrder(field)
         if order == 'ymd':
@@ -926,6 +938,8 @@ class PatchedDateTimeWidget(DateTimeWidget):
             time_result = hour + field.get_value('time_separator') + minute
             if use_ampm:
                 time_result += space + ampm
+            if use_timezone:
+                time_result += space + timezone
             return date_result + (space * 3) + time_result
         else:
             return date_result
@@ -940,7 +954,133 @@ DateTimeField.widget = PatchedDateTimeWidget()
 
 from Products.Formulator.Validator import DateTimeValidator, ValidationError, DateTime
 from DateTime.DateTime import DateError, TimeError
+from Products.Formulator.StandardFields import ListField, StringField, IntegerField, create_items
+from Products.Formulator.Form import BasicForm
+import Products.Formulator.StandardFields
 
+gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
+                  + [('GMT', 'GMT',),] \
+                  + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
+                  
+def Patched_create_datetime_text_sub_form():
+    """ Patch Products.Formulator.StandardFields so we can add timezone subfield """
+    sub_form = BasicForm()
+        
+    year = IntegerField('year',
+                        title="Year",
+                        required=0,
+                        display_width=4,
+                        display_maxwidth=4,
+                        max_length=4)
+    
+    month = IntegerField('month',
+                         title="Month",
+                         required=0,
+                         display_width=2,
+                         display_maxwidth=2,
+                         max_length=2)
+    
+    day = IntegerField('day',
+                       title="Day",
+                       required=0,
+                       display_width=2,
+                       display_maxwidth=2,
+                       max_length=2)
+    sub_form.add_group("date")
+    sub_form.add_fields([year, month, day], "date")
+    
+    hour = IntegerField('hour',
+                        title="Hour",
+                        required=0,
+                        display_width=2,
+                        display_maxwidth=2,
+                        max_length=2)
+    
+    minute = IntegerField('minute',
+                          title="Minute",
+                          required=0,
+                          display_width=2,
+                          display_maxwidth=2,
+                          max_length=2)
+
+    ampm = StringField('ampm',
+                       title="am/pm",
+                       required=0,
+                       display_width=2,
+                       display_maxwidth=2,
+                       max_length=2)
+    timezone_field = ListField('timezone',
+                               title = "Timezone",
+                               required = 0,
+                               default = 'GMT',
+                               items = gmt_timezones,
+                               size = 1)                       
+    sub_form.add_fields([hour, minute, ampm, timezone_field], "time")
+    return sub_form
+    
+def Patched_create_datetime_list_sub_form():
+    """ Patch Products.Formulator.StandardFields so we can add timezone subfield """
+    sub_form = BasicForm()
+
+    year = ListField('year',
+                     title="Year",
+                     required=0,
+                     default="",
+                     items=create_items(2000, 2010, digits=4),
+                     size=1)
+    
+    month = ListField('month',
+                      title="Month",
+                      required=0,
+                      default="",
+                      items=create_items(1, 13, digits=2),
+                      size=1)
+    
+    day = ListField('day',
+                    title="Day",
+                    required=0,
+                    default="",
+                    items=create_items(1, 32, digits=2),
+                    size=1)
+
+    sub_form.add_group("date")
+    sub_form.add_fields([year, month, day], "date")
+    
+    hour = IntegerField('hour',
+                        title="Hour",
+                        required=0,
+                        display_width=2,
+                        display_maxwidth=2,
+                        max_length=2)
+    
+    minute = IntegerField('minute',
+                          title="Minute",
+                          required=0,
+                          display_width=2,
+                          display_maxwidth=2,
+                          max_length=2)
+
+    ampm = ListField('ampm',
+                     title="am/pm",
+                     required=0,
+                     default="am",
+                     items=[("am","am"),
+                            ("pm","pm")],
+                     size=1)
+    timezone = ListField('timezone',
+                          title = "Timezone",
+                          required = 0,
+                          default = 'GMT',
+                          items = gmt_timezones,
+                          size = 1)                                            
+    sub_form.add_group("time")
+
+    sub_form.add_fields([hour, minute, ampm, timezone], "time")
+    return sub_form
+
+Products.Formulator.StandardFields.create_datetime_text_sub_form = Patched_create_datetime_text_sub_form
+Products.Formulator.StandardFields.create_datetime_list_sub_form = Patched_create_datetime_list_sub_form
+    
 class PatchedDateTimeValidator(DateTimeValidator):
     """
       Added support for key in every call to validate_sub_field
@@ -989,7 +1129,6 @@ class PatchedDateTimeValidator(DateTimeValidator):
              (hour == '' or minute == ''))):
             self.raise_error('not_datetime', field)
 
-
         if field.get_value('ampm_time_style'):
             ampm = field.validate_sub_field('ampm', REQUEST, key=key)
             if field.get_value('allow_empty_time'):
@@ -1004,7 +1143,12 @@ class PatchedDateTimeValidator(DateTimeValidator):
                 self.raise_error('not_datetime', field)
             elif ampm == 'pm' and hour < 12:
                 hour += 12
-
+                
+        # handle possible timezone input
+        timezone = ''
+        if field.get_value('timezone_style'):
+          timezone =  field.validate_sub_field('timezone', REQUEST, key=key)
+          
         try:
             # handling of hidden day, which can be first or last day of the month:
             if field.get_value('hidden_day_is_last_day'):
@@ -1017,8 +1161,8 @@ class PatchedDateTimeValidator(DateTimeValidator):
               tmp_day = DateTime(tmp_year, tmp_month, 1, hour, minute)
               result = tmp_day - 1
             else:
-              result = DateTime(int(year), int(month), int(day), hour, minute)
-        # ugh, a host of string based exceptions (not since Zope 2.7)
+              result = DateTime('%s/%s/%s %s:%s %s' %(int(year), int(month), int(day), hour, minute, timezone))
+         # ugh, a host of string based exceptions (not since Zope 2.7)
         except ('DateTimeError', 'Invalid Date Components', 'TimeError',
                 DateError, TimeError) :
             self.raise_error('not_datetime', field)
