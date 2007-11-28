@@ -286,10 +286,7 @@ class Category(Folder):
       if checked_permission is not None:
         checkPermission = self.portal_membership.checkPermission
         def permissionFilter(obj):
-          if checkPermission(checked_permission, obj):
-            return 1
-          else:
-            return 0
+          return checkPermission(checked_permission, obj):
         value_list = filter(permissionFilter, value_list)
 
       return sortValueList(value_list, sort_on, sort_order, **kw)
