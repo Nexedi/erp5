@@ -1009,13 +1009,13 @@ def Patched_create_datetime_text_sub_form():
                        display_width=2,
                        display_maxwidth=2,
                        max_length=2)
-    timezone_field = ListField('timezone',
-                               title = "Timezone",
-                               required = 0,
-                               default = 'GMT',
-                               items = gmt_timezones,
-                               size = 1)                       
-    sub_form.add_fields([hour, minute, ampm, timezone_field], "time")
+    timezone = ListField('timezone',
+                          title = "Timezone",
+                          required = 0,
+                          default = 'GMT',
+                          items = gmt_timezones,
+                          size = 1)                       
+    sub_form.add_fields([hour, minute, ampm, timezone], "time")
     return sub_form
     
 def Patched_create_datetime_list_sub_form():
