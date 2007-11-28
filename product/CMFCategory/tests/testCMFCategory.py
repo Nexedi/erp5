@@ -753,6 +753,17 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals([['', ''], ['The Title (the_id)', 'the_id']],
                        base_cat.getCategoryChildTitleAndIdItemList())
 
+  def test_20_CategoryChildCompactTitleItemList(self):
+    # Tests getCategoryChildCompactTitleItemList
+    base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
+    cat = base_cat.newContent(portal_type='Category',
+          id='the_id', title='The Title', short_title='The T.')
+    self.assertEquals([['', ''], ['The T.', 'the_id']],
+                       base_cat.getCategoryChildCompactTitleItemList())
+    self.assertEquals([['', ''], ['The T.', 'the_id']],
+             base_cat.getCategoryChildTranslatedCompactTitleItemList())
+
+
   def test_21_AcquiredPortalType(self, quiet=quiet, run=run_all_test):
     """Test if acquired_portal_type works correctly."""
     if not run : return

@@ -375,7 +375,7 @@ class Category(Folder):
       given list of base categories. Uses translated_compact_title as default method
       """
       return self.getCategoryChildItemList(recursive=recursive,
-                                           display_id='translated_compact_title',
+                                           display_id='compact_translated_title',
                                            base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
