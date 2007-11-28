@@ -35,19 +35,11 @@ from Products.PageTemplates.GlobalTranslationService import \
                                       setGlobalTranslationService
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import DummyTranslationService
 
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
 HTTP_REDIRECT = 302
-
-class DummyTranslationService:
-  """A dummy translation service where you can access translated msgids and
-  mappings in _translated.
-  """
-  _translated = {}
-  def translate(self, domain, msgid, mapping=None, *args, **kw):
-    self._translated.setdefault(domain, []).append((msgid, mapping))
-    return msgid
 
 class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_core business template.
