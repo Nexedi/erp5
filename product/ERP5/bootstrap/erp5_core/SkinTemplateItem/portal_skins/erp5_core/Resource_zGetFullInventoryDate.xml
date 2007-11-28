@@ -74,6 +74,12 @@
                                   </dictionary>
                                 </value>
                             </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -81,11 +87,12 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>column_value_list_list</string>
-<string>column_id_list</string>
-<string>group_by_expression</string>
-<string>date</string>
-<string>simulation_state</string>
+                            <string>column_value_list_list</string>
+                            <string>column_id_list</string>
+                            <string>group_by_expression</string>
+                            <string>date</string>
+                            <string>simulation_state</string>
+                            <string>where_expression</string>
                           </list>
                         </value>
                     </item>
@@ -106,7 +113,8 @@
 column_id_list:list\r\n
 group_by_expression\r\n
 date\r\n
-simulation_state=delivered</string> </value>
+simulation_state=delivered\r\n
+where_expression</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -140,6 +148,9 @@ WHERE\n
   </dtml-in>\n
   <dtml-if date>\n
     AND date <= <dtml-sqlvar date type="string">\n
+  </dtml-if>\n
+  <dtml-if where_expression>\n
+    AND <dtml-var where_expression>\n
   </dtml-if>\n
 GROUP BY\n
   <dtml-var group_by_expression>\n
@@ -203,6 +214,9 @@ WHERE\n
   </dtml-in>\n
   <dtml-if date>\n
     AND date <= <dtml-sqlvar date type="string">\n
+  </dtml-if>\n
+  <dtml-if where_expression>\n
+    AND <dtml-var where_expression>\n
   </dtml-if>\n
 GROUP BY\n
   <dtml-var group_by_expression>\n
