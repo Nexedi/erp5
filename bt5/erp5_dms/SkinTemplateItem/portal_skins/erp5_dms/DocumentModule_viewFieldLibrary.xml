@@ -81,11 +81,13 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_creation_date</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>listbox_thumbnail</string>

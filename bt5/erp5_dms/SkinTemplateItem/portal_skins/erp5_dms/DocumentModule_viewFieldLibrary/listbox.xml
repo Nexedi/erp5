@@ -88,7 +88,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>all_columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -153,7 +153,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -200,7 +200,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>domain_root_list</string> </key>
+                    <key> <string>domain_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -223,11 +223,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>domain_tree</string> </key>
+                    <key> <string>domain_tree</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -258,7 +258,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>document_selection</string> </value>
                 </item>
                 <item>
@@ -266,7 +266,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Documents</string> </value>
                 </item>
                 <item>
