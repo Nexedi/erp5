@@ -231,10 +231,8 @@ class QueryMixin:
         value = value.replace(' ','')
         value = "'%s'" % value
     else:
-      if hasattr(value, 'ISO'):
-        value = "'%s'" % value.ISO()
-      elif hasattr(value, 'strftime'):
-        value = "'%s'" % value.strftime('%Y-%m-%d %H:%M:%S')
+      if getattr(value, 'ISO', None) is not None:
+        value = "'%s'" % value.toZone('UTC').ISO()
       else:
         value = "'%s'" % sql_quote(str(value))
     return value
