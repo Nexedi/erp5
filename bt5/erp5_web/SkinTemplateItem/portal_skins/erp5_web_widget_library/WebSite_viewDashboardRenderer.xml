@@ -163,27 +163,6 @@
     </div>\n
   </tal:block>\n
 </tal:block>\n
-\n
-<tal:block metal:define-macro="bookmark">\n
-  <tal:block tal:define="content_list python: here.WebSite_getBookmarkContentValueList()">\n
-    <div class="boxHeader">\n
-      Bookmark\n
-    </div>\n
-    <div class="boxContent">\n
-      <ul>\n
-        <li tal:repeat="item python: content_list">\n
-          <a tal:define="url python: \'%s/view\' % item.absolute_url()"\n
-            tal:attributes="href url">\n
-            <tal:block tal:replace="item/getTitleOrId"\n
-                       tal:on-error="string:"/>\n
-          </a>\n
-          <tal:block tal:replace="python: \'(%s)\' % item.getPortalType()"\n
-                     tal:on-error="string:"/>\n
-        </li>\n
-      </ul>\n
-    </div>\n
-  </tal:block>\n
-</tal:block>\n
 </tal:block>\n
 
 

@@ -1,3 +1,6 @@
+2007-11-28 Yusei
+* Remove bookmark box from WebSite_viewDashboardRenderer.
+
 2007-11-23 Yusei
 * Add bookmark box in WebSite_viewDashboardRenderer.
 * Try to get simulation state if validation state accessor does not exists.
