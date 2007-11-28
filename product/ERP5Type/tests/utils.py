@@ -70,18 +70,29 @@ class DummyTranslationService:
 
 class DummyMessageCatalog:
   __allow_access_to_unprotected_subobjects__ = 1
+  def __init__(self):
+    self._translated = []
   def gettext(self, word, *args, **kw):
+    self._translated.append(word)
     return word
 
 class DummyLocalizer:
   """A replacement for stock cookie - based localizer.
 
   You can change the current language by calling 'changeLanguage'
+  You can access the translated messages in _translated attribute from erp5_ui
+  and erp5_content message catalogs. It's a list.
   """
   __allow_access_to_unprotected_subobjects__ = 1
-  erp5_ui = DummyMessageCatalog()
-  erp5_catalog = DummyMessageCatalog()
+  erp5_ui = ui = DummyMessageCatalog()
+  erp5_content = content = DummyMessageCatalog()
+  default = DummyMessageCatalog()
   lang = 'en'
+
+  def __getitem__(self, key):
+    if hasattr(self, key):
+      return getattr(self, key)
+    raise KeyError, key
 
   def get_selected_language(self):
     return self.lang
@@ -94,8 +105,21 @@ class DummyLocalizer:
   def changeLanguage(self, lang):
     self.lang = lang
 
-  def translate(self, word, *args, **kw):
-    return word
+  def translate(self, domain, msgid, lang=None, mapping=None, *args, **kw):
+    params = dict()
+    for key in ('lang', 'add', 'default'):
+      if key in kw:
+        params[key] = kw[key]
+    if lang is not None:
+      params['lang'] = lang
+    if 'target_language' in kw:
+      params['lang'] = kw['target_language']
+    msg = getattr(self, domain, self.default).gettext(msgid, **params)
+    if mapping:
+      # this is a simpler version that does not handle unicode
+      from string import Template
+      return Template(msg).substitute(mapping)
+    return msg
   
   def __call__(self, request, context):
     # the before traverse hook
