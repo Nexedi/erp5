@@ -951,16 +951,24 @@ class SimulationTool(BaseTool):
           column_id_list = new_column_value_dict.keys()
           column_value_list_list = new_column_value_dict.values()
           date_value_list = column_value_dict.get('date', {}).get('query', [])
+          where_expression = None
           if len(date_value_list) > 0:
             date = min(date_value_list)
             if isinstance(date, DateTime):
               date = date.ISO()
-          else:
-            date = None
+            # build a query for date to take range into account
+            date_query_kw = {"inventory.date" : date,
+                             "operator" : column_value_dict.get('date', {}).get('operator', []),
+                             "range"  : column_value_dict.get('date', {}).get('range', []),
+                             }
+            date_query = Query(**date_query_kw)
+            date_query_result = date_query()
+            if date_query_result['where_expression'] not in ('',None):
+              where_expression = date_query_result['where_expression']
           return {'group_by_expression': group_by_expression,
                   'column_id_list': column_id_list,
                   'column_value_list_list': column_value_list_list,
-                  'date': date}
+                  'where_expression' : where_expression,}
         first_query_param_dict = getFirstQueryParameterDict(new_kw)
         if optimisation_success:
           if len(first_query_param_dict['column_id_list']):
