@@ -35,7 +35,8 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
   """
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_web', 'erp5_dms', 'erp5_crm')
+    return ('erp5_base', 'erp5_web', 'erp5_dms',
+            'erp5_dms_mysql_innodb_catalog', 'erp5_crm')
 
   def afterSetUp(self):
     portal = self.portal
@@ -124,16 +125,20 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     event = self._ingestMail('simple')
     self.assertEquals('Hello,\nContent of the mail.\n', str(event.asText()))
  
-# not working ? a script seems missing
-##  def test_sender(self):
-##    # source is found automatically, based on the From: header in the mail
-##    event = self._ingestMail('simple')
-##    self.assertEquals('person_module/sender', event.getSource())
-##
-##  def test_recipient(self):
-##    # destination is found automatically, based on the To: header in the mail
-##    event = self._ingestMail('simple')
-##    self.assertEquals('person_module/me', event.getDestination())
+  def test_sender(self):
+    # source is found automatically, based on the From: header in the mail
+    event = self._ingestMail('simple')
+    # metadata discovery is done in an activity
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('person_module/sender', event.getSource())
+
+  def test_recipient(self):
+    # destination is found automatically, based on the To: header in the mail
+    event = self._ingestMail('simple')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('person_module/me', event.getDestination())
  
 ## TODO:
 ##  def test_forwarder_mail(self):
