@@ -53,6 +53,7 @@ import time
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import DummyLocalizer
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 import os
@@ -87,36 +88,6 @@ def makeFilePath(name):
 def makeFileUpload(name):
   return FileUpload(makeFilePath(name), name)
 
-class DummyMessageCatalog:
-  __allow_access_to_unprotected_subobjects__ = 1
-  def gettext(self, word, *args, **kw):
-    return word
-
-class DummyLocalizer:
-  """
-    A replacement for stock cookie - based localizer
-  """
-  __allow_access_to_unprotected_subobjects__ = 1
-  erp5_ui = DummyMessageCatalog()
-  erp5_catalog = DummyMessageCatalog()
-  lang = 'en'
-
-  def get_selected_language(self):
-    return self.lang
-  
-  def get_languages_map(self):
-    return [{'selected': True, 'id': 'en', 'title': 'English'},
-            {'selected': False, 'id': 'pl', 'title': 'Polish'},
-            {'selected': False, 'id': 'fr', 'title': 'French'},]
-
-  def changeLanguage(self, lang):
-    self.lang = lang
-
-  def translate(self, word, *args, **kw):
-    return word
-  
-  def __call__(self, request, context):
-    pass
 
 class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
