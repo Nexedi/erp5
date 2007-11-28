@@ -38,12 +38,11 @@ from SelectionTool import createFolderMixInPageSelectionMethod
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.utils import _checkPermission
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
 from Acquisition import aq_base, aq_self
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, INFO
 from ZODB.POSException import ConflictError
 
 from Globals import InitializeClass, Acquisition, get_request
@@ -52,14 +51,13 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 import md5
 import cgi
-import types
+from traceback import extract_stack
 
 # For compatibility with Python 2.3.
 try:
   set
 except NameError:
   from sets import Set as set
-
 
 class ObjectValuesWrapper:
   """This class wraps objectValues so that objectValues behaves like portal_catalog.
@@ -422,7 +420,7 @@ class ListBoxRenderer:
   def getPhysicalPath(self):
     """
       Return the path of form we render.
-      This function is required to be able to use ZopeProfiler product with 
+      This function is required to be able to use ZopeProfiler product with
       listbox.
     """
     return self.field.getPhysicalPath()
@@ -985,7 +983,7 @@ class ListBoxRenderer:
     # objects in the current ListBox configuration.
     if 'select_expression' in params:
       del params['select_expression']
-    
+
     self.getSelection().edit(params=params)
     return params
 
@@ -1395,7 +1393,7 @@ class ListBoxRenderer:
         else:
           original_value = stat_method
           processed_value = original_value
-      
+
       editable_field = self.getEditableField(alias)
       if editable_field is not None:
         processed_value = editable_field.render_view(value=original_value)
@@ -1770,7 +1768,6 @@ class ListBoxRendererLine:
       if context is not None:
         return context.getTitleOrId() or ''
     return ''
-        
 
   def getDepth(self):
     """Return the depth of a domain. Used only for a summary line.
@@ -1857,7 +1854,7 @@ class ListBoxRendererLine:
             original_value = editable_field.__of__(obj).get_value('default',
                                                         cell=brain)
             processed_value = original_value
-        
+
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
           if hasattr(aq_self(brain), alias):
@@ -2035,7 +2032,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           error_text = error_dict[key].error_text
           error_text = cgi.escape(error_text)
           if isinstance(error_text, str):
-            error_text = u'%s' % Message(domain=ui_domain, 
+            error_text = u'%s' % Message(domain=ui_domain,
                                          message=error_text)
           error_message = u'<br />' + error_text
         else:
@@ -2841,11 +2838,10 @@ class ListBoxValidator(Validator.Validator):
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         params = here.portal_selections.getSelectionParamsFor(
-                                                           selection_name, 
+                                                           selection_name,
                                                            REQUEST=REQUEST)
         portal_url = getToolByName(here, 'portal_url')
         portal = portal_url.getPortalObject()
-
 
         result = {}
         error_result = {}
@@ -3052,7 +3048,6 @@ class ListBox(ZMIField):
       name = list_method
     return name or None
 
-
 class ListBoxLine:
   meta_type = "ListBoxLine"
   security = ClassSecurityInfo()
@@ -3240,7 +3235,6 @@ class ListBoxLine:
     """
     self.is_section_folded = is_section_folded
 
-
   security.declarePublic('isSectionFolded')
   def isSectionFolded(self):
     """
@@ -3277,7 +3271,6 @@ class ListBoxLine:
       config_column = [None] * len(self.config_display_list)
     else:
       config_column = [self.config_dict[column_id] for column_id in self.config_display_list]
-
 
     return config_column + [self.column_dict[column_id] for column_id in column_id_list]
 

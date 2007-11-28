@@ -30,29 +30,19 @@
   ERP5 portal_selection tool.
 """
 
-from OFS.Traversable import NotFound
 from OFS.SimpleItem import SimpleItem
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
-from ZTUtils import make_query
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Form import _dtmldir
 from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
-from email.MIMEBase import MIMEBase
-from email import Encoders
-from copy import copy
-from DateTime import DateTime
 import md5
-import pickle
-import hmac
-import random
-import re
 import string
-from zLOG import LOG, WARNING, INFO
-from Acquisition import Implicit, aq_base
+from zLOG import LOG, INFO
+from Acquisition import aq_base
 from Products.ERP5Type.Message import Message
 import warnings
 
@@ -726,7 +716,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         params = selection.getParams()
         zoom_start = request.form.get('zoom_start',0)
         params['zoom_start'] = zoom_start
-        selection.edit(params= params)
+        selection.edit(params=params)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                            query_string=query_string)
@@ -794,7 +784,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST,
                                             form_id=form_id,
                                              query_string=query_string)
-    
+
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
     def setDomainRoot(self, REQUEST, form_id=None, query_string=None):
       """
@@ -963,7 +953,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       # It is better to reset the query when changing the display mode.
       params = selection.getParams()
       if 'where_expression' in params: del params['where_expression']
-      selection.edit(params = params)
+      selection.edit(params=params)
 
       if redirect:
         return self._redirectToOriginalForm(REQUEST=request, form_id=form_id,
