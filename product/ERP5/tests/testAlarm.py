@@ -57,6 +57,8 @@ class TestAlarm(ERP5TypeTestCase):
   sales_order_id = '1'
   quantity = 10
   base_price = 0.7832
+  # year/month/day hour:minute:second
+  date_format = '%i/%i/%i %i:%i:%d UTC'
 
   def getTitle(self):
     return "Alarm"
@@ -152,7 +154,7 @@ class TestAlarm(ERP5TypeTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
     alarm = self.newAlarm()
-    now = DateTime()
+    now = DateTime().toZone('UTC')
     hour_to_remove = now.hour() % 3
     now = addToDate(now,hour=-hour_to_remove)
     date = addToDate(now,day=2)
@@ -179,12 +181,12 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test Some Hours'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,15,00,00))
-    now = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,15,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,21,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,7,06,00,00))
-    right_fourth_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,7,10,00,00))
+
+    right_first_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
+    now = DateTime(self.date_format               % (2006,10,6,15,00,00))
+    right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,7,06,00,00))
+    right_fourth_date = DateTime(self.date_format % (2006,10,7,10,00,00))
     alarm = self.newAlarm()
     hour_list = (6,10,15,21)
     alarm.setPeriodicityStartDate(now)
@@ -205,11 +207,11 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Every Day Once'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    now = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,10,00,00))
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,10,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,7,10,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,8,10,00,00))
+
+    now = DateTime(self.date_format               % (2006,10,6,10,00,00))
+    right_first_date = DateTime(self.date_format  % (2006,10,6,10,00,00))
+    right_second_date = DateTime(self.date_format % (2006,10,7,10,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,8,10,00,00))
     alarm = self.newAlarm()
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityDayFrequency(1)
@@ -229,11 +231,11 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Every 3 Days Some Hours'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,14,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,15,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,6,17,00,00))
-    right_fourth_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,9,14,00,00))
+
+    right_first_date = DateTime(self.date_format % (2006,10,6,14,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,6,17,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,9,14,00,00))
     alarm = self.newAlarm()
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityDayFrequency(3)
@@ -255,11 +257,11 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Some Week Days Some Hours'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,9,27,6,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,9,29,15,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,2,6,00,00))
-    right_fourth_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,2,15,00,00))
+
+    right_first_date = DateTime(self.date_format  % (2006,9,27,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,2,15,00,00))
     alarm = self.newAlarm()
     get_transaction().commit()
     self.tic()
@@ -293,11 +295,11 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Some Month Days Some Hours'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,01,12,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,01,14,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,15,12,00,00))
-    right_fourth_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,15,14,00,00))
+
+    right_first_date = DateTime(self.date_format  % (2006,10,01,12,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,01,14,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,15,14,00,00))
     alarm = self.newAlarm()
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,15))
@@ -313,10 +315,10 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Once Every 2 Month'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,01,6,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,12,01,6,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2007,2,01,6,00,00))
+
+    right_first_date = DateTime(self.date_format  % (2006,10,01,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,12,01,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2007,2,01,6,00,00))
     alarm = self.newAlarm()
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,))
@@ -332,11 +334,11 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Every Day Once Week 41 And 43'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    # year/month/day hour:minute:second
-    right_first_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,1,6,00,00))
-    right_second_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,9,6,00,00))
-    right_third_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,10,6,00,00))
-    right_fourth_date = DateTime('%i/%i/%i %i:%i:%d' % (2006,10,11,6,00,00))
+
+    right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,9,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,10,6,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,11,6,00,00))
     alarm = self.newAlarm()
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityHourList((6,))

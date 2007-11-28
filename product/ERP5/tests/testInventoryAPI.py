@@ -715,9 +715,9 @@ class TestInventoryList(InventoryAPITestCase):
   def test_GroupByDate(self):
     # group by date currently only groups by *exact* date
     getInventoryList = self.getSimulationTool().getInventoryList
-    self._makeMovement(quantity=1, start_date=DateTime(2000, 1, 1))
-    self._makeMovement(quantity=1, start_date=DateTime(2000, 1, 1))
-    self._makeMovement(quantity=1, start_date=DateTime(2001, 1, 1))
+    self._makeMovement(quantity=1, start_date=DateTime('2000/1/1 12:00 UTC'))
+    self._makeMovement(quantity=1, start_date=DateTime('2000/1/1 12:00 UTC'))
+    self._makeMovement(quantity=1, start_date=DateTime('2001/1/1 12:00 UTC'))
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_date=1)
     self.assertEquals(2, len(inventory_list))

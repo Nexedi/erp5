@@ -115,7 +115,7 @@ class DomainTool(BaseTool):
             if value is not None:
               # Handle Mysql datetime correctly
               if isinstance(value, DateTime):
-                value = value.ISO()
+                value = value.toZone('UTC').ISO()
               format_dict['value'] = value
               # Generate expression
               expression += "OR (%(base_name)s = '%(value)s') " \

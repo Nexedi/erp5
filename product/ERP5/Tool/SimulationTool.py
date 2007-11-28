@@ -955,7 +955,7 @@ class SimulationTool(BaseTool):
           if len(date_value_list) > 0:
             date = min(date_value_list)
             if isinstance(date, DateTime):
-              date = date.ISO()
+              date = date.toZone('UTC').ISO()
             # build a query for date to take range into account
             date_query_kw = {"inventory.date" : date,
                              "operator" : column_value_dict.get('date', {}).get('operator', []),
