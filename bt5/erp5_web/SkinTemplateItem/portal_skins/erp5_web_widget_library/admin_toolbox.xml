@@ -67,7 +67,7 @@
 \n
   <!-- Edit button menu -->\n
   <div name="adminSection" class="adminSection">\n
-    <h3>Edit</h3>\n
+    <h3 i18n:translate="" i18n:domain="ui">Edit</h3>\n
     <ul tal:define="edit_link_list python: context.Base_getAdminToolboxEditShortcutList()">\n
       <li tal:repeat="link edit_link_list">\n
         <a tal:attributes="href python: link[\'url\']">\n
