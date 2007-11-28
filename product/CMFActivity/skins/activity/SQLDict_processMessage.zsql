@@ -10,7 +10,7 @@ class_file:
 <params>uid</params>
 UPDATE message
 SET
-  processing_date = NOW(),
+  processing_date = UTC_TIMESTAMP(),
   processing = 1
 WHERE
   uid IN (

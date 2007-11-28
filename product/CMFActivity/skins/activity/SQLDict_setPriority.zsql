@@ -22,7 +22,7 @@ SET
   , priority = <dtml-sqlvar priority type="int">
 </dtml-if>
 <dtml-if delay>
-  , date = DATE_ADD(NOW(), INTERVAL <dtml-sqlvar delay type="int"> * (retry + 1) SECOND)
+  , date = DATE_ADD(UTC_TIMESTAMP(), INTERVAL <dtml-sqlvar delay type="int"> * (retry + 1) SECOND)
 <dtml-elif date>
   , date = <dtml-sqlvar date type="datetime">
 </dtml-if>

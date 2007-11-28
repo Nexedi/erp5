@@ -11,7 +11,7 @@ class_file:
 UPDATE
   message_queue
 SET
-  processing_date = NOW(),
+  processing_date = UTC_TIMESTAMP(),
   processing=1
 WHERE
   uid IN (

@@ -19,7 +19,7 @@ INSERT INTO message_queue
 SET
   uid = <dtml-sqlvar uid type="int">,
   path = <dtml-sqlvar path type="string">,
-  date = <dtml-if date><dtml-sqlvar date type="datetime"><dtml-else>NOW()</dtml-if>,
+  date = <dtml-if date><dtml-sqlvar date type="datetime"><dtml-else>UTC_TIMESTAMP()</dtml-if>,
   method_id = <dtml-sqlvar method_id type="string">,
 <dtml-if processing_node>
   processing_node = <dtml-sqlvar processing_node type="int">,
