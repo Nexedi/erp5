@@ -68,6 +68,39 @@ class DummyTranslationService:
     self._translated.setdefault(domain, []).append((msgid, mapping))
     return msgid
 
+class DummyMessageCatalog:
+  __allow_access_to_unprotected_subobjects__ = 1
+  def gettext(self, word, *args, **kw):
+    return word
+
+class DummyLocalizer:
+  """A replacement for stock cookie - based localizer.
+
+  You can change the current language by calling 'changeLanguage'
+  """
+  __allow_access_to_unprotected_subobjects__ = 1
+  erp5_ui = DummyMessageCatalog()
+  erp5_catalog = DummyMessageCatalog()
+  lang = 'en'
+
+  def get_selected_language(self):
+    return self.lang
+  
+  def get_languages_map(self):
+    return [{'selected': True, 'id': 'en', 'title': 'English'},
+            {'selected': False, 'id': 'pl', 'title': 'Polish'},
+            {'selected': False, 'id': 'fr', 'title': 'French'},]
+
+  def changeLanguage(self, lang):
+    self.lang = lang
+
+  def translate(self, word, *args, **kw):
+    return word
+  
+  def __call__(self, request, context):
+    # the before traverse hook
+    pass
+
 
 # python scripts
 def createZODBPythonScript(container, script_id, script_params,
