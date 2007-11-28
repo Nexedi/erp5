@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -64,7 +67,7 @@
 \n
 <div class="tabber" id="mytabber2">\n
   <div class="tabbertab">\n
-    <h2>Contribute</h2>\n
+    <h2 i18n:translate="" i18n:domain="ui">Contribute</h2>\n
     <div class="fieldset">\n
       <div>\n
         <label for="contribute_portal_type" i18n:translate="" i18n:domain="ui">Type</label>\n
@@ -108,7 +111,7 @@
   </div>\n
   \n
   <div class="tabbertab">\n
-    <h2>Link</h2>\n
+    <h2 i18n:translate="" i18n:domain="ui">Link</h2>\n
     <div class="fieldset tabbertabcont">\n
       <div>\n
         <label for="url" value="" i18n:translate="" i18n:domain="ui">Url</label>\n
@@ -167,6 +170,7 @@
             <tal:block tal:repeat="portal_type file_group/portal_type_list">\n
               <li tal:condition="python:here.ERP5Site_isNewContentAllowed(portal_type, user)">\n
                 <a tal:content="portal_type"\n
+                  i18n:translate="" i18n:domain="ui"\n
                   tal:attributes="href string:ERP5Site_newContent?portal_type=${portal_type}">Toto</a>\n
               </li>\n
             </tal:block>\n
