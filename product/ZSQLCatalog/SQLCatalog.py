@@ -326,8 +326,8 @@ class Query(QueryMixin):
     self.type = type
     self.search_key = key
 
-  def __call__(self):
-    self.asSQLExpression()
+  def __call__(self, **kw):
+    return self.asSQLExpression(**kw)
 
   def getRange(self):
     return self.range
@@ -384,7 +384,7 @@ class Query(QueryMixin):
     range_value = self.getRange()
     format = self.getFormat()
     if ignore_key:
-      pass
+      pass    
     elif range_value is not None:
       if isinstance(value, (list, tuple)):
         if format is None:
@@ -530,8 +530,8 @@ class ComplexQuery(QueryMixin):
     # XXX: What is that used for ?! It's utterly dangerous.
     self.__dict__.update(kw)
 
-  def __call__(self):
-    self.asSQLExpression()
+  def __call__(self, **kw):
+    return self.asSQLExpression(**kw)
 
   def getQueryList(self):
     return self.query_list
