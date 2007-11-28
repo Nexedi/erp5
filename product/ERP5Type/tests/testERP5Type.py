@@ -32,6 +32,7 @@ import unittest
 from random import randint
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import LOG, INFO
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.Base import _aq_reset
@@ -1712,6 +1713,23 @@ class TestPropertySheet:
       self.assertEquals(person.getDummyList(), ['value'])
       self.assertEquals(person.getDummySet(), ['value'])
 
+    def test_translated_accessors(self):
+      self._addProperty('Person', '''{'id': 'dummy',
+                                      'type': 'string',
+                                      'translatable': 1,
+                                      'translation_domain': 'erp5_ui',
+                                      'mode': 'w',}''')
+      self.portal.Localizer = DummyLocalizer()
+      doc = self.portal.person_module.newContent(portal_type='Person')
+
+      # translated and translation domain accessors are generated
+      self.assertTrue(hasattr(doc, 'getTranslatedDummy'))
+      self.assertTrue(hasattr(doc, 'getDummyTranslationDomain'))
+      
+      self.assertEquals('erp5_ui', doc.getDummyTranslationDomain())
+      doc.setDummy('foo')
+      self.assertEquals('foo', doc.getTranslatedDummy())
+      self.assertEquals(['foo'], self.portal.Localizer.erp5_ui._translated)
 
 
     # _aq_reset should be called implicitly when the system configuration
