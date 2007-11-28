@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -94,7 +91,10 @@
       \n
       <div style="float:right; margin-top:10px;">\n
       <a onclick="setMailString();"  id="mail_contribute_button"\n
-         href="mailto:dms@dms.nexedi.com?subject=Contribution&body=">\n
+         href="mailto:dms@dms.nexedi.com?subject=Contribution&body="\n
+         tal:define="ingestion_address here/portal_preferences/getPreferredDocumentEmailIngestionAddress|nothing"\n
+         tal:condition="ingestion_address"\n
+         tal:attributes="href string:${ingestion_address}?subject=Contribution&body=">\n
         <img src="send_by_mail" border="0"/>\n
         <tal:block  i18n:translate="" i18n:domain="ui">Click here to contribute by Email</tal:block></a>\n
       &nbsp;\n

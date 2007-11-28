@@ -1,4 +1,7 @@
 2007-11-28 Yusei
+* Remove hardcoded ingestion email address from WebSite_viewContributeRenderer. Please use Email Ingestion Address preference instead.
+
+2007-11-28 Yusei
 * Remove bookmark box from WebSite_viewDashboardRenderer.
 
 2007-11-23 Yusei
