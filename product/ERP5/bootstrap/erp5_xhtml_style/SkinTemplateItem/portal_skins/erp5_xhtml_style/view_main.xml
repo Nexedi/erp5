@@ -86,7 +86,7 @@
                 <li tal:repeat="action actions"\n
                     tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
                   <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)"\n
-                     i18n:translate="" i18n:domain="ui"><span tal:content="action/name">action_name</span></a>\n
+                    ><span i18n:translate="" i18n:domain="ui" tal:content="action/name">action_name</span></a>\n
                 </li>\n
               </ul>\n
             </div>\n
