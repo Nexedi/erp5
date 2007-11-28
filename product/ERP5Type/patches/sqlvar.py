@@ -19,6 +19,7 @@ from Shared.DC.ZRDB import sqlvar
 from string import atoi,atof
 from types import StringType
 from Products.ERP5Type.PsycoWrapper import psyco
+from DateTime import DateTime
 
 def SQLVar_render(self, md):
     name=self.__name__
@@ -70,17 +71,15 @@ def SQLVar_render(self, md):
 
         try:
             if getattr(v, 'ISO', None) is not None:
-                v=v.ISO()
-            elif getattr(v, 'strftime', None) is not None:
-                v=v.strftime('%Y-%m-%d %H:%M:%S')
-            else: 
-                v=str(v)
+                v=v.toZone('UTC').ISO()
+            else:
+                v = DateTime(v)
+                v=v.toZone('UTC').ISO()
         except:
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
             raise ValueError, (
                 'Invalid datetime value for <em>%s</em>: %r' % (name, v))
-
         v=md.getitem('sql_quote__',0)(v)
     # End of patch
     else:
