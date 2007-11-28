@@ -59,6 +59,16 @@ class DummyMailHost(MailHost):
     """Record message in _last_message."""
     self._last_message = (mfrom, mto, messageText)
 
+class DummyTranslationService:
+  """A dummy translation service where you can access translated msgids and
+  mappings in _translated.
+  """
+  _translated = {}
+  def translate(self, domain, msgid, mapping=None, *args, **kw):
+    self._translated.setdefault(domain, []).append((msgid, mapping))
+    return msgid
+
+
 # python scripts
 def createZODBPythonScript(container, script_id, script_params,
                            script_content):
