@@ -10,7 +10,6 @@ Document Module | search
 Document Module | sort_on
 Document Module | view
 Document Module | webdav
-Drawing | bookmark
 Drawing | convert
 Drawing | create_snapshot
 Drawing | download
@@ -32,7 +31,6 @@ Drawing | related_document
 Drawing | view
 Drawing | web_view
 External Source Module | view
-File | bookmark
 File | file_upload
 File | jump_to_all_related
 File | jump_to_predecessor
@@ -45,7 +43,6 @@ File | related_document
 Image Module | list_ui
 Image Module | sort_on
 Image Module | view
-Image | bookmark
 Image | export
 Image | file_upload
 Image | jump_to_all_related
@@ -56,7 +53,6 @@ Image | jump_to_successor
 Image | jump_to_wiki_predecessor
 Image | local_permission
 Image | related_document
-PDF | bookmark
 PDF | download
 PDF | file_upload
 PDF | html_view
@@ -72,7 +68,6 @@ PDF | related_document
 PDF | view
 PDF | web_view
 Preference | dms_preferences
-Presentation | bookmark
 Presentation | convert
 Presentation | create_snapshot
 Presentation | download
@@ -96,7 +91,6 @@ Presentation | web_view
 RSS Feed | crawl
 RSS Feed | crawled_content
 RSS Feed | view
-Spreadsheet | bookmark
 Spreadsheet | convert
 Spreadsheet | create_snapshot
 Spreadsheet | download
@@ -117,7 +111,6 @@ Spreadsheet | print
 Spreadsheet | related_document
 Spreadsheet | view
 Spreadsheet | web_view
-Text | bookmark
 Text | create_snapshot
 Text | download
 Text | download_ooo

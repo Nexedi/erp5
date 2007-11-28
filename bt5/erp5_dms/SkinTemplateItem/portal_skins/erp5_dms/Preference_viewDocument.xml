@@ -93,9 +93,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_preferred_document_bookmark_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
