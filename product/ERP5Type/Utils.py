@@ -1173,7 +1173,7 @@ def setDefaultProperties(property_holder, object=None):
 
         # Create translation accesor, if translatable is set
         if prop.get('translatable', 0):
-          # make accesso like getTranslatedProperty
+          # make accessors like getTranslatedProperty
           createTranslationAccessors(
                     property_holder,
                     'translated_%s' % (prop['id']),
@@ -2445,9 +2445,9 @@ def createTranslationAccessors(property_holder, id,
   if 'translation_domain' in id:
     # Getter
     accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name):
-      property_holder.registerAccessor(accessor_name, id, Translation.PropertyTranslationDomainGetter, ())
-      property_holder.declareProtected(read_permission, accessor_name)
+    property_holder.registerAccessor(accessor_name, id,
+        Translation.PropertyTranslationDomainGetter, ('string', default,))
+    property_holder.declareProtected(read_permission, accessor_name)
 
 
 #####################################################
