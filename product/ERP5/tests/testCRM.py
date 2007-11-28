@@ -52,6 +52,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
       # set prefered file name regular expression
       pref = portal.portal_preferences.default_site_preference
       pref.setPreferredDocumentFileNameRegularExpression('.*')
+      pref.setPreferredDocumentReferenceRegularExpression('.*')
       pref.enable()
 
       # XXX do this in ERP5Site.py ?
@@ -139,6 +140,20 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals('person_module/me', event.getDestination())
+
+  def test_follow_up(self):
+    # follow up is found automatically, based on the content of the mail, and
+    # what you defined in preference regexpr.
+    # But, we don't want it to associate with the first campaign simply
+    # because we searched against nothing
+    self.portal.campaign_module.newContent(portal_type='Campaign')
+    get_transaction().commit()
+    self.tic()
+    event = self._ingestMail('simple')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(None, event.getFollowUp())
+ 
  
 ## TODO:
 ##  def test_forwarder_mail(self):
