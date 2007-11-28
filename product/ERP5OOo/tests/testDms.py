@@ -47,20 +47,14 @@
 # XXX test_02 works only with oood on
 # XXX test_03 and test_04 work only WITHOUT oood (because of a known bug in erp5_dms)
 
-
 import unittest
-from random import randint
 import time
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
+from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 import os
-from Products.ERP5Type import product_path
-from Products.ERP5OOo.Document.OOoDocument import ConversionError
 
 QUIET = 0
 RUN_ALL_TEST = 1
