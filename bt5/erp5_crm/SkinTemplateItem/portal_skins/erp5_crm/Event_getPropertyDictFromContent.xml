@@ -81,6 +81,8 @@
     Event_finishIngestion)\n
 """\n
 \n
+getResultValue = context.getPortalObject().portal_catalog.getResultValue\n
+\n
 def getPersonList(information_text):\n
   result = []\n
   for recipient in information_text.split(\',\'):\n
@@ -88,7 +90,7 @@ def getPersonList(information_text):\n
       recipient = recipient[recipient.find(\'<\') + 1:]\n
       recipient = recipient[:recipient.find(\'>\')]\n
     if recipient:\n
-      email = context.portal_catalog.getResultValue(url_string=recipient, portal_type="Email")\n
+      email = getResultValue(url_string=recipient, portal_type="Email")\n
       if email is not None:\n
         result.append(email.getParentValue().getRelativeUrl())\n
   return result\n
@@ -102,20 +104,27 @@ cc_list = getPersonList(content_information.get(\'CC\', \'\'))\n
 reference_search_list = []\n
 text_search_list = []\n
 for text, prop_dict in context.getSearchableReferenceList():\n
-  if text: text_search_list.append(text)\n
-  if prop_dict.has_key(\'reference\'): reference_search_list.append(prop_dict[\'reference\'])\n
+  if text:\n
+    text_search_list.append(text)\n
+  if prop_dict.has_key(\'reference\'):\n
+    reference_search_list.append(prop_dict[\'reference\'])\n
 \n
 # Search reference ticket or project\n
 follow_up_type_list = context.getPortalProjectTypeList() + context.getPortalTicketTypeList()\n
-follow_up = context.portal_catalog.getResultValue(reference=reference_search_list, portal_type=follow_up_type_list)\n
-if follow_up is None:\n
-  follow_up = context.portal_catalog.getResultValue(reference=text_search_list, portal_type=follow_up_type_list)\n
+follow_up = None\n
+if reference_search_list:\n
+  follow_up = getResultValue(reference=reference_search_list, portal_type=follow_up_type_list)\n
+if follow_up is None and text_search_list:\n
+  follow_up = getResultValue(reference=text_search_list, portal_type=follow_up_type_list)\n
 \n
 # Build dict.\n
 result = {}\n
-if sender_list: result[\'source_list\'] = sender_list\n
-if to_list or cc_list: result[\'destination_list\'] = to_list + cc_list\n
-if follow_up is not None: result[\'follow_up\'] = follow_up.getRelativeUrl()\n
+if sender_list:\n
+  result[\'source_list\'] = sender_list\n
+if to_list or cc_list:\n
+  result[\'destination_list\'] = to_list + cc_list\n
+if follow_up is not None:\n
+  result[\'follow_up\'] = follow_up.getRelativeUrl()\n
 \n
 return result\n
 
@@ -168,9 +177,10 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>getPersonList</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>getResultValue</string>
+                            <string>getPersonList</string>
                             <string>content_information</string>
                             <string>sender_list</string>
                             <string>to_list</string>
@@ -182,8 +192,8 @@ return result\n
                             <string>prop_dict</string>
                             <string>_getitem_</string>
                             <string>follow_up_type_list</string>
-                            <string>follow_up</string>
                             <string>None</string>
+                            <string>follow_up</string>
                             <string>result</string>
                             <string>_write_</string>
                           </tuple>

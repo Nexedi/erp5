@@ -1,1 +1,1 @@
-FIXME: email address are not catalogged, so the CMFMailIn doesn't work
+FIXME: email address are not catalogged, so the CMFMailIn doesn't work. ( for now you have to install erp5_dms)
