@@ -153,7 +153,7 @@ def _mysql_timestamp_converter(s):
 	return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
 def DateTime_or_None(s):
-    try: return DateTime(s)
+    try: return DateTime('%s UTC' % s)
     except: return None
 
 def int_or_long(s):
