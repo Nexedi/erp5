@@ -1699,16 +1699,18 @@ class TestPropertySheet:
       self.assertTrue(hasattr(person, 'getDummyList'))
 
       self.assertEquals(person.getDummy(), None)
-      # self.assertEquals(person.getDummyList(), []) # XXX what is the default
-                                                     # value for a list getter ?
+      self.assertEquals(person.getDummyList(), None)
+      self.assertEquals(person.getDummySet(), None)
 
       person.setDummyList(['a', 'b'])
       self.assertEquals(person.getDummy(), 'a')
       self.assertEquals(person.getDummyList(), ['a', 'b'])
+      self.assertEquals(person.getDummySet(), ['a', 'b'])
 
       person.setDummy('value')
       self.assertEquals(person.getDummy(), 'value')
       self.assertEquals(person.getDummyList(), ['value'])
+      self.assertEquals(person.getDummySet(), ['value'])
 
 
 
