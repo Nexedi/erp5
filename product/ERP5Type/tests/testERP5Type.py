@@ -1729,7 +1729,22 @@ class TestPropertySheet:
       self.assertEquals('erp5_ui', doc.getDummyTranslationDomain())
       doc.setDummy('foo')
       self.assertEquals('foo', doc.getTranslatedDummy())
+      # the value of the property is translated with erp5_ui
       self.assertEquals(['foo'], self.portal.Localizer.erp5_ui._translated)
+
+      # we can change the translation domain on the portal type
+      self.portal.portal_types.Person.changeTranslations(
+                                    dict(dummy='erp5_content'))
+      self.assertEquals('erp5_content', doc.getDummyTranslationDomain())
+      self.assertEquals('foo', doc.getTranslatedDummy())
+      self.assertEquals(['foo'],
+                  self.portal.Localizer.erp5_content._translated)
+
+      # set on instance. It has priority over portal type
+      doc.setDummyTranslationDomain('default')
+      self.assertEquals('default', doc.getDummyTranslationDomain())
+      self.assertEquals('foo', doc.getTranslatedDummy())
+      self.assertEquals(['foo'], self.portal.Localizer.default._translated)
 
 
     # _aq_reset should be called implicitly when the system configuration
