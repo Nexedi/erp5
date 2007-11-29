@@ -283,22 +283,19 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
       Exchange databases and finish reindexing in the same transaction.
     """
+    if self.archive_path is not None  and \
+           getattr(self, "portal_archives", None) is not None:
+      current_archive = self.portal_archives.getCurrentArchive()
+    else:
+      current_archive = None
     default_catalog_id = self.default_sql_catalog_id
     self.exchangeDatabases(source_sql_catalog_id=source_sql_catalog_id,
                            destination_sql_catalog_id=destination_sql_catalog_id,
                            skin_selection_dict=skin_selection_dict,
                            sql_connection_id_dict=sql_connection_id_dict)
-    # cancel archive use as current catalog before archive
-    if self.archive_path is not None  and \
-           getattr(self, "portal_archives", None) is not None:
-      if len(self.portal_archives):
-        archive_list = self.portal_archives.getArchiveList()
-        for archive_path in archive_list:
-          archive = self.unrestrictedTraverse(archive_path)
-          if archive.getCatalogId() == default_catalog_id:
-            # this is the current catalog used for archiving
-            archive.cancel()
-          
+    # cancel archive use as current catalog before archiving
+    if current_archive is not None:
+      current_archive.cancel()
     self.setHotReindexingState(state=HOT_REINDEXING_FINISHED_STATE)
     clearCache(cache_factory_list=('erp5_content_short',))
 
