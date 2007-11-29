@@ -150,7 +150,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     # Category accessors
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryList')
-    def getBaseCategoryList(self, context=None):
+    def getBaseCategoryList(self, context=None, sort=False):
       """
         Returns the ids of base categories of the portal_categories tool
         if no context is provided, otherwise, returns the base categories
@@ -163,9 +163,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
         baseCategoryIds -- for zope users conveniance
       """
       if context is None:
-        return self.objectIds()
+        result = self.objectIds()
       else:
-        return context._categories # XXX Incompatible with ERP5Type per portal type categories
+        # XXX Incompatible with ERP5Type per portal type categories
+        result = context._categories[:]
+      if sort:
+        result.sort()
+      return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryIds')
     getBaseCategoryIds = getBaseCategoryList
