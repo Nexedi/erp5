@@ -1,4 +1,7 @@
 2007-11-29 yusei
+* Membership criteria list in Predicate_view is sorted. Please use revision 17909 or newer version of CMFCategory.
+
+2007-11-29 yusei
 * Fixed Predicate_edit to use ignore_layout and editable_mode parameters in redirect url.
 
 2007-11-19 yusei
