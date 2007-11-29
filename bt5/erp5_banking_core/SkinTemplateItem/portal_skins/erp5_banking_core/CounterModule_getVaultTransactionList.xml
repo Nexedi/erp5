@@ -82,6 +82,9 @@ if from_date is not None:\n
   if from_date == at_date:\n
     from_date=None\n
 \n
+if only_last_date and vault_report_type==\'history\':\n
+  from_date = at_date\n
+\n
 #context.log(\'CounterModule_getVaultTransactionList vault:\',vault)\n
 def getTranslatedTitleFromCategoryUrl(category):\n
   return context.portal_categories.getCategoryValue(category).getTranslatedTitle()\n
@@ -104,7 +107,9 @@ portal = context.getPortalObject()\n
 vault_url_list = vault\n
 if same_type(vault, \'a\'):\n
   vault_url_list = [vault,]\n
-\n
+#context.log("vault_url_list", vault_url_list)\n
+if vault_url_list is None:\n
+  raise ValueError, "The vault must be defined"\n
 for vault_url in vault_url_list:\n
   vault_dict[vault_url] = 1\n
   vault_inventory_dict[vault_url] = {}\n
@@ -130,6 +135,8 @@ def cartesianProduct(list_of_list):\n
 total_inventory_list = []\n
 inventory_kw = {}\n
 #context.log(\'CounterModule_getVaultTransactionList, vault_report_type\',vault_report_type)\n
+if vault_report_type == \'inventory\' and from_date is not None:\n
+  raise ValueError, "The from date must be None in the case of inventory"\n
 if vault_report_type is None or vault_report_type==\'inventory\':\n
   inventory_kw[\'group_by_variation\'] = 1\n
   inventory_kw[\'group_by_resource\'] = 1\n
@@ -194,14 +201,22 @@ if column_names == 1:\n
 \n
 #context.log(\'node_category\',vault)\n
 #context.log(\'inventory_kw\',inventory_kw)\n
-vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
+display_simulation_state = 0\n
+if all_state and vault_report_type==\'history\':\n
+  display_simulation_state = 1\n
+  vault_inventory_list = context.portal_simulation.getInventoryList( node=vault_url_list\n
+                                                                 , ignore_variation=0\n
+                                                                 ,**inventory_kw\n
+                                                                 )\n
+else: \n
+  vault_inventory_list = context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
 #context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
-#                                                                , ignore_variation=0,src__=1\n
-#                                                               ,**inventory_kw\n
-#                                                              ))\n
+                                                                #, ignore_variation=0,src__=1\n
+                                                               #,**inventory_kw\n
+                                                              #))\n
 \n
 if summarise:\n
   total_quantity = 0\n
@@ -272,7 +287,8 @@ for resource in resource_dict.keys():\n
     continue\n
   variation_text = resource[1]\n
   tmp_dict = context.Base_getResourceInformationDictFromUrlAndVariation(\n
-           resource_url, variation_text, movement=movement)\n
+           resource_url, variation_text, movement=movement, \n
+           display_simulation_state= display_simulation_state)\n
   general_total_price = 0\n
   for vault in vault_dict.keys():\n
     try:\n
@@ -331,7 +347,7 @@ return repr([x for x in total_inventory_list])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, excluded_variation_list=None,**kw</string> </value>
+            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, excluded_variation_list=None, all_state=0, only_last_date=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -359,7 +375,7 @@ return repr([x for x in total_inventory_list])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>12</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -375,6 +391,8 @@ return repr([x for x in total_inventory_list])\n
                             <string>banknote_quantity_divisor</string>
                             <string>summarise</string>
                             <string>excluded_variation_list</string>
+                            <string>all_state</string>
+                            <string>only_last_date</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
@@ -390,6 +408,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>portal</string>
                             <string>vault_url_list</string>
                             <string>same_type</string>
+                            <string>ValueError</string>
                             <string>_getiter_</string>
                             <string>vault_url</string>
                             <string>_write_</string>
@@ -413,6 +432,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>variation</string>
                             <string>variation_text</string>
                             <string>column_list</string>
+                            <string>display_simulation_state</string>
                             <string>_apply_</string>
                             <string>vault_inventory_list</string>
                             <string>total_quantity</string>
@@ -461,6 +481,8 @@ return repr([x for x in total_inventory_list])\n
                 <none/>
                 <int>0</int>
                 <none/>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>

@@ -123,7 +123,7 @@ def checkActivities(source_counter):\n
     raise ValidationFailed, (msg,)\n
 \n
 inventory_list = context.portal_simulation.getCurrentInventoryList(\n
-                   at_date=start_date,\n
+                   #at_date=start_date,\n
                    group_by_variation=1,\n
                    group_by_node=1,\n
                    group_by_resource=1,\n

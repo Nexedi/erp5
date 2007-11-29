@@ -90,16 +90,23 @@ if reference in (None, \'\') or not str(reference).startswith(application_id):\n
     if codification in (None, \'\'):\n
       return \'\'\n
   else:\n
-    # get source from user site\n
-    site_list = context.Baobab_getUserAssignedSiteList()\n
-    if len(site_list) == 0:\n
-      return \'\'\n
-    else:\n
-      site = site_list[0]\n
-      site_value = context.restrictedTraverse(\'portal_categories/%s\' %(site,))\n
-      codification = site_value.getCodification()\n
+    # get from document site\n
+    site = context.getSiteValue()\n
+    if site not in (None, \'\'):\n
+      codification = site.getCodification()\n
       if codification in (None, \'\'):\n
         return \'\'\n
+    else:\n
+      # get source from user site\n
+      site_list = context.Baobab_getUserAssignedSiteList()\n
+      if len(site_list) == 0:\n
+        return \'\'\n
+      else:\n
+        site = site_list[0]\n
+        site_value = context.restrictedTraverse(\'portal_categories/%s\' %(site,))\n
+        codification = site_value.getCodification()\n
+        if codification in (None, \'\'):\n
+          return \'\'\n
 \n
   # actual generation\n
   #if reference in (None, \'\'): \n
@@ -176,10 +183,10 @@ return reference\n
                             <string>year</string>
                             <string>source</string>
                             <string>codification</string>
+                            <string>site</string>
                             <string>site_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>site</string>
                             <string>site_value</string>
                             <string>baobab_id_group</string>
                             <string>new_id</string>

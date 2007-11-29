@@ -363,6 +363,10 @@
                           <string>Explanation</string>
                         </tuple>
                         <tuple>
+                          <string>simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
                           <string>total_quantity</string>
                           <string>Quantity</string>
                         </tuple>
@@ -570,7 +574,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>CounterModule_getVaultInventoryList</unicode> </value>
+            <value> <string>CounterModule_getVaultInventoryList</string> </value>
         </item>
       </dictionary>
     </pickle>

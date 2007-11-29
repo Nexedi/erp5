@@ -86,7 +86,10 @@
                         <string>my_vault</string>
                         <string>my_vault_report_type</string>
                         <string>my_from_date</string>
-                        <string>my_to_date</string>
+                        <string>my_at_date</string>
+                        <string>my_all_state</string>
+                        <string>my_only_last_date</string>
+                        <string>my_reset</string>
                       </list>
                     </value>
                 </item>

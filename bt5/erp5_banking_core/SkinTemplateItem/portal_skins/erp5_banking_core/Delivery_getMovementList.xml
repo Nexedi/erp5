@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return context.getMovementList(portal_type=portal_type)\n
+            <value> <string>if portal_type is None:\n
+  portal_type = []\n
+\n
+# return context.getMovementList(portal_type=portal_type)\n
 # here we suppose we have only two level of portal type\n
 #context.log("Delivery_getMovementList", "portal_type = %s" %(portal_type,))\n
 #context.log("Delivery_getMovementList", "len portal_type = %s" % (len(portal_type),))\n
@@ -120,7 +123,7 @@ return cell_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=[], *argv, **kw</string> </value>
+            <value> <string>portal_type=None, *argv, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,6 +152,7 @@ return cell_list\n
                             <string>portal_type</string>
                             <string>argv</string>
                             <string>kw</string>
+                            <string>None</string>
                             <string>same_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -173,7 +177,7 @@ return cell_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <list/>
+                <none/>
               </tuple>
             </value>
         </item>

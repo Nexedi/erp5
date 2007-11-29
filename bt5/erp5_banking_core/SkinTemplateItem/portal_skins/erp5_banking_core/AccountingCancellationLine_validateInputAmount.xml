@@ -65,23 +65,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Rerturns the emission letter corresponding to a particular site\n
-from Products.ERP5Type.Cache import CachingMethod\n
+            <value> <string encoding="cdata"><![CDATA[
+
+if editor in (None, \'\') : \n
+  return 1\n
 \n
-def getSiteEmissionLetter(site=None):\n
-  portal = context.getPortalObject()\n
-  site_object = portal.portal_categories.restrictedTraverse(site)\n
-  lower_letter = site_object.getCodification()[0].lower()\n
-  if lower_letter == \'z\':\n
-    lower_letter = \'k\'\n
-  return lower_letter\n
+if int(editor) > 0:\n
+  return 0\n
 \n
-getSiteEmissionLetter = CachingMethod(getSiteEmissionLetter,\n
-                             id = \'Baobab_getSiteEmissionLetter\',\n
-                             cache_factory = \'erp5_ui_long\')\n
-\n
-return getSiteEmissionLetter(site=site)\n
-</string> </value>
+return 1\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -103,7 +98,7 @@ return getSiteEmissionLetter(site=site)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None</string> </value>
+            <value> <string>editor, request</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,17 +118,16 @@ return getSiteEmissionLetter(site=site)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
+                            <string>editor</string>
+                            <string>request</string>
                             <string>None</string>
-                            <string>getSiteEmissionLetter</string>
+                            <string>int</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,14 +139,12 @@ return getSiteEmissionLetter(site=site)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getSiteEmissionLetter</string> </value>
+            <value> <string>AccountingCancellationLine_validateInputAmount</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

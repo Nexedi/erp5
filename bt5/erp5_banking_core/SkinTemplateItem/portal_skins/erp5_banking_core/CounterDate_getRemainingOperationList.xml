@@ -70,7 +70,8 @@
 site_uid = site.getUid()\n
 site_url = site.getRelativeUrl()\n
 operation_list = []\n
-exception_portal_type_list = [\'Paper Money Deposit\', \'Foreign Check\', \'External Banking Operation\', \'Account Transfer\', \'Check Deposit\']\n
+exception_portal_type_list = [\'Paper Money Deposit\', \'Foreign Check\', \'External Banking Operation\', \'Account Transfer\', \'Check Deposit\',\n
+                              \'Checkbook Reception\', \'Accounting Cancellation\']\n
 if site_uid is not None:\n
   not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\', \'ready\', \'deposited\', \'received\')\n
   portal_type_list = [x for x in context.getPortalDeliveryTypeList()\n
@@ -88,9 +89,10 @@ if site_uid is not None:\n
       simulation_state = document.getSimulationState()\n
       if (portal_type in (\'Stop Payment\', ) and simulation_state == \'started\')  \\\n
               or (portal_type == \'Mutilated Banknote\' and \n
-                   (simulation_state == \'planned\' or \n
-                     (simulation_state == \'finished\' and \'siege\' in here.getSource(\'\'))\n
-                   )\n
+                   simulation_state == \'finished\' \\\n
+                 ) \\\n
+              or (portal_type == \'Check Payment\' and \n
+                   simulation_state in (\'planned\', \'ordered\') \\\n
                  ) \\\n
               or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\'):\n
          continue\n
@@ -185,7 +187,6 @@ return operation_list\n
                             <string>document</string>
                             <string>portal_type</string>
                             <string>simulation_state</string>
-                            <string>here</string>
                             <string>operation_sort</string>
                           </tuple>
                         </value>

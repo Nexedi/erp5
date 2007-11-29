@@ -109,6 +109,8 @@ if movement is not None: # case of history\n
   resource_dict[\'explanation_relative_url\'] = explanation_value.getRelativeUrl()\n
   source_reference = explanation_value.getSourceReference() or \'\'\n
   resource_dict[\'source_reference\'] = source_reference\n
+  if display_simulation_state:\n
+    resource_dict[\'simulation_state_title\'] = movement.getTranslatedSimulationStateTitle()\n
   resource_dict[\'explanation_translated_relative_url\'] = "%s/%s" % \\\n
         (explanation_value.getTranslatedPortalType(),source_reference)\n
 resource_dict[\'base_price\'] = resource_value.getBasePrice()\n
@@ -149,7 +151,7 @@ return resource_dict\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resource, variation_text, movement=None</string> </value>
+            <value> <string>resource, variation_text, movement=None, display_simulation_state=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -177,7 +179,7 @@ return resource_dict\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -186,6 +188,7 @@ return resource_dict\n
                             <string>resource</string>
                             <string>variation_text</string>
                             <string>movement</string>
+                            <string>display_simulation_state</string>
                             <string>resource_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -216,6 +219,7 @@ return resource_dict\n
             <value>
               <tuple>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

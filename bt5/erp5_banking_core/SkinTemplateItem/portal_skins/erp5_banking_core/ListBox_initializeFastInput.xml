@@ -93,6 +93,14 @@ def get_fast_input_discriminant(line_id):\n
         return (cash_currency.getPortalType(), -cash_currency.getBasePrice(), line_id) # First sort by base price (desc), then by line id (asc)\n
   return line_id\n
 \n
+def sort_container(x, y):\n
+  x = listbox.get(x)\n
+  y = listbox.get(y)\n
+  result = cmp(x.get(\'date\'), y.get(\'date\'))\n
+  if result == 0:\n
+    result = cmp(x.get(\'reference\'),y.get(\'reference\'))\n
+  return result\n
+\n
 def sort_fast_input_lines(x, y):\n
   criterion_x = get_fast_input_discriminant(x)\n
   criterion_y = get_fast_input_discriminant(y)\n
@@ -111,7 +119,11 @@ if hasattr(request, \'listbox\'):\n
 \n
   if keys_list != []:\n
     #keys_list.sort(lambda x,y: cmp(int(x),int(y)))\n
-    keys_list.sort(sort_fast_input_lines)\n
+    if context.getPortalType() in (\'Monetary Issue\',):\n
+      keys_list.sort(sort_container)\n
+      pass\n
+    else:\n
+      keys_list.sort(sort_fast_input_lines)\n
     first_empty_line_id = int(keys_list[-1])+1\n
 \n
   for i in keys_list:\n
@@ -210,6 +222,7 @@ return l\n
                             <string>int_len</string>
                             <string>listbox</string>
                             <string>get_fast_input_discriminant</string>
+                            <string>sort_container</string>
                             <string>sort_fast_input_lines</string>
                             <string>hasattr</string>
                             <string>keys_list</string>

@@ -72,7 +72,10 @@ for a in site_list:\n
     a = \'site/\' + a\n
   site_codification = context.portal_categories.getCategoryValue(a).getCodification()\n
   if site_codification not in (\'\', None):\n
-    emission_letter_dict[site_codification[0].lower()] = 1\n
+    lower_letter = site_codification[0].lower()\n
+    if lower_letter == \'z\':\n
+      lower_letter = \'k\'\n
+    emission_letter_dict[lower_letter] = 1\n
 \n
 return emission_letter_dict.keys()\n
 </string> </value>
@@ -131,8 +134,9 @@ return emission_letter_dict.keys()\n
                             <string>context</string>
                             <string>site_codification</string>
                             <string>None</string>
-                            <string>_write_</string>
                             <string>_getitem_</string>
+                            <string>lower_letter</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

@@ -167,10 +167,12 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
         if is_member_of(site_member_object, exclude_vault_type_item, strict=0) :\n
           break\n
       else:\n
-        if first_level == 1 and site_member_object.getParentValue().getVaultType()==site_member_object.getVaultType():\n
+        parent_value = site_member_object.getParentValue()\n
+        if first_level == 1 and getattr(parent_value, \'getVaultType\', None) is not None \\\n
+            and parent_value.getVaultType()==site_member_object.getVaultType():\n
           pass\n
         elif leaf_node == 1:\n
-          if len(site_member_object) == 0:\n
+          if len(site_member_object) == 0 or site_member_relative_url.endswith("auxiliaire/encaisse_des_externes"):\n
             site_member_logical_path = site_member_object.getLogicalPath()\n
             vault_dict[site_member_relative_url] = [site_member_logical_path,site_member_relative_url]\n
         else:\n

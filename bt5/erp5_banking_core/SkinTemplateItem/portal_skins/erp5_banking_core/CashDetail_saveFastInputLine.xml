@@ -91,6 +91,9 @@ else:\n
 base_category_list = (\'emission_letter\', \'cash_status\', \'variation\')\n
 per_resource_dict = {}\n
 \n
+error = 0\n
+negative_quantity = 0\n
+float_quantity = 0\n
 # remove previous line\n
 # specific case for monetary issue\n
 if context.getPortalType() == "Monetary Issue":\n
@@ -109,6 +112,12 @@ for line in listbox:\n
   for counter in xrange(1, len(column_base_list)+1):\n
     quantity = line["column%s" %(str(counter),)]\n
     if quantity != 0 and quantity != \'\':\n
+      if quantity < 0:\n
+        error = 1\n
+        negative_quantity = 1\n
+      if int("%i" % quantity) != quantity:\n
+        error = 1\n
+        float_quantity = 1\n
       #context.log("listboxline", line)\n
       movement = {}\n
       movement[\'quantity\'] = quantity\n
@@ -173,7 +182,7 @@ for line in listbox:\n
 # create the movement\n
 variation_not_defined = 0\n
 for resource_id in per_resource_dict.keys():\n
-  if variation_not_defined == 1:\n
+  if error == 1:\n
     break\n
   variation_list_dict = per_resource_dict[resource_id].values()\n
   # get the resource\n
@@ -197,6 +206,7 @@ for resource_id in per_resource_dict.keys():\n
 #         break\n
       if variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
         variation_not_defined = 1\n
+        error = 1\n
         break\n
     # for the letter, if coin, must always be not_defined\n
     if letter != \'emission_letter/not_defined\' and letter.replace(\'emission_letter/\',\'\') not in resource_object.getEmissionLetterList()+[\'mixed\']:\n
@@ -285,12 +295,17 @@ for resource_id in per_resource_dict.keys():\n
 request  = context.REQUEST\n
 N_ = context.Base_translateString\n
 \n
-if variation_not_defined:\n
+if error:\n
   old_line = [x.getObject() for x in context.objectValues(portal_type=[line_portal_type,])]\n
   if len(old_line)>0:\n
     for object_list in old_line:\n
       context.deleteContent(object_list.getId())\n
-  message = N_("$title doesn\'t exist for $variation", mapping = {\'title\':resource_object.getTranslatedTitle(), \'variation\':variation.replace(\'variation/\',\'\')})\n
+  if variation_not_defined:\n
+    message = N_("$title doesn\'t exist for $variation", mapping = {\'title\':resource_object.getTranslatedTitle(), \'variation\':variation.replace(\'variation/\',\'\')})\n
+  if negative_quantity:\n
+    message = N_("You must not enter negative values")\n
+  if float_quantity:\n
+    message = N_("You must not enter int values")\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                   , "portal_status_message=%s" %message\n
                                   )\n
@@ -378,6 +393,9 @@ else:\n
                             <string>column_base_list</string>
                             <string>base_category_list</string>
                             <string>per_resource_dict</string>
+                            <string>error</string>
+                            <string>negative_quantity</string>
+                            <string>float_quantity</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>append</string>
@@ -393,6 +411,7 @@ else:\n
                             <string>counter</string>
                             <string>str</string>
                             <string>quantity</string>
+                            <string>int</string>
                             <string>movement</string>
                             <string>_write_</string>
                             <string>movement_key</string>
