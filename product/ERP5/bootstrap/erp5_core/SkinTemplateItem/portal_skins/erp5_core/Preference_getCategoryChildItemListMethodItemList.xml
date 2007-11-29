@@ -71,7 +71,8 @@ N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 return [\n
    (\'\', \'\'),\n
    (N_(\'Logical Path\'), \'getCategoryChildTranslatedLogicalPathItemList\', ),\n
-   (N_(\'Indented Title\'), \'getCategoryChildTranslatedIndentedTitleItemList\', )\n
+   (N_(\'Indented Title\'), \'getCategoryChildTranslatedIndentedTitleItemList\', ),\n
+   (N_(\'Compact Title\'), \'getCategoryChildTranslatedCompactTitleItemList\', ),\n
 ]\n
 </string> </value>
         </item>
