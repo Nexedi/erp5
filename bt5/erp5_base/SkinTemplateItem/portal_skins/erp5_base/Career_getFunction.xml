@@ -72,7 +72,7 @@ function if the function is a node in the function tree (this happens when\n
 function is acquired from the subordination organisation).\n
 \'\'\'\n
 function_value = context.getFunctionValue()\n
-if len(function_value):\n
+if function_value is None or len(function_value):\n
   return None\n
 return context.getFunction()\n
 </string> </value>
@@ -118,10 +118,10 @@ return context.getFunction()\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>function_value</string>
-                            <string>len</string>
                             <string>None</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
