@@ -52,6 +52,7 @@ class ArchiveTool(BaseTool):
 
   manage_overview = DTMLFile( 'explainArchiveTool', _dtmldir)
 
+
   def getSQLCatalogIdList(self):
     """
     Wrapper to CatalogTool method
@@ -71,6 +72,19 @@ class ArchiveTool(BaseTool):
     return ["%s - %s" %(x.getId(), x.getTitle()) for x in \
             self.portal_catalog(portal_type="Archive",
                                 validation_state="ready")]
+
+
+  def getCurrentArchive(self):
+    """
+    Return the archive used for the current catalog
+    """
+    current_catalog = self.portal_catalog.default_sql_catalog_id
+    current_archive_list = [x.getObject() for x in self.searchFolder(validation_state="validated") \
+                            if x.getCatalogId() == current_catalog]
+    if len(current_archive_list) == 0:
+      return None
+    else:
+      return current_archive_list[0]
 
 
   def getArchiveList(self):
