@@ -48,10 +48,10 @@ from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
 MAX_PRIORITY = 5
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000 
-# Read this many messages to validate.
+# Read up to this number of messages to validate.
 READ_MESSAGE_LIMIT = 1000
-# Stop electing more messages for processing if more than this many objects 
-# are impacted by elected messages.
+# Stop electing more messages for processing if more than this number of
+# objects are impacted by elected messages.
 MAX_GROUPED_OBJECTS = 500
 
 class SQLDict(RAMDict, SQLBase):
