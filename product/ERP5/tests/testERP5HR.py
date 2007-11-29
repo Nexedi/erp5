@@ -898,6 +898,7 @@ class TestHR(ERP5TypeTestCase):
     # on Organisation_view, the user usually select node for functions:
     organisation_view_html = organisation.Organisation_view()
     self.assertTrue('Function Node' in organisation_view_html)
+    self.assertTrue('Function Leave' not in organisation_view_html)
     # person acquire function from the organisation
     self.assertEquals(person.getFunctionValue(), function_node)
     # but the user interface does not show the acquired value in this case
