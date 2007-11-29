@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -84,11 +81,13 @@ if context.getSubordination():\n
   if subordination_value is not None:\n
     function_value = subordination_value.getFunctionValue()\n
     if function_value is not None:\n
-      result.extend(getattr(function_value, category_child_item_list_method_id)(filter_node=1,local_sort_id="int_index"))\n
+      result.extend(getattr(function_value, category_child_item_list_method_id)(\n
+                    filter_node=1, local_sort_id="translated_title"))\n
 \n
 result.extend(getattr(\n
          portal.portal_categories.function,\n
-         category_child_item_list_method_id)(filter_node=1,local_sort_id="int_index"))\n
+         category_child_item_list_method_id)(\n
+              filter_node=1, local_sort_id="translated_title"))\n
 \n
 return result\n
 </string> </value>
