@@ -113,16 +113,9 @@ def editListBox(listbox_field, listbox):\n
       hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
       for k in hidden_attributes:\n
         gv[k] = getattr(request, k, None)\n
-    if form_id==\'Predicate_view\':\n
-      # Special procedure for Predicate\n
-      for property, v in listbox.items():\n
-        v.update(gv)\n
-        context.setCriterion(property, **v)\n
-    else:\n
-      # General procedure\n
-      for url, v in listbox.items():\n
-        v.update(gv)\n
-        context.restrictedTraverse(url).edit(**v)\n
+    for url, v in listbox.items():\n
+      v.update(gv)\n
+      context.restrictedTraverse(url).edit(**v)\n
 \n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n
