@@ -103,7 +103,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -133,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories.function, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(filter_leaves=1, local_sort_id="translated_title", checked_permission=\'View\')</string> </value>
+            <value> <string>python: getattr(here.portal_categories.function, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(filter_leave=1, local_sort_id="translated_title", checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
