@@ -1,3 +1,6 @@
+2007-11-29 yusei
+* Fixed Predicate_edit to use ignore_layout and editable_mode parameters in redirect url.
+
 2007-11-19 yusei
 * Switch off acquire_local_roles on Simulation Movement.
 
