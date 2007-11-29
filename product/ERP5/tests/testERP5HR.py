@@ -896,17 +896,24 @@ class TestHR(ERP5TypeTestCase):
     person = self.getPersonModule().newContent(portal_type='Person',
                             career_subordination_value=organisation)
     # on Organisation_view, the user usually select node for functions:
-    organisation_view_html = organisation.Organisation_view()
-    self.assertTrue('Function Node' in organisation_view_html)
-    self.assertTrue('Function Leave' not in organisation_view_html)
+    self.assertEquals([['', ''], ['Function Node', 'function_node']],
+      organisation.Organisation_view.my_function.get_value('items'))
+    
+    # on Person_view, the user select leaves for functions:
+    field = person.Person_view.my_career_function
+    self.assertTrue('function_node' not in [x[1] for x in
+                          field.get_value('items')])
+    self.assertTrue('function_node/function_leave' in [x[1] for x in
+                          field.get_value('items')])
     # person acquire function from the organisation
     self.assertEquals(person.getFunctionValue(), function_node)
     # but the user interface does not show the acquired value in this case
-    person_view_html = person.Person_view()
-    self.assertTrue('Function Leave' in person_view_html)
-    self.assertTrue('value="function_node/function_leave"'
-                               in person_view_html)
-    self.assertTrue('value="function_node"' not in person_view_html)
+    self.assertEquals('', field.get_value('default'))
+    # (the field is working)
+    person.setDefaultCareerFunctionValue(function_leave)
+    self.assertEquals(person.getFunctionValue(), function_leave)
+    self.assertEquals('function_node/function_leave',
+                      field.get_value('default'))
 
 
 def test_suite():
