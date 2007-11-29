@@ -85,17 +85,21 @@ class TranslationProviderBase:
           domain_name = prop.get('translation_domain', None)
           property_domain_dict[prop_id] = TranslationInformation(prop_id, domain_name)
 
-    original_property_domain_dict = getattr(aq_base(self), '_property_domain_dict', {})
+    original_property_domain_dict = getattr(aq_base(self),
+                                            '_property_domain_dict', _MARKER)
     original_property_domain_keys = original_property_domain_dict.keys()
     property_domain_keys = property_domain_dict.keys()
     property_domain_keys.sort()
     original_property_domain_keys.sort()
+
     # Only update if required in order to prevent ZODB from growing
-    if property_domain_keys != original_property_domain_keys:
+    if original_property_domain_dict is _MARKER or\
+          property_domain_keys != original_property_domain_keys:
       # Update existing dict
       property_domain_dict.update(original_property_domain_dict)
       # And store
       self._property_domain_dict = property_domain_dict
+
         
   security.declarePrivate( 'getPropertyTranslationDomainDict' )
   def getPropertyTranslationDomainDict(self,):
