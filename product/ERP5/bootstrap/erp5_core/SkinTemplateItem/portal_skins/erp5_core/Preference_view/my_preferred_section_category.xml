@@ -130,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories.group, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id="title", base=1)</string> </value>
+            <value> <string>python: getattr(here.portal_categories.group, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\').replace(\'Translated\', \'\'))(local_sort_id="title", base=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
