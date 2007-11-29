@@ -74,7 +74,6 @@ class PaySheetTransaction(Invoice):
   def getRatioQuantityFromReference(self, ratio_reference=None):
     """
     return the ratio value correponding to the ratio_reference,
-    or description if ratio value is empty,
     None if ratio_reference not found
     """
     object_ratio_list = self.contentValues(portal_type=\
@@ -147,16 +146,16 @@ class PaySheetTransaction(Invoice):
     for cell in good_cell_list:
       cell_cat_list = cell['axe_list']
       paycell = payline.newCell(base_id = base_id, *cell_cat_list)
-      # if the quantity aven't be completed, it should be set to 1 (=100%)
+      # if the price aven't be completed, it should be set to 1 (=100%)
       if cell['price']:
         price = cell['price']
       else: 
         price = 1
-      paycell.edit( mapped_value_property_list = ('price', 'quantity')
-                  , quantity                   = cell['quantity']
-                  , price                      = price
-                  , force_update               = 1
-                  , category_list              = cell_cat_list
+      paycell.edit( mapped_value_property_list = ('price', 'quantity'),
+                    quantity                   = cell['quantity'],
+                    price                      = price,
+                    force_update               = 1,
+                    category_list              = cell_cat_list,
                   )
 
     return payline
@@ -171,18 +170,19 @@ class PaySheetTransaction(Invoice):
       the values  of the editables lines and create corresponding 
       PaySheetLines with this values
     '''
-
     paysheet = self 
-
-    paysheet_items = {}
-    for line in listbox:
+    item_dict = {}
+    model_line_id_list = []
+    for cell in listbox:
       model_line = paysheet.getPortalObject().restrictedTraverse(\
-                                                          line['model_line'])
+                                                          cell['model_line'])
+      model_line_id = model_line.getId()
       service      = model_line.getResourceValue()
       service_id   = service.getId()
-      quantity     = line['quantity']
-      price        = line['price']
-      tax_category = line['tax_category_relative_url']
+      quantity     = cell['quantity']
+      price        = cell['price']
+      tax_category = cell['tax_category_relative_url']
+      salary_range = cell['salary_range_relative_url']
 
       variation_category_list = model_line.getVariationCategoryList(\
                                             base_category_list='salary_range')
@@ -192,53 +192,42 @@ class PaySheetTransaction(Invoice):
         if category.startswith('salary_range/'): 
           salary_range_categories.append(category)
 
-      # perhaps here it will be necesary to raise an error ?
-      if not paysheet_items.has_key(service_id):
-        paysheet_items[service_id] = { 
-                           'title'            : model_line.getTitleOrId(),
-                           'desc'             : [],
-                           'base_amount_list' : model_line.getBaseAmountList(),
-                           'res'              : service.getRelativeUrl(),
-                           'int_index'        : model_line.getFloatIndex(),
-                           'cell_list'        : []
-                         }
-      
-      # create cells if a value has been entered 
-      if quantity or price:
-        for salary_range in salary_range_categories: 
-          # Define an empty new cell
-          new_cell = None
-          new_cell = { 'axe_list' : [tax_category,salary_range]
-                     , 'quantity' : quantity
-                     , 'price'    : price
-                     }
-          # Add the cell to the conresponding paysheet item 
-          if new_cell: 
-            paysheet_items[service_id]['cell_list'].append(new_cell) 
-            # Save the comment as description 
-            if model_line.getDescription():
-              paysheet_items[service_id]['desc'].append(\
-                                                  model_line.getDescription())
-            else:
-              resource_description = \
-                                model_line.getResourceValue().getDescription()
-              paysheet_items[service_id]['desc'].append(resource_description)
+      new_cell = { 'axe_list' : [tax_category,salary_range],
+                   'quantity' : quantity,
+                   'price'    : price,
+                 }
 
-    # Create a paysheet item for each service with user data in it
-    for item in paysheet_items.values():
-      if item['cell_list']:
-        if len(item['desc']) > 0: 
-          desc = '\n'.join(item['desc'])
-        else: 
-          desc = None
-        paysheet.createPaySheetLine( 
-                                    title     = item['title'],
-                                    res       = item['res'],
-                                    desc      = desc,
-                                    cell_list = item['cell_list'],
-                                    int_index = item['int_index'],
-                                    base_amount_list=item['base_amount_list'],)
+      if item_dict.has_key(model_line_id):
+        # an item for this model_line_id already exists
+        item_dict[model_line_id]['cell_list'].append(new_cell)
+      else:
+        if model_line.getDescription():
+          desc = model_line.getDescription()
+        else:
+          desc = model_line.getResourceValue().getDescription()
 
+        model_line_id_list.append(model_line_id)
+        # create a new item
+        item_dict[model_line_id]={\
+              'title' : model_line.getTitleOrId(),
+              'res' : model_line.getResourceValue().getRelativeUrl(),
+              'desc' : desc,
+              'cell_list' : [new_cell],
+              'int_index' : model_line.getFloatIndex(),
+              'base_amount_list' : model_line.getBaseAmountList(),
+            }
+
+    for model_line_id in model_line_id_list:
+      item = item_dict[model_line_id]
+      paysheet.createPaySheetLine(title     = item['title'],
+                                  res       = item['res'],
+                                  desc      = item['desc'],
+                                  cell_list = item['cell_list'],
+                                  int_index = item['int_index'],
+                                  base_amount_list = item['base_amount_list'])
+
+        
+        
 
   security.declareProtected(Permissions.ModifyPortalContent,
                           'createNotEditablePaySheetLineList')
@@ -364,7 +353,7 @@ class PaySheetTransaction(Invoice):
           calculation_script = getattr(self, script_name, None)
           quantity=0
           price=0
-          LOG('script_name :', 0, script_name)
+          #LOG('script_name :', 0, script_name)
           result = calculation_script(\
             base_amount_current_value_dict=base_amount_current_value_dict,
             model_slice_min=model_slice_min, 
