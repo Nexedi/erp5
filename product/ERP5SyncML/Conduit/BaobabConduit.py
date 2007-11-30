@@ -478,16 +478,18 @@ class BaobabConduit(ERP5Conduit):
     ### handle bank account inventory objects
     elif portal_type == 'Bank Account Inventory':
       if bank_account_inventory_module == None: return None
-      subobject = bank_account_inventory_module.newContent( portal_type = 'Bank Account Inventory'
+      subobject = bank_account_inventory_module.newContent( portal_type = 'Bank Account Inventory Group'
                                                           , id          = object_id
                                                           )
 
     ### handle bank account inventory line objects
     elif portal_type == 'Bank Account Inventory Line':
-      subobject = object.newContent( portal_type = 'Bank Account Inventory Line'
+      subobject = object.newContent( portal_type = 'Bank Account Inventory'
                                    , id          = object_id
                                    )
-
+      subsubobject = subobject.newContent( portal_type = 'Bank Account Inventory Line'
+                                   , id          = 'line'
+                                          )
     return subobject
 
 
@@ -610,14 +612,18 @@ class BaobabConduit(ERP5Conduit):
 
     ### Bank Account Inventory Line objects needs two properties to get the right bank account object
     # This part is only usefull for bank account inventory line, it is not used for most portal types
-    if object.getPortalType() == 'Bank Account Inventory Line':
+    if object.getPortalType() == 'Bank Account Inventory':
+      line = object['line']
       # Make sure variables will be defined
       currency_id         = None
       bank_account_number = None
       for k,v in kw.items():
         if k == 'currency'      : currency_id         = v
         if k == 'account_number': bank_account_number = v
+        if k == "amount"        : quantity            = float(v)
       # try to find the bank account
+      line.setQuantity(quantity)
+
       if bank_account_number != None:
         bank_account_object = None
         # We use here the catalog in order to find very quickly
