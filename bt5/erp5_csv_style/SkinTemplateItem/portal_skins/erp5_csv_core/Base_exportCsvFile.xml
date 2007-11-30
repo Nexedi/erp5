@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,64 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def cleanString(str):\n
-  clean_item = str\n
-  if clean_item.find(\'"\') != -1:\n
-    clean_item = clean_item[1:-1].replace(\'""\', \'"\')\n
-  else:\n
-    if clean_item != \'\':\n
-      if clean_item.find(\'.\') != -1:\n
-        clean_item = float(clean_item)\n
-      else:\n
-        clean_item = int(clean_item)\n
-    else:\n
-      clean_item = None\n
-  return clean_item\n
+            <value> <string>request  = context.REQUEST\n
 \n
-def splitCsvLine(str_line):\n
-  unclean_list = []\n
-  pieces_of_line = str_line.split(\',\')\n
+from ZTUtils import make_query\n
+kw = { \'portal_skin\' : \'CSV\',\n
+       \'export_only\' : export_only }\n
 \n
-  p_stack = \'\'\n
-  for p in pieces_of_line:\n
-    if p_stack == \'\':\n
-      p_stack = p\n
-    else:\n
-      p_stack += \',%s\' % p\n
-    if p_stack.count(\'"\') % 2 == 0:\n
-      unclean_list.append(p_stack)\n
-      p_stack = \'\'\n
+redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+form_id, \n
+                             make_query(kw) )\n
 \n
-  return [cleanString(x) for x in unclean_list]\n
-\n
-request  = context.REQUEST\n
-# Read first line (attribute\'s ids)\n
-first_line = import_file.readline()\n
-first_line = first_line.replace(\'\\n\', \'\')\n
-csv_property_list = splitCsvLine(first_line)\n
-# Read second line (attribute\'s titles)\n
-second_line = import_file.readline()\n
-\n
-# Read data lines\n
-method = context.activate\n
-\n
-i = 0\n
-for line in iter(import_file.readline, ""):\n
-  # XXX Currently, if the file is too big, there is too many\n
-  # activities created in only one transaction\n
-  # We need to reduce the number of activities\n
-  # Ex: create 1 activity which manages 100 lines, by created itself 100 \n
-  # others activities\n
-  i += 1\n
-  line = line.replace(\'\\n\', \'\')\n
-  csv_data_list = splitCsvLine(line)\n
-\n
-  attribute_value_dict = dict([(csv_property_list[x], csv_data_list[x]) \\\n
-                               for x in xrange(len(csv_property_list))])\n
-\n
-  method(priority=4, activity="SQLQueue", passive_commit=1).Base_importCsvLine(attribute_value_dict)\n
-redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=Importing+CSV+file.\')\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
+return request[ \'RESPONSE\' ].redirect( redirect_url )\n
 </string> </value>
         </item>
         <item>
@@ -148,7 +97,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, **kw</string> </value>
+            <value> <string>form_id=\'\', export_only=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -168,37 +117,22 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>import_file</string>
-                            <string>kw</string>
-                            <string>cleanString</string>
-                            <string>splitCsvLine</string>
+                            <string>form_id</string>
+                            <string>export_only</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>first_line</string>
-                            <string>csv_property_list</string>
-                            <string>second_line</string>
-                            <string>method</string>
-                            <string>i</string>
-                            <string>_getiter_</string>
-                            <string>iter</string>
-                            <string>line</string>
-                            <string>csv_data_list</string>
-                            <string>dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>xrange</string>
-                            <string>len</string>
-                            <string>x</string>
-                            <string>_getitem_</string>
-                            <string>attribute_value_dict</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>kw</string>
                             <string>redirect_url</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -210,12 +144,15 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string></string>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_importCsvFile</string> </value>
+            <value> <string>Base_exportCsvFile</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

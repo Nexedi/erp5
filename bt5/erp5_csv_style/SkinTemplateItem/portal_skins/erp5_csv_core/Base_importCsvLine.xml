@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,16 +65,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request  = context.REQUEST\n
+            <value> <string>if object_property_dict[\'uid\'] is None:\n
+  object = None\n
+else:\n
+  object = context.portal_catalog.getObject(object_property_dict[\'uid\'])\n
 \n
-from ZTUtils import make_query\n
-kw = { \'portal_skin\' : \'CSV\',\n
-       \'export_only\' : export_only }\n
+if object == None:\n
+  object = context.newContent()\n
 \n
-redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+form_id, \n
-                             make_query(kw) )\n
+# activity doesn\'t support security rights yet...\n
+for key in [\'uid\',\'id\']:\n
+  if object_property_dict.has_key(key):\n
+    object_property_dict.pop(key)\n
 \n
-return request[ \'RESPONSE\' ].redirect( redirect_url )\n
+object.edit(**object_property_dict)\n
 </string> </value>
         </item>
         <item>
@@ -93,8 +94,14 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\', export_only=1</string> </value>
+            <value> <string>object_property_dict</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,22 +121,21 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>export_only</string>
+                            <string>object_property_dict</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>object</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>kw</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -141,15 +147,12 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-                <int>1</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_exportCsvFile</string> </value>
+            <value> <string>Base_importCsvLine</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
