@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -15,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+              </list>
             </value>
         </item>
         <item>
@@ -75,6 +74,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>The currency that is used by this bank account.</string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_currency_list</string> </value>
