@@ -139,6 +139,20 @@ check = transaction.Base_checkCheck(reference=check_number, bank_account=bank_ac
 transaction.edit(aggregate=check.getRelativeUrl())\n
 \n
 context.updateBankingOperation(state_change)\n
+\n
+# Test if the account balance is sufficient.\n
+# We do not need to serialize here because we do not make\n
+# reservation yet\n
+error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), price)\n
+if error[\'error_code\'] == 1:\n
+  msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
+  raise ValidationFailed, (msg,)\n
+elif error[\'error_code\'] == 2:\n
+  msg = Message(domain=\'ui\', message="Bank account is not valid.")\n
+  raise ValidationFailed, (msg,)\n
+elif error[\'error_code\'] != 0:\n
+  msg = Message(domain=\'ui\', message="Unknown error code.")\n
+  raise ValidationFailed, (msg,)\n
 
 
 ]]></string> </value>
@@ -216,6 +230,7 @@ context.updateBankingOperation(state_change)\n
                             <string>check_resource</string>
                             <string>check</string>
                             <string>context</string>
+                            <string>error</string>
                           </tuple>
                         </value>
                     </item>

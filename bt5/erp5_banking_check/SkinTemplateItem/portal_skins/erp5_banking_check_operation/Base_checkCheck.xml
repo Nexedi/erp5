@@ -69,7 +69,8 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 # Check that a check exists for given bank account and reference.\n
-check = context.Base_checkOrCreateCheck(reference=reference, \n
+if check is None:\n
+  check = context.Base_checkOrCreateCheck(reference=reference, \n
                                          bank_account=bank_account,\n
                                          resource=resource)\n
 \n
@@ -109,7 +110,7 @@ return check\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>bank_account, reference, resource</string> </value>
+            <value> <string>bank_account, reference, resource, check=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,7 +130,7 @@ return check\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -138,13 +139,14 @@ return check\n
                             <string>bank_account</string>
                             <string>reference</string>
                             <string>resource</string>
+                            <string>check</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>check</string>
                             <string>bad_simulation_state_dict</string>
                             <string>simulation_state</string>
                             <string>_getitem_</string>
@@ -160,7 +162,9 @@ return check\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Check Consistency</string> </value>
+            <value> <string>Send to Validation</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
