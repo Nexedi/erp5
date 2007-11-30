@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/PreferenceTool_viewChangePasswordForm</string> </value>
+            <value> <string>string:${object_url}/PreferenceTool_viewChangePasswordDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
