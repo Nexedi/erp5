@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.DCWorkflow</string>
-          <string>DCWorkflowDefinition</string>
-        </tuple>
-        <none/>
+        <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,7 +72,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 default workflow</string> </value>
+            <value> <string>Foo Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>
