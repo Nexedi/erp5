@@ -95,6 +95,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string>BankAccountInventory_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
