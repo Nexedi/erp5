@@ -65,7 +65,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Folders allow to store a large number of documents (1,000,000 should not\n
+be a problem).</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -78,7 +79,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>delivery</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -89,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Bank Account Inventory Module</string> </value>
+            <value> <string>Bank Account Inventory Group</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

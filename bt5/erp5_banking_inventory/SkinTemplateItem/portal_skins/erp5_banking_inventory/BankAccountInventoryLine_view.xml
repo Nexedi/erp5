@@ -99,7 +99,6 @@
                     <value>
                       <list>
                         <string>my_resource</string>
-                        <string>my_destination_payment_reference</string>
                         <string>my_quantity</string>
                       </list>
                     </value>

@@ -1,3 +1,4 @@
+Bank Account Inventory Group | view
 Bank Account Inventory Line | view
 Bank Account Inventory Module | view
 Bank Account Inventory | view
@@ -6,4 +7,5 @@ Cash Inventory Group | view
 Cash Inventory Line | view
 Cash Inventory Module | view
 Cash Inventory | fastinput
+Cash Inventory | print
 Cash Inventory | view

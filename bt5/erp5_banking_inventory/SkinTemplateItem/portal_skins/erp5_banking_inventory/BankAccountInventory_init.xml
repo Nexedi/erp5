@@ -65,18 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>default_inventory_calculation_list = ({ "inventory_params" : {"payment_uid" : context.getDestinationPaymentUid(),\n
-                                                                      "group_by_resource" : 1,\n
-                                                                      },\n
-                                        "list_method" : "getMovementList",\n
-                                        "first_level" : ({\'key\' : \'resource_relative_url\',\n
-                                                          \'getter\' : \'getResource\',\n
-                                                          \'setter\' : ("appendToCategoryList", "resource")},\n
-                                                         ),\n
-                                        },\n
-                                      )\n
-\n
-return default_inventory_calculation_list\n
+            <value> <string>context.setSource("account_module/bank_account")\n
+context.setDestination("account_module/bank_account")\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +89,7 @@ return default_inventory_calculation_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,9 +115,9 @@ return default_inventory_calculation_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
-                            <string>default_inventory_calculation_list</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,7 +134,7 @@ return default_inventory_calculation_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankAccountInventory_getDefaultInventoryCalculationList</string> </value>
+            <value> <string>BankAccountInventory_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

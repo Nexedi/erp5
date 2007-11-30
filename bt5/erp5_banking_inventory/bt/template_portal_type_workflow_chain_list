@@ -1,4 +1,7 @@
+Bank Account Inventory Group | edit_workflow
+Bank Account Inventory Line | edit_workflow
 Bank Account Inventory | edit_workflow
 Bank Account Inventory | inventory_workflow
+Cash Inventory Group | edit_workflow
 Cash Inventory | edit_workflow
 Cash Inventory | inventory_workflow

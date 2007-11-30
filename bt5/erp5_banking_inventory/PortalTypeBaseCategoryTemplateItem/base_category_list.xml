@@ -2,13 +2,16 @@
  <portal_type id="Bank Account Inventory">
   <item>destination</item>
  </portal_type>
+ <portal_type id="Bank Account Inventory Group">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Bank Account Inventory Line">
   <item>destination</item>
   <item>price_currency</item>
  </portal_type>
  <portal_type id="Cash Inventory">
   <item>destination</item>
-  <item>destination_section</item>
   <item>price_currency</item>
+  <item>destination_section</item>
  </portal_type>
 </base_category_list>
