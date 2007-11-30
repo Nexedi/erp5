@@ -79,7 +79,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The organisation code for Value Added Tax.</string> </value>
                 </item>
                 <item>
@@ -95,7 +95,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>VAT Code</string> </value>
                 </item>
               </dictionary>

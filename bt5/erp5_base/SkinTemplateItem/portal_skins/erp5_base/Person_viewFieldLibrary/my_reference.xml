@@ -79,7 +79,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The username this person will use to log in the system.\n
 \n
 The system will check that there isn\'t another user with the same username.</string> </value>
@@ -97,7 +97,7 @@ The system will check that there isn\'t another user with the same username.</st
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>User Login</string> </value>
                 </item>
               </dictionary>

@@ -77,7 +77,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>How much this currency is worth in terms of the reference currency.</string> </value>
                 </item>
                 <item>
@@ -89,7 +89,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>precision</string> </key>
+                    <key> <string>precision</string> </key>
                     <value> <int>6</int> </value>
                 </item>
                 <item>
@@ -97,7 +97,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Exchange Rate</string> </value>
                 </item>
               </dictionary>

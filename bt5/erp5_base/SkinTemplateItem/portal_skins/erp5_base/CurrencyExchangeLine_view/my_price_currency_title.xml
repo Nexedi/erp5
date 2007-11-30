@@ -87,15 +87,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>allow_creation</string> </key>
+                    <key> <string>allow_creation</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>allow_jump</string> </key>
+                    <key> <string>allow_jump</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string>price_currency</string> </value>
                 </item>
                 <item>
@@ -103,7 +103,7 @@
                     <value> <string>currency</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The reference currency in which the exchange rate is given.</string> </value>
                 </item>
                 <item>
@@ -115,7 +115,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -125,7 +125,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -140,7 +140,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Reference Currency</string> </value>
                 </item>
               </dictionary>

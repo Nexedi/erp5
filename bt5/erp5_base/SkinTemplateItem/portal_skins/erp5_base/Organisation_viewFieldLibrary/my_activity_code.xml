@@ -79,7 +79,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The activity code of the organisation.\n
 \n
 This code is specific to the local legislation. For instance, in France this is called "Code APE"</string> </value>
@@ -97,7 +97,7 @@ This code is specific to the local legislation. For instance, in France this is 
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Activity Code</string> </value>
                 </item>
               </dictionary>

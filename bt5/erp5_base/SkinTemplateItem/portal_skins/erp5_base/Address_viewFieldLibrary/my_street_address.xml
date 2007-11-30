@@ -61,7 +61,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -83,11 +83,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -100,7 +100,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The street address.\n
 \n
 This usually contains the street name, building number and apartment number (if any).</string> </value>
@@ -124,11 +124,11 @@ This usually contains the street name, building number and apartment number (if 
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Street Address</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>30</int> </value>
                 </item>
               </dictionary>

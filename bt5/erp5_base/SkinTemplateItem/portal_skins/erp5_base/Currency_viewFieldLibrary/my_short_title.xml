@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -85,7 +82,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The symbol used to represent the currency.\n
 \n
 It is for example $, \xc2\xa5, \xe2\x82\xac, \xc2\xa3...</string> </value>
@@ -103,7 +100,7 @@ It is for example $, \xc2\xa5, \xe2\x82\xac, \xc2\xa3...</string> </value>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Currency Symbol</string> </value>
                 </item>
               </dictionary>
