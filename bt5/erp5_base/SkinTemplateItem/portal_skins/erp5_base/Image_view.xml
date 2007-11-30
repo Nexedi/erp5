@@ -87,7 +87,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_reference</string>
                         <string>my_file</string>
                       </list>
                     </value>
@@ -96,7 +95,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>image_view</string>
+                        <string>my_source_reference</string>
+                        <string>my_thumbnail</string>
                       </list>
                     </value>
                 </item>

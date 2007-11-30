@@ -76,7 +76,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>image_view</string>
+                        <string>my_full_sized_image</string>
                       </list>
                     </value>
                 </item>

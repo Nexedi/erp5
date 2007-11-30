@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ImageField</string>
-          <string>ImageField</string>
-        </tuple>
-        <none/>
+        <global name="ImageField" module="Products.ERP5Form.ImageField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>image_view</string> </value>
+            <value> <string>my_full_sized_image</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -261,11 +258,11 @@
                 </item>
                 <item>
                     <key> <string>image_display</string> </key>
-                    <value> <string>thumbnail</string> </value>
+                    <value> <string>medium</string> </value>
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string>jpg</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
@@ -281,7 +278,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Thumbnail</string> </value>
+                    <value> <string>Full Sized Image</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
