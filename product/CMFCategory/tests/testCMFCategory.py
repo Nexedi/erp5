@@ -899,6 +899,21 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals(list(c1.getCategoryChildValueList(
                               local_sort_id='int_index')), [c12, c11, c111])
 
+    # local_sort_id can be a list, in this case document are sorted with the
+    # first sort_id in the list, then the second, and so on.
+
+    # When we use those category properties:
+    #        int_index     title
+    #   c1                   C
+    #   c2                   B
+    #   c3      1            A
+    c1.setIntIndex(None)
+    c2.setIntIndex(None)
+    # and we sort on int_index then title, we should have this order:
+    self.assertEquals(list(bc.getCategoryChildValueList(
+                          local_sort_id=['int_index', 'title'])),
+                      [c2, c1, c12, c11, c111, c3])
+
   
   def test_25_getCategoryChildItemList_base_parameter(self):
     pc = self.getCategoriesTool()
