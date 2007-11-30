@@ -117,6 +117,9 @@ elif price != cash_detail:\n
 elif resource == 1:\n
   msg = Message(domain="ui", message="Insufficient Balance in counter.")\n
   raise ValidationFailed, (msg,)\n
+\n
+\n
+transaction.Base_checkCheck(None, None, None, check=transaction.getAggregateValue())\n
 </string> </value>
         </item>
         <item>
