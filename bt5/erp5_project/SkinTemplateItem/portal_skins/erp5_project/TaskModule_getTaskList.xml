@@ -70,8 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string># Get the Object showed at List Box \n
 return  context.portal_selections.getSelectionValueList(context=context, \n
-                                                                              REQUEST=context.REQUEST, \n
-                                                                              selection_name=\'task_selection\')\n
+                                                        REQUEST=context.REQUEST, \n
+                                                        selection_name=\'task_module_selection\')\n
 </string> </value>
         </item>
         <item>
