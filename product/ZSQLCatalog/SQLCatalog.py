@@ -517,12 +517,6 @@ class ComplexQuery(QueryMixin):
   Used in order to concatenate many queries
   """
   def __init__(self, *args, **kw):
-    # XXX: python weirdness
-    # >>> def foo(a='a', *args):
-    # ...   pass
-    # ...
-    # >>> foo('something', a='test')
-    # TypeError: foo() got multiple values for keyword argument 'a'
     self.query_list = args
     self.operator = kw.pop('operator', 'AND')
     # XXX: What is that used for ?! It's utterly dangerous.
