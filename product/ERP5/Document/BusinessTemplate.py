@@ -779,10 +779,17 @@ class ObjectTemplateItem(BaseTemplateItem):
               connection = o._p_jar
             # import subobjects
             for subobject_id, subobject_data in subobjects_dict.iteritems():
-              if obj._getOb(subobject_id, None) is None:
-                subobject_data.seek(0)
-                subobject = connection.importFile(subobject_data)
-                obj._setObject(subobject_id, subobject)
+              try:
+                if obj._getOb(subobject_id, None) is None:
+                  subobject_data.seek(0)
+                  subobject = connection.importFile(subobject_data)
+                  obj._setObject(subobject_id, subobject)
+              except AttributeError:
+                # XXX this may happen when an object which can contain
+                # sub-objects (e.g. ERP5 Form) has been replaced with
+                # an object which cannot (e.g. External Method).
+                LOG('BusinessTemplate', WARNING,
+                    'could not restore %r in %r' % (subobject_id, obj))
           if obj.meta_type in ('Z SQL Method',):
             fixZSQLMethod(portal, obj)
       # now put original order group
