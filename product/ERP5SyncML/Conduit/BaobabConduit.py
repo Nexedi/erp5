@@ -1075,3 +1075,26 @@ class BaobabConduit(ERP5Conduit):
     """
     ERP5Conduit.newObject(self, object=object, xml=xml, simulate=simulate,
                           reset_local_roles=reset_local_roles, reset_workflow=reset_workflow)
+
+  def getGidFromObject(self, object):
+    """
+    return the Gid composed with the object informations
+    """
+    script = None
+    parent = object.aq_parent
+    while not (parent.id.endswith('_xml') or (parent.id.endswith('_module'))):
+      parent = parent.aq_parent
+    if parent.id == 'bank_account_inventory_xml':
+      script = getattr(object, 'BankAccountInventory_getMasterGid')
+    elif parent.id == 'customers_xml':
+      script = getattr(object, 'Oracle_getGid')
+    elif parent.id == 'cash_inventory_xml':
+      script = getattr(object, 'Inventory_getMasterGid')
+    elif object.getPortalType() == 'Bank Account Inventory Group':
+      script = getattr(object, 'BankAccountInventory_getGid')
+    elif object.getPortalType() == 'Cash Inventory Group':
+      script = getattr(object, 'Inventory_getClientGid')
+    else:
+      script = getattr(object, 'Baobab_getGid')
+    return script()
+
