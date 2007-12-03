@@ -42,7 +42,7 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
     def get_url(*args, **kw):
       return '%s/view?reset:int=1&%s=%s&portal_type=%s' % (
             self.absolute_url(), state_var, doc.getProperty(state_var),
-            doc.getPortalType())
+            doc.getPortalTypeName())
     return get_url
 
   request = self.REQUEST
@@ -58,7 +58,6 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
   
   # If there are checked uids, only use checked uids.
   selection_uid_list = selection_tool.getSelectionCheckedUidsFor(selection_name)
-  # TODO invert mode: calculate in python
   
   document_list = []
   
@@ -89,22 +88,49 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
                             count=brain.count,
                             
                             workflow_id=workflow.getId(),
-                            portal_type=doc.getPortalType(),
+                            portal_type=doc.getPortalTypeName(),
                             state_var=state_var,
                             workflow_state=doc.getProperty(state_var),
                             ))
   
   else:
     getObject = portal.portal_catalog.getObject
+    selected_document_list = [getObject(uid) for uid in selection_uid_list]
+    marker = []
+    # this will be a dictionnary with (portal_type, workflow_id, workflow_state)
+    # as keys, and (count, a random document) as values
     workflow_state_dict = dict()
-    for document in [getObject(uid) for uid in selection_uid_list]:
-      state = document.getProperty(workflow_state)
-      ptype = document.getPortalTypeName()
-      workflow_state_dict[(ptype, state)] = \
-             workflow_state_dict.get((ptype, state), 0) + 1
-  
-      document_list = [Object(uid='new_',
-            translated_portal_type='TODO: count in python')]
+
+    for document in selected_document_list:
+      for state_var in possible_state_list:
+        for workflow in wf_tool.getWorkflowsFor(document):
+          if state_var == workflow.variables.getStateVar():
+            key = (document.getPortalTypeName(), workflow,
+                        document.getProperty(state_var))
+            document_count = workflow_state_dict.get(key, [None, 0])[1]
+            workflow_state_dict[key] = document, document_count + 1
+    
+    
+    counter = 0
+    for (ptype, workflow, state), (doc, document_count) in\
+                workflow_state_dict.items():
+      counter += 1
+      state_var = workflow.variables.getStateVar()
+      translated_workflow_state_title = doc.getProperty(
+                      'translated_%s_title' % state_var)
+      document_list.append(doc.asContext(
+                uid='new_%s' % counter,
+                getListItemUrl=UrlGetter(doc, state_var),
+                workflow_title=N_(workflow.title_or_id()),
+                translated_workflow_state_title=
+                       translated_workflow_state_title,
+                count=document_count,
+                
+                workflow_id=workflow.getId(),
+                portal_type=doc.getPortalTypeName(),
+                state_var=state_var,
+                workflow_state=doc.getProperty(state_var),
+                ))
   
   return document_list
 
@@ -122,11 +148,13 @@ def getWorkflowActionDocumentList(self, **kw):
   searchResults = portal.portal_catalog.searchResults
   wtool = portal.portal_workflow
   stool = portal.portal_selections
-  original_selection_params = \
-    portal.portal_selections.getSelectionParamsFor(selection_name)
+  original_selection_params = stool.getSelectionParamsFor(selection_name)
   original_selection_params.setdefault('sort_on', kw.get('sort_on'))
 
-  # TODO: invert mode
+  selection_uid_list = stool.getSelectionCheckedUidsFor(selection_name)
+
+  if selection_uid_list:
+    original_selection_params['uid'] = selection_uid_list
 
   for listbox_selection in listbox:
     if listbox_selection.get('workflow_action'):
