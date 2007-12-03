@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -206,15 +203,23 @@ if include_root:\n
 relative = utool.getRelativeContentPath(context)\n
 portal = utool.getPortalObject()\n
 \n
-for i in xrange( len( relative ) ):\n
-    now = relative[ :i+1 ]\n
-    obj = portal.restrictedTraverse( now )\n
-    if not now[ -1 ] == \'talkback\':\n
-        result.append( { \'id\'      : now[ -1 ]\n
-                       , \'title\'   : obj.Title()\n
+obj = portal\n
+now = []\n
+module = True\n
+for name in relative:\n
+    obj = obj[name]\n
+    now.append(name)\n
+    if module:\n
+      title = obj.getTranslatedTitle()\n
+    else:\n
+      title = obj.getTitle()\n
+    if not name == \'talkback\':\n
+        result.append( { \'id\'      : name\n
+                       , \'title\'   : title\n
                        , \'url\'     : \'%s/%s/view\' % (portal_url, \'/\'.join(now))\n
                        }\n
                     )\n
+    module = False\n
 \n
 return result\n
 </string> </value>
@@ -283,13 +288,15 @@ return result\n
                             <string>context</string>
                             <string>relative</string>
                             <string>portal</string>
-                            <string>_getiter_</string>
-                            <string>xrange</string>
-                            <string>len</string>
-                            <string>i</string>
-                            <string>_getitem_</string>
-                            <string>now</string>
                             <string>obj</string>
+                            <string>now</string>
+                            <string>True</string>
+                            <string>module</string>
+                            <string>_getiter_</string>
+                            <string>name</string>
+                            <string>_getitem_</string>
+                            <string>title</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>

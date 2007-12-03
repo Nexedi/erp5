@@ -124,8 +124,7 @@ IDEAS:\n
               <div id="status">\n
                 <div id="breadcrumb">\n
                   <tal:block tal:repeat="item here/breadcrumbs">\n
-                    <a tal:condition="python: repeat[\'item\'].index &lt; 2" tal:attributes="href item/url" tal:content="item/title" i18n:translate="" i18n:domain="ui" />\n
-                    <a tal:condition="python: repeat[\'item\'].index &gt;= 2" tal:attributes="href item/url" tal:content="item/title" />\n
+                    <a tal:attributes="href item/url" tal:content="item/title" />\n
                     /\n
                   </tal:block>\n
                 </div>\n
