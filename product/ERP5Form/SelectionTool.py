@@ -88,6 +88,17 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                              , 'manage_configure' )
     manage_configure = DTMLFile( 'SelectionTool_configure', _dtmldir )
 
+    security.declareProtected( ERP5Permissions.ManagePortal
+                             , 'manage_deleteSelection' )
+    def manage_deleteSelection(self, selection_name, REQUEST=None):
+      """
+        Relete a specified selection
+      """
+      self._deleteSelectionFromContainer(selection_name)
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect('%s/%s' %
+                (self.absolute_url(), 'manage_viewSelections'))
+
     # storages of SelectionTool
     storage_list = ('Persistent Mapping', 'Memcached Tool')
 
@@ -1275,6 +1286,14 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         self._getMemcachedContainer().set('%s-%s' % (user_id, selection_name), aq_base(selection))
       else:
         self._getPersistentContainer(user_id)[selection_name] = aq_base(selection)
+
+    def _deleteSelectionFromContainer(self, selection_name):
+      user_id = self._getUserId()
+      if user_id is None: return None
+      if self.isMemcachedUsed():
+        del(self._getMemcachedContainer()['%s-%s' % (user_id, selection_name)])
+      else:
+        del(self._getPersistentContainer(user_id)[selection_name])
 
     def _getSelectionNameListFromContainer(self):
       if self.isMemcachedUsed():
