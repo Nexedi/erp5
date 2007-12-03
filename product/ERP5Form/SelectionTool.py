@@ -70,7 +70,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                          , 'action'     : 'manage_overview'
                          },
                          { 'label'      : 'View Selections'
-                         , 'action'     : 'manage_view_selections'
+                         , 'action'     : 'manage_viewSelections'
                          },
                          { 'label'      : 'Configure'
                          , 'action'     : 'manage_configure'
@@ -81,8 +81,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     manage_overview = DTMLFile( 'explainSelectionTool', _dtmldir )
 
     security.declareProtected( ERP5Permissions.ManagePortal
-                             , 'manage_view_selections' )
-    manage_view_selections = DTMLFile( 'SelectionTool_manageViewSelections', _dtmldir )
+                             , 'manage_viewSelections' )
+    manage_viewSelections = DTMLFile( 'SelectionTool_manageViewSelections', _dtmldir )
 
     security.declareProtected( ERP5Permissions.ManagePortal
                              , 'manage_configure' )
@@ -124,7 +124,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
 
     def isMemcachedUsed(self):
       return self.getStorage() == 'Memcached Tool'
-      
+
     def _redirectToOriginalForm(self, REQUEST=None, form_id=None, dialog_id=None,
                                 query_string=None,
                                 no_reset=False, no_report_depth=False):
@@ -163,7 +163,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if self.isMemcachedUsed():
         return []
-      return self._getSelectionNameListFromContainer()
+      return sorted(self._getSelectionNameListFromContainer())
 
     # backward compatibility
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
@@ -202,7 +202,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if selection_object != None:
         # Set the name so that this selection itself can get its own name.
-        selection_object.edit(name = selection_name)
+        selection_object.edit(name=selection_name)
 
       if self.getSelectionFor(selection_name) != selection_object:
         self._setSelectionToContainer(selection_name, selection_object)
@@ -294,7 +294,6 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
-        #return selection_object.selection_checked_uids
         return selection_object.getCheckedUids()
       return []
 
@@ -519,7 +518,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           o = selection_list[0]
           url = o.absolute_url()
         else:
-          url = REQUEST.getURL()  
+          url = REQUEST.getURL()
       else:
         url = REQUEST.getURL()
       url = '%s/%s?selection_index=%s&selection_name=%s' % (url, form_id, 0, selection_name)
@@ -680,15 +679,15 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         params = selection.getParams()
         zoom_level = request.form.get('zoom_level', None)
         if zoom_level is None:
-          # If zoom_level is not defined try to 
+          # If zoom_level is not defined try to
           # use the last one from params
           zoom_level =  params.get('zoom_level', 1)
 
-        # for keep compatibility with the old zoom        
+        # for keep compatibility with the old zoom
         zoom_start = request.form.get('zoom_start',0)
         if zoom_level <= zoom_start:
           zoom_start = max(int(float(zoom_level)),1) - 1
-          params['zoom_start'] = zoom_start   
+          params['zoom_start'] = zoom_start
 
         # XXX URL currently pass string parameter and not int
         # This is a dirty fix!
@@ -747,7 +746,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         zoom_level =  params.get('zoom_level', 1)
         zoom_variation = + 1
         zoom_begin = request.form.get('zoom_begin', None)
-        
+
         # for keep the compatibility
         zoom_start = params.get('zoom_start',0)
         params['zoom_start'] = int(zoom_start) + 1
@@ -1422,11 +1421,11 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
       report_path = report_path[1:]
     is_empty_level = (root is not None) and \
         (root.objectCount() == 0) and (len(report_path) != 0)
-    if is_empty_level: 
+    if is_empty_level:
       base_category = report_path[0]
 
   tree_list = []
-  if root is None: 
+  if root is None:
     return tree_list
 
   if base_category == 'parent':
@@ -1435,7 +1434,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
       if hasattr(aq_base(root), 'objectValues'):
         # If this is a folder, try to browse the hierarchy
         object_list = root.searchFolder(sort_on=sort_on)
-    else: 
+    else:
       if filtered_portal_types not in [[],None,'']:
         object_list = list_method(portal_type=filtered_portal_types,
                                   sort_on=sort_on)
@@ -1463,7 +1462,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
             tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)]
 
           tree_list += makeTreeList(here, form, new_root_dict, report_path,
-      		    base_category, depth + 1, unfolded_list, form_id, 
+      		    base_category, depth + 1, unfolded_list, form_id,
       		    selection_name, report_depth,
       		    is_report_opened=is_report_opened, sort_on=sort_on)
         else:
