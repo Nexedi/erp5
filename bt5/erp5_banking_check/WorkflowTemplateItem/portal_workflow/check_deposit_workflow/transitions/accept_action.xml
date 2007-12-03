@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>createCheckDepositLine</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

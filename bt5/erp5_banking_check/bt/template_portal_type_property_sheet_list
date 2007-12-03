@@ -9,6 +9,14 @@ Checkbook Usual Cash Transfer | Amount
 Checkbook Usual Cash Transfer | Price
 Checkbook Vault Transfer | Amount
 Checkbook Vault Transfer | Price
+Incoming Check Deposit Line | Amount
+Incoming Check Deposit Line | Arrow
+Incoming Check Deposit Line | Price
+Incoming Check Deposit Line | Task
+Outgoing Check Deposit Line | Amount
+Outgoing Check Deposit Line | Arrow
+Outgoing Check Deposit Line | Price
+Outgoing Check Deposit Line | Task
 Stop Payment | Amount
 Stop Payment | Price
 Stop Payment | StopPayment

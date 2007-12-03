@@ -1,7 +1,8 @@
 <allowed_content_type_list>
  <portal_type id="Check Deposit">
-  <item>Banking Operation Line</item>
   <item>Check Operation Line</item>
+  <item>Outgoing Check Deposit Line</item>
+  <item>Incoming Check Deposit Line</item>
  </portal_type>
  <portal_type id="Check Deposit Module">
   <item>Check Deposit</item>

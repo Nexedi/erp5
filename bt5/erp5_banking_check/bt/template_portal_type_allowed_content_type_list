@@ -1,6 +1,7 @@
 Check Deposit Module | Check Deposit
-Check Deposit | Banking Operation Line
 Check Deposit | Check Operation Line
+Check Deposit | Incoming Check Deposit Line
+Check Deposit | Outgoing Check Deposit Line
 Check Payment Module | Check Payment
 Check Payment | Banking Operation Line
 Check Payment | Cash Delivery Line

@@ -1,4 +1,5 @@
-Check Deposit | Banking Operation Line
+Check Deposit | Incoming Check Deposit Line
+Check Deposit | Outgoing Check Deposit Line
 Check Payment | Banking Operation Line
 Check Payment | Cash Delivery Line
 Checkbook Delivery | Checkbook Delivery Line

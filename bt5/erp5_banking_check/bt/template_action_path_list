@@ -30,6 +30,10 @@ Checkbook Vault Transfer Module | view
 Checkbook Vault Transfer | fastinput
 Checkbook Vault Transfer | print_pdf
 Checkbook Vault Transfer | view
+Incoming Check Deposit Line | print
+Incoming Check Deposit Line | view
+Outgoing Check Deposit Line | print
+Outgoing Check Deposit Line | view
 Stop Payment Module | print
 Stop Payment Module | view
 Stop Payment | accounting_view

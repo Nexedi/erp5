@@ -138,22 +138,6 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
                                              start_date=check_operation_line.getIssueDate(),\n
                                              stop_date=check_operation_line.getStopDate(),\n
                                              check_nb=check_operation_line.getAggregateFreeText())\n
-\n
-#   \n
-#   if \'compte\' in check_operation_line.getAggregateResourceTitle():\n
-#     interval = getIntervalBetweenDates(check_operation_line.getStartDate(), check_operation_line.getStopDate())\n
-#     if interval[\'year\'] >= 3:\n
-#       if interval[\'month\'] > 0 or interval["day"] > 0:\n
-#         msg = Message(domain=\'ui\', message="Check $check is more than 3 years old.",\n
-#                       mapping={"check" : check_operation_line.getAggregateFreeText()})\n
-#         raise ValidationFailed, (msg,)\n
-#   elif \'virement\' in check_operation_line.getAggregateResourceTitle():\n
-#     interval = getIntervalBetweenDates(check_operation_line.getStartDate(), check_operation_line.getStopDate())\n
-#     if interval[\'month\'] >= 3:\n
-#       if interval["day"] > 0:\n
-#         msg = Message(domain=\'ui\', message="Check $check is more than 3 month old.",\n
-#                       mapping={"check" : check_operation_line.getAggregateFreeText()})\n
-#         raise ValidationFailed, (msg,)\n
     \n
   \n
   # Test if the account balance is sufficient.\n
@@ -176,7 +160,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     check_operation_line.edit(aggregate=check.getRelativeUrl())\n
 \n
 if transaction.getSimulationState() == "draft":\n
-  context.updateBankingOperation(state_change)\n
+  context.createCheckDepositLine(state_change)\n
 
 
 ]]></string> </value>
