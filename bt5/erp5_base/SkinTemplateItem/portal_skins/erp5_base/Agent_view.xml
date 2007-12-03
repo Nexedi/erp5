@@ -109,6 +109,7 @@
                       <list>
                         <string>my_agent_title</string>
                         <string>my_start_date</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>

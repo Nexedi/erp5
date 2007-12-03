@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -87,12 +84,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>int_index</string>
+                          <string>Sort Index</string>
                         </tuple>
                         <tuple>
                           <string>agent_title</string>
@@ -118,7 +115,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -129,7 +126,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>agent_selection</string> </value>
                 </item>
                 <item>
@@ -137,7 +134,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Agents</string> </value>
                 </item>
               </dictionary>
