@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Pay</string> </value>
+            <value> <string>Settle</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

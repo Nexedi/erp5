@@ -77,6 +77,17 @@ site = transaction.getSite()\n
 date = transaction.getStartDate()\n
 transaction.Baobab_checkAccountingDateOpen(site=site, date=date)\n
 \n
+# Check we don\'t defined accounting code and account\n
+if transaction.getDestinationSection() not in ("", None) and \\\n
+       transaction.getDestinationPayment() not in ("", None):\n
+  msg = Message(domain=\'ui\', message="You can\'t defined both account and accounting code.")\n
+  raise ValidationFailed, (msg,)\n
+  \n
+if transaction.getDestinationSection() in ("", None) and \\\n
+       transaction.getDestinationPayment() in ("", None):\n
+  msg = Message(domain=\'ui\', message="You must defined an account or and accounting code as destination.")\n
+  raise ValidationFailed, (msg,)\n
+\n
 # Check the amount.\n
 price = transaction.getSourceTotalAssetPrice()\n
 if price is None or price <= 0:\n
@@ -85,12 +96,10 @@ if price is None or price <= 0:\n
 \n
 # Check the bank account.\n
 destination_bank_account = transaction.getDestinationPaymentValue()\n
-if destination_bank_account is None:\n
-  msg = Message(domain=\'ui\', message="Destination bank account not defined.")\n
-  raise ValidationFailed, (msg,)\n
-if destination_bank_account.getValidationState() != \'valid\':\n
-  msg = Message(domain=\'ui\', message=\'Destination bank account is not valid.\')\n
-  raise ValidationFailed, (msg,)\n
+if destination_bank_account is not None:\n
+  if destination_bank_account.getValidationState() != \'valid\':\n
+    msg = Message(domain=\'ui\', message=\'Destination bank account is not valid.\')\n
+    raise ValidationFailed, (msg,)\n
 \n
 # Check if the total price is equal to the total asset price.\n
 if transaction.getTotalPrice(portal_type = \'Check Operation Line\') != transaction.getSourceTotalAssetPrice():\n
@@ -238,9 +247,9 @@ if transaction.getSimulationState() == "draft":\n
                             <string>_getattr_</string>
                             <string>site</string>
                             <string>date</string>
-                            <string>price</string>
                             <string>None</string>
                             <string>msg</string>
+                            <string>price</string>
                             <string>destination_bank_account</string>
                             <string>_getiter_</string>
                             <string>check_operation_line</string>

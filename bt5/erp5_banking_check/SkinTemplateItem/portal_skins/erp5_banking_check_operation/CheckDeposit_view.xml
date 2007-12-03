@@ -109,6 +109,7 @@
                         <string>my_site</string>
                         <string>my_destination_payment_reference</string>
                         <string>my_destination_payment_title</string>
+                        <string>my_destination_section</string>
                         <string>my_source_total_asset_price</string>
                       </list>
                     </value>
