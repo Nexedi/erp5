@@ -95,7 +95,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>Workflow</td>\n
+  <td>Mass Workflow Transition</td>\n
 </tr>\n
 \n
 <!-- we have a listbox with 2 lines, one for 2 Draft Foos, the other for 1\n
