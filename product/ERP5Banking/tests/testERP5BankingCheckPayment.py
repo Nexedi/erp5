@@ -283,8 +283,17 @@ class TestERP5BankingCheckPaymentMixin:
                                          start_date = DateTime().Date(),
                                          source_total_asset_price = 20000.0)
     new_payment._setSource(self.bi_counter.getRelativeUrl())
-    self.workflow_tool.doActionFor(new_payment, 'plan_action', 
-                                   wf_id='check_payment_workflow')
+    if will_fail and insuffisient_balance:
+      message = self.assertWorkflowTransitionFails(new_payment,
+                         'check_payment_workflow','plan_action')
+      LOG('self.assertWorkflowTransitionFails message',0,message)
+      if insuffisient_balance:
+        self.failUnless(message.find('Bank account is not sufficient')>=0)
+      # We will force it in order to test the next step
+      new_payment.plan()
+    else:
+      self.workflow_tool.doActionFor(new_payment, 'plan_action', 
+                                     wf_id='check_payment_workflow')
     self.assertEqual(new_payment.getSimulationState(), 'planned')
     get_transaction().commit()
     if will_fail:
