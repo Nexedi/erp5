@@ -40,6 +40,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_day, number_of_hours_in_year
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 from AccessControl import Unauthorized
@@ -546,13 +547,21 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
-    # XXX results should be cached as volatile attributes
+    tv = getTransactionalVariable(self)
+    cache_key = ('getImplicitSuccessorValueList', self.getPhysicalPath())
+    try:
+      return tv[cache_key]
+    except KeyError:
+      pass
+
     reference_list = [r[1] for r in self.getSearchableReferenceList()]
-    result = self.Base_getImplicitSuccessorValueList(reference_list)
+    successor_list = self.Base_getImplicitSuccessorValueList(reference_list)
     # get unique latest (most relevant) versions
-    result = [r.getObject().getLatestVersionValue() for r in result]
-    result_dict = dict.fromkeys(result)
-    return result_dict.keys()
+    temp_result = [r.getObject().getLatestVersionValue() for r in successor_list]
+    result_dict = dict.fromkeys(temp_result)
+    result = result_dict.keys()
+    tv[cache_key] = result
+    return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitPredecessorValueList')
   def getImplicitPredecessorValueList(self):
@@ -574,7 +583,13 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
-    # XXX results should be cached as volatile attributes
+    tv = getTransactionalVariable(self)
+    cache_key = ('getImplicitPredecessorValueList', self.getPhysicalPath())
+    try:
+      return tv[cache_key]
+    except KeyError:
+      pass
+
     method = self._getTypeBasedMethod('getImplicitPredecessorValueList', 
         fallback_script_id = 'Base_getImplicitPredecessorValueList')
     lst = method()
@@ -585,7 +600,9 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
                         for o in di.keys()
                         if getattr(o, 'getLatestVersionValue', None)])
     ref = self.getReference()
-    return [o for o in di.keys() if o.getReference() != ref] # every object has its own reference in SearchableText
+    result = [o for o in di.keys() if o.getReference() != ref] # every object has its own reference in SearchableText
+    tv[cache_key] = result
+    return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSimilarValueList')
   def getImplicitSimilarValueList(self):
