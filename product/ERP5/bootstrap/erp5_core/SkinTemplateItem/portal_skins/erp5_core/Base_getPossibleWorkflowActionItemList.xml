@@ -65,35 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
+            <value> <string>item_list = [(\'\', \'\')]\n
+for action in context.portal_actions.listFilteredActionsFor(brain).get(\'workflow\', []):\n
+  transition = action.get(\'transition\', None)\n
+  if transition is not None:\n
+    workflow_id = action[\'transition\'].aq_parent.aq_parent.getId()\n
+    if workflow_id == brain.workflow_id:\n
+      item_list.append((action[\'title\'], \'%s/%s\' % (workflow_id, action[\'id\'])))\n
 \n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
-request = context.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-# generate a random tag\n
-tag = \'folder_workflow_action_%s\' % random.randint(0, 1000)\n
-\n
-for parameters in listbox:\n
-  doc = portal.restrictedTraverse(parameters[\'listbox_key\'])\n
-  if same_type(parameters[\'workflow_action\'], \'\'):\n
-    doc.activate(tag=tag).Base_workflowStatusModify(batch=1,\n
-                                        workflow_action=parameters[\'workflow_action\'],\n
-                                        workflow_id=parameters[\'workflow_id\'],\n
-                                        comment=comment)\n
-  else:\n
-    for workflow_action, workflow_id in zip(\n
-             parameters[\'workflow_action\'], parameters[\'workflow_id\']):\n
-      doc.activate(activity=\'SQLQueue\', tag=tag).Base_workflowStatusModify(batch=1,\n
-                                        workflow_action=workflow_action,\n
-                                        workflow_id=workflow_id,\n
-                                        comment=comment)\n
-\n
-context.activate(after_tag=tag).getTitle()\n
-\n
-return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
-                         context.absolute_url(), form_id,\n
-                        N_("Workflow Modification in Progress")))\n
+return item_list\n
 </string> </value>
         </item>
         <item>
@@ -116,7 +96,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox, comment=\'\', form_id=\'view\', **kw</string> </value>
+            <value> <string>brain, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -136,32 +116,22 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>listbox</string>
-                            <string>comment</string>
-                            <string>form_id</string>
+                            <string>brain</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>portal</string>
-                            <string>random</string>
-                            <string>tag</string>
+                            <string>item_list</string>
                             <string>_getiter_</string>
-                            <string>parameters</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>action</string>
+                            <string>None</string>
+                            <string>transition</string>
                             <string>_getitem_</string>
-                            <string>doc</string>
-                            <string>same_type</string>
-                            <string>zip</string>
-                            <string>workflow_action</string>
                             <string>workflow_id</string>
                           </tuple>
                         </value>
@@ -174,19 +144,12 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-                <string>view</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_modifyWorkflowStatus</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value>                 <string></string> </value>
+            <value> <string>Base_getPossibleWorkflowActionItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

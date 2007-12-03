@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Folder_viewWorkflowActionDocumentListDialog</string> </value>
+            <value> <string>Folder_modifyWorkflowStatus</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -62,15 +62,17 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
                 <string>left</string>
-                <string>hidden</string>
+                <string>right</string>
+                <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -83,27 +85,35 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox_portal_type</string>
-                        <string>listbox_state_var</string>
-                        <string>listbox_workflow_action</string>
-                        <string>listbox_workflow_state</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
                         <string>your_comment</string>
-                        <string>your_module_selection_name</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_workflow_action</string>
+                        <string>listbox_workflow_id</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -111,7 +121,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_viewWorkflowActionDialog</string> </value>
+            <value> <string>Folder_viewWorkflowActionDocumentListDialogRenderer</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,11 +129,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_viewWorkflowActionDialog</string> </value>
+            <value> <string>Folder_viewWorkflowActionDocumentListDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
