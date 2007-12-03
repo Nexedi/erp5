@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.CMFCore.utils import getToolByName\n
+\n
+foo_module = context.getPortalObject().foo_module\n
+wtool = getToolByName(context, \'portal_workflow\')\n
+\n
+result = \'OK\'\n
+error_list = []\n
+\n
+def assertEquals(a, b, msg=\'\'):\n
+  if a != b:\n
+    if msg:\n
+      error_list.append(msg)\n
+    else:\n
+      error_list.append(\'%r != %r\' % (a, b))\n
+\n
+foo_2 = foo_module[\'2\']\n
+assertEquals(foo_2.getSimulationState(), \'validated\', \n
+             \'Foo 2 state is %s\' % foo_2.getSimulationState())\n
+if not error_list:\n
+  assertEquals(\n
+   wtool.getInfoFor(foo_2, \'history\', wf_id=\'foo_workflow\')[-2][\'comment\'],\n
+   \'Comment !\')\n
+\n
+foo_3 = foo_module[\'3\']\n
+assertEquals(foo_3.getSimulationState(), \'validated\', \n
+             \'Foo 3 state is %s\' % foo_3.getSimulationState())\n
+if not error_list:\n
+  assertEquals(\n
+   wtool.getInfoFor(foo_3, \'history\', wf_id=\'foo_workflow\')[-2][\'comment\'],\n
+  \'Comment !\')\n
+\n
+if error_list:\n
+  result = \'\'.join(error_list)\n
+\n
+return \'<html><body><span id="result">%s</span></body></html>\' % result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>foo_module</string>
+                            <string>wtool</string>
+                            <string>result</string>
+                            <string>error_list</string>
+                            <string>assertEquals</string>
+                            <string>_getitem_</string>
+                            <string>foo_2</string>
+                            <string>foo_3</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_testFolderWorkflowActionCheckWorkflowHistory</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
