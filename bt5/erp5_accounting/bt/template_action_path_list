@@ -20,21 +20,16 @@ Accounting Transaction Line | view_destination
 Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | balance_sheet_report
 Accounting Transaction Module | bank_accounts_report
-Accounting Transaction Module | cancel_transactions
-Accounting Transaction Module | close_transactions
-Accounting Transaction Module | confirm_transactions
 Accounting Transaction Module | create_related_payments
 Accounting Transaction Module | general_ledger_report
 Accounting Transaction Module | journal_from_selection
 Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
 Accounting Transaction Module | jump_bank_accounts
-Accounting Transaction Module | plan_transactions
 Accounting Transaction Module | profit_and_loss_report
 Accounting Transaction Module | search
 Accounting Transaction Module | third_parties_report
 Accounting Transaction Module | trial_balance_report
-Accounting Transaction Module | validate_transactions
 Accounting Transaction Module | view
 Accounting Transaction | add_accounting_transaction_line
 Accounting Transaction | create_reversal
