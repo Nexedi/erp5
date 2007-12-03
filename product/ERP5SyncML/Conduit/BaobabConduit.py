@@ -250,7 +250,7 @@ class BaobabConduit(ERP5Conduit):
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
-  def constructContent(self, object, object_id, docid, portal_type):
+  def constructContent(self, object, object_id, portal_type):
     """
       This is a redefinition of the original ERP5Conduit.constructContent function to
       create Baobab objects.
@@ -490,7 +490,7 @@ class BaobabConduit(ERP5Conduit):
       subsubobject = subobject.newContent( portal_type = 'Bank Account Inventory Line'
                                    , id          = 'line'
                                           )
-    return subobject
+    return (subobject, 0, 0)
 
 
 
