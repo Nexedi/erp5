@@ -21,19 +21,16 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validated</string> </value>
+            <value> <string>invalidated</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Invalidated</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>invalidate</string>
-                <string>invalidate_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Invalidate Action</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=invalidate_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>delete</string> </value>
+            <value> <string>invalidate</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delete_action</string> </value>
+            <value> <string>invalidate_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
