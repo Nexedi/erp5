@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.ERP5Type</string>
-          <string>ERP5TypeInformation</string>
-        </tuple>
-        <none/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -87,7 +84,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>module</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -102,6 +101,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
