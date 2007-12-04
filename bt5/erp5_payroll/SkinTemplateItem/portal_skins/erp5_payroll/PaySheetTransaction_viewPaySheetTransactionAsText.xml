@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\'\'\'\n
+  this script is just made to have a simple visual render of the paysheet\n
+  calculation\n
+\'\'\'\n
+\n
+line_dict_list = context.PaySheetTransaction_getLineListAsDict()\n
+\n
+title_list = [\'Designation\\t\\t\', \'Base\', \'Employer Rate\', \'Employer Share\', \n
+    \'Employee Rate\', \'Employee Share\']\n
+\n
+print \'\\t\\t\'.join(title_list)\n
+print \'\'\n
+\n
+def rightPad(string, length):\n
+  string=str(string)\n
+  if len(string)>length:\n
+    return string[:length]\n
+  return string + \' \' * (length - len(string))\n
+\n
+for line in line_dict_list:\n
+  string_to_display = []\n
+  string_to_display.append(rightPad(line[\'title\'], 40))\n
+  string_to_display.append(rightPad(line[\'base\'], 16))\n
+\n
+  if line.has_key(\'employer_share_amount\'):\n
+    string_to_display.append(rightPad(str(line[\'employer_share_rate\']), 24))\n
+    string_to_display.append(rightPad(str(line[\'employer_share_amount\']), 24))\n
+  else:\n
+    string_to_display.append(rightPad(\' \', 24))\n
+    string_to_display.append(rightPad(\' \', 24))\n
+\n
+  if line.has_key(\'employee_share_amount\'):\n
+    string_to_display.append(rightPad(str(line[\'employee_share_rate\']), 24))\n
+    string_to_display.append(rightPad(str(line[\'employee_share_amount\']), 24))\n
+  else:\n
+    string_to_display.append(rightPad(\' \', 24))\n
+    string_to_display.append(rightPad(\' \', 24))\n
+\n
+  print \'\'.join(string_to_display)\n
+\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>line_dict_list</string>
+                            <string>title_list</string>
+                            <string>rightPad</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>string_to_display</string>
+                            <string>_getitem_</string>
+                            <string>str</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_viewPaySheetTransactionAsText</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\'\'\'\n
+  return a list of slice items\n
+\'\'\'\n
+\n
+def framing(cell, name):\n
+  \'\'\'\n
+    this function return a string corresponding to the framing of the slice \n
+    with the min and max value of the cell.\n
+    e.g. : \'2682.0 <= Tranche B < 10728\'\n
+  \'\'\'\n
+  if cell is None:\n
+    raise "PaySheetModelLine_asCellRange Error", "cell is None"\n
+  return \'%s <= %s < %s\' % (str(cell.getQuantityRangeMin()), name,\n
+      str(cell.getQuantityRangeMax()))\n
+\n
+\n
+N_ = context.Base_translateString\n
+resource = context.getResourceValue()\n
+cell_range = []\n
+tax_category_title = N_(\'(Amount or Percent)\')\n
+\n
+if matrixbox :\n
+  if resource is not None:\n
+    base_category_list = resource.getVariationBaseCategoryList()\n
+    base_category_list.reverse()\n
+    for base_category in base_category_list:\n
+      category_cell_range = []\n
+      category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,))\n
+      for category_item in category_item_list:\n
+        if base_category == \'salary_range\':\n
+          category_cell_range.append((category_item[1],\\\n
+              framing(context.getParentValue().getCell(category_item[1]), \n
+                      category_item[0])))\n
+        elif base_category == \'tax_category\':\n
+          category_cell_range.append((category_item[1], \n
+            \' \'.join((category_item[0], tax_category_title))))\n
+        else:\n
+          raise "PaySheetModelLine_asCellRange Error", "the two categories "\\\n
+                "must could be only tax_category and salary_range"\n
+      cell_range.append(category_cell_range)\n
+\n
+    cell_range = filter(lambda x: x != [], cell_range )\n
+  return cell_range\n
+else:\n
+  list_of_category_list = []\n
+  variation_base_category_list = context.getVariationBaseCategoryList()\n
+  variation_base_category_list.reverse()\n
+  for base_category in variation_base_category_list:\n
+    list_of_category_list.append(\\\n
+        context.getVariationCategoryList(base_category_list=base_category))\n
+  return list_of_category_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, base_id=\'movement\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>base_id</string>
+                            <string>kw</string>
+                            <string>framing</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>N_</string>
+                            <string>resource</string>
+                            <string>cell_range</string>
+                            <string>tax_category_title</string>
+                            <string>None</string>
+                            <string>base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
+                            <string>category_cell_range</string>
+                            <string>category_item_list</string>
+                            <string>category_item</string>
+                            <string>_getitem_</string>
+                            <string>filter</string>
+                            <string>list_of_category_list</string>
+                            <string>variation_base_category_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <string>movement</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetModelLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

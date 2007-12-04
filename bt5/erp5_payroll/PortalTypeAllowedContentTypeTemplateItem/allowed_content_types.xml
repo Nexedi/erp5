@@ -1,0 +1,34 @@
+<allowed_content_type_list>
+ <portal_type id="Accounting Transaction Module">
+  <item>Pay Sheet Transaction</item>
+ </portal_type>
+ <portal_type id="Annotation Line">
+  <item>Annotation Line</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Line">
+  <item>Pay Sheet Cell</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Model">
+  <item>Pay Sheet Model Ratio Line</item>
+  <item>Annotation Line</item>
+  <item>Pay Sheet Model Slice</item>
+  <item>Pay Sheet Model Line</item>
+  <item>Payment Condition</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Model Line">
+  <item>Pay Sheet Cell</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Model Module">
+  <item>Pay Sheet Model</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Transaction">
+  <item>Pay Sheet Transaction Line</item>
+  <item>Pay Sheet Line</item>
+  <item>Annotation Line</item>
+  <item>Pay Sheet Model Ratio Line</item>
+  <item>Payment Condition</item>
+ </portal_type>
+ <portal_type id="Payroll Service Module">
+  <item>Payroll Service</item>
+ </portal_type>
+</allowed_content_type_list>

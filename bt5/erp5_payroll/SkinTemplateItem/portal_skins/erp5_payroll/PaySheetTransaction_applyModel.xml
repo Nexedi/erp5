@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>N_ = context.Base_translateString\n
+paysheet = context\n
+\n
+model = paysheet.getSpecialiseValue()\n
+\n
+if model is None:\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+               , \'portal_status_message=\' + N_(\'No Pay Sheet Model.\'))\n
+else:\n
+\n
+  # set source and destination from the model if there is no value yet defined\n
+  if paysheet.getDestinationSectionTitle() is None:\n
+    paysheet.setDestinationSectionValue(model.getDestinationSectionValue())\n
+  if paysheet.getSourceSectionTitle() is None:\n
+    paysheet.setSourceSectionValue(model.getSourceSectionValue())\n
+\n
+  if paysheet.getPriceCurrency() is None:\n
+    paysheet.setPriceCurrencyValue(model.getPriceCurrencyValue())\n
+\n
+  # copy model sub objects into paysheet\n
+  portal_type_list = [\'Annotation Line\', \'Payment Condition\', \n
+                      \'Pay Sheet Model Ratio Line\']\n
+  paysheet.PaySheetTransaction_copySubObject(portal_type_list)\n
+\n
+\n
+  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
+                 \'portal_status_message=\'+ N_(\'Pay Sheet Transaction updated.\'))\n
+\n
+if batch_mode:\n
+  return None\n
+else:\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, batch_mode=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>batch_mode</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>N_</string>
+                            <string>paysheet</string>
+                            <string>model</string>
+                            <string>None</string>
+                            <string>redirect_url</string>
+                            <string>portal_type_list</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_applyModel</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

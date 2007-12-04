@@ -1,0 +1,8 @@
+payroll_service_module/total_employee_contributions
+portal_categories/base_amount/base_salary
+portal_categories/base_amount/bonus
+portal_categories/base_amount/deductible_tax
+portal_categories/base_amount/gross_salary
+portal_categories/base_amount/non_deductible_tax
+portal_categories/tax_category/employee_share
+portal_categories/tax_category/employer_share

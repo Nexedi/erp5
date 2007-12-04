@@ -1,0 +1,11 @@
+Pay Sheet Cell | edit_workflow
+Pay Sheet Line | edit_workflow
+Pay Sheet Model Line | edit_workflow
+Pay Sheet Model | edit_workflow
+Pay Sheet Model | validation_workflow
+Pay Sheet Transaction Line | edit_workflow
+Pay Sheet Transaction | accounting_workflow
+Pay Sheet Transaction | edit_workflow
+Pay Sheet Transaction | invoice_causality_workflow
+Payroll Service | edit_workflow
+Payroll Service | validation_workflow

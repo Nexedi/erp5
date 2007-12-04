@@ -1,0 +1,16 @@
+Accounting Transaction Module | Pay Sheet Transaction
+Annotation Line | Annotation Line
+Pay Sheet Line | Pay Sheet Cell
+Pay Sheet Model Line | Pay Sheet Cell
+Pay Sheet Model Module | Pay Sheet Model
+Pay Sheet Model | Annotation Line
+Pay Sheet Model | Pay Sheet Model Line
+Pay Sheet Model | Pay Sheet Model Ratio Line
+Pay Sheet Model | Pay Sheet Model Slice
+Pay Sheet Model | Payment Condition
+Pay Sheet Transaction | Annotation Line
+Pay Sheet Transaction | Pay Sheet Line
+Pay Sheet Transaction | Pay Sheet Model Ratio Line
+Pay Sheet Transaction | Pay Sheet Transaction Line
+Pay Sheet Transaction | Payment Condition
+Payroll Service Module | Payroll Service

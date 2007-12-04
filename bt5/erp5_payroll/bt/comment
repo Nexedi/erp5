@@ -1,0 +1,1 @@
+It's a lifting of erp5_payroll bt because actually this BT is too french-accounting centric. This new bt try to corrects some bugs and use a Pay Sheet Transaction Model to generate a lot of paysheets with the same rules and to change the slice value (and others values) easily.

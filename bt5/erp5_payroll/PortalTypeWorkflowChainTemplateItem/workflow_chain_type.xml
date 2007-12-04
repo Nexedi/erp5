@@ -1,0 +1,30 @@
+<workflow_chain>
+ <chain>
+  <type>Pay Sheet Cell</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Pay Sheet Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Pay Sheet Model</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Pay Sheet Model Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Pay Sheet Transaction</type>
+  <workflow>invoice_causality_workflow, edit_workflow, accounting_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Pay Sheet Transaction Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Payroll Service</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>

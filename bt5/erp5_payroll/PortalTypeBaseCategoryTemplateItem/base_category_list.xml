@@ -1,0 +1,27 @@
+<base_category_list>
+ <portal_type id="Pay Sheet Cell">
+  <item>product_line</item>
+  <item>tax_category</item>
+  <item>salary_range</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Line">
+  <item>salary_range</item>
+  <item>base_amount</item>
+  <item>tax_category</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Model Slice">
+  <item>salary_range</item>
+  <item>product_line</item>
+  <item>tax_category</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Transaction">
+  <item>quantity_unit</item>
+  <item>specialise</item>
+ </portal_type>
+ <portal_type id="Payroll Service">
+  <item>base_amount</item>
+ </portal_type>
+ <portal_type id="Payroll Service Module">
+  <item>role</item>
+ </portal_type>
+</base_category_list>
