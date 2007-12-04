@@ -107,6 +107,7 @@ for paysheet_line in paysheet_line_list:\n
                     base_name=base_name,\n
                     base=base,\n
                     base_participation_list=base_participation_list,\n
+                    payroll_service=payroll_service.getId(),\n
                     **share_dict))\n
 \n
 if kw.has_key(\'sort_on\'):\n

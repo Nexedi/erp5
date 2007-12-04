@@ -92,7 +92,7 @@
                     <value> <string>BasePdm_FieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>80</int> </value>
                 </item>
               </dictionary>

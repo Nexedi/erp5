@@ -38,10 +38,22 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_append_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>acquisition_copy_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>acquisition_object_id</string> </key>
@@ -52,6 +64,10 @@
         <item>
             <key> <string>acquisition_portal_type</string> </key>
             <value> <string>python: []</string> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_sync_value</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -65,22 +81,98 @@
             </value>
         </item>
         <item>
+            <key> <string>category_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>fallback_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>base_amount</string> </value>
+        </item>
+        <item>
+            <key> <string>id_generator</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value>                 <string>base_amount</string> </value>
+            <key> <string>id_group</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
             <value> <string>1</string> </value>
         </item>
         <item>
+            <key> <string>membership_criterion_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>multimembership_criterion_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Base Category</string> </value>
+        </item>
+        <item>
+            <key> <string>read_permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>rid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -88,6 +180,12 @@
         </item>
         <item>
             <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>write_permission</string> </key>
             <value>
               <none/>
             </value>

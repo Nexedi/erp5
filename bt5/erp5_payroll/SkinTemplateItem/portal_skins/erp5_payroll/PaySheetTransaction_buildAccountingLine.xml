@@ -65,64 +65,54 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  this script get all paysheet lines in the int_index order with all the amounts\n
-  displayed in the lisbox\n
-\'\'\'\n
-import pprint\n
-precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+PRIORITY = 1\n
 \n
-line_list = context.PaySheetTransaction_getMovementList(sort_on=[(\'int_index\',\n
-                                                                  \'ascending\')])\n
+pay_sheet = context\n
 \n
-line_dict_list = []\n
-for line in line_list: \n
-  if line.getResourceId() == \'total_employee_contributions\':\n
-    continue\n
-  line_dict = {\n
-      \'group\'  : line.getSourceSectionTitle(),\n
-      \'title\'  : line.getTitle(),\n
-      \'payroll_service\' : getattr(line, \'payroll_service\', None)\n
-      }\n
+# Delete Accounting Lines\n
+for accounting_line in pay_sheet.objectValues(portal_type = [\'Pay Sheet Transaction Line\']):\n
+  pay_sheet.deleteContent(accounting_line.getId())\n
 \n
-  line_dict[\'slice\'] =  getattr(line, \'slice\', None)\n
-  #line_dict[\'title\'] = \'%s (%s)\' % (line_dict[\'title\'], line_dict[\'slice\'])\n
-  line_dict[\'base_participation_list\'] = getattr(line, \n
-                                              \'base_participation_list\', None)\n
+applied_rule = context.getCausalityRelatedValue()\n
+# Delete the applied rule if present\n
+if applied_rule != None:\n
+  simulation_tool = context.portal_simulation\n
+  ar_id  = applied_rule.getId()\n
+  ar_url = applied_rule.absolute_url()\n
+  simulation_tool.deleteObject(ar_id)\n
 \n
-  line_dict[\'base_name\'] =  getattr(line, \'base_name\', None)\n
+  for applied_rule in simulation_tool.objectValues():\n
+    if ar_id == applied_rule.getId():\n
+      return "Applied rule <a href=\'%s\'>%s</a> of <a href=\'\'>%s</a> paysheet not deleted" % (ar_url, ar_id, pay_sheet.absolute_url(), pay_sheet.getPath())\n
 \n
-  line_dict[\'base\'] =  getattr(line, \'base\', None)\n
-  if line_dict[\'base\'] != None:\n
-    line_dict[\'base\'] = round(line_dict[\'base\'], precision)\n
+previous_tag = pay_sheet.getPath() + \'_firstUpdateAppliedRule\'\n
+expand_tag   = pay_sheet.getPath() + \'_expand\'\n
 \n
-  line_dict[\'employer_share_rate\'] =  getattr(line, \'employer_share_rate\', None)\n
-  if line_dict[\'employer_share_rate\'] != None:\n
-    line_dict[\'employer_share_rate\'] = \\\n
-        str(line_dict[\'employer_share_rate\']*100)+\'%\'\n
-  line_dict[\'employer_share_amount\'] =  getattr(line, \'employer_share_amount\', \n
-                                                None)\n
+activate_kw = { \'tag\'     : expand_tag\n
+              , \'priority\': PRIORITY\n
+              }\n
 \n
-  if line_dict[\'employer_share_amount\'] != None:\n
-    line_dict[\'employer_share_amount\'] = \\\n
-        round(line_dict[\'employer_share_amount\'], precision)\n
-  line_dict[\'employee_share_rate\'] =  getattr(line, \'employee_share_rate\', None)\n
+pay_sheet.activate( tag       = expand_tag\n
+                  , after_tag = previous_tag\n
+                  , priority  = PRIORITY\n
+                  ).updateAppliedRule( rule_id     = \'default_invoice_rule\'\n
+                                     , activate_kw = activate_kw\n
+                                     )\n
 \n
-  if line_dict[\'employee_share_rate\'] != None:\n
-    line_dict[\'employee_share_rate\'] = \\\n
-        str(line_dict[\'employee_share_rate\']*100)+\'%\'\n
-  line_dict[\'employee_share_amount\'] =  getattr(line, \'employee_share_amount\', \n
-                                                None)\n
+builder = pay_sheet.portal_deliveries.pay_sheet_transaction_builder\n
+builder.activate( activity  = \'SQLQueue\'\n
+                , after_tag = expand_tag\n
+                , priority  = PRIORITY\n
+                ).build( explanation_uid = pay_sheet.getUid()\n
+                       , activate_kw     = activate_kw\n
+                       )\n
 \n
-  if line_dict[\'employee_share_amount\'] != None:\n
-    line_dict[\'employee_share_amount\'] = \\\n
-        round(line_dict[\'employee_share_amount\'], precision)\n
-\n
-  line_dict_list.append(line_dict)\n
-\n
-#return pprint.pformat(line_dict_list)\n
-return line_dict_list\n
-</string> </value>
+return None\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -164,21 +154,21 @@ return line_dict_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>pprint</string>
-                            <string>_getattr_</string>
+                            <string>PRIORITY</string>
                             <string>context</string>
-                            <string>precision</string>
-                            <string>line_list</string>
-                            <string>line_dict_list</string>
+                            <string>pay_sheet</string>
                             <string>_getiter_</string>
-                            <string>line</string>
-                            <string>getattr</string>
+                            <string>_getattr_</string>
+                            <string>accounting_line</string>
+                            <string>applied_rule</string>
                             <string>None</string>
-                            <string>line_dict</string>
-                            <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>round</string>
-                            <string>str</string>
+                            <string>simulation_tool</string>
+                            <string>ar_id</string>
+                            <string>ar_url</string>
+                            <string>previous_tag</string>
+                            <string>expand_tag</string>
+                            <string>activate_kw</string>
+                            <string>builder</string>
                           </tuple>
                         </value>
                     </item>
@@ -195,7 +185,7 @@ return line_dict_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_getLineListAsDict</string> </value>
+            <value> <string>PaySheetTransaction_buildAccountingLine</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

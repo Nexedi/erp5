@@ -101,7 +101,7 @@
   An ERP5 Binder document class will eventually be defined\n
   in order to implement a binder of documents which can itself\n
   be categorized.\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
