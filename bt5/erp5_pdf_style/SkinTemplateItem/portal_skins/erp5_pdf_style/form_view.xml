@@ -84,6 +84,7 @@
                                    tal:content="python: str(item)"\n
                                    tal:condition="not:item_list"/>\n
                             <para  style="TableStandard"\n
+                                   tal:on-error="string: ${value} (???)"\n
                                    tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
                                    tal:condition="item_list" />\n
                         </tal:block>\n
@@ -93,6 +94,7 @@
                                tal:content="python: str(value)"\n
                                tal:condition="not:item_list" />\n
                             <para  style="TableStandard"\n
+                                   tal:on-error="string: ${value} (???)"\n
                                    tal:content="python: [i[0].replace(\'&amp;nbsp;\', \'\') for i in item_list if i[1] == value][0]"\n
                                    tal:condition="item_list" />\n
                       </tal:block>\n
