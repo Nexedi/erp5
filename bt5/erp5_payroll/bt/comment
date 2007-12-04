@@ -1,3 +1,0 @@
-Actually this BT is too french-accounting centric. It must evolve to a general framework to handle pay sheets of many different countries in the same instance of ERP5. Each piece of information and code related to local laws will be moved to other BTs (erp5_payroll_l10n_something).
-
-Note: this BT still depend on erp5_trade because Payroll Service Module was a fork of Service Module.
