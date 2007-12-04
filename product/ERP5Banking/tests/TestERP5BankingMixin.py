@@ -798,12 +798,12 @@ class TestERP5BankingMixin:
                                                                                 site_value=self.testsite,
                                                                                 stop_date=DateTime().Date())
 
-    account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
-    inventory = self.bank_account_inventory.newContent(id=account_inventory_line_id,
+
+    inventory = self.bank_account_inventory.newContent(id=bank_account.getReference(),
                                            portal_type='Bank Account Inventory',
                                            destination_payment_value=bank_account,)
-
-    inventory_line = inventory.newContent(id='line',
+    account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
+    inventory_line = inventory.newContent(id=account_inventory_line_id,
                                           portal_type='Bank Account Inventory Line',
                                           resource_value=currency,
                                           quantity=amount)
