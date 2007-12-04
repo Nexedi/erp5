@@ -517,10 +517,18 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       LOG('ERP5/Document/Document.getSearchableReferenceList', 0,
           'Document regular expression must be set in portal preferences')
       return ()
-    res = rx_search.finditer(text)
-    res = [(r.group(), r.groupdict()) for r in res]
-    return res
-    
+    result = []
+    tmp = {}
+    for match in rx_search.finditer(text):
+      group = match.group()
+      group_item_list = match.groupdict().items()
+      group_item_list.sort()
+      key = (group, tuple(group_item_list))
+      tmp[key] = None
+    for group, group_item_tuple in tmp.keys():
+      result.append((group, dict(group_item_tuple)))
+    return result
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSuccessorValueList')
   def getImplicitSuccessorValueList(self):
     """
