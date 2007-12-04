@@ -70,6 +70,7 @@ portal_actions | category_tool
 portal_actions | create_module
 portal_properties | history
 portal_properties | list_ui
+portal_properties | mass_workflow
 portal_properties | metadata
 portal_properties | module_view
 portal_properties | search
