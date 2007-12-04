@@ -3115,6 +3115,9 @@ class Base( CopyContainer,
   def updateRoleMappingsFor(self, wf_id, **kw):
     """
     Update security policy according to workflow settings given by wf_id
+      
+    There's no check that the document is actually chained to the workflow,
+    it's caller responsability to perform this check.
     """
     workflow = self.portal_workflow.getWorkflowById(wf_id)
     if workflow is not None:
