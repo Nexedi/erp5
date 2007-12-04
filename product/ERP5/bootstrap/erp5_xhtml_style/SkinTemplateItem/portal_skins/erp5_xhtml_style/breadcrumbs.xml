@@ -210,9 +210,12 @@ for name in relative:\n
     obj = obj[name]\n
     now.append(name)\n
     if module:\n
-      title = obj.getTranslatedTitle()\n
+      try:\n
+        title = obj.getTranslatedTitleOrId()\n
+      except AttributeError:\n
+        title = obj.Title()\n
     else:\n
-      title = obj.getTitle()\n
+      title = obj.Title()\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
@@ -296,6 +299,7 @@ return result\n
                             <string>name</string>
                             <string>_getitem_</string>
                             <string>title</string>
+                            <string>AttributeError</string>
                             <string>False</string>
                           </tuple>
                         </value>
