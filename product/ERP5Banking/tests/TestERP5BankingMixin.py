@@ -793,19 +793,21 @@ class TestERP5BankingMixin:
       return bank_account
     # we need to put some money on this bank account
     if not hasattr(self, 'bank_account_inventory'):
-      self.bank_account_inventory = self.bank_account_inventory_module.newContent(id='account_inventory',
-                                                                                portal_type='Bank Account Inventory',
-                                                                                source=None,
+      self.bank_account_inventory = self.bank_account_inventory_module.newContent(id='account_inventory_group',
+                                                                                portal_type='Bank Account Inventory Group',
                                                                                 site_value=self.testsite,
-                                                                                destination = "account_module/bank_account",
                                                                                 stop_date=DateTime().Date())
 
     account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
     inventory = self.bank_account_inventory.newContent(id=account_inventory_line_id,
-                                           portal_type='Bank Account Inventory Line',
-                                           resource_value=currency,
-                                           destination_payment_value=bank_account,
-                                           inventory=amount)
+                                           portal_type='Bank Account Inventory',
+                                           destination_payment_value=bank_account,)
+
+    inventory_line = inventory.newContent(id='line',
+                                          portal_type='Bank Account Inventory Line',
+                                          resource_value=currency,
+                                          quantity=amount)
+
 
     # deliver the inventory
     if inventory.getSimulationState()!='delivered':
@@ -980,7 +982,6 @@ class TestERP5BankingMixin:
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
-                                                               source=None,
                                                                destination_value=destination,
                                                                start_date=start_date)
       setattr(self, inventory_group_id, inventory_group)
