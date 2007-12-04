@@ -85,7 +85,7 @@
                       tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
                 <tal:block tal:repeat="action dialog_actions">\n
                   <option tal:attributes="value action/url;\n
-                          selected python: action is current_action and \'selected\' or None"\n
+                          selected python: action == current_action and \'selected\' or None"\n
                           tal:content="action/name"\n
                           i18n:translate="" i18n:domain="ui"></option>\n
                 </tal:block>\n
