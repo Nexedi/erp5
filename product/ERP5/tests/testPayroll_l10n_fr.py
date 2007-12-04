@@ -60,7 +60,7 @@ class TestPayroll_l10n_fr(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-        'erp5_payroll_ng', 'erp5_payroll_l10n_fr')
+        'erp5_payroll', 'erp5_payroll_l10n_fr')
 
 
   def test_01_btInstallation(self, quiet=0, run=run_all_test):

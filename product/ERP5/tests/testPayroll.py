@@ -44,6 +44,7 @@ TODO:
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
+from DateTime import DateTime
 from Acquisition import aq_parent
 
 class TestPayrollMixin(ERP5TypeTestCase):
@@ -246,13 +247,12 @@ class TestPayrollMixin(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', 
-        'erp5_payroll_ng',)
+        'erp5_payroll',)
 
   def createPerson(self, id='one', title='One', 
       career_subordination_value=None, career_grade=None, **kw):
     """
       Create some Pesons so that we have something to feed.
-      (we create only one because we'd have sorting problems)
     """
     person_module = self.portal.getDefaultModule(portal_type=\
                                                  self.person_portal_type)
@@ -455,7 +455,9 @@ class TestPayrollMixin(ERP5TypeTestCase):
         title                     = id,
         specialise_value          = model,
         source_section_value      = model.getSourceSectionValue(),
-        destination_section_value = model.getDestinationSectionValue(),)
+        destination_section_value = model.getDestinationSectionValue(),
+        start_date                = DateTime(2008, 1, 1),
+        stop_date                 = DateTime(2008, 1, 31),)
     paysheet.setPriceCurrency('currency_module/EUR')
     get_transaction().commit()
     paysheet.reindexObject()
@@ -795,7 +797,6 @@ class TestPayroll(TestPayrollMixin):
 
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
-
 
 import unittest
 def test_suite():
