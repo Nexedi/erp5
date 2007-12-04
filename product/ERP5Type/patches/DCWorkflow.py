@@ -511,18 +511,20 @@ def updateRoleMappings(self, REQUEST=None):
         portal_type_list.append(tid)
     elif include_default == 1:
       portal_type_list.append(tid)
-
-  object_list = self.portal_catalog(portal_type=portal_type_list, limit=None)
-  object_list_len = len(object_list)
-  portal_activities = self.portal_activities
-  object_path_list = [x.path for x in object_list]
-  for i in xrange(0, object_list_len, ACTIVITY_GROUPING_COUNT):
-    current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
-    portal_activities.activate(activity='SQLQueue',
-                                priority=3)\
-          .callMethodOnObjectList(current_path_list,
-                                  'updateRoleMappingsFor',
-                                  wf_id = self.getId())
+  if portal_type_list:
+    object_list = self.portal_catalog(portal_type=portal_type_list, limit=None)
+    object_list_len = len(object_list)
+    portal_activities = self.portal_activities
+    object_path_list = [x.path for x in object_list]
+    for i in xrange(0, object_list_len, ACTIVITY_GROUPING_COUNT):
+      current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
+      portal_activities.activate(activity='SQLQueue',
+                                  priority=3)\
+            .callMethodOnObjectList(current_path_list,
+                                    'updateRoleMappingsFor',
+                                    wf_id = self.getId())
+  else:
+    object_list_len = 0
 
   if REQUEST is not None:
     return self.manage_properties(REQUEST,
