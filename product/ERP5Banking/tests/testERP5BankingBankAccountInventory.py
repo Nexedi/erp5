@@ -108,26 +108,45 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(
       payment=self.site.getRelativeUrl()), 0.0)
 
+  def stepCreateBankAccountInventoryGroup(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create a cash inventory document and check it
+    """
+    inventory_group = self.inventory_module.newContent(id='inventory_group_1',
+                                                 portal_type='Bank Account Inventory Group',
+                                                 site_value=self.site,
+                                                 start_date = DateTime())
+    self.assertNotEqual(inventory_group, None)
+    self.stepTic()
+
+    self.assertEqual(len(self.inventory_module.objectValues()), 1)
+    self.inventory_group = getattr(self.inventory_module, 'inventory_group_1')
+    self.assertEqual(self.inventory_group.getPortalType(), 'Bank Account Inventory Group')
+    self.assertEqual(self.inventory_group.getSource(), None)
+    self.assertEqual(self.inventory_group.getDestination(), None)
+    self.assertEqual(self.inventory_group.getSite(), 'testsite/paris')
+    self.assertEqual(self.inventory_group.getSourcePayment(), None)
+    self.assertEqual(self.inventory_group.getDestinationPayment(), None)
+
   def stepCreateBankAccountInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash inventory document and check it
     """
-    inventory = self.inventory_module.newContent(id='inventory_1',
-                                                      portal_type='Bank Account Inventory',
-                                                      source_value=None,
-                                                      destination_value=self.site,
-                                                      start_date = DateTime())
-    self.assertNotEqual(inventory, None)
-    
-    self.stepTic()
 
-    self.assertEqual(len(self.inventory_module.objectValues()), 1)
-    self.inventory = getattr(self.inventory_module, 'inventory_1')
+    inventory = self.inventory_group.newContent(id='inventory_1',
+                                                portal_type='Bank Account Inventory',
+                                                destination_payment_value=self.bank_account_1,
+                                                )
+    self.assertNotEqual(inventory, None)
+    self.stepTic()
+    self.assertEqual(len(self.inventory_group.objectValues()), 1)
+    self.inventory = getattr(self.inventory_group, 'inventory_1')
     self.assertEqual(self.inventory.getPortalType(), 'Bank Account Inventory')
-    self.assertEqual(self.inventory.getSource(), None)
-    self.assertEqual(self.inventory.getDestination(), 'site/testsite/paris')
+    self.assertEqual(self.inventory.getSource(), "account_module/bank_account")
+    self.assertEqual(self.inventory.getDestination(), "account_module/bank_account")
     self.assertEqual(self.inventory.getSourcePayment(), None)
-    self.assertEqual(self.inventory.getDestinationPayment(), None)
+    self.assertEqual(self.inventory.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
+
 
   def stepCreateBankAccountInventoryLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -136,7 +155,6 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     inventory_line = self.inventory.newContent(id="line_1",
                                                portal_type='Bank Account Inventory Line',
                                                resource_value=self.currency_1,
-                                               destination_payment_value=self.bank_account_1,
                                                quantity=50000)
     self.assertNotEqual(inventory_line, None)
 
@@ -145,8 +163,8 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.inventory.objectValues()), 1)
     self.inventory_line = getattr(self.inventory, 'line_1')
     self.assertEqual(self.inventory_line.getPortalType(), 'Bank Account Inventory Line')
-    self.assertEqual(self.inventory_line.getSource(), None)
-    self.assertEqual(self.inventory_line.getDestination(), 'site/testsite/paris')
+    self.assertEqual(self.inventory.getSource(), "account_module/bank_account")
+    self.assertEqual(self.inventory.getDestination(), "account_module/bank_account")
     self.assertEqual(self.inventory_line.getSourcePayment(), None)
     self.assertEqual(self.inventory_line.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
     self.assertEqual(self.inventory_line.getQuantity(), 50000)
@@ -180,9 +198,10 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # define the sequence
     sequence_string = 'Tic CheckInitialInventory ' \
-                    + 'CreateBankAccountInventory ' \
-                    + 'CreateBankAccountInventoryLine ' \
-                    + 'CheckFinalInventory'
+                      + 'CreateBankAccountInventoryGroup ' \
+                      + 'CreateBankAccountInventory ' \
+                      + 'CreateBankAccountInventoryLine ' \
+                      + 'CheckFinalInventory'
 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
