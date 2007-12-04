@@ -170,11 +170,13 @@ class Inventory(Delivery):
       current_inventory_dict = {}
       current_inventory_key_id_list = [x["key"] for x in inventory_calculation_dict['first_level']]
       for line in current_inventory_list:
-        current_inventory_key = tuple(
-          [line[x] for x in current_inventory_key_id_list])
-        if current_inventory_key[1] is None:
-          # To be consistent
-          current_inventory_key = (current_inventory_key[0], "")
+
+
+        current_inventory_key = [line[x] for x in current_inventory_key_id_list]
+        for x in xrange(len(current_inventory_key)):
+          if current_inventory_key[x] is None:
+            current_inventory_key[x] = ""
+        current_inventory_key = tuple(current_inventory_key)        
 
         if inventory_calculation_dict.has_key("second_level"):
           # two level of variation
