@@ -6,7 +6,6 @@
   <item>Bank Account Inventory</item>
  </portal_type>
  <portal_type id="Bank Account Inventory Module">
-  <item>Bank Account Inventory</item>
   <item>Bank Account Inventory Group</item>
  </portal_type>
  <portal_type id="Cash Inventory">
