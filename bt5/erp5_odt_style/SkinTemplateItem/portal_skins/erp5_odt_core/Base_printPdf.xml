@@ -65,9 +65,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>\'\'\'Compatibility script for old print action.\n
+\'\'\'\n
+portal = context.getPortalObject()\n
 portal.changeSkin(\'ODT\')\n
-portal.REQUEST.set(\'format\', \'pdf\')\n
+\n
 return getattr(context, form_id)()\n
 </string> </value>
         </item>

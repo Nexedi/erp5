@@ -331,6 +331,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
   \n
                       <tal:block tal:condition="report_item/getFormId">\n
                        <tal:block tal:define="form python:getattr(here, report_item.getFormId())" >\n
+                         <!-- TODO: define a macro for multiple prints, for\n
+                              actions using an odt print action. -->\n
                         <tal:block tal:condition="python:form.pt == \'form_view\'">\n
                           <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
                         </tal:block>\n
