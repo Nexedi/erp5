@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -40,6 +37,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>_owner</string> </key>
             <value>
               <none/>
@@ -47,7 +50,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_printPdf</string> </value>
+            <value> <string>Base_redirectToDialogAction</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -55,13 +62,17 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,7 +81,33 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>your_dialog_action_url</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -80,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_print</string> </value>
+            <value> <string>Base_viewIntermediatePrintDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -88,7 +125,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_print</string> </value>
+            <value> <string>Folder_viewPrintDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

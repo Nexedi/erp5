@@ -66,17 +66,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = container.REQUEST\n
-kw.update(request.form)\n
-context.ERP5Site_prepareAction(**kw)\n
-\n
-new_print_action_list = context.Base_fixDialogActions(\n
-     context.Base_filterDuplicateActions(\n
-     context.portal_actions.listFilteredActionsFor(context)), \'object_print\')\n
-\n
-return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
-    keep_items={\'form_id\': form_id,\n
-                \'cancel_url\': cancel_url,\n
-                \'dialog_category\': \'object_print\'}, **kw)\n
+if \'dialog_action_url\' in request:\n
+  current_url = request[\'dialog_action_url\']\n
+  for action in dialog_actions:\n
+    if current_url == action[\'original_url\']:\n
+      return action\n
+else:\n
+  for action in dialog_actions:\n
+    if current_url == action[\'url\'].split(\'?\')[0]:\n
+      return action\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +98,7 @@ return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, cancel_url, **kw</string> </value>
+            <value> <string>current_url, dialog_actions</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,16 +124,15 @@ return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>cancel_url</string>
-                            <string>kw</string>
+                            <string>current_url</string>
+                            <string>dialog_actions</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
-                            <string>_apply_</string>
-                            <string>context</string>
-                            <string>new_print_action_list</string>
                             <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>action</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,7 +149,7 @@ return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_print</string> </value>
+            <value> <string>ERP5Site_getCurrentDialogAction</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

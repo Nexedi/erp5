@@ -65,18 +65,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
-kw.update(request.form)\n
-context.ERP5Site_prepareAction(**kw)\n
+            <value> <string>"""This script fix dialog actions to add an empty dialog for object_print\n
+actions that does not provide one.\n
+"""\n
+from Products.PythonScripts.standard import url_quote\n
 \n
-new_print_action_list = context.Base_fixDialogActions(\n
-     context.Base_filterDuplicateActions(\n
-     context.portal_actions.listFilteredActionsFor(context)), \'object_print\')\n
+if dialog_category != \'object_print\':\n
+  return actions.get(dialog_category, [])\n
 \n
-return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
-    keep_items={\'form_id\': form_id,\n
-                \'cancel_url\': cancel_url,\n
-                \'dialog_category\': \'object_print\'}, **kw)\n
+def addDialogIfNeeded(url):\n
+  \'\'\'If the action url is not a dialog, we add a generic print dialog.\n
+  \'\'\'\n
+  parts = url.split(\'/\')\n
+  absolute_url = \'/\'.join(parts[:-1])\n
+  action = parts[-1]\n
+  action_id = action.split(\'?\')[0]\n
+  form = getattr(context, action_id, None)\n
+  if form is not None and getattr(form, \'pt\', None) != \'form_dialog\':\n
+    url = \'%s/Base_viewIntermediatePrintDialog?dialog_action_url=%s\' % (\n
+                 context.absolute_url(), url_quote(\'%s/%s\' % (absolute_url, action)))\n
+  return url\n
+\n
+print_action_list = actions[\'object_print\']\n
+new_print_action_list = []\n
+for ai in print_action_list:\n
+  ai_copy = ai.copy()\n
+  # this is quite low level. It may require to be done from file system code in\n
+  # the future.\n
+  ai_copy.data[\'original_url\'] = ai_copy[\'url\']\n
+  ai_copy.data[\'url\'] = addDialogIfNeeded(ai_copy[\'url\'])\n
+  new_print_action_list.append( ai_copy )\n
+\n
+return new_print_action_list\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +119,7 @@ return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, cancel_url, **kw</string> </value>
+            <value> <string>actions, dialog_category</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,16 +145,19 @@ return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>cancel_url</string>
-                            <string>kw</string>
+                            <string>actions</string>
+                            <string>dialog_category</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>url_quote</string>
                             <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>_apply_</string>
-                            <string>context</string>
-                            <string>new_print_action_list</string>
+                            <string>addDialogIfNeeded</string>
                             <string>_getitem_</string>
+                            <string>print_action_list</string>
+                            <string>new_print_action_list</string>
+                            <string>_getiter_</string>
+                            <string>ai</string>
+                            <string>ai_copy</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,7 +174,7 @@ return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_print</string> </value>
+            <value> <string>Base_fixDialogActions</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

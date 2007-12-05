@@ -65,7 +65,8 @@
                    left_group python: form.get_fields_in_group(\'left\');\n
                    right_group python: form.get_fields_in_group(\'right\');\n
                    center_group python: form.get_fields_in_group(\'center\');\n
-                   dialog_actions python: actions.get(dialog_category, []);\n
+                   dialog_actions python: here.Base_fixDialogActions(actions, dialog_category);\n
+                   current_action python: here.ERP5Site_getCurrentDialogAction(current_url, dialog_actions);\n
                    field_render here/field_render/macros/field_render;">\n
           <tal:block tal:condition="preferred_html_style_developper_mode">\n
             <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
@@ -83,6 +84,7 @@
                      i18n:translate="" i18n:domain="ui"></label>\n
               <select name="select_dialog" id="dialog_selector"\n
                       tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
+\n
                 <tal:block tal:repeat="action dialog_actions">\n
                   <option tal:attributes="value action/url;\n
                           selected python: action == current_action and \'selected\' or None"\n
