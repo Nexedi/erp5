@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.RelationField</string>
-          <string>RelationStringField</string>
-        </tuple>
-        <none/>
+        <global name="RelationStringField" module="Products.ERP5Form.RelationField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -390,7 +387,20 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Sort Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string>Relative URL</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
