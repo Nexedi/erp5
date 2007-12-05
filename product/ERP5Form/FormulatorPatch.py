@@ -25,6 +25,8 @@ from Products.Formulator.Field import Field
 from Products.Formulator.Widget import Widget
 from Products.Formulator.Widget import render_element
 from Products.Formulator.FieldRegistry import FieldRegistry
+from Products.Formulator import TALESField
+from Products.Formulator import MethodField
 from ProxyField import ProxyField
 from AccessControl import ClassSecurityInfo
 from cgi import escape
@@ -1467,7 +1469,15 @@ Field.render_dict = Field_render_dict
 
 
 # Find support in ZMI. This is useful for development.
+def getSearchSource(obj):
+  obj_type = type(obj)
+  if obj_type is MethodField.Method:
+    return obj.method_name
+  elif obj_type is TALESField.TALESMethod:
+    return obj._text
+  return str(obj)
 def Field_PrincipiaSearchSource(self):
-  return str((self.values.values(), self.tales.values(),
-              self.overrides.values()))
+  return ''.join(
+    map(getSearchSource,
+        (self.values.values()+self.tales.values()+self.overrides.values())))
 Field.PrincipiaSearchSource = Field_PrincipiaSearchSource
