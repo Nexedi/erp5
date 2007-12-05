@@ -92,7 +92,7 @@ if site is None:\n
 #context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
 site = context.Baobab_getVaultSite(site)\n
 \n
-if context.portal_catalog.countResults(portal_type=\'Counter Date\', start_date=str(date), site_id=site.getId(), simulation_state="open")[0][0] == 0:\n
+if context.portal_catalog.countResults(portal_type=\'Counter Date\', start_date=date, site_id=site.getId(), simulation_state="open")[0][0] == 0:\n
   msg = Message(domain = "ui", message="Transaction not in the good counter date")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
@@ -162,7 +162,6 @@ if context.portal_catalog.countResults(portal_type=\'Counter Date\', start_date=
                             <string>site_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>str</string>
                             <string>msg</string>
                           </tuple>
                         </value>
