@@ -773,7 +773,8 @@ class TestERP5BankingMixin:
     if not kw.has_key('bank_account_key'):
       kw['bank_account_key'] = '12'
     if not kw.has_key('internal_bank_account_number'):
-      kw['internal_bank_account_number'] = 'k12341234512'
+      kw['internal_bank_account_number'] = 'k%11s' %(12341234512 + self.account_inventory_number,)
+      #kw['internal_bank_account_number'] = 'k12341234512'
     bank_account = person.newContent(id = account_id,
                                      portal_type = 'Bank Account',
                                      price_currency_value = currency,
@@ -798,8 +799,8 @@ class TestERP5BankingMixin:
                                                                                 site_value=self.testsite,
                                                                                 stop_date=DateTime().Date())
 
-
-    inventory = self.bank_account_inventory.newContent(id=bank_account.getReference(),
+      
+    inventory = self.bank_account_inventory.newContent(id=bank_account.getInternalBankAccountNumber(),
                                            portal_type='Bank Account Inventory',
                                            destination_payment_value=bank_account,)
     account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
