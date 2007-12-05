@@ -70,6 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>REQUEST=context.REQUEST\n
 error_message = \'\'\n
+N_ = context.Base_translateString\n
+\n
 if context.cb_dataValid:\n
   # We first look if the content of objects to paste is allowed\n
   # inside this folder\n
@@ -77,23 +79,25 @@ if context.cb_dataValid:\n
   try:\n
     portal_type_list = [x.getPortalType() for x in object_list]\n
   except AttributeError:\n
-    error_message = \'Sorry+you+can+not+paste+theses+Items+here\'\n
+    error_message = N_(\'Sorry+you+can+not+paste+theses+Items+here\')\n
   else:\n
     allowed_type_list = [x.id for x in context.allowedContentTypes()]\n
     for portal_type in portal_type_list:\n
       if portal_type not in allowed_type_list:\n
-        error_message = \'Sorry+you+can+not+paste+theses+Items+here\'\n
+        error_message = N_(\'Sorry+you+can+not+paste+theses+Items+here\')\n
 if context.cb_dataValid and error_message==\'\':\n
   try:\n
     new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
   except KeyError:\n
-    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Nothing+To+Paste.\')\n
+    msg = N_(\'Nothing+To+Paste.\')\n
+    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
   else:\n
     new_id_list = [i[\'new_id\'] for i in new_item_list]\n
     for my_id in new_id_list:\n
       context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
       context[my_id].recursiveImmediateReindexObject()\n
-    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Pasted.\')\n
+    msg = N_(\'Item(s)+Pasted.\')\n
+    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
 elif context.cb_dataValid and error_message!=\'\':\n
   return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
 else:\n
@@ -145,6 +149,7 @@ else:\n
                             <string>context</string>
                             <string>REQUEST</string>
                             <string>error_message</string>
+                            <string>N_</string>
                             <string>object_list</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -157,6 +162,7 @@ else:\n
                             <string>_getitem_</string>
                             <string>new_item_list</string>
                             <string>KeyError</string>
+                            <string>msg</string>
                             <string>i</string>
                             <string>new_id_list</string>
                             <string>my_id</string>
