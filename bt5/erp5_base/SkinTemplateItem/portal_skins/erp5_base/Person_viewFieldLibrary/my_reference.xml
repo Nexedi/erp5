@@ -18,7 +18,6 @@
               <list>
                 <string>title</string>
                 <string>description</string>
-                <string>enabled</string>
               </list>
             </value>
         </item>
@@ -61,11 +60,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -83,7 +82,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -94,14 +93,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key>                 <string>description</string> </key>
                     <value> <string>The username this person will use to log in the system.\n
 \n
 The system will check that there isn\'t another user with the same username.</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -116,7 +111,7 @@ The system will check that there isn\'t another user with the same username.</st
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>User Login</string> </value>
                 </item>
               </dictionary>
