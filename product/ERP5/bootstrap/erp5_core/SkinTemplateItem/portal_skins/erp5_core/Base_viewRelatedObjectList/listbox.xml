@@ -15,14 +15,11 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
-                <string>all_columns</string>
-                <string>search_columns</string>
                 <string>sort_columns</string>
                 <string>sort</string>
                 <string>list_method</string>
                 <string>count_method</string>
                 <string>selection_name</string>
-                <string>search</string>
               </list>
             </value>
         </item>
@@ -65,17 +62,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>all_columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>count_method</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -87,29 +84,29 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>search</string> </key>
+                    <key> <string>search</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort</string> </key>
+                    <key> <string>sort</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>sort_columns</string> </key>
+                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -117,7 +114,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -132,36 +129,13 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -184,7 +158,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
+                    <key>                 <string>count_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
@@ -206,7 +180,7 @@
                     <value> <string>SEARCH_LIST</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
@@ -216,44 +190,17 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>Base_viewRelatedObjectList</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>sort_columns</string> </key>
+                    <key>                 <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -268,7 +215,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Related Objects</string> </value>
                 </item>
                 <item>
