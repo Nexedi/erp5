@@ -105,16 +105,17 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
       for state_var in possible_state_list:
         for workflow in wf_tool.getWorkflowsFor(document):
           if state_var == workflow.variables.getStateVar():
-            key = (document.getPortalTypeName(), workflow,
+            key = (document.getPortalTypeName(), workflow.getId(),
                         document.getProperty(state_var))
             document_count = workflow_state_dict.get(key, [None, 0])[1]
             workflow_state_dict[key] = document, document_count + 1
     
     
     counter = 0
-    for (ptype, workflow, state), (doc, document_count) in\
+    for (ptype, workflow_id, state), (doc, document_count) in\
                 workflow_state_dict.items():
       counter += 1
+      workflow = wf_tool.getWorkflowById(workflow_id)
       state_var = workflow.variables.getStateVar()
       translated_workflow_state_title = doc.getProperty(
                       'translated_%s_title' % state_var)
