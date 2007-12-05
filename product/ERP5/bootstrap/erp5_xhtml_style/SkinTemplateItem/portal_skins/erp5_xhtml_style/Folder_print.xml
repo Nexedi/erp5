@@ -73,7 +73,8 @@ new_print_action_list = context.Base_fixDialogActions(\n
      context.Base_filterDuplicateActions(\n
      context.portal_actions.listFilteredActionsFor(context)), \'object_print\')\n
 \n
-return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
+if new_print_action_list:\n
+  return context.ERP5Site_redirect(new_print_action_list[0][\'url\'],\n
     keep_items={\'form_id\': form_id,\n
                 \'cancel_url\': cancel_url,\n
                 \'dialog_category\': \'object_print\'}, **kw)\n
