@@ -1464,3 +1464,10 @@ def Field_render_dict(self, value=None, REQUEST=None, key=None, **kw):
   """
   return self.widget.render_dict(self, value)
 Field.render_dict = Field_render_dict
+
+
+# Find support in ZMI. This is useful for development.
+def Field_PrincipiaSearchSource(self):
+  return str((self.values.values(), self.tales.values(),
+              self.overrides.values()))
+Field.PrincipiaSearchSource = Field_PrincipiaSearchSource

@@ -927,6 +927,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         return [group for group in self.group_list
                 if self.get_fields_in_group(group, include_disabled=1)]
 
+    # Find support in ZMI. This is useful for development.
+    def PrincipiaSearchSource(self):
+      return str((self.pt, self.name, self.action, self.update_action,
+                  self.encoding, self.stored_encoding, self.enctype))
 
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
