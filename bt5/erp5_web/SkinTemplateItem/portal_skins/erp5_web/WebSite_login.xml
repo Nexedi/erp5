@@ -54,21 +54,27 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
-           tal:define="dummy here/setupCurrentSkin;" />\n
-<tal:block tal:define="response request/RESPONSE;\n
-                       mtool here/portal_membership;\n
-                       isAnon mtool/isAnonymousUser|nothing;">\n
-  <tal:block tal:condition="isAnon">\n
-    <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
-                           url python: \'%s?came_from=%s&portal_status_message=%s\' % (request[\'came_from\'], request[\'came_from\'], here.getPortalObject().Localizer.translate(\'ui\', \'Sorry,+the+email+adress and/or+the+password+that+you+provided+are+incorrect.\'));\n
-                           dummy python: response.redirect(url);"/>\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
+             tal:define="dummy here/setupCurrentSkin;" />\n
+  <tal:block tal:define="response request/RESPONSE;\n
+             mtool here/portal_membership;\n
+             isAnon mtool/isAnonymousUser|nothing;">\n
+    <tal:block tal:condition="isAnon">\n
+      <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
+                 url python: \'%s?portal_status_message=%s\' % (here.absolute_url(), here.getPortalObject().Localizer.translate(\'ui\', \'Login+and/or+password+is+incorrect.\'));\n
+                 url python: request.get(\'came_from\') and  \'%s&amp;came_from=%s\' % (url, request[\'came_from\']) or url;\n
+                 dummy python: response.redirect(url);" />\n
+    </tal:block>\n
+    <tal:block tal:condition="not: isAnon">\n
+      <tal:block tal:define="came_from python: request.get(\'came_from\') or here.absolute_url() + \'/view\';\n
+                 dummy python: response.redirect(came_from);" />\n
+    </tal:block>\n
   </tal:block>\n
-  <tal:block tal:condition="not: isAnon">\n
-    <tal:block tal:define="came_from python: \'%s\' % request.get(\'came_from\') or here.portal_url() + \'/view\';\n
-                           dummy python: response.redirect(came_from);" />\n
-  </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
