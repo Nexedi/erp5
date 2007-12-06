@@ -1,4 +1,3 @@
-
 Account Module | account_statement_report
 Account Module | balance_sheet_report
 Account Module | bank_accounts_report
@@ -13,6 +12,7 @@ Account | jump_active_accounting_pref
 Account | jump_to_accounting
 Account | transaction_list
 Account | view
+Accounting Period | jump_related_balance_transaction
 Accounting Period | view
 Accounting Rule Cell | view
 Accounting Rule Cell | view_destination
