@@ -191,6 +191,7 @@ class UidBuffer(TM):
 FULL_TEXT_SEARCH_MODE = 'FullText'
 EXACT_MATCH_SEARCH_MODE = 'ExactMatch'
 KEYWORD_SEARCH_MODE = 'Keyword'
+DATETIME_SEARCH_MODE = 'DateTime'
 
 
 class QueryMixin:
@@ -254,6 +255,7 @@ class QueryMixin:
 
   def asSQLExpression(self, key_alias_dict=None,
                       keyword_search_keys=None,
+                      datetime_search_keys=None,
                       full_text_search_keys=None,
                       ignore_empty_string=1, stat__=0):
     """
@@ -358,6 +360,7 @@ class Query(QueryMixin):
 
   def asSQLExpression(self, key_alias_dict=None,
                             keyword_search_keys=None,
+                            datetime_search_keys=None,
                             full_text_search_keys=None,
                             ignore_empty_string=1, stat__=0):
     """
@@ -425,6 +428,21 @@ class Query(QueryMixin):
                         and isinstance(value, basestring):
           if '%' in value and search_key != EXACT_MATCH_SEARCH_MODE:
             comparison_operator = 'LIKE'
+          elif search_key == DATETIME_SEARCH_MODE  or (
+               datetime_search_keys is not None and key in datetime_search_keys):
+            if len(value) >= 1 and value[0:2] in ('<=','!=','>='):
+              comparison_operator = value[0:2]
+              value = value[2:]
+            elif len(value) >= 1 and value[0] in ('=','>','<'):
+              comparison_operator = value[0]
+              value = value[1:]
+            if comparison_operator is None:
+              comparison_operator = '='
+            # this seems like a DateTime bug!
+            # 2002/02/01 ==>(UTC) 2002-01-31 22:00:00
+            # 2002-02-01 ==>(UTC) 2002-02-01 00:00:00 (!)
+            value = value.replace('-', '/') 
+            value = DateTime(value).toZone('UTC').ISO()
           elif len(value) >= 1 and value[0:2] in ('<=','!=','>='):
             comparison_operator = value[0:2]
             value = value[2:]
@@ -538,6 +556,7 @@ class ComplexQuery(QueryMixin):
   def asSQLExpression(self, key_alias_dict=None,
                             ignore_empty_string=1,
                             keyword_search_keys=None,
+                            datetime_search_keys=None,
                             full_text_search_keys=None,
                             stat__=0):
     """
@@ -804,6 +823,11 @@ class Catalog(Folder,
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_datetime_search_keys',
+      'description' : 'Columns which should be considered as full text search',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getColumnIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_full_text_search_keys',
       'description' : 'Columns which should be considered as full text search',
       'type'    : 'multiple selection',
@@ -864,6 +888,7 @@ class Catalog(Folder,
   sql_unique_values = ''
   sql_catalog_paths = ''
   sql_catalog_keyword_search_keys =  ()
+  sql_catalog_datetime_search_keys = ()
   sql_catalog_full_text_search_keys = ()
   sql_catalog_request_keys = ()
   sql_search_result_keys = ()
@@ -2116,6 +2141,7 @@ class Catalog(Folder,
     acceptable_key_map = self.getColumnMap()
     full_text_search_keys = list(self.sql_catalog_full_text_search_keys)
     keyword_search_keys = list(self.sql_catalog_keyword_search_keys)
+    datetime_search_keys = list(self.sql_catalog_datetime_search_keys)
     topic_search_keys = self.sql_catalog_topic_search_keys
     multivalue_keys = self.sql_catalog_multivalue_keys
 
@@ -2386,6 +2412,7 @@ class Catalog(Folder,
         query_result = query.asSQLExpression(key_alias_dict=key_alias_dict,
                                     full_text_search_keys=full_text_search_keys,
                                     keyword_search_keys=keyword_search_keys,
+                                    datetime_search_keys=datetime_search_keys,
                                     ignore_empty_string=ignore_empty_string,
                                     stat__=stat__)
         if query_result['where_expression'] not in ('',None):
@@ -2714,4 +2741,3 @@ class Catalog(Folder,
 Globals.default__class_init__(Catalog)
 
 class CatalogError(Exception): pass
-
