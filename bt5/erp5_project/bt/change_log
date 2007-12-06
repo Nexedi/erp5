@@ -1,3 +1,6 @@
+2007-12-06 yo
+* Allow Associate to modify contents of Task and Task Report, so that project managers may change Destination Decision, for example.
+
 2007-09-20 yo
 * Set Source Project on Task Report, if all lines share the same Source Project.
 * Show Source Project in Task Report Module.
