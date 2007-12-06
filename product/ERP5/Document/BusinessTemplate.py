@@ -606,6 +606,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj = connection.importFile(file_obj, customImporters=customImporters)
     else:
       obj = connection.importFile(file_obj, customImporters=customImporters)
+    self.removeProperties(obj)
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
@@ -619,7 +620,6 @@ class ObjectTemplateItem(BaseTemplateItem):
           # compare object to see it there is changes
           new_object = self._objects[path]
           old_object = installed_bt._objects[path]
-          new_object = self.removeProperties(new_object)
           old_object = self.removeProperties(old_object)
           new_io = StringIO()
           old_io = StringIO()
@@ -2097,6 +2097,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         obj=obj.aq_parent
         connection=obj._p_jar
       obj = connection.importFile(file, customImporters=customImporters)
+      self.removeProperties(obj)
       self._objects[file_name[:-4]] = obj
     else:
       # recreate data mapping specific to catalog method
