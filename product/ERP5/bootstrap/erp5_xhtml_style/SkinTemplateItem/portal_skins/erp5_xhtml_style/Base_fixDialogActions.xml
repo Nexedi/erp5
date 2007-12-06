@@ -81,7 +81,7 @@ def addDialogIfNeeded(url):\n
   action = parts[-1]\n
   action_id = action.split(\'?\')[0]\n
   form = getattr(context, action_id, None)\n
-  if form is not None and getattr(form, \'pt\', None) != \'form_dialog\':\n
+  if not (hasattr(form, \'pt\') and form.pt == \'form_dialog\'):\n
     url = \'%s/Base_viewIntermediatePrintDialog?dialog_action_url=%s\' % (\n
                  context.absolute_url(), url_quote(\'%s/%s\' % (absolute_url, action)))\n
   return url\n
