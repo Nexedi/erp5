@@ -350,13 +350,10 @@ class OOoDocument(File, ConversionCacheMixin):
       is_html = 1
     elif format in ('txt', 'text', 'text-content'):
       format_list = self.getTargetFormatList()
-      if format in format_list:
-        format = format_list[format_list.index(format)]
-      if 'txt' in format_list:
-        format = format_list[format_list.index('txt')]
-      elif 'text' in format_list:
-        format = format_list[format_list.index('text')]
-      else:
+      # if possible, we try to get utf8 text. ('enc.txt' will encode to utf8)
+      if 'enc.txt' in format_list:
+        format = 'enc.txt'
+      elif format not in format_list:
         return 'text/plain', self.asTextContent()
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
