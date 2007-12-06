@@ -1163,7 +1163,17 @@ class PatchedDateTimeValidator(DateTimeValidator):
               tmp_day = DateTime(tmp_year, tmp_month, 1, hour, minute)
               result = tmp_day - 1
             else:
-              result = DateTime('%s/%s/%s %s:%s %s' %(int(year), int(month), int(day), hour, minute, timezone))
+              result = DateTime(int(year),
+                                int(month),
+                                int(day),
+                                hour,
+                                minute)
+              year = result.year()
+              result = DateTime('%s/%s/%s %s:%s %s' % (year,
+                                  int(month),
+                                  int(day),
+                                  hour,
+                                  minute, timezone))
          # ugh, a host of string based exceptions (not since Zope 2.7)
         except ('DateTimeError', 'Invalid Date Components', 'TimeError',
                 DateError, TimeError) :
