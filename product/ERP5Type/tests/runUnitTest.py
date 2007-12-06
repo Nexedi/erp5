@@ -1,6 +1,7 @@
 #!/usr/bin/python2.4
 import os
 import sys
+import pdb
 import re
 import getopt
 import unittest
@@ -57,12 +58,15 @@ Options:
                              Run only specified test methods delimited with
                              commas (e.g. testFoo,testBar). This can be regular
                              expressions.
+  -D                         
+                             Invoke debugger on errors / failures.
 """
 
 def getUnitTestFile():
   """returns the absolute path of this script.
   This is used by template tool to run unit tests."""
   return os.path.abspath(__file__)
+
 
 def initializeInstanceHome(tests_framework_home,
                            real_instance_home,
@@ -146,6 +150,7 @@ initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 if '__INSTANCE_HOME' not in globals().keys() :
   __INSTANCE_HOME = instance_home
 
+
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
@@ -171,7 +176,39 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       return module.test_suite()
     return unittest.TestLoader.loadTestsFromModule(self, module)
 
-def runUnitTestList(test_list, verbosity=1):
+
+class DebugTestResult:
+  """Wrap an unittest.TestResult, invoking pdb on errors / failures
+  """
+  def __init__(self, result):
+    self.result = result
+
+  def _start_debugger(self, tb):
+    try:
+      # try ipython if available
+      import IPython
+      IPython.Shell.IPShell(argv=[])
+      p = IPython.Debugger.Pdb(color_scheme='Linux')
+      p.reset()
+      while tb.tb_next is not None:
+        tb = tb.tb_next
+      p.interaction(tb.tb_frame, tb)
+    except ImportError:
+      pdb.post_mortem(tb)
+
+  def addError(self, test, err):
+    self._start_debugger(err[2])
+    self.result.addError(test, err)
+
+  def addFailure(self, test, err):
+    self._start_debugger(err[2])
+    self.result.addFailure(test, err)
+
+  def __getattr__(self, attr):
+    return getattr(self.result, attr)
+
+
+def runUnitTestList(test_list, verbosity=1, debug=0):
   if not test_list:
     print "No test to run, exiting immediately."
     return
@@ -257,17 +294,24 @@ def runUnitTestList(test_list, verbosity=1):
   
   suite = ERP5TypeTestLoader(save=save).loadTestsFromNames(test_list)
 
-  # Hack the profiler to run only specified test methods.
-  run_only = os.environ.get('run_only')
-  if run_only and not save:
+  # Hack the profiler to run only specified test methods, and wrap results when
+  # running in debug mode.
+  run_only = os.environ.get('run_only', '')
+  if not save:
     test_method_list = run_only.split(',')
     from Testing.ZopeTestCase import profiler
     run_orig = profiler.Profiled.__call__
-    def run(self, *args, **kw):
+    
+    def run(self, result=None):
+      if debug and result:
+        result = DebugTestResult(result)
+      if not test_method_list:
+        return run_orig(self, result)
       test_method_name = self.id().rsplit('.', 1)[-1]
       for valid_test_method_name_re in test_method_list:
         if re.search(valid_test_method_name_re, test_method_name):
-          return run_orig(self, *args, **kw)
+          return run_orig(self, result)
+
     profiler.Profiled.__call__ = run
 
   # change current directory to the test home, to create zLOG.log in this dir.
@@ -284,7 +328,7 @@ def usage(stream, msg=None):
 def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
-        "hpv", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
+        "hpvD", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
         "bt5_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
@@ -303,6 +347,7 @@ def main():
 
   os.environ["erp5_tests_recreate_catalog"] = "0"
   verbosity = 1
+  debug = 0
   
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
@@ -311,7 +356,9 @@ def main():
     elif opt in ("-h", "--help"):
       usage(sys.stdout)
       sys.exit()
-    if opt in ("-p", "--profile"):
+    elif opt == '-D':
+      debug = 1
+    elif opt in ("-p", "--profile"):
       os.environ['PROFILE_TESTS'] = "1"
       # profiling of setup and teardown is disabled by default, just set
       # environment variables yourself if you want to enable them, but keep in
@@ -350,7 +397,9 @@ def main():
     print "No test to run, exiting immediately."
     sys.exit(1)
 
-  result = runUnitTestList(test_list=test_list, verbosity=verbosity)
+  result = runUnitTestList(test_list=test_list,
+                           verbosity=verbosity,
+                           debug=debug)
   from Testing.ZopeTestCase import profiler
   profiler.print_stats()
   sys.exit(len(result.failures) + len(result.errors))
