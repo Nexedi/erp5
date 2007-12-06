@@ -33,10 +33,10 @@
  </chain>
  <chain>
   <type>Currency</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>-validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Currency Exchange Line</type>
-  <workflow>currency_exchange_line_interaction_workflow, edit_workflow, currency_exchange_line_workflow</workflow>
+  <workflow>currency_exchange_line_interaction_workflow, -validation_workflow, edit_workflow, currency_exchange_line_workflow</workflow>
  </chain>
 </workflow_chain>
