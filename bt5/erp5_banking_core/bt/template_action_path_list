@@ -8,6 +8,8 @@ Accounting Date Module | print_pdf
 Accounting Date Module | view
 Accounting Date | remaining_operations
 Accounting Date | view
+Bank Account | transactions
+Bank Account | view
 Banking Operation Line | print
 Banking Operation Line | view
 Banknote | view

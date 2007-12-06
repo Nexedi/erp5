@@ -8,6 +8,9 @@
  <portal_type id="Accounting Date Module">
   <item>Accounting Date</item>
  </portal_type>
+ <portal_type id="Bank Account">
+  <item>Agent</item>
+ </portal_type>
  <portal_type id="Cash Delivery Line">
   <item>Cash Delivery Cell</item>
  </portal_type>

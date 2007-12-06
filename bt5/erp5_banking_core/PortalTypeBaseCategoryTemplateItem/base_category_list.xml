@@ -5,6 +5,9 @@
  <portal_type id="Accounting Date">
   <item>site</item>
  </portal_type>
+ <portal_type id="Bank Account">
+  <item>site</item>
+ </portal_type>
  <portal_type id="Cash Delivery Cell">
   <item>variation</item>
  </portal_type>
