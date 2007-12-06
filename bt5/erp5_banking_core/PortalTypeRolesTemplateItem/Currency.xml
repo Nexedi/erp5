@@ -1,30 +1,0 @@
-<type_roles>
-  <role id='Author; Auditor'>
-   <property id='title'>Financier A</property>
-   <property id='priority'>10</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/banking/financier_a</multi_property>
-   <multi_property id='category'>site/siege</multi_property>
-  </role>
-  <role id='Author; Auditor'>
-   <property id='title'>Financier B</property>
-   <property id='priority'>10</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/banking/financier_b</multi_property>
-   <multi_property id='category'>site/siege</multi_property>
-  </role>
-  <role id='Auditor'>
-   <property id='title'>Chef Financier</property>
-   <property id='priority'>10</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/banking/chef_financier</multi_property>
-   <multi_property id='category'>site/siege</multi_property>
-  </role>
-  <role id='Auditor'>
-   <property id='title'>Chef Section Financier</property>
-   <property id='priority'>10</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/banking/chef_section_financier</multi_property>
-   <multi_property id='category'>site/siege</multi_property>
-  </role>
-</type_roles>
