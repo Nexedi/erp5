@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -78,8 +75,7 @@
 persons_to_inform = []\n
 \n
 # find which persons have needed roles so they can be informed\n
-person_list = context.getPortalObject().portal_catalog(portal_type = \'Person\')\n
-person_list = filter(lambda x: x.getReference() is not None, person_list)\n
+person_list = context.getPortalObject().portal_catalog(portal_type = \'Person\', reference=\'%\')\n
 for person in person_list:\n
   local_roles = context.Document_getPersonRoleList(person, context)\n
   # check if person\'s roles in this document\'s context allow him/her to modify it\n
@@ -173,7 +169,6 @@ for person in persons_to_inform:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>person_list</string>
-                            <string>filter</string>
                             <string>_getiter_</string>
                             <string>person</string>
                             <string>local_roles</string>
