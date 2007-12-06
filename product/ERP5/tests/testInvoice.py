@@ -121,7 +121,7 @@ class TestInvoice(TestPackingListMixin,
   def getBusinessTemplateList(self):
     """ """
     return TestPackingListMixin.getBusinessTemplateList(self) + (
-              'erp5_accounting',)
+              'erp5_accounting', 'erp5_invoicing')
 
   def stepTic(self, **kw):
     self.tic()

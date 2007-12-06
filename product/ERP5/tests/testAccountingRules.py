@@ -80,7 +80,8 @@ class TestAccountingRulesMixin:
 
   def getBusinessTemplateList(self):
     """  Return the list of business templates. """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting')
+    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting',
+        'erp5_invoicing')
 
   def getAccountModule(self):
     return getattr(self.getPortal(), 'account',

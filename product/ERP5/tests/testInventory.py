@@ -72,7 +72,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """Business Templates required for this test.
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',
-            'erp5_accounting')
+            'erp5_accounting', 'erp5_invoicing')
 
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()

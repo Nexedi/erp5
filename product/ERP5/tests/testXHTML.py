@@ -54,6 +54,7 @@ target_business_templates = (
   'erp5_pdf_style',
   'erp5_pdm',
   'erp5_accounting',
+  'erp5_invoicing',
 
   'erp5_apparel',
 

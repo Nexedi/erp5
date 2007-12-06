@@ -83,7 +83,7 @@ class TestRuleMixin(TestOrderMixin):
     cataloging the version property.
     """
     return TestOrderMixin.getBusinessTemplateList(self) + ('erp5_accounting',
-        'erp5_dms_mysql_innodb_catalog',)
+                'erp5_invoicing', 'erp5_dms_mysql_innodb_catalog',)
 
   def createPackingList(self):
     """
