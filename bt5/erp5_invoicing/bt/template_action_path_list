@@ -10,6 +10,7 @@ Invoice Transaction Rule | view
 Invoicing Rule | view
 Purchase Invoice Transaction | view_invoice
 Sale Invoice Transaction | invoice_item_list
+Sale Invoice Transaction | invoice_item_list
 Sale Invoice Transaction | jump_to_related_sale_packing_list
 Sale Invoice Transaction | payment_condition
 Sale Invoice Transaction | trade_condition_discount

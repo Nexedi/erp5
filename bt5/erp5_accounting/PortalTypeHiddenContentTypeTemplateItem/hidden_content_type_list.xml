@@ -8,9 +8,6 @@
  <portal_type id="Balance Transaction">
   <item>Balance Transaction Line</item>
  </portal_type>
- <portal_type id="Invoice Transaction Rule">
-  <item>Accounting Rule Cell</item>
- </portal_type>
  <portal_type id="Payment Transaction">
   <item>Accounting Transaction Line</item>
  </portal_type>

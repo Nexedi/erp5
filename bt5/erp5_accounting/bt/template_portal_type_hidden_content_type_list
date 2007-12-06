@@ -1,7 +1,6 @@
 Accounting Transaction Module | Balance Transaction
 Accounting Transaction | Accounting Transaction Line
 Balance Transaction | Balance Transaction Line
-Invoice Transaction Rule | Accounting Rule Cell
 Payment Transaction | Accounting Transaction Line
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
 Sale Invoice Transaction | Sale Invoice Transaction Line
