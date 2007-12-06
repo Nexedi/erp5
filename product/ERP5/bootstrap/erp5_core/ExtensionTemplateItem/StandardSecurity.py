@@ -74,8 +74,8 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
         if category_value_list:
           for category_value in category_value_list:
             if base_category in child_category_list:
-              if category_value.getPortalType() == 'Category':
-                while category_value.getPortalType() == 'Category':
+              if category_value.getPortalType() not in ('Base Category', 'ERP5 Site'):
+                while category_value.getPortalType() not in ('Base Category', 'ERP5 Site'):
                   category_dict.setdefault(base_category, []).append('%s*' % category_value.getRelativeUrl())
                   category_value = category_value.getParentValue()
               else:
