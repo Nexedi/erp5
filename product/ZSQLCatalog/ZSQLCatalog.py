@@ -177,6 +177,10 @@ class ZCatalog(Folder, Persistent, Implicit):
       'description' : 'The state of hot reindexing',
       'type'    : 'string',
       'mode'    : '' },
+    { 'id'      : 'archive_path',
+      'description' : 'The path of the archive which is create',
+      'type'    : 'string',
+      'mode'    : '' },
 
   )
 
