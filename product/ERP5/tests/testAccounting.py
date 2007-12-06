@@ -1380,14 +1380,10 @@ class TestAccounting(ERP5TypeTestCase):
   currency_portal_type          = 'Currency'
   organisation_portal_type      = 'Organisation'
   sale_invoice_portal_type      = 'Sale Invoice Transaction'
-  sale_invoice_line_portal_type = 'Sale Invoice Line' 
   sale_invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
-  sale_invoice_cell_portal_type = 'Invoice Cell'
   purchase_invoice_portal_type      = 'Purchase Invoice Transaction'
-  purchase_invoice_line_portal_type = 'Purchase Invoice Line' 
   purchase_invoice_transaction_line_portal_type = \
                 'Purchase Invoice Transaction Line'
-  purchase_invoice_cell_portal_type = 'Invoice Cell'
 
   start_date = DateTime(2004, 01, 01)
   stop_date  = DateTime(2004, 12, 31)
