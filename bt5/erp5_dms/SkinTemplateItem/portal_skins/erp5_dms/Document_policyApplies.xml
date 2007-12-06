@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -97,7 +94,7 @@ if kl == [\'personal,restricted\']:\n
 pol = policy.split(\'/\')\n
 \n
 if not membershiponly:\n
-  # project policies do not apply if we don\'t have source_project\n
+  # project policies do not apply if we don\'t have follow_up\n
   if pol[1] == \'project\':\n
     if context.getFollowUp() == None:\n
       return False\n
