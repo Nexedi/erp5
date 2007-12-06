@@ -1,3 +1,6 @@
+2007-12-6 jerome
+* move invoicing parts in erp5_invoicing
+
 2007-10-30 yo
 * Set pricing_interaction_workflow to Invoice Line.
 

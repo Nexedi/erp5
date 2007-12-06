@@ -1,3 +1,4 @@
+
 Account Module | account_statement_report
 Account Module | balance_sheet_report
 Account Module | bank_accounts_report
@@ -45,16 +46,6 @@ Bank Account | transactions
 Cash Register | jump_active_accounting_pref
 Cash Register | transactions
 Cash Register | view
-Invoice Cell | list
-Invoice Cell | view
-Invoice Line | list
-Invoice Line | price
-Invoice Line | quantity
-Invoice Line | view
-Invoice Rule | view
-Invoice Transaction Rule | divergence
-Invoice Transaction Rule | view
-Invoicing Rule | view
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions
@@ -80,7 +71,6 @@ Purchase Invoice Transaction | detail
 Purchase Invoice Transaction | jump_related_payment
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | view
-Purchase Invoice Transaction | view_invoice
 Purchase Invoice Transaction | view_source
 Sale Invoice Transaction Line | view
 Sale Invoice Transaction | add_sale_invoice_transaction_line
@@ -90,9 +80,5 @@ Sale Invoice Transaction | destination_asset
 Sale Invoice Transaction | detail
 Sale Invoice Transaction | invoice_item_list
 Sale Invoice Transaction | jump_to_related_payment
-Sale Invoice Transaction | jump_to_related_sale_packing_list
-Sale Invoice Transaction | payment_condition
 Sale Invoice Transaction | source_asset
-Sale Invoice Transaction | trade_condition_discount
-Sale Invoice Transaction | trade_condition_profile_view
 Sale Invoice Transaction | view
