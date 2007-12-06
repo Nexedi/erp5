@@ -266,9 +266,8 @@ if memcache is not None:
         Return used memcached dict.
         Create it if does not exist.
       """
-      try:
-        dictionary = self._v_memcached_dict
-      except AttributeError:
+      dictionary = getattr(self, '_v_memcached_dict', None)
+      if dictionary is None:
         dictionary = MemcachedDict(self.getServerAddressList())
         self._v_memcached_dict = dictionary
       return dictionary
