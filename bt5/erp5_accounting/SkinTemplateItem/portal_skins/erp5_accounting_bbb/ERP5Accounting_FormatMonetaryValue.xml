@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -161,6 +158,7 @@ return formatted_value\n
                             <string>old_value</string>
                             <string>i</string>
                             <string>char</string>
+                            <string>_inplacevar_</string>
                             <string>formatted_value</string>
                           </tuple>
                         </value>

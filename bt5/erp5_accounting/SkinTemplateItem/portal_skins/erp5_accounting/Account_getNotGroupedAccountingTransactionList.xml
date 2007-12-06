@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -227,6 +224,7 @@ return line_list\n
                             <string>mirror_section_title</string>
                             <string>max</string>
                             <string>debit</string>
+                            <string>_inplacevar_</string>
                             <string>credit</string>
                           </tuple>
                         </value>

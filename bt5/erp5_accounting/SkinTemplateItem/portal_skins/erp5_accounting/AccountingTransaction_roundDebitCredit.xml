@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -156,6 +153,7 @@ if line is not None:\n
                             <string>_getiter_</string>
                             <string>round</string>
                             <string>line_quantity</string>
+                            <string>_inplacevar_</string>
                             <string>abs</string>
                             <string>ValueError</string>
                           </tuple>
