@@ -427,7 +427,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
     for slice in slice_list:
       for share in share_list:
         cell = model_line.newCell(\
-            slice, share, portal_type='Pay Sheet Cell', base_id='movement')
+            share, slice, portal_type='Pay Sheet Cell', base_id='movement')
         cell.setMappedValuePropertyList(['quantity', 'price'])
         amount = values[share_list.index(share)][slice_list.index(slice)][0]
         percent = values[share_list.index(share)][slice_list.index(slice)][1]
