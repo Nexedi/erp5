@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Invoice import Invoice
+from Products.ERP5Type.Utils import cartesianProduct
 from zLOG import LOG
 
 class PaySheetTransaction(Invoice):
@@ -128,11 +129,11 @@ class PaySheetTransaction(Invoice):
              portal_type                  = 'Pay Sheet Line',
              title                        = title,
              description                  = description,
+             destination                  = self.getSourceSection(),
              source_section               =  \
                 self.getPortalObject().restrictedTraverse(res).getSource(),
              resource                     = res,
              destination_section          = self.getDestinationSection(),
-             destination                  = self.getDestinationSection(),
              variation_base_category_list = ('tax_category', 'salary_range'),
              variation_category_list      = var_cat_list,
              base_amount_list             = base_amount_list,
@@ -243,8 +244,8 @@ class PaySheetTransaction(Invoice):
 
     # in this dictionary will be saved the current amount corresponding to 
     # the tuple (tax_category, base_amount) :
-    # current_amount = base_amount_current_value_dict[base_amount]
-    base_amount_current_value_dict = {}
+    # current_amount = base_amount_dict[base_amount][share]
+    base_amount_dict = {}
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(),
@@ -269,19 +270,23 @@ class PaySheetTransaction(Invoice):
         for paysheetcell in paysheetcell_list:
           tax_category = paysheetcell.getTaxCategory(base=1)
           if tax_category and paysheetcell.getQuantity():
-            if base_amount_current_value_dict.has_key(base_amount):
-              old_val = base_amount_current_value_dict[base_amount]
+            if base_amount_dict.has_key(base_amount) and \
+                base_amount_dict[base_amount].has_key(tax_category):
+              old_val = base_amount_dict[base_amount][tax_category]
             else:
               old_val = 0
             new_val = old_val + paysheetcell.getQuantity()
+            if not base_amount_dict.has_key(base_amount):
+              base_amount_dict[base_amount]={}
             # increment the corresponding amount
-            base_amount_current_value_dict[base_amount] = new_val
+            base_amount_dict[base_amount][tax_category] = new_val
 
     # get not editables model lines
     model = self.getSpecialiseValue()
     model_line_list = model.contentValues(portal_type='Pay Sheet Model Line',
                                           sort_on='int_index')
-    model_line_list = [line for line in model_line_list if not line.getEditable()]
+    model_line_list = [line for line in model_line_list \
+        if not line.getEditable()]
 
     pay_sheet_line_list = []
 
@@ -305,85 +310,112 @@ class PaySheetTransaction(Invoice):
       # description is used
       else: 
         desc = ''.join(service.getDescription())
-      
-      variation_share_list = model_line.getVariationCategoryList(\
-                                      base_category_list=['tax_category',])
-      variation_slice_list = model_line.getVariationCategoryList(\
-                                      base_category_list=['salary_range',])
 
-      for slice in variation_slice_list:
-        for share in variation_share_list:
-          cell = model_line.getCell(slice, share)
-          if cell is None:
-            LOG('createNotEditablePaySheetLineList : cell is None')
-            continue
-          # get the slice :
-          model_slice = model_line.getParentValue().getCell(slice)
-          quantity = 0.0
-          price = 0.0
-          if model_slice is None:
-            LOG('createNotEditablePaySheetLineList : model_slice %s is None' %\
-                                                                          slice)
-            continue
+
+
+      base_category_list = model_line.getVariationBaseCategoryList()
+      list_of_list = []
+      for base_cat in base_category_list:
+        list = model_line.getVariationCategoryList(base_category_list=base_cat)
+        list_of_list.append(list)
+      cartesian_product = cartesianProduct(list_of_list)
+
+      slice = None
+      indice = 0
+      for tuple in cartesian_product:
+        indice += 1
+        cell = model_line.getCell(*tuple)
+        if cell is None:
+          continue
+
+        tuple_dict = {}
+        for item in tuple:
+          # the dict key is the base category and value is the category path
+          tuple_dict[item.split('/')[0]] = \
+              self.portal_categories.restrictedTraverse(item).getTitle()
+          tuple_dict[item.split('/')[0]+'_relative_url']=item
+
+        #get the slice
+        if tuple_dict.has_key('salary_range'):
+          slice = tuple_dict['salary_range_relative_url']
+
+        #get the share
+        if tuple_dict.has_key('tax_category'):
+          share = tuple_dict['tax_category_relative_url']
+    
+        # get the slice :
+        model_slice = model_line.getParentValue().getCell(slice)
+        quantity = 0.0
+        price = 0.0
+        model_slice_min = 0
+        model_slice_max = 0
+        if model_slice is None:
+          LOG('createNotEditablePaySheetLineList :', 0, 'model_slice %s is None'
+              % slice)
+        else:
           model_slice_min = model_slice.getQuantityRangeMin()
           model_slice_max = model_slice.getQuantityRangeMax()
 
-          ######################
-          # calculation part : #
-          ######################
+        ######################
+        # calculation part : #
+        ######################
 
-          # get script in this order
-          # 1 - model_line script
-          # 2 - model script
-          # 3 - get the default calculation script
+        # get script in this order
+        # 1 - model_line script
+        # 2 - model script
+        # 3 - get the default calculation script
 
-          # get the model line script
-          script_name = model_line.getCalculationScriptId()
-          if script_name is None:
-            # if model line script is None, get the default model script
-            script_name = model.getDefaultCalculationScriptId()
+        # get the model line script
+        script_name = model_line.getCalculationScriptId()
+        if script_name is None:
+          # if model line script is None, get the default model script
+          script_name = model.getDefaultCalculationScriptId()
 
-          if script_name is None:
-            # if no calculation script found, use a default script :
-            script_name = 'PaySheetTransaction_defaultCalculationScript'
+        if script_name is None:
+          # if no calculation script found, use a default script :
+          script_name = 'PaySheetTransaction_defaultCalculationScript'
 
-          if getattr(self, script_name, None) is None:
-            raise ValueError, "Unable to find `%s` calculation script" % \
-                                                             script_name
-          calculation_script = getattr(self, script_name, None)
-          quantity=0
-          price=0
-          #LOG('script_name :', 0, script_name)
-          result = calculation_script(\
-            base_amount_current_value_dict=base_amount_current_value_dict,
-            model_slice_min=model_slice_min, 
-            model_slice_max=model_slice_max, 
-            cell=cell,)
+        if getattr(self, script_name, None) is None:
+          raise ValueError, "Unable to find `%s` calculation script" % \
+                                                           script_name
+        calculation_script = getattr(self, script_name, None)
+        quantity=0
+        price=0
+        #LOG('script_name :', 0, script_name)
+        result = calculation_script(\
+          base_amount_dict=base_amount_dict,
+          model_slice_min=model_slice_min, 
+          model_slice_max=model_slice_max, 
+          cell=cell,)
 
-          quantity = result['quantity']
-          price = result['price']
+        quantity = result['quantity']
+        price = result['price']
 
-          # Cell creation :
-          # Define an empty new cell
-          new_cell = { 'axe_list' : [share, slice],
-                       'quantity' : quantity,
-                       'price'    : price,
-                     }
-          cell_list.append(new_cell)
+        # Cell creation :
+        # Define an empty new cell
+        new_cell = { 'axe_list' : tuple, # share, slice
+                     'quantity' : quantity,
+                     'price'    : price,
+                   }
+        cell_list.append(new_cell)
 
-        # update base participation
+
+        
         base_participation_list = service.getBaseAmountList(base=1)
         for base_participation in base_participation_list:
           if quantity:
-            if base_amount_current_value_dict.has_key(base_participation):
-              old_val = base_amount_current_value_dict[base_participation]
+            if base_amount_dict.has_key(base_participation) and \
+                base_amount_dict[base_participation].has_key(share):
+              old_val = base_amount_dict[base_participation][share]
             else:
               old_val = 0
             new_val = old_val + quantity
+            if not base_amount_dict.has_key(base_participation):
+              base_amount_dict[base_participation]={}
 
             if price:
               new_val = round((old_val + quantity*price), precision) 
-            base_amount_current_value_dict[base_participation] = new_val
+            base_amount_dict[base_participation][share] = new_val
 
       if cell_list:
         # create the PaySheetLine
