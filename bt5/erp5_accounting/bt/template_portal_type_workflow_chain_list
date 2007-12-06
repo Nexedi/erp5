@@ -21,7 +21,6 @@ Purchase Invoice Transaction | accounting_workflow
 Purchase Invoice Transaction | delivery_causality_interaction_workflow
 Purchase Invoice Transaction | delivery_simulation_interaction_workflow
 Purchase Invoice Transaction | edit_workflow
-Purchase Invoice Transaction | invoice_causality_workflow
 Sale Invoice Transaction Line | delivery_movement_causality_interaction_workflow
 Sale Invoice Transaction Line | delivery_movement_simulation_interaction_workflow
 Sale Invoice Transaction Line | edit_workflow
@@ -29,4 +28,3 @@ Sale Invoice Transaction | accounting_workflow
 Sale Invoice Transaction | delivery_causality_interaction_workflow
 Sale Invoice Transaction | delivery_simulation_interaction_workflow
 Sale Invoice Transaction | edit_workflow
-Sale Invoice Transaction | invoice_causality_workflow
