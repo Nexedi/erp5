@@ -66,8 +66,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""This is the action for the Base_viewPrintDialog.\n
-\n
 """\n
+\n
+if target_language:\n
+  container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
+\n
 if print_mode == \'list_view\':\n
   return context.Folder_viewContentListReport()\n
 \n
@@ -94,7 +97,7 @@ return getattr(context, form_id)()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, print_mode=\'\', **kw</string> </value>
+            <value> <string>form_id, print_mode=\'\', target_language=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,7 +117,7 @@ return getattr(context, form_id)()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -122,8 +125,11 @@ return getattr(context, form_id)()\n
                           <tuple>
                             <string>form_id</string>
                             <string>print_mode</string>
+                            <string>target_language</string>
                             <string>kw</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>container</string>
                             <string>context</string>
                             <string>getattr</string>
                           </tuple>
@@ -138,6 +144,7 @@ return getattr(context, form_id)()\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string></string>
                 <string></string>
               </tuple>
             </value>
