@@ -78,7 +78,6 @@ Sale Invoice Transaction | create_related_payment
 Sale Invoice Transaction | create_reversal
 Sale Invoice Transaction | destination_asset
 Sale Invoice Transaction | detail
-Sale Invoice Transaction | invoice_item_list
 Sale Invoice Transaction | jump_to_related_payment
 Sale Invoice Transaction | source_asset
 Sale Invoice Transaction | view
