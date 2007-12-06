@@ -94,7 +94,10 @@ def _getCatalog(acquisition_context):
   """
   catalog_method_id_list = acquisition_context.getTemplateCatalogMethodIdList()
   if len(catalog_method_id_list) == 0:
-    return None
+    try:
+      return acquisition_context.getPortalObject().portal_catalog.objectIds('SQLCatalog')[0]
+    except IndexError:
+      return None
   catalog_method_id = catalog_method_id_list[0]
   return catalog_method_id.split('/')[0]
 
@@ -3274,6 +3277,98 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
       xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None)
 
+# datetime
+class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    sql_datetime_keys = list(catalog.sql_catalog_datetime_search_keys)
+    key_list = []
+    for key in self._archive.keys():
+      if key in sql_datetime_keys:
+        key_list.append(key)
+      else:
+        raise NotFound, 'DateTime key "%r" not found in catalog' %(key,)
+    if len(key_list) > 0:
+      self._objects[self.__class__.__name__+'/'+'datetime_key_list'] = key_list
+
+  def _importFile(self, file_name, file):
+    list = []
+    xml = parse(file)
+    key_list = xml.getElementsByTagName('key')
+    for key in key_list:
+      node = key.childNodes[0]
+      value = node.data
+      list.append(str(value))
+    self._objects[file_name[:-4]] = list
+
+  def install(self, context, trashbin, **kw):
+    catalog = _getCatalogValue(context)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    sql_datetime_keys = list(catalog.sql_catalog_datetime_search_keys)
+    if context.getTemplateFormatVersion() == 1:
+      if len(self._objects.keys()) == 0: # needed because of pop()
+        return
+      keys = []
+      for k in self._objects.values().pop(): # because of list of list
+        keys.append(k)
+    else:
+      keys = self._archive.keys()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    # XXX same as related key
+    if update_dict.has_key('datetime_key_list') or force:
+      if not force:
+        action = update_dict['datetime_key_list']
+        if action == 'nothing':
+          return
+      for key in keys:
+        if key not in sql_datetime_keys:
+          sql_datetime_keys.append(key)
+      catalog.sql_catalog_datetime_search_keys = sql_datetime_keys
+
+  def uninstall(self, context, **kw):
+    catalog = _getCatalogValue(context)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available - uninstall')
+      return
+    sql_datetime_keys = list(catalog.sql_catalog_datetime_search_keys)
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for key in object_keys:
+      if key in sql_datetime_keys:
+        sql_datetime_keys.remove(key)
+    catalog.sql_catalog_datetime_search_keys = sql_datetime_keys
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+  # Function to generate XML Code Manually
+  def generateXml(self, path=None):
+    obj = self._objects[path]
+    xml_data = '<key_list>'
+    obj.sort()
+    for key in obj:
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=path)
+    for path in self._objects.keys():
+      xml_data = self.generateXml(path=path)
+      bta.addObject(obj=xml_data, name=path, path=None)      
+      
 # full text
 class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
 
@@ -3975,6 +4070,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_catalog_related_key_item',
       '_catalog_result_table_item',
       '_catalog_keyword_key_item',
+      '_catalog_datetime_key_item',
       '_catalog_full_text_key_item',
       '_catalog_request_key_item',
       '_catalog_multivalue_key_item',
@@ -4110,6 +4206,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_keyword_key_item = \
           CatalogKeywordKeyTemplateItem(
                self.getTemplateCatalogKeywordKeyList())
+      self._catalog_datetime_key_item = \
+          CatalogDateTimeKeyTemplateItem(
+               self.getTemplateCatalogDatetimeKeyList())
       self._catalog_full_text_key_item = \
           CatalogFullTextKeyTemplateItem(
                self.getTemplateCatalogFullTextKeyList())
@@ -4666,7 +4765,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         bta = BusinessTemplateFolder(importing=1, file=file, path=root_path)
       else:
         bta = BusinessTemplateTarball(importing=1, file=file)
-
       self._portal_type_item = \
           PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
       self._portal_type_workflow_chain_item = \
@@ -4732,6 +4830,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_keyword_key_item = \
           CatalogKeywordKeyTemplateItem(
                self.getTemplateCatalogKeywordKeyList())
+      self._catalog_datetime_key_item = \
+          CatalogDateTimeKeyTemplateItem(
+               self.getTemplateCatalogDatetimeKeyList())
       self._catalog_full_text_key_item = \
           CatalogFullTextKeyTemplateItem(
                self.getTemplateCatalogFullTextKeyList())
@@ -4829,6 +4930,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogRelatedKey' : '_catalog_related_key_item',
         'CatalogResultTable' : '_catalog_result_table_item',
         'CatalogKeywordKey' : '_catalog_keyword_key_item',
+        'CatalogDateTimeKey' : '_catalog_datetime_key_item',
         'CatalogFullTextKey' : '_catalog_full_text_key_item',
         'CatalogRequestKey' : '_catalog_request_key_item',
         'CatalogMultivalueKey' : '_catalog_multivalue_key_item',
@@ -4884,6 +4986,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_result_key_item', '_catalog_related_key_item',
                      '_catalog_result_table_item',
                      '_catalog_keyword_key_item',
+                     '_catalog_datetime_key_item',
                      '_catalog_full_text_key_item',
                      '_catalog_request_key_item',
                      '_catalog_multivalue_key_item',
