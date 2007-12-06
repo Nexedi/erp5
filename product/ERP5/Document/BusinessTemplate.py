@@ -674,11 +674,11 @@ class ObjectTemplateItem(BaseTemplateItem):
       for path in keys:
         if update_dict.has_key(path) or force:
           # get action for the oject
+          action = 'backup'
           if not force:
             action = update_dict[path]
             if action == 'nothing':
               continue
-          action = 'backup'
           # get subobjects in path
           path_list = path.split('/')
           container_path = path_list[:-1]
