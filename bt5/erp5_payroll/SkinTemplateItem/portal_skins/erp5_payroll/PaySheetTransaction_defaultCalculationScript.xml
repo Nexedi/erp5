@@ -67,22 +67,31 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 base_application = 0\n
-if base_amount_current_value_dict:\n
+tax_category_list = cell.getVariationCategoryList(base_category_list= \\\n
+    \'tax_category\')\n
+if tax_category_list != []:\n
+  tax_category = tax_category_list[0]\n
+else:\n
+  tax_category = None\n
+\n
+if base_amount_dict:\n
   # get the application amount for this cell\n
   model_line = cell.getParentValue()\n
   for base in model_line.getBaseAmountList(base=1):\n
-    if base_amount_current_value_dict.has_key(base):\n
-      base_application += base_amount_current_value_dict[base]\n
-\n
+    if base_amount_dict.has_key(base):\n
+      base_application += base_amount_dict[base][tax_category]\n
 quantity = cell.getQuantity() or 0\n
 price = cell.getPrice() or 0\n
 \n
 if not quantity and base_application-model_slice_min>0:\n
   if base_application <= model_slice_max:\n
     quantity = base_application-model_slice_min\n
-  else:\n
+  elif model_slice_max:\n
     quantity = model_slice_max-model_slice_min\n
+  else:\n
+    quantity = base_application\n
 \n
 return {\'quantity\':quantity, \'price\':price}\n
 
@@ -109,7 +118,7 @@ return {\'quantity\':quantity, \'price\':price}\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_amount_current_value_dict, model_slice_min, model_slice_max, cell</string> </value>
+            <value> <string>base_amount_dict, model_slice_min, model_slice_max, cell</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,17 +144,22 @@ return {\'quantity\':quantity, \'price\':price}\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>base_amount_current_value_dict</string>
+                            <string>base_amount_dict</string>
                             <string>model_slice_min</string>
                             <string>model_slice_max</string>
                             <string>cell</string>
-                            <string>base_application</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>precision</string>
+                            <string>base_application</string>
+                            <string>tax_category_list</string>
+                            <string>_getitem_</string>
+                            <string>tax_category</string>
+                            <string>None</string>
                             <string>model_line</string>
                             <string>_getiter_</string>
                             <string>base</string>
                             <string>_inplacevar_</string>
-                            <string>_getitem_</string>
                             <string>quantity</string>
                             <string>price</string>
                           </tuple>

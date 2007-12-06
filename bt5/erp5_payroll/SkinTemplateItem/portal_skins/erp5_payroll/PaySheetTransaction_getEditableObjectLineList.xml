@@ -87,9 +87,6 @@ model_line_list = model.contentValues(portal_type=\'Pay Sheet Model Line\')\n
 model_line_editable_list = [x.getObject() for x in model_line_list \\\n
                             if x.getObject().isEditable()]\n
 \n
-\n
-\n
-\n
 line_list = []\n
 for model_line in model_line_editable_list:\n
 \n
@@ -103,7 +100,6 @@ for model_line in model_line_editable_list:\n
   service = model_line.getResourceValue()\n
 \n
   for tuple in cartesian_product:\n
-    tuple.reverse() #XXX understand why it is necesary\n
     cell = model_line.getCell(*tuple)\n
     if cell is None:\n
       continue\n
@@ -128,13 +124,9 @@ for model_line in model_line_editable_list:\n
 \n
     params.update(tuple_dict)\n
 \n
-    #line_list.append(model_line.asContext(**params))\n
     line_list.append(cell.asContext(**params))\n
 \n
 return line_list\n
-\n
-#return context.PaySheetTransaction_getTempObjectListFromModelLineList(\\\n
-#    model_line_list = model_line_editable_list)\n
 </string> </value>
         </item>
         <item>

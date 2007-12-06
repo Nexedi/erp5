@@ -85,8 +85,10 @@ params = {\n
 \n
 \n
 deductible_tax = portal_simulation.getInventoryAssetPrice(**params)\n
+over_time = context.PaySheetTransaction_getYearToDateOvertimeAmount()\n
+gross_salary = context.PaySheetTransaction_getYearToDateGrossSalary()\n
 \n
-return context.PaySheetTransaction_getYearToDateGrossSalary() - deductible_tax\n
+return gross_salary - over_time - deductible_tax\n
 </string> </value>
         </item>
         <item>
@@ -138,6 +140,8 @@ return context.PaySheetTransaction_getYearToDateGrossSalary() - deductible_tax\n
                             <string>params</string>
                             <string>_apply_</string>
                             <string>deductible_tax</string>
+                            <string>over_time</string>
+                            <string>gross_salary</string>
                           </tuple>
                         </value>
                     </item>

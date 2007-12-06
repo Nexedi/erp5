@@ -285,7 +285,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getProperty(\'price\')</string> </value>
+            <value> <string>python:cell.getProperty(\'price\')</string> </value>
         </item>
       </dictionary>
     </pickle>

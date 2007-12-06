@@ -259,6 +259,14 @@
                           <string>price</string>
                           <string>Share</string>
                         </tuple>
+                        <tuple>
+                          <string>variation_category_list</string>
+                          <string>variation_category_list</string>
+                        </tuple>
+                        <tuple>
+                          <string>predicate_category_list</string>
+                          <string>predicate_category_list</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -281,14 +289,6 @@
                         <tuple>
                           <string>mapped_value_property_list</string>
                           <string>mapped_value_property_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_category_list</string>
-                          <string>variation_category_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>predicate_category_list</string>
-                          <string>predicate_category_list</string>
                         </tuple>
                       </list>
                     </value>

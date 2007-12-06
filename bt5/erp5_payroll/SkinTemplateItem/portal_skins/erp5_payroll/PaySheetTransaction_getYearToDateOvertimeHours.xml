@@ -65,60 +65,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\'\'\'\n
-  return a list of slice items\n
-\'\'\'\n
+            <value> <string>portal = context.getPortalObject()\n
+accounting_module = portal.accounting_module\n
 \n
-def framing(cell, name):\n
-  \'\'\'\n
-    this function return a string corresponding to the framing of the slice \n
-    with the min and max value of the cell.\n
-    e.g. : \'2682.0 <= Tranche B < 10728\'\n
-  \'\'\'\n
-  if cell is None:\n
-    raise "PaySheetModelLine_asCellRange Error", "cell is None"\n
-  return \'%s <= %s < %s\' % (str(cell.getQuantityRangeMin()), name,\n
-      str(cell.getQuantityRangeMax()))\n
+from_date=DateTime(context.getStartDate().year(), 1, 1)\n
+to_date=context.getStartDate()\n
 \n
+search_params = \\\n
+  { \n
+   \'portal_type\'         : \'Pay Sheet Transaction\',\n
+   \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
+   \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
+#   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+  }\n
 \n
-N_ = context.Base_translateString\n
-resource = context.getResourceValue()\n
-cell_range = []\n
-tax_category_title = N_(\'(Amount or Percent)\')\n
+paysheet_list = accounting_module.searchFolder( **search_params)\n
 \n
-if matrixbox :\n
-  if resource is not None:\n
-    base_category_list = resource.getVariationBaseCategoryList()\n
-    for base_category in base_category_list:\n
-      category_cell_range = []\n
-      category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,))\n
-      for category_item in category_item_list:\n
-        if base_category == \'salary_range\':\n
-          category_cell_range.append((category_item[1],\\\n
-              framing(context.getParentValue().getCell(category_item[1]), \n
-                      category_item[0])))\n
-        elif base_category == \'tax_category\':\n
-          category_cell_range.append((category_item[1], \n
-            \' \'.join((category_item[0], tax_category_title))))\n
-        else:\n
-          raise "PaySheetModelLine_asCellRange Error", "the two categories "\\\n
-                "must could be only tax_category and salary_range"\n
-      cell_range.append(category_cell_range)\n
+yearly_work_time = 0\n
+for paysheet in paysheet_list:\n
+  yearly_work_time += paysheet.getOvertimeAnnotationLineQuantity(0)\n
 \n
-    cell_range = filter(lambda x: x != [], cell_range )\n
-  return cell_range\n
-else:\n
-  list_of_category_list = []\n
-  variation_base_category_list = context.getVariationBaseCategoryList()\n
-  for base_category in variation_base_category_list:\n
-    list_of_category_list.append(\\\n
-        context.getVariationCategoryList(base_category_list=base_category))\n
-  return list_of_category_list\n
-
-
-]]></string> </value>
+return yearly_work_time\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -134,7 +102,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, base_id=\'movement\', **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -154,33 +122,26 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>matrixbox</string>
-                            <string>base_id</string>
-                            <string>kw</string>
-                            <string>framing</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
-                            <string>resource</string>
-                            <string>cell_range</string>
-                            <string>tax_category_title</string>
-                            <string>None</string>
-                            <string>base_category_list</string>
+                            <string>portal</string>
+                            <string>accounting_module</string>
+                            <string>DateTime</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>search_params</string>
+                            <string>_apply_</string>
+                            <string>paysheet_list</string>
+                            <string>yearly_work_time</string>
                             <string>_getiter_</string>
-                            <string>base_category</string>
-                            <string>category_cell_range</string>
-                            <string>category_item_list</string>
-                            <string>category_item</string>
-                            <string>_getitem_</string>
-                            <string>filter</string>
-                            <string>list_of_category_list</string>
-                            <string>variation_base_category_list</string>
+                            <string>paysheet</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
@@ -192,15 +153,12 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-                <string>movement</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetModelLine_asCellRange</string> </value>
+            <value> <string>PaySheetTransaction_getYearToDateOvertimeHours</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

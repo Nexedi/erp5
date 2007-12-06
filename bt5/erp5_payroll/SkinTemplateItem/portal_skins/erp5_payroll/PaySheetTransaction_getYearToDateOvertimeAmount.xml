@@ -65,27 +65,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-accounting_module = portal.accounting_module\n
+            <value> <string>if paysheet is None:\n
+    paysheet = context\n
 \n
-from_date=DateTime(context.getStartDate().year(), 1, 1)\n
-to_date=context.getStartDate()\n
+portal_simulation = context.getPortalObject().portal_simulation\n
 \n
-search_params = \\\n
-  { \n
-   \'portal_type\'         : \'Pay Sheet Transaction\',\n
-   \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
-   \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
-#   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+params = {\n
+    \'node_uid\' : paysheet.getSourceSectionUid(),\n
+    \'mirror_section_uid\' : paysheet.getSourceSectionUid(),\n
+    \'section_uid\' : paysheet.getDestinationSectionUid(),\n
+    \'tax_category_uid\' :\\\n
+        context.portal_categories.tax_category.employee_share.getUid(),\n
+    \'to_date\' : paysheet.getStartDate(),\n
+    \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
+    #\'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+    \'precision\' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),\n
+    \'resource_category\' : [\'base_amount/over_time\',]\n
+    #\'src__\' : 1\n
   }\n
 \n
-paysheet_list = accounting_module.searchFolder( **search_params)\n
-\n
-yearly_work_time = 0\n
-for paysheet in paysheet_list:\n
-  yearly_work_time += paysheet.getOvertimeAnnotationLineQuantity(0)\n
-\n
-return yearly_work_time\n
+return portal_simulation.getInventoryAssetPrice(**params)\n
 </string> </value>
         </item>
         <item>
@@ -102,7 +101,7 @@ return yearly_work_time\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>paysheet=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,26 +121,20 @@ return yearly_work_time\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>accounting_module</string>
-                            <string>DateTime</string>
-                            <string>from_date</string>
-                            <string>to_date</string>
-                            <string>search_params</string>
-                            <string>_apply_</string>
-                            <string>paysheet_list</string>
-                            <string>yearly_work_time</string>
-                            <string>_getiter_</string>
                             <string>paysheet</string>
-                            <string>_inplacevar_</string>
+                            <string>None</string>
+                            <string>context</string>
+                            <string>_getattr_</string>
+                            <string>portal_simulation</string>
+                            <string>DateTime</string>
+                            <string>params</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,12 +146,14 @@ return yearly_work_time\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_getYearToDateOverTimeHours</string> </value>
+            <value> <string>PaySheetTransaction_getYearToDateOvertimeAmount</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

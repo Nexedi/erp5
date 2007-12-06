@@ -65,50 +65,94 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-import pprint\n
+            <value> <string>\'\'\'\n
+  This script return a Pay Sheet Line list with some new parameters on\n
+  each Pay Sheet Line (like base, base_name, base_participation_list,\n
+  payroll_service,...)\n
+  It\'s used in the PaySheetTransaction_view to display PaySheetLines\n
+\'\'\'\n
 \n
-paysheet_line_list = context.contentValues(portal_type=\'Pay Sheet Line\')\n
+\n
+from Products.ERP5Type.Utils import cartesianProduct\n
+import pprint\n
 from Products.ERP5Type.Message import Message\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+\n
+\n
+paysheet_line_list = context.contentValues(portal_type=\'Pay Sheet Line\')\n
 if context.getPriceCurrencyValue():\n
   precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 else:\n
   precision = 2\n
 \n
+\n
 line_list = []\n
 \n
 for paysheet_line in paysheet_line_list:\n
-  slice_list = paysheet_line.getSalaryRangeValueList()\n
-  tax_category_list = paysheet_line.getVariationCategoryList(\\\n
-      base_category_list=\'tax_category\')\n
+  base_category_list = paysheet_line.getVariationBaseCategoryList()\n
+  list_of_list = []\n
+  for base_category in base_category_list:\n
+    list = paysheet_line.getVariationCategoryList(base_category_list=\\\n
+        base_category)\n
+    list_of_list.append(list)\n
+  cartesian_product = cartesianProduct(list_of_list)\n
 \n
-  for slice in slice_list:\n
-    share_dict={}\n
-    quantity=0\n
-    for tax_category in tax_category_list:\n
-      cell = paysheet_line.getCell(tax_category, slice.getRelativeUrl())\n
-      quantity = cell.getQuantity()\n
-      price = cell.getPrice()\n
-      share_dict[cell.getTaxCategory()+\'_rate\'] = price\n
-      share_dict[cell.getTaxCategory()+\'_amount\'] = round(quantity*price,\n
-          precision)\n
+  previous_share = None\n
+  indice = 0\n
 \n
-    # In theory, the base is the same for all share, but changes with the slice\n
+  object_dict = {}\n
+  for tuple in cartesian_product:\n
+    indice += 1\n
+    share_dict = {}\n
+    cell = paysheet_line.getCell(*tuple)\n
+    if cell is None:\n
+      continue\n
+\n
+    quantity = cell.getQuantity()\n
     base = quantity\n
 \n
     base_list = [str(N_(base_application)) for base_application in \\\n
         paysheet_line.getBaseAmountTitleList()]\n
     base_name = \'+\'.join(base_list)\n
+\n
     payroll_service = paysheet_line.getResourceValue()\n
     base_participation_list = payroll_service.getBaseAmountList()\n
-    line_list.append(paysheet_line.asContext(\n
-                    slice=slice.getTitle(),\n
-                    base_name=base_name,\n
-                    base=base,\n
-                    base_participation_list=base_participation_list,\n
-                    payroll_service=payroll_service.getId(),\n
-                    **share_dict))\n
+\n
+    price = cell.getPrice()\n
+    share_dict[cell.getTaxCategory()+\'_rate\'] = price\n
+    share_dict[cell.getTaxCategory()+\'_amount\'] = round(quantity*price,\n
+        precision)\n
+\n
+    tuple_dict = {}\n
+    for item in tuple:\n
+      # the dict key is the base category and value is the category path\n
+      tuple_dict[item.split(\'/\')[0]]=context.portal_categories.restrictedTraverse(item).getTitle()\n
+      tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
+\n
+    # we want to display as lines as a paysheet line as slices\n
+    # this is esay to read\n
+    slice = cell.getSalaryRange()\n
+    if slice is None:\n
+      slice = \'no_slice\'\n
+    if not object_dict.has_key(slice):\n
+      slice_title = None\n
+      if tuple_dict.has_key(\'salary_range\'):\n
+        slice_title=tuple_dict[\'salary_range\']\n
+      object_dict[slice]={\n
+                    \'slice\':slice_title,\n
+                    \'base_name\':base_name,\n
+                    \'base\':base,\n
+                    \'base_participation_list\':base_participation_list,\n
+                    \'payroll_service\':payroll_service.getId()}\n
+      object_dict[slice].update(share_dict)\n
+    else:\n
+      object_dict[slice].update(**share_dict)\n
+\n
+\n
+  for object_key in paysheet_line.getSalaryRangeList():\n
+    line_list.append(paysheet_line.asContext(**object_dict[object_key]))\n
+  if object_dict.has_key(\'no_slice\'):\n
+    line_list.append(paysheet_line.asContext(**object_dict[\'no_slice\']))\n
 \n
 if kw.has_key(\'sort_on\'):\n
   list = kw[\'sort_on\']\n
@@ -166,29 +210,34 @@ return line_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>Object</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>cartesianProduct</string>
                             <string>pprint</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>paysheet_line_list</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>N_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>paysheet_line_list</string>
                             <string>precision</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>paysheet_line</string>
-                            <string>slice_list</string>
-                            <string>tax_category_list</string>
-                            <string>slice</string>
+                            <string>base_category_list</string>
+                            <string>list_of_list</string>
+                            <string>base_category</string>
+                            <string>list</string>
+                            <string>cartesian_product</string>
+                            <string>None</string>
+                            <string>previous_share</string>
+                            <string>indice</string>
+                            <string>object_dict</string>
+                            <string>tuple</string>
+                            <string>_inplacevar_</string>
                             <string>share_dict</string>
-                            <string>quantity</string>
-                            <string>tax_category</string>
+                            <string>_apply_</string>
                             <string>cell</string>
-                            <string>price</string>
-                            <string>_write_</string>
-                            <string>round</string>
+                            <string>quantity</string>
                             <string>base</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -198,9 +247,15 @@ return line_list\n
                             <string>base_name</string>
                             <string>payroll_service</string>
                             <string>base_participation_list</string>
-                            <string>_apply_</string>
+                            <string>price</string>
+                            <string>_write_</string>
+                            <string>round</string>
+                            <string>tuple_dict</string>
+                            <string>item</string>
                             <string>_getitem_</string>
-                            <string>list</string>
+                            <string>slice</string>
+                            <string>slice_title</string>
+                            <string>object_key</string>
                           </tuple>
                         </value>
                     </item>
