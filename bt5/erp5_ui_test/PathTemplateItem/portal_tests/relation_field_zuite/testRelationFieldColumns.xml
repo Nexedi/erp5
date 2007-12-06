@@ -107,17 +107,17 @@
 <!-- this field is configured to show title, int_index and relative url -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 \n
@@ -133,17 +133,17 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 \n
@@ -159,17 +159,17 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 \n
