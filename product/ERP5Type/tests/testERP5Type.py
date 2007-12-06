@@ -1807,6 +1807,37 @@ class TestPropertySheet:
     # ... other cases should be added here
 
 
+
+
+    # Tests for _aq_dynamic patch. Probably not in the right place.
+    def test_aq_dynamic(self):
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      from Acquisition import Explicit
+
+      class Ok(Explicit):
+        aq_dynamic_calls = []
+        def _aq_dynamic(self, name):
+          self.aq_dynamic_calls.append(name)
+          return 'returned_attr'
+
+      ok = Ok().__of__(doc)
+      self.assertEquals('returned_attr', getattr(ok, 'attr'))
+      self.assertEquals(ok.aq_dynamic_calls, ['attr'])
+      
+    def test_aq_dynamic_exception(self):
+      # if an exception is raised in _aq_dynamic, it should not be hidden
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      from Acquisition import Explicit
+
+      class NotOk(Explicit):
+        def _aq_dynamic(self, name):
+          raise ValueError()
+
+      not_ok = NotOk().__of__(doc)
+      self.assertRaises(ValueError, getattr, not_ok, 'attr')
+      self.assertFalse(hasattr(not_ok, 'attr'))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
