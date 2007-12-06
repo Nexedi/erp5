@@ -1,0 +1,16 @@
+Invoice Cell | list
+Invoice Cell | view
+Invoice Line | list
+Invoice Line | price
+Invoice Line | quantity
+Invoice Line | view
+Invoice Rule | view
+Invoice Transaction Rule | divergence
+Invoice Transaction Rule | view
+Invoicing Rule | view
+Purchase Invoice Transaction | view_invoice
+Sale Invoice Transaction | invoice_item_list
+Sale Invoice Transaction | jump_to_related_sale_packing_list
+Sale Invoice Transaction | payment_condition
+Sale Invoice Transaction | trade_condition_discount
+Sale Invoice Transaction | trade_condition_profile_view

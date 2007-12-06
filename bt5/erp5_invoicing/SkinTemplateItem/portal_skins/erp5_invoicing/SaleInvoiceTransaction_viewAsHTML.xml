@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\n
+\n
+<html>\n
+\n
+  <head>\n
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">\n
+    <title tal:content="here/getTitle">Nexedi</title>\n
+\n
+  </head>\n
+\n
+  <body bgcolor="#ffffff"\n
+                tal:define="packing_list python:here.getDefaultValue(\'causality\',spec=[\'Sale Packing List\']);\n
+                invoice_line_list        python:here.contentValues(filter={\'portal_type\':\'Invoice Line\'});\n
+                from_organisation        python:here.getSourceSectionValue();\n
+                client_invoice           python:here.getDefaultValue(\'destination_section\',spec=[\'Organisation\', \'Person\']);\n
+                client_delivery          python:here.getDefaultValue(\'destination\',spec=[\'Organisation\', \'Person\']);\n
+                client_delivery          python:client_delivery or here.getDefaultValue(\'destination_section\',spec=[\'Organisation\', \'Person\']);\n
+                total_price              python:here.getTotalPrice();\n
+                VAT_infos                python:here.SaleInvoiceTransaction_getVAT()">\n
+\n
+\n
+  <table width=100%>\n
+    <tr>\n
+      <td colspan=3><img src="logo.png"></td>\n
+    </tr>\n
+    <tr>\n
+      <td align=left tal:content="python: from_organisation.getCorporateName(\'\')" colspan="2" />\n
+      <td align=right tal:content="python: \'Invoice / Date Facture: %s\' % here.getStartDate().Date()"/>\n
+    </tr>\n
+    <tr>\n
+      <td align=left tal:content="python: \'Tel: %s\' % from_organisation.getDefaultTelephoneText(\'\')" colspan="2"/>\n
+      <td align=right tal:content="python: \'Pay Before / Payer avant: %s\' % here.SaleInvoiceTransaction_getDueDate().Date()"/>\n
+    </tr>\n
+    <tr>\n
+      <td tal:content="python: from_organisation.getDefaultAddressStreetAddress()" colspan="2"/>\n
+      <td align=right> Invoice / Facture No: ERP5 <span tal:replace="python: here.getReference() or here.getId()"/> </td>\n
+    </tr>\n
+    <tr>\n
+      <td tal:content="python: \'%s %s\' %\n
+                              (from_organisation.getDefaultAddressZipCode(\'\'),\n
+                              from_organisation.getDefaultAddressCity(\'\'))" colspan="3"/>\n
+    </tr>\n
+    <tr>\n
+      <td tal:content="python: from_organisation.getDefaultAddressRegionTitle(\'\')" colspan="3"/>\n
+    </tr>\n
+\n
+    <tr>\n
+      <th colspan=3>\n
+        <h2 tal:condition="python:here.getSimulationState() not in (\'draft\',\'planned\')">INVOICE / FACTURE</h2>\n
+        <h2 tal:condition="python:here.getSimulationState() in (\'draft\',\'planned\')">PROFORMA INVOICE / FACTURE PROFORMA</h2>\n
+      </th>\n
+    </tr>\n
+\n
+    </table>\n
+\n
+    <br/>\n
+\n
+      <table width=100%>\n
+      <tr bgcolor=000000>\n
+        <th align=left><font color=ffffff size=-2>INVOICE ADDRESS / ADRESSE FACTURATION</font></th>\n
+        <th align=left><font color=ffffff size=-2>DELIVERY ADDRESS / ADRESSE LIVRAISON </font></th>\n
+      </tr>\n
+\n
+      <tr>\n
+        <td align=left tal:content="client_invoice/getCorporateName | client_invoice/getTitle"/>\n
+        <td align=left tal:content="client_delivery/getCorporateName | client_delivery/getTitle"/>\n
+      </tr>\n
+      <tr>\n
+        <td align=left tal:content="python: client_invoice.getDefaultAddressStreetAddress(\'\')"/>\n
+        <td align=left tal:content="python: client_delivery.getDefaultAddressStreetAddress(\'\')"/>\n
+      </tr>\n
+      <tr>\n
+        <td align=left>\n
+          <tal:block tal:replace="python: client_invoice.getDefaultAddressZipCode(\'\')"/>\n
+          <tal:block tal:replace="python: client_invoice.getDefaultAddressCity(\'\')"/>\n
+        </td>\n
+        <td align=left>\n
+          <tal:block tal:replace="python: client_delivery.getDefaultAddressZipCode(\'\')"/>\n
+          <tal:block tal:replace="python: client_delivery.getDefaultAddressCity(\'\')"/>\n
+        </td>\n
+      </tr>\n
+      <tr>\n
+        <td align=left tal:content="python: client_invoice.getDefaultAddressRegionTitle(\'\')"/>\n
+        <td align=left tal:content="python: client_delivery.getDefaultAddressRegionTitle(\'\')"/>\n
+      </tr>\n
+      </table>\n
+\n
+    <br/>\n
+\n
+      <table width=100%>\n
+        <tr bgcolor=000000>\n
+          <th align=left nowrap><font color=ffffff size=-2>Nbr / No</font></th>\n
+          <th align=left nowrap><font color=ffffff size=-2>Description</font></th>\n
+          <th nowrap><font color=ffffff size=-2>Qty / Qt\xc3\xa9</th>\n
+          <th nowrap><font color=ffffff size=-2>Unit</font></th>\n
+          <th nowrap><font color=ffffff size=-2>Price / Prix Unit.</font></th>\n
+          <th nowrap><font color=ffffff size=-2>Price / Prix Total</font></th>\n
+        </tr>\n
+        <tal:block tal:condition="python: packing_list is not None">\n
+          <span tal:define="ordered_line_list python:packing_list.contentValues(filter={\'portal_type\':\'Delivery Line\'})"\n
+                tal:repeat="line ordered_line_list">\n
+            <tr valign=top tal:condition="python:line.getTotalQuantity()>0">\n
+\n
+              <td align=left tal:content="python:line.getId()"></td>\n
+              <td tal:content="python: line.getResourceTitle()" tal:condition="python: line.getDescription() == \'\'"></td>\n
+              <td tal:content="python: line.getDescription()" tal:condition="python: line.getDescription() != \'\'"></td>\n
+              <td align=right tal:content="python: \'%.0f\' % line.getTotalQuantity()"></td>\n
+              <td align=right tal:content="python: line.getQuantityUnitTitle() or line.getQuantityUnit()">n/a</td>\n
+              <td align=right tal:content="python: \'%.02f\' % line.getPrice()"></td>\n
+              <td align=right tal:content="python: \'%.02f\' % line.getTotalPrice()"></td>\n
+            </tr>\n
+          </span>\n
+        </tal:block>\n
+        <tal:block tal:condition="python: invoice_line_list is not None">\n
+          <tal:block tal:repeat="line invoice_line_list">\n
+            <tr valign=top tal:condition="python:float(line.getTotalQuantity()) != 0.0">\n
+\n
+              <td align=left tal:content="python:line.getId()"></td>\n
+              <td tal:content="python: line.getResourceTitle()" tal:condition="python: line.getDescription() == \'\'"></td>\n
+              <td tal:content="python: line.getDescription()" tal:condition="python: line.getDescription() != \'\'"></td>\n
+              <td align=right tal:content="python: \'%.0f\' % line.getTotalQuantity()"></td>\n
+              <td align=right tal:content="python: line.getQuantityUnitTitle() or line.getQuantityUnit()">n/a</td>\n
+              <td align=right tal:content="python: \'%.02f\' % line.getPrice()"></td>\n
+              <td align=right tal:content="python: \'%.02f\' % line.getTotalPrice()"></td>\n
+            </tr>\n
+          </tal:block>\n
+        </tal:block>\n
+        <tr>\n
+          <td colspan=6><hr noshade></td>\n
+        </tr>\n
+        <tr>\n
+          <th colspan=5 align=right>Total\n
+            (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
+          <td colspan=1 align=right tal:content="python: \'%.02f\' % round(here.getTotalPrice(), 2)" tal:on-error="nothing"></td>\n
+        </tr>\n
+        <tal:block tal:condition="python: VAT_infos[\'ratio\'] != 0">\n
+          <tr>\n
+            <td colspan=2 align=left>\n
+              <tal:block tal:repeat="description_line python:here.getDescription().split(\'\\n\')">\n
+                <p tal:content="description_line">\n
+                </p>\n
+              </tal:block>\n
+            </td>\n
+            <th colspan=3 align=right>\n
+              <tal:block tal:replace="python: VAT_infos[\'title\']">TVA / VAT</tal:block> <br> \n
+              <tal:block tal:replace="python: \'%.02f\' % ((VAT_infos[\'ratio\'] or 0.0) * 100.0)"/> % (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
+            <td colspan=1 align=right tal:content="python: \'%.02f\' % round(VAT_infos[\'total\'], 2)"></td>\n
+          </tr>\n
+        </tal:block>\n
+        <tr>\n
+          <td colspan=3>&nbsp;</td>\n
+          <td colspan=3><hr noshade></td>\n
+        </tr>\n
+        <tr>\n
+          <td colspan=3>A r\xc3\xa9gler dans <b tal:content="python: here.getPaymentConditionPaymentTerm(30)">0</b> jours au plus tard.\n
+    <br><font size="-3">Conditions de r\xc3\xa9glement: par ch\xc3\xa9que ou virement, \xc3\xa0 <b tal:replace="python: here.getPaymentTerm(30)">0</b> jours date de la facture. Paiement accept\xc3\xa9 en euros.\n
+    Tout retard de r\xc3\xa9glement donnera lieu \xc3\xa0 une p\xc3\xa9nalit\xc3\xa9 de 1,5% du montant d\xc3\xa9 par mois.\n
+    R\xc3\xa9serve de propri\xc3\xa9t\xc3\xa9 nous conservons la pleine propri\xc3\xa9t\xc3\xa9 des marchandises jusqu\'au paiement int\xc3\xa9gral du prix, des taxes et accessoires.</font></td>\n
+\n
+          <th colspan=2 align=right nowrap>Montant Total<br>Total Amount\n
+            (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
+          <th colspan=1 align=right tal:content="python: \'%.02f\' % (round(VAT_infos[\'total\'], 2) + round(here.getTotalPrice(), 2))" tal:on-error="nothing"></th>\n
+        </tr>\n
+        <tr>\n
+          <td>&nbsp;</td>\n
+        </tr>\n
+      </table>\n
+\n
+  <table width="100%">\n
+  <tr>\n
+        <td><center><h6>RCS Roubaix Tourcoing 440 047 504<br>\n
+  Banque:&nbsp;30027&nbsp;Guichet:&nbsp;17503&nbsp;Compte:&nbsp;00065894401&nbsp;RIB:&nbsp;62<br>IBAN: FR76 3002 7175 0300 0658 9440 162<br>\n
+   \n
+  VAT FR72440047504</h6></center></td>\n
+    </tr>\n
+  </table>\n
+\n
+\n
+</body>\n
+\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleInvoiceTransaction_viewAsHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

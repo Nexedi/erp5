@@ -1,0 +1,23 @@
+Invoice Line | Discount
+Invoice Line | Invoice Cell
+Invoice Line | Invoice Cell
+Invoice Rule | Category Divergence Tester
+Invoice Rule | Property Divergence Tester
+Invoice Rule | Quantity Divergence Tester
+Invoice Transaction Rule | Accounting Rule Cell
+Invoice Transaction Rule | Category Divergence Tester
+Invoice Transaction Rule | Predicate
+Invoice Transaction Rule | Property Divergence Tester
+Invoice Transaction Rule | Quantity Divergence Tester
+Invoicing Rule | Category Divergence Tester
+Invoicing Rule | Property Divergence Tester
+Invoicing Rule | Quantity Divergence Tester
+Purchase Invoice Transaction | Discount
+Purchase Invoice Transaction | Invoice Line
+Purchase Invoice Transaction | Payment Condition
+Rule Tool | Invoice Rule
+Rule Tool | Invoice Transaction Rule
+Rule Tool | Invoicing Rule
+Sale Invoice Transaction | Discount
+Sale Invoice Transaction | Invoice Line
+Sale Invoice Transaction | Payment Condition
