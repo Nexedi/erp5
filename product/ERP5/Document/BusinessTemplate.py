@@ -3285,7 +3285,7 @@ class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
-    sql_datetime_keys = list(catalog.sql_catalog_datetime_search_keys)
+    sql_datetime_keys = list(getattr(catalog, 'sql_catalog_datetime_search_keys', []))
     key_list = []
     for key in self._archive.keys():
       if key in sql_datetime_keys:
@@ -3311,7 +3311,7 @@ class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    sql_datetime_keys = list(catalog.sql_catalog_datetime_search_keys)
+    sql_datetime_keys = list(getattr(catalog, 'sql_catalog_datetime_search_keys', []))
     if context.getTemplateFormatVersion() == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
@@ -3338,7 +3338,7 @@ class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available - uninstall')
       return
-    sql_datetime_keys = list(catalog.sql_catalog_datetime_search_keys)
+    sql_datetime_keys = list(getattr(catalog, 'sql_catalog_datetime_search_keys', []))
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_keys = [object_path]
