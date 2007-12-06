@@ -59,9 +59,6 @@
   <item>Task</item>
   <item>Reference</item>
  </portal_type>
- <portal_type id="Currency Exchange Line">
-  <item>BaobabStopDate</item>
- </portal_type>
  <portal_type id="Preference">
   <item>RenderingPreference</item>
  </portal_type>

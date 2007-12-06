@@ -73,7 +73,7 @@ operation_list = []\n
 exception_portal_type_list = [\'Paper Money Deposit\', \'Foreign Check\', \'External Banking Operation\', \'Account Transfer\', \'Check Deposit\',\n
                               \'Checkbook Reception\', \'Accounting Cancellation\']\n
 if site_uid is not None:\n
-  not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\', \'ready\', \'deposited\', \'received\')\n
+  not_closed_state_list = (\'ordered\',\'planned\',\'confirmed\',\'started\',\'stopped\', \'ready\', \'deposited\', \'received\', \'finished\')\n
   portal_type_list = [x for x in context.getPortalDeliveryTypeList()\n
                       if x not in exception_portal_type_list]\n
   document_list = context.Baobab_getRemainingOperationList(\n
@@ -89,7 +89,7 @@ if site_uid is not None:\n
       simulation_state = document.getSimulationState()\n
       if (portal_type in (\'Stop Payment\', ) and simulation_state == \'started\')  \\\n
               or (portal_type == \'Mutilated Banknote\' and \n
-                   simulation_state == \'finished\' \\\n
+                   simulation_state != \'finished\' \\\n
                  ) \\\n
               or (portal_type == \'Check Payment\' and \n
                    simulation_state in (\'planned\', \'ordered\') \\\n

@@ -1,0 +1,65 @@
+<type_roles>
+  <role id='Assignor'>
+   <property id='title'>Financier A</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/financier_a</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Financier B</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/financier_b</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='DestinationAssignee'>
+   <property id='title'>Chef Section Financier</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/chef_section_financier</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='DestinationAssignee'>
+   <property id='title'>Chef Financier</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/chef_financier</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Comptable</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/comptable</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='DestinationAssignee'>
+   <property id='title'>Chef Comptable</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/chef_comptable</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Chef Section Comptable </property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/chef_section_comptable</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Reviewer'>
+   <property id='title'>Chef Caisse</property>
+   <property id='priority'>10</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromDocumentSite</property>
+   <multi_property id='category'>function/banking/chef_caisse</multi_property>
+   <multi_property id='base_category'>site</multi_property>
+  </role>
+</type_roles>

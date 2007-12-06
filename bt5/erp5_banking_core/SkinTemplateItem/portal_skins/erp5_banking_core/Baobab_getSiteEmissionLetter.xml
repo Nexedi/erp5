@@ -80,6 +80,9 @@ getSiteEmissionLetter = CachingMethod(getSiteEmissionLetter,\n
                              id = \'Baobab_getSiteEmissionLetter\',\n
                              cache_factory = \'erp5_ui_long\')\n
 \n
+if not same_type(site, \'a\'):\n
+  site = site.getRelativeUrl()\n
+\n
 return getSiteEmissionLetter(site=site)\n
 </string> </value>
         </item>
@@ -134,6 +137,8 @@ return getSiteEmissionLetter(site=site)\n
                             <string>CachingMethod</string>
                             <string>None</string>
                             <string>getSiteEmissionLetter</string>
+                            <string>same_type</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

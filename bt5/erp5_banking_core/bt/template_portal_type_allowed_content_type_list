@@ -15,3 +15,6 @@ Counter Module | Counter
 Counter | Telephone
 Currency Cash Module | Banknote
 Currency Cash Module | Coin
+Currency Exchange Line | Currency Exchange Cell
+Currency Module | Currency
+Currency | Currency Exchange Line

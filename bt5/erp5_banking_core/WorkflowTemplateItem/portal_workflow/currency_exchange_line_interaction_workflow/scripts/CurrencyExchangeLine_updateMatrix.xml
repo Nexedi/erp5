@@ -65,35 +65,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return site of the user and possible counter on wich user can be assigned\n
-if context.getDestination() is None:\n
-  # must have an organisation defined to limit site diplayed\n
-  return [[\'\', \'\']]\n
+            <value> <string>context = state_change[\'object\']\n
 \n
-#dest_site_title = context.getDestinationValue().getSiteTitle()\n
+base_id = \'path\'\n
+kwd = {\'base_id\': base_id}\n
 \n
-site_list = context.Delivery_getVaultItemList(user_site=0, vault_type=("site", "site/surface/banque_interne/guichet", "site/surface/gros_paiement/guichet", "site/surface/gros_versement/guichet", "site/surface/operations_diverses/guichet"), first_level=1, strict_membership=1, leaf_node=0, base_site=context.getDestinationValue().getSite())\n
-# now must filter again this list to remove useless categories\n
-#site_dict = {}\n
-#for site in site_list:\n
-#  site_dict[site[0]] = site[1]\n
-#  site_split = site[0].split(\'/\')\n
-#  if dest_site_title in site_split:\n
-#    if len(site_split) == 4:\n
-#      # case of counter\n
-#      counter = "/".join(site_split[:-1])\n
-#      if not site_dict.has_key(counter):\n
-#        if not \'siege\' in site[1]:\n
-#          site_dict[counter] = \'/\'.join(site[1].split("/")[:7])\n
-#        else:\n
-#          site_dict[counter] = \'/\'.join(site[1].split("/")[:6])\n
-#    else:\n
-#      site_dict[site[0]] = site[1]\n
 \n
-#list = site_dict.items()\n
-#list.sort()\n
-#return list\n
-return site_list\n
+context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
+cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
+resource_list = [\'resource/%s\' % context.getParent().getRelativeUrl()]\n
+price_currency_list = [\'price_currency/%s\' % context.getPriceCurrency()]\n
+membership_list = resource_list+price_currency_list\n
+context.setMembershipCriterionBaseCategoryList([x.split(\'/\')[0] for x in membership_list])\n
+context.setMembershipCriterionCategoryList(membership_list)\n
+context.setResource(context.getParentValue().getRelativeUrl())\n
+context.setMappedValuePropertyList((\'base_price\',\'discount\'))\n
+if cell_range_key_list != [[None, None]] :\n
+  i = 0\n
+  for k in cell_range_key_list:\n
+    category_list = filter(lambda k_item: k_item is not None, k)\n
+    c = context.newCell(*k, **kwd)\n
+    c.edit(mapped_value_property_list = (\'base_price\',\'discount\'),\n
+           force_update = 1,\n
+           membership_criterion_base_category_list = [x.split(\'/\')[0] for x in category_list],\n
+           membership_criterion_category_list = category_list,\n
+           category_list = category_list,\n
+    )\n
+    c.setCriterion(\'stop_date\', min=context.getStartDate(), max=context.getStopDate())\n
+    if c.getBasePrice() is None and context.getBasePrice() is not None:\n
+      c.setBasePrice(context.getBasePrice())\n
 </string> </value>
         </item>
         <item>
@@ -109,14 +109,8 @@ return site_list\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -136,16 +130,34 @@ return site_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
+                            <string>state_change</string>
+                            <string>kw</string>
+                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>base_id</string>
+                            <string>kwd</string>
+                            <string>_getattr_</string>
+                            <string>cell_range_key_list</string>
+                            <string>resource_list</string>
+                            <string>price_currency_list</string>
+                            <string>membership_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                             <string>None</string>
-                            <string>site_list</string>
+                            <string>i</string>
+                            <string>k</string>
+                            <string>filter</string>
+                            <string>category_list</string>
+                            <string>_apply_</string>
+                            <string>c</string>
                           </tuple>
                         </value>
                     </item>
@@ -162,7 +174,7 @@ return site_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getPossibleUserAssignmentSiteList</string> </value>
+            <value> <string>CurrencyExchangeLine_updateMatrix</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

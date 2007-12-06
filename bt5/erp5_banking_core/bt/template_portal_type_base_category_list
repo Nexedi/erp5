@@ -11,3 +11,6 @@ Checkbook | check_amount
 Checkbook | resource
 Checkbook | site
 Counter Date | site
+Currency Exchange Cell | currency_exchange_type
+Currency Exchange Cell | price_currency
+Currency Exchange Line | price_currency

@@ -91,6 +91,7 @@
 # user_vault = 0 : Display only subvaults that corresponds to the user assigned vault\n
 # first_level = 0 : Ne prend que le premier niveau pour un vault type, meme si les sous categories\n
 #                   ont le meme vault_type\n
+# disable_user_site_for_manager = 0 : permet de desactiver l\'option user_site pour les utilisateurs manager\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
@@ -229,6 +230,12 @@ if hasattr(erp5_site, \'functionnal_test_mode\'):\n
   if getattr(erp5_site,  \'functionnal_test_mode\') == 1:\n
     mode_test = 1\n
 \n
+if disable_user_site_for_manager:\n
+  from AccessControl import getSecurityManager\n
+  u=getSecurityManager().getUser()\n
+  if \'Manager\' in u.getRoles():\n
+    user_site=0\n
+\n
 user_site_list = []\n
 if user_site == 1 or owner_site==1:\n
   if owner_site:\n
@@ -260,7 +267,6 @@ if exclude_user_site:\n
     if root_site_url not in new_list:\n
       new_list.append(root_site_url)\n
   exclude_site_list = new_list\n
-\n
 \n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
@@ -317,7 +323,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0,exclude_user_site=0,user_vault=0</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0,exclude_user_site=0,user_vault=0,disable_user_site_for_manager=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -345,7 +351,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>14</int> </value>
+                        <value> <int>15</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -365,6 +371,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>main_agency</string>
                             <string>exclude_user_site</string>
                             <string>user_vault</string>
+                            <string>disable_user_site_for_manager</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -376,6 +383,9 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>mode_test</string>
                             <string>hasattr</string>
                             <string>getattr</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>u</string>
                             <string>user_site_list</string>
                             <string>_getitem_</string>
                             <string>new_site_list</string>
@@ -417,6 +427,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>1</int>
                 <int>0</int>
                 <none/>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
                 <int>0</int>

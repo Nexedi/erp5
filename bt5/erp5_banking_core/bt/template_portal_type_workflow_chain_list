@@ -13,4 +13,7 @@ Counter Date | counter_date_workflow
 Counter Date | edit_workflow
 Counter | counter_workflow
 Counter | edit_workflow
+Currency Exchange Line | currency_exchange_line_interaction_workflow
 Currency Exchange Line | currency_exchange_line_workflow
+Currency Exchange Line | edit_workflow
+Currency | edit_workflow

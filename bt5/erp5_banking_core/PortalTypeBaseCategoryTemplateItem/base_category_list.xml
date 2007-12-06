@@ -32,4 +32,11 @@
  <portal_type id="Counter Date">
   <item>site</item>
  </portal_type>
+ <portal_type id="Currency Exchange Cell">
+  <item>price_currency</item>
+  <item>currency_exchange_type</item>
+ </portal_type>
+ <portal_type id="Currency Exchange Line">
+  <item>price_currency</item>
+ </portal_type>
 </base_category_list>
