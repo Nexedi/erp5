@@ -150,7 +150,7 @@
 <tr>\n
   <td>type</td>\n
   <td>title</td>\n
-  <td>%</td>\n
+  <td>%c%</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
