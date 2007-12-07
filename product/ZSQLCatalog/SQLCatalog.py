@@ -442,7 +442,7 @@ class Query(QueryMixin):
             # 2002/02/01 ==>(UTC) 2002-01-31 22:00:00
             # 2002-02-01 ==>(UTC) 2002-02-01 00:00:00 (!)
             value = value.replace('-', '/') 
-            value = DateTime(value).toZone('UTC').ISO()
+            value = DateTime(value).toZone('UTC')
           elif len(value) >= 1 and value[0:2] in ('<=','!=','>='):
             comparison_operator = value[0:2]
             value = value[2:]
