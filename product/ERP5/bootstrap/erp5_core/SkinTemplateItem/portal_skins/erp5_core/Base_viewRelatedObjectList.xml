@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Update Relation</string> </value>
+            <value> <string>Set Relation</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update Relation</string> </value>
+            <value> <string>Set Relation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
