@@ -29,11 +29,11 @@
  </chain>
  <chain>
   <type>Container Cell</type>
-  <workflow>edit_workflow, packing_list_interaction_workflow</workflow>
+  <workflow>container_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Container Line</type>
-  <workflow>edit_workflow, packing_list_interaction_workflow, trade_matrix_workflow</workflow>
+  <workflow>edit_workflow, trade_matrix_workflow, container_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Counter Rendering</type>
@@ -53,7 +53,7 @@
  </chain>
  <chain>
   <type>Monetary Destruction</type>
-  <workflow>monetary_destruction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, monetary_destruction_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Issue</type>

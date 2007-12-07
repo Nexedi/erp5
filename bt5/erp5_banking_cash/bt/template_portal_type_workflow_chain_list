@@ -12,10 +12,10 @@ Cash To Currency Sale | cash_to_currency_sale_workflow
 Cash To Currency Sale | edit_workflow
 Classification Survey | classification_survey_workflow
 Classification Survey | edit_workflow
+Container Cell | container_interaction_workflow
 Container Cell | edit_workflow
-Container Cell | packing_list_interaction_workflow
+Container Line | container_interaction_workflow
 Container Line | edit_workflow
-Container Line | packing_list_interaction_workflow
 Container Line | trade_matrix_workflow
 Counter Rendering | counter_rendering_workflow
 Counter Rendering | edit_workflow
