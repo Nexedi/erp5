@@ -1,5 +1,7 @@
 portal_categories/account_type/**
 portal_categories/financial_section/*
 portal_deliveries/payment_transaction_builder
+portal_rules/default_invoice_rule
+portal_rules/default_invoice_rule/**
 portal_rules/default_payment_rule
 portal_rules/default_payment_rule/**

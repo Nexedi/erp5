@@ -4,7 +4,6 @@ Invoice Line | list
 Invoice Line | price
 Invoice Line | quantity
 Invoice Line | view
-Invoice Rule | view
 Invoice Transaction Rule | divergence
 Invoice Transaction Rule | view
 Invoicing Rule | view

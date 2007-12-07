@@ -6,8 +6,6 @@ Invoice Line | delivery_movement_simulation_interaction_workflow
 Invoice Line | edit_workflow
 Invoice Line | pricing_interaction_workflow
 Invoice Line | trade_matrix_workflow
-Invoice Rule | edit_workflow
-Invoice Rule | rule_validation_workflow
 Invoice Transaction Rule | edit_workflow
 Invoice Transaction Rule | rule_interaction_workflow
 Invoice Transaction Rule | rule_validation_workflow

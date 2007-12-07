@@ -1,7 +1,5 @@
 portal_deliveries/sale_invoice_builder
 portal_deliveries/sale_invoice_transaction_builder
-portal_rules/default_invoice_rule
-portal_rules/default_invoice_rule/**
 portal_rules/default_invoice_transaction_rule
 portal_rules/default_invoice_transaction_rule/**
 portal_rules/default_invoicing_rule

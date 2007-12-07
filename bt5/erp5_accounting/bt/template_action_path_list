@@ -46,6 +46,7 @@ Bank Account | transactions
 Cash Register | jump_active_accounting_pref
 Cash Register | transactions
 Cash Register | view
+Invoice Rule | view
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions

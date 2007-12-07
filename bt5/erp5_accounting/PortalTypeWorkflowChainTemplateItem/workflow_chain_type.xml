@@ -24,6 +24,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Invoice Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Payment Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
@@ -37,7 +41,7 @@
  </chain>
  <chain>
   <type>Purchase Invoice Transaction Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Invoice Transaction</type>

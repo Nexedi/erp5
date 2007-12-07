@@ -10,6 +10,8 @@ Accounting Transaction | edit_workflow
 Balance Transaction Line | edit_workflow
 Balance Transaction | accounting_workflow
 Balance Transaction | edit_workflow
+Invoice Rule | edit_workflow
+Invoice Rule | rule_validation_workflow
 Payment Rule | edit_workflow
 Payment Rule | rule_validation_workflow
 Payment Transaction | accounting_workflow

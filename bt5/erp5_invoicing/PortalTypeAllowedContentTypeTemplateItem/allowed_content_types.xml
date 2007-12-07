@@ -1,24 +1,19 @@
 <allowed_content_type_list>
  <portal_type id="Invoice Line">
-  <item>Discount</item>
   <item>Invoice Cell</item>
- </portal_type>
- <portal_type id="Invoice Rule">
-  <item>Category Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
-  <item>Property Divergence Tester</item>
+  <item>Discount</item>
  </portal_type>
  <portal_type id="Invoice Transaction Rule">
   <item>Category Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
-  <item>Predicate</item>
   <item>Accounting Rule Cell</item>
   <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Invoicing Rule">
+  <item>Property Divergence Tester</item>
   <item>Category Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
-  <item>Property Divergence Tester</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Discount</item>
@@ -26,13 +21,12 @@
   <item>Invoice Line</item>
  </portal_type>
  <portal_type id="Rule Tool">
-  <item>Invoice Rule</item>
   <item>Invoice Transaction Rule</item>
   <item>Invoicing Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
-  <item>Payment Condition</item>
   <item>Discount</item>
+  <item>Payment Condition</item>
   <item>Invoice Line</item>
  </portal_type>
 </allowed_content_type_list>

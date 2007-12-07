@@ -7,6 +7,9 @@ Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
 Accounting Transaction | Accounting Transaction Line
 Balance Transaction | Balance Transaction Line
+Invoice Rule | Category Divergence Tester
+Invoice Rule | Property Divergence Tester
+Invoice Rule | Quantity Divergence Tester
 Organisation | Accounting Period
 Organisation | Cash Register
 Payment Rule | Category Divergence Tester
@@ -18,5 +21,6 @@ Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
+Rule Tool | Invoice Rule
 Rule Tool | Payment Rule
 Sale Invoice Transaction | Sale Invoice Transaction Line

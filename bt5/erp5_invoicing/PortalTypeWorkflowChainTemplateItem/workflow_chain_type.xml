@@ -8,10 +8,6 @@
   <workflow>delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Invoice Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
   <type>Invoice Transaction Rule</type>
   <workflow>rule_interaction_workflow, rule_validation_workflow, edit_workflow</workflow>
  </chain>
