@@ -53,7 +53,7 @@ class TestNamingConvention(ERP5TypeTestCase):
                 'erp5_dummy_movement', 'erp5_forge', 'erp5_html_style',
                 'erp5_immobilisation', 'erp5_mobile', 'erp5_payroll',
                 'erp5_payroll_ui_test', 'erp5_pdf_editor', 'erp5_publication',
-                'erp5_sxc_style',
+                'erp5_sxc_style', 'erp5_dms_ui_test',
                 # skip l10n templates to save time.
                 # 'erp5_l10n_fr', 'erp5_l10n_ja',
                 # 'erp5_l10n_pl_PL', 'erp5_l10n_pt-BR',
