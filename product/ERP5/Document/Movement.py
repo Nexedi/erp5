@@ -246,7 +246,7 @@ class Movement(XMLObject, Amount):
     return {'price': context.Movement_lookupPrice()}
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-  def getPrice(self, default=None, **kw):
+  def getPrice(self, default=None, evaluate=1, **kw):
     """
       Get the Price in the context.
 
