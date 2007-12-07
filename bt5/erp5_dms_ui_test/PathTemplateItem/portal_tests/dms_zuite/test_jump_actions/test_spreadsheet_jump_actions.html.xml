@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Check Jump Actions on Spreadsheet</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Check Jump Actions on Spreadsheet</td></tr>\n
+</thead><tbody>\n
+\n
+<tr>\n
+        <td>store</td>\n
+        <td>/erp5</td>\n
+        <td>base_url</td>\n
+</tr>\n
+<tr>\n
+        <td>open</td>\n
+        <td>${base_url}/document_module/view</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_action</td>\n
+        <td>label=Add Spreadsheet</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Object Created.</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=Similarity Cloud</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Similarity Cloud</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=Wiki Predecessors</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Wiki Predecessors</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=Wiki Successors</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Wiki Successors</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=Related Documents</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Related Documents</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=Similar Documents</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Similar Documents</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=Reference Documents</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>Reference Documents</td>\n
+        <td></td>\n
+</tr>\n
+<tr>\n
+        <td>selectAndWait</td>\n
+        <td>select_jump</td>\n
+        <td>label=All Related Documents</td>\n
+</tr>\n
+<tr>\n
+        <td>assertTextPresent</td>\n
+        <td>All Related Documents</td>\n
+        <td></td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_spreadsheet_jump_actions.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
