@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>SImilar Documents</string> </value>
+            <value> <string>Similar Documents</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -75,7 +75,11 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DMS_jumpToRelatedDocuments?what=related_similar</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:${object_url}/Document_jumpToRelatedDocumentList?relation_id=related_similar&listbox_title=Similar documents
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
