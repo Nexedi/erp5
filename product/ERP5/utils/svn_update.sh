@@ -1,7 +1,6 @@
 #!/bin/bash
 
 echo -e "\033[0;31mThis is an unsupported script. You should use 'svn update' command instead\033[0m"
-echo "Press Enter to proceed"
 
 # Modules to get from the SVN
 PRODUCTS="CMFActivity CMFCategory ERP5 ERP5Banking ERP5Catalog \
