@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -72,19 +69,22 @@
 This script tries to send a message to the appropriate recipient\n
 from the appropriate sender. It uses portal_notifications\n
 and the getObject API of ERP5Catalog.\n
+This script has a proxy role to make sure we can find person documents in the\n
+catalog.\n
 """\n
 from Products.ERP5Type.Log import log\n
 \n
 object = sci[\'object\']\n
-translateString = context.Base_translateString\n
-portal_catalog = object.portal_catalog\n
+portal = sci.getPortal()\n
+translateString = portal.Base_translateString\n
+portal_catalog = portal.portal_catalog\n
 \n
 # Get the owner\n
 owner = object.getViewPermissionOwner()\n
 owner_value = portal_catalog.getResultValue(portal_type=\'Person\', reference=owner)\n
 \n
 # Get the authenticated user\n
-user = context.portal_membership.getAuthenticatedMember().getUserName()\n
+user = portal.portal_membership.getAuthenticatedMember().getUserName()\n
 user_value = portal_catalog.getResultValue(portal_type=\'Person\', reference=user)\n
 \n
 # If users are not defined, we need to log and return\n
@@ -183,7 +183,7 @@ context.portal_notifications.sendMessage(sender=user, recipient=owner, subject=s
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>portal</string>
                             <string>translateString</string>
                             <string>portal_catalog</string>
                             <string>owner</string>
@@ -194,6 +194,7 @@ context.portal_notifications.sendMessage(sender=user, recipient=owner, subject=s
                             <string>subject</string>
                             <string>msg</string>
                             <string>dict</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
