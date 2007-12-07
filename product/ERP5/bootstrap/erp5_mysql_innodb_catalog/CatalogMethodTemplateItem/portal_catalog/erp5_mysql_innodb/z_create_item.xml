@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -108,9 +105,9 @@ CREATE TABLE `item` (\n
   KEY `node_uid` (`node_uid`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
-  KEY `variation_text` (`variation_text`)\n
+  KEY `variation_text` (`variation_text`),\n
+  KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`)\n
 ) TYPE=InnoDB;\n
-\n
 </string> </value>
         </item>
         <item>
@@ -118,9 +115,11 @@ CREATE TABLE `item` (\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -162,9 +161,9 @@ CREATE TABLE `item` (\n
   KEY `node_uid` (`node_uid`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
-  KEY `variation_text` (`variation_text`)\n
+  KEY `variation_text` (`variation_text`),\n
+  KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`)\n
 ) TYPE=InnoDB;\n
-\n
 </string> </value>
                     </item>
                   </dictionary>
