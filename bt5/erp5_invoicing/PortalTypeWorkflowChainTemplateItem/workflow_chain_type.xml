@@ -19,12 +19,4 @@
   <type>Invoicing Rule</type>
   <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
- <chain>
-  <type>Purchase Invoice Transaction</type>
-  <workflow>invoice_causality_workflow</workflow>
- </chain>
- <chain>
-  <type>Sale Invoice Transaction</type>
-  <workflow>invoice_causality_workflow</workflow>
- </chain>
 </workflow_chain>

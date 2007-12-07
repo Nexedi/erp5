@@ -13,5 +13,3 @@ Invoice Transaction Rule | rule_interaction_workflow
 Invoice Transaction Rule | rule_validation_workflow
 Invoicing Rule | edit_workflow
 Invoicing Rule | rule_validation_workflow
-Purchase Invoice Transaction | invoice_causality_workflow
-Sale Invoice Transaction | invoice_causality_workflow
