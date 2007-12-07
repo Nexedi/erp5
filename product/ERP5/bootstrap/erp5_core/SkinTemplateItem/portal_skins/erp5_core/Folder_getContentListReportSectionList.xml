@@ -77,10 +77,6 @@ stool = portal.portal_selections\n
 \n
 def getFormIdFromAction(action):\n
   return action[\'url\'].split(\'/\')[-1].split(\'?\')[0]\n
-  # something like this will be needed to print default document view:\n
-  form = getattr(context, form_id, None)\n
-  if hasattr(form, \'action\'):\n
-    return form.action\n
 \n
 def getReportSectionForObject(doc):\n
   """ Get all possible report section for object. """\n
