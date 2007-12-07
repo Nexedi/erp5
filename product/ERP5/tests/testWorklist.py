@@ -151,6 +151,9 @@ class TestWorklist(ERP5TypeTestCase):
           props={'guard_roles': role,
                  'var_match_portal_type': self.checked_portal_type})
 
+  def clearCache(self):
+    self.portal.portal_caches.clearAllCache()
+
   def test_01_worklist(self, quiet=0, run=run_all_test):
     """
     Test the permission of the building module.
@@ -170,7 +173,7 @@ class TestWorklist(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    self.portal.portal_caches.clearAllCache()
+    self.clearCache()
 
     result = workflow_tool.listActions(object=document)
     self.logout()
@@ -206,7 +209,7 @@ class TestWorklist(ERP5TypeTestCase):
     document.reindexObject()
     get_transaction().commit()
     self.tic()
-    self.portal.portal_caches.clearAllCache()
+    self.clearCache()
     self.logout()
 
     for user_id in ('manager', ):
@@ -267,7 +270,7 @@ class TestWorklist(ERP5TypeTestCase):
     document.reindexObject()
     get_transaction().commit()
     self.tic()
-    self.portal.portal_caches.clearAllCache()
+    self.clearCache()
     self.logout()
 
     # Users can not see worklist as they are not Assignor
