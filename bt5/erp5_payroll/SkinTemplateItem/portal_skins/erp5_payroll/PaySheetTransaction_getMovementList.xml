@@ -154,16 +154,39 @@ for paysheet_line in paysheet_line_list:\n
   if object_dict.has_key(\'no_slice\'):\n
     line_list.append(paysheet_line.asContext(**object_dict[\'no_slice\']))\n
 \n
+\n
+# sort results\n
+\n
+def sortByTitleAscending(x, y):\n
+  return cmp(x.getTitle(), y.getTitle())\n
+\n
+def sortByTitleDescending(x, y):\n
+  return cmp(y.getTitle(), x.getTitle())\n
+\n
+def sortByIntIndexAscending(x, y):\n
+  return cmp(x.getIntIndex(), y.getIntIndex())\n
+\n
+def sortByIntIndexDescending(x, y):\n
+  return cmp(y.getIntIndex(), x.getIntIndex())\n
+\n
+sortByDefaultSortMethod = sortByIntIndexAscending\n
+\n
 if kw.has_key(\'sort_on\'):\n
   list = kw[\'sort_on\']\n
   if list[0][0] == \'title\' and list[0][1]==\'ascending\':\n
-    line_list.sort(lambda x, y: cmp(x.getTitle(), y.getTitle()))\n
+    line_list.sort(sortByTitleAscending)\n
   elif list[0][0] == \'title\' and list[0][1]==\'descending\':\n
-    line_list.sort(lambda x, y: cmp(x.getTitle(), y.getTitle()), reverse=1)\n
+    line_list.sort(sortByTitleDescending)\n
   elif list[0][0] == \'int_index\' and list[0][1]==\'ascending\':\n
-    line_list.sort(lambda x, y: cmp(x.getIntIndex(), y.getIntIndex()))\n
+    line_list.sort(sortByIntIndexAscending)\n
   elif list[0][0] == \'int_index\' and list[0][1]==\'descending\':\n
-    line_list.sort(lambda x, y: cmp(x.getIntIndex(), y.getIntIndex()), reverse=1)\n
+    line_list.sort(sortByIntIndexDescending)\n
+  else:\n
+    line_list.sort(sortByDefaultSortMethod)\n
+else:\n
+  line_list.sort(sortByDefaultSortMethod)\n
+\n
+\n
 \n
 #return pprint.pformat(line_list)\n
 return line_list\n
@@ -256,6 +279,11 @@ return line_list\n
                             <string>slice</string>
                             <string>slice_title</string>
                             <string>object_key</string>
+                            <string>sortByTitleAscending</string>
+                            <string>sortByTitleDescending</string>
+                            <string>sortByIntIndexAscending</string>
+                            <string>sortByIntIndexDescending</string>
+                            <string>sortByDefaultSortMethod</string>
                           </tuple>
                         </value>
                     </item>
