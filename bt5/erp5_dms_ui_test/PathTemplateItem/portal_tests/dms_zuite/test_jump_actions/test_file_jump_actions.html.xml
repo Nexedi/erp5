@@ -99,16 +99,6 @@
 <tr>\n
         <td>selectAndWait</td>\n
         <td>select_jump</td>\n
-        <td>label=Wiki Successors</td>\n
-</tr>\n
-<tr>\n
-        <td>assertTextPresent</td>\n
-        <td>Wiki Successors</td>\n
-        <td></td>\n
-</tr>\n
-<tr>\n
-        <td>selectAndWait</td>\n
-        <td>select_jump</td>\n
         <td>label=Related Documents</td>\n
 </tr>\n
 <tr>\n
