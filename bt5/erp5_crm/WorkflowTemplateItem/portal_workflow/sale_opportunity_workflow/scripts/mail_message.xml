@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,11 +67,12 @@
             <key> <string>_body</string> </key>
             <value> <string>string_subject = \'Re: %s\' % state_change[\'object\'].getTitle()\n
 message = state_change.kwargs[\'comment\']\n
+document = state_change[\'object\']\n
 \n
 # XXX Wrong way to get email or even to send an email\n
-PersonModule_viewPersonList = context.getClientValueList(portal_type="Person") # should become getDestinationSectionList()\n
+PersonModule_viewPersonList = document.getClientValueList(portal_type="Person") # should become getDestinationSectionList()\n
 email_list = map(lambda x:x.getDefaultEmailText(), PersonModule_viewPersonList)\n
-state_change[\'object\'].MailHost.send(message, mto=email_list, mfrom=context.portal_preferences.getPreferredEventSenderEmail(),\n
+document.MailHost.send(message, mto=email_list, mfrom=context.portal_preferences.getPreferredEventSenderEmail(),\n
                                   subject=string_subject)\n
 </string> </value>
         </item>
@@ -123,10 +121,11 @@ state_change[\'object\'].MailHost.send(message, mto=email_list, mfrom=context.po
                             <string>_getitem_</string>
                             <string>string_subject</string>
                             <string>message</string>
-                            <string>context</string>
+                            <string>document</string>
                             <string>PersonModule_viewPersonList</string>
                             <string>map</string>
                             <string>email_list</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
