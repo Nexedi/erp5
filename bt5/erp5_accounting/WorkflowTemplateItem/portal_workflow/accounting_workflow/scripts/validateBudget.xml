@@ -71,6 +71,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 """ This scripts validate that this transaction fits in the defined budget. It requires erp5_budget.\n
 """\n
 transaction = state_change[\'object\']\n
+portal = state_change.getPortal()\n
 \n
 # checks if there is enough budget before validating this transaction\n
 AccountingTransaction_viewAccountingTransactionLineList = transaction.contentValues(\n
@@ -81,13 +82,13 @@ AccountingTransaction_viewAccountingTransactionLineList = transaction.contentVal
 \n
 # delete all objects which are mapped values (predicates) in the budget module\n
 id_list = []\n
-for objects in transaction.getObject().getPortalObject().budget_module.objectValues():\n
+for objects in portal.budget_module.objectValues():\n
   if objects.getPortalType() == \'Mapped Value\':\n
     id_list.append(objects.getId())\n
-context.budget_module.manage_delObjects(id_list)\n
+portal.budget_module.manage_delObjects(id_list)\n
 \n
 # Create predicates (mapped values) from budget cells\n
-for objects in transaction.getObject().getPortalObject().budget_module.objectValues():\n
+for objects in portal.budget_module.objectValues():\n
   if objects.getPortalType() == \'Budget\':\n
     for obj_line in objects.objectValues():\n
       if obj_line.getPortalType() == \'Budget Line\':\n
@@ -110,7 +111,7 @@ for line in AccountingTransaction_viewAccountingTransactionLineList:\n
     new_id = \'atl\' + str(line.getId())\n
     financial_section = line.getSourceValue().getFinancialSectionValue().getCategoryRelativeUrl(base=0)\n
     function_category = line.getParent().getSourceFunction()\n
-    function = context.portal_categories.getCategoryValue(function_category).getCategoryRelativeUrl(base=0)\n
+    function = portal.portal_categories.getCategoryValue(function_category).getCategoryRelativeUrl(base=0)\n
     group = line.getParent().getSourceSectionValue().getGroup() \n
     quantity = -line.getQuantity()\n
     temp_obj = line.asContext(\n
@@ -129,7 +130,7 @@ for line in AccountingTransaction_viewAccountingTransactionLineList:\n
     temp_obj.setGroup(group)\n
     temp_obj.setQuantity(quantity)\n
     enough_budget = 0\n
-    for objects in context.getPortalObject().budget_module.objectValues():\n
+    for objects in portal.budget_module.objectValues():\n
       if objects.getPortalType() == \'Mapped Value\': \n
          res = objects.test(temp_obj)\n
          if res: \n
@@ -193,11 +194,11 @@ for line in AccountingTransaction_viewAccountingTransactionLineList:\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
+                            <string>portal</string>
                             <string>AccountingTransaction_viewAccountingTransactionLineList</string>
                             <string>id_list</string>
                             <string>_getiter_</string>
                             <string>objects</string>
-                            <string>context</string>
                             <string>obj_line</string>
                             <string>obj</string>
                             <string>financial_section</string>
