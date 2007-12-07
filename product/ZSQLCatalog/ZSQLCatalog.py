@@ -321,7 +321,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       object_path = self.getPhysicalPath()
       # Activities must be removed in the reverse order they were inserted
       # to make sure removing one does not accidntaly trigger the next one.
-      method_id_list = ('finishHotReindexing', 'playBackRecordedObjectList',
+      method_id_list = ('finishHotReindexing', 'runInventoryMethod', 'playBackRecordedObjectList',
                         'setHotReindexingState')
       for method_id in method_id_list:
         portal_activities.flush(object_path, method_id=method_id)
