@@ -259,7 +259,7 @@ class Movement(XMLObject, Amount):
     #   context.getPrice(context=context)
     # instead of:
     #   context.getPrice(context)
-    if isinstance(default, Base) and context is None:
+    if isinstance(default, Base):
       msg = 'getPrice first argument is supposed to be the default value'\
             ' accessor, the context should be passed as with the context='\
             ' keyword argument'
