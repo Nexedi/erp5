@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -126,8 +123,6 @@ if not kw.has_key(\'validation_state\'):\n
                             \'released\', \'published\', \'restricted\']\n
 if not kw.has_key(\'sort_on\'):\n
   kw[\'sort_on\'] = [(\'int_index\', \'descending\')]\n
-if not kw.has_key(\'group_by\'):\n
-  kw[\'group_by\'] = (\'reference\',)\n
 \n
 # Return the list of matching documents for the given states\n
 return current_section.searchResults(**kw)\n
