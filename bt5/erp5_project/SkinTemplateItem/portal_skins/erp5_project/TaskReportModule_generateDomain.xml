@@ -81,7 +81,7 @@ if depth == 0:\n
 # XXX this is usefull but Breaks the edition\n
 #elif depth == 1:\n
 #    category_list = context.portal_selections.getSelectionValueList(context=context,\n
-#                                                                        selection_name= \'task_report_selection\')\n
+#                                                                    selection_name= \'task_report_module_selection\')\n
 \n
 \n
 else:\n

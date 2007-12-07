@@ -74,7 +74,7 @@ domain_list = []\n
 if depth == 0:\n
   category_list = [ ]\n
   for i in context.portal_selections.getSelectionValueList(context=context,\n
-                                                                   selection_name= \'task_report_selection\'):\n
+                                                           selection_name= \'task_report_module_selection\'):\n
     category_list.extend([j for j in i.getSourceValueList() if j not in category_list])\n
 \n
 \n
