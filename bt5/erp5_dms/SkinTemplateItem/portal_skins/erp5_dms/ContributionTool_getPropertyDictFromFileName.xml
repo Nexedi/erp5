@@ -142,7 +142,7 @@ if reference:\n
   new_dict[\'reference\'] = reference\n
 \n
 # Set title to file_name by default\n
-new_dict[\'title\'] = file_name.split(\'.\')[0]\n
+new_dict[\'title\'] = property_dict.get(\'title\', file_name.split(\'.\')[0])\n
 \n
 return new_dict\n
 </string> </value>
