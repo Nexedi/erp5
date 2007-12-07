@@ -102,11 +102,11 @@ CREATE TABLE `item` (\n
   `variation_text` VARCHAR(255),\n
   `simulation_state` VARCHAR(255) default \'\',\n
   KEY `uid` (`uid`),\n
-  KEY `node_uid` (`node_uid`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `variation_text` (`variation_text`),\n
-  KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`)\n
+  KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`),\n
+  KEY `node_simulation_state_date` (`node_uid`,`simulation_state`,`date`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
         </item>
@@ -158,11 +158,11 @@ CREATE TABLE `item` (\n
   `variation_text` VARCHAR(255),\n
   `simulation_state` VARCHAR(255) default \'\',\n
   KEY `uid` (`uid`),\n
-  KEY `node_uid` (`node_uid`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `variation_text` (`variation_text`),\n
-  KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`)\n
+  KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`),\n
+  KEY `node_simulation_state_date` (`node_uid`,`simulation_state`,`date`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
                     </item>
