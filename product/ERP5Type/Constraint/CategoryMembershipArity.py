@@ -60,18 +60,26 @@ class CategoryMembershipArity(Constraint):
     # Retrieve values inside de PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']
     min_arity = int(self.constraint_definition['min_arity'])
-    max_arity = int(self.constraint_definition['max_arity'])
+    max_arity = None
+    if 'max_arity' in self.constraint_definition:
+      max_arity = int(self.constraint_definition['max_arity'])
     portal_type = self.constraint_definition['portal_type']
     # Check arity and compare it with the min and max
-    arity = len(obj.getCategoryMembershipList(base_category, 
-                                                 portal_type=portal_type))
-    if (arity < min_arity) or (arity > max_arity):
+    arity = len(obj.getCategoryMembershipList(base_category,
+                                              portal_type=portal_type))
+    if not (max_arity is None and (min_arity <= arity)
+        or (min_arity <= arity <= max_arity)):
       # Generate error message
       error_message = "Arity error for relation '%s'" % \
                       base_category
       if portal_type is not ():
         error_message += " and portal_type: '%s'" % str(portal_type)
-      error_message += \
+      if max_arity is None:
+        error_message += \
+          ", arity is equal to %i but should be at least %i" % \
+          (arity, min_arity)
+      else:
+        error_message += \
           ", arity is equal to %i but should be between %i and %i" % \
           (arity, min_arity, max_arity)
       # Add error

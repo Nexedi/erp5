@@ -62,6 +62,13 @@ class TestConstraint(PropertySheetTestCase):
     self.category_tool = self.getCategoryTool()
     self.createCategories()
 
+  def beforeTearDown(self):
+    get_transaction().abort()
+    module = self.portal.organisation_module
+    module.manage_delObjects(list(module.objectIds()))
+    get_transaction().commit()
+    self.tic()
+
   def stepTic(self,**kw):
     self.tic()
 
@@ -202,7 +209,7 @@ class TestConstraint(PropertySheetTestCase):
     object = sequence.get('object')
     object.edit(local_prop = 12345)
 
-  def _createGenericConstraint(self, sequence, klass_name='Constraint',
+  def _createGenericConstraint(self, sequence=None, klass_name='Constraint',
                                **kw):
     """
       Create a Constraint
@@ -215,9 +222,8 @@ class TestConstraint(PropertySheetTestCase):
     klass = file
 #     klass = getattr(file, klass_name)
     constraint = klass(**kw)
-    sequence.edit(
-        constraint=constraint,
-    )
+    if sequence is not None:
+      sequence.edit(constraint=constraint,)
     return constraint
 
   def stepCallCheckConsistency(self, sequence=None, 
@@ -950,6 +956,19 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_CategoryMembershipArityNoMax(self):
+    obj = self._makeOne()
+    constraint = self._createGenericConstraint(
+                   id='dummy_constraint',
+                   portal_type=('Category',),
+                   base_category=('group',),
+                   klass_name='CategoryMembershipArity',
+                   min_arity=1)
+    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    obj.setGroup('testGroup1')
+    self.assertEquals(0, len(constraint.checkConsistency(obj)))
+  
+  
   def stepCreateCategoryRelatedMembershipArity0(self, sequence=None, 
                                                 sequence_list=None, **kw):
     """
@@ -1066,6 +1085,21 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_RelatedCategoryMembershipArityNoMax(self):
+    related_obj = self._makeOne()
+    obj = self.portal.portal_categories.group.testGroup1
+    constraint = self._createGenericConstraint(
+                   id='dummy_constraint',
+                   portal_type=('Organisation',),
+                   base_category=('group',),
+                   klass_name='CategoryRelatedMembershipArity',
+                   min_arity=1)
+    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    related_obj.setGroupValue(obj)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(0, len(constraint.checkConsistency(obj)))
+
   def test_BooleanPropertiesPropertyTypeValidity(self):
     """Tests PropertyTypeValidity can handle boolean values.
     """
@@ -1088,7 +1122,7 @@ class TestConstraint(PropertySheetTestCase):
   def test_TALESConstraint(self):
     """Tests TALESConstraint
     """
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='TALESConstraint',
                    id='tales_constraint',
                    expression='python: object.getTitle() != "foo"')
@@ -1100,7 +1134,7 @@ class TestConstraint(PropertySheetTestCase):
   def test_TALESConstraintInvalidExpression(self):
     """Tests TALESConstraint with an invalid expression
     """
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='TALESConstraint',
                    id='tales_constraint',
                    expression='python: None / 3') # ValueError
@@ -1109,14 +1143,14 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(1, len(constraint.checkConsistency(obj)))
 
     # an error during expression compilation is reraised to the programmer
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='TALESConstraint',
                    id='tales_constraint',
                    expression='python: None (" ')
     from Products.PageTemplates.TALES import CompilerError
     self.assertRaises(CompilerError, constraint.checkConsistency, obj)
 
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='TALESConstraint',
                    id='tales_constraint',
                    expression='error: " ')
@@ -1126,7 +1160,7 @@ class TestConstraint(PropertySheetTestCase):
     """Tests PropertyTypeValidity can repairs local property when this property
     is added on the class later.
     """
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='PropertyTypeValidity',
                    id='type_validity_constraint', )
     obj = self._makeOne()
@@ -1144,7 +1178,7 @@ class TestConstraint(PropertySheetTestCase):
     """Tests PropertyTypeValidity can repairs local property of type content
     when this property is added on the class later.
     """
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='PropertyTypeValidity',
                    id='type_validity_constraint', )
     obj = self._makeOne()
@@ -1177,7 +1211,7 @@ class TestConstraint(PropertySheetTestCase):
     bc = self.getPortal().portal_categories.newContent(
                               portal_type='Base Category',
                               id='testing_category')
-    constraint = self._createGenericConstraint(Sequence(),
+    constraint = self._createGenericConstraint(
                    klass_name='PropertyTypeValidity',
                    id='type_validity_constraint', )
     obj = self._makeOne()
@@ -1306,6 +1340,7 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self, quiet=quiet)
+
 
 def test_suite():
   suite = unittest.TestSuite()
