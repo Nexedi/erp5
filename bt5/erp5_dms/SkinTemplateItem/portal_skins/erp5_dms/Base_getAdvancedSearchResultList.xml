@@ -69,7 +69,7 @@
 
 """\n
 The main search script. Receives one big string - a SearchableText, in\n
-the search syntax, parses the string using external method parseSearchString,\n
+the search syntax, parses the string using external method Base_parseSearchString,\n
 then does the following:\n
 - processes arguments for searching by any category\n
 - selects search mode\n
@@ -94,7 +94,7 @@ else:\n
 \n
 if not sstr: return []\n
 \n
-args = context.parseSearchString(sstr)\n
+args = context.Base_parseSearchString(sstr)\n
 \n
 # if no portal type specified, take all\n
 if not args.has_key(\'portal_type\') or args[\'portal_type\'] == ():\n
