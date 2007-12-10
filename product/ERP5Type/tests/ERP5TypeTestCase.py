@@ -75,6 +75,7 @@ ZopeTestCase.installProduct('MailHost', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ZopeProfiler', quiet=install_product_quiet)
 try:
   # Workaround iHotFix patch that doesn't work with
   # ZopeTestCase REQUESTs
