@@ -10,6 +10,8 @@ Check Payment | related_agents
 Check Payment | view
 Checkbook Delivery Line | print
 Checkbook Delivery Line | view
+Checkbook Delivery Module | view
+Checkbook Delivery | accounting_view
 Checkbook Delivery | fastinput
 Checkbook Delivery | print_pdf
 Checkbook Delivery | view
@@ -17,6 +19,8 @@ Checkbook Reception Line | print
 Checkbook Reception Line | view
 Checkbook Reception Module | view
 Checkbook Reception | fastInput
+Checkbook Reception | import
+Checkbook Reception | print
 Checkbook Reception | view
 Checkbook Usual Cash Transfer Module | list
 Checkbook Usual Cash Transfer Module | print_pdf

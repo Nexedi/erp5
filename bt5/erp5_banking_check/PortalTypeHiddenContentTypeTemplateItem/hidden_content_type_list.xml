@@ -21,6 +21,7 @@
  </portal_type>
  <portal_type id="Stop Payment">
   <item>Checkbook Delivery Line</item>
+  <item>Banking Operation Line</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
   <item>Checkbook Delivery Line</item>

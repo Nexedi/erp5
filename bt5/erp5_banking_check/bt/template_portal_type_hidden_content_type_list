@@ -6,6 +6,7 @@ Checkbook Delivery | Checkbook Delivery Line
 Checkbook Reception | Checkbook Reception Line
 Checkbook Usual Cash Transfer | Checkbook Delivery Line
 Checkbook Vault Transfer | Checkbook Delivery Line
+Stop Payment | Banking Operation Line
 Stop Payment | Checkbook Delivery Line
 Traveler Check Purchase | Checkbook Delivery Line
 Traveler Check Sale | Checkbook Delivery Line

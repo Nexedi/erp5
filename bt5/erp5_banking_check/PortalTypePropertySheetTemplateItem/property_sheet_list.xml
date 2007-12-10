@@ -14,6 +14,9 @@
  <portal_type id="Checkbook Reception">
   <item>CheckbookReception</item>
  </portal_type>
+ <portal_type id="Checkbook Reception Module">
+  <item>Checkbook</item>
+ </portal_type>
  <portal_type id="Checkbook Usual Cash Transfer">
   <item>Amount</item>
   <item>Price</item>
