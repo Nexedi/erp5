@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -79,7 +76,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          field_errors python: request.get(\'field_errors\', {});\n
                          field_has_error  python: field_errors.has_key(field_id);\n
                          global form_id form_id | python: form.id;\n
-                         field_description python: here.Base_getFieldDescription(form_id=form_id, field=field)">\n
+                         field_description field/Field_getDescription;">\n
     <div tal:define="html_render  python: field.render_htmlgrid(value, request)"\n
          tal:attributes="title field_description;\n
                          class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n

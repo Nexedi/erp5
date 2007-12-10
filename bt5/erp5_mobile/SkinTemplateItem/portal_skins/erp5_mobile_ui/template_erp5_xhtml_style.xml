@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -77,8 +74,8 @@ IDEAS:\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="master">\n
-\n
-<tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+<tal:block tal:define="global_definitions_macros here/global_definitions/macros">\n
+<tal:block metal:use-macro="global_definitions_macros/header_definitions"/>\n
 \n
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
 \n
@@ -91,7 +88,6 @@ IDEAS:\n
     <tal:block tal:repeat="css css_list">\n
       <link tal:attributes="href css" type="text/css" rel="stylesheet"/>\n
     </tal:block>\n
-    <tal:block metal:use-macro="here/global_definitions/macros/planning_box_definitions"/>\n
     <tal:block tal:repeat="js js_list">\n
       <script tal:attributes="src js" type="text/javascript">\n
       </script>\n
@@ -108,7 +104,7 @@ IDEAS:\n
       <input tal:condition="form_action | nothing"\n
              id="hidden_button" type="submit" value="dummy"\n
              tal:attributes="name python: \'%s:method\' % (form_action, )" />\n
-      <tal:block metal:use-macro="here/global_definitions/macros/http_definitions"/>\n
+      <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>\n
       <div id="bars">\n
         <div id="main_bar">\n
           <span class="first">\n
@@ -125,6 +121,7 @@ IDEAS:\n
     </form>\n
   </body>\n
 </html>\n
+</tal:block>\n
 </tal:block>
 
 ]]></string> </value>
