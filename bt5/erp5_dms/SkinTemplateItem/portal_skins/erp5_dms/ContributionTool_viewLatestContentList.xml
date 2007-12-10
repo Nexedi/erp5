@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -47,6 +44,10 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -124,6 +125,10 @@
             <value> <string>ContributionTool_viewMyContentList</string> </value>
         </item>
         <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
         </item>
@@ -133,11 +138,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Latest Content List</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
