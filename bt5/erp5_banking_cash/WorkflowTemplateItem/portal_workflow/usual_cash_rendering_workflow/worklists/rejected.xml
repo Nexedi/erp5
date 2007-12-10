@@ -31,7 +31,11 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+Base_viewWorklist?simulation_state=rejected&reset=1&portal_type=Usual Cash Rendering
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
