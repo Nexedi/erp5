@@ -220,6 +220,31 @@ class AccountingTestCase(ERP5TypeTestCase):
             'erp5_accounting_ui_test')
 
 
+class TestAccounts(AccountingTestCase):
+  """Tests Accounts.
+  """
+  def test_AccountValidation(self):
+    # Accounts need a gap category and an account_type category to be valid
+    account = self.portal.account_module.newContent(portal_type='Account')
+    self.assertEquals(2, len(account.checkConsistency()))
+    account.setAccountType('equity')
+    self.assertEquals(1, len(account.checkConsistency()))
+    account.setGap('my_country/my_accounting_standards/1')
+    self.assertEquals(0, len(account.checkConsistency()))
+    
+  def test_AccountWorkflow(self):
+    account = self.portal.account_module.newContent(portal_type='Account')
+    self.assertEquals('draft', account.getValidationState())
+    doActionFor = self.portal.portal_workflow.doActionFor
+    self.assertRaises(ValidationFailed, doActionFor, account,
+                          'validate_action')
+    account.setAccountType('equity')
+    account.setGap('my_country/my_accounting_standards/1')
+    doActionFor(account, 'validate_action')
+    self.assertEquals('validated', account.getValidationState())
+
+
+
 class TestTransactionValidation(AccountingTestCase):
   """Test validations of accounting transactions.
 
@@ -2738,6 +2763,7 @@ class TestAccounting(ERP5TypeTestCase):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccounting))
+  suite.addTest(unittest.makeSuite(TestAccounts))
   suite.addTest(unittest.makeSuite(TestClosingPeriod))
   suite.addTest(unittest.makeSuite(TestTransactionValidation))
   return suite

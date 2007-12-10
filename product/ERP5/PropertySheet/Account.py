@@ -42,3 +42,25 @@ class Account:
  )
 
   _categories = ( 'account_type', 'gap', 'pcg', 'financial_section', )
+
+  _constraints = (
+    { 'id': 'account_type_existance',
+      'description': 'Account Type must be set',
+      'type': 'CategoryMembershipArity',
+      'min_arity': 1,
+      'max_arity': 1,
+      'portal_type': ('Category', ),
+      'base_category' : ('account_type',),
+      'condition' : 'python: object.getValidationState() not'
+                     ' in ("invalidated", "deleted")'
+    },
+    { 'id': 'gap_existance',
+      'description': 'GAP must be set',
+      'type': 'CategoryMembershipArity',
+      'min_arity': 1,
+      'portal_type': ('Category', ),
+      'base_category' : ('gap',),
+      'condition' : 'python: object.getValidationState() not'
+                     ' in ("invalidated", "deleted")'
+    },
+ )
