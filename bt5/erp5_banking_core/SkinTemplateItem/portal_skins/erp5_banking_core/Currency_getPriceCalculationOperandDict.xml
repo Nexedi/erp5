@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return {"price" : 1}\n
+            <value> <string>return {"price" : 1.0}\n
 </string> </value>
         </item>
         <item>
