@@ -58,7 +58,7 @@
 \n
 <tr>\n
         <td>store</td>\n
-        <td>/erp5</td>\n
+        <td tal:content="here/portal_url">/erp5_portal</td>\n
         <td>base_url</td>\n
 </tr>\n
 <tr>\n
