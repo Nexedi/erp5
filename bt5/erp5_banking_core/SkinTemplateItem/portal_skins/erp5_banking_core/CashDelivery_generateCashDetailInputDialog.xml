@@ -76,6 +76,7 @@
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
+precision = 0\n
 \n
 if listbox is None:\n
   # This is the first time.\n
@@ -86,6 +87,7 @@ if listbox is None:\n
   line_portal_type          = cash_detail_dict[\'line_portal_type\']\n
   column_base_category      = cash_detail_dict[\'column_base_category\']\n
   read_only                 = cash_detail_dict[\'read_only\']\n
+  check_float               = int(cash_detail_dict.get(\'check_float\', 1))\n
   currency_cash_portal_type = cash_detail_dict[\'currency_cash_portal_type\']\n
 \n
   if fast_input_title is None:\n
@@ -347,7 +349,9 @@ if listbox is None:\n
         currency_dict[\'column%d\' % (counter + 1)] = 0\n
       listbox.append(currency_dict)\n
       \n
-  other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory, fast_input_title, target_total_price)\n
+  if check_float == 0:\n
+    precision = 4\n
+  other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory, fast_input_title, target_total_price, check_float)\n
   context.Base_updateDialogForm(listbox=listbox\n
                                 , calculated_price=total_price\n
                                 , empty_line_number=0\n
@@ -357,6 +361,7 @@ if listbox is None:\n
                                 , other_parameter = other_parameter_list\n
                                 , fast_input_title=fast_input_title\n
                                 , target_total_price=target_total_price\n
+                                , precision=precision\n
                                 , )\n
 \n
   return context.asContext(  context=None\n
@@ -368,6 +373,7 @@ if listbox is None:\n
                              , other_parameter = other_parameter_list\n
                              , fast_input_title=fast_input_title\n
                              , target_total_price=target_total_price\n
+                             , precision=precision\n
                              ).CashDetail_viewLineFastInputForm(**kw)\n
 \n
 \n
@@ -385,6 +391,7 @@ else :\n
   use_inventory             = other_parameter[4]\n
   fast_input_title          = other_parameter[5]\n
   target_total_price        = other_parameter[6]\n
+  check_float               = int(other_parameter[7])\n
 \n
   # we don\'t update anything in read only mode\n
   if read_only == "True":\n
@@ -456,11 +463,14 @@ else :\n
     # add current line\n
     new_line_list.append(line)\n
 \n
+  if check_float == 0:\n
+   precision = 4\n
   listbox = new_line_list\n
   context.Base_updateDialogForm(  listbox=listbox\n
                                   , calculated_price=total_price\n
                                   , empty_line_number=0\n
                                   , fast_input_title=fast_input_title\n
+                                  , precision=precision\n
                                   , target_total_price=target_total_price)\n
 \n
   return context.asContext(  context=None\n
@@ -468,6 +478,7 @@ else :\n
                              , calculated_price=total_price\n
                              , fast_input_title=fast_input_title\n
                              , target_total_price=target_total_price\n
+                             , precision=precision\n
                              ,**kw\n
                              ).CashDetail_viewLineFastInputForm(**kw)\n
 
@@ -530,6 +541,7 @@ else :\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>precision</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>cash_status_list</string>
@@ -539,6 +551,8 @@ else :\n
                             <string>line_portal_type</string>
                             <string>column_base_category</string>
                             <string>read_only</string>
+                            <string>int</string>
+                            <string>check_float</string>
                             <string>currency_cash_portal_type</string>
                             <string>target_total_price</string>
                             <string>False</string>
@@ -609,7 +623,6 @@ else :\n
                             <string>resource_key</string>
                             <string>new_line_list</string>
                             <string>max</string>
-                            <string>int</string>
                             <string>next_listbox_key</string>
                             <string>resource_value</string>
                             <string>lines_to_add</string>

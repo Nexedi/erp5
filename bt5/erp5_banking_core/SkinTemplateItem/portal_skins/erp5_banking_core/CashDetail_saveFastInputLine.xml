@@ -79,6 +79,7 @@ line_portal_type     = other_parameter_list[1]\n
 read_only            = other_parameter_list[2]\n
 column_base_category = other_parameter_list[3]\n
 use_inventory        = other_parameter_list[4]\n
+check_float          = int(other_parameter_list[7])\n
 \n
 # get the column base list\n
 if column_base_category == \'cash_status\':\n
@@ -115,9 +116,10 @@ for line in listbox:\n
       if quantity < 0:\n
         error = 1\n
         negative_quantity = 1\n
-      if int("%i" % quantity) != quantity:\n
-        error = 1\n
-        float_quantity = 1\n
+      if check_float:\n
+        if int("%i" % quantity) != quantity:\n
+          error = 1\n
+          float_quantity = 1\n
       #context.log("listboxline", line)\n
       movement = {}\n
       movement[\'quantity\'] = quantity\n
@@ -305,7 +307,7 @@ if error:\n
   if negative_quantity:\n
     message = N_("You must not enter negative values")\n
   if float_quantity:\n
-    message = N_("You must not enter int values")\n
+    message = N_("You must enter integer values")\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                   , "portal_status_message=%s" %message\n
                                   )\n
@@ -389,6 +391,8 @@ else:\n
                             <string>read_only</string>
                             <string>column_base_category</string>
                             <string>use_inventory</string>
+                            <string>int</string>
+                            <string>check_float</string>
                             <string>columne_base_list</string>
                             <string>column_base_list</string>
                             <string>base_category_list</string>
@@ -411,7 +415,6 @@ else:\n
                             <string>counter</string>
                             <string>str</string>
                             <string>quantity</string>
-                            <string>int</string>
                             <string>movement</string>
                             <string>_write_</string>
                             <string>movement_key</string>
