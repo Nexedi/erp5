@@ -93,7 +93,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:getattr(portal, \'document_module\', None) is None</string> </value>
+            <value> <string>python:getattr(portal.portal_skins, \'erp5_dms\', None) is None</string> </value>
         </item>
       </dictionary>
     </pickle>
