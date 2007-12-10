@@ -87,7 +87,6 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash To Currency Purchase Line">
-  <item>Delivery Cell</item>
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Cash To Currency Sale Line">

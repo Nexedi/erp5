@@ -349,8 +349,8 @@
                           <string>Exchanged Amount</string>
                         </tuple>
                         <tuple>
-                          <string>source_decision_title</string>
-                          <string>Reporter</string>
+                          <string>deponent</string>
+                          <string>Deponent</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
