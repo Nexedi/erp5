@@ -105,12 +105,20 @@ class TrashTool(BaseTool):
             # so object is not backup
             LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
             pass
-      # in case of portal types, export properties instead of subobjects
-      if obj is None:
+
+    keep_sub = kw.get('keep_subobjects', 0)
+    subobjects_dict = {}
+
+    if not keep_sub:
+      # export subobjects
+      if save:
+        obj = backup_object_container._getOb(object_id)
+      else:
         object_path = container_path + [object_id]
-        obj = self.unrestrictedTraverse(object_path, None)
+        obj = self.unrestrictedTraverse(object_path)
       if obj is None:
         pass
+      # in case of portal types, export properties instead of subobjects
       elif getattr(obj, 'meta_type', None) == 'ERP5 Type Information':
         subobjects_dict = {}
         subobjects_dict['allowed_content_type_list'] = getattr(obj, 'allowed_content_types', []) or []
@@ -127,20 +135,6 @@ class TrashTool(BaseTool):
           subobjects_dict['workflow_chain'] = wf_chain['chain_%s' % object_id]
         else:
           subobjects_dict['workflow_chain'] = ''
-        return subobjects_dict
-
-    keep_sub = kw.get('keep_subobjects', 0)
-    subobjects_dict = {}
-
-    if not keep_sub:
-      # export subobjects
-      if save:
-        obj = backup_object_container._getOb(object_id)
-      else:
-        object_path = container_path + [object_id]
-        obj = self.unrestrictedTraverse(object_path)
-      if obj is None:
-        pass
       else:
         for subobject_id in list(obj.objectIds()):
           subobject_path = object_path + [subobject_id]
