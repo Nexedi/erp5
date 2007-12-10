@@ -66,10 +66,12 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
     for workflow_state in possible_state_list:
       selection_params = \
               selection_tool.getSelectionParamsFor(selection_name).copy()
-      selection_params['where_expression'] = '%s is not NULL' % workflow_state
-      selection_params['group_by'] = ('catalog.portal_type', workflow_state)
+      selection_params['where_expression'] = \
+                        'catalog.%s is not NULL' % workflow_state
+      selection_params['group_by'] = ('catalog.portal_type',
+                                      'catalog.%s' % workflow_state)
       selection_params['select_expression'] = (
-          'count(catalog.uid) as count, catalog.portal_type, %s'
+          'count(catalog.uid) as count, catalog.portal_type, catalog.%s'
             % workflow_state)
       
       for brain in self.searchFolder(**selection_params):
