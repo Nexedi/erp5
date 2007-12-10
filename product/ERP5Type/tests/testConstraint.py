@@ -56,7 +56,7 @@ class TestConstraint(PropertySheetTestCase):
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
-  def afterSetUp(self:
+  def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
