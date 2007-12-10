@@ -27,13 +27,11 @@
 ##############################################################################
 
 from Globals import InitializeClass, Persistent, Acquisition
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
-from OFS.SimpleItem import SimpleItem
+from Acquisition import aq_base
 from OFS.Traversable import Traversable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.PythonScripts.Utility import allow_class
-import string
 
 # Put a try in front XXX
 from Products.CMFCategory.Category import Category
@@ -123,7 +121,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     def getId(self):
       return self.name
-      
+
     def __init__(self, method_path=None, params=None, sort_on=None, default_sort_on=None,
                  uids=None, invert_mode=0, list_url='', domain=None, report=None,
                  columns=None, checked_uids=None, name=None, index=None):
@@ -321,12 +319,12 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
       try:
         current_zoom=self.params['zoom']
         if current_zoom != None:
-          return current_zoom 
+          return current_zoom
         else:
-          return 1  
+          return 1
       except KeyError:
         return 1
-    
+
     security.declarePublic('getReportList')
     def getReportList(self):
         if self.report_list is None:
@@ -342,19 +340,26 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     security.declarePublic('isInvertMode')
     def isInvertMode(self):
         return self.invert_mode
- 
+
     security.declarePublic('getInvertModeUidList')
     def getInvertModeUidList(self):
         return self.uids
-     
- 
+
+    security.declarePublic('getDomainTreeMode')
+    def getDomainTreeMode(self):
+        return getattr(self, 'domain_tree_mode', 0)
+
+    security.declarePublic('getReportTreeMode')
+    def getReportTreeMode(self):
+        return getattr(self, 'report_tree_mode', 0)
+
 InitializeClass(Selection)
 allow_class(Selection)
 
 class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   """
     A class to store a selection of domains which defines a report
-    section. There are different ways to use DomainSelection in 
+    section. There are different ways to use DomainSelection in
     SQL methods. As a general principle, SQL methods are passed
     DomainSelection instances as a parameter.
 
@@ -370,7 +375,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     </dtml-if>
 
     Example 2: (auto generated)
-    
+
     The domain object is in charge of generating automatically all
     SQL expressions to feed the SQL method (or the catalog). This
     is the recommended approach.
@@ -434,9 +439,9 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     return obj
 
   security.declarePublic('asSQLExpression')
-  def asSQLExpression(self, table_map=None, domain_id=None, 
+  def asSQLExpression(self, table_map=None, domain_id=None,
                       exclude_domain_id=None, strict_membership=0,
-                      join_table="catalog", join_column="uid", 
+                      join_table="catalog", join_column="uid",
                       base_category=None, category_table_alias='category'):
     select_expression = []
     portal = self.getPortalObject()
@@ -456,7 +461,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
         else:
           # This is a category, we must join
           select_expression.append('%s.%s = %s_%s.uid' % \
-                                (join_table, join_column, 
+                                (join_table, join_column,
                                  k, category_table_alias))
           select_expression.append(
               d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
@@ -474,9 +479,9 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   # Compatibility SQL Sql
   security.declarePublic('asSqlExpression')
   asSqlExpression = asSQLExpression
-  
+
   security.declarePublic('asSQLJoinExpression')
-  def asSQLJoinExpression(self, domain_id=None, exclude_domain_id=None, 
+  def asSQLJoinExpression(self, domain_id=None, exclude_domain_id=None,
                           category_table_alias='category'):
     join_expression = []
     #LOG('DomainSelection', 0, 'domain_id = %r, exclude_domain_id = %r, self.domain_dict = %r' % (domain_id, exclude_domain_id, self.domain_dict))
