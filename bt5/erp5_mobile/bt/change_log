@@ -1,3 +1,6 @@
+2007-12-10 Nicolas
+* Add new Skin: Mobile
+
 2007-10-11 Yusei
 * Modified ListBox_asHTML. This changes depends on ERP5Form changes. Please upgrade ERP5Form revision 16942 or above.
 
