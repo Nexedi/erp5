@@ -241,12 +241,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>tax_category</string>
-                          <string>tax_category</string>
+                          <string>salary_range</string>
+                          <string>salary_range</string>
                         </tuple>
                         <tuple>
-                          <string>salary_range</string>
-                          <string>salary_range</string>
+                          <string>tax_category</string>
+                          <string>tax_category</string>
                         </tuple>
                         <tuple>
                           <string>grade</string>

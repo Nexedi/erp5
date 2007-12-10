@@ -99,7 +99,7 @@ for pay_sheet_line in paysheet.contentValues(portal_type=\'Pay Sheet Line\'):\n
         for slice in pay_sheet_line.getSalaryRangeList(base=1):\n
           for category in category_list:\n
             if category in pay_sheet_line.getVariationCategoryList():\n
-              cell = pay_sheet_line.getCell(category, slice)\n
+              cell = pay_sheet_line.getCell(slice, category)\n
               total_price = cell.getQuantity() * cell.getPrice()\n
               amount += round(total_price, precision)\n
       else:\n

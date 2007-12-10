@@ -89,6 +89,8 @@ for line in line_list: \n
   #line_dict[\'title\'] = \'%s (%s)\' % (line_dict[\'title\'], line_dict[\'slice\'])\n
   line_dict[\'base_participation_list\'] = getattr(line, \n
                                               \'base_participation_list\', None)\n
+  line_dict[\'base_application_list\'] = getattr(line, \n
+                                              \'base_application_list\', None)\n
 \n
   line_dict[\'base_name\'] =  getattr(line, \'base_name\', None)\n
 \n

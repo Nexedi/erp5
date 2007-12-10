@@ -108,8 +108,8 @@
             <key> <string>variation_base_category_list</string> </key>
             <value>
               <tuple>
-                <string>tax_category</string>
                 <string>salary_range</string>
+                <string>tax_category</string>
               </tuple>
             </value>
         </item>

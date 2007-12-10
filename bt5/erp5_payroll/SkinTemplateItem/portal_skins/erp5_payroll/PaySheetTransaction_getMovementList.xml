@@ -90,6 +90,11 @@ line_list = []\n
 \n
 for paysheet_line in paysheet_line_list:\n
   base_category_list = paysheet_line.getVariationBaseCategoryList()\n
+  base_application_list = paysheet_line.getBaseAmountTitleList()\n
+  translated_base_application_list = [str(N_(x)) for x in base_application_list]\n
+  context.log(\'translated_base_application_list :%s\' %\n
+      translated_base_application_list)\n
+  base_application_list = \', \'.join(translated_base_application_list)\n
   list_of_list = []\n
   for base_category in base_category_list:\n
     list = paysheet_line.getVariationCategoryList(base_category_list=\\\n
@@ -143,6 +148,7 @@ for paysheet_line in paysheet_line_list:\n
                     \'base_name\':base_name,\n
                     \'base\':base,\n
                     \'base_participation_list\':base_participation_list,\n
+                    \'base_application_list\': base_application_list,\n
                     \'payroll_service\':payroll_service.getId()}\n
       object_dict[slice].update(share_dict)\n
     else:\n
@@ -247,6 +253,12 @@ return line_list\n
                             <string>_getiter_</string>
                             <string>paysheet_line</string>
                             <string>base_category_list</string>
+                            <string>base_application_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>str</string>
+                            <string>translated_base_application_list</string>
                             <string>list_of_list</string>
                             <string>base_category</string>
                             <string>list</string>
@@ -262,10 +274,7 @@ return line_list\n
                             <string>cell</string>
                             <string>quantity</string>
                             <string>base</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>base_application</string>
-                            <string>str</string>
                             <string>base_list</string>
                             <string>base_name</string>
                             <string>payroll_service</string>
