@@ -1,31 +1,43 @@
 <workflow_chain>
  <chain>
   <type>Accounting Cancellation</type>
-  <workflow>accounting_cancellation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, accounting_cancellation_workflow</workflow>
  </chain>
  <chain>
   <type>Accounting Date</type>
-  <workflow>edit_workflow, accounting_date_workflow</workflow>
+  <workflow>accounting_date_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Bank Account</type>
   <workflow>bank_account_workflow, -validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Career</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Check</type>
   <workflow>edit_workflow, check_workflow</workflow>
  </chain>
  <chain>
+  <type>Check Model Type Variation</type>
+  <workflow>model_variation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Checkbook</type>
-  <workflow>checkbook_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, checkbook_workflow</workflow>
  </chain>
  <chain>
   <type>Checkbook Model</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Checkbook Model Check Amount Variation</type>
+  <workflow>model_variation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Counter</type>
-  <workflow>edit_workflow, counter_workflow</workflow>
+  <workflow>counter_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Counter Date</type>

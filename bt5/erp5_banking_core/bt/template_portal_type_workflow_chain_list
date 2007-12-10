@@ -4,8 +4,13 @@ Accounting Date | accounting_date_workflow
 Accounting Date | edit_workflow
 Bank Account | -validation_workflow
 Bank Account | bank_account_workflow
+Career | edit_workflow
+Check Model Type Variation | edit_workflow
+Check Model Type Variation | model_variation_interaction_workflow
 Check | check_workflow
 Check | edit_workflow
+Checkbook Model Check Amount Variation | edit_workflow
+Checkbook Model Check Amount Variation | model_variation_interaction_workflow
 Checkbook Model | edit_workflow
 Checkbook | checkbook_workflow
 Checkbook | edit_workflow
