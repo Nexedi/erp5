@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -210,7 +207,7 @@
                                      paramX python: valueX[1];\n
                                      search_fieldX python: valueX[2];\n
                                      foo2 repeat/valueX/index">\n
-                        <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" tal:attributes="value python: foo2;"></option>\n
+                        <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: foo2;"></option>\n
                         </tal:block>\n
                       </tal:block>\n
                     </select>\n
