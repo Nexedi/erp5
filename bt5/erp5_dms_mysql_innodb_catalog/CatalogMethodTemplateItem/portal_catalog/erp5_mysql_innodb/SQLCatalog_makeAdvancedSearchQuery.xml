@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -88,7 +85,7 @@ if not search_string: \n
   return None\n
 \n
 # extract search arguments\n
-args = context.parseSearchString(search_string)\n
+args = context.Base_parseSearchString(search_string)\n
 \n
 # process searching by category\n
 bases = context.portal_categories.getBaseCategoryList()\n
@@ -258,6 +255,7 @@ if args.get(\'newest\'):\n
                             <string>int</string>
                             <string>ver</string>
                             <string>ValueError</string>
+                            <string>_inplacevar_</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>doc</string>

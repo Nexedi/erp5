@@ -1,1 +1,4 @@
+2007-12-10 yusei
+* Update SQLCatalog_makeAdvancedSearchQuery for renaming external method in erp5_dms.
+
 2007-03-12 Initial version
