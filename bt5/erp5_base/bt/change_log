@@ -1,3 +1,6 @@
+2007-12-10 Yusei
+* Hide document tab on person document if erp5_dms is installed.
+
 2007-11-19 Yusei
 * switch off acquire_local_roles on Assignment, Currency, Bank Account.
 
