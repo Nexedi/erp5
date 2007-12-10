@@ -178,22 +178,12 @@ class PaySheetTransaction(Invoice):
       model_line = paysheet.getPortalObject().restrictedTraverse(\
                                                           cell['model_line'])
       model_line_id = model_line.getId()
-      service      = model_line.getResourceValue()
-      service_id   = service.getId()
       quantity     = cell['quantity']
       price        = cell['price']
       tax_category = cell['tax_category_relative_url']
       salary_range = cell['salary_range_relative_url']
 
-      variation_category_list = model_line.getVariationCategoryList(\
-                                            base_category_list='salary_range')
-      salary_range_categories = []
-      #for category in resource_variation_category_list:
-      for category in variation_category_list:
-        if category.startswith('salary_range/'): 
-          salary_range_categories.append(category)
-
-      new_cell = { 'axe_list' : [tax_category,salary_range],
+      new_cell = { 'axe_list' : [salary_range, tax_category],
                    'quantity' : quantity,
                    'price'    : price,
                  }
