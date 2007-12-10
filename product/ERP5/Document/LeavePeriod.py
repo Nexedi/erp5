@@ -69,4 +69,7 @@ class LeavePeriod(PresencePeriod):
     quantity = PresencePeriod.getInventoriatedQuantity(
                                             self, default=default,
                                             *args, **kw)
-    return -quantity
+    if quantity is not None:
+      return -quantity
+    else:
+      return None
