@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -54,6 +51,10 @@
         <item>
             <key> <string>action</string> </key>
             <value> <string>Base_processAdvancedSearch</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -109,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewSearchDialog</string> </value>
+            <value> <string>DocumentModule_viewSearchDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,7 +118,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_searchDialog</string> </value>
+            <value> <string>DocumentModule_viewSearchDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
