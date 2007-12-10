@@ -27,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewWorklist?simulation_state=draftd&reset=1&portal_type=Checkbook Usual Cash Transfer
+Base_viewWorklist?simulation_state=draft&reset=1&portal_type=Checkbook Usual Cash Transfer
 
 ]]></string> </value>
         </item>
@@ -57,17 +57,14 @@ Base_viewWorklist?simulation_state=draftd&reset=1&portal_type=Checkbook Usual Ca
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
