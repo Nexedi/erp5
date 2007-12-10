@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -444,12 +441,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Group Calendar Event</string>
-                          <string>Group Calendar Event</string>
-                        </tuple>
-                        <tuple>
-                          <string>Group Calendar Period</string>
-                          <string>Group Calendar Period</string>
+                          <string>Group Presence Period</string>
+                          <string>Group Presence Period</string>
                         </tuple>
                       </list>
                     </value>
@@ -528,11 +521,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
