@@ -127,8 +127,8 @@ class TestERP5BankingTravelerCheckSaleMixin:
     self.destination_site = self.paris.surface.banque_interne.guichet_1
     self.source_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
              
-    self.destination_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
-    self.traveler_check_source = self.destination_vault
+    self.destination_vault = self.paris.surface.banque_interne.guichet_1
+    self.traveler_check_source = self.destination_vault['encaisse_des_billets_et_monnaies']
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
                           function='banking', group='baobab',  site='testsite/paris')
