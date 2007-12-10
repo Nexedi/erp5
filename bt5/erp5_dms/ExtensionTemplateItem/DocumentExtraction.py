@@ -91,7 +91,7 @@ def generateParts(context,text,sw,tags,trail,maxlines):
           yield par # return the last marked part
 
 
-def cutFound(context, txt, sw, tags, trail, maxlines):
+def getExcerptText(context, txt, sw, tags, trail, maxlines):
   """
   Returns an excerpt of text found in the txt string
   """

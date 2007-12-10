@@ -115,12 +115,12 @@ if search_words in (\'\', None,):\n
   return result\n
 \n
 # get fragments of text containing searched words\n
-found_text_fragments = context.cutFound(context, \n
-                                        document_text, \n
-                                        search_words, \n
-                                        tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'), \n
-                                        trail = 5, \n
-                                        maxlines = 5)\n
+found_text_fragments = context.Base_getExcerptText(context,\n
+                                                   document_text,\n
+                                                   search_words,\n
+                                                   tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'),\n
+                                                   trail = 5,\n
+                                                   maxlines = 5)\n
 result = \' \'.join(map(str, found_text_fragments))\n
 \n
 # Document may contains charactors which utf8 codec cannot decode.\n

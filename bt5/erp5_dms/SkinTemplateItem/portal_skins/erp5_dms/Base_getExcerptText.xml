@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ExternalMethod.ExternalMethod</string>
-          <string>ExternalMethod</string>
-        </tuple>
-        <none/>
+        <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -20,7 +17,7 @@
         </item>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>cutFound</string> </value>
+            <value> <string>getExcerptText</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
@@ -28,7 +25,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cutFound</string> </value>
+            <value> <string>Base_getExcerptText</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
