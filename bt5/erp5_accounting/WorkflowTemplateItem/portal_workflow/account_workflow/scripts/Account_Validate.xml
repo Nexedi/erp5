@@ -65,23 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-account = sci[\'object\']\n
-N_ = lambda msgid: Message(\'erp5_ui\', msgid)\n
-\n
-# TODO: use constraint for this\n
-if not account.getGap():\n
-  raise ValidationFailed(N_("GAP is unset."))\n
-\n
-for err in account.checkConsistency():\n
-  if hasattr(err, \'getTranslatedMessage\'):\n
-    raise ValidationFailed(err.getTranslatedMessage())\n
-  # Old constraints implementation doesn\'t have a translated message,\n
-  # in this case, simply translate the description of the constraint in\n
-  # the property sheet.\n
-  raise ValidationFailed(N_(err[4]))\n
+            <value> <string>sci[\'object\'].Base_checkConsistency()\n
 </string> </value>
         </item>
         <item>
@@ -125,17 +109,8 @@ for err in account.checkConsistency():\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>account</string>
-                            <string>N_</string>
                             <string>_getattr_</string>
-                            <string>_getiter_</string>
-                            <string>err</string>
-                            <string>hasattr</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
