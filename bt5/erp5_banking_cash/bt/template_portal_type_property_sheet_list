@@ -34,6 +34,9 @@ Incoming Classification Survey Line | CashDeliveryLine
 Incoming Mutilated Banknote Line | CashDeliveryLine
 Internal Money Deposit | ItemAggregation
 Internal Money Deposit | Price
+Internal Money Payment | Amount
+Internal Money Payment | ItemAggregation
+Internal Money Payment | Price
 Monetary Destruction Cell | CashDeliveryLine
 Monetary Destruction Line | CashDeliveryLine
 Monetary Destruction | Account

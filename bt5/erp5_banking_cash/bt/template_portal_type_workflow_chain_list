@@ -25,6 +25,8 @@ Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
 Internal Money Deposit | edit_workflow
 Internal Money Deposit | internal_money_deposit_workflow
+Internal Money Payment | edit_workflow
+Internal Money Payment | internal_money_payment_workflow
 Monetary Destruction | edit_workflow
 Monetary Destruction | monetary_destruction_workflow
 Monetary Issue | edit_workflow

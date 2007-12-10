@@ -73,6 +73,11 @@
   <item>Price</item>
   <item>ItemAggregation</item>
  </portal_type>
+ <portal_type id="Internal Money Payment">
+  <item>Price</item>
+  <item>ItemAggregation</item>
+  <item>Amount</item>
+ </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Amount</item>
   <item>Account</item>
@@ -113,16 +118,16 @@
  </portal_type>
  <portal_type id="Money Deposit">
   <item>Arrow</item>
-  <item>Task</item>
   <item>Price</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Money Deposit Rendering">
   <item>Price</item>
   <item>Amount</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
-  <item>Amount</item>
   <item>MutilatedBanknote</item>
+  <item>Amount</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">

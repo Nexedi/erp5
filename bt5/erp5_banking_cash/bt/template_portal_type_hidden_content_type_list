@@ -25,6 +25,8 @@ Incoming Cash To Currency Sale Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Internal Money Deposit | Banking Operation Line
 Internal Money Deposit | Cash Delivery Line
+Internal Money Payment | Banking Operation Line
+Internal Money Payment | Cash Delivery Line
 Monetary Destruction Cell | Vault Transfer Cell
 Monetary Destruction Line | Monetary Destruction Cell
 Monetary Destruction | Monetary Destruction Line

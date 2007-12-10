@@ -9,6 +9,7 @@ counter_rendering_workflow
 destruction_survey_workflow
 foreign_cash_reception_workflow
 internal_money_deposit_workflow
+internal_money_payment_workflow
 monetary_destruction_workflow
 monetary_issue_workflow
 monetary_recall_workflow

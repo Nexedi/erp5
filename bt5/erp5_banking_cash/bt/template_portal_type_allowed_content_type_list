@@ -38,6 +38,9 @@ Incoming Mutilated Banknote Line | Cash Delivery Cell
 Internal Money Deposit Module | Internal Money Deposit
 Internal Money Deposit | Banking Operation Line
 Internal Money Deposit | Cash Delivery Line
+Internal Money Payment Module | Internal Money Payment
+Internal Money Payment | Banking Operation Line
+Internal Money Payment | Cash Delivery Line
 Monetary Destruction Line | Monetary Destruction Cell
 Monetary Destruction Module | Monetary Destruction
 Monetary Destruction | Monetary Destruction Line

@@ -88,6 +88,11 @@ Internal Money Deposit | accouting_view
 Internal Money Deposit | fast_input
 Internal Money Deposit | print
 Internal Money Deposit | view
+Internal Money Payment Module | view
+Internal Money Payment | accouting_view
+Internal Money Payment | fast_input
+Internal Money Payment | print
+Internal Money Payment | view
 Monetary Destruction Cell | view
 Monetary Destruction Line | print
 Monetary Destruction Line | view

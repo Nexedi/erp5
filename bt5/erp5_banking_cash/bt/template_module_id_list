@@ -9,6 +9,7 @@ counter_rendering_module
 destruction_survey_module
 foreign_cash_reception_module
 internal_money_deposit_module
+internal_money_payment_module
 monetary_destruction_module
 monetary_issue_module
 monetary_recall_module

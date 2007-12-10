@@ -105,6 +105,13 @@
  <portal_type id="Internal Money Deposit Module">
   <item>Internal Money Deposit</item>
  </portal_type>
+ <portal_type id="Internal Money Payment">
+  <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
+ </portal_type>
+ <portal_type id="Internal Money Payment Module">
+  <item>Internal Money Payment</item>
+ </portal_type>
  <portal_type id="Monetary Destruction">
   <item>Monetary Destruction Line</item>
  </portal_type>
