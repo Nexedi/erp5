@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -83,24 +80,29 @@ def getReportSectionListForObject(doc):\n
   report_section_list = []\n
   doc = doc.getObject()\n
   title = doc.getTitle()\n
-  title = translate(title)\n
-  report_section_list.append(ReportSection(level = 1, \n
-                                           title = title, \n
+  report_section_list.append(ReportSection(level = 1,\n
+                                           title = title,\n
                                            form_id = None))\n
   for action in portal.portal_actions.listFilteredActionsFor(doc)[\'object_view\']:\n
     form_id = action[\'url\'].split(\'/\')[-1].split(\'?\')[0]\n
-    action_title = action[\'title\']    \n
+    action_title = action[\'title\']\n
     if action_title != \'History\' and action_title != \'Metadata\':\n
-      report_section_list.append(ReportSection(path = doc.getPath(), \n
-                                               form_id = form_id, \n
-                                               level = 2, \n
+      report_section_list.append(ReportSection(path = doc.getPath(),\n
+                                               form_id = form_id,\n
+                                               level = 2,\n
                                                title = \'%s - %s\' % (title, translate(action_title))))\n
   return report_section_list\n
 \n
 if selection_name is not None:\n
-  # get all documents in the selection\n
-  for doc in portal.portal_selections.callSelectionFor(selection_name, context=form):\n
-    report_section_list.extend(getReportSectionListForObject(doc))\n
+  checked_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+  if checked_uid_list:\n
+    getObject = portal.portal_catalog.getObject\n
+    for uid in checked_uid_list:\n
+      report_section_list.extend(getReportSectionListForObject(getObject(doc)))\n
+  else:\n
+    # get all documents in the selection\n
+    for doc in portal.portal_selections.callSelectionFor(selection_name, context=form):\n
+      report_section_list.extend(getReportSectionListForObject(doc))\n
 else:\n
   # get only current (context) document \n
   report_section_list.extend(getReportSectionListForObject(context))\n
@@ -162,7 +164,10 @@ return report_section_list\n
                             <string>selection_name</string>
                             <string>translate</string>
                             <string>getReportSectionListForObject</string>
+                            <string>checked_uid_list</string>
+                            <string>getObject</string>
                             <string>_getiter_</string>
+                            <string>uid</string>
                             <string>doc</string>
                           </tuple>
                         </value>
