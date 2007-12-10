@@ -1,3 +1,6 @@
+2007-12-10 Yusei
+* Disable group and site fields on document view when web_mode is off.
+
 2007-11-28 Yusei
 * Remove bookmark feature.
 
