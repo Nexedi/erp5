@@ -50,7 +50,6 @@ transaction_to_line_mapping = {
     'Purchase Invoice Transaction': 'Purchase Invoice Transaction Line',
     'Sale Invoice Transaction': 'Sale Invoice Transaction Line',
     'Payment Transaction': 'Accounting Transaction Line',
-    'Closing Transaction': 'Closing Transaction Line',
   }
 
 
@@ -213,6 +212,10 @@ class AccountingTestCase(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
+    # note that this test case does *not* install erp5_invoicing, even if it's
+    # a dependancy of erp5_accounting_ui_test, because it's used to test
+    # standalone accounting and only installs erp5_accounting_ui_test to have
+    # some default content created.
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_accounting_ui_test')
 
