@@ -1,3 +1,4 @@
+Cash Balance Regulation Module | print_pdf
 Cash Balance Regulation Module | view
 Cash Balance Regulation | final
 Cash Balance Regulation | incoming_fastinput
@@ -6,7 +7,9 @@ Cash Balance Regulation | outgoing_fastinput
 Cash Balance Regulation | print
 Cash Balance Regulation | view
 Cash Container Item | view
+Cash Container | print
 Cash Container | view
+Cash Exchange Module | print_pdf
 Cash Exchange Module | view
 Cash Exchange | incoming_fastinput
 Cash Exchange | outgoing_fastinput
@@ -39,6 +42,7 @@ Cash To Currency Sale | outgoing_cash_view
 Cash To Currency Sale | outgoing_fastinput
 Cash To Currency Sale | print
 Cash To Currency Sale | view
+Classification Survey Module | print_pdf
 Classification Survey Module | view
 Classification Survey | incoming_fastinput
 Classification Survey | outgoing_fastinput
@@ -56,12 +60,14 @@ Counter Rendering Module | view
 Counter Rendering | fastinput
 Counter Rendering | print_pdf
 Counter Rendering | view
+Destruction Survey Module | print_pdf
 Destruction Survey Module | view
 Destruction Survey | fastInput
 Destruction Survey | print
 Destruction Survey | view
 Exchanged Mutilated Banknote Line | print
 Exchanged Mutilated Banknote Line | view
+Foreign Cash Reception Module | print_pdf
 Foreign Cash Reception Module | view
 Foreign Cash Reception | fastinput
 Foreign Cash Reception | print_pdf
@@ -96,10 +102,12 @@ Monetary Issue Module | view
 Monetary Issue | coin_fastinput
 Monetary Issue | container
 Monetary Issue | fastInput
+Monetary Issue | print
 Monetary Issue | view
 Monetary Recall Cell | view
 Monetary Recall Line | print
 Monetary Recall Line | view
+Monetary Recall Module | print_pdf
 Monetary Recall Module | view
 Monetary Recall | fastinput
 Monetary Recall | print
@@ -111,10 +119,12 @@ Monetary Reception | cahs_container
 Monetary Reception | fastinput
 Monetary Reception | print_pdf
 Monetary Reception | view
+Monetary Survey Module | print_pdf
 Monetary Survey Module | view
 Monetary Survey | fastInput
 Monetary Survey | print
 Monetary Survey | view
+Money Deposit Module | print
 Money Deposit Module | view
 Money Deposit Rendering Module | print_pdf
 Money Deposit Rendering Module | view
@@ -152,6 +162,7 @@ Usual Cash Rendering Module | view
 Usual Cash Rendering | fastinput
 Usual Cash Rendering | print_pdf
 Usual Cash Rendering | view
+Usual Cash Transfer Module | print_pdf
 Usual Cash Transfer Module | view
 Usual Cash Transfer | fastinput
 Usual Cash Transfer | print

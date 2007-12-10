@@ -12,7 +12,9 @@ Foreign Cash Reception | currency_exchange_type
 Monetary Destruction Cell | variation
 Monetary Recall Cell | variation
 Money Deposit | source_trade
+Mutilated Banknote | causality
 Mutilated Banknote | source_decision
 Mutilated Banknote | source_trade
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation
+Vault Transfer Cell | variation

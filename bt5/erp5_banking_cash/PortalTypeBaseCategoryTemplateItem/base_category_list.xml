@@ -35,12 +35,16 @@
  </portal_type>
  <portal_type id="Mutilated Banknote">
   <item>source_decision</item>
+  <item>causality</item>
   <item>source_trade</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>
  </portal_type>
  <portal_type id="Outgoing Classification Survey Cell">
+  <item>variation</item>
+ </portal_type>
+ <portal_type id="Vault Transfer Cell">
   <item>variation</item>
  </portal_type>
 </base_category_list>
