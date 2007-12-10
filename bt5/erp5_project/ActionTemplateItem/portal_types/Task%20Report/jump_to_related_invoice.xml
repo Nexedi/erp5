@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.ActionInformation</string>
-          <string>ActionInformation</string>
-        </tuple>
-        <none/>
+        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -83,7 +77,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type=Sale+Invoice+Transaction
+string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type=Sale+Invoice+Transaction&portal_type=Purchase+Invoice+Transaction
 
 ]]></string> </value>
         </item>
