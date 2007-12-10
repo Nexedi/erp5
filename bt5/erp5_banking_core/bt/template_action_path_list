@@ -40,6 +40,7 @@ Checkbook | view
 Coin | view
 Counter Date Module | print_pdf
 Counter Date Module | view
+Counter Date | counter_stock
 Counter Date | remaining_operations
 Counter Date | view
 Counter Module | print_pdf
@@ -52,3 +53,4 @@ Currency Exchange Cell | view
 Currency Exchange Line | view
 Currency Module | view
 Currency | view
+Organisation | person_list

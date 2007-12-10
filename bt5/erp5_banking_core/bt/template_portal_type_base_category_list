@@ -2,6 +2,7 @@ Accounting Cancellation | site
 Accounting Date | site
 Bank Account | site
 Cash Delivery Cell | variation
+Category | vault_type
 Check Model Type Variation | check_type
 Check Operation Line | aggregate_resource
 Check | check_type

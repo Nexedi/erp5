@@ -11,6 +11,9 @@
  <portal_type id="Cash Delivery Cell">
   <item>variation</item>
  </portal_type>
+ <portal_type id="Category">
+  <item>vault_type</item>
+ </portal_type>
  <portal_type id="Check">
   <item>site</item>
   <item>check_type</item>
