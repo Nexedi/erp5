@@ -7,10 +7,10 @@
 #                    Jonathan Loriette <john@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -36,8 +36,6 @@
     # anywhere in the Project module : listbox, editing form).
     # this method should return a list of all the objects' urls that does not
     # fit the constraints.
-
-
 
 # Class monitoring access security control
 from Products.PythonScripts.Utility import allow_class
@@ -250,7 +248,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
             if final_block['activity_origin'].name not in warning_activity_list:
               warning_activity_list.append(final_block['activity_origin'].name)
 
-
       block_moved['secondary_axis_start'] = secondary_axis_positions[0]
       block_moved['secondary_axis_stop'] = secondary_axis_positions[1]
 
@@ -262,7 +259,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         activity_dict[final_block['activity_origin'].name].append(final_block)
       except KeyError:
         activity_dict[final_block['activity_origin'].name] = [final_block]
-
 
     # getting object_dict to update object properties once activities are up to
     # date. Activities values will be updated directly on the
@@ -363,7 +359,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # - dict with error results
       raise FormValidationError(errors_list, {})
 
-    # the whole process is now finished, 
+    # the whole process is now finished,
     # just need to return editor for updating data
     return PlanningBoxEditor(field.id, update_dict)
 
@@ -411,8 +407,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     for block in content_list:
       if block.name == block_name:
-        return block 
-
+        return block
 
   def getDestinationGroup(self, basic, planning, block_moved, axis_groups,
                                 group_position, group_length):
@@ -439,7 +434,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       if group.name == good_group_name:
         return group
     return None
-
 
   def getDestinationBounds(self, basic, planning, block_moved, block_object,
                                  planning_coordinates, axis_length,
@@ -507,7 +501,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     # getting list moved block names
     block_moved_name_list = [x['block_moved']['name'] for x in activity_block_moved_list]
-    
+
     for activity_block in activity_block_list:
       if activity_block.name in block_moved_name_list:
         # the block composing the activity has been moved, not taking care of
@@ -745,7 +739,6 @@ class PlanningBoxWidget(Widget.Widget):
       default=10,
       required=1)
 
-
   y_axis_position = fields.CheckBoxField('y_axis_position',
       title='Force Y axis to the right intead of left',
       description='position of Y axis over the planning content.' \
@@ -761,14 +754,12 @@ class PlanningBoxWidget(Widget.Widget):
       default=0,
       required=1)
 
-
   default = fields.TextAreaField('default',
       title='Default',
       description="Default value of the text in the widget.",
       default="",
       width=20, height=3,
       required=0)
-
 
   delimiter = fields.IntegerField('delimiter',
       title='min number of delimiters over the secondary axis',
@@ -811,7 +802,6 @@ class PlanningBoxWidget(Widget.Widget):
      description="Method to use to list background objects",
      default='',
      required=0)
-
 
   title_line = fields.StringField('title_line',
       title="Specific method which fetches the title of each line",
@@ -869,7 +859,6 @@ class PlanningBoxWidget(Widget.Widget):
       description='script for block bounds rounding when validating',
       default='',
       required=0)
-
 
   sec_axis_script = fields.StringField('sec_axis_script',
       title='Name of script building secondary axis (ex. ' \
@@ -958,7 +947,7 @@ class PlanningBoxWidget(Widget.Widget):
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
-    basic, planning = self.render_structure(field=field, REQUEST=REQUEST, 
+    basic, planning = self.render_structure(field=field, REQUEST=REQUEST,
                                             context=context)
     # getting CSS script generator
     planning_css_method = getattr(context, 'planning_css')
@@ -985,7 +974,7 @@ class PlanningBoxWidget(Widget.Widget):
     planning = REQUEST.get('planning')
 
     # getting HTML rendering Page Template
-    planning_html_method = getattr(getContext(field, REQUEST), 
+    planning_html_method = getattr(getContext(field, REQUEST),
                                    'planning_content')
     # recovering HTML data by calling Page Template document
     HTML_data = planning_html_method(basic=basic, planning=planning)
@@ -1035,14 +1024,14 @@ class PlanningBoxWidget(Widget.Widget):
     # creating BasicStructure instance (and initializing its internal values)
     basic = BasicStructure(context=context,
                            form=form, field=field,
-                           REQUEST=REQUEST, 
+                           REQUEST=REQUEST,
                            list_method=list_method,
                            sec_layer_list_method=sec_layer_list_method,
                            selection=selection, params=params,
                            selection_name=selection_name,
                            title_line=title_line,
                            report_root_list=report_root_list,
-                           portal_types=portal_types, 
+                           portal_types=portal_types,
                            sort=sort,
                            list_error=list_error)
     # call build method to generate BasicStructure
@@ -1227,7 +1216,7 @@ class BasicStructure:
       selection_report_current = ()
     else:
       selection_report_current = self.selection.getReportList()
- 
+
     # building report_tree_list
     report_tree_list = makeTreeList(here=self.context, form=self.form,
                                     root_dict=None,
@@ -1244,7 +1233,7 @@ class BasicStructure:
                                     form_id=self.form.id)
 
     if report_tree_list == []:
-      LOG("BasicStructure",0 ,"Report tree list is empty on %s" % 
+      LOG("BasicStructure",0 ,"Report tree list is empty on %s" %
                       self.field.absolute_url())
 
     ########### GETTING MAIN AXIS BOUNDS #############
@@ -1321,7 +1310,7 @@ class BasicStructure:
           del kw['select_expression']
         else:
           kw['select_expression'] = original_select_expression
-        
+
         # adding current line to report_section where
         # line is pure Summary
         self.report_groups += [(object_tree_line,stat_list,info_dict)]
@@ -1336,7 +1325,7 @@ class BasicStructure:
           if sec_layer_method_name not in (None,''):
             sec_layer_object_list = getattr(domain_obj,\
                             sec_layer_method_name)()
-           
+
         # Default Values
         new_object_list = []
         sec_new_object_list = []
@@ -1373,7 +1362,7 @@ class BasicStructure:
           object_list = new_object_list
 
         self.sec_layer_uid_list.extend([obj.getUid() for obj in sec_layer_object_list])
-        # The order is important 
+        # The order is important
         sec_layer_object_list.extend(object_list)
         object_list = sec_layer_object_list
 
@@ -1406,7 +1395,6 @@ class BasicStructure:
               self.report_groups += [(object_tree_line,object_list,info_dict)]
               self.nbr_groups += 1
 
-
     # reset to original value
     self.selection.edit(report = None)
     #self.selection.edit(report_list=None) # comment to save report_list status
@@ -1421,7 +1409,6 @@ class BasicStructure:
           # saving information
           unfolded_list.append(report_line.getObject().getRelativeUrl())
       self.selection.edit(report_list=unfolded_list)
-
 
     ############## CHECKING CONSTRAINTS ##############
     # XXX Constraints checking should be called here
@@ -1548,7 +1535,6 @@ class BasicStructure:
     self.calendar_range = calendar_range
     return secondary_axis_occurence
 
-
   def getSecondaryAxisInfo(self):
     """
     secondary_axis_ocurence holds couples of data (begin,end) related to
@@ -1561,7 +1547,7 @@ class BasicStructure:
     # recovering zoom properties
     axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
     axis_dict['zoom_level'] = float(self.params.get('zoom_level',1))
-  
+
     if not use_dz:
       if len(self.secondary_axis_occurence) != 0:
         axis_dict['bound_begin'] = self.secondary_axis_occurence[0][0]
@@ -1590,11 +1576,11 @@ class BasicStructure:
         if len(self.secondary_axis_occurence) == 1:
            self.secondary_axis_occurence = []
         return 1
-  
+
       axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
       # now start and stop have the extreme values of the second axis bound.
       # this represents in fact the size of the Planning's secondary axis
-  
+
       # can now get selection informations ( float range 0..1)
       axis_dict['bound_start'] = 0
       axis_dict['bound_stop'] = 1
@@ -1607,20 +1593,20 @@ class BasicStructure:
         except AttributeError:
           # bounds were not defined, escaping test
           pass
-  
+
       # getting secondary axis page step
       axis_zoom_step = axis_dict['bound_range'] / axis_dict['zoom_level']
-  
+
       # now setting bound_start
       axis_dict['bound_start'] = axis_dict['zoom_start'] * axis_zoom_step + \
                                  axis_dict['bound_begin']
       # for bound_stop just add page step
       axis_dict['bound_stop'] = axis_dict['bound_start'] + axis_zoom_step
-  
+
       # saving current zoom values
       self.params['zoom_level'] = axis_dict['zoom_level']
       self.params['zoom_start'] = axis_dict['zoom_start']
-  
+
     else:
       # Use dz_zoom feature
       axis_dict['zoom_begin'] = self.params.get('zoom_begin',None)
@@ -1637,7 +1623,7 @@ class BasicStructure:
         validate_method = getattr(self.context, 'planning_validate_date_list', None)
         axis_dict['bound_start'], axis_dict['bound_stop'] = \
                             validate_method( DateTime(), axis_dict['zoom_level'])
-  
+
       # For Keep compatibility
       axis_dict['zoom_begin'] = axis_dict['bound_start']
       axis_dict['zoom_end'] = axis_dict['bound_stop']
@@ -1648,7 +1634,6 @@ class BasicStructure:
       self.params['zoom_level'] = axis_dict['zoom_level']
     # everything is OK, returning 'true' flag
     return axis_dict
-
 
   def getMainAxisInfo(self, report_tree_list):
     """
@@ -1713,7 +1698,6 @@ class BasicStructure:
 
     return main_axis_dict
 
-
   def buildGroupStructure(self):
       """
       This procedure builds BasicGroup instances corresponding to the
@@ -1776,7 +1760,6 @@ class BasicStructure:
         self.basic_group_list.append(child_group)
 	
       return 1
-
 
 class BasicGroup:
   """
@@ -1911,7 +1894,7 @@ class BasicGroup:
             object = activity_content
             url=''
           else:
-            
+
             # getting info text from activity itself if exists
             info_center_method = getattr(activity_content,info_center,None)
             info_topright_method = getattr(activity_content,info_topright,None)
@@ -1959,13 +1942,13 @@ class BasicGroup:
             stat_context.absolute_url = \
                          lambda x: activity_content.getObject().absolute_url()
             object = stat_context.getObject()
-            
+
             # check if the activity_content has some special method for URL
             # This approach is also used by ListBox, but in Planning Box
             # the parameters are not important for now. In future, can be define
             # special sublinks using this implementation.
             #if getattr(activity_content, 'getListItemUrl', None):
-            #  url = activity_content.getListItemUrl(cname_id='', 
+            #  url = activity_content.getListItemUrl(cname_id='',
             #      selection_index='',
             #      selection_name=self.field.get_value('selection_name'))
             #else:
@@ -2105,7 +2088,6 @@ class BasicActivity:
     self.error = error
     self.property_dict = property_dict # dict containing specific properties
 
-
 class PlanningStructure:
   """
   class aimed to generate the Planning final structure, including :
@@ -2119,7 +2101,6 @@ class PlanningStructure:
     self.secondary_axis = ''
     self.content = []
     self.content_delimiters = None
-
 
   def build(self, basic_structure=None, field=None, REQUEST=None):
     """
@@ -2220,9 +2201,9 @@ class PlanningStructure:
     # using relative coordinates
     for delimiter in delimiter_list:
       link = None
-      if delimiter.has_key('link'): link = delimiter['link'] 
+      if delimiter.has_key('link'): link = delimiter['link']
       axis_group = AxisGroup(name='Group_sec_' + str(axis_group_number),
-                             title=delimiter['title'], 
+                             title=delimiter['title'],
 			     delimiter_type=delimiter['delimiter_type'],
 			     link=link)
       axis_group.tooltip = delimiter['tooltip']
@@ -2247,7 +2228,6 @@ class PlanningStructure:
       axis_group_number += 1
 
     return axis_group_list
-    
 
   def completeAxis(self):
     """
@@ -2405,7 +2385,6 @@ class PlanningStructure:
       return 1
     return axis_element_already_present
 
-
   def buildBlocs(self, basic_structure=None, REQUEST=None):
     """
     iterate the whole planning structure to get various activities and build
@@ -2448,7 +2427,6 @@ class PlanningStructure:
     # no problem during process, returning 'true' flag
     return 1
 
-
 class Activity:
   """
   Class representing a task in the Planning, for example an appointment or
@@ -2490,12 +2468,10 @@ class Activity:
     self.calendar_view = calendar_view
     self.property_dict = property_dict
 
-
   # XXX Still used ?
   def get_error_message(self, Error):
     # need to update the error message
     return 'task %s (%s)not validated' % (self.name, self.title)
-
 
   def isValidPosition(self, bound_begin, bound_end):
     """
@@ -2691,8 +2667,6 @@ class Activity:
 #     # return new list
 #     return returned_list
 
-
-
 class Bloc:
   """
   structure that will be rendered as a bloc, a task element.
@@ -2806,7 +2780,6 @@ class Position:
     self.relative_end = relative_end
     self.relative_range = relative_range
 
-
 class Axis:
   """
   Structure holding informations about a specified axis. Can be X or Y axis.
@@ -2836,7 +2809,6 @@ class Axis:
     # dict containing all class properties with their values
     self.render_dict=None
 
-
 class AxisGroup:
   """
   Class representing an item, that can have the following properties :
@@ -2856,7 +2828,7 @@ class AxisGroup:
                 property_dict={}):
     self.name = name
     self.title = title
-    # link to fold or unfold report in report-tree mode and also 
+    # link to fold or unfold report in report-tree mode and also
     # special link on header columns
     self.link = link
     self.info_title = Info(info=self.title, link=self.link, title=self.title)
@@ -2899,7 +2871,6 @@ class AxisGroup:
     self.secondary_axis_range = secondary_axis_range
     self.property_dict = property_dict
 
-
   security = ClassSecurityInfo()
 
   security.declarePublic('setTitle')
@@ -2930,7 +2901,6 @@ class AxisGroup:
     info_title.title = info_title.info
 
     self.tooltip = info_title.info
-
 
   def addActivity(self, activity=None, axis_element_already_insered=0,
                   basic_structure=None):
@@ -3021,7 +2991,6 @@ class AxisGroup:
       self.axis_element_list = []
       self.axis_element_list.append(new_axis_element)
 
-
   def addStatActivities(self, basic_activity_list=None, axis_group_number=0,
                         axis_element_already_present= 0, calendar_view=0,
                         primary_axis_block=None, property_dict={}):
@@ -3073,7 +3042,6 @@ class AxisGroup:
       new_axis_element.activity_list.append(activity)
 
       activity_number +=1
-
 
   def updateStatBlocks(self):
     """
@@ -3133,7 +3101,6 @@ class AxisElement:
     self.render_dict=None
     self.parent_axis_group = parent_axis_group
 
-
 class Info:
   """
   Class holding all informations to display an info text div inside of a block
@@ -3154,7 +3121,6 @@ class Info:
 
 # declaring validator instance
 PlanningBoxValidatorInstance = PlanningBoxValidator()
-
 
 class PlanningBox(ZMIField):
   meta_type = "PlanningBox"
