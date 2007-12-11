@@ -63,7 +63,7 @@ class CategoryMembershipArity(Constraint):
     if not self._checkConstraintCondition(obj):
       return []
     errors = []
-    # Retrieve values inside de PropertySheet (_constraints)
+    # Retrieve configuration values from PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']
     min_arity = int(self.constraint_definition['min_arity'])
     max_arity = None
@@ -74,19 +74,33 @@ class CategoryMembershipArity(Constraint):
     arity = self._calculateArity(obj)
     if not (max_arity is None and (min_arity <= arity)
         or (min_arity <= arity <= max_arity)):
+      mapping = dict(base_category=base_category,
+                     portal_type=portal_type,
+                     current_arity=arity,
+                     min_arity=min_arity,
+                     max_arity=max_arity,)
       # Generate error message
-      error_message = "Arity error for relation '%s'" % \
-                      base_category
       if portal_type is not ():
-        error_message += " and portal_type: '%s'" % str(portal_type)
-      if max_arity is None:
-        error_message += \
-          ", arity is equal to %i but should be at least %i" % \
-          (arity, min_arity)
+        if max_arity is None:
+          error_message = "Arity Error for Relation ${base_category}"\
+                          " and Type ${portal_type}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be at least ${min_arity}"
+        else:
+          error_message = "Arity Error for Relation ${base_category}"\
+                          " and Type ${portal_type}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be between ${min_arity} and ${max_arity}"
       else:
-        error_message += \
-          ", arity is equal to %i but should be between %i and %i" % \
-          (arity, min_arity, max_arity)
+        if max_arity is None:
+          error_message = "Arity Error for Relation ${base_category}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be at least ${min_arity}"
+        else:
+          error_message = "Arity Error for Relation ${base_category}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be between ${min_arity} and ${max_arity}"
+
       # Add error
-      errors.append(self._generateError(obj, error_message))
+      errors.append(self._generateError(obj, error_message, mapping))
     return errors

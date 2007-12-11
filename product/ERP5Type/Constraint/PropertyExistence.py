@@ -55,18 +55,19 @@ class PropertyExistence(Constraint):
     # For each attribute name, we check if defined
     for property_id in self.constraint_definition.keys():
       # Check existence of property
-      error_message = \
-          "Property existence error for property '%s': " % property_id
+      mapping = dict(property_id=property_id)
       if not obj.hasProperty(property_id):
-        error_message += " this document has no such property"
+        error_message = "Property existence error for property "\
+            "${property_id}, this document has no such property"
       elif obj.getProperty(property_id) is None:
         # If value is '', attribute is considered a defined
         # XXX is this the default API ?
-        error_message += " this property was not defined"
+        error_message = "Property existence error for property "\
+            "${property_id}, this property is not defined"
       else:
         error_message = None
       # Return error
-      error = self._generateError(obj, error_message)
+      error = self._generateError(obj, error_message, mapping)
       if error is not None:
         errors.append(error)
     return errors

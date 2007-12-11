@@ -282,6 +282,11 @@ class TestConstraint(PropertySheetTestCase):
     error_list = sequence.get('error_list')
     self.failUnless(error_list != [],
                     "error_list : %s" % error_list)
+    # call getTranslatedMessage, to make sure messages have a valid mapping.
+    for error in error_list:
+      self.assertNotEquals('',
+                           error.getTranslatedMessage())
+       
 
   def stepCreateConstraint(self, sequence=None, 
                            sequence_list=None, **kw):
@@ -964,7 +969,9 @@ class TestConstraint(PropertySheetTestCase):
                    base_category=('group',),
                    klass_name='CategoryMembershipArity',
                    min_arity=1)
-    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    message_list = constraint.checkConsistency(obj)
+    self.assertEquals(1, len(message_list))
+    self.assertNotEquals('', message_list[0].getTranslatedMessage())
     obj.setGroup('testGroup1')
     self.assertEquals(0, len(constraint.checkConsistency(obj)))
   
@@ -976,7 +983,9 @@ class TestConstraint(PropertySheetTestCase):
                    base_category=('group',),
                    klass_name='CategoryAcquiredMembershipArity',
                    min_arity=1)
-    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    message_list = constraint.checkConsistency(obj)
+    self.assertEquals(1, len(message_list))
+    self.assertNotEquals('', message_list[0].getTranslatedMessage())
     obj.setGroup('testGroup1')
     self.assertEquals(0, len(constraint.checkConsistency(obj)))
   
@@ -1106,7 +1115,9 @@ class TestConstraint(PropertySheetTestCase):
                    base_category=('group',),
                    klass_name='CategoryRelatedMembershipArity',
                    min_arity=1)
-    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    message_list = constraint.checkConsistency(obj)
+    self.assertEquals(1, len(message_list))
+    self.assertNotEquals('', message_list[0].getTranslatedMessage())
     related_obj.setGroupValue(obj)
     get_transaction().commit()
     self.tic()
@@ -1141,7 +1152,9 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     self.assertEquals([], constraint.checkConsistency(obj))
     obj.setTitle('foo')
-    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    message_list = constraint.checkConsistency(obj)
+    self.assertEquals(1, len(message_list))
+    self.assertNotEquals('', message_list[0].getTranslatedMessage())
     
   def test_TALESConstraintInvalidExpression(self):
     """Tests TALESConstraint with an invalid expression
@@ -1152,7 +1165,9 @@ class TestConstraint(PropertySheetTestCase):
                    expression='python: None / 3') # ValueError
     obj = self._makeOne()
     # an error during expression evaluation simply makes a consistency error
-    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    message_list = constraint.checkConsistency(obj)
+    self.assertEquals(1, len(message_list))
+    self.assertNotEquals('', message_list[0].getTranslatedMessage())
 
     # an error during expression compilation is reraised to the programmer
     constraint = self._createGenericConstraint(

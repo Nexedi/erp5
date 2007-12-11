@@ -53,33 +53,38 @@ class AttributeEquality(PropertyExistence):
     if not self._checkConstraintCondition(obj):
       return []
     errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
-    for attribute_name, attribute_value in self.constraint_definition.items():
+    for attribute_name, expected_value in self.constraint_definition.items():
       error_message = None
+      mapping = dict()
       # If property does not exist, error will be raise by 
       # PropertyExistence Constraint.
       if obj.hasProperty(attribute_name):
         identical = 1
-        if type(attribute_value) in (type(()), type([])):
+        if isinstance(expected_value, (list, tuple)):
           # List type
-          if len(obj.getProperty(attribute_name)) != len(attribute_value):
+          if len(obj.getProperty(attribute_name)) != len(expected_value):
             identical = 0
           else:
             for item in obj.getProperty(attribute_name):
-              if item not in attribute_value:
+              if item not in expected_value:
                 identical = 0
                 break
         else:
           # Other type
-          identical = (attribute_value == obj.getProperty(attribute_name))
+          identical = (expected_value == obj.getProperty(attribute_name))
         if not identical:
           # Generate error_message
-          error_message =  "Attribute %s is '%s' but should be '%s'" % \
-              (attribute_name, obj.getProperty(attribute_name),
-               attribute_value)
+          error_message = "Attribute ${attribute_name} value is "\
+                "${current_value} but should be ${expected_value}"
+          mapping(attribute_name=attribute_name,
+                  attribute_value=obj.getProperty(attribute_name),
+                  expected_value=expected_value)
       # Generate error
       if error_message is not None:
         if fixit:
-          obj._setProperty(attribute_name, attribute_value)
-          error_message += " (Fixed)"
-        errors.append(self._generateError(obj, error_message))
+          obj._setProperty(attribute_name, expected_value)
+          error_message = "Attribute ${attribute_name} value is "\
+            "${current_value} but should be ${expected_value} (Fixed)" 
+        errors.append(self._generateError(obj, error_message, mapping))
     return errors
+

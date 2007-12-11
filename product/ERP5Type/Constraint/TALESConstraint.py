@@ -70,6 +70,7 @@ class TALESConstraint(Constraint):
       LOG('ERP5Type', PROBLEM, 'TALESConstraint error on "%s" on %s' %
          (self.constraint_definition['expression'], obj), error=sys.exc_info())
       errors.append(self._generateError(obj,
-                    'Error while evaluating expression: %s' % str(e)))
+                    'Error while evaluating expression: ${error_text}',
+                    mapping=dict(error_text=str(e))))
     return errors
 

@@ -59,20 +59,25 @@ class PortalTypeClass(Constraint):
     type_info = types_tool._getOb(obj.getPortalType(), None)
     if type_info is None :
       errors.append(self._generateError(obj,
-          "Type information for '%s' not registred with the TypeTool"))
+          "Type Information ${type_name} not registred with the TypeTool",
+          mapping=dict(type_name=obj.getPortalType())))
     elif type_info.content_meta_type != obj.meta_type :
       errors.append(self._generateError(obj,
           "Meta type is inconsistant with portal type definition."\
-          " Portal type meta type is '%s' class meta type is '%s' " % (
-           type_info.content_meta_type, obj.meta_type )))
+          " Portal type meta type is ${portal_type_meta_type}"\
+          " class meta type is ${class_meta_type} ",
+          mapping=dict(portal_type_meta_type=type_info.content_meta_type,
+                       class_meta_type=obj.meta_type)))
     else :
       portal_type_class = self._getClassForPortalType(obj, type_info)
       obj_class = str(obj.__class__)
       if portal_type_class != obj_class :
         errors.append(self._generateError(obj,
           "__class__ is inconsistant with portal type definition."\
-          " Portal_type class is %s, document class is %s" % (
-            portal_type_class, obj_class)))
+          " Portal Type class is ${portal_type_class},"
+          " document class is ${document_class}",
+          mapping=dict(portal_type_class=portal_type_class,
+                       document_class=obj_class)))
       # TODO fixit argument can be implemented here.
     return errors
 

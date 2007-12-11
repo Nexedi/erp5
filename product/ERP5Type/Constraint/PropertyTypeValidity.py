@@ -58,7 +58,7 @@ class PropertyTypeValidity(Constraint):
     'multiple selection': (list, tuple),
     'date':               (DateTime, ),
   }
-
+  
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object')
 
@@ -88,25 +88,36 @@ class PropertyTypeValidity(Constraint):
           wrong_type = not isinstance(value, self._type_dict[property_type])
         except KeyError:
           wrong_type = 0
-          error_message = "Attribute %s is defined with unknown type %s" % \
-                          (property_id, property_type)
-          errors.append(self._generateError(obj, error_message))
+          errors.append(self._generateError(obj,
+             "Attribute ${attribute_name} is defined with "
+             "an unknown type ${type_name}",
+             mapping=dict(attribute_name=property_id,
+                          type_name=property_type)))
+
       if wrong_type:
         # Type is wrong, so, raise constraint error
-        error_message = \
-            "Attribute %s should be of type %s but is of type %s" % \
-            (property_id, property_type, str(type(value)))
+        error_message = "Attribute ${attribute_name} should be of type"\
+            " ${expected_type} but is of type ${actual_type}"
+        mapping = dict(attribute_name=property_id,
+                       expected_type=property_type,
+                       actual_type=str(type(value)))
         if fixit:
           # try to cast to correct type
           if wrong_type:
             try:
               value = self._type_dict[property_type][0](value)
             except (KeyError, ValueError), error:
-              error_message += " (Type cast failed : %s)" % error
+              error_message = "Attribute ${attribute_name} should be of type"\
+                " ${expected_type} but is of type ${actual_type} (Type cast"\
+                " failed with error ${type_cast_error}"
+              mapping['type_cast_error'] = str(error)
+
             else:
               obj.setProperty(property_id, value)
-              error_message += " (Fixed)"
-        errors.append(self._generateError(obj, error_message))
+              error_message = "Attribute ${attribute_name} should be of type"\
+                " ${expected_type} but is of type ${actual_type} (Fixed)"
+
+        errors.append(self._generateError(obj, error_message, mapping))
       elif fixit:
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:

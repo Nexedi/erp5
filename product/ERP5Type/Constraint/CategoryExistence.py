@@ -55,21 +55,21 @@ class CategoryExistence(Constraint):
     for base_category in self.constraint_definition.keys():
       if base_category in ('portal_type', ):
         continue
-      
+      mapping = dict(base_category=base_category)
       # Check existence of base category
-      error_message = "Category existence error for base category '%s': " % \
-                      base_category
       if base_category not in obj.getBaseCategoryList():
-        error_message += " this document has no such category"
+        error_message = "Category existence error for base category "\
+                  "${base_category}, this document has no such category"
       elif len(obj.getCategoryMembershipList(base_category,
                 portal_type = self.constraint_definition\
                                   .get('portal_type', ()))) == 0:
-        error_message += " this category was not defined"
+        error_message = "Category existence error for base category "\
+                  "${base_category}, this category is not defined"
       else:
         error_message = None
       
       # Raise error
       if error_message:
-        errors.append(self._generateError(obj, error_message))
+        errors.append(self._generateError(obj, error_message, mapping))
     return errors
 
