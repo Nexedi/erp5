@@ -103,7 +103,7 @@ if listbox is None:\n
       container_dict[\'quantity\'] = quantity\n
       total_price = total_price_dict.get((quantity,resource), None)\n
       if total_price is None:\n
-        total_price = container_line.getTotalPrice()\n
+        total_price = container_line.getTotalPrice(fast=0)\n
         total_price_dict[(quantity,resource)] = total_price\n
       container_dict[\'total_price\'] = total_price\n
       container_dict[\'selection\'] = 0\n
