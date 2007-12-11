@@ -41,7 +41,7 @@ class Account:
       'default'     : 0 },
  )
 
-  _categories = ( 'account_type', 'gap', 'pcg', 'financial_section', )
+  _categories = ( 'account_type', 'gap', 'financial_section', )
 
   _constraints = (
     { 'id': 'account_type_existance',
