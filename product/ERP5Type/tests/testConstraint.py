@@ -968,6 +968,18 @@ class TestConstraint(PropertySheetTestCase):
     obj.setGroup('testGroup1')
     self.assertEquals(0, len(constraint.checkConsistency(obj)))
   
+  def test_CategoryAcquiredMembershipArityNoMax(self):
+    obj = self._makeOne()
+    constraint = self._createGenericConstraint(
+                   id='dummy_constraint',
+                   portal_type=('Category',),
+                   base_category=('group',),
+                   klass_name='CategoryAcquiredMembershipArity',
+                   min_arity=1)
+    self.assertEquals(1, len(constraint.checkConsistency(obj)))
+    obj.setGroup('testGroup1')
+    self.assertEquals(0, len(constraint.checkConsistency(obj)))
+  
   
   def stepCreateCategoryRelatedMembershipArity0(self, sequence=None, 
                                                 sequence_list=None, **kw):
