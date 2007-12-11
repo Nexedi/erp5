@@ -49,11 +49,9 @@ class ContentExistence(Constraint):
     obj = object
     errors = []
     if self._checkConstraintCondition(object):
-      # Retrieve values inside de PropertySheet (_constraints)
+      # Retrieve configuration values from PropertySheet (_constraints)
       portal_type = self.constraint_definition['portal_type']
-      # Check arity and compare it with the min and max
-      arity = len(obj.contentValues(portal_type=portal_type))
-      if (arity == 0):
+      if not len(obj.contentValues(portal_type=portal_type)):
         # Generate error message
         error_message = "Does not contain any subobject"
         if portal_type is not ():
@@ -61,3 +59,4 @@ class ContentExistence(Constraint):
         # Add error
         errors.append(self._generateError(obj, error_message))
     return errors
+
