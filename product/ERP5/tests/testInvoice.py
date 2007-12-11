@@ -57,15 +57,15 @@ class TestInvoice(TestPackingListMixin,
   sale_gap = 'fr/pcg/7/70/707/7071/70712'
   customer_gap = 'fr/pcg/4/41/411'
 
-  # (account_id, account_gap)
+  # (account_id, account_gap, account_type)
   #XXX gap for the last 3 should be set to real values
   account_definition_list = (
-      ('receivable_vat', vat_gap),
-      ('sale', sale_gap),
-      ('customer', customer_gap),
-      ('refundable_vat', vat_gap),
-      ('purchase', sale_gap),
-      ('supplier', customer_gap),
+      ('receivable_vat', vat_gap, 'liability/payable/collected_vat',),
+      ('sale', sale_gap, 'income'),
+      ('customer', customer_gap, 'asset/receivable'),
+      ('refundable_vat', vat_gap, 'asset/receivable/refundable_vat'),
+      ('purchase', sale_gap, 'expense'),
+      ('supplier', customer_gap, 'liability/payable'),
       )
   # (line_id, source_account_id, destination_account_id, line_quantity)
   transaction_line_definition_list = (
@@ -131,13 +131,18 @@ class TestInvoice(TestPackingListMixin,
     self.stepCreateOrganisation1(sequence, **kw)
     self.stepCreateOrganisation2(sequence, **kw)
     self.stepCreateOrganisation3(sequence, **kw)
-    sequence.edit(vendor=sequence.get('organisation1'))
+    vendor = sequence.get('organisation1')
+    vendor.setRegion(self.default_region)
+    vendor.validate()
+    sequence.edit(vendor=vendor)
     client1 = sequence.get('organisation2')
     client1.setRegion(self.default_region)
     self.assertNotEquals(client1.getRegionValue(), None)
+    client1.validate()
     sequence.edit(client1=client1)
     client2 = sequence.get('organisation3')
     self.assertEquals(client2.getRegionValue(), None)
+    client2.validate()
     sequence.edit(client2=client2)
 
   def stepCreateCurrency(self, sequence, **kw) :
@@ -168,10 +173,12 @@ class TestInvoice(TestPackingListMixin,
     """Create the rule for accounting. """
     portal = self.getPortal()
     account_module = self.getAccountModule()
-    for account_id, account_gap in self.account_definition_list:
+    for account_id, account_gap, account_type \
+               in self.account_definition_list:
       if not account_id in account_module.objectIds():
         account = account_module.newContent(id=account_id)
         account.setGap(account_gap)
+        account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account,
             'validate_action', wf_id='account_workflow')
     invoice_rule = self.getPortal().portal_rules\
