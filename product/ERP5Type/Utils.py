@@ -465,7 +465,7 @@ def importLocalInterface(class_id, path = None):
     f.close()
 
 def importLocalConstraint(class_id, path = None):
-  import Products.ERP5Type.Interface
+  import Products.ERP5Type.Constraint
   if path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "Constraint")
