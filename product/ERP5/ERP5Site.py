@@ -339,17 +339,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     if not kw.has_key('parent_uid'):
       kw['parent_uid'] = self.uid
-    kw2 = {}
-    # Remove useless matter before calling the
-    # catalog. In particular, consider empty
-    # strings as None values
-    for cname in kw.keys():
-      if kw[cname] not in ('', None):
-        kw2[cname] = kw[cname]
-    # The method to call to search the folder
-    # content has to be called z_search_folder
-    method = self.portal_catalog.searchResults
-    return method(**kw2)
+    return self.portal_catalog.searchResults(**kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
   def countFolder(self, **kw):
@@ -359,17 +349,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     if not kw.has_key('parent_uid'):
       kw['parent_uid'] = self.uid
-    kw2 = {}
-    # Remove useless matter before calling the
-    # catalog. In particular, consider empty
-    # strings as None values
-    for cname in kw.keys():
-      if kw[cname] not in ('', None):
-        kw2[cname] = kw[cname]
-    # The method to call to search the folder
-    # content has to be called z_search_folder
-    method = self.portal_catalog.countResults
-    return method(**kw2)
+    return self.portal_catalog.countResults(**kw)
 
   # Proxy methods for security reasons
   def getOwnerInfo(self):
