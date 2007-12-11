@@ -75,7 +75,26 @@ ZopeTestCase.installProduct('MailHost', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
-ZopeTestCase.installProduct('iHotfix', quiet=install_product_quiet)
+try:
+  # Workaround iHotFix patch that doesn't work with
+  # ZopeTestCase REQUESTs
+  ZopeTestCase.installProduct('iHotfix', quiet=install_product_quiet)
+  from Products import iHotfix
+  from types import UnicodeType
+  # revert monkey patchs from iHotfix
+  iHotfix.get_request = get_request
+
+  originalStringIO = iHotfix.originalStringIO
+  class UnicodeSafeStringIO(originalStringIO):
+    """StringIO like class which never fails with unicode."""
+    def write(self, s):
+      if isinstance(s, UnicodeType):
+        s = s.encode('utf8', 'repr')
+      originalStringIO.write(self, s)
+  # iHotFix will patch PageTemplate StringIO with
+  iHotfix.iHotfixStringIO = UnicodeSafeStringIO
+except ImportError:
+  pass
 ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
 ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
 
