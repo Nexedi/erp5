@@ -48,7 +48,6 @@ class Account:
       'description': 'Account Type must be set',
       'type': 'CategoryMembershipArity',
       'min_arity': 1,
-      'max_arity': 1,
       'portal_type': ('Category', ),
       'base_category' : ('account_type',),
       'condition' : 'python: object.getValidationState() not'
