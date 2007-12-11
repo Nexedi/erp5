@@ -46,6 +46,12 @@ class CategoryMembershipArity(Constraint):
     },
   """
 
+  def _calculateArity(self, obj):
+    base_category = self.constraint_definition['base_category']
+    portal_type = self.constraint_definition['portal_type']
+    return len(obj.getCategoryMembershipList(base_category,
+                                              portal_type=portal_type))
+
   def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
@@ -65,8 +71,7 @@ class CategoryMembershipArity(Constraint):
       max_arity = int(self.constraint_definition['max_arity'])
     portal_type = self.constraint_definition['portal_type']
     # Check arity and compare it with the min and max
-    arity = len(obj.getCategoryMembershipList(base_category,
-                                              portal_type=portal_type))
+    arity = self._calculateArity(obj)
     if not (max_arity is None and (min_arity <= arity)
         or (min_arity <= arity <= max_arity)):
       # Generate error message

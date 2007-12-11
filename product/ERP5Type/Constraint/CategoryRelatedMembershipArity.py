@@ -28,9 +28,11 @@
 ##############################################################################
 
 from Constraint import Constraint
+from Products.ERP5Type.Constraint.CategoryMembershipArity \
+          import CategoryMembershipArity
 
-class CategoryRelatedMembershipArity(Constraint):
-    """
+class CategoryRelatedMembershipArity(CategoryMembershipArity):
+  """
     This method check and fix if an object respects the arity
     from a category reverse membership point of view.
     For example we can check if every Order has at
@@ -45,44 +47,11 @@ class CategoryRelatedMembershipArity(Constraint):
       'base_category' : ('causality',)
       'condition'     : 'python: object.getPortalType() == 'Foo',
     },
-    """
+  """
+  
+  def _calculateArity(self, obj):
+    base_category = self.constraint_definition['base_category']
+    portal_type = self.constraint_definition['portal_type']
+    return len(obj._getRelatedValueList(base_category,
+                                        portal_type=portal_type))
 
-    def checkConsistency(self, obj, fixit=0):
-      """
-        This is the check method, we return a list of string,
-        each string corresponds to an error.
-        We are looking the definition of the constraing where
-        are defined the minimum and the maximum arity, and the
-        list of objects we wants to check the arity.
-      """
-      if not self._checkConstraintCondition(obj):
-        return []
-      errors = []
-      # Retrieve values inside de PropertySheet (_constraints)
-      base_category = self.constraint_definition['base_category']
-      min_arity = int(self.constraint_definition['min_arity'])
-      max_arity = None
-      if 'max_arity' in self.constraint_definition:
-        max_arity = int(self.constraint_definition['max_arity'])
-      portal_type = self.constraint_definition['portal_type']
-      # Check arity and compare it with the min and max
-      arity = len(obj._getRelatedValueList(base_category, 
-                                              portal_type=portal_type))
-      if not (max_arity is None and (min_arity <= arity)
-          or (min_arity <= arity <= max_arity)):
-        # Generate error message
-        error_message = "Arrity error for reverse relation '%s'" % \
-                        base_category
-        if portal_type is not ():
-          error_message += " and portal_type: '%s'" % str(portal_type)
-        if max_arity is None:
-          error_message += \
-            ", arity is equal to %i but should be at least %i" % \
-            (arity, min_arity)
-        else:
-          error_message += \
-            ", arity is equal to %i but should be between %i and %i" % \
-            (arity, min_arity, max_arity)
-        # Add error
-        errors.append(self._generateError(obj, error_message))
-      return errors

@@ -28,8 +28,10 @@
 ##############################################################################
 
 from Constraint import Constraint
+from Products.ERP5Type.Constraint.CategoryMembershipArity \
+          import CategoryMembershipArity
 
-class CategoryAcquiredMembershipArity(Constraint):
+class CategoryAcquiredMembershipArity(CategoryMembershipArity):
   """
     This method check and fix if an object respects the arity.
     For example we can check if every Order has at
@@ -46,34 +48,9 @@ class CategoryAcquiredMembershipArity(Constraint):
     },
   """
 
-  def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
-      We are looking the definition of the constraing where
-      are defined the minimum and the maximum arity, and the
-      list of objects we wants to check the arity.
-    """
-    if not self._checkConstraintCondition(obj):
-      return []
-    errors = []
-    # Retrieve values inside de PropertySheet (_constraints)
+  def _calculateArity(self, obj):
     base_category = self.constraint_definition['base_category']
-    min_arity = int(self.constraint_definition['min_arity'])
-    max_arity = int(self.constraint_definition['max_arity'])
     portal_type = self.constraint_definition['portal_type']
-    # Check arity and compare it with the min and max
-    arity = len(obj.getAcquiredCategoryMembershipList(base_category,
-                                                 portal_type=portal_type))
-    if (arity < min_arity) or (arity > max_arity):
-      # Generate error message
-      error_message = "Arity error for relation '%s'" % \
-                      base_category
-      if portal_type is not ():
-        error_message += " and portal_type: '%s'" % str(portal_type)
-      error_message += \
-          ", arity is equal to %i but should be between %i and %i" % \
-          (arity, min_arity, max_arity)
-      # Add error
-      errors.append(self._generateError(obj, error_message))
-    return errors
+    return len(obj.getAcquiredCategoryMembershipList(base_category,
+                                              portal_type=portal_type))
+
