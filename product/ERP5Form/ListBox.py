@@ -2214,526 +2214,6 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     pt = self.getPageTemplate()
     return pt()
 
-  def original_render(self, **kw):
-    """This is just a reference. Not used any longer.
-    """
-    # Make it sure to store the current selection, only if a list method is defined.
-    list_method = self.getListMethod()
-    selection = self.getSelection()
-    if list_method is not None:
-      method_path = getPath(self.getContext()) + '/' + self.getListMethodName()
-      list_url = '%s?selection_name=%s' % (self.getUrl(), self.getRequestedSelectionName())
-      selection_index = self.getSelectionIndex()
-      if selection_index is not None:
-        list_url += '&selection_index=%s' % selection_index
-      selection.edit(method_path = method_path, list_url = list_url)
-      self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
-
-    # Obtain the list of lines.
-    line_list = self.query()
-
-    # Start rendering.
-    # FIXME: This part should be replaced with Page Templates.
-    html_list = []
-    ui_domain = 'erp5_ui'
-    context_domain = 'erp5_content'
-    param_dict = self.getParamDict()
-
-    # Prepare format parameters.
-    format_dict = dict(portal_url_string = self.getPortalUrlString(),
-                       list_action = self.getListActionUrl(),
-                       selection_name = self.getSelectionName(),
-                       field_id = self.getId(),
-                       field_title = unicode(Message(domain = ui_domain, message = self.getTitle())),
-                       record_number = unicode(Message(domain = ui_domain, message = '${number} record(s)',
-                                                       mapping = dict(number = str(self.total_size)))),
-                       item_number = unicode(Message(domain = ui_domain, message = '${number} item(s) selected',
-                                                     mapping = dict(number = str(len(self.getCheckedUidList()))))),
-                       flat_list_title = unicode(Message(domain = ui_domain, message = 'Flat List')),
-                       report_tree_title = unicode(Message(domain = ui_domain, message = 'Report Tree')),
-                       domain_tree_title = unicode(Message(domain = ui_domain, message = 'Domain Tree')),
-                       change_page_title = unicode(Message(domain = ui_domain, message = 'Change Page')),
-                       previous_page_title = unicode(Message(domain = ui_domain, message = 'Previous Page')),
-                       next_page_title = unicode(Message(domain = ui_domain, message = 'Next Page')),
-                       check_all_title = unicode(Message(domain = ui_domain, message = 'Check All')),
-                       uncheck_all_title = unicode(Message(domain = ui_domain, message = 'Uncheck All')),
-                       ascending_display_title = unicode(Message(domain = ui_domain, message = 'Ascending Display')),
-                       descending_display_title = unicode(Message(domain = ui_domain, message = 'Descending Display')),
-                       action_title = unicode(Message(domain = ui_domain, message = 'Action')),
-                       context_url = self.getContext().getUrl())
-
-    # This is the start of HTML. Embed a selection name.
-    html_list.append("""\
-<!-- ListBox %(field_id)s starts here. -->
-<input type="hidden" name="list_selection_name" value="%(selection_name)s" />
-""" % format_dict)
-
-    # If the MD5 checksum is valid, embed it.
-    md5_string = self.getMD5Checksum()
-    if md5_string is not None:
-      html_list.append("""
-<input type="hidden" name="md5_object_uid_list" value="%s" />
-""" % md5_string)
-
-    # Create a domain tree selector. Note that this creates one more table, so
-    # the table must be terminated at the end.
-    if self.isDomainTreeMode():
-      html_list.append("""\
- <table border="0" cellpadding="0" cellspacing="0" width="100%%">
-  <tr>
-   <td valign="top">
-    <select name="domain_root_url" onChange="submitAction(this.form, '%(context_url)s/portal_selections/setDomainRoot')">
-""" % format_dict)
-
-      selected_domain_path = self.getSelectedDomainPath()
-      for c in self.getDomainRootList():
-        if c[0] == selected_domain_path:
-          selected = 'selected'
-        else:
-          selected = ''
-
-        html_list.append("""\
-     <option %s value="%s">%s</option>
-""" % (selected, c[0], unicode(Message(domain = ui_domain, message = c[1]))))
-
-      html_list.append("""\
-    </select>
-    <table id="%(field_id)s_domain_tree_table" cellpadding="0" border="0">
-""" % format_dict)
-
-      # Render a domain tree.
-      try:
-        report_tree_list = self.makeReportTreeList(report_path = selected_domain_path,
-                                                   unfolded_list = selection.getDomainList(),
-                                                   is_report_opened = False)
-
-        total_depth = max([report_tree.depth for report_tree in report_tree_list] + [-1])
-        for report_tree in report_tree_list:
-          html_list.append("""\
-     <tr>
-""")
-          html_list.append("""\
-      <td width="16" nowrap>&nbsp;</td>
-""" * report_tree.depth)
-
-          relative_url = report_tree.obj.getRelativeUrl()
-          if report_tree.base_category is not None and not relative_url.startswith(report_tree.base_category + '/'):
-            domain_url = '%s/%s' % (report_tree.base_category, relative_url)
-          else:
-            domain_url = relative_url
-
-          if report_tree.is_open:
-            method_id = 'foldDomain'
-            content = u'-&nbsp;<b>%s</b>' % unicode(report_tree.obj.getTranslatedTitleOrId())
-          else:
-            method_id = 'unfoldDomain'
-            content = u'+&nbsp;%s' % unicode(report_tree.obj.getTranslatedTitleOrId())
-
-          html_list.append("""\
-      <td nowrap valign="top" align="left" colspan="%d">
-       <a href="portal_selections/%s?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%d">%s</a>
-      </td>
-     </tr>
-""" % (total_depth - report_tree.depth + 1, method_id, domain_url, self.getForm().id, self.getSelectionName(),
-       report_tree.depth, content))
-      except KeyError:
-        pass
-
-      html_list.append("""\
-    </table>
-   </td>
-   <td valign="top">
-""")
-
-    # Create the title line.
-    html_list.append("""
-<div class="ListSummary">
- <table border="0" cellpadding="0" cellspacing="0">
-  <tr height="10">
-   <td height="10"><img src="%(portal_url_string)s/images/Left.png" border="0"/></td>
-   <td class="Top" colspan="2" height="10">
-    <img src="%(portal_url_string)s/images/spacer.png" width="5" height="10" border="0"
-      alt="spacer"/></td>
-   <td class="Top" colspan="3" height="10">
-    <img src="%(portal_url_string)s/images/spacer.png" width="5" height="10" border="0"
-      alt="spacer"/>
-   </td>
-  </tr>
-  <tr id="%(field_id)s_title_line">
-   <td class="Left" width="17">
-    <img src="%(portal_url_string)s/images/spacer.png" width="5" height="5" border="0"
-        alt="spacer"/>
-   </td>
-   <td valign="middle" nowrap>
-""" % format_dict)
-
-    # Embed icons for flat list mode, report tree mode and domain tree mode, only if applicable.
-    if self.isReportTreeSupported() or self.isDomainTreeSupported():
-      html_list.append("""
-    <input type="image" src="%(portal_url_string)s/images/text_block.png" id="%(field_id)s_flat_list_mode"
-      title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img" />
-""" % format_dict)
-
-    if self.isReportTreeSupported():
-      html_list.append("""
-    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="%(field_id)s_report_tree_mode"
-      title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img" />
-""" % format_dict)
-
-    if self.isDomainTreeSupported():
-      html_list.append("""
-    <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="%(field_id)s_domain_tree_mode"
-      title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img" />
-""" % format_dict)
-
-    # Add information about simple statistics.
-    html_list.append("""
-   </td>
-   <td width="100%%" valign="middle">&nbsp; <a id="listbox_title" href="%(list_action)s">%(field_title)s</a>:
-        <span id="listbox_record_number">%(record_number)s</span>
-        - <span id="listbox_item_number">%(item_number)s</span>
-   </td>
-   <td nowrap valign="middle" align="center">
-""" % format_dict)
-
-    # Embed a previous page button, only if applicable.
-    if self.current_page > 0:
-      html_list.append("""
-    <input id="%(field_id)s_previous_page" type="image" src="%(portal_url_string)s/images/1leftarrowv.png"
-      title="%(previous_page_title)s" name="portal_selections/previousPage:method" border="0" />
-""" % format_dict)
-
-    # Make page selectors.
-    html_list.append("""
-   </td>
-   <td nowrap valign="middle" align="center">
-    <select id="%(field_id)s_page_selection" name="list_start" title="%(change_page_title)s" size="1"
-      onChange="submitAction(this.form, '%(context_url)s/portal_selections/setPage')">
-""" % format_dict)
-
-    for p in xrange(0, self.total_pages):
-      if p == self.current_page:
-        selected = 'selected'
-      else:
-        selected = ''
-
-      html_list.append("""\
-      <option %s value="%d">%s</option>
-""" % (selected, p * self.getMaxLineNumber(),
-       unicode(Message(domain = ui_domain, message = '${page} of ${total_pages}',
-                       mapping = dict(page = p + 1, total_pages = self.total_pages)))))
-
-    html_list.append("""\
-    </select>
-   </td>
-   <td nowrap valign="middle" align="center">
-""")
-
-    # Embed a next page button, only if applicable.
-    if self.current_page < self.total_pages - 1:
-      html_list.append("""\
-    <input id="%(field_id)s_next_page" type="image" src="%(portal_url_string)s/images/1rightarrowv.png"
-      title="%(next_page_title)s" name="portal_selections/nextPage:method" border="0" />
-""" % format_dict)
-
-    # Create the label line.
-    html_list.append("""\
-   </td>
-  </tr>
- </table>
-</div>
-<!-- List Content -->
-<div class="ListContent">
- <table cellpadding="0" cellspacing="0" border="0">
-  <tr id="%(field_id)s_label_line">
-""" % format_dict)
-
-    # Make a report tree selection, if applicable.
-    if self.isReportTreeMode():
-      html_list.append("""\
-   <td class="Data" width="50" align="left" valign="middle">
-    <select name="report_root_url" onChange="submitAction(this.form, '%(context_url)s/portal_selections/setReportRoot')">
-""" % format_dict)
-
-      for c in self.getReportRootList():
-        if c[0] == self.getSelectedReportPath():
-          selected = 'selected'
-        else:
-          selected = ''
-
-        html_list.append("""\
-     <option %s value="%s">%s</option>
-""" % (selected, c[0], c[1]))
-
-      html_list.append("""\
-    </select>
-   </td>
-""")
-
-    # Show check and uncheck icons, if applicable.
-    if self.showSelectColumn():
-      html_list.append("""\
-   <td class="Data" width="50" align="center" valign="middle">
-    <input id="%(field_id)s_check_all" type="image" name="portal_selections/checkAll:method" value="1"
-      src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title="%(check_all_title)s" />\
-&nbsp;<input id="%(field_id)s_uncheck_all" type="image" name="portal_selections/uncheckAll:method" value="1"
-      src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title="%(uncheck_all_title)s" />
-   </td>
-""" % format_dict)
-
-    # Show labels with quick sort links when appropriate.
-    for sql, title, sort_order in self.getLabelValueList():
-      html_list.append("""\
-   <td class="Data">\
-""")
-      if sql is not None:
-        html_list.append("""\
-<a href="portal_selections/setSelectionQuickSortOrder?selection_name=%s&amp;sort_on=%s&amp;form_id=%s">%s</a>\
-""" % (self.getSelectionName(), sql, self.getForm().id, unicode(Message(domain = ui_domain, message = title))))
-
-        if sort_order == 'ascending':
-          html_list.append("""\
- <img src="%(portal_url_string)s/images/1bottomarrow.png" alt="Ascending Display" title="%(ascending_display_title)s" />\
-""" % format_dict)
-        elif sort_order == 'descending':
-          html_list.append("""\
- <img src="%(portal_url_string)s/images/1toparrow.png" alt="Descending Display" title="%(descending_display_title)s" />\
-""" % format_dict)
-      else:
-        html_list.append('%s' % (unicode(Message(domain = ui_domain, message = title),)))
-
-      html_list.append("""\
-   </td>
-""")
-
-    html_list.append("""\
-  </tr>
-""")
-
-    # Make the search line, if enabled. Or, make a report depth selector only in report tree mode.
-    if self.showSearchLine() or self.isReportTreeMode():
-      if self.showSearchLine():
-        html_list.append("""\
-  <tr id="%(field_id)s_search_line">
-""" % format_dict)
-      else:
-        html_list.append("""\
-  <tr id="%(field_id)s_report_depth_line">
-""" % format_dict)
-
-      # Make a report depth selector, if applicable.
-      if self.isReportTreeMode():
-        if self.showSearchLine():
-          colspan = 1
-        else:
-          colspan = len(self.getSelectedColumnList()) + self.showSelectColumn() + 1
-
-        html_list.append("""\
-   <td class="Data" width="50" align="left" valign="middle" colspan="%d">\
-""" % colspan)
-
-        # XXX isn't it better to make this configurable?
-        for i in xrange(0, 6):
-          html_list.append("""\
-&nbsp;<a href="%s?selection_name=%s&selection_index=%s&report_depth:int=%d">%d</a>\
-""" % (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex(), i, i))
-
-        is_report_opened = self.getSelection().isReportOpened()
-        html_list.append("""\
-&nbsp;-&nbsp;<a href="%s?selection_name=%s&selection_index=%s&is_report_opened:int=%d">%s</a>\
-""" % (self.getUrl(), self.getRequestedSelectionName(), self.getSelectionIndex(),
-       not is_report_opened,
-       unicode(Message(domain = ui_domain, message = is_report_opened and 'Hide' or 'Show'))))
-
-        html_list.append("""\
-   </td>
-""")
-
-      # Put a select icon, if enabled.
-      if self.showSelectColumn() and self.showSearchLine():
-        html_list.append("""\
-   <td class="Data" width="50" align="center" valign="middle">
-     <input id="%(field_id)s_select" type="image" src="%(portal_url_string)s/images/exec16.png" title="%(action_title)s" alt="Action" name="Base_doSelect:method" />
-   </td>
-""" % format_dict)
-
-      # Add search fields.
-      if self.showSearchLine():
-        for alias, param, search_field in self.getSearchValueList():
-          html_list.append("""\
-   <td class="DataB">
-""")
-
-          if alias is not None:
-            # Render the search field by a widget, if any.
-            if search_field is not None:
-              search_field_html = search_field.render(value = param, key = alias)
-            else:
-              search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, cgi.escape(param))
-
-            # FIXME: The font size should be defined in the CSS.
-            html_list.append("""\
-    <font size="-3">%s</font>
-""" % search_field_html)
-
-          html_list.append("""\
-   </td>
-""")
-
-      # Terminate the search line.
-      html_list.append("""\
-  </tr>
-""")
-
-    # Add data lines.
-    selection = self.getSelection()
-    checked_uid_set = self.getCheckedUidSet()
-
-    for i, line in enumerate(line_list):
-      # Change the appearance of each line for visibility.
-      if (i % 2) == 0:
-        tr_css = 'DataA'
-      else:
-        tr_css = 'DataB'
-
-      # For now, use the same class name for td as well.
-      td_css = tr_css
-
-      html_list.append("""\
-  <tr id="%s_data_line_%d" class="%s">
-""" % (self.getId(), i, tr_css))
-
-      # Embed the uid of the object.
-      html_list.append("""\
-   <input type="hidden" value="%s" name="%s_uid:list" />
-""" % (line.getUid() or '', self.getId()))
-
-      # Show a report section column in report tree mode.
-      if self.isReportTreeMode():
-        # Get the title or the id of the context.
-        if line.getContext() is not None:
-          section_name = unicode(Message(domain = context_domain, message = line.getContext().getTitleOrId()))
-        else:
-          section_name = ''
-
-        # Select the prefix for the section name.
-        if len(section_name):
-          if line.isOpen():
-            section_char = '- '
-          else:
-            section_char = '+ '
-        else:
-          section_char = ''
-
-        if line.isOpen():
-          method_id = 'foldReport'
-        else:
-          method_id = 'unfoldReport'
-
-        domain_url = line.getDomainUrl()
-
-        html_list.append("""\
-   <td class="%s" align="left" valign="middle">
-     <a href="portal_selections/%s?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a>
-   </td>
-""" % (td_css, method_id, domain_url, self.getForm().id, self.getSelectionName(),
-       '&nbsp;&nbsp;' * line.getDepth(), section_char, section_name))
-
-      # Show a select column, if enabled.
-      if self.showSelectColumn():
-        html_list.append("""\
-   <td class="%s" width="50" align="center" valign="middle">
-""" % td_css)
-
-        if not line.isSummary() and line.getObject() is not None:
-          if line.getUid() in checked_uid_set:
-            selected = 'checked'
-          else:
-            selected = ''
-
-          html_list.append("""\
-     <input type="checkbox" %s value="%s" id="%s_cb_%s" name="uids:list" />
-""" % (selected, line.getUid(), self.getId(), line.getUid()))
-        else:
-          html_list.append('&nbsp;')
-
-        html_list.append("""\
-   </td>
-""")
-
-      # Add data columns.
-      for html, original_value, error in line.render():
-        # Depending on the type of the original value, determine an alignment.
-        # FIXME: should use a CSS class instead of "align".
-        if isinstance(original_value, (float, int, long)):
-          td_align = 'right'
-        else:
-          td_align = 'left'
-
-        if error:
-          td_css = td_css + 'Error'
-
-        html_list.append("""\
-   <td class="%s" align="%s">%s</td>
-""" % (td_css, td_align, html))
-
-      # Terminate the line.
-      html_list.append("""\
-  </tr>
-""")
-
-    # Show a stat line, if enabled.
-    if self.showStat():
-      html_list.append("""\
-  <tr id="%(field_id)s_stat_line">
-""" % format_dict)
-
-      if self.isReportTreeMode():
-        html_list.append("""\
-   <td class="Data">&nbsp;</td>
-""")
-
-      if self.showSelectColumn():
-        html_list.append("""\
-   <td class="Data">&nbsp;</td>
-""")
-
-      for original_value, processed_value in self.getStatValueList():
-        # XXX Determine the alignment.
-        if isinstance(original_value, (float, int, long)):
-          td_align = 'right'
-        else:
-          td_align = 'left'
-
-        processed_value = cgi.escape(processed_value)
-
-        html_list.append("""\
-   <td class="Data" align="%s">%s</td>
-""" % (td_align, processed_value))
-
-      html_list.append("""\
-  </tr>
-""")
-
-    html_list.append("""\
- </table>
-</div>
-""")
-
-    # In domain tree mode, an extra table is used, so terminate the table here.
-    if self.isDomainTreeMode():
-      html_list.append("""\
-   </td>
-  </tr>
- </table>
-""")
-
-    html_list.append("""\
-<!-- ListBox %(field_id)s ends here. -->
-""" % format_dict)
-
-    return ''.join(html_list)
-
 allow_class(ListBoxHTMLRenderer)
 
 class ListBoxListRenderer(ListBoxRenderer):
@@ -2905,7 +2385,7 @@ class ListBoxValidator(Validator.Validator):
           list_method = field.get_value('list_method')
           list_method = getattr(here, list_method.method_name)
           REQUEST.set(field.id, listbox)
-          object_list = list_method(REQUEST=REQUEST,**params)
+          object_list = list_method(REQUEST=REQUEST, **params)
         for uid in listbox_uids:
           if str(uid).find('new') == 0:
             # First case: dialog input to create new objects
@@ -2930,7 +2410,7 @@ class ListBoxValidator(Validator.Validator):
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
                 REQUEST.cell = o
-                if my_field.get_value('editable',REQUEST=REQUEST) and field.need_validate(REQUEST):
+                if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
                   key = 'field_%s_%s' % (my_field.id, o.uid)
                   error_result_key = '%s_%s' % (my_field.id, o.uid)
                   try:
@@ -2956,7 +2436,7 @@ class ListBoxValidator(Validator.Validator):
                 if not object_list:
                   list_method = field.get_value('list_method')
                   list_method = getattr(here, list_method.method_name)
-                  object_list = list_method(REQUEST=REQUEST,**params)
+                  object_list = list_method(REQUEST=REQUEST, **params)
                 for object in object_list:
                   try:
                     if object.getUid() == int(uid):
@@ -2976,7 +2456,7 @@ class ListBoxValidator(Validator.Validator):
                 if form.has_field( my_field_id ):
                   my_field = form.get_field(my_field_id)
                   REQUEST.cell = o # We need cell
-                  if my_field.get_value('editable',REQUEST=REQUEST) and field.need_validate(REQUEST):
+                  if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
                     tales_expr = my_field.tales.get('default', "")
                     key = 'field_' + my_field.id + '_%s' % o.uid
                     error_result_key = my_field.id + '_%s' % o.uid
@@ -3108,7 +2588,7 @@ class ListBoxLine:
     self.is_stat_line,\
     self.is_summary_line = content_mode_dict[content_mode]
 
-    self.setConfigProperty('content_mode',content_mode)
+    self.setConfigProperty('content_mode', content_mode)
 
   #security.declarePublic('View')
   def markTitleLine(self):
@@ -3172,7 +2652,7 @@ class ListBoxLine:
       Set line to checked if is_checked=1
       Default value is 0
     """
-    self.setConfigProperty('is_checked',is_checked)
+    self.setConfigProperty('is_checked', is_checked)
 
   security.declarePublic('isLineChecked')
   def isLineChecked(self):
@@ -3187,7 +2667,7 @@ class ListBoxLine:
       Define the uid of the object
       Default value is None
     """
-    self.setConfigProperty('uid',object_uid)
+    self.setConfigProperty('uid', object_uid)
 
   security.declarePublic('getObjectUid')
   def getObjectUid(self):
@@ -3202,7 +2682,7 @@ class ListBoxLine:
       Set the section name of this line
       Default value is None
     """
-    self.setConfigProperty('section_name',section_name)
+    self.setConfigProperty('section_name', section_name)
 
   security.declarePublic('getSectionName')
   def getSectionName(self):
@@ -3218,7 +2698,7 @@ class ListBoxLine:
       Set the section depth of this line
       default value is 0 and means no depth
     """
-    self.setConfigProperty('section_depth',depth)
+    self.setConfigProperty('section_depth', depth)
 
   security.declarePublic('getSectionDepth')
   def getSectionDepth(self):
