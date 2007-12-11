@@ -120,7 +120,8 @@ msg = translateString(msg, \n
             )\n
 \n
 # We can now notify the owner through the notification tool\n
-context.portal_notifications.sendMessage(sender=user, recipient=owner, subject=subject, message=msg)\n
+portal.portal_notifications.sendMessage(\n
+         sender=user, recipient=owner, subject=subject, message=msg)\n
 </string> </value>
         </item>
         <item>
@@ -194,7 +195,6 @@ context.portal_notifications.sendMessage(sender=user, recipient=owner, subject=s
                             <string>subject</string>
                             <string>msg</string>
                             <string>dict</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
