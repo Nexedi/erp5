@@ -12,7 +12,7 @@ From: john <john@doe.com>
 User-Agent: Thunderbird 1.5.0.7 (X11/20060921)
 MIME-Version: 1.0
 To:  bartek@erp5.pl
-Subject: blebleble
+Subject: A Test Mail
 Content-Type: multipart/mixed;
  boundary="------------070902080602050309080805"
 

@@ -91,8 +91,8 @@ class TestIngestion(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base', 'erp5_web', 'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
-    #return ('erp5_base', 'erp5_trade', 'erp5_project', 'erp5_dms')
+    return ('erp5_base', 'erp5_web', 'erp5_crm',
+            'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
 
   def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -105,32 +105,11 @@ class TestIngestion(ERP5TypeTestCase):
     self.portal_catalog = self.getCatalogTool()
     self.createDefaultCategoryList()
     self.setSystemPreference()
-    self.createTools()
     self.setSimulatedNotificationScript()
+    self.setTools()
 
   def beforeTearDown(self):
     self.portal.portal_caches.clearAllCache()
-
-  def createTools(self):
-    """
-      Set up missing portal_mailin tool.
-    """
-    # Delete and create portal_contributions
-    #try:
-    #  self.portal._delObject('portal_contributions')
-    #except AttributeError:
-    #  pass
-    #addTool = self.portal.manage_addProduct['ERP5'].manage_addTool
-    #addTool('ERP5 Contribution Tool', None)
-    # Delete and create portal_mailin
-    try:
-      self.portal._delObject('portal_mailin')
-    except AttributeError:
-      pass
-    addTool = self.portal.manage_addProduct['CMFMailIn'].manage_addTool
-    addTool('CMF Mail In Tool', None)
-    mailin = self.portal.portal_mailin
-    mailin.edit_configuration('Document_ingestEmail')
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
@@ -152,6 +131,13 @@ class TestIngestion(ERP5TypeTestCase):
     script = getattr(context, script_id)
     script.ZPythonScript_edit('email_to, event, doc, **kw', 'return')
 
+  def setTools(self):
+    # XXX FIX ME
+    # XXX We should use business template to install these tools.(Yusei)
+    if getattr(self.portal, 'mimetypes_registry', None) is None:
+      self.portal.manage_addProduct['MimetypesRegistry'].manage_addTool(type='MimeTypes Registry')
+    if getattr(self.portal, 'portal_transforms', None) is None:
+      self.portal.manage_addProduct['PortalTransforms'].manage_addTool(type='Portal Transforms')
 
   ##################################
   ##  Useful methods
@@ -447,6 +433,15 @@ class TestIngestion(ERP5TypeTestCase):
     for k, v in expected_metadata.items():
       self.assertEquals(context.getProperty(k), v)
 
+  def receiveEmail(self, data,
+                   portal_type='Document Ingestion Message',
+                   container_path='document_ingestion_module',
+                   file_name='email.emx'):
+    return self.portal.portal_contributions.newContent(data=data,
+                                                       portal_type=portal_type,
+                                                       container_path=container_path,
+                                                       file_name=file_name)
+
   ##################################
   ##  Basic steps
   ##################################
@@ -459,16 +454,21 @@ class TestIngestion(ERP5TypeTestCase):
       Create a person with ID "john" if it does not exists already
     """
     portal_type = 'Person'
-    id = 'john'
+    person_id = 'john'
     reference = 'john_doe'
     person_module = self.portal.person_module
-    if getattr(person_module, 'john', False): return 
-    person = person_module.newContent( portal_type='Person'
-                                     , id=id
-                                     ,  reference = reference
-                                     )
+    if getattr(person_module, person_id, None) is not None:
+      return
+    person = person_module.newContent(portal_type='Person',
+                                      id=person_id,
+                                      reference=reference,
+                                      first_name='John',
+                                      last_name='Doe'
+                                      )
     person.setDefaultEmailText('john@doe.com')
-    person.reindexObject(); get_transaction().commit(); self.tic()
+    person.reindexObject()
+    get_transaction().commit()
+    self.tic()
 
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -792,7 +792,7 @@ class TestIngestion(ERP5TypeTestCase):
         Clean up DMS system from old content.
     """
     portal = self.getPortal()
-    for module in (portal.document_module, portal.image_module,):
+    for module in (portal.document_module, portal.image_module, portal.document_ingestion_module):
       module.manage_delObjects(map(None, module.objectIds()))
     
   def stepContributeFileListWithType(self, sequence=None, sequence_list=None, **kw):
@@ -872,23 +872,17 @@ class TestIngestion(ERP5TypeTestCase):
     """
       email was sent in by someone who is not in the person_module
     """
-    self.failUnless(hasattr(self.portal, 'portal_mailin'))
     f = open(makeFilePath('email_from.txt'))
-    res = self.portal.portal_mailin.postMailMessage(f.read())
-    # we check if the mailin returned anything - it should return a message saying that the recipient does not exist
-    # the exact wording may differ
-    # the way mailin works is that if mail was accepted it returns None
-    self.failUnless(res)  
+    document = self.receiveEmail(data=f.read())
+    get_transaction().commit()
+    self.tic()
 
   def stepReceiveEmailFromJohn(self, sequence=None, sequence_list=None, **kw):
     """
       email was sent in by someone who is in the person_module
     """
-    self.failUnless(hasattr(self.portal, 'portal_mailin'))
     f = open(makeFilePath('email_from.txt'))
-    res = self.portal.portal_mailin.postUTF8MailMessage(f.read())
-    printAndLog(res)
-    self.failIf(res)  
+    document = self.receiveEmail(f.read())
     get_transaction().commit()
     self.tic()
 
@@ -897,15 +891,24 @@ class TestIngestion(ERP5TypeTestCase):
       find the newly mailed-in document by its reference
       check its properties
     """
-    res = self.portal_catalog(reference='MAIL')
-    self.assertEquals(len(res), 1) # check if it is there
-    document = res[0].getObject()
-    john_is_owner = 0
-    for role in document.get_local_roles():
-      if role[0] == 'john_doe' and 'Owner' in role[1]:
-        john_is_owner = 1
-        break
-    self.failUnless(john_is_owner)
+    # First, check document ingestion message
+    result = self.portal_catalog(portal_type='Document Ingestion Message',
+                                 title='A Test Mail',
+                                 source_title='John Doe'
+                                 )
+    self.assertEqual(len(result), 1)
+    ingestion_message = result[0].getObject()
+
+    # Second, check attachments
+    attachment_list = ingestion_message.getAggregateValueList()
+    self.assertEqual(len(attachment_list), 1)
+
+    # Third, check document
+    result = self.portal_catalog(portal_type='Text')
+    self.assertEqual(len(result), 1)
+    document = result[0].getObject()
+    self.assertEqual(document.getRelativeUrl(), result[0].getRelativeUrl())
+
 
   def playSequence(self, step_list, quiet):
     sequence_list = SequenceList()
