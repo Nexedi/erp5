@@ -36,12 +36,10 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
 
 
-class TestHR(ERP5TypeTestCase):
-  """
-    ERP5 Human Ressources related tests. 
+class TestERP5Base(ERP5TypeTestCase):
+  """ERP5 Base tests.
 
-  XXX actually this test suite tests person and organisation subcontent,
-  properties and acquisition, but not really HR.
+  Those are tests for erp5_base business template.
   """
 
   # pseudo constants
@@ -57,7 +55,7 @@ class TestHR(ERP5TypeTestCase):
     """
       Return the title of the current test set.
     """
-    return "ERP5 HR"
+    return "ERP5 Base"
 
 
   def getBusinessTemplateList(self):
@@ -77,6 +75,7 @@ class TestHR(ERP5TypeTestCase):
     self.portal_categories = self.getCategoryTool()
     self.portal_catalog    = self.getCatalogTool()
     self.createCategories()
+    # self.login_as_member()
 
 
 
@@ -93,6 +92,14 @@ class TestHR(ERP5TypeTestCase):
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
+  def login_as_member(self):
+    """Create a new member user and login.
+    """
+    user_name = 'member_user'
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(user_name, '', ['Member', 'Author', 'Assignor'], [])
+    user = user_folder.getUserById(user_name).__of__(user_folder)
+    newSecurityManager(None, user)
 
   def createCategories(self):
     """
@@ -418,15 +425,12 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals( organisation.getDefaultAddressRegion()
                      , default_address.getRegion()
                      )
-#     self.assertEquals( organisation.getDefaultAddressRegionTitle() # XXX Why ?
-#                      , default_address.getRegionTitle()
-#                      )
-#     self.assertEquals( organisation.getDefaultAddressRegionValue()
-#                      , region_object
-#                      )
-#     self.assertEquals( default_address.getRegionValue()
-#                      , region_object
-#                      )
+    self.assertEquals( organisation.getDefaultAddressRegionTitle()
+                     , default_address.getRegionTitle()
+                     )
+    self.assertEquals( default_address.getRegionValue()
+                     , region_object
+                     )
     self.assertEquals( organisation.getDefaultAddressZipCode()
                      , default_address.getZipCode()
                      )
@@ -918,5 +922,5 @@ class TestHR(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestHR))
+  suite.addTest(unittest.makeSuite(TestERP5Base))
   return suite
