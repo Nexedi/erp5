@@ -920,6 +920,26 @@ class TestERP5Base(ERP5TypeTestCase):
                       field.get_value('default'))
 
 
+  def test_CreateBankAccount(self):
+    # We can add Bank Accounts inside Persons and Organisation
+    for entity in (self.getPersonModule().newContent(portal_type='Person'),
+        self.getOrganisationModule().newContent(portal_type='Organisation')):
+      bank_account = entity.newContent(portal_type='Bank Account')
+      self.assertEquals([], bank_account.checkConsistency())
+      bank_account.newContent(portal_type='Agent')
+      self.assertEquals([], bank_account.checkConsistency())
+      self.portal.portal_workflow.doActionFor(bank_account, 'validate_action')
+      self.assertEquals('validated', bank_account.getValidationState())
+
+  def test_CreateImage(self):
+    # We can add Images inside Persons and Organisation
+    for entity in (self.getPersonModule().newContent(portal_type='Person'),
+        self.getOrganisationModule().newContent(portal_type='Organisation')):
+      image = entity.newContent(portal_type='Image')
+      self.assertEquals([], image.checkConsistency())
+      image.view() # viewing the image does not cause error
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Base))
