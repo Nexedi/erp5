@@ -303,6 +303,25 @@ def CheckBoxWidget_render(self, field, key, value, REQUEST):
 
 CheckBoxWidget.render = CheckBoxWidget_render
 
+def CheckBoxWidget_render_view(self, field, value):
+  """Render checkbox in view mode.
+  """
+  if value:
+    return render_element("input",
+                                   type="checkbox",
+                                   css_class=field.get_value('css_class'),
+                                   checked=1,
+                                   extra=field.get_value('extra'),
+                                   disabled='disabled')
+  else:
+    return render_element("input",
+                                   type="checkbox",
+                                   css_class=field.get_value('css_class'),
+                                   extra=field.get_value('extra'),
+                                   disabled='disabled')
+
+CheckBoxWidget.render_view = CheckBoxWidget_render_view
+
 # Patch the render_view of LinkField so that it is clickable in read-only mode.
 from Products.Formulator.Widget import TextWidget
 from Products.Formulator.StandardFields import LinkField
