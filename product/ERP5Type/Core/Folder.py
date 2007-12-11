@@ -277,20 +277,7 @@ class FolderMixIn(ExtensionClass.Base):
     if delete_parent_uid:
       del kw['parent_uid']
 
-    # kw2 = {}
-    # I (seb) remove this because sometimes it
-    # is important to give a None parameter, like limit=None
-    # Remove useless matter before calling the
-    # catalog. In particular, consider empty
-    # strings as None values
-    #for cname in kw.keys():
-    #  if kw[cname] != '' and kw[cname] != None:
-    #    kw2[cname] = kw[cname]
-
-    # The method to call to search the folder
-    # content has to be called z_search_folder
-    method = self.portal_catalog.portal_catalog
-    return method(**kw)
+    return self.portal_catalog.searchResults(**kw)
 
   security.declareProtected(Permissions.View, 'countFolder')
   def countFolder(self, **kw):
@@ -323,17 +310,7 @@ class FolderMixIn(ExtensionClass.Base):
     if delete_parent_uid:
       del kw['parent_uid']
 
-    #kw2 = {}
-    # Remove useless matter before calling the
-    # catalog. In particular, consider empty
-    # strings as None values
-    #for cname in kw.keys():
-    #  if kw[cname] != '' and kw[cname]!=None:
-    #    kw2[cname] = kw[cname]
-    # The method to call to search the folder
-    # content has to be called z_search_folder
-    method = self.portal_catalog.countResults
-    return method(**kw)
+    return self.portal_catalog.countResults(**kw)
 
   # Count objects in the folder
   security.declarePrivate('_count')
