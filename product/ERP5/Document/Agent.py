@@ -58,6 +58,9 @@ class Agent(Folder, Image):
                     , PropertySheet.Agent
                     )
 
+  # content_type property is also a method from PortalFolder, so we need a
+  # valid type by default.
+  content_type = ''
 
   def __init__(self, *args, **kw):
     Folder.__init__(self, *args, **kw)
