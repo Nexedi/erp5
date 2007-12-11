@@ -77,9 +77,6 @@ class Constraint(Interface):
   Products.ERP5Type.Core.Folder.Folder, checkConsistency will be called
   recursivly.
     
-  XXX How to call only one constraint, even if this constraint is not defined
-  on property sheet ?
-
   """
   
   def checkConsistency(obj, fixit=0):
@@ -95,7 +92,7 @@ class Constraint(Interface):
     can simply call::
        
       >>> if something_is_wrong:
-      >>>   errors.append(self._generateError(obj, 'Something is wrong !')
+      >>>   error_list.append(self._generateError(obj, 'Something is wrong !')
     
     Then this message ("Something is wrong !") will be translated when the
     caller of document.checkConsistency() calls getTranslatedMessage() on
@@ -105,7 +102,7 @@ class Constraint(Interface):
     'mapping' for substitution, like this::
     
       >>> if something_is_wrong:
-      >>>   errors.append(self._generateError(obj,
+      >>>   error_list.append(self._generateError(obj,
       ...      'Something is wrong: ${wrong_thing}',
       ...      mapping=dict(wrong_thing=obj.getTheWrongThing())))
    
