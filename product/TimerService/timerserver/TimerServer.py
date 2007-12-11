@@ -55,15 +55,17 @@ class TimerServer:
         ip = socket.gethostbyname(socket.gethostname())
 
         # To be very sure, try to connect to the HTTPServer
-        # and only start after we are able to connect
+        # and only start after we are able to connect and got a response
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(None)
         while 1:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(5)
             try:
                 s.connect((ip, port))
-            except (socket.error, socket.timeout):
-                s.close()
+            except socket.error:
+                time.sleep(5)
                 continue
+            s.send('GET / HTTP/1.1\r\n\r\n')
+            s.recv(4096) # blocks until a response is received
             break
         s.close()
 
