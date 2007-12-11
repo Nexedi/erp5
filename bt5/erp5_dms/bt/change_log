@@ -1,3 +1,6 @@
+2007-12-11 Yusei
+* Fixed dependencies. erp5_dms depends on erp5_crm. Because Document Ingestion Message is based on Event portal type.
+
 2007-12-10 Yusei
 * Disable group and site fields on document view when web_mode is off.
 
