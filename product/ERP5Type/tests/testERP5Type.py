@@ -115,8 +115,10 @@ class %(property_sheet_name)s:
     # reset aq_dynamic cache
     _aq_reset()
 
-class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
+class TestERP5Type(PropertySheetTestCase, LogInterceptor):
+    """Tests ERP5TypeInformation and per portal type generated accessors.
+    """
     run_all_test = 1
     quiet = 1
 
@@ -187,12 +189,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Test if portal_categories has getId method (RAD)
       self.assertEquals(self.getCategoryTool().getId(), 'portal_categories')
 
-    # erp5_common tests
-    def testCommonHasParentBaseCategory(self):
+    # erp5_core tests
+    def testERP5CoreHasParentBaseCategory(self):
       # Test if erp5_common parent base category was imported successfully
       self.assertNotEquals(getattr(self.getCategoryTool(), 'parent', None), None)
 
-    def testCommonHasImageType(self):
+    def testERP5CoreHasImageType(self):
       # Test if erp5_common parent base category was imported successfully
       self.assertNotEquals(getattr(self.getTypeTool(), 'Image', None), None)
 
@@ -1750,7 +1752,6 @@ class TestPropertySheet:
       self.assertEquals('default', doc.getDummyTranslationDomain())
       self.assertEquals('foo', doc.getTranslatedDummy())
       self.assertEquals(['foo'], self.portal.Localizer.default._translated)
-
 
     # _aq_reset should be called implicitly when the system configuration
     # changes:
