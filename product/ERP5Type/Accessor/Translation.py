@@ -101,12 +101,16 @@ class PropertyTranslationDomainGetter(Method):
       ptype_domain = None
       ptype = instance.getPortalType()
       ptypes_tool = instance.getPortalObject()['portal_types']
-      domain_dict = ptypes_tool[ptype].getPropertyTranslationDomainDict()
-      domain = domain_dict.get(self._original_key)
-      if domain is None:
+      typeinfo = ptypes_tool.getTypeInfo(ptype)
+      if typeinfo is None:
         ptype_domain = ''
       else:
-        ptype_domain = domain.getDomainName()
+        domain_dict = typeinfo.getPropertyTranslationDomainDict()
+        domain = domain_dict.get(self._original_key)
+        if domain is None:
+          ptype_domain = ''
+        else:
+          ptype_domain = domain.getDomainName()
       if ptype_domain is '' and default is not None:
         # then get the default property defined on property sheet
         value = default
