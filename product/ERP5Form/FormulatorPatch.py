@@ -308,17 +308,17 @@ def CheckBoxWidget_render_view(self, field, value):
   """
   if value:
     return render_element("input",
-                                   type="checkbox",
-                                   css_class=field.get_value('css_class'),
-                                   checked=1,
-                                   extra=field.get_value('extra'),
-                                   disabled='disabled')
+                          type="checkbox",
+                          css_class=field.get_value('css_class'),
+                          checked=1,
+                          extra=field.get_value('extra'),
+                          disabled='disabled')
   else:
     return render_element("input",
-                                   type="checkbox",
-                                   css_class=field.get_value('css_class'),
-                                   extra=field.get_value('extra'),
-                                   disabled='disabled')
+                          type="checkbox",
+                          css_class=field.get_value('css_class'),
+                          extra=field.get_value('extra'),
+                          disabled='disabled')
 
 CheckBoxWidget.render_view = CheckBoxWidget_render_view
 
