@@ -38,9 +38,7 @@ class ConsistencyMessage(ObjectMessage):
     """
     init specific variable to constraint
     """
-    self.object_relative_url = object_relative_url
-    self.message = message
-    self.mapping = mapping
+    ObjectMessage.__init__(self, object_relative_url, message, mapping)
     self.description = constraint.description
     self.class_name = constraint.__class__.__name__
     self.__dict__.update(kw)
