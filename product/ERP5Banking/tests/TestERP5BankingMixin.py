@@ -970,7 +970,7 @@ class TestERP5BankingMixin:
 
 
   def createCashInventory(self, source, destination, currency, line_list=[],extra_id='',
-                          reset_quantity=0, start_date=None):
+                          reset_quantity=0, start_date=None, quantity_factor=1):
     """
     Create a cash inventory group
     """
@@ -1015,7 +1015,8 @@ class TestERP5BankingMixin:
                                  line['variation_value'],
                                  line['quantity'],
                                  variation_list=variation_list,
-                                 reset_quantity=reset_quantity)
+                                 reset_quantity=reset_quantity,
+                                 quantity_factor=quantity_factor)
     # deliver the inventory
     if inventory.getSimulationState()!='delivered':
       inventory.deliver()
@@ -1024,7 +1025,7 @@ class TestERP5BankingMixin:
 
   def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
           variation_base_category_list, variation_category_list, resource_quantity_dict,
-          variation_list=None, reset_quantity=0):
+          variation_list=None, reset_quantity=0, quantity_factor=1):
     """
     Add a cash line to a delivery
      """
@@ -1062,7 +1063,7 @@ class TestERP5BankingMixin:
         quantity = resource_quantity_dict[variation]
         if reset_quantity:
           quantity = 0
-        cell.setQuantity(quantity)
+        cell.setQuantity(quantity*quantity_factor)
 
 
   def checkResourceCreated(self):
