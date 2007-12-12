@@ -73,7 +73,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>salary_range/france/forfait</string>
                 <string>tax_category/employee_share</string>
                 <string>quantity_unit/time/month</string>
                 <string>product_line/total_cotisation_salariales</string>
