@@ -699,6 +699,13 @@ class TestERP5BankingMixin:
     # open it
     counter.open()
 
+  def closeCounterDate(self, id):
+    """
+    close the counter date
+    """
+    module = self.getCounterDateModule()
+    counter_date = module[id]
+    counter_date.close()
 
   def initDefaultVariable(self):
     """
