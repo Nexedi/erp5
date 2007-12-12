@@ -378,7 +378,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.PaySheetLine_asCellRange(matrixbox=1)[1]</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: len(here.PaySheetLine_asCellRange(matrixbox=1))>1 and here.PaySheetLine_asCellRange(matrixbox=1)[1] or []
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
