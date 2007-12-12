@@ -620,7 +620,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_balance_regulation, name='history', wf_id='cash_balance_regulation_workflow')
     # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 5)
+    self.assertEqual(len(workflow_history), 3)
     
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, check_source=1,**kwd):
@@ -725,9 +725,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventory ' \
                     + 'Tic CheckWorklist ' \
-                    + 'ConfirmCashBalanceRegulation Tic ' \
-                    + 'CheckConfirmedInventory ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)
@@ -740,9 +737,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventoryCaveau ' \
                     + 'Tic CheckWorklist ' \
-                    + 'ConfirmCashBalanceRegulation Tic ' \
-                    + 'CheckConfirmedInventoryCaveau ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventoryCaveau'
     sequence_list.addSequenceString(sequence_caveau)
@@ -753,9 +747,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventorySalleTri ' \
-                    + 'ConfirmCashBalanceRegulation Tic ' \
-                    + 'CheckConfirmedInventorySalleTri ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventorySalleTri'
     sequence_list.addSequenceString(sequence_salletri)
@@ -766,9 +757,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventorySurface ' \
-                    + 'ConfirmCashBalanceRegulation Tic ' \
-                    + 'CheckConfirmedInventorySurface ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventorySurface'
     sequence_list.addSequenceString(sequence_surface)
