@@ -66,30 +66,37 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>\'\'\'\n
-  this small script a list of the categories used in the paysheet lines\n
+  this small script return a list of the categories used in the paysheet lines\n
+\n
+  parameters :\n
+    - editable :  if editable = 1, the columns returned are editables columns\n
+                  else, all the columns are returned\n
 \'\'\'\n
 \n
 column_list = []\n
 \n
-static_columns = [\n
-                    (\'int_index\', \'Sort Index\'),\n
-                    (\'title\', \'Title\'),\n
-                    (\'source_section_title\', \'Source\'),\n
-                    (\'slice\', \'Slice\'),\n
-                    (\'base\', \'Base\'),\n
-                 ]\n
+not_editable_columns = [(\'int_index\', \'Sort Index\'),\n
+                        (\'title\', \'Title\'),\n
+                        (\'source_section_title\', \'Source\'),\n
+                        (\'slice\', \'Slice\'),\n
+                        (\'base\', \'Base\'),]\n
 \n
-column_list.extend(static_columns)\n
+if not editable:\n
+  column_list.extend(not_editable_columns)\n
 \n
-for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
-  for tax_category in model_line.getTaxCategoryValueList():\n
-    rate = (tax_category.getRelativeUrl().replace(\'tax_category/\', \'\', 1)+\\\n
-        \'_rate\', tax_category.getTitle()+\' Rate\')\n
-    amount = (tax_category.getRelativeUrl().replace(\'tax_category/\', \'\', 1)+\\\n
-        \'_amount\', tax_category.getTitle()+\' Amount\')\n
-    if rate not in column_list:\n
-      column_list.append(rate)\n
-      column_list.append(amount)\n
+  for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
+    for tax_category in model_line.getTaxCategoryValueList():\n
+      price = (tax_category.getId()+\'_rate\', tax_category.getTitle()+\' Rate\')\n
+      quantity = (tax_category.getId()+\'_amount\', \n
+                  tax_category.getTitle()+\' Amount\')\n
+      if price not in column_list:\n
+        column_list.append(price)\n
+        column_list.append(quantity)\n
+\n
+else:\n
+  pass\n
+  # add here the editable column you want to use\n
+  # currently, it\'s not required to use editable columns\n
 \n
 return column_list\n
 </string> </value>
@@ -108,7 +115,7 @@ return column_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>editable=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,21 +135,22 @@ return column_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>editable</string>
                             <string>column_list</string>
-                            <string>static_columns</string>
+                            <string>not_editable_columns</string>
                             <string>_getattr_</string>
                             <string>_getiter_</string>
                             <string>context</string>
                             <string>model_line</string>
                             <string>tax_category</string>
-                            <string>rate</string>
-                            <string>amount</string>
+                            <string>price</string>
+                            <string>quantity</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,7 +162,9 @@ return column_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

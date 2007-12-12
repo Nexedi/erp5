@@ -66,27 +66,41 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>\'\'\'\n
-  this script is the conductor. All other scripts that permit to create a \n
-  paysheet are called here\n
+  this small script a list of the categories used in the paysheet lines\n
+\n
+  parameters :\n
+    - editable :  if editable = 1, the columns returned are editables columns\n
+                  else, all the columns are returned\n
 \'\'\'\n
-import pprint\n
 \n
-# Delete all objects in the paysheet\n
-id_list = []\n
-for paysheet_item in context.objectValues(portal_type= \\\n
-  [\'Pay Sheet Transaction Line\', \'Pay Sheet Line\']):\n
-  # Delete lines which now became outdated and keep the sub-objects\n
-  id_list.append(paysheet_item.getId())\n
-context.manage_delObjects(id_list)\n
+column_list = []\n
 \n
-# create Pay Sheet Lines\n
-context.createPaySheetLineList(listbox=listbox)\n
+not_editable_columns = [ (\'title\', \'Title\'),\n
+                          (\'salary_range_title\', \'Slice\'),]\n
 \n
-if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
-  # Return to pay sheet default view\n
-  from ZTUtils import make_query\n
-  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), \'view\', make_query())\n
-  return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+if not editable:\n
+  column_list.extend(not_editable_columns)\n
+\n
+model = context.getSpecialiseValue()\n
+model_line_list = model.contentValues(portal_type=\'Pay Sheet Model Line\')\n
+model_line_list = [line for line in model_line_list if line.isEditable()]\n
+\n
+for model_line in model_line_list:\n
+  for tax_category in model_line.getTaxCategoryValueList():\n
+    price = (tax_category.getId()+\'_price\', tax_category.getTitle()+\' Rate\')\n
+    quantity = (tax_category.getId()+\'_quantity\', \n
+                tax_category.getTitle()+\' Amount\')\n
+    if price not in column_list:\n
+      column_list.append(price)\n
+      column_list.append(quantity)\n
+\n
+\n
+# hidden columns are put at the end of the list, it\'s less ugly\n
+hidden_columns = [(\'model_line\', \' \'),\n
+                  (\'salary_range_relative_url\', \' \'),]\n
+\n
+column_list.extend(hidden_columns)\n
+return column_list\n
 </string> </value>
         </item>
         <item>
@@ -103,7 +117,7 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=[], **kw</string> </value>
+            <value> <string>editable=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,19 +143,22 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>listbox</string>
-                            <string>kw</string>
-                            <string>pprint</string>
-                            <string>id_list</string>
-                            <string>_getiter_</string>
+                            <string>editable</string>
+                            <string>column_list</string>
+                            <string>not_editable_columns</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>paysheet_item</string>
-                            <string>_getitem_</string>
-                            <string>True</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>redirect_url</string>
+                            <string>model</string>
+                            <string>model_line_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>model_line</string>
+                            <string>tax_category</string>
+                            <string>price</string>
+                            <string>quantity</string>
+                            <string>hidden_columns</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,13 +171,13 @@ if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <list/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_createAllPaySheetLineList</string> </value>
+            <value> <string>PaySheetTransaction_getListBoxPreviewColumnList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

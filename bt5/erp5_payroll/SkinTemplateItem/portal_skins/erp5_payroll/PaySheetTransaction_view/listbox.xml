@@ -63,13 +63,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -81,21 +87,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -103,7 +107,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -118,7 +122,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -130,7 +134,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -157,30 +161,9 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>base</string>
-                          <string>Base</string>
-                        </tuple>
-                        <tuple>
-                          <string>employer_share_amount</string>
-                          <string>Employer Share Amount</string>
-                        </tuple>
-                        <tuple>
-                          <string>employer_share_rate</string>
-                          <string>Employer Share Rate</string>
-                        </tuple>
-                        <tuple>
-                          <string>employee_share_amount</string>
-                          <string>Employee Share Amount</string>
-                        </tuple>
-                        <tuple>
-                          <string>employee_share_rate</string>
-                          <string>Employee Share Rate</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -204,7 +187,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
@@ -214,7 +197,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -229,11 +212,11 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>paysheet_line_list_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -248,7 +231,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Pay Sheet Lines</string> </value>
                 </item>
                 <item>
@@ -280,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.PaySheetTransaction_getListBoxColumnList()</string> </value>
+            <value> <string>python: context.PaySheetTransaction_getListBoxColumnList()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -296,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_listbox_view_mode_line_count\', 15)</string> </value>
+            <value> <string>python: context.PaySheetTransaction_getListBoxColumnList(editable=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

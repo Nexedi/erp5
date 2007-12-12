@@ -105,19 +105,25 @@
                         <string>listbox_base_application_string</string>
                         <string>listbox_base_participation_string</string>
                         <string>listbox_service_id</string>
-                        <string>listbox_salary_range</string>
                         <string>listbox_quantity</string>
                         <string>listbox_price</string>
                         <string>listbox_tax_category</string>
                         <string>listbox_tax_category_relative_url</string>
                         <string>listbox_salary_range_relative_url</string>
+                        <string>listbox_id</string>
+                        <string>listbox_employee_share_price</string>
+                        <string>listbox_employer_share_price</string>
+                        <string>listbox_employee_share_quantity</string>
+                        <string>listbox_employer_share_quantity</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_salary_range</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -143,7 +149,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

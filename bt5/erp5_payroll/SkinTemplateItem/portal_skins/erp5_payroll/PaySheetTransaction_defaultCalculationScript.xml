@@ -85,6 +85,28 @@ if base_amount_dict:\n
 quantity = cell.getQuantity() or 0\n
 price = cell.getPrice() or 0\n
 \n
+\n
+salary_range_list = cell.getVariationCategoryList(\\\n
+    base_category_list=\'salary_range\')\n
+if len(salary_range_list):\n
+  salary_range = salary_range_list[0] # a slice can have only one salary_range\n
+                                      # category\n
+else:\n
+  salary_range = None\n
+\n
+model_slice_min = 0\n
+model_slice_max = 0\n
+if salary_range:\n
+  model = context.getSpecialiseValue()\n
+  cell = model.getCell(salary_range)\n
+  if cell is None:\n
+    context.log("Warning ! Can\'t find cell corresponding to : %s" %\n
+        salary_range)\n
+  else:\n
+    model_slice_min = cell.getQuantityRangeMin()\n
+    model_slice_max = cell.getQuantityRangeMax()\n
+\n
+\n
 if not quantity and base_application-model_slice_min>0:\n
   if base_application <= model_slice_max:\n
     quantity = base_application-model_slice_min\n
@@ -118,7 +140,7 @@ return {\'quantity\':quantity, \'price\':price}\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_amount_dict, model_slice_min, model_slice_max, cell</string> </value>
+            <value> <string>base_amount_dict, cell</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -138,15 +160,13 @@ return {\'quantity\':quantity, \'price\':price}\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>base_amount_dict</string>
-                            <string>model_slice_min</string>
-                            <string>model_slice_max</string>
                             <string>cell</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -162,6 +182,12 @@ return {\'quantity\':quantity, \'price\':price}\n
                             <string>_inplacevar_</string>
                             <string>quantity</string>
                             <string>price</string>
+                            <string>salary_range_list</string>
+                            <string>len</string>
+                            <string>salary_range</string>
+                            <string>model_slice_min</string>
+                            <string>model_slice_max</string>
+                            <string>model</string>
                           </tuple>
                         </value>
                     </item>

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="IntegerField" module="Products.Formulator.StandardFields"/>
+        <global name="FloatField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_int_index</string> </value>
+            <value> <string>listbox_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -22,12 +22,8 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>integer_out_of_range</string> </key>
-                    <value> <string>The integer you entered was out of range.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_integer</string> </key>
-                    <value> <string>You did not enter an integer.</string> </value>
+                    <key> <string>not_float</string> </key>
+                    <value> <string>You did not enter a floating point number.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -73,10 +69,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -90,10 +82,6 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>start</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -144,10 +132,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -160,11 +144,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>input_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -188,7 +176,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>figure</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -204,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -213,10 +201,6 @@
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>end</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -231,16 +215,20 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1 234.5</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>start</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Sort Index</string> </value>
+                    <value> <string>Id</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

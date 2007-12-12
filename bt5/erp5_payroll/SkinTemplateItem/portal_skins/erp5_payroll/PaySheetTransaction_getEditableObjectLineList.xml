@@ -72,37 +72,58 @@
   In base cases, only \'Monthly Labour\' model line is editable (without any\n
   tax_category or slice)\n
 """\n
+\n
 from Products.ERP5Type.Utils import cartesianProduct\n
+import pprint\n
+from Products.ERP5Type.Message import Message\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-# Get all the editable model lines\n
-model = context.getSpecialiseValue()\n
-if not model:\n
-  context.log("PaySheetTransaction_getEditables WARNING! no model found")\n
-  return None\n
-\n
-# get model lines\n
+model = context.getSpecialiseValue(0)\n
 model_line_list = model.contentValues(portal_type=\'Pay Sheet Model Line\')\n
-\n
-# remove not editable model line\n
-model_line_editable_list = [x.getObject() for x in model_line_list \\\n
+# remove editable model line\n
+model_line_list = [x.getObject() for x in model_line_list \\\n
                             if x.getObject().isEditable()]\n
 \n
 line_list = []\n
-for model_line in model_line_editable_list:\n
+object_dict_list = []\n
+id = 0\n
 \n
+for model_line in model_line_list:\n
   base_category_list = model_line.getVariationBaseCategoryList()\n
+  base_application_list = model_line.getBaseAmountTitleList()\n
+  translated_base_application_list = [str(N_(x)) for x in base_application_list]\n
+  base_application_list = \', \'.join(translated_base_application_list)\n
   list_of_list = []\n
   for base_category in base_category_list:\n
-    list_of_list.append(model_line.getVariationCategoryList(base_category_list=\\\n
-                                                            base_category))\n
+    list = model_line.getVariationCategoryList(base_category_list=\\\n
+        base_category)\n
+    list_of_list.append(list)\n
   cartesian_product = cartesianProduct(list_of_list)\n
 \n
-  service = model_line.getResourceValue()\n
+  previous_share = None\n
 \n
+  object_dict = {}\n
   for tuple in cartesian_product:\n
+    share_dict = {}\n
     cell = model_line.getCell(*tuple)\n
     if cell is None:\n
       continue\n
+\n
+    quantity = cell.getQuantity()\n
+    base = quantity\n
+\n
+    base_list = [str(N_(base_application)) for base_application in \\\n
+        model_line.getBaseAmountTitleList()]\n
+    base_name = \'+\'.join(base_list)\n
+\n
+    payroll_service = model_line.getResourceValue()\n
+    base_participation_list = payroll_service.getBaseAmountList()\n
+\n
+    price = cell.getPrice()\n
+    if price is None:\n
+      price = 1\n
+    share_dict[cell.getTaxCategory()+\'_price\'] = price\n
+    share_dict[cell.getTaxCategory()+\'_quantity\'] = quantity\n
 \n
     tuple_dict = {}\n
     for item in tuple:\n
@@ -110,22 +131,86 @@ for model_line in model_line_editable_list:\n
       tuple_dict[item.split(\'/\')[0]]=context.portal_categories.restrictedTraverse(item).getTitle()\n
       tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
 \n
-    params={\\\n
-        \'service_title\':service.getTitleOrId(),\n
-        \'quantity\': cell.getQuantity(),\n
-        \'price\' : cell.getPrice(),\n
-        \'model_line\':model_line.getRelativeUrl(),\n
-        \'service_id\':service.getId(),\n
-        \'description\':model_line.getDescription(),\n
-        \'base_participation_list\':service.getBaseAmountTitleList(),\n
-        \'base_participation_string\':\', \'.join(service.getBaseAmountTitleList()),\n
-        \'base_application_list\':model_line.getBaseAmountTitleList(),\n
-        \'base_application_string\':\', \'.join(model_line.getBaseAmountTitleList())         }\n
+    # we want to display as lines as a paysheet line as slices\n
+    # this is easier to read\n
 \n
-    params.update(tuple_dict)\n
+    salary_range = cell.getSalaryRange()\n
+    # if there is no slice on a contribution, the dict key will be \'no_slice\'\n
+    # it could be just one \'no_slice\' because a contribution have slice or not\n
+    if salary_range is None:\n
+      salary_range = \'no_slice\'\n
 \n
-    line_list.append(cell.asContext(**params))\n
+    # check that another share on the same slice have not been already add\n
+    if not object_dict.has_key(salary_range):\n
+      salary_range_title = None\n
+      salary_range_relative_url = None\n
+      if tuple_dict.has_key(\'salary_range\'):\n
+        salary_range_title = tuple_dict[\'salary_range\']\n
+        salary_range_relative_url = tuple_dict[\'salary_range_relative_url\']\n
+      new_uid = "new_%s" % id\n
+      id += 1\n
+      object_dict[salary_range]={\n
+                    \'uid\':new_uid,\n
+                    \'salary_range_title\':salary_range_title,\n
+                    \'salary_range_relative_url\':salary_range_relative_url,\n
+                    \'base_name\':base_name,\n
+                    \'base\':base,\n
+                    \'model_line\': model_line.getRelativeUrl(),\n
+                    \'base_participation_list\':base_participation_list,\n
+                    \'base_application_list\': base_application_list,\n
+                    \'service_id\':payroll_service.getId()}\n
+      object_dict[salary_range].update(share_dict)\n
 \n
+    # if the slice already exists, just update the share\n
+    else:\n
+      object_dict[salary_range].update(share_dict)\n
+\n
+  object_dict_list.append(object_dict)\n
+\n
+  for object_key in model_line.getSalaryRangeList():\n
+    line_list.append(model_line.asContext(**object_dict[object_key]))\n
+  if object_dict.has_key(\'no_slice\'):\n
+    line_list.append(model_line.asContext(**object_dict[\'no_slice\']))\n
+\n
+\n
+if batch_mode:\n
+  object_dict_list = [x.values()[0] for x in object_dict_list]\n
+  return object_dict_list\n
+\n
+# sort results\n
+\n
+def sortByTitleAscending(x, y):\n
+  return cmp(x.getTitle(), y.getTitle())\n
+\n
+def sortByTitleDescending(x, y):\n
+  return cmp(y.getTitle(), x.getTitle())\n
+\n
+def sortByIntIndexAscending(x, y):\n
+  return cmp(x.getIntIndex(), y.getIntIndex())\n
+\n
+def sortByIntIndexDescending(x, y):\n
+  return cmp(y.getIntIndex(), x.getIntIndex())\n
+\n
+sortByDefaultSortMethod = sortByIntIndexAscending\n
+\n
+if kw.has_key(\'sort_on\'):\n
+  list = kw[\'sort_on\']\n
+  if list[0][0] == \'title\' and list[0][1]==\'ascending\':\n
+    line_list.sort(sortByTitleAscending)\n
+  elif list[0][0] == \'title\' and list[0][1]==\'descending\':\n
+    line_list.sort(sortByTitleDescending)\n
+  elif list[0][0] == \'int_index\' and list[0][1]==\'ascending\':\n
+    line_list.sort(sortByIntIndexAscending)\n
+  elif list[0][0] == \'int_index\' and list[0][1]==\'descending\':\n
+    line_list.sort(sortByIntIndexDescending)\n
+  else:\n
+    line_list.sort(sortByDefaultSortMethod)\n
+else:\n
+  line_list.sort(sortByDefaultSortMethod)\n
+\n
+\n
+\n
+#return pprint.pformat(line_list)\n
 return line_list\n
 </string> </value>
         </item>
@@ -149,7 +234,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>batch_mode=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -169,40 +254,70 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>batch_mode</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>cartesianProduct</string>
+                            <string>pprint</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>model</string>
-                            <string>None</string>
                             <string>model_line_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>model_line_editable_list</string>
                             <string>line_list</string>
+                            <string>object_dict_list</string>
+                            <string>id</string>
                             <string>model_line</string>
                             <string>base_category_list</string>
+                            <string>base_application_list</string>
+                            <string>str</string>
+                            <string>translated_base_application_list</string>
                             <string>list_of_list</string>
                             <string>base_category</string>
+                            <string>list</string>
                             <string>cartesian_product</string>
-                            <string>service</string>
+                            <string>None</string>
+                            <string>previous_share</string>
+                            <string>object_dict</string>
                             <string>tuple</string>
+                            <string>share_dict</string>
                             <string>_apply_</string>
                             <string>cell</string>
+                            <string>quantity</string>
+                            <string>base</string>
+                            <string>base_application</string>
+                            <string>base_list</string>
+                            <string>base_name</string>
+                            <string>payroll_service</string>
+                            <string>base_participation_list</string>
+                            <string>price</string>
+                            <string>_write_</string>
                             <string>tuple_dict</string>
                             <string>item</string>
-                            <string>_write_</string>
                             <string>_getitem_</string>
-                            <string>params</string>
+                            <string>salary_range</string>
+                            <string>salary_range_title</string>
+                            <string>salary_range_relative_url</string>
+                            <string>new_uid</string>
+                            <string>_inplacevar_</string>
+                            <string>object_key</string>
+                            <string>sortByTitleAscending</string>
+                            <string>sortByTitleDescending</string>
+                            <string>sortByIntIndexAscending</string>
+                            <string>sortByIntIndexDescending</string>
+                            <string>sortByDefaultSortMethod</string>
                           </tuple>
                         </value>
                     </item>
@@ -214,7 +329,9 @@ return line_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

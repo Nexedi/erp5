@@ -92,8 +92,6 @@ for paysheet_line in paysheet_line_list:\n
   base_category_list = paysheet_line.getVariationBaseCategoryList()\n
   base_application_list = paysheet_line.getBaseAmountTitleList()\n
   translated_base_application_list = [str(N_(x)) for x in base_application_list]\n
-  context.log(\'translated_base_application_list :%s\' %\n
-      translated_base_application_list)\n
   base_application_list = \', \'.join(translated_base_application_list)\n
   list_of_list = []\n
   for base_category in base_category_list:\n
