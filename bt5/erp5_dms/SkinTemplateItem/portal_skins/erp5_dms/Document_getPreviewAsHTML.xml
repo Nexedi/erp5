@@ -67,13 +67,26 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.PythonScripts.standard import html_quote\n
+\n
+result = \'\'\n
+error_message = None\n
 try:\n
-  return context.asStrippedHTML()\n
+  result = context.asStrippedHTML()\n
+  if result:\n
+    return result\n
+  if not context.hasBaseData():\n
+    error_message = context.Base_translateString("This document is not converted yet.")\n
 except Exception, e:\n
   from Products.ERP5Type.Log import log\n
   log("asStrippedHTML", str(e))\n
-  error_message = context.Base_translateString("Preview Error.")\n
-  return \'<div class="error">%s</div>\' % error_message\n
+  error_message = "%s %s" % (context.Base_translateString("Preview Error:"),\n
+                              str(e))\n
+\n
+if error_message is not None:\n
+  return \'<div class="error">%s</div>\' % html_quote(error_message)\n
+\n
+return result\n
 
 
 ]]></string> </value>
@@ -118,14 +131,18 @@ except Exception, e:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>html_quote</string>
+                            <string>result</string>
+                            <string>None</string>
+                            <string>error_message</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>Exception</string>
                             <string>e</string>
                             <string>Products.ERP5Type.Log</string>
                             <string>log</string>
                             <string>str</string>
-                            <string>error_message</string>
                           </tuple>
                         </value>
                     </item>
