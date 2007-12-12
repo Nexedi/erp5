@@ -44,14 +44,14 @@ class Account:
   _categories = ( 'account_type', 'gap', 'financial_section', )
 
   _constraints = (
-    { 'id': 'account_type_existance',
+    { 'id': 'account_type_category_existence',
       'description': 'Account Type must be set',
       'type': 'CategoryExistence',
       'account_type' : 1,
       'condition' : 'python: object.getValidationState() not'
                      ' in ("invalidated", "deleted")'
     },
-    { 'id': 'gap_existance',
+    { 'id': 'gap_category_existence',
       'description': 'GAP must be set',
       'type': 'CategoryExistence',
       'gap' : 1,
