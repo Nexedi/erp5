@@ -67,8 +67,6 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Create a balance transaction\n
 """\n
-from DateTime import DateTime\n
-\n
 accounting_period = sci[\'object\']\n
 portal = accounting_period.getPortalObject()\n
 profit_and_loss_account = portal.portal_workflow.getInfoFor(\n
@@ -125,7 +123,6 @@ accounting_period.AccountingPeriod_createBalanceTransaction(\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>DateTime</string>
                             <string>_getitem_</string>
                             <string>accounting_period</string>
                             <string>_getattr_</string>

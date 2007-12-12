@@ -67,8 +67,6 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
 \n
 period = state_change[\'object\']\n
 portal = period.getPortalObject()\n
@@ -138,9 +136,6 @@ if movement_list:\n
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>ComplexQuery</string>
                             <string>_getitem_</string>
                             <string>period</string>
                             <string>_getattr_</string>
