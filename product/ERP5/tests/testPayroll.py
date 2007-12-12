@@ -471,7 +471,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
       XXX Editable line are not yet take into account
     '''
     paysheet_line_list = \
-        paysheet.createNotEditablePaySheetLineList()
+        paysheet.createPaySheetLineList()
     portal_type_list = ['Annotation Line', 'Payment Condition',
                         'Pay Sheet Model Ratio Line']
     paysheet.PaySheetTransaction_copySubObject(portal_type_list)
