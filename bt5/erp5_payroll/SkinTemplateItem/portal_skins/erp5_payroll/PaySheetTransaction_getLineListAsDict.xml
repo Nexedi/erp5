@@ -95,8 +95,6 @@ for line in line_list: \n
   line_dict[\'base_name\'] =  getattr(line, \'base_name\', None)\n
 \n
   line_dict[\'base\'] =  getattr(line, \'base\', None)\n
-  if line_dict[\'base\'] != None:\n
-    line_dict[\'base\'] = round(line_dict[\'base\'], precision)\n
 \n
   line_dict[\'employer_share_rate\'] =  getattr(line, \'employer_share_rate\', None)\n
   if line_dict[\'employer_share_rate\'] != None:\n
@@ -105,9 +103,6 @@ for line in line_list: \n
   line_dict[\'employer_share_amount\'] =  getattr(line, \'employer_share_amount\', \n
                                                 None)\n
 \n
-  if line_dict[\'employer_share_amount\'] != None:\n
-    line_dict[\'employer_share_amount\'] = \\\n
-        round(line_dict[\'employer_share_amount\'], precision)\n
   line_dict[\'employee_share_rate\'] =  getattr(line, \'employee_share_rate\', None)\n
 \n
   if line_dict[\'employee_share_rate\'] != None:\n
@@ -115,10 +110,6 @@ for line in line_list: \n
         str(line_dict[\'employee_share_rate\']*100)+\'%\'\n
   line_dict[\'employee_share_amount\'] =  getattr(line, \'employee_share_amount\', \n
                                                 None)\n
-\n
-  if line_dict[\'employee_share_amount\'] != None:\n
-    line_dict[\'employee_share_amount\'] = \\\n
-        round(line_dict[\'employee_share_amount\'], precision)\n
 \n
   line_dict_list.append(line_dict)\n
 \n
@@ -179,7 +170,6 @@ return line_dict_list\n
                             <string>line_dict</string>
                             <string>_write_</string>
                             <string>_getitem_</string>
-                            <string>round</string>
                             <string>str</string>
                           </tuple>
                         </value>
