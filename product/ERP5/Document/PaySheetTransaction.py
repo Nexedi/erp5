@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Invoice import Invoice
 from Products.ERP5Type.Utils import cartesianProduct
+import pprint
 from zLOG import LOG
 
 class PaySheetTransaction(Invoice):
@@ -141,8 +142,7 @@ class PaySheetTransaction(Invoice):
              **kw)
 
     base_id = 'movement'
-    a = payline.updateCellRange(script_id = 'PaySheetLine_asCellRange',
-                                base_id   = base_id)
+    a = payline.updateCellRange(base_id = base_id)
     # create cell_list
     for cell in good_cell_list:
       cell_cat_list = cell['axe_list']
@@ -162,74 +162,111 @@ class PaySheetTransaction(Invoice):
     return payline
 
 
-
-  security.declareProtected(Permissions.AddPortalContent,
-                          'createEditablePaySheetLineList')
-  def createEditablePaySheetLineList(self, listbox, **kw):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                          'getEditableModelLineAsDict')
+  def getEditableModelLineAsDict(self, listbox, paysheet):
     '''
-      this script is called by the preview form to ask to the accountable 
-      the values  of the editables lines and create corresponding 
-      PaySheetLines with this values
+      listbox is composed by one line for each slice of editables model_lines
+      this script will return editable model lines as a dict with the 
+      properties that could/have be modified.
     '''
-    paysheet = self 
-    item_dict = {}
-    model_line_id_list = []
-    for cell in listbox:
-      model_line = paysheet.getPortalObject().restrictedTraverse(\
-                                                          cell['model_line'])
-      model_line_id = model_line.getId()
-      quantity     = cell['quantity']
-      price        = cell['price']
-      tax_category = cell['tax_category_relative_url']
-      salary_range = cell['salary_range_relative_url']
+    portal = paysheet.getPortalObject()
 
-      new_cell = { 'axe_list' : [salary_range, tax_category],
-                   'quantity' : quantity,
-                   'price'    : price,
-                 }
+    model_line_dict = {}
+    for line in listbox:
+      model_line_url = line['model_line']
+      model_line = portal.restrictedTraverse(model_line_url)
 
-      if item_dict.has_key(model_line_id):
-        # an item for this model_line_id already exists
-        item_dict[model_line_id]['cell_list'].append(new_cell)
-      else:
-        if model_line.getDescription():
-          desc = model_line.getDescription()
+      salary_range_relative_url=line['salary_range_relative_url']
+      if salary_range_relative_url == '':
+        salary_range_relative_url='no_slice'
+      
+      # if this is the first slice of the model_line, create the dict
+      if not model_line_dict.has_key(model_line_url):
+        model_line_dict[model_line_url] = {'int_index' :\
+            model_line.getIntIndex()}
+
+      model_line_dict[model_line_url][salary_range_relative_url] = {}
+      slice_dict = model_line_dict[model_line_url][salary_range_relative_url]
+      for tax_category in model_line.getTaxCategoryList():
+        if line.has_key('%s_quantity' % tax_category) and \
+            line.has_key('%s_price' % tax_category):
+          slice_dict[tax_category]=\
+              {
+                  'quantity' : line['%s_quantity' % tax_category],
+                  'price' : line['%s_price' % tax_category],
+              }
         else:
-          desc = model_line.getResourceValue().getDescription()
+          LOG('Warning, no atribute %s_quantity or %s_price for model_line %s' %
+              tax_category, tax_category, model_line_url, 0, '')
+       
+    return model_line_dict
 
-        model_line_id_list.append(model_line_id)
-        # create a new item
-        item_dict[model_line_id]={\
-              'title' : model_line.getTitleOrId(),
-              'res' : model_line.getResourceValue().getRelativeUrl(),
-              'desc' : desc,
-              'cell_list' : [new_cell],
-              'int_index' : model_line.getFloatIndex(),
-              'base_amount_list' : model_line.getBaseAmountList(),
-            }
 
-    for model_line_id in model_line_id_list:
-      item = item_dict[model_line_id]
-      paysheet.createPaySheetLine(title     = item['title'],
-                                  res       = item['res'],
-                                  desc      = item['desc'],
-                                  cell_list = item['cell_list'],
-                                  int_index = item['int_index'],
-                                  base_amount_list = item['base_amount_list'])
+  security.declareProtected(Permissions.AccessContentsInformation,
+                          'getNotEditableModelLineAsDict')
+  def getNotEditableModelLineAsDict(self, paysheet):
+    '''
+      return the not editable lines as dict
+    '''
+    model = paysheet.getSpecialiseValue()
+    model_line_list = model.contentValues(portal_type='Pay Sheet Model Line')
 
+    model_line_dict = {}
+    for model_line in model_line_list:
+      model_line_url = model_line.getRelativeUrl()
+      cell_list = model_line.contentValues(portal_type='Pay Sheet Cell')
+
+      for cell in cell_list:
+        salary_range_relative_url = \
+            cell.getVariationCategoryList(base_category_list='salary_range')
+        tax_category = cell.getTaxCategory()
+        if len(salary_range_relative_url):
+          salary_range_relative_url = salary_range_relative_url[0]
+        else:
+          salary_range_relative_url = 'no_slice'
         
-        
+        # if this is the first slice of the model_line, create the dict
+        if not model_line_dict.has_key(model_line_url):
+          model_line_dict[model_line_url] = {'int_index' :\
+              model_line.getIntIndex()}
+
+        model_line_dict[model_line_url][salary_range_relative_url] = {}
+        slice_dict = model_line_dict[model_line_url][salary_range_relative_url]
+        slice_dict[tax_category]=\
+          {
+              'quantity' : cell.getQuantity(),
+              'price' : cell.getPrice(),
+          }
+       
+    return model_line_dict
+
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                          'createNotEditablePaySheetLineList')
-  def createNotEditablePaySheetLineList(self, **kw):
+                          'createPaySheetLineList')
+  def createPaySheetLineList(self, listbox=None, batch_mode=0, **kw):
     '''
-      get all data required to create not editable paysheet lines and create it
-      editable paysheet lines have been created by a script
+      create all Pay Sheet Lines (editable or not)
+
+      parameters :
+
+      - batch_mode :if batch_mode is enabled (=1) then there is no preview view,
+                    and editable lines are considered as not editable lines.
+                    This is usefull to generate all PaySheet of a company.
+                    Modification values can be made on each paysheet after, by
+                    using the "Calculation of the Pay Sheet Transaction"
+                    action button. (concerned model lines must be editable)
+
     '''
 
+    paysheet = self 
+    
+    if not batch_mode and listbox is not None:
+      model_line_dict = paysheet.getEditableModelLineAsDict(listbox=listbox,
+          paysheet=paysheet)
+
     # Get Precision
-    precision = self.getPriceCurrencyValue().getQuantityPrecision()
+    precision = paysheet.getPriceCurrencyValue().getQuantityPrecision()
 
 
     # in this dictionary will be saved the current amount corresponding to 
@@ -238,45 +275,17 @@ class PaySheetTransaction(Invoice):
     base_amount_dict = {}
 
     def sortByIntIndex(a, b):
-      return cmp(a.getIntIndex(),
-                 b.getIntIndex())
+      return cmp(a.getIntIndex(), b.getIntIndex())
 
 
-    base_amount_list = self.portal_categories['base_amount'].contentValues()
+    base_amount_list = paysheet.portal_categories['base_amount'].contentValues()
     base_amount_list.sort(sortByIntIndex)
 
-    # it's important to get the editable lines to know if they contribute to
-    # a base_amount (this is required to do the calcul later)
 
-    # get edited lines:
-    paysheetline_list = self.contentValues(portal_type = ['Pay Sheet Line'])
-
-    for paysheetline in paysheetline_list:
-      service = paysheetline.getResourceValue()
-      base_amount_list = service.getBaseAmountList(base=1)
-      for base_amount in base_amount_list:
-        paysheetcell_list = paysheetline.contentValues(portal_type = \
-                                                            ['Pay Sheet Cell'])
-        for paysheetcell in paysheetcell_list:
-          tax_category = paysheetcell.getTaxCategory(base=1)
-          if tax_category and paysheetcell.getQuantity():
-            if base_amount_dict.has_key(base_amount) and \
-                base_amount_dict[base_amount].has_key(tax_category):
-              old_val = base_amount_dict[base_amount][tax_category]
-            else:
-              old_val = 0
-            new_val = old_val + paysheetcell.getQuantity()
-            if not base_amount_dict.has_key(base_amount):
-              base_amount_dict[base_amount]={}
-            # increment the corresponding amount
-            base_amount_dict[base_amount][tax_category] = new_val
-
-    # get not editables model lines
-    model = self.getSpecialiseValue()
+    # get model lines
+    model = paysheet.getSpecialiseValue()
     model_line_list = model.contentValues(portal_type='Pay Sheet Model Line',
                                           sort_on='int_index')
-    model_line_list = [line for line in model_line_list \
-        if not line.getEditable()]
 
     pay_sheet_line_list = []
 
@@ -284,8 +293,11 @@ class PaySheetTransaction(Invoice):
     for model_line in model_line_list:
       cell_list       = []
       # test with predicate if this model line could be applied
-      if not model_line.test(self,):
-        # This line should not be used
+      if not model_line.test(paysheet,):
+        # This model_line should not be applied
+        LOG('createPaySheetLineList :', 0, 
+            'Model Line %s will not be applied, because predicates not match' % 
+            model_line.getTitle())
         continue
 
       service          = model_line.getResourceValue()
@@ -294,14 +306,13 @@ class PaySheetTransaction(Invoice):
       id               = model_line.getId()
       base_amount_list = model_line.getBaseAmountList()
       res              = service.getRelativeUrl()
+
       if model_line.getDescription():
         desc = ''.join(model_line.getDescription())
       # if the model_line description is empty, the payroll service 
       # description is used
       else: 
         desc = ''.join(service.getDescription())
-
-
 
       base_category_list = model_line.getVariationBaseCategoryList()
       list_of_list = []
@@ -310,29 +321,48 @@ class PaySheetTransaction(Invoice):
         list_of_list.append(list)
       cartesian_product = cartesianProduct(list_of_list)
 
-      slice = None
+      share = None
+      slice = 'no_slice'
       indice = 0
       for tuple in cartesian_product:
         indice += 1
         cell = model_line.getCell(*tuple)
         if cell is None:
+          LOG("Warning ! can't find the cell corresponding to this tuple : %s",
+              0, tuple)
           continue
 
-        tuple_dict = {}
-        for item in tuple:
-          # the dict key is the base category and value is the category path
-          tuple_dict[item.split('/')[0]] = \
-              self.portal_categories.restrictedTraverse(item).getTitle()
-          tuple_dict[item.split('/')[0]+'_relative_url']=item
+        if len(cell.getVariationCategoryList(base_category_list='tax_category')):
+          share = \
+              cell.getVariationCategoryList(base_category_list='tax_category')[0]
 
-        #get the slice
-        if tuple_dict.has_key('salary_range'):
-          slice = tuple_dict['salary_range_relative_url']
-
-        #get the share
-        if tuple_dict.has_key('tax_category'):
-          share = tuple_dict['tax_category_relative_url']
+        if len(cell.getVariationCategoryList(base_category_list='salary_range')):
+          slice = \
+              cell.getVariationCategoryList(base_category_list='salary_range')[0]
     
+        # get the edited values if this model_line is editable
+        # and replace the original cell values by this ones
+        if model_line.isEditable() and not batch_mode:
+          tax_category = cell.getTaxCategory()
+
+          # get the dict who contain modified values
+          line_dict = model_line_dict[model_line.getRelativeUrl()]
+
+          def getModifiedCell(cell, slice_dict, tax_category):
+            '''
+              return a cell with the modified values (conained in slice_dict)
+            '''
+            if slice_dict:
+              if slice_dict.has_key(tax_category):
+                if slice_dict[tax_category].has_key('quantity'):
+                  cell = cell.asContext(\
+                      quantity=slice_dict[tax_category]['quantity'])
+                if slice_dict[tax_category].has_key('price'):
+                  cell = cell.asContext(price=slice_dict[tax_category]['price'])
+            return cell
+
+          cell = getModifiedCell(cell, line_dict[slice], tax_category)
+
         # get the slice :
         model_slice = model_line.getParentValue().getCell(slice)
         quantity = 0.0
@@ -340,8 +370,12 @@ class PaySheetTransaction(Invoice):
         model_slice_min = 0
         model_slice_max = 0
         if model_slice is None:
-          LOG('createNotEditablePaySheetLineList :', 0, 'model_slice %s is None'
-              % slice)
+          pass # that's not a problem :)
+
+          #LOG('createPaySheetLineList :', 0, 'model_slice of slice '
+          #  '"%s" of the model_line "%s" is None' % (slice,
+          #    model_line.getTitle()))
+
         else:
           model_slice_min = model_slice.getQuantityRangeMin()
           model_slice_max = model_slice.getQuantityRangeMax()
@@ -365,18 +399,14 @@ class PaySheetTransaction(Invoice):
           # if no calculation script found, use a default script :
           script_name = 'PaySheetTransaction_defaultCalculationScript'
 
-        if getattr(self, script_name, None) is None:
+        if getattr(paysheet, script_name, None) is None:
           raise ValueError, "Unable to find `%s` calculation script" % \
                                                            script_name
-        calculation_script = getattr(self, script_name, None)
+        calculation_script = getattr(paysheet, script_name, None)
         quantity=0
         price=0
         #LOG('script_name :', 0, script_name)
-        result = calculation_script(\
-          base_amount_dict=base_amount_dict,
-          model_slice_min=model_slice_min, 
-          model_slice_max=model_slice_max, 
-          cell=cell,)
+        result = calculation_script(base_amount_dict=base_amount_dict, cell=cell,)
 
         quantity = result['quantity']
         price = result['price']
@@ -389,8 +419,7 @@ class PaySheetTransaction(Invoice):
                    }
         cell_list.append(new_cell)
 
-
-        
+        # update the base_participation
         base_participation_list = service.getBaseAmountList(base=1)
         for base_participation in base_participation_list:
           if quantity:
@@ -409,20 +438,19 @@ class PaySheetTransaction(Invoice):
 
       if cell_list:
         # create the PaySheetLine
-        pay_sheet_line = self.createPaySheetLine(
+        pay_sheet_line = paysheet.createPaySheetLine(
                                     title     = title,
                                     res       = res,
                                     int_index = int_index,
                                     desc      = desc,
                                     base_amount_list = base_amount_list,
-                                    cell_list = cell_list,
-                                  )
+                                    cell_list = cell_list,)
         pay_sheet_line_list.append(pay_sheet_line)
 
 
     # this script is used to add a line that permit to have good accounting 
     # lines
-    post_calculation_script = getattr(self,
+    post_calculation_script = getattr(paysheet,
                                 'PaySheetTransaction_postCalculation', None)
     if post_calculation_script:
       post_calculation_script()
