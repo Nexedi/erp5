@@ -107,6 +107,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_resource_title</string>
                         <string>my_calculation_script_id</string>
                         <string>my_base_amount_list</string>
