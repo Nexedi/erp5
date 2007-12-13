@@ -277,7 +277,10 @@ class ContributionTool(BaseTool):
     if portal_type and container is None:
       # We know the portal_type, let us find the default module
       # and use it as container
-      container = self.getDefaultModule(portal_type)
+      try:
+        container = self.getDefaultModule(portal_type)
+      except ValueError:
+        container = None
 
     if portal_type and container is not None:
       # We could simplify things here and return a document immediately
