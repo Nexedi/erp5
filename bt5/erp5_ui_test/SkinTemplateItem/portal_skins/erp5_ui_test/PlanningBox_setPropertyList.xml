@@ -73,8 +73,8 @@
   field_alternate_name = \'\',\n
   field_hidden = \'\',\n
   field_js_enabled = \'checked\',\n
-  field_calendar_view = calendar_view,\n
-  field_main_axis_groups = \'10\' ,\n
+  field_vertical_view = vertical_view,\n
+  field_report_axis_groups = \'10\' ,\n
   field_size_border_width_left = \'10\' ,\n
   field_size_planning_width = \'800\'   ,\n
   field_size_y_axis_space = \'10\'   ,\n
@@ -101,13 +101,16 @@ foo_domain | foo_domain"""   ,\n
   field_split_method = \'\' ,\n
   field_color_script = \'\' ,\n
   field_round_script = \'\' ,\n
-  field_sec_axis_script = \'Planning_generateDateZoomAxis\' ,\n
-  field_delimiter = \'5\' ,\n
+  field_lane_root_list="""base_day_domain | Day\n
+base_week_domain | Week\n
+base_month_domain | Month\n
+base_year_domain | Year\n
+""",\n
   field_info_center = \'getTitle\'   ,\n
   field_info_topleft = \'getTitle\'   ,\n
   field_info_topright = \'getTitle\'   ,\n
-  field_info_backleft = \'getTitle\'   ,\n
-  field_info_backright = \'getTitle\'   ,\n
+  field_info_botleft = \'getTitle\'   ,\n
+  field_info_botright = \'getTitle\'   ,\n
   field_info_tooltip = \'getTitle\'  ,\n
   field_enabled = \'checked\',\n
   field_editable = \'checked\',\n
@@ -119,7 +122,7 @@ foo_domain | foo_domain"""   ,\n
 \n
 d.update(context.REQUEST)\n
 d.update(kw)\n
-#context.log(\'ListBox_setPropertyList\', \'kw = %r, d = %r\' % (kw, d,))\n
+#context.log(\'PlanningBox_setPropertyList\', \'kw = %r, d = %r\' % (kw, d,))\n
 r = context.form.validate(d)\n
 context.manage_edit_xmlrpc(r)\n
 \n
@@ -146,7 +149,7 @@ return \'Set Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>stat_method = \'\', height_method = \'\', calendar_view = \'\',  **kw</string> </value>
+            <value> <string>stat_method = \'\', height_method = \'\', vertical_view = \'\',  **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,7 +177,7 @@ return \'Set Successfully.\'\n
                           <tuple>
                             <string>stat_method</string>
                             <string>height_method</string>
-                            <string>calendar_view</string>
+                            <string>vertical_view</string>
                             <string>kw</string>
                             <string>dict</string>
                             <string>d</string>
