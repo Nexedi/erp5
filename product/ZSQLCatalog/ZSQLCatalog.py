@@ -321,7 +321,8 @@ class ZCatalog(Folder, Persistent, Implicit):
       object_path = self.getPhysicalPath()
       # Activities must be removed in the reverse order they were inserted
       # to make sure removing one does not accidntaly trigger the next one.
-      method_id_list = ('finishHotReindexing', 'runInventoryMethod', 'playBackRecordedObjectList',
+      method_id_list = ('finishHotReindexing', 'runInventoryMethod',
+                        'playBackRecordedObjectList', 'InventoryModule_reindexMovementList'
                         'setHotReindexingState')
       for method_id in method_id_list:
         portal_activities.flush(object_path, method_id=method_id)
@@ -530,8 +531,9 @@ class ZCatalog(Folder, Persistent, Implicit):
     # Once there is nothing to replay, databases are sync'ed, so the new
     # catalog can become current.
     self.activate(passive_commit=1,
-                  after_method_id=('playBackRecordedObjectList', 'runInventoryMethod'),
-                  after_tag='runInventoryMethod',
+                  after_method_id=('playBackRecordedObjectList',
+                                   'InventoryModule_reindexMovementList'),
+                  after_tag='InventoryModule_reindexMovementList',
                   priority=5).finishHotReindexing(
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
