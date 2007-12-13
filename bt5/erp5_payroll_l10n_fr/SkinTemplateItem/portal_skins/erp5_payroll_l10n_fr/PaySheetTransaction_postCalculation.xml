@@ -72,7 +72,7 @@ tax_amount = context.PaySheetTransaction_getAmountFromBaseParticipationList(\\\n
       base_participation_list=(\'non_deductible_tax\', \'deductible_tax\'), \n
       category_list=\'tax_category/employee_share\')\n
 \n
-new_cell = {\'axe_list\' : [\'tax_category/employee_share\',],\n
+new_cell = {\'category_list\' : [\'tax_category/employee_share\',],\n
             \'quantity\' : tax_amount,\n
             \'price\'    : 1,}\n
 \n
