@@ -70,8 +70,7 @@
 """\n
 when OOoDocument is edited, we update metadata in the ODF file\n
 \n
-XXX - This script must be verified, written with clean syntax \n
-and using less horrible methods (request lookup yuk!)\n
+XXX - This script must be verified, written with clean syntax\n
 """\n
 document = state_change[\'object\']\n
 kw = state_change[\'kwargs\']\n
