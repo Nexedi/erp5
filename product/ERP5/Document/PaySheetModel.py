@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from zLOG import LOG, WARNING, DEBUG
 
 
 class PaySheetModel(TradeCondition, XMLMatrix):
@@ -64,4 +65,60 @@ class PaySheetModel(TradeCondition, XMLMatrix):
                       , PropertySheet.Amount
                       , PropertySheet.DefaultAnnotationLine
                       )
+
+    def getReferenceList(self, portal_type_list):
+      '''
+        return all objects reference of the model wich portal_type is in the
+        portal_type_list
+      '''
+      reference_list = []
+      object_list = self.contentValues(portal_type=portal_type_list,
+          sort_on='id')
+
+      for object in object_list:
+        reference_method = getattr(object, 'getReference', None)
+        if reference_method is None:
+          LOG('PaySheetModel getReferenceList', 0, '%s have not '
+              'getReference method' % object.getTitle() or
+              object.getRelativeUrl())
+        else:
+          reference = reference_method()
+          if reference is not None:
+            reference_list.append(reference)
+          else:
+            LOG('PaySheetModel getReferenceList', 0, '%s reference '
+                'property is empty' % object.getTitle() or
+                object.getRelativeUrl())
+
+      return reference_list
+
+
+    def getInheritanceModelReferenceDict(self, model_reference_dict,
+        model_list, portal_type_list, reference_list):
+      '''
+        return a dict with the model url as key and a list of reference 
+        as value. Normaly, a Reference appear only one time in the final output
+      '''
+      # handle the case where just one model is given
+      if type(model_list) != type([]):
+        model_list = [model_list,]
+
+      for model in model_list:
+        model_reference_list=model.getReferenceList(portal_type_list)
+        unique_list = []
+
+        for reference in model_reference_list:
+          if reference not in reference_list:
+            reference_list.append(reference)
+            unique_list.append(reference)
+
+        model_reference_dict[model.getRelativeUrl()]=unique_list
+
+        new_model_list = model.getSpecialiseValueList()
+        model_reference_dict = self.getInheritanceModelReferenceDict(\
+            model_reference_dict=model_reference_dict,
+            model_list=new_model_list,
+            portal_type_list=portal_type_list,
+            reference_list=reference_list,)
+      return model_reference_dict
 
