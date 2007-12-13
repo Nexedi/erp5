@@ -90,8 +90,8 @@ if resource is None :\n
 \n
 # Next, check the balance of the account\n
 account_balance = resource.getAvailableInventory(payment=payment, src__=src__)\n
-context.log("account balance",account_balance)\n
-context.log("resource payement", str((resource,payment)))\n
+# context.log("account balance",account_balance)\n
+# context.log("resource payement", str((resource,payment)))\n
 if src__ :\n
   return account_balance \n
 \n
@@ -173,7 +173,6 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                             <string>None</string>
                             <string>AttributeError</string>
                             <string>account_balance</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
