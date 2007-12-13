@@ -206,6 +206,10 @@ for criterion in group_by_criterion:\n
 for group_details in layout_form.Form_getGroupTitleAndId():                   # Rule (5)\n
                                                                               # Rule (2)\n
   group_css_classes = group_details[\'gid\']\n
+  \n
+  # Do not display hidden group\n
+  if group_css_classes == \'hidden\':\n
+    continue\n
 \n
   # Criterion matching status\n
   matched = False\n
