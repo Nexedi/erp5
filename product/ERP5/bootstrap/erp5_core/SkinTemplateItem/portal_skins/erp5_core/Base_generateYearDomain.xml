@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#  - Years always starts at 0h of the current year\'s first day  and \n
+#    finish 0h of the next year\'s first day.\n
+\n
+from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
+\n
+portal_object = context.getPortalObject()\n
+request = context.REQUEST\n
+domain_list = []\n
+form_id=request.get(\'form_id\')\n
+\n
+selection_name = request.get(\'selection_name\')\n
+selection = context.portal_selections.getSelectionFor(\n
+                                                               selection_name, request)\n
+\n
+params = selection.getParams()\n
+zoom_begin = DateTime(params.get(\'bound_start\', DateTime()))\n
+year = zoom_begin.year() + params.get(\'bound_variation\', 0)\n
+current_date = DateTime(year, 1, 1)\n
+\n
+default_link_url =\'setLanePath?form_id=%s&list_selection_name=%s\' %(\n
+                                 form_id, selection_name)\n
+\n
+# Definning date order using user Preference Options\n
+try:\n
+  date_order = context.portal_preferences.getActivePreference().getPreferredDateOrder()\n
+  if (date_order is None) or date_order not in [ \'dmy\', \'ymd\' , \'mdy\' ]:\n
+    date_order = \'ymd\'\n
+except AttributeError:\n
+  date_order = \'ymd\'\n
+\n
+\n
+category_list = []\n
+if depth == 0:  \n
+  # getting list of months\n
+  count = 0\n
+  while   count < 12:\n
+    # Create one Temp Object\n
+    o = newTempBase(portal_object, id=\'year\' ,uid=\'new_%s\' % zfill(\'year\',4))\n
+    # Seting delimiter \n
+    if current_date.month() in [1, 7]:\n
+      o.setProperty(\'delimiter_type\', 1)\n
+    else:\n
+      o.setProperty(\'delimiter_type\', 0)\n
+    \n
+     # Setting Axis Dates start and stop\n
+    o.setProperty(\'start\',current_date)\n
+    if current_date.month() != 12:\n
+      stop_date = DateTime(current_date.year(),current_date.month() +1,1)\n
+    else:\n
+       stop_date = DateTime(year+1, 1, 1)\n
+    o.setProperty(\'stop\', stop_date)\n
+    \n
+    o.setProperty(\'relative_position\', int(current_date))\n
+\n
+    date_order_list = []\n
+    for i in date_order:\n
+      if i == \'m\': date_order_list.append(current_date.month())\n
+      if i == \'y\': date_order_list.append(current_date.year())\n
+\n
+    o.setProperty(\'title\', str(date_order_list[0]) + \'/\' + str(date_order_list[1]))\n
+\n
+    # Defining ToolTip (Optional)\n
+    tp = \'%s %s\' % (Message(domain=\'erp5_ui\', message=current_date.Day(),mapping=None), str(current_date))\n
+    o.setProperty(\'tooltip\', tp)\n
+\n
+    # Defining Link\n
+    link = \'%s&bound_start=%s&lane_path=base_month_domain\' % ( default_link_url, current_date)\n
+    o.setProperty(\'link\', link) \n
+    \n
+    category_list.append(o) \n
+    current_date = DateTime(str(current_date.year()) + \'/\' + str((current_date.month() +1)) + \'/1\')\n
+    count += 1\n
+else:\n
+  return domain_list\n
+\n
+for category in category_list:\n
+  domain = parent.generateTempDomain(id = \'sub\' + category.getProperty(\'id\'))\n
+  domain.edit(title = category.getTitle(),\n
+              membership_criterion_base_category = (\'parent\', ), \n
+              membership_criterion_category = (category,),\n
+              domain_generator_method_id = script.id,\n
+              uid = category.getUid())\n
+                \n
+  domain_list.append(domain)\n
+\n
+return domain_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>depth, parent, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>depth</string>
+                            <string>parent</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_object</string>
+                            <string>request</string>
+                            <string>domain_list</string>
+                            <string>form_id</string>
+                            <string>selection_name</string>
+                            <string>selection</string>
+                            <string>params</string>
+                            <string>DateTime</string>
+                            <string>zoom_begin</string>
+                            <string>year</string>
+                            <string>current_date</string>
+                            <string>default_link_url</string>
+                            <string>date_order</string>
+                            <string>None</string>
+                            <string>AttributeError</string>
+                            <string>category_list</string>
+                            <string>count</string>
+                            <string>o</string>
+                            <string>stop_date</string>
+                            <string>int</string>
+                            <string>date_order_list</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>str</string>
+                            <string>_getitem_</string>
+                            <string>tp</string>
+                            <string>link</string>
+                            <string>_inplacevar_</string>
+                            <string>category</string>
+                            <string>domain</string>
+                            <string>script</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_generateYearDomain</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
