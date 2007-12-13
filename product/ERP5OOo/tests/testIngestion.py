@@ -662,8 +662,7 @@ class TestIngestion(ERP5TypeTestCase):
     kw = dict(title='another title',
               subject='another subject',
               description='another description')
-    context.updateBaseMetadata(**kw)
-    # context.edit(**kw) - this works from UI but not from here - is there a problem somewhere?
+    context.edit(**kw)
     context.reindexObject(); get_transaction().commit();
     self.tic();
 
