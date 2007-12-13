@@ -117,7 +117,7 @@ class PaySheetTransaction(Invoice):
     var_cat_list = []
     for cell in good_cell_list:
       # Don't add a variation category if already in it
-      for category in cell['axe_list']:
+      for category in cell['category_list']:
         if category not in var_cat_list: 
           var_cat_list.append(category)
 
@@ -125,14 +125,15 @@ class PaySheetTransaction(Invoice):
     description = None
     if len(desc) > 0:
       description = desc#'\n'.join(desc)
+
+    source = self.getPortalObject().restrictedTraverse(res).getSource()
     # Add a new Pay Sheet Line
     payline = self.newContent(
              portal_type                  = 'Pay Sheet Line',
              title                        = title,
              description                  = description,
              destination                  = self.getSourceSection(),
-             source_section               =  \
-                self.getPortalObject().restrictedTraverse(res).getSource(),
+             source_section               = source,
              resource                     = res,
              destination_section          = self.getDestinationSection(),
              variation_base_category_list = ('tax_category', 'salary_range'),
@@ -145,19 +146,13 @@ class PaySheetTransaction(Invoice):
     a = payline.updateCellRange(base_id = base_id)
     # create cell_list
     for cell in good_cell_list:
-      cell_cat_list = cell['axe_list']
-      paycell = payline.newCell(base_id = base_id, *cell_cat_list)
+      paycell = payline.newCell(base_id = base_id, *cell['category_list'])
       # if the price aven't be completed, it should be set to 1 (=100%)
-      if cell['price']:
-        price = cell['price']
-      else: 
-        price = 1
+      if not cell['price']:
+        cell['price'] = 1
       paycell.edit( mapped_value_property_list = ('price', 'quantity'),
-                    quantity                   = cell['quantity'],
-                    price                      = price,
                     force_update               = 1,
-                    category_list              = cell_cat_list,
-                  )
+                    **cell)
 
     return payline
 
@@ -406,18 +401,14 @@ class PaySheetTransaction(Invoice):
         quantity=0
         price=0
         #LOG('script_name :', 0, script_name)
-        result = calculation_script(base_amount_dict=base_amount_dict, cell=cell,)
+        cell_dict = calculation_script(base_amount_dict=base_amount_dict, 
+                                        cell=cell,)
+        cell_dict.update({'category_list':tuple})
 
-        quantity = result['quantity']
-        price = result['price']
+        quantity = cell_dict['quantity']
+        price = cell_dict['price']
 
-        # Cell creation :
-        # Define an empty new cell
-        new_cell = { 'axe_list' : tuple, # share, slice
-                     'quantity' : quantity,
-                     'price'    : price,
-                   }
-        cell_list.append(new_cell)
+        cell_list.append(cell_dict)
 
         # update the base_participation
         base_participation_list = service.getBaseAmountList(base=1)
@@ -439,12 +430,12 @@ class PaySheetTransaction(Invoice):
       if cell_list:
         # create the PaySheetLine
         pay_sheet_line = paysheet.createPaySheetLine(
-                                    title     = title,
-                                    res       = res,
-                                    int_index = int_index,
-                                    desc      = desc,
-                                    base_amount_list = base_amount_list,
-                                    cell_list = cell_list,)
+                                              title     = title,
+                                              res       = res,
+                                              int_index = int_index,
+                                              desc      = desc,
+                                              base_amount_list = base_amount_list,
+                                              cell_list = cell_list,)
         pay_sheet_line_list.append(pay_sheet_line)
 
 
