@@ -212,6 +212,11 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
+  def stepModifyCheckPayment(self, sequence=None, sequence_list=None, **kwd):
+    """
+    """
+    self.check_payment.edit(aggregate_free_text="0000051")
+    
 
   def stepCreateCheckPayment(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -333,6 +338,14 @@ class TestERP5BankingCheckPaymentMixin:
     self.workflow_tool.doActionFor(self.check_payment, 'plan_action', wf_id='check_payment_workflow')
     self.assertNotEqual(self.check_payment.getAggregateValue(), None)
     self.assertEqual(self.check_payment.getSimulationState(), 'planned')
+
+  def stepRejectCheckPayment(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Reject the check payment
+    """
+    self.workflow_tool.doActionFor(self.check_payment, 'reject_action', wf_id='check_payment_workflow')
+    self.assertNotEqual(self.check_payment.getAggregateValue(), None)
+    self.assertEqual(self.check_payment.getSimulationState(), 'rejected')
 
   def stepAggregateToInnexistantCheck(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -504,6 +517,15 @@ class TestERP5BankingCheckPaymentMixin:
   def stepCheckWorklist(self, **kw):
     self.checkWorklist(self.check_payment)
 
+  def stepCheckCheckAfterReject(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Make sure that the check is in delivered state
+    """
+    check = self.check_payment.getAggregateValue()
+    self.assertEquals(check, self.check_2)
+    self.assertEquals(check.getSimulationState(), 'delivered')
+    self.assertEquals(self.check_1.getSimulationState(), 'confirmed')
+
 class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                                   TestERP5BankingMixin, ERP5TypeTestCase):
 
@@ -551,9 +573,26 @@ class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
                         'AggregateToInnexistantCheck Tic ' \
                         'TryCheckConsistencyWithAutomaticCheckCreation Tic ' \
                         'Cleanup Tic'
+
+    # sequence 4 : reject document and change check number
+    sequence_string_4 = 'Tic CheckObjects Tic CheckInitialInventory ' \
+                      'CreateCheckPayment Tic ' \
+                      'CheckConsistency Tic ' \
+                      'SendToCounter Tic ' \
+                      'RejectCheckPayment Tic ' \
+                      'ModifyCheckPayment Tic ' \
+                      'CheckConsistency Tic ' \
+                      'SendToCounter Tic ' \
+                      'CheckConfirmedInventory ' \
+                      'InputCashDetails Tic ' \
+                      'Pay Tic ' \
+                      'CheckCheckAfterReject ' \
+                      'CheckFinalInventory Cleanup Tic'
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.addSequenceString(sequence_string_2)
     sequence_list.addSequenceString(sequence_string_3)
+    sequence_list.addSequenceString(sequence_string_4)
     # play the sequence
     sequence_list.play(self)
 
