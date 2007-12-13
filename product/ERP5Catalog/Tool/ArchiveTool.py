@@ -220,7 +220,14 @@ class ArchiveTool(BaseTool):
                                                  inventory_date
                                                  )
     
-    
+
+    self.activate(passive_commit=1,
+                  after_method_id=('runInventoryMethod'),
+                  after_tag="runInventoryMethod",
+                  priority=5).InventoryModule_reindexMovementList(sql_catalog_id=destination_sql_catalog_id,
+                                                                  final_activity_tag="InventoryModule_reindexMovementList"
+                                                                  )
+
     if RESPONSE is not None:
       URL1 = REQUEST.get('URL1')
       RESPONSE.redirect(URL1 + '/portal_archives?portal_status_message=Archiving%20Started')
