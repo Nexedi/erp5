@@ -93,6 +93,14 @@ for paysheet_line in paysheet_line_list:\n
   base_application_list = paysheet_line.getBaseAmountTitleList()\n
   translated_base_application_list = [str(N_(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
+  payroll_service = paysheet_line.getResourceValue()\n
+  base_participation_list = payroll_service.getBaseAmountList()\n
+  causality = paysheet_line.getCausality()\n
+\n
+  base_list = [str(N_(base_application)) for base_application in \\\n
+      paysheet_line.getBaseAmountTitleList()]\n
+  base_name = \'+\'.join(base_list)\n
+\n
   list_of_list = []\n
   for base_category in base_category_list:\n
     list = paysheet_line.getVariationCategoryList(base_category_list=\\\n
@@ -114,22 +122,16 @@ for paysheet_line in paysheet_line_list:\n
     quantity = cell.getQuantity()\n
     base = quantity\n
 \n
-    base_list = [str(N_(base_application)) for base_application in \\\n
-        paysheet_line.getBaseAmountTitleList()]\n
-    base_name = \'+\'.join(base_list)\n
-\n
-    payroll_service = paysheet_line.getResourceValue()\n
-    base_participation_list = payroll_service.getBaseAmountList()\n
-\n
     price = cell.getPrice()\n
-    share_dict[cell.getTaxCategory()+\'_rate\'] = price\n
-    share_dict[cell.getTaxCategory()+\'_amount\'] = round(quantity*price,\n
+    share_dict[cell.getTaxCategory()+\'_price\'] = price\n
+    share_dict[cell.getTaxCategory()+\'_quantity\'] = round(quantity*price,\n
         precision)\n
 \n
     tuple_dict = {}\n
     for item in tuple:\n
       # the dict key is the base category and value is the category path\n
-      tuple_dict[item.split(\'/\')[0]]=context.portal_categories.restrictedTraverse(item).getTitle()\n
+      tuple_dict[item.split(\'/\')[0]] = \\\n
+          context.portal_categories.restrictedTraverse(item).getTitle()\n
       tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
 \n
     # we want to display as lines as a paysheet line as slices\n
@@ -147,17 +149,21 @@ for paysheet_line in paysheet_line_list:\n
                     \'base\':base,\n
                     \'base_participation_list\':base_participation_list,\n
                     \'base_application_list\': base_application_list,\n
-                    \'payroll_service\':payroll_service.getId()}\n
+                    \'payroll_service\':payroll_service.getId(),\n
+                    \'causality\': causality,}\n
       object_dict[slice].update(share_dict)\n
     else:\n
       object_dict[slice].update(**share_dict)\n
 \n
+#  print pprint.pformat(object_dict)\n
 \n
   for object_key in paysheet_line.getSalaryRangeList():\n
     line_list.append(paysheet_line.asContext(**object_dict[object_key]))\n
   if object_dict.has_key(\'no_slice\'):\n
     line_list.append(paysheet_line.asContext(**object_dict[\'no_slice\']))\n
 \n
+\n
+#return printed\n
 \n
 # sort results\n
 \n
@@ -192,7 +198,6 @@ else:\n
 \n
 \n
 \n
-#return pprint.pformat(line_list)\n
 return line_list\n
 </string> </value>
         </item>
@@ -257,6 +262,12 @@ return line_list\n
                             <string>x</string>
                             <string>str</string>
                             <string>translated_base_application_list</string>
+                            <string>payroll_service</string>
+                            <string>base_participation_list</string>
+                            <string>causality</string>
+                            <string>base_application</string>
+                            <string>base_list</string>
+                            <string>base_name</string>
                             <string>list_of_list</string>
                             <string>base_category</string>
                             <string>list</string>
@@ -272,11 +283,6 @@ return line_list\n
                             <string>cell</string>
                             <string>quantity</string>
                             <string>base</string>
-                            <string>base_application</string>
-                            <string>base_list</string>
-                            <string>base_name</string>
-                            <string>payroll_service</string>
-                            <string>base_participation_list</string>
                             <string>price</string>
                             <string>_write_</string>
                             <string>round</string>

@@ -84,19 +84,19 @@ not_editable_columns = [(\'int_index\', \'Sort Index\'),\n
 if not editable:\n
   column_list.extend(not_editable_columns)\n
 \n
-  for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
-    for tax_category in model_line.getTaxCategoryValueList():\n
-      price = (tax_category.getId()+\'_rate\', tax_category.getTitle()+\' Rate\')\n
-      quantity = (tax_category.getId()+\'_amount\', \n
-                  tax_category.getTitle()+\' Amount\')\n
-      if price not in column_list:\n
-        column_list.append(price)\n
-        column_list.append(quantity)\n
-\n
 else:\n
   pass\n
   # add here the editable column you want to use\n
-  # currently, it\'s not required to use editable columns\n
+\n
+# this following columns are add for both edibales and not\n
+for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
+  for tax_category in model_line.getTaxCategoryValueList():\n
+    price = (tax_category.getId()+\'_price\', tax_category.getTitle()+\' Rate\')\n
+    quantity = (tax_category.getId()+\'_quantity\', \n
+                tax_category.getTitle()+\' Amount\')\n
+    if price not in column_list:\n
+      column_list.append(price)\n
+      column_list.append(quantity)\n
 \n
 return column_list\n
 </string> </value>

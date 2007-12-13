@@ -96,11 +96,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_employee_share_amount</string>
-                        <string>listbox_employee_share_rate</string>
-                        <string>listbox_employer_share_amount</string>
-                        <string>listbox_employer_share_rate</string>
                         <string>listbox_base</string>
+                        <string>listbox_employee_share_price</string>
+                        <string>listbox_employee_share_quantity</string>
+                        <string>listbox_employer_share_quantity</string>
+                        <string>listbox_employer_share_price</string>
                       </list>
                     </value>
                 </item>

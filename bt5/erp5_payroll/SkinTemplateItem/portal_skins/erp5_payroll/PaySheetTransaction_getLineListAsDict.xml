@@ -74,8 +74,28 @@ precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 \n
 line_list = context.PaySheetTransaction_getMovementList(sort_on=[(\'int_index\',\n
                                                                   \'ascending\')])\n
+def addProperties(line, line_dict, property_list):\n
+  for property in property_list:\n
+    line_dict[property] = getattr(line, property, None)\n
+\n
+    #XXX this is a hack wich should be removed when the OOoTemplate will be\n
+    # rewireted\n
+    if line_dict[property] is not None and property.endswith(\'_price\'):\n
+      line_dict[property] = \'%s %%\' % line_dict[property]\n
+  return line_dict\n
 \n
 line_dict_list = []\n
+property_list = [ \'slice\',\n
+                  \'base_participation_list\',\n
+                  \'base_application_list\',\n
+                  \'base_name\',\n
+                  \'base\',\n
+                  \'employer_share_price\',\n
+                  \'employer_share_quantity\',\n
+                  \'employee_share_price\',\n
+                  \'employee_share_quantity\',\n
+                  \'causality\',\n
+                ]\n
 for line in line_list: \n
   if line.getResourceId() == \'total_employee_contributions\':\n
     continue\n
@@ -85,31 +105,7 @@ for line in line_list: \n
       \'payroll_service\' : getattr(line, \'payroll_service\', None)\n
       }\n
 \n
-  line_dict[\'slice\'] =  getattr(line, \'slice\', None)\n
-  #line_dict[\'title\'] = \'%s (%s)\' % (line_dict[\'title\'], line_dict[\'slice\'])\n
-  line_dict[\'base_participation_list\'] = getattr(line, \n
-                                              \'base_participation_list\', None)\n
-  line_dict[\'base_application_list\'] = getattr(line, \n
-                                              \'base_application_list\', None)\n
-\n
-  line_dict[\'base_name\'] =  getattr(line, \'base_name\', None)\n
-\n
-  line_dict[\'base\'] =  getattr(line, \'base\', None)\n
-\n
-  line_dict[\'employer_share_rate\'] =  getattr(line, \'employer_share_rate\', None)\n
-  if line_dict[\'employer_share_rate\'] != None:\n
-    line_dict[\'employer_share_rate\'] = \\\n
-        str(line_dict[\'employer_share_rate\']*100)+\'%\'\n
-  line_dict[\'employer_share_amount\'] =  getattr(line, \'employer_share_amount\', \n
-                                                None)\n
-\n
-  line_dict[\'employee_share_rate\'] =  getattr(line, \'employee_share_rate\', None)\n
-\n
-  if line_dict[\'employee_share_rate\'] != None:\n
-    line_dict[\'employee_share_rate\'] = \\\n
-        str(line_dict[\'employee_share_rate\']*100)+\'%\'\n
-  line_dict[\'employee_share_amount\'] =  getattr(line, \'employee_share_amount\', \n
-                                                None)\n
+  addProperties(line=line, line_dict=line_dict, property_list=property_list)\n
 \n
   line_dict_list.append(line_dict)\n
 \n
@@ -162,15 +158,14 @@ return line_dict_list\n
                             <string>context</string>
                             <string>precision</string>
                             <string>line_list</string>
+                            <string>addProperties</string>
                             <string>line_dict_list</string>
+                            <string>property_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>getattr</string>
                             <string>None</string>
                             <string>line_dict</string>
-                            <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
