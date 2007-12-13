@@ -255,6 +255,7 @@ class EmptyERP5PdfFormError(Exception):
 allow_class(EmptyERP5PdfFormError)
 
 
+
 class PDFForm(File):
   """This class allows to fill PDF Form with TALES expressions,
     using a TALES expression for each cell.
@@ -299,9 +300,6 @@ class PDFForm(File):
       filter(lambda option:option['label'] != "View", File.manage_options)
   )
 
-  # XXX This non thread-safeness is probably a problem under high load
-  pdftk = PDFTk()
-
   def __init__ (self, id, title='', pdf_file=''):
     # holds all the cell informations, even those not related to this form
     self.all_cells = PersistentMapping()
@@ -322,7 +320,7 @@ class PDFForm(File):
       raise ValueError ("The pdf form file should not be empty")
 
     file.seek(0) # file is always valid here
-    values = self.pdftk.dumpDataFields(file)
+    values = PDFTk().dumpDataFields(file)
     self.cells = {}
     for v in values :
       if v["FieldType"] not in ("Button", "Choice")\
@@ -433,7 +431,7 @@ class PDFForm(File):
     values = {}
     for cell in self.cells.keys() :
       values[cell] = cell
-    pdf = self.pdftk.fillFormWithDict(str(self.data), values)
+    pdf = PDFTk().fillFormWithDict(str(self.data), values)
     if RESPONSE :
       RESPONSE.setHeader('Content-Type', 'application/pdf')
       RESPONSE.setHeader('Content-Length', len(pdf))
@@ -478,12 +476,13 @@ class PDFForm(File):
         LOG("PDFForm", PROBLEM,
             'format method (%r) is not callable' % format_method)
     data = str(self.data)
-    pdf = self.pdftk.fillFormWithDict(data, values)
+    pdftk = PDFTk()
+    pdf =pdftk.fillFormWithDict(data, values)
     if self.__page_range__:
       compiled_tales = getEngine().compile(self.__page_range__)
       page_range = getEngine().getContext(context).evaluate(compiled_tales)
       if page_range :
-        pdf = self.pdftk.catPages(pdf, page_range)
+        pdf = pdftk.catPages(pdf, page_range)
     if RESPONSE :
       RESPONSE.setHeader('Content-Type', 'application/pdf')
       RESPONSE.setHeader('Content-Length', len(pdf))
