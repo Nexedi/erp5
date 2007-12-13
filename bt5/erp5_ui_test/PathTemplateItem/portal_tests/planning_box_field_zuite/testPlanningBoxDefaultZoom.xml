@@ -54,7 +54,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test PlanningBox Domain Data Info</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Default Zoom</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -129,7 +129,48 @@
 </tr>\n
 <tr>\n
   <td>assertTextNotPresent</td>\n
-  <td>SiteError</td>\n
+  <td>PlanningBoxError</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>lane_path</td>\n
+\t<td>label=Week</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>lane_path</td>\n
+\t<td>label=Month</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>lane_path</td>\n
+\t<td>label=Year</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>lane_path</td>\n
+\t<td>label=Day</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -138,108 +179,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>//select[@name=\'report_root_url\']</td>\n
-  <td>foo_domain</td>\n
-</tr>\n
-<tr>\n
   <td>assertTextNotPresent</td>\n
-  <td>SiteError</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_2"]</td>\n
-  <td>[+] b</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1"]</td>\n
-  <td>[+] a</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_2_block_1"]/div[@class="planning_box_center"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_3_block_1"]/div[@class="planning_box_center"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_1_block_1"]/a[@class="planning_box_topright"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_2_block_1"]/a[@class="planning_box_topright"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_3_block_1"]/a[@class="planning_box_topright"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_1_block_1"]/a[@class="planning_box_topleft"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_2_block_1"]/a[@class="planning_box_topleft"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_3_block_1"]/a[@class="planning_box_topleft"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_1_block_1"]/a[@class="planning_box_botright"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_2_block_1"]/a[@class="planning_box_botright"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_3_block_1"]/a[@class="planning_box_botright"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_1_block_1"]/a[@class="planning_box_botleft"]</td>\n
-  <td>Title 0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_2_block_1"]/a[@class="planning_box_botleft"]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@id="group_1_activity_3_block_1"]/a[@class="planning_box_botleft"]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>//select[@name=\'report_root_url\']</td>\n
-  <td>parent</td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextNotPresent</td>\n
-  <td>SiteError</td>\n
+  <td>Site Error</td>\n
   <td></td>\n
 </tr>\n
 </tbody></table>\n
@@ -260,7 +201,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testPlanningBoxDomainDataInfo</string> </value>
+            <value> <string>testPlanningBoxDefaultZoom</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

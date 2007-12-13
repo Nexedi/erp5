@@ -54,7 +54,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test PlanningBox Data Info</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Next and Previous Lane</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -139,12 +139,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1"]</td>\n
+  <td>//div[@id="group_1"]</td>\n
   <td>[+] Title 0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -154,7 +154,7 @@
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -164,7 +164,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
@@ -174,12 +174,13 @@
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//div[@id="Group_1_Activity_1_Block_1"]/div[@class="planning_box_center"]</td>\n
+  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>\n
   <td></td>\n
 </tr>\n
 </tbody></table>\n
 </body>\n
-</html>
+</html>\n
+
 
 ]]></string> </value>
         </item>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -143,47 +140,47 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_1"]</td>\n
+  <td>//div[@id="group_lane_1"]</td>\n
   <td tal:content="python: \'%s %s/%s 0:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_2"]</td>\n
+  <td>//div[@id="group_lane_2"]</td>\n
   <td tal:content="python: \'%s %s/%s 3:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_3"]</td>\n
+  <td>//div[@id="group_lane_3"]</td>\n
   <td tal:content="python: \'%s %s/%s 6:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_4"]</td>\n
+  <td>//div[@id="group_lane_4"]</td>\n
   <td tal:content="python: \'%s %s/%s 9:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_5"]</td>\n
+  <td>//div[@id="group_lane_5"]</td>\n
   <td tal:content="python: \'%s %s/%s 12:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_6"]</td>\n
+  <td>//div[@id="group_lane_6"]</td>\n
   <td tal:content="python: \'%s %s/%s 15:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_7"]</td>\n
+  <td>//div[@id="group_lane_7"]</td>\n
   <td tal:content="python: \'%s %s/%s 18:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_8"]</td>\n
+  <td>//div[@id="group_lane_8"]</td>\n
   <td tal:content="python: \'%s %s/%s 21:00\' % (DateTime().Day(), str(DateTime().month()),  str(DateTime().day()))"> </td>\n
 </tr>\n
 <tr>\n
 \t<td>selectAndWait</td>\n
-\t<td>zoom_level</td>\n
+\t<td>lane_path</td>\n
 \t<td>label=Year</td>\n
 </tr>\n
 <tr>\n
@@ -193,67 +190,67 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_1"]</td>\n
+  <td>//div[@id="group_lane_1"]</td>\n
   <td tal:content="python: \'%s/1\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_2"]</td>\n
+  <td>//div[@id="group_lane_2"]</td>\n
   <td tal:content="python: \'%s/2\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_3"]</td>\n
+  <td>//div[@id="group_lane_3"]</td>\n
   <td tal:content="python: \'%s/3\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_4"]</td>\n
+  <td>//div[@id="group_lane_4"]</td>\n
   <td tal:content="python: \'%s/4\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_5"]</td>\n
+  <td>//div[@id="group_lane_5"]</td>\n
   <td tal:content="python: \'%s/5\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_6"]</td>\n
+  <td>//div[@id="group_lane_6"]</td>\n
   <td tal:content="python: \'%s/6\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_7"]</td>\n
+  <td>//div[@id="group_lane_7"]</td>\n
   <td tal:content="python: \'%s/7\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_8"]</td>\n
+  <td>//div[@id="group_lane_8"]</td>\n
   <td tal:content="python: \'%s/8\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_9"]</td>\n
+  <td>//div[@id="group_lane_9"]</td>\n
   <td tal:content="python: \'%s/9\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_10"]</td>\n
+  <td>//div[@id="group_lane_10"]</td>\n
   <td tal:content="python: \'%s/10\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_11"]</td>\n
+  <td>//div[@id="group_lane_11"]</td>\n
   <td tal:content="python: \'%s/11\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_12"]</td>\n
+  <td>//div[@id="group_lane_12"]</td>\n
   <td tal:content="python: \'%s/12\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
 \t<td>selectAndWait</td>\n
-\t<td>zoom_level</td>\n
+\t<td>lane_path</td>\n
 \t<td>label=Month</td>\n
 </tr>\n
 <tr>\n
@@ -263,62 +260,73 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_1"]</td>\n
+  <td>//div[@id="group_lane_1"]</td>\n
   <td tal:content="python: \'%s/1/1\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_2"]</td>\n
+  <td>//div[@id="group_lane_2"]</td>\n
   <td tal:content="python: \'%s/1/4\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_3"]</td>\n
+  <td>//div[@id="group_lane_3"]</td>\n
   <td tal:content="python: \'%s/1/7\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_4"]</td>\n
+  <td>//div[@id="group_lane_4"]</td>\n
   <td tal:content="python: \'%s/1/10\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_5"]</td>\n
+  <td>//div[@id="group_lane_5"]</td>\n
   <td tal:content="python: \'%s/1/13\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_6"]</td>\n
+  <td>//div[@id="group_lane_6"]</td>\n
   <td tal:content="python: \'%s/1/16\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_7"]</td>\n
+  <td>//div[@id="group_lane_7"]</td>\n
   <td tal:content="python: \'%s/1/19\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_8"]</td>\n
+  <td>//div[@id="group_lane_8"]</td>\n
   <td tal:content="python: \'%s/1/22\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_9"]</td>\n
+  <td>//div[@id="group_lane_9"]</td>\n
   <td tal:content="python: \'%s/1/25\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_10"]</td>\n
+  <td>//div[@id="group_lane_10"]</td>\n
   <td tal:content="python: \'%s/1/28\' % (str(DateTime().year()))"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//div[@id="Group_sec_11"]</td>\n
+  <td>//div[@id="group_lane_11"]</td>\n
   <td tal:content="python: \'%s/1/31\' % (str(DateTime().year()))"> </td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>lane_path</td>\n
+\t<td>label=Day</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
 </tr>\n
 </tbody></table>\n
 </body>\n
-</html>
+</html>\n
+
 
 ]]></string> </value>
         </item>
