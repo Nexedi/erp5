@@ -108,10 +108,10 @@ class TestPlanningBox(ERP5TypeTestCase):
 
   def stepCheckPlanning(self, sequence = None, sequence_list = None, **kw):
     planning = sequence.get('planning')
-    self.assertEquals(planning.calendar_view, 0)
+    self.assertEquals(planning.vertical_view, 0)
     self.assertEquals(len(planning.content), 1)
     bloc = planning.content[0]
-    self.assertEquals(bloc.name , 'Group_1_Activity_1_Block_1')
+    self.assertEquals(bloc.name , 'group_1_activity_1_block_1')
     self.assertEquals(bloc.title , 'Title 0')
     for info in bloc.info.values():
       self.assertEquals(info.info,'Title 0')
@@ -129,7 +129,7 @@ class TestPlanningBox(ERP5TypeTestCase):
     basic = sequence.get('basic')
     self.assertEquals(len(basic.report_groups), 1)
     # Note that this test use the use_date_zoom enabled.
-    sec_axis_info = basic.getSecondaryAxisInfo()
+    sec_axis_info = basic.getLaneAxisInfo()
     date = DateTime()
     today = DateTime('%s/%s/%s' % (date.year(),date.month(),date.day()))
     self.assertEquals(sec_axis_info['zoom_begin'], today)

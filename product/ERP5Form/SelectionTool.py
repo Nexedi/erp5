@@ -664,8 +664,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
     # PlanningBox related methods
-    security.declareProtected(ERP5Permissions.View, 'setZoomLevel')
-    def setZoomLevel(self, uids=None, REQUEST=None, form_id=None,
+    security.declareProtected(ERP5Permissions.View, 'setLanePath')
+    def setLanePath(self, uids=None, REQUEST=None, form_id=None,
                      query_string=None):
       """
       Set graphic zoom level in PlanningBox
@@ -677,62 +677,24 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_level = request.form.get('zoom_level', None)
-        if zoom_level is None:
-          # If zoom_level is not defined try to
+        lane_path = request.form.get('lane_path', None)
+        if lane_path is None:
+          # If lane_path is not defined try to 
           # use the last one from params
-          zoom_level =  params.get('zoom_level', 1)
-
-        # for keep compatibility with the old zoom
-        zoom_start = request.form.get('zoom_start',0)
-        if zoom_level <= zoom_start:
-          zoom_start = max(int(float(zoom_level)),1) - 1
-          params['zoom_start'] = zoom_start
-
-        # XXX URL currently pass string parameter and not int
-        # This is a dirty fix!
-        # It should be fixed by cleaning the date zoom level
-        # in a generic way
-        zoom_level = int(zoom_level)
-        zoom_begin = request.form.get('zoom_begin', None)
-        #zoom_end = request.form.get('zoom_end', None)
-        zoom_date_start = request.form.get('zoom_date_start', None)
-        if zoom_date_start is not None:
-          zoom_begin = zoom_date_start
-        if zoom_begin is None:
-          zoom_begin = params.get('zoom_begin', None)
-        params['zoom_level'] = zoom_level
-        # Calculating New zoom Dates Range.
-        validate_method = getattr(self, 'planning_validate_date_list', None)
-        date_range = validate_method(zoom_begin,zoom_level)
-        params['from_date'] = params['zoom_begin'] = date_range[0]
-        params['to_date'] = params['zoom_end'] = date_range[1]
+          lane_path = params.get('lane_path',1)
+        bound_start = request.form.get('bound_start', None)
+        if bound_start is not None:
+          params['bound_start'] = bound_start
+        params['lane_path'] = lane_path     
+        params['zoom_variation'] = 0
         selection.edit(params=params)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST,
                                             form_id=form_id,
                                             query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'setZoom')
-    def setZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
-      """
-      Set graphic zoom in PlanningBox
-      """
-      if uids is None: uids = []
-      request = REQUEST
-      selection_name=request.list_selection_name
-      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
-      if selection is not None:
-        params = selection.getParams()
-        zoom_start = request.form.get('zoom_start',0)
-        params['zoom_start'] = zoom_start
-        selection.edit(params=params)
-      if REQUEST is not None:
-        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
-                                           query_string=query_string)
-
-    security.declareProtected(ERP5Permissions.View, 'nextZoom')
-    def nextZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
+    security.declareProtected(ERP5Permissions.View, 'nextLanePage')
+    def nextLanePage(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set next graphic zoom start in PlanningBox
       """
@@ -743,28 +705,15 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_level =  params.get('zoom_level', 1)
-        zoom_variation = + 1
-        zoom_begin = request.form.get('zoom_begin', None)
-
-        # for keep the compatibility
-        zoom_start = params.get('zoom_start',0)
-        params['zoom_start'] = int(zoom_start) + 1
-
-        if zoom_begin is None:
-          zoom_begin = params.get('zoom_begin', None)
-        validate_method = getattr(self, 'planning_validate_date_list', None)
-        date_range = validate_method(zoom_begin,zoom_level,zoom_variation)
-        params['zoom_begin'] = params['from_date'] = date_range[0]
-        params['zoom_end'] = params['to_date'] = date_range[1]
+        params['bound_variation'] = 1
         selection.edit(params=params)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST,
                                             form_id=form_id,
                                              query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'previousZoom')
-    def previousZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
+    security.declareProtected(ERP5Permissions.View, 'previousLanePage')
+    def previousLanePage(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set previous graphic zoom in PlanningBox
       """
@@ -775,20 +724,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
-        zoom_level =  params.get('zoom_level', 1)
-        zoom_variation = -1
-        zoom_begin = request.form.get('zoom_begin', None)
-
-        # for keep the compatibility
-        zoom_start = params.get('zoom_start',0)
-        params['zoom_start'] = int(zoom_start) - 1
-
-        if zoom_begin is None:
-          zoom_begin = params.get('zoom_begin', None)
-        validate_method = getattr(self, 'planning_validate_date_list', None)
-        date_range = validate_method(zoom_begin,zoom_level,zoom_variation)
-        params['zoom_begin'] = params['from_date'] = date_range[0]
-        params['zoom_end'] = params['to_date'] = date_range[1]
+        params['bound_variation'] = -1
         selection.edit(params=params)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST,
