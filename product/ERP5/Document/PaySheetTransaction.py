@@ -70,7 +70,6 @@ class PaySheetTransaction(Invoice):
   __implements__ = ( )
 
 
-
   security.declareProtected(Permissions.AccessContentsInformation,
                           'getRatioQuantityFromReference')
   def getRatioQuantityFromReference(self, ratio_reference=None):
@@ -98,11 +97,36 @@ class PaySheetTransaction(Invoice):
     return [self.getRatioQuantityFromReference(reference) \
         for reference in ratio_reference_list]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                          'getRatioQuantityFromReference')
+  def getAnnotationLineFromReference(self, reference=None):
+    """
+    return the annotation line correponding to the reference,
+    None if reference not found
+    """
+    annotation_line_list = self.contentValues(portal_type='Annotation Line')
+    for annotation_line in annotation_line_list:
+      if annotation_line.getReference() == reference:
+        return annotation_line
+    return None 
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                          'getRatioQuantityList')
+  def getAnnotationLineListList(self, reference_list):
+    """
+    Return a annotation line list corresponding to the reference_list
+    reference_list is a list of references to the Annotation Line we want 
+    to get.
+    """
+    if not isinstance(reference_list, list):
+      return [self.getAnnotationLineFromReference(reference_list)]
+    return [self.getAnnotationLineFromReference(reference) \
+        for reference in reference_list]
 
   security.declareProtected(Permissions.AddPortalContent,
                           'createPaySheetLine')
   def createPaySheetLine(self, cell_list, title='', res='', desc='', 
-      base_amount_list=None, int_index=None, **kw):
+      base_amount_list=None, int_index=None, categories=None, **kw):
     '''
     This function register all paysheet informations in paysheet lines and 
     cells. Select good cells only
@@ -141,6 +165,13 @@ class PaySheetTransaction(Invoice):
              base_amount_list             = base_amount_list,
              int_index                    = int_index,
              **kw)
+
+    # add cells categories to the Pay Sheet Line
+    # it's a sort of inheritance of sub-object data
+    if categories is not None:
+      categories_list = payline.getCategoryList()
+      categories_list.extend(categories)
+      payline.edit(categories = categories_list)
 
     base_id = 'movement'
     a = payline.updateCellRange(base_id = base_id)
@@ -319,6 +350,7 @@ class PaySheetTransaction(Invoice):
       share = None
       slice = 'no_slice'
       indice = 0
+      categories = []
       for tuple in cartesian_product:
         indice += 1
         cell = model_line.getCell(*tuple)
@@ -405,9 +437,20 @@ class PaySheetTransaction(Invoice):
                                         cell=cell,)
         cell_dict.update({'category_list':tuple})
 
+        if cell_dict.has_key('categories'):
+          for cat in cell_dict['categories']:
+            if cat not in categories:
+              categories.append(cat)
+
         quantity = cell_dict['quantity']
         price = cell_dict['price']
 
+#        # Define an empty new cell
+#        new_cell = { 'axe_list' : tuple, # share, slice
+#                     'quantity' : quantity,
+#                     'price'    : price,
+#                     #'categories' : causality/machin_module/annotation_line,
+#                   }
         cell_list.append(cell_dict)
 
         # update the base_participation
@@ -435,7 +478,8 @@ class PaySheetTransaction(Invoice):
                                               int_index = int_index,
                                               desc      = desc,
                                               base_amount_list = base_amount_list,
-                                              cell_list = cell_list,)
+                                              cell_list = cell_list,
+                                              categories= categories)
         pay_sheet_line_list.append(pay_sheet_line)
 
 
