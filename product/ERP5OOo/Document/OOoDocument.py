@@ -488,8 +488,10 @@ class OOoDocument(File, ConversionCacheMixin):
       based on the values provided by the user. This is implemented
       through the invocation of the conversion server.
     """
-    # We must use original data which is uploaded by user from editform.
-    data = self.getData()
+    data = self.getBaseData()
+    if data in ('', None):
+      return
+
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
@@ -502,4 +504,3 @@ class OOoDocument(File, ConversionCacheMixin):
       # Explicitly raise the exception!
       raise ConversionError("OOoDocument: error getting document metadata %s:%s"
                         % (response_code, response_message))
-
