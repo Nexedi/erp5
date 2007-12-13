@@ -31,20 +31,18 @@ from DateTime import DateTime as DateTimeKlass
 STATE_KEY = 'str'
 
 def DateTime__setstate__(self, state):
-  if len(state) != 1 or STATE_KEY not in state:
+  if isinstance(state, tuple):
+    self._parse_args(*state)
+  elif len(state) != 1 or STATE_KEY not in state:
+    # For original pickle representation
     self.__dict__.update(state)
   else:
-    # For backward compatibility
+    # For r15569 implementation
     self._parse_args(state[STATE_KEY])
 
 DateTimeKlass.__setstate__ = DateTime__setstate__
-  
-# This below is disabled, because this loses information at
-# millisecond level, and it breaks the simulation due to
-# divergency tests. I will not disable the above for backward
-# compatibility. -yo
-# 
-# def DateTime__getstate__(self):
-#   return {STATE_KEY: str(self)}
-# 
-# DateTimeKlass.__getstate__ = DateTime__getstate__
+
+def DateTime__getstate__(self):
+  return (self._t, self._tz)
+
+DateTimeKlass.__getstate__ = DateTime__getstate__
