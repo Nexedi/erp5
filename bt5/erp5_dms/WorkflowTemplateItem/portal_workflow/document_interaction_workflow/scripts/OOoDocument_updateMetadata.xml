@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,29 +65,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
 when OOoDocument is edited, we update metadata in the ODF file\n
 \n
 XXX - This script must be verified, written with clean syntax \n
 and using less horrible methods (request lookup yuk!)\n
 """\n
-\n
-ob=state_change[\'object\']\n
-kw=ob.REQUEST\n
-metafields=(\'title\',\'subject\',\'description\',\'reference\',\'version\',\'language\') # XXX hardcoded?\n
-f=kw.get(\'my_file\',None)\n
+document = state_change[\'object\']\n
+kw = state_change[\'kwargs\']\n
+metadata_field_list = (\'title\', \'subject\', \'description\', \'reference\', \'version\', \'language\') # XXX hardcoded?\n
 \n
 # edit metadata (only if we have OOo file)\n
-if ob.hasBaseData():\n
-  newmeta={}\n
-  for mf in metafields:\n
-    keymf=\'my_\'+mf\n
-    if kw.has_key(keymf):\n
-      newmeta[mf]=kw[keymf]\n
-  if newmeta:\n
+if document.hasBaseData():\n
+  new_metadata = {}\n
+  for field in metadata_field_list:\n
+    value = kw.get(field, None)\n
+    if value is None:\n
+      value_list = kw.get(\'%s_list\' % field, None)\n
+      if value_list is not None and len(value_list)>0:\n
+        value = \' \'.join(map(str, value_list))\n
+    if value is not None:\n
+      new_metadata[field] = value    \n
+  if new_metadata:\n
     # edit metadata via server\n
-    ob.activate().updateBaseMetadata(newmeta)\n
-</string> </value>
+    document.activate().updateBaseMetadata(**new_metadata)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -140,17 +143,21 @@ if ob.hasBaseData():\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>ob</string>
-                            <string>_getattr_</string>
+                            <string>document</string>
                             <string>kw</string>
-                            <string>metafields</string>
-                            <string>None</string>
-                            <string>f</string>
-                            <string>newmeta</string>
+                            <string>metadata_field_list</string>
+                            <string>_getattr_</string>
+                            <string>new_metadata</string>
                             <string>_getiter_</string>
-                            <string>mf</string>
-                            <string>keymf</string>
+                            <string>field</string>
+                            <string>None</string>
+                            <string>value</string>
+                            <string>value_list</string>
+                            <string>len</string>
+                            <string>map</string>
+                            <string>str</string>
                             <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
