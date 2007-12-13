@@ -798,6 +798,188 @@ class TestPayroll(TestPayrollMixin):
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
 
+  def test_06_model_inheritance(self, quiet=QUIET, 
+      run=RUN_ALL_TESTS):
+    '''
+      check that a model can inherite some datas from another
+      the ineritance rules are the following :
+       - a DATA could be a model_line, annotation_line, ratio_line or
+         payement_condition (XXX -> this last one haven't yet reference)
+       - a model_line, annotation_line and a ratio_line have a REFERENCE
+       - a model can have some DATA's
+       - a model can inherite from another, that's mean :
+         o At the calculation step, each DATA of the parent model will be
+           checked : the DATA with a REFERENCE that's already in the child 
+           model will not entered in the calcul. The other will.
+         o This will be repeated on each parent model and on each parent of 
+           the parent model,... until there is no parent model to inherite 
+           (or until a max loop number has been reached).
+    '''
+    if not run: return
+    if not quiet:
+      self.logMessage('Model Inheritance')
+
+    # create 3 models
+    model_employee = self.paysheet_model_module.newContent(id='model_employee',
+        portal_type='Pay Sheet Model')
+
+    model_company = self.paysheet_model_module.newContent(id='model_company',
+        portal_type='Pay Sheet Model')
+
+    model_country = self.paysheet_model_module.newContent(id='model_country',
+        portal_type='Pay Sheet Model')
+
+    # add some content in the models
+    model_employee.newContent(id='over_time_duration',
+                              title='over_time_duration',
+                              portal_type='Annotation Line', 
+                              reference='over_time_duration',)
+
+    model_company.newContent( id='worked_time_duration',
+                              title='worked_time_duration',
+                              portal_type='Annotation Line', 
+                              reference='worked_time_duration',)
+
+    model_country.newContent( id='social_insurance',
+                              title='social_insurance',
+                              portal_type='Annotation Line', 
+                              reference='social_insurance',)
+
+    # inherite from each other
+    model_employee.setSpecialiseValue(model_company)
+    model_company.setSpecialiseValue(model_country)
+
+    # return a list of data that should contain data from all model
+    portal_type_list = ['Annotation Line', ]
+    model_reference_dict = {}
+    model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
+                        model_reference_dict, model_employee, portal_type_list, [])
+
+
+    # check data's are corrected
+    number_of_different_references = []
+    for model in model_reference_dict.keys():
+      number_of_different_references.extend(model_reference_dict[model])
+
+    self.assertEqual(len(number_of_different_references), 3) # here, there is 
+                                                # 3 differents annotation line
+
+    # check the model number
+    self.assertEqual(len(model_reference_dict), 3)
+    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
+        ['over_time_duration',])
+    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
+        ['worked_time_duration',])
+    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
+        ['social_insurance',])
+
+    # check with more values on each model
+    # employee :
+    model_employee.newContent(id='1',
+                              portal_type='Annotation Line', 
+                              reference='1',)
+    # company :
+    model_company.newContent( id='1',
+                              portal_type='Annotation Line', 
+                              reference='1',)
+    model_company.newContent( id='2',
+                              portal_type='Annotation Line', 
+                              reference='2',)
+    # country :
+    model_country.newContent( id='1',
+                              portal_type='Annotation Line', 
+                              reference='1',)
+    model_country.newContent( id='2',
+                              portal_type='Annotation Line', 
+                              reference='2',)
+    model_country.newContent( id='3',
+                              portal_type='Annotation Line', 
+                              reference='3',)
+    model_country.newContent( id='4',
+                              portal_type='Annotation Line', 
+                              reference='4',)
+
+    # return a list of data that should contain data from all model
+    portal_type_list = ['Annotation Line', ]
+    model_reference_dict = {}
+    model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
+                        model_reference_dict, model_employee, portal_type_list, [])
+
+    # check that if a reference is already present in the model_employee,
+    # and the model_company contain a data with the same one, the data used at
+    # the calculation step is the model_employee data.
+    number_of_different_references = []
+    for model in model_reference_dict.keys():
+      number_of_different_references.extend(model_reference_dict[model])
+
+    self.assertEqual(len(number_of_different_references), 7) # here, there is 
+    # 4 differents annotation lines, and with the 3 ones have been had before
+    # that's make 7 !
+
+    # check the model number
+    self.assertEqual(len(model_reference_dict), 3)
+    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
+        ['1', 'over_time_duration'])
+    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
+        ['2', 'worked_time_duration'])
+    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
+        ['3','4', 'social_insurance'])
+
+
+    # same test with a multi model inheritance
+    model_a = self.paysheet_model_module.newContent(id='model_a', title='model_a',
+        portal_type='Pay Sheet Model')
+    model_b = self.paysheet_model_module.newContent(id='model_b', title='model_b',
+        portal_type='Pay Sheet Model')
+    model_c = self.paysheet_model_module.newContent(id='model_c', title='model_c', 
+        portal_type='Pay Sheet Model')
+
+    # check with more values on each model
+    # a :
+    model_a.newContent(id='5', portal_type='Annotation Line', reference='5')
+    # b :
+    model_b.newContent(id='5',portal_type='Annotation Line', reference='5')
+    model_b.newContent(id='6',portal_type='Annotation Line', reference='6')
+    # c :
+    model_c.newContent(id='5', portal_type='Annotation Line', reference='5')
+    model_c.newContent(id='6', portal_type='Annotation Line', reference='6')
+    model_c.newContent(id='7', portal_type='Annotation Line', reference='7')
+    model_c.newContent(id='8', portal_type='Annotation Line', reference='8')
+
+    # inherite from each other
+    model_a.setSpecialiseValue(model_c)
+    model_company.setSpecialiseValueList([model_country, model_a, model_b])
+    model_employee.setSpecialiseValue(model_company)
+
+    # return a list of data that should contain data from all model
+    portal_type_list = ['Annotation Line', ]
+    model_reference_dict = {}
+    model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
+                        model_reference_dict, model_employee, portal_type_list, [])
+
+
+    # check data's are corrected
+    number_of_different_references = []
+    for model in model_reference_dict.keys():
+      number_of_different_references.extend(model_reference_dict[model])
+
+    self.assertEqual(len(number_of_different_references), 11) # here, there is 
+    # 8 differents annotation lines, and with the 3 ones have been had before
+    # that's make 11 !
+    
+    # check the model number
+    self.assertEqual(len(model_reference_dict), 6)
+    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
+        ['1', 'over_time_duration'])
+    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
+        ['2', 'worked_time_duration'])
+    self.assertEqual(model_reference_dict[model_a.getRelativeUrl()], ['5',])
+    self.assertEqual(model_reference_dict[model_c.getRelativeUrl()], 
+        ['6', '7', '8'])
+    self.assertEqual(model_reference_dict[model_b.getRelativeUrl()], [])
+    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
+        ['3','4', 'social_insurance'])
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
