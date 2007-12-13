@@ -490,7 +490,7 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     data = self.getBaseData()
     if data in ('', None):
-      return
+      raise ValueError, "OOoDocument: BaseData is empty. Document is not converted yet."
 
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = \
