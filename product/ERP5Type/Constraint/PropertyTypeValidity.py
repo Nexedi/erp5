@@ -60,7 +60,7 @@ class PropertyTypeValidity(Constraint):
   }
   
   # Properties of type eg. "object" can hold anything
-  _permissive_type_list = ('object')
+  _permissive_type_list = ('object', )
 
   def checkConsistency(self, obj, fixit=0):
     """
