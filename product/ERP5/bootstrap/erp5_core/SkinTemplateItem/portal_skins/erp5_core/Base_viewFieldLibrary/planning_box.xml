@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>planning_box</string> </value>
         </item>
@@ -449,6 +443,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>info_botleft</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>info_botright</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>info_center</string> </key>
                     <value> <string>getTitle</string> </value>
                 </item>
@@ -467,6 +469,29 @@
                 <item>
                     <key> <string>js_enabled</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>lane_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>base_day_domain</string>
+                          <string>Day</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_week_domain</string>
+                          <string>Week</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_month_domain</string>
+                          <string>Month</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_year_domain</string>
+                          <string>Year</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -492,6 +517,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>report_axis_groups</string> </key>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>report_root_list</string> </key>
@@ -590,6 +619,10 @@
                 <item>
                     <key> <string>use_date_zoom</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>vertical_view</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
