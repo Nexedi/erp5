@@ -852,7 +852,7 @@ class TestPayroll(TestPayrollMixin):
     # return a list of data that should contain data from all model
     portal_type_list = ['Annotation Line', ]
     model_reference_dict = {}
-    model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
+    model_employee.getInheritanceModelReferenceDict(\
                         model_reference_dict, model_employee, portal_type_list, [])
 
 
@@ -916,14 +916,16 @@ class TestPayroll(TestPayrollMixin):
     # 4 differents annotation lines, and with the 3 ones have been had before
     # that's make 7 !
 
+
+
     # check the model number
     self.assertEqual(len(model_reference_dict), 3)
-    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
-        ['1', 'over_time_duration'])
-    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
-        ['2', 'worked_time_duration'])
-    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
-        ['3','4', 'social_insurance'])
+    self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
+        set(['1', 'over_time_duration']))
+    self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
+        set(['2', 'worked_time_duration']))
+    self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]), 
+        set(['3','4', 'social_insurance']))
 
 
     # same test with a multi model inheritance
@@ -971,15 +973,15 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(len(model_reference_dict), 5) # (6-1 because model_b
                                                    # haven't any subobject not
                                                    # yet added)
-    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
-        ['1', 'over_time_duration'])
-    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
-        ['2', 'worked_time_duration'])
+    self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
+        set(['1', 'over_time_duration']))
+    self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
+        set(['2', 'worked_time_duration']))
     self.assertEqual(model_reference_dict[model_a.getRelativeUrl()], ['5',])
-    self.assertEqual(model_reference_dict[model_c.getRelativeUrl()], 
-        ['6', '7', '8'])
-    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
-        ['3','4', 'social_insurance'])
+    self.assertEqual(set(model_reference_dict[model_c.getRelativeUrl()]), 
+        set(['6', '7', '8']))
+    self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]), 
+        set(['3','4', 'social_insurance']))
 
 
     # copy sub object from all inhéritance models into the a paysheet
@@ -996,27 +998,13 @@ class TestPayroll(TestPayrollMixin):
         title                     = id,
         specialise_value          = model_employee)
 
-    # inherite model
-    #paysheet.setSpecialiseValue(model_employee)
-
     # check heneritance works
     self.assertEqual(paysheet.getSpecialiseValue(), model_employee)
 
-    # copy sub objects
-    nb_subobject_before = len(paysheet.contentValues(\
-        portal_type=portal_type_list))
-    paysheet.copyInheritanceSubObjects(model_reference_dict)
-
-    get_transaction().commit()
-    self.paysheet_model_module.reindexObject()
-    self.tic()
-
-    nb_subobject_after = len(paysheet.contentValues(\
-        portal_type=portal_type_list))
-
-    # check there are all here:
-    nb_added_sub_objects = nb_subobject_after - nb_subobject_before
-    self.assertEqual(nb_added_sub_objects, 11)
+    # get a list of all this subObjects:
+    sub_oject_list = paysheet.getSubObjectValueList(portal_type_list)
+    self.assertEqual(len(sub_oject_list), 11)
+    
 
 import unittest
 def test_suite():
