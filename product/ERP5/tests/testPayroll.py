@@ -968,7 +968,9 @@ class TestPayroll(TestPayrollMixin):
     # that's make 11 !
     
     # check the model number
-    self.assertEqual(len(model_reference_dict), 6)
+    self.assertEqual(len(model_reference_dict), 5) # (6-1 because model_b
+                                                   # haven't any subobject not
+                                                   # yet added)
     self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
         ['1', 'over_time_duration'])
     self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
@@ -976,25 +978,44 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(model_reference_dict[model_a.getRelativeUrl()], ['5',])
     self.assertEqual(model_reference_dict[model_c.getRelativeUrl()], 
         ['6', '7', '8'])
-    self.assertEqual(model_reference_dict[model_b.getRelativeUrl()], [])
     self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
         ['3','4', 'social_insurance'])
 
 
-    # copy sub object from all inhéritance models into the base model
-    nb_subobject_before = len(model_employee.contentValues(\
-                                                      portal_type=portal_type_list))
-    model_employee.copyInheritanceSubObjects(model_reference_dict)
-    nb_subobject_after = len(model_employee.contentValues(\
-                                                      portal_type=portal_type_list))
+    # copy sub object from all inhéritance models into the a paysheet
 
-    # check there are all here:
-    nb_added_sub_objects = nb_subobject_after - nb_subobject_before
+    # create a paysheet
+    id = 'inheritance_paysheet'
+    paysheet_module = self.portal.getDefaultModule(\
+                            portal_type=self.paysheet_transaction_portal_type)
+    if hasattr(paysheet_module, id):
+      paysheet_module.manage_delObjects([id])
+    paysheet = paysheet_module.newContent(\
+        portal_type               = self.paysheet_transaction_portal_type,
+        id                        = id,
+        title                     = id,
+        specialise_value          = model_employee)
+
+    # inherite model
+    #paysheet.setSpecialiseValue(model_employee)
+
+    # check heneritance works
+    self.assertEqual(paysheet.getSpecialiseValue(), model_employee)
+
+    # copy sub objects
+    nb_subobject_before = len(paysheet.contentValues(\
+        portal_type=portal_type_list))
+    paysheet.copyInheritanceSubObjects(model_reference_dict)
 
     get_transaction().commit()
     self.paysheet_model_module.reindexObject()
     self.tic()
 
+    nb_subobject_after = len(paysheet.contentValues(\
+        portal_type=portal_type_list))
+
+    # check there are all here:
+    nb_added_sub_objects = nb_subobject_after - nb_subobject_before
     self.assertEqual(nb_added_sub_objects, 11)
 
 import unittest
@@ -1002,4 +1023,3 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPayroll))
   return suite
- 
