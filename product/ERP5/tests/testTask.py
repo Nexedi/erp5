@@ -35,11 +35,13 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
 from Testing import ZopeTestCase
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
 class TestTaskMixin:
 
   default_quantity = 99.99999999
   default_price = 555.88888888
+  person_portal_type = 'Person'
   organisation_portal_type = 'Organisation'
   resource_portal_type = 'Service'
   project_portal_type = 'Project'
@@ -53,7 +55,9 @@ class TestTaskMixin:
   datetime = DateTime()
   task_workflow_id='task_workflow'
 
-  default_task_sequence = 'stepCreateOrganisation \
+  default_task_sequence = '\
+                       stepLogin \
+                       stepCreateOrganisation \
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateProject \
@@ -64,7 +68,9 @@ class TestTaskMixin:
                        stepTic \
                        stepSetTaskReport '
 
-  default_task_sequence_two_lines = 'stepCreateOrganisation \
+  default_task_sequence_two_lines = '\
+                       stepLogin \
+                       stepCreateOrganisation \
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateResource \
@@ -77,26 +83,67 @@ class TestTaskMixin:
                        stepTic \
                        stepSetTaskReport '
                        
-  default_task_report_sequence = 'stepCreateOrganisation \
+  default_task_report_sequence = '\
+                       stepLogin \
+                       stepCreateOrganisation \
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateSimpleTaskReport \
                        stepFillTaskReportWithData \
                        stepCreateTaskReportLine '
 
+  login = PortalTestCase.login
+
   def getBusinessTemplateList(self):
     """
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',)
 
-  def login(self, quiet=0, run=1):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('dummy', '', 
-                  ['Member', 'Auditor', 'Author', 'Assignee', 'Assignor'], [])
-    user = uf.getUserById('dummy').__of__(uf)
-    newSecurityManager(None, user)
+  def stepLogin(self, **kw):
+    portal = self.getPortal()
+    uf = portal.acl_users
+    if not uf.getUser('dummy'):
+      uf._doAddUser('manager', '', ['Manager'], [])
+      self.login('manager')
+      person_module = portal.getDefaultModule(self.person_portal_type)
+      person = person_module.newContent(id='dummy', title='dummy',
+                                        reference='dummy')
+      portal.portal_categories.group.newContent(id='dummy',
+                                                codification='DUMMY')
+      assignment = person.newContent(title='dummy', group='dummy',
+                                     portal_type='Assignment',
+                                     start_date='1980-01-01',
+                                     stop_date='2099-12-31')
+      assignment.open()
+      get_transaction().commit()
+      self.tic()
+      module_list = []
+      portal_type_list = []
+      for portal_type in (self.resource_portal_type,
+                          self.project_portal_type,
+                          self.requirement_document_portal_type,
+                          self.organisation_portal_type,
+                          self.task_portal_type,
+                          self.task_report_portal_type,):
+        module = portal.getDefaultModule(portal_type)
+        module_list.append(module)
+        portal_type_list.append(portal_type)
+        portal_type_list.append(module.getPortalType())
 
-  def stepTic(self,**kw):
+      for portal_type in portal_type_list:
+        ti = portal.portal_types[portal_type]
+        ti.addRole('Auditor;Author;Assignee;Assignor', '', 'Dummy',
+                   '', 'group/dummy', 'ERP5Type_getSecurityCategoryFromAssignment',
+                   '')
+        ti.updateRoleMapping()
+
+      get_transaction().commit()
+      self.tic()
+      portal.portal_caches.clearAllCache()
+
+    self.login('dummy')
+
+  def stepTic(self, **kw):
     self.tic()
 
   def stepCreateResource(self,sequence=None, sequence_list=None, \
@@ -483,7 +530,8 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    sequence_string = 'stepCreateOrganisation \
+    sequence_string = 'stepLogin \
+                       stepCreateOrganisation \
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateResource \
@@ -503,6 +551,35 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_05_testStrictSimulationSecurity(self, quiet=0, run=run_all_test):
+    """Test creation of task and (automatic) task_report with strict
+    security in the simulation.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = self.default_task_sequence + '\
+                       stepVerifyGeneratedByBuilderTaskReport \
+                       stepStartTaskReport \
+                       stepFinishTaskReport \
+                       stepCloseTaskReport \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    simulation_tool = self.getPortal().portal_simulation
+    uf = self.getPortal().acl_users
+    if not uf.getUser('manager'):
+      uf._doAddUser('manager', '', ['Manager'], [])
+    self.login('manager')
+    try:
+      simulation_tool.Base_setDefaultSecurity()
+      self.logout()
+      sequence_list.play(self)
+    finally:
+      self.login('manager')
+      for permission in simulation_tool.possible_permissions():
+        simulation_tool.manage_permission(permission, roles=(), acquire=1)
+      self.logout()
 
 def test_suite():
   suite = unittest.TestSuite()
