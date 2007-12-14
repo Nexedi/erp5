@@ -43,6 +43,7 @@ class TestWorklist(ERP5TypeTestCase):
   login = PortalTestCase.login
 
   checked_portal_type = 'Organisation'
+  checked_validation_state = 'draft'
   checked_workflow = 'validation_workflow'
   worklist_assignor_id = 'assignor_worklist'
   actbox_assignor_name = 'assignor_todo'
@@ -128,7 +129,9 @@ class TestWorklist(ERP5TypeTestCase):
 
   def createDocument(self):
     module = self.getPortal().getDefaultModule(self.checked_portal_type)
-    return module.newContent(portal_type=self.checked_portal_type)
+    result = module.newContent(portal_type=self.checked_portal_type)
+    assert result.getValidationState() == self.checked_validation_state
+    return result
 
   def getWorklistDocumentCountFromActionName(self, action_name):
     self.assertEquals(action_name[-1], ')')
@@ -149,7 +152,8 @@ class TestWorklist(ERP5TypeTestCase):
       worklist_definition.setProperties('',
           actbox_name='%s (%%(count)s)' % (actbox_name, ),
           props={'guard_roles': role,
-                 'var_match_portal_type': self.checked_portal_type})
+                 'var_match_portal_type': self.checked_portal_type,
+                 'var_match_validation_state': self.checked_validation_state})
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
