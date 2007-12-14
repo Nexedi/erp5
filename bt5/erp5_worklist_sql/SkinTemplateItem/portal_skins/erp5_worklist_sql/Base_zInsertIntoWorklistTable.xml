@@ -114,7 +114,7 @@ VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(count))">\n
   (\n
   <dtml-sqlvar expr="count[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="owner[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="owner[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
@@ -168,7 +168,7 @@ VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(count))">\n
   (\n
   <dtml-sqlvar expr="count[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="owner[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="owner[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n

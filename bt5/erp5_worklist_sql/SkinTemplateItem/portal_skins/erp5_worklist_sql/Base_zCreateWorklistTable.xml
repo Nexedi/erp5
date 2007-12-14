@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS worklist_cache\n
 <dtml-var sql_delimiter>\n
 CREATE TABLE `worklist_cache` (\n
   `count` INT UNSIGNED NOT NULL,\n
-  `owner` VARCHAR(32) NOT NULL,\n
+  `owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
   `security_uid` INT UNSIGNED NOT NULL,\n
   `portal_type` VARCHAR(255) NOT NULL,\n
   `validation_state` VARCHAR(255) NULL,\n
@@ -121,7 +121,7 @@ DROP TABLE IF EXISTS worklist_cache\n
 <dtml-var sql_delimiter>\n
 CREATE TABLE `worklist_cache` (\n
   `count` INT UNSIGNED NOT NULL,\n
-  `owner` VARCHAR(32) NOT NULL,\n
+  `owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
   `security_uid` INT UNSIGNED NOT NULL,\n
   `portal_type` VARCHAR(255) NOT NULL,\n
   `validation_state` VARCHAR(255) NULL,\n
