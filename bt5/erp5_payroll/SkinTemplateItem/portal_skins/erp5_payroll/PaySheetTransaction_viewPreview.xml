@@ -115,15 +115,14 @@
                         <string>listbox_employer_share_price</string>
                         <string>listbox_employee_share_quantity</string>
                         <string>listbox_employer_share_quantity</string>
+                        <string>listbox_salary_range</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_salary_range</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

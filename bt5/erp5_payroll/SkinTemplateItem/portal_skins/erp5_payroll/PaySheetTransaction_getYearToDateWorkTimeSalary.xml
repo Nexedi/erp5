@@ -83,7 +83,10 @@ paysheet_list = accounting_module.searchFolder( **search_params)\n
 \n
 yearly_work_time = 0\n
 for paysheet in paysheet_list:\n
-  yearly_work_time += paysheet.getWorkTimeAnnotationLineQuantity(0)\n
+  annotation_line = context.getAnnotationLineFromReference(\\\n
+      reference=\'work_time_annotation_line\')\n
+  nb_heures = annotation_line.getQuantity()\n
+  yearly_work_time += nb_heures\n
 \n
 return yearly_work_time\n
 </string> </value>
@@ -141,6 +144,8 @@ return yearly_work_time\n
                             <string>yearly_work_time</string>
                             <string>_getiter_</string>
                             <string>paysheet</string>
+                            <string>annotation_line</string>
+                            <string>nb_heures</string>
                             <string>_inplacevar_</string>
                           </tuple>
                         </value>

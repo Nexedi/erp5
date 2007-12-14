@@ -70,12 +70,12 @@
   portal_type_list) in the paysheet\n
 \'\'\'\n
 \n
-model = context.getSpecialiseValue()\n
-subobject_list = model.contentValues(portal_type=portal_type_list)\n
-subobject_id_list = [x.getId() for x in subobject_list]\n
+sub_object_list = context.getSubObjectValueList(portal_type_list)\n
+sub_object_uid_list = [x.getUid() for x in sub_object_list]\n
 \n
 # copy model object\n
-copy_data = model.manage_copyObjects(ids=subobject_id_list)\n
+model = context.getSpecialiseValue()\n
+copy_data = model.manage_copyObjects(uids=sub_object_uid_list)\n
 \n
 # paste into context (paysheet) folder\n
 context.manage_pasteObjects(copy_data)\n
@@ -124,13 +124,13 @@ context.manage_pasteObjects(copy_data)\n
                             <string>portal_type_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>model</string>
-                            <string>subobject_list</string>
+                            <string>sub_object_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>subobject_id_list</string>
+                            <string>sub_object_uid_list</string>
+                            <string>model</string>
                             <string>copy_data</string>
                           </tuple>
                         </value>
