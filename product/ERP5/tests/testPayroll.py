@@ -1002,8 +1002,8 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(paysheet.getSpecialiseValue(), model_employee)
 
     # get a list of all this subObjects:
-    sub_oject_list = paysheet.getSubObjectValueList(portal_type_list)
-    self.assertEqual(len(sub_oject_list), 11)
+    sub_object_list = paysheet.getSubObjectValueList(portal_type_list)
+    self.assertEqual(len(sub_object_list), 11)
     
 
 import unittest
