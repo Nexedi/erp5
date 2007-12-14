@@ -763,7 +763,6 @@ class ZCatalog(Folder, Persistent, Implicit):
         catalog_id = None
         for archive in archive_obj_list:
           if archive.test(obj) is True:
-            goto_current_catalog = 0
             catalog_id = archive.getCatalogId()
             # if current catalog, no need to construct dict as it will be reindex now
             if catalog_id in (default_catalog.id, self.source_sql_catalog_id):
