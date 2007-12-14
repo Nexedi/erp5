@@ -492,16 +492,44 @@ class PaySheetTransaction(Invoice):
 
     return pay_sheet_line_list
 
-  def copyInheritanceSubObjects(self, model_reference_dict):
+  def getSubObjectValueList(self, portal_type_list):
     '''
-      copy all sub objects containing in the dict into the current paysheet
+      return a list of all subobject of the herited model (incuding the
+      dependencies)
     '''
+    model = self.getSpecialiseValue()
+
+    model_reference_dict={}
+    model.getInheritanceModelReferenceDict(\
+        model_reference_dict=model_reference_dict, 
+        model_list=model,
+        portal_type_list=portal_type_list,
+        reference_list=[])
+        pprint.pformat(model_reference_dict))
+
+    # add line of base model without reference
+    model_dict = model.getReferenceDict(\
+        portal_type_list=portal_type_list,
+        get_none_reference=1)
+    id_list = model_dict.values()
+    model_reference_dict[model.getRelativeUrl()].extend(id_list)
+        pprint.pformat(model_reference_dict))
+
+
+    # get sub objects
     key_list = model_reference_dict.keys()
+
+    sub_object_list = []
 
     for key in key_list:
       id_list = model_reference_dict[key]
       model = self.getPortalObject().restrictedTraverse(key)
       if model is None:
         LOG("copyInheritanceSubObjects,", 0, "can't find model %s" % key)
-      copied_data = model.manage_copyObjects(ids=id_list)
-      self.manage_pasteObjects(copied_data)
+
+      for id in id_list:
+        object = model._getOb(id)
+        sub_object_list.append(object)
+
+    return sub_object_list
+

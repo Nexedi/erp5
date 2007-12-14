@@ -66,12 +66,17 @@ class PaySheetModel(TradeCondition, XMLMatrix):
                       , PropertySheet.DefaultAnnotationLine
                       )
 
-    def getReferenceList(self, portal_type_list):
+    def getReferenceDict(self, portal_type_list, get_none_reference=0):
       '''
-        return all objects reference of the model wich portal_type is in the
+        return all objects reference and id of the model wich portal_type is in the
         portal_type_list
+        - parameters :
+          o get_none_reference : permit to get a dict with all references
+          not defined. This is usefull to get all object on the model paysheet
+          inherite from.
       '''
-      reference_list = []
+      reference_dict={}
+
       object_list = self.contentValues(portal_type=portal_type_list,
           sort_on='id')
 
@@ -83,14 +88,17 @@ class PaySheetModel(TradeCondition, XMLMatrix):
               object.getRelativeUrl())
         else:
           reference = reference_method()
-          if reference is not None:
-            reference_list.append(reference)
+          if reference is not None and not get_none_reference:
+            reference_dict[reference]=object.getId()
+          elif reference is None and get_none_reference:
+            reference_dict[reference]=object.getId()
+
           else:
             LOG('PaySheetModel getReferenceList', 0, '%s reference '
                 'property is empty' % object.getTitle() or
                 object.getRelativeUrl())
 
-      return reference_list
+      return reference_dict
 
     def getInheritanceModelReferenceDict(self, model_reference_dict,
         model_list, portal_type_list, reference_list):
@@ -103,19 +111,19 @@ class PaySheetModel(TradeCondition, XMLMatrix):
         model_list = [model_list,]
 
       for model in model_list:
-        model_reference_list=model.getReferenceList(portal_type_list)
-        unique_list = []
+        model_reference_list=model.getReferenceDict(portal_type_list)
+        id_list = []
 
-        for reference in model_reference_list:
+        for reference in model_reference_list.keys():
           if reference not in reference_list:
             reference_list.append(reference)
-            unique_list.append(reference)
+            id_list.append(model_reference_list[reference])
 
-        if unique_list != []:
-          model_reference_dict[model.getRelativeUrl()]=unique_list
+        if id_list != []:
+          model_reference_dict[model.getRelativeUrl()]=id_list
 
         new_model_list = model.getSpecialiseValueList()
-        model_reference_dict = self.getInheritanceModelReferenceDict(\
+        self.getInheritanceModelReferenceDict(\
             model_reference_dict=model_reference_dict,
             model_list=new_model_list,
             portal_type_list=portal_type_list,
