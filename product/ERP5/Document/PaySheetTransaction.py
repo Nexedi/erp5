@@ -33,6 +33,9 @@ from Products.ERP5Type.Utils import cartesianProduct
 import pprint
 from zLOG import LOG
 
+#XXX TODO: review naming of new methods
+#XXX WARNING: current API naming may change although model should be stable.
+
 class PaySheetTransaction(Invoice):
   """
   A paysheet will store data about the salary of an employee
@@ -79,12 +82,21 @@ class PaySheetTransaction(Invoice):
     """
     # get ratio lines
     portal_type_list = ['Pay Sheet Model Ratio Line']
+    object_ratio_list = self.contentValues(portal_type=portal_type_list)
+
+    # look for ratio lines on the paysheet
+    if object_ratio_list:
+      for object in object_ratio_list:
+        if object.getReference() == ratio_reference:
+          return object.getQuantity()
+
+    # if not find in the paysheet, look on dependence tree
     sub_object_list = self.getSubObjectValueList(portal_type_list)
     object_ratio_list = sub_object_list
-
     for object in object_ratio_list:
       if object.getReference() == ratio_reference:
         return object.getQuantity()
+
     return None 
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -109,12 +121,22 @@ class PaySheetTransaction(Invoice):
     """
     # get Annotation Lines
     portal_type_list = ['Annotation Line']
+    
+    annotation_line_list = self.contentValues(portal_type=portal_type_list)
+
+    # look for annotation lines on the paysheet
+    if annotation_line_list:
+      for annotation_line in annotation_line_list:
+        if annotation_line.getReference() == reference:
+          return annotation_line
+
+    # if not find in the paysheet, look on dependence tree
     sub_object_list = self.getSubObjectValueList(portal_type_list)
     annotation_line_list = sub_object_list
-
     for annotation_line in annotation_line_list:
       if annotation_line.getReference() == reference:
         return annotation_line
+
     return None 
 
   security.declareProtected(Permissions.AccessContentsInformation,
