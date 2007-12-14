@@ -29,15 +29,19 @@
   Tests paysheet creation using paysheet model.
 
 TODO:
+  - review naming of new methods
   - in the test test_04_paySheetCalculation, add sub_object (annotation_line, 
   ratio_line and payment conditioni), and verify that before the script 
   'PaySheetTransaction_applyModel' is called, subobjects are not in the 
   paysheet, and after that there are copied in.
   - use ratio settings and test it (there is a method getRatioQuantityList, see
-  the file Document/PaySheetModelLine.py)
+  the file Document/PaySheetTransaction.py)
   - test with bonus which participate on the base_salary and see if the 
   contribution are applied on the real base_salary or on the base_salary + bonus
   (it should).
+
+WARNING: 
+  - current API naming may change although model should be stable.
 
 """
 
