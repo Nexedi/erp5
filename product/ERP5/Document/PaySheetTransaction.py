@@ -491,3 +491,17 @@ class PaySheetTransaction(Invoice):
       post_calculation_script()
 
     return pay_sheet_line_list
+
+  def copyInheritanceSubObjects(self, model_reference_dict):
+    '''
+      copy all sub objects containing in the dict into the current paysheet
+    '''
+    key_list = model_reference_dict.keys()
+
+    for key in key_list:
+      id_list = model_reference_dict[key]
+      model = self.getPortalObject().restrictedTraverse(key)
+      if model is None:
+        LOG("copyInheritanceSubObjects,", 0, "can't find model %s" % key)
+      copied_data = model.manage_copyObjects(ids=id_list)
+      self.manage_pasteObjects(copied_data)
