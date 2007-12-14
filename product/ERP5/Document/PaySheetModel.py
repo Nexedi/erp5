@@ -91,10 +91,9 @@ class PaySheetModel(TradeCondition, XMLMatrix):
           if reference is not None and not get_none_reference:
             reference_dict[reference]=object.getId()
           elif reference is None and get_none_reference:
-            reference_dict[reference]=object.getId()
-
+            reference_dict[object.getId()]=object.getId()
           else:
-            LOG('PaySheetModel getReferenceList', 0, '%s reference '
+            LOG('PaySheetModel getReferenceList', 0, '"%s" reference '
                 'property is empty' % object.getTitle() or
                 object.getRelativeUrl())
 

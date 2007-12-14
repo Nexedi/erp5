@@ -77,8 +77,11 @@ class PaySheetTransaction(Invoice):
     return the ratio value correponding to the ratio_reference,
     None if ratio_reference not found
     """
-    object_ratio_list = self.contentValues(portal_type=\
-        'Pay Sheet Model Ratio Line')
+    # get ratio lines
+    portal_type_list = ['Pay Sheet Model Ratio Line']
+    sub_object_list = self.getSubObjectValueList(portal_type_list)
+    object_ratio_list = sub_object_list
+
     for object in object_ratio_list:
       if object.getReference() == ratio_reference:
         return object.getQuantity()
@@ -104,7 +107,11 @@ class PaySheetTransaction(Invoice):
     return the annotation line correponding to the reference,
     None if reference not found
     """
-    annotation_line_list = self.contentValues(portal_type='Annotation Line')
+    # get Annotation Lines
+    portal_type_list = ['Annotation Line']
+    sub_object_list = self.getSubObjectValueList(portal_type_list)
+    annotation_line_list = sub_object_list
+
     for annotation_line in annotation_line_list:
       if annotation_line.getReference() == reference:
         return annotation_line
@@ -236,7 +243,15 @@ class PaySheetTransaction(Invoice):
       return the not editable lines as dict
     '''
     model = paysheet.getSpecialiseValue()
-    model_line_list = model.contentValues(portal_type='Pay Sheet Model Line')
+
+    def sortByIntIndex(a, b):
+      return cmp(a.getIntIndex(), b.getIntIndex())
+
+    # get model lines
+    portal_type_list = ['Pay Sheet Model Line']
+    sub_object_list = paysheet.getSubObjectValueList(portal_type_list)
+    sub_object_list.sort(sortByIntIndex)
+    model_line_list = sub_object_list
 
     model_line_dict = {}
     for model_line in model_line_list:
@@ -300,6 +315,8 @@ class PaySheetTransaction(Invoice):
     # current_amount = base_amount_dict[base_amount][share]
     base_amount_dict = {}
 
+    model = paysheet.getSpecialiseValue()
+
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(), b.getIntIndex())
 
@@ -309,9 +326,10 @@ class PaySheetTransaction(Invoice):
 
 
     # get model lines
-    model = paysheet.getSpecialiseValue()
-    model_line_list = model.contentValues(portal_type='Pay Sheet Model Line',
-                                          sort_on='int_index')
+    portal_type_list = ['Pay Sheet Model Line']
+    sub_object_list = paysheet.getSubObjectValueList(portal_type_list)
+    sub_object_list.sort(sortByIntIndex)
+    model_line_list = sub_object_list
 
     pay_sheet_line_list = []
 
@@ -505,16 +523,16 @@ class PaySheetTransaction(Invoice):
         model_list=model,
         portal_type_list=portal_type_list,
         reference_list=[])
-        pprint.pformat(model_reference_dict))
 
     # add line of base model without reference
     model_dict = model.getReferenceDict(\
         portal_type_list=portal_type_list,
         get_none_reference=1)
     id_list = model_dict.values()
-    model_reference_dict[model.getRelativeUrl()].extend(id_list)
-        pprint.pformat(model_reference_dict))
-
+    if model_reference_dict.has_key(model.getRelativeUrl()):
+      model_reference_dict[model.getRelativeUrl()].extend(id_list)
+    else:
+      model_reference_dict[model.getRelativeUrl()]=id_list
 
     # get sub objects
     key_list = model_reference_dict.keys()
