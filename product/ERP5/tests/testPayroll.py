@@ -855,9 +855,8 @@ class TestPayroll(TestPayrollMixin):
 
     # return a list of data that should contain data from all model
     portal_type_list = ['Annotation Line', ]
-    model_reference_dict = {}
-    model_employee.getInheritanceModelReferenceDict(\
-                        model_reference_dict, model_employee, portal_type_list, [])
+    model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
+        portal_type_list=portal_type_list)
 
 
     # check data's are corrected
@@ -907,7 +906,7 @@ class TestPayroll(TestPayrollMixin):
     portal_type_list = ['Annotation Line', ]
     model_reference_dict = {}
     model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
-                        model_reference_dict, model_employee, portal_type_list, [])
+        portal_type_list=portal_type_list)
 
     # check that if a reference is already present in the model_employee,
     # and the model_company contain a data with the same one, the data used at
@@ -961,7 +960,7 @@ class TestPayroll(TestPayrollMixin):
     portal_type_list = ['Annotation Line', ]
     model_reference_dict = {}
     model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
-                        model_reference_dict, model_employee, portal_type_list, [])
+        portal_type_list=portal_type_list)
 
 
     # check data's are corrected
@@ -974,18 +973,17 @@ class TestPayroll(TestPayrollMixin):
     # that's make 11 !
     
     # check the model number
-    self.assertEqual(len(model_reference_dict), 5) # (6-1 because model_b
-                                                   # haven't any subobject not
-                                                   # yet added)
+    self.assertEqual(len(model_reference_dict), 6)
     self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
         set(['1', 'over_time_duration']))
     self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
         set(['2', 'worked_time_duration']))
-    self.assertEqual(model_reference_dict[model_a.getRelativeUrl()], ['5',])
-    self.assertEqual(set(model_reference_dict[model_c.getRelativeUrl()]), 
-        set(['6', '7', '8']))
     self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]), 
         set(['3','4', 'social_insurance']))
+    self.assertEqual(model_reference_dict[model_a.getRelativeUrl()], ['5',])
+    self.assertEqual(model_reference_dict[model_b.getRelativeUrl()], ['6',])
+    self.assertEqual(set(model_reference_dict[model_c.getRelativeUrl()]), 
+        set(['7', '8']))
 
 
     # copy sub object from all inhéritance models into the a paysheet
