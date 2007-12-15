@@ -938,6 +938,8 @@ class TestPayroll(TestPayrollMixin):
         portal_type='Pay Sheet Model')
     model_c = self.paysheet_model_module.newContent(id='model_c', title='model_c', 
         portal_type='Pay Sheet Model')
+    model_d = self.paysheet_model_module.newContent(id='model_d', title='model_d', 
+        portal_type='Pay Sheet Model')
 
     # check with more values on each model
     # a :
@@ -950,9 +952,14 @@ class TestPayroll(TestPayrollMixin):
     model_c.newContent(id='6', portal_type='Annotation Line', reference='6')
     model_c.newContent(id='7', portal_type='Annotation Line', reference='7')
     model_c.newContent(id='8', portal_type='Annotation Line', reference='8')
+    # d :
+    model_d.newContent(id='5',portal_type='Annotation Line', reference='5')
+    model_d.newContent(id='6',portal_type='Annotation Line', reference='6')
+
 
     # inherite from each other
     model_a.setSpecialiseValue(model_c)
+    model_country.setSpecialiseValue(model_d)
     model_company.setSpecialiseValueList([model_country, model_a, model_b])
     model_employee.setSpecialiseValue(model_company)
 
@@ -973,7 +980,10 @@ class TestPayroll(TestPayrollMixin):
     # that's make 11 !
     
     # check the model number
-    self.assertEqual(len(model_reference_dict), 6)
+    self.assertEqual(len(model_reference_dict), 6) # there is 7 model, but the
+    # model_d is not take into account because it have no annotation line wich
+    # are not already added by other models
+
     self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
         set(['1', 'over_time_duration']))
     self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
