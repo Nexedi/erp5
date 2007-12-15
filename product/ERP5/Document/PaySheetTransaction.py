@@ -399,13 +399,15 @@ class PaySheetTransaction(Invoice):
               0, tuple)
           continue
 
-        if len(cell.getVariationCategoryList(base_category_list='tax_category')):
-          share = \
-              cell.getVariationCategoryList(base_category_list='tax_category')[0]
+        if len(cell.getVariationCategoryList(\
+            base_category_list='tax_category')):
+          share = cell.getVariationCategoryList(\
+              base_category_list='tax_category')[0]
 
-        if len(cell.getVariationCategoryList(base_category_list='salary_range')):
-          slice = \
-              cell.getVariationCategoryList(base_category_list='salary_range')[0]
+        if len(cell.getVariationCategoryList(\
+            base_category_list='salary_range')):
+          slice = cell.getVariationCategoryList(\
+              base_category_list='salary_range')[0]
     
         # get the edited values if this model_line is editable
         # and replace the original cell values by this ones
@@ -485,12 +487,6 @@ class PaySheetTransaction(Invoice):
         quantity = cell_dict['quantity']
         price = cell_dict['price']
 
-#        # Define an empty new cell
-#        new_cell = { 'axe_list' : tuple, # share, slice
-#                     'quantity' : quantity,
-#                     'price'    : price,
-#                     #'categories' : causality/machin_module/annotation_line,
-#                   }
         cell_list.append(cell_dict)
 
         # update the base_participation
@@ -539,12 +535,9 @@ class PaySheetTransaction(Invoice):
     '''
     model = self.getSpecialiseValue()
 
-    model_reference_dict={}
-    model.getInheritanceModelReferenceDict(\
-        model_reference_dict=model_reference_dict, 
-        model_list=model,
-        portal_type_list=portal_type_list,
-        reference_list=[])
+    model_reference_dict = \
+        model.getInheritanceModelReferenceDict(\
+        portal_type_list=portal_type_list)
 
     # add line of base model without reference
     model_dict = model.getReferenceDict(\

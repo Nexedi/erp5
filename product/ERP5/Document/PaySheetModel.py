@@ -33,6 +33,8 @@ from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from zLOG import LOG, WARNING, DEBUG
 
+#XXX TODO: review naming of new methods
+#XXX WARNING: current API naming may change although model should be stable.
 
 class PaySheetModel(TradeCondition, XMLMatrix):
     """
@@ -95,20 +97,25 @@ class PaySheetModel(TradeCondition, XMLMatrix):
 
       return reference_dict
 
-    def getInheritanceModelReferenceDict(self, model_reference_dict,
-        model_list, portal_type_list, reference_list):
+    def getInheritanceModelReferenceDict(self, portal_type_list):
       '''
         return a dict with the model url as key and a list of reference 
         as value. Normaly, a Reference appear only one time in the final output
+        It's use a Breadth First Search
       '''
-      # handle the case where just one model is given
-      if type(model_list) != type([]):
-        model_list = [model_list,]
+      model = self
+      already_add_models = [model]
+      model_list = [model]
+      model_reference_dict = {}
+      reference_list = []
+      id_list = []
 
-      for model in model_list:
-        model_reference_list=model.getReferenceDict(portal_type_list)
+      while len(model_list) != 0:
+        model = model_list.pop(0)
         id_list = []
+        specialise_list = model.getSpecialiseValueList()
 
+        model_reference_list=model.getReferenceDict(portal_type_list)
         for reference in model_reference_list.keys():
           if reference not in reference_list:
             reference_list.append(reference)
@@ -117,10 +124,12 @@ class PaySheetModel(TradeCondition, XMLMatrix):
         if id_list != []:
           model_reference_dict[model.getRelativeUrl()]=id_list
 
-        new_model_list = model.getSpecialiseValueList()
-        self.getInheritanceModelReferenceDict(\
-            model_reference_dict=model_reference_dict,
-            model_list=new_model_list,
-            portal_type_list=portal_type_list,
-            reference_list=reference_list,)
+        while len(specialise_list) !=0:
+          child = specialise_list.pop(0)
+
+          # this should avoid circular dependencies
+          if child not in already_add_models:
+            already_add_models.append(child)
+            model_list.append(child)
+
       return model_reference_dict
