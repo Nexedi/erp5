@@ -214,19 +214,7 @@ class CachingMethod:
     ## generate cache id out of arguments passed.
     ## depending on arguments we may have different
     ## cache_id for same method_id
-    cache_id = [method_id]
-    key_list = kwd.keys()
-    key_list.sort()
-    append = cache_id.append
-    for arg in args:
-      append((None, arg))
-    for key in key_list:
-      append((key, kwd[key]))
-    cache_id = str(cache_id)
-    # because some cache backends don't allow some chars in cached id we make
-    # sure to replace them
-    cache_id = cache_id.translate(self._cache_id_translate_table)
-    return cache_id
+    return str((method_id, args, kwd)).translate(self._cache_id_translate_table)
 
 allow_class(CachingMethod)
 
