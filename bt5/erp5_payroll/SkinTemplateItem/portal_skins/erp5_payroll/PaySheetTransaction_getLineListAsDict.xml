@@ -81,7 +81,7 @@ def addProperties(line, line_dict, property_list):\n
     #XXX this is a hack wich should be removed when the OOoTemplate will be\n
     # rewireted\n
     if line_dict[property] is not None and property.endswith(\'_price\'):\n
-      line_dict[property] = \'%s %%\' % line_dict[property]\n
+      line_dict[property] = \'%s %%\' % (float(line_dict[property])*100)\n
   return line_dict\n
 \n
 line_dict_list = []\n
