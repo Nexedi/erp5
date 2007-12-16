@@ -68,20 +68,19 @@ class RamCache(BaseCache):
     
   def get(self, cache_id, scope, default=None):
     cache = self.getCacheStorage()
-    if self.has_key(cache_id, scope):
-      cache_entry = cache[scope].get(cache_id, default)
+    try:
+      cache_entry = cache[scope][cache_id]
       cache_entry.markCacheHit()
       self.markCacheHit()
       return cache_entry
-    else:
-      return default
+    except KeyError:
+      pass
+    return default
             
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache = self.getCacheStorage()
-    if not cache.has_key(scope):
-      ## cache scope not initialized
-      cache[scope] = {}
-    cache[scope][cache_id] = CacheEntry(value, cache_duration, calculation_time)
+    slot = cache.setdefault(scope, {})
+    slot[cache_id] = CacheEntry(value, cache_duration, calculation_time)
     self.markCacheMiss()
 
   def expireOldCacheEntries(self, forceCheck = False):
@@ -103,10 +102,8 @@ class RamCache(BaseCache):
 
   def has_key(self, cache_id, scope):
     cache = self.getCacheStorage()
-    if not cache.has_key(scope):
-      ## cache scope not initialized
-      cache[scope] = {}
-    return cache[scope].has_key(cache_id)
+    slot = cache.setdefault(scope, {})
+    return slot.has_key(cache_id)
 
   def getScopeList(self):
     scope_list = []
