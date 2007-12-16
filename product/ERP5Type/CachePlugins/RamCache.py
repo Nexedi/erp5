@@ -32,7 +32,6 @@ Local RAM based cache plugin.
 
 import time
 
-from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from BaseCache import BaseCache
 from BaseCache import CacheEntry
 
@@ -69,7 +68,7 @@ class RamCache(BaseCache):
   def get(self, cache_id, scope, default=None):
     cache = self.getCacheStorage()
     try:
-      cache_entry = cache[scope][cache_id]
+      cache_entry = cache[(scope, cache_id)]
       cache_entry.markCacheHit()
       self.markCacheHit()
       return cache_entry
@@ -79,8 +78,7 @@ class RamCache(BaseCache):
             
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache = self.getCacheStorage()
-    slot = cache.setdefault(scope, {})
-    slot[cache_id] = CacheEntry(value, cache_duration, calculation_time)
+    cache[(scope, cache_id)] = CacheEntry(value, cache_duration, calculation_time)
     self.markCacheMiss()
 
   def expireOldCacheEntries(self, forceCheck = False):
@@ -89,44 +87,50 @@ class RamCache(BaseCache):
       ## time to check for expired cache items
       self._last_cache_expire_check_at = now
       cache = self.getCacheStorage()        
-      for scope in cache.keys():
-        for (cache_id, cache_item) in cache[scope].items():
-          if cache_item.isExpired()==True:
-            del cache[scope][cache_id]
+      for key, value in cache.items():
+        if value.isExpired():
+          try:
+            del cache[key]
+          except KeyError:
+            # The key might have disappeared, due to multi-threading.
+            pass
 
   def delete(self, cache_id, scope):
     try:
-      del self.getCacheStorage()[scope][cache_id]
+      del self.getCacheStorage()[(scope, cache_id)]
     except KeyError:
       pass
 
   def has_key(self, cache_id, scope):
     cache = self.getCacheStorage()
-    slot = cache.setdefault(scope, {})
-    return slot.has_key(cache_id)
+    return cache.has_key((scope, cache_id))
 
   def getScopeList(self):
-    scope_list = []
-    ## some cache scopes in RAM Cache can have no cache_ids keys but 
-    ## they do exists. To have consistent behaviour with SQLCache plugin 
-    ## where cache scope will not exists without its cache_ids we filter them.  
-    for scope, item in self.getCacheStorage().items():
-      if item!={}:
-        scope_list.append(scope)
-    return scope_list
+    scope_set = set()
+    for scope, cache_id in self.getCacheStorage().iterkeys():
+      scope_set.add(scope)
+    return list(scope_set)
     
   def getScopeKeyList(self, scope):
-    return self.getCacheStorage()[scope].keys()
+    key_list = []
+    for key in self.getCacheStorage().iterkeys():
+      if scope == key[0]:
+        key_list.append(key[1])
+    return key_list
     
   def clearCache(self):
     BaseCache.clearCache(self)
-    self._cache_dict = {DEFAULT_CACHE_SCOPE: {}} 
+    self.getCacheStorage().clear()
     
   def clearCacheForScope(self, scope):
-    try:
-      self.getCacheStorage()[scope] = {}
-    except KeyError:
-      pass
+    cache = self.getCacheStorage()
+    for key in cache.keys():
+      if key[0] == scope:
+        try:
+          del cache[key]
+        except KeyError:
+          # The key might have disappeared, due to multi-threading.
+          pass
       
   def getCachePluginTotalMemorySize(self):
     """ Calculate total RAM memory size of cache plugin. 
@@ -135,8 +139,9 @@ class RamCache(BaseCache):
         """
     total_size = 0
     cache_keys_total_size = {}
-    for cache_key, cache_value in self._cache_dict[DEFAULT_CACHE_SCOPE].items():
-      cache_item_size = calcPythonObjectMemorySize(cache_value.getValue())
-      total_size += cache_item_size
-      cache_keys_total_size[cache_key] = cache_item_size
+    cache = self.getCacheStorage()
+    for key, value in cache.iteritems():
+      value_size = calcPythonObjectMemorySize(value)
+      total_size += value_size
+      cache_keys_total_size[key[1]] = value_size
     return total_size, cache_keys_total_size      
