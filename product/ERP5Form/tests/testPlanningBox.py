@@ -127,22 +127,15 @@ class TestPlanningBox(ERP5TypeTestCase):
 
   def stepCheckBasic(self, sequence = None, sequence_list = None, **kw):
     basic = sequence.get('basic')
-    self.assertEquals(len(basic.report_groups), 1)
-    # Note that this test use the use_date_zoom enabled.
-    sec_axis_info = basic.getLaneAxisInfo()
+    self.assertEquals(len(basic.report_group_list), 1)
+    lane_tree_list = basic.buildLaneTreeList()
+    sec_axis_info = basic.getLaneAxisInfo(lane_tree_list)
     date = DateTime()
     today = DateTime('%s/%s/%s' % (date.year(),date.month(),date.day()))
-    self.assertEquals(sec_axis_info['zoom_begin'], today)
-    self.assertEquals(sec_axis_info['zoom_end'], today+1)
-    self.assertEquals(sec_axis_info['bound_begin'], today)
     self.assertEquals(sec_axis_info['bound_start'], today)
-    self.assertEquals(sec_axis_info['bound_end'], today+1)
     self.assertEquals(sec_axis_info['bound_stop'], today+1)
-    self.assertEquals(sec_axis_info['zoom_start'], 0)
-    self.assertEquals(sec_axis_info['zoom_level'], 1.0)
-    self.assertEquals(sec_axis_info['bound_range'], 1.0)
 
-    for tree_list, activity_list,stat in basic.report_groups:
+    for tree_list, activity_list,stat in basic.report_group_list:
       self.assertEquals(len(activity_list), 1)
 
 
