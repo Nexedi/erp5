@@ -91,7 +91,7 @@ class PaySheetTransaction(Invoice):
           return object.getQuantity()
 
     # if not find in the paysheet, look on dependence tree
-    sub_object_list = self.getSubObjectValueList(portal_type_list)
+    sub_object_list = self.getInheritedObjectValueList(portal_type_list)
     object_ratio_list = sub_object_list
     for object in object_ratio_list:
       if object.getReference() == ratio_reference:
@@ -131,7 +131,7 @@ class PaySheetTransaction(Invoice):
           return annotation_line
 
     # if not find in the paysheet, look on dependence tree
-    sub_object_list = self.getSubObjectValueList(portal_type_list)
+    sub_object_list = self.getInheritedObjectValueList(portal_type_list)
     annotation_line_list = sub_object_list
     for annotation_line in annotation_line_list:
       if annotation_line.getReference() == reference:
@@ -271,7 +271,7 @@ class PaySheetTransaction(Invoice):
 
     # get model lines
     portal_type_list = ['Pay Sheet Model Line']
-    sub_object_list = paysheet.getSubObjectValueList(portal_type_list)
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     sub_object_list.sort(sortByIntIndex)
     model_line_list = sub_object_list
 
@@ -349,7 +349,7 @@ class PaySheetTransaction(Invoice):
 
     # get model lines
     portal_type_list = ['Pay Sheet Model Line']
-    sub_object_list = paysheet.getSubObjectValueList(portal_type_list)
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     sub_object_list.sort(sortByIntIndex)
     model_line_list = sub_object_list
 
@@ -528,7 +528,7 @@ class PaySheetTransaction(Invoice):
 
     return pay_sheet_line_list
 
-  def getSubObjectValueList(self, portal_type_list):
+  def getInheritedObjectValueList(self, portal_type_list):
     '''
       return a list of all subobject of the herited model (incuding the
       dependencies)
