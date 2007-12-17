@@ -963,7 +963,8 @@ class TestPayroll(TestPayrollMixin):
     model_company.setSpecialiseValueList([model_country, model_a, model_b])
     model_employee.setSpecialiseValue(model_company)
 
-    # return a list of data that should contain data from all model
+    # get a list of data that should contain data from all model inheritance
+    # dependances tree
     portal_type_list = ['Annotation Line', ]
     model_reference_dict = {}
     model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
@@ -998,17 +999,17 @@ class TestPayroll(TestPayrollMixin):
 #                        /             |             \
 #                       /              |              \
 #            model_country           model_a          model_b
-#          ('social_insurance',       ('5',)         ('5', '6')
-#           '1', '2', '3', '4')        |
+#         ('social_insurance',       ('5',)          ('5', '6')
+#          '1', '2', '3', '4')         |
 #                  |                   |
 #                  |                   |
 #               model_d             model_c
-#            ('5', '6')        ('5', '6', '7', '8')
+#            ('5', '6')       ('5', '6', '7', '8')
 
 
 
 
-    self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]),
         set(['1', 'over_time_duration']))
     self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
         set(['2', 'worked_time_duration']))
@@ -1020,7 +1021,7 @@ class TestPayroll(TestPayrollMixin):
         set(['7', '8']))
 
 
-    # copy sub object from all inhéritance models into the a paysheet
+    # get all sub objects from a paysheet witch inherite of model_employee
 
     # create a paysheet
     id = 'inheritance_paysheet'
@@ -1038,7 +1039,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(paysheet.getSpecialiseValue(), model_employee)
 
     # get a list of all this subObjects:
-    sub_object_list = paysheet.getSubObjectValueList(portal_type_list)
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     self.assertEqual(len(sub_object_list), 11)
     
 
