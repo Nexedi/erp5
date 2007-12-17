@@ -61,7 +61,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
     up to the root skins folder.
     This should be fast, flexible, and predictable.
   '''
-  if not name.startswith('_') and not name.startswith('aq_'):
+  if name[:1] != '_' and name[:3] != 'aq_':
     skin_info = SKINDATA.get(get_ident())
     if skin_info is not None:
       skin_selection_name, ignore, resolve = skin_info
