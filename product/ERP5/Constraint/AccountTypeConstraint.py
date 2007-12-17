@@ -28,7 +28,7 @@
 
 from Products.ERP5Type.Constraint import Constraint
 from Products.ERP5Type.Message import Message
-N_ = lambda msg: msg
+N_ = lambda msg: msg  # just to extract messages
 _MARKER = []
 
 class AccountTypeConstraint(Constraint):
@@ -50,6 +50,12 @@ class AccountTypeConstraint(Constraint):
 
   This constraints supports fixing consistency.
   """
+  
+  _message_id_list = ['message_inconsistent_account_type']
+  
+  message_inconsistent_account_type = N_('Account is member'\
+      ' of ${category}, this should have account_type'\
+      ' in ${account_type_list}')
 
   def checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
@@ -68,8 +74,7 @@ class AccountTypeConstraint(Constraint):
         if obj.isMemberOf(category):
           if obj.getAccountType() not in account_type_list:
             errors.append(self._generateError(obj,
-                N_("Account is member of ${category}, thus should have"
-                   " account_type in ${account_type_list}"),
+                self._getMessage('message_inconsistent_account_type'),
                 # XXX we should probably print translated logical path of
                 # categories instead of category path.
                     mapping=dict(category=category,
