@@ -153,7 +153,7 @@ class IdTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewLengthIdList')
   def generateNewLengthIdList(self, id_group=None, id_count=1, default=None,
-                              store=1):
+                              store=True):
     """
       Generates a list of Ids.
       The ids are generated using mysql and then stored in a Length object in a
@@ -167,11 +167,6 @@ class IdTool(BaseTool):
       store : if we want do store the new id into the zodb, we want it
               by default
     """
-    if getattr(self, 'dict_length_ids', None) is None:
-      # Length objects are stored in a persistent mapping: there is one
-      # Length object per id_group.
-      self.dict_length_ids = PersistentMapping()
-
     new_id = None
     if id_group in (None, 'None'):
       raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
@@ -194,9 +189,13 @@ class IdTool(BaseTool):
     finally:
       commit()
     new_id = result[0]['LAST_INSERT_ID()']
-    if self.dict_length_ids.get(id_group) is None:
-      self.dict_length_ids[id_group] = Length(new_id)
     if store:
+      if getattr(self, 'dict_length_ids', None) is None:
+        # Length objects are stored in a persistent mapping: there is one
+        # Length object per id_group.
+        self.dict_length_ids = PersistentMapping()
+      if self.dict_length_ids.get(id_group) is None:
+        self.dict_length_ids[id_group] = Length(new_id)
       self.dict_length_ids[id_group].set(new_id)
     return range(new_id - id_count, new_id)
 
