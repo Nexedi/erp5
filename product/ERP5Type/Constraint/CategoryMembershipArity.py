@@ -45,6 +45,26 @@ class CategoryMembershipArity(Constraint):
       'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
+  _message_id_list = ['message_arity_too_small',
+                   'message_arity_not_in_range',
+                   'message_arity_with_portal_type_to_small',
+                   'message_arity_with_portal_type_not_in_range']
+
+  message_arity_too_small = "Arity Error for Relation ${base_category}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be at least ${min_arity}"
+  message_arity_not_in_range = "Arity Error for Relation ${base_category}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be between ${min_arity} and ${max_arity}"
+  message_arity_with_portal_type_to_small = "Arity Error for Relation"\
+                          " ${base_category} and Type ${portal_type}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be at least ${min_arity}"
+
+  message_arity_with_portal_type_not_in_range = "Arity Error for Relation"\
+                          " ${base_category} and Type ${portal_type}"\
+                          ", arity is equal to ${current_arity} but "\
+                          "should be between ${min_arity} and ${max_arity}"
 
   def _calculateArity(self, obj):
     base_category = self.constraint_definition['base_category']
@@ -62,7 +82,7 @@ class CategoryMembershipArity(Constraint):
     """
     if not self._checkConstraintCondition(obj):
       return []
-    errors = []
+    error_list = []
     # Retrieve configuration values from PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']
     min_arity = int(self.constraint_definition['min_arity'])
@@ -82,25 +102,16 @@ class CategoryMembershipArity(Constraint):
       # Generate error message
       if portal_type is not ():
         if max_arity is None:
-          error_message = "Arity Error for Relation ${base_category}"\
-                          " and Type ${portal_type}"\
-                          ", arity is equal to ${current_arity} but "\
-                          "should be at least ${min_arity}"
+          message_id = 'message_arity_with_portal_type_to_small'
         else:
-          error_message = "Arity Error for Relation ${base_category}"\
-                          " and Type ${portal_type}"\
-                          ", arity is equal to ${current_arity} but "\
-                          "should be between ${min_arity} and ${max_arity}"
+          message_id = 'message_arity_with_portal_type_not_in_range'
       else:
         if max_arity is None:
-          error_message = "Arity Error for Relation ${base_category}"\
-                          ", arity is equal to ${current_arity} but "\
-                          "should be at least ${min_arity}"
+          message_id = 'message_arity_too_small'
         else:
-          error_message = "Arity Error for Relation ${base_category}"\
-                          ", arity is equal to ${current_arity} but "\
-                          "should be between ${min_arity} and ${max_arity}"
+          message_id = 'message_arity_not_in_range'
 
       # Add error
-      errors.append(self._generateError(obj, error_message, mapping))
-    return errors
+      error_list.append(self._generateError(obj,
+                              self._getMessage(message_id), mapping))
+    return error_list

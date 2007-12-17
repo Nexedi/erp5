@@ -44,6 +44,13 @@ class PropertyExistence(Constraint):
     },
   """
 
+  _message_id_list = ['message_no_such_propery',
+                      'message_property_not_set']
+  message_no_such_propery =  "Property existence error for property "\
+            "${property_id}, this document has no such property"
+  message_property_not_set = "Property existence error for property "\
+            "${property_id}, this property is not defined"
+
   def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
@@ -51,23 +58,21 @@ class PropertyExistence(Constraint):
     """
     if not self._checkConstraintCondition(obj):
       return []
-    errors = []
+    error_list = []
     # For each attribute name, we check if defined
     for property_id in self.constraint_definition.keys():
       # Check existence of property
       mapping = dict(property_id=property_id)
       if not obj.hasProperty(property_id):
-        error_message = "Property existence error for property "\
-            "${property_id}, this document has no such property"
+        error_message_id = "message_no_such_propery"
       elif obj.getProperty(property_id) is None:
         # If value is '', attribute is considered a defined
         # XXX is this the default API ?
-        error_message = "Property existence error for property "\
-            "${property_id}, this property is not defined"
+        error_message_id = "message_property_not_set"
       else:
-        error_message = None
-      # Return error
-      error = self._generateError(obj, error_message, mapping)
-      if error is not None:
-        errors.append(error)
-    return errors
+        error_message_id = None
+
+      if error_message_id:
+        error_list.append(self._generateError(obj,
+                     self._getMessage(error_message_id), mapping))
+    return error_list

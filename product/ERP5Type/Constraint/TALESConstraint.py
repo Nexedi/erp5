@@ -50,6 +50,13 @@ class TALESConstraint(Constraint):
   For readability, please don't abuse this constraint to evaluate complex
   things. If necessary, write your own constraint class.
   """
+  
+  _message_id_list = [ 'message_expression_false',
+                       'message_expression_error' ]
+
+  message_expression_false = "Expression was false"
+  message_expression_error = \
+      "Error while evaluating expression: ${error_text}"
 
   def checkConsistency(self, obj, fixit=0):
     """See Interface """
@@ -57,20 +64,21 @@ class TALESConstraint(Constraint):
     from Products.ERP5Type.Utils import createExpressionContext
     if not self._checkConstraintCondition(obj):
       return []
-    errors = []
+    error_list = []
     expression_text = self.constraint_definition['expression']
     expression = Expression(expression_text)
     econtext = createExpressionContext(obj)
     try:
       if not expression(econtext):
-        errors.append(self._generateError(obj, 'Expression was false'))
+        error_list.append(self._generateError(obj,
+                  self._getMessage('message_expression_false')))
     except (ConflictError, CompilerError):
       raise
     except Exception, e:
       LOG('ERP5Type', PROBLEM, 'TALESConstraint error on "%s" on %s' %
          (self.constraint_definition['expression'], obj), error=sys.exc_info())
-      errors.append(self._generateError(obj,
-                    'Error while evaluating expression: ${error_text}',
-                    mapping=dict(error_text=str(e))))
-    return errors
+      error_list.append(self._generateError(obj,
+                  self._getMessage('message_expression_error'),
+                  mapping=dict(error_text=str(e))))
+    return error_list
 

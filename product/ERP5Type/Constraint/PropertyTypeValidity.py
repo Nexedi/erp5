@@ -62,12 +62,28 @@ class PropertyTypeValidity(Constraint):
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object', )
 
+  _message_id_list = [ 'message_unknown_type',
+                       'message_incorrect_type',
+                       'message_incorrect_type_fix_failed',
+                       'message_incorrect_type_fixed']
+
+  message_unknown_type = "Attribute ${attribute_name} is defined with"\
+                         " an unknown type ${type_name}"
+  message_incorrect_type = "Attribute ${attribute_name}"\
+    " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
+  message_incorrect_type_fix_failed = "Attribute ${attribute_name}"\
+    " should be of type ${expected_type} but is of type ${actual_type}"\
+    " (Type cast failed with error ${type_cast_error})"
+  message_incorrect_type_fixed = "Attribute ${attribute_name}"\
+    " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
+  
+
   def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
-    errors = []
+    error_list = []
     # For each attribute name, we check type
     for prop in obj.propertyMap():
       property_id = prop['id']
@@ -88,16 +104,14 @@ class PropertyTypeValidity(Constraint):
           wrong_type = not isinstance(value, self._type_dict[property_type])
         except KeyError:
           wrong_type = 0
-          errors.append(self._generateError(obj,
-             "Attribute ${attribute_name} is defined with "
-             "an unknown type ${type_name}",
+          error_list.append(self._generateError(obj,
+            self._getMessage('message_unknown_type'),
              mapping=dict(attribute_name=property_id,
                           type_name=property_type)))
 
       if wrong_type:
         # Type is wrong, so, raise constraint error
-        error_message = "Attribute ${attribute_name} should be of type"\
-            " ${expected_type} but is of type ${actual_type}"
+        error_message = 'message_incorrect_type'
         mapping = dict(attribute_name=property_id,
                        expected_type=property_type,
                        actual_type=str(type(value)))
@@ -107,19 +121,17 @@ class PropertyTypeValidity(Constraint):
             try:
               value = self._type_dict[property_type][0](value)
             except (KeyError, ValueError), error:
-              error_message = "Attribute ${attribute_name} should be of type"\
-                " ${expected_type} but is of type ${actual_type} (Type cast"\
-                " failed with error ${type_cast_error}"
+              error_message = 'message_incorrect_type_fix_failed'
               mapping['type_cast_error'] = str(error)
 
             else:
               obj.setProperty(property_id, value)
-              error_message = "Attribute ${attribute_name} should be of type"\
-                " ${expected_type} but is of type ${actual_type} (Fixed)"
+              error_message = 'message_incorrect_type_fixed'
 
-        errors.append(self._generateError(obj, error_message, mapping))
+        error_list.append(self._generateError(obj,
+              self._getMessage(error_message), mapping))
       elif fixit:
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:
           obj.setProperty(property_id, oldvalue)
-    return errors
+    return error_list

@@ -43,6 +43,13 @@ class AttributeEquality(PropertyExistence):
     },
   """
 
+  _message_id_list = ['message_invalid_attribute_value',
+                      'message_invalid_attribute_value_fixed']
+  message_invalid_attribute_value = "Attribute ${attribute_name} "\
+       "value is ${current_value} but should be ${expected_value}"
+  message_invalid_attribute_value_fixed = "Attribute ${attribute_name} "\
+       "value is ${current_value} but should be ${expected_value} (Fixed)"
+
   def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
@@ -54,9 +61,9 @@ class AttributeEquality(PropertyExistence):
       return []
     errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
     for attribute_name, expected_value in self.constraint_definition.items():
-      error_message = None
+      message_id = None
       mapping = dict()
-      # If property does not exist, error will be raise by 
+      # If property does not exist, error will be raised by 
       # PropertyExistence Constraint.
       if obj.hasProperty(attribute_name):
         identical = 1
@@ -73,18 +80,16 @@ class AttributeEquality(PropertyExistence):
           # Other type
           identical = (expected_value == obj.getProperty(attribute_name))
         if not identical:
-          # Generate error_message
-          error_message = "Attribute ${attribute_name} value is "\
-                "${current_value} but should be ${expected_value}"
+          message_id = 'message_invalid_attribute_value'
           mapping(attribute_name=attribute_name,
                   attribute_value=obj.getProperty(attribute_name),
                   expected_value=expected_value)
       # Generate error
-      if error_message is not None:
+      if message_id is not None:
         if fixit:
           obj._setProperty(attribute_name, expected_value)
-          error_message = "Attribute ${attribute_name} value is "\
-            "${current_value} but should be ${expected_value} (Fixed)" 
-        errors.append(self._generateError(obj, error_message, mapping))
+          message_id = 'message_invalid_attribute_value_fixed'
+        errors.append(self._generateError(obj,
+                        self._getMessage(message_id), mapping))
     return errors
 

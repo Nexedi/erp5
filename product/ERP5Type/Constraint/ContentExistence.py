@@ -40,6 +40,13 @@ class ContentExistence(Constraint):
     },
   """
 
+  _message_id_list = [ 'message_no_subobject',
+                       'message_no_subobject_portal_type' ]
+
+  message_no_subobject = "The document does not contain any subobject"
+  message_no_subobject_portal_type = "The document does not contain any"\
+                   " subobject of portal portal type ${portal_type}"
+
   def checkConsistency(self, object, fixit=0):
     """
       This is the check method, we return a list of string,
@@ -48,22 +55,23 @@ class ContentExistence(Constraint):
     """
     from Products.ERP5Type.Message import Message
     obj = object
-    errors = []
+    error_list = []
     if self._checkConstraintCondition(object):
       # Retrieve configuration values from PropertySheet (_constraints)
       portal_type = self.constraint_definition.get('portal_type', ())
       if not len(obj.contentValues(portal_type=portal_type)):
         # Generate error message
         mapping = {}
-        error_message = "The document does not contain any subobject"
+        message_id = 'message_no_subobject'
         if portal_type is not ():
-          error_message += " of portal type ${portal_type}"
+          message_id = 'message_no_subobject_portal_type'
           # XXX maybe this could be factored out
           if isinstance(portal_type, basestring):
             portal_type = (portal_type, )
           mapping['portal_type'] = str(Message('erp5_ui', ' or ')).join(
               [str(Message('erp5_ui', pt)) for pt in portal_type])
         # Add error
-        errors.append(self._generateError(obj, error_message, mapping))
-    return errors
+        error_list.append(self._generateError(obj,
+                            self._getMessage(message_id), mapping))
+    return error_list
 

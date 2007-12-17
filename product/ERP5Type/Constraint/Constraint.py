@@ -38,23 +38,22 @@ class Constraint:
     """
     __implements__ = (IConstraint, )
 
+    _message_id_list = []
+
     def __init__(self, id=None, description=None, type=None,
                  condition=None, **constraint_definition):
-      """
-        Remove unwanted attributes from constraint definition and keep
-        them as instance attributes
+      """Initialize a constraint.
       """
       self.id = id
       self.description = description
       self.type = type
-      self.condition = condition
-      self.constraint_definition = constraint_definition
+      self.constraint_definition = dict()
+      self.message_id_dict = dict()
+      self.edit(id, description, type, condition, **constraint_definition)
 
-    def edit(self, id=None, description=None, type=None,
-             **constraint_definition):
-      """
-        Remove unwanted attributes from constraint definition and keep
-        them as instance attributes
+    def edit(self, id=None, description=None, type=None, condition=None,
+        **constraint_definition):
+      """Edit the constraint instance.
       """
       if id is not None:
         self.id = id
@@ -62,11 +61,22 @@ class Constraint:
         self.description = description
       if type is not None:
         self.type = type
-      self.constraint_definition.update(constraint_definition)
+      self.condition = condition
+      for key, value in constraint_definition.items():
+        if key in self._message_id_list:
+          self.message_id_dict[key] = value
+        else:
+          self.constraint_definition[key] = value
 
-    def _generateError(self, obj, error_message, mapping={}):
+    def _getMessage(self, message_id):
+      """Get the message corresponding to this message_id.
       """
-        Generic method used to generate error in checkConsistency.
+      if message_id in self.message_id_dict:
+        return self.message_id_dict[message_id]
+      return getattr(self, message_id)
+      
+    def _generateError(self, obj, error_message, mapping={}):
+      """Generic method used to generate error in checkConsistency.
       """
       if error_message is not None:
         msg = ConsistencyMessage(self, obj.getRelativeUrl(),

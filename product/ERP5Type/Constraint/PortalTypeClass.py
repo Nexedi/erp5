@@ -47,6 +47,19 @@ class PortalTypeClass(Constraint):
     },
   """
 
+  _message_id_list = [ 'message_type_not_registred',
+                       'message_inconsistent_meta_type',
+                       'message_inconsistent_class' ]
+  
+  message_type_not_registred = "Type Information ${type_name} not "\
+                               "registred with the TypeTool"
+  message_inconsistent_meta_type = "Meta type is inconsistant with portal"\
+      " type definition. Portal type meta type is ${portal_type_meta_type}"\
+      " class meta type is ${class_meta_type}"
+  message_inconsistent_class = "__class__ is inconsistant with portal type"\
+      " definition. Portal Type class is ${portal_type_class},"\
+      " document class is ${document_class}"
+
   def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
@@ -54,32 +67,28 @@ class PortalTypeClass(Constraint):
     """
     if not self._checkConstraintCondition(obj):
       return []
-    errors = []
+    error_list = []
     types_tool = getToolByName(obj, 'portal_types')
     type_info = types_tool._getOb(obj.getPortalType(), None)
     if type_info is None :
-      errors.append(self._generateError(obj,
-          "Type Information ${type_name} not registred with the TypeTool",
+      error_list.append(self._generateError(obj,
+          self._getMessage('message_type_not_registred'),
           mapping=dict(type_name=obj.getPortalType())))
     elif type_info.content_meta_type != obj.meta_type :
-      errors.append(self._generateError(obj,
-          "Meta type is inconsistant with portal type definition."\
-          " Portal type meta type is ${portal_type_meta_type}"\
-          " class meta type is ${class_meta_type} ",
+      error_list.append(self._generateError(obj,
+          self._getMessage('message_inconsistent_meta_type'),
           mapping=dict(portal_type_meta_type=type_info.content_meta_type,
                        class_meta_type=obj.meta_type)))
     else :
       portal_type_class = self._getClassForPortalType(obj, type_info)
       obj_class = str(obj.__class__)
       if portal_type_class != obj_class :
-        errors.append(self._generateError(obj,
-          "__class__ is inconsistant with portal type definition."\
-          " Portal Type class is ${portal_type_class},"
-          " document class is ${document_class}",
+        error_list.append(self._generateError(obj,
+          self._getMessage('message_inconsistent_class'),
           mapping=dict(portal_type_class=portal_type_class,
                        document_class=obj_class)))
       # TODO fixit argument can be implemented here.
-    return errors
+    return error_list
 
 
   def _getClassForPortalType(self, obj, type_info):

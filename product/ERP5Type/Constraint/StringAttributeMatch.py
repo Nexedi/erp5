@@ -41,6 +41,12 @@ class StringAttributeMatch(PropertyExistence):
     },
   """
 
+  _message_id_list = PropertyExistence._message_id_list +\
+                      ['message_attribute_does_not_match']
+
+  message_attribute_does_not_match = "Attribute ${attribute_name} is "\
+     "${attribute_value} and does not match ${regular_expression}."
+
   def checkConsistency(self, object, fixit=0):
     """
     This is the check method, we return a list of string,
@@ -62,8 +68,7 @@ class StringAttributeMatch(PropertyExistence):
     
           # Generate error
           error_list.append(self._generateError(object,
-            "Attribute ${attribute_name} is ${attribute_value} and"
-            " does not match ${regular_expression}.",
+            self._getMessage('message_attribute_does_not_match'),
             mapping=dict(attribute_name=attribute_name,
                          attribute_value=repr(current_value),
                          regular_expression=repr(regular_expression))))

@@ -30,18 +30,30 @@
 from Constraint import Constraint
 
 class CategoryExistence(Constraint):
-  """
-    This method check and fix if an object respects the existence of 
-    a category.
+  """This constraint checks if an object respects the existence of 
+    a category, without acquisition.
+
     Configuration example:
     { 'id'            : 'category_existence',
       'description'   : 'Category causality must be defined',
       'type'          : 'CategoryExistence',
-      'portal_type'   : ('Person', 'Organisation')
+      'portal_type'   : ('Person', 'Organisation'),
       'causality'     : None,
       'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
+
+  _message_id_list = [ 'message_category_not_set',
+                       'message_category_not_associated_with_portal_type' ]
+  message_category_not_set = "Category existence error for base"\
+      " category ${base_category}, this category is not defined"
+  message_category_not_associated_with_portal_type = "Category existence"\
+      " error for base category ${base_category}, this"\
+      " document has no such category"
+
+  def _calculateArity(self, obj, base_category, portal_type):
+    return len(obj.getCategoryMembershipList(base_category,
+                                             portal_type=portal_type))
 
   def checkConsistency(self, obj, fixit=0):
     """
@@ -50,7 +62,8 @@ class CategoryExistence(Constraint):
     """
     if not self._checkConstraintCondition(obj):
       return []
-    errors = []
+    error_list = []
+    portal_type = self.constraint_definition.get('portal_type', ())
     # For each attribute name, we check if defined
     for base_category in self.constraint_definition.keys():
       if base_category in ('portal_type', ):
@@ -58,18 +71,36 @@ class CategoryExistence(Constraint):
       mapping = dict(base_category=base_category)
       # Check existence of base category
       if base_category not in obj.getBaseCategoryList():
-        error_message = "Category existence error for base category "\
-                  "${base_category}, this document has no such category"
-      elif len(obj.getCategoryMembershipList(base_category,
-                portal_type = self.constraint_definition\
-                                  .get('portal_type', ()))) == 0:
-        error_message = "Category existence error for base category "\
-                  "${base_category}, this category is not defined"
+        error_message = 'message_category_not_associated_with_portal_type'
+      elif self._calculateArity(obj, base_category, portal_type) == 0:
+        error_message = 'message_category_not_set'
+        if base_category == 'destination_section':
+          import pdb; pdb.set_trace()
       else:
         error_message = None
       
       # Raise error
       if error_message:
-        errors.append(self._generateError(obj, error_message, mapping))
-    return errors
+        error_list.append(self._generateError(obj,
+                  self._getMessage(error_message), mapping))
+    return error_list
+
+
+class CategoryAcquiredExistence(CategoryExistence):
+  """This constraint check an object respects the existence of a category, with
+  acquisition.
+
+    Configuration example:
+    { 'id'            : 'category_existence',
+      'description'   : 'Category causality must be defined',
+      'type'          : 'CategoryExistence',
+      'portal_type'   : ('Person', 'Organisation'),
+      'causality'     : None,
+      'condition'     : 'python: object.getPortalType() == 'Foo',
+    },
+  """
+
+  def _calculateArity(self, obj, base_category, portal_type):
+    return len(obj.getAcquiredCategoryMembershipList(base_category,
+                                             portal_type=portal_type))
 
