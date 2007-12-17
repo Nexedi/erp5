@@ -66,4 +66,9 @@ class ConsistencyMessage(ObjectMessage):
     """
     pass
 
+  def __repr__(self):
+    return "<ERP5Type.ConsistencyMessage for %s on %s (message: %s)>" % (
+        self.class_name, self.object_relative_url, self.getTranslatedMessage())
+      
+
 allow_class(ConsistencyMessage)
