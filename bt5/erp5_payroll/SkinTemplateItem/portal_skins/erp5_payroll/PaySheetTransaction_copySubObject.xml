@@ -70,7 +70,7 @@
   portal_type_list) in the paysheet\n
 \'\'\'\n
 \n
-sub_object_list = context.getSubObjectValueList(portal_type_list)\n
+sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
 sub_object_uid_list = [x.getUid() for x in sub_object_list]\n
 \n
 # copy model object\n

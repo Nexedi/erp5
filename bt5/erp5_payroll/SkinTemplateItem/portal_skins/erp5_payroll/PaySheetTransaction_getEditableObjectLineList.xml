@@ -83,7 +83,7 @@ def sortByIntIndex(a, b):\n
 \n
 model = context.getSpecialiseValue(0)\n
 portal_type_list = [\'Pay Sheet Model Line\']\n
-sub_object_list = context.getSubObjectValueList(portal_type_list)\n
+sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
 sub_object_list.sort(sortByIntIndex)\n
 model_line_list = sub_object_list\n
 \n
