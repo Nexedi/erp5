@@ -984,6 +984,30 @@ class TestPayroll(TestPayrollMixin):
     # model_d is not take into account because it have no annotation line wich
     # are not already added by other models
 
+
+    # the inheritance tree look like this :
+
+#                                model_employee
+#                           ('overtime_duration', '1')
+#                                      |
+#                                      |
+#                                      |
+#                                model_company
+#                      ('worked_time_duration', '1', '2')
+#                         /            |            \
+#                        /             |             \
+#                       /              |              \
+#            model_country           model_a          model_b
+#          ('social_insurance',       ('5',)         ('5', '6')
+#           '1', '2', '3', '4')        |
+#                  |                   |
+#                  |                   |
+#               model_d             model_c
+#            ('5', '6')        ('5', '6', '7', '8')
+
+
+
+
     self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
         set(['1', 'over_time_duration']))
     self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
