@@ -932,14 +932,14 @@ class TestPayroll(TestPayrollMixin):
 
 
     # same test with a multi model inheritance
-    model_a = self.paysheet_model_module.newContent(id='model_a', title='model_a',
-        portal_type='Pay Sheet Model')
-    model_b = self.paysheet_model_module.newContent(id='model_b', title='model_b',
-        portal_type='Pay Sheet Model')
-    model_c = self.paysheet_model_module.newContent(id='model_c', title='model_c', 
-        portal_type='Pay Sheet Model')
-    model_d = self.paysheet_model_module.newContent(id='model_d', title='model_d', 
-        portal_type='Pay Sheet Model')
+    model_a = self.paysheet_model_module.newContent(id='model_a', 
+        title='model_a', portal_type='Pay Sheet Model')
+    model_b = self.paysheet_model_module.newContent(id='model_b', 
+        title='model_b', portal_type='Pay Sheet Model')
+    model_c = self.paysheet_model_module.newContent(id='model_c', 
+        title='model_c', portal_type='Pay Sheet Model')
+    model_d = self.paysheet_model_module.newContent(id='model_d', 
+        title='model_d', portal_type='Pay Sheet Model')
 
     # check with more values on each model
     # a :
