@@ -415,4 +415,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       periodicity_start_date = self.getPeriodicityStartDate()
       if alarm_date < periodicity_start_date:
         alarm_date = periodicity_start_date
+      # convert the date to the user provided timezone
+      alarm_zone = periodicity_start_date.timezone()
+      alarm_date = alarm_date.toZone(alarm_zone)
     return alarm_date

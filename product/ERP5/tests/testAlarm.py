@@ -58,7 +58,7 @@ class TestAlarm(ERP5TypeTestCase):
   quantity = 10
   base_price = 0.7832
   # year/month/day hour:minute:second
-  date_format = '%i/%i/%i %i:%i:%d UTC'
+  date_format = '%i/%i/%i %i:%i:%d GMT+0100'
 
   def getTitle(self):
     return "Alarm"
