@@ -43,6 +43,7 @@ from Products.ERP5.Document.Url import no_crawl_protocol_list, no_host_protocol_
 from zLOG import LOG
 from DateTime import DateTime
 from Acquisition import aq_base
+from zExceptions import BadRequest
 
 # Install openers
 import ContributionOpener
@@ -299,18 +300,29 @@ class ContributionTool(BaseTool):
     # with PUT_factory - we provide the mime_type as
     # parameter
     # LOG('new content', 0, "%s -- %s" % (file_name, mime_type))
+
+    try:
+      self._checkId(file_name)
+    except BadRequest:
+      extension = ''
+      if '.' in file_name:
+        extension = '.%s' % file_name.split('.')[-1]
+      file_name = '%s%s' % (self.generateNewId(), extension)
+
     ob = self.PUT_factory(file_name, mime_type, None)
 
     # Raise an error if we could not guess the portal type
     if ob is None:
       raise ValueError, "Could not determine the document type"
 
+    object_id = ob.getId()
+
     # Prevent any reindexing operations
     ob.isIndexable = 0
 
     # Then put the file inside ourselves for a short while
-    BaseTool._setObject(self, file_name, ob)
-    document = BaseTool._getOb(self, file_name)
+    BaseTool._setObject(self, object_id, ob)
+    document = BaseTool._getOb(self, object_id)
 
     try:
       # Then edit the document contents (so that upload can happen)
@@ -319,15 +331,15 @@ class ContributionTool(BaseTool):
         document.fromURL(url)
     finally:
       # Remove the object from ourselves
-      BaseTool._delObject(self, file_name)
+      BaseTool._delObject(self, object_id)
 
     # Move the document to where it belongs
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(file_name, ob, user_login=user_login, id=id,
+    document = self._setObject(object_id, ob, user_login=user_login, id=id,
                                container=container, discover_metadata=discover_metadata,
                                )
-    document = self._getOb(file_name) # Call _getOb to purge cache
+    document = self._getOb(object_id) # Call _getOb to purge cache
 
     # Notify workflows
     #document.notifyWorkflowCreated()
