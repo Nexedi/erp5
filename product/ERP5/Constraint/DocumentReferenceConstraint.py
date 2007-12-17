@@ -27,9 +27,9 @@
 ##############################################################################
 
 from Products.ERP5Type.Constraint import Constraint
-from Products.ERP5Type.Message import Message
-N_ = lambda msg, **kw: Message('erp5_ui', msg, **kw)
+N_ = lambda msg, **kw: msg # just to extract messages
 _MARKER = []
+
 
 class DocumentReferenceConstraint(Constraint):
   """
@@ -41,28 +41,57 @@ class DocumentReferenceConstraint(Constraint):
   (although we could, e.g. by changing version number)
   """
 
+  _message_id_list = [ 'message_property_not_defined',
+                       'message_another_document_exists',
+                       'message_multiple_documents_exists' ]
+  
+  message_property_not_defined = N_(
+      'Property ${property_id} was not defined')
+  message_another_document_exists = N_(
+      'Another document ${document_reference} - '
+      '${document_language} - ${document_version} already exists')
+  message_multiple_documents_exists = N_(
+      'Multiple (${document_count}) documents ${document_reference} - '
+      '${document_language} - ${document_version} already exists')
+
   def checkConsistency(self, object, fixit=0):
     """
       Implement here the consistency checker
     """
-    # XXX we probably could check reference syntax here, based on regexp in preferences?
+    # XXX we probably could check reference syntax here, based on regexp in
+    # preferences?
     error_list = []
 
-    for req in ('reference', 'language', 'version'):
-      if object.getProperty(req) in (None, ''):
-        message = '%s is not defined' % req # XXX-JPS Is translation required here with a Message class ?
-        error_list.append(self._generateError(object, N_(message)))
+    for property_id in ('reference', 'language', 'version'):
+      if object.getProperty(property_id) in (None, ''):
+        error_list.append(self._generateError(object,
+             self._getMessage('message_property_not_defined'),
+             mapping=dict(property_id=property_id)))
     if error_list:
       return error_list
-    res = object.portal_catalog(reference=object.getReference(), language=object.getLanguage(),
-                                version=object.getVersion(), portal_type=object.getPortalDocumentTypeList())
+
+    # XXX isn't it better to use unrestrictedSearchResults ?
+    #   potential problem is that we would get deleted documents aswell
+    res = object.portal_catalog(reference=object.getReference(),
+                                language=object.getLanguage(),
+                                version=object.getVersion(),
+                                portal_type=object.getPortalDocumentTypeList())
     res = list(res)
     if len(res) == 2: # this object and another object
-      message = 'E: another object %s - %s - %s exists' % (object.getReference(),
-                                     object.getLanguage(), object.getVersion())
-      error_list.append(self._generateError(object, N_(message)))
-    if len(res) > 2: # this is very serious since there are many objects with the same reference
-      raise Exception('Fatal error: multiple objects %s - %s - %s exist' % (object.getReference(),
-                                                      object.getLanguage(), object.getVersion()))
-      #error_list.append(self._generateError(object, N_(s)))
+      error_list.append(self._generateError(object,
+                self._getMessage('message_another_document_exists'),
+                mapping=dict(document_reference=object.getReference(),
+                             document_language=object.getLanguage(),
+                             document_version=object.getVersion())))
+
+    if len(res) > 2:
+      # this is very serious since there are many objects with the same
+      # reference
+      error_list.append(self._generateError(object,
+                self._getMessage('message_multiple_documents_exists'),
+                mapping=dict(document_count=len(res),
+                             document_reference=object.getReference(),
+                             document_language=object.getLanguage(),
+                             document_version=object.getVersion())))
     return error_list
+
