@@ -522,7 +522,8 @@ class ZCatalog(Folder, Persistent, Implicit):
                   after_tag=final_activity_tag,
                   priority=5).setHotReindexingState(HOT_REINDEXING_DOUBLE_INDEXING_STATE,
                       source_sql_catalog_id=source_sql_catalog_id,
-                      destination_sql_catalog_id=destination_sql_catalog_id)
+                      destination_sql_catalog_id=destination_sql_catalog_id,
+                      archive_path=archive_path)
     # Once in double-indexing mode, planned reindex can be replayed.
     self.activate(passive_commit=1,
                   after_method_id='setHotReindexingState',
