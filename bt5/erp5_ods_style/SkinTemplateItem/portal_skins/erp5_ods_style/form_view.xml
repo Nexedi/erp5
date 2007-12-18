@@ -67,7 +67,8 @@ dQEAAAAA</string> </value>
       <tal:block tal:condition=\'field_list\'>\n
         <tal:block tal:define="field python:field_list[0]">\n
           <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
-            <tal:block tal:define="column_list python: field.get_value(\'columns\'); global column_len python: len(column_list)" />\n
+            <tal:block tal:define="column_list python: field.get_value(\'columns\');\n
+                                   global column_len python: len(column_list)" />\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n
@@ -80,29 +81,45 @@ dQEAAAAA</string> </value>
             table:default-cell-style-name=\'report-column-title\'/>\n
 \n
       <tal:block metal:define-macro="form_layout">\n
-        <tal:block tal:define="field_errors python: request.get(\'field_errors,{}\'); dummy python: request.set(\'here\', here)">\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here)">\n
           <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
             <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
               <tal:block tal:condition="python: field_list not in [None, []]">\n
                 <tal:block tal:repeat="field field_list">\n
                   <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                     <table:table-row table:style-name=\'ro2\'>\n
-                      <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
+                      \n
+                      <!-- field title -->\n
+                      <table:table-cell table:number-rows-spanned=\'1\'\n
+                                        table:style-name=\'report-column-title\'\n
+                                        table:number-columns-spanned=\'1\'\n
+                                        office:value-type=\'string\'>\n
                         <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')"></text:p>\n
                       </table:table-cell>\n
-                      <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None" tal:condition="python:field.get_value(\'title\')">\n
-                      <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-content-heading2-with-lines\' tal:attributes="table:number-columns-spanned python: column_len-1" office:value-type=\'string\' tal:define="value python: field.get_value(\'default\')">\n
+\n
+                      <!-- field value -->\n
+                      <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None"\n
+                                 tal:condition="python: field.get_value(\'title\')">\n
+                       <table:table-cell table:number-rows-spanned=\'1\'\n
+                                         table:style-name=\'report-content-heading2-with-lines\'\n
+                                         tal:attributes="table:number-columns-spanned python: column_len-1"\n
+                                         office:value-type=\'string\'\n
+                                         tal:define="value python: field.get_value(\'default\')">\n
+\n
                         <tal:block tal:condition="python: same_type(value, []) or same_type(value, ())">\n
                           <tal:block tal:repeat="item value">\n
-                            <text:p tal:condition="not:item_list" tal:content="python: str(item)"></text:p>\n
+                            <text:p tal:condition="not:item_list" tal:content="item"></text:p>\n
                             <text:p tal:condition="item_list" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"></text:p>\n
                           </tal:block>\n
                         </tal:block>\n
+                        \n
                         <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value is not None">\n
-                          <text:p tal:condition="not:item_list" tal:content="python: str(value)">\n
+                          <text:p tal:condition="not: item_list"\n
+                                  tal:content="value">\n
                           </text:p>\n
-                          <tal:block tal:condition="python:value != \'\'">\n
-                            <text:p tal:condition="item_list" tal:content="python: [i[0].replace(\'&amp;\', \'\') for i in item_list if i[1] == value][0]">\n
+                          <tal:block tal:condition="python: value != \'\'">\n
+                            <text:p tal:condition="item_list"\n
+                                    tal:content="python: [i[0].replace(\'&amp;\', \'\') for i in item_list if i[1] == value][0]">\n
                             </text:p>\n
                           </tal:block>\n
                           <tal:block tal:condition="python: value is None">\n
@@ -114,9 +131,11 @@ dQEAAAAA</string> </value>
                   </table:table-row>\n
                 </tal:block>\n
               </tal:block>\n
+\n
               <table:table-row>\n
                 <table:table-cell table:style-name=\'Default\'/>\n
               </table:table-row>\n
+\n
             </tal:block>\n
           </tal:block>\n
         </tal:block>\n
