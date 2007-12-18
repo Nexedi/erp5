@@ -59,6 +59,7 @@
 \n
     <tal:block metal:define-macro="listbox">\n
       <tal:block tal:define="listboxline_list python: listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
+               DateTime nocall: modules/DateTime/DateTime;\n
                selection_name python: listbox.get_value(\'selection_name\', REQUEST=request);\n
                editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n
                editable_fields python: dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
@@ -68,7 +69,8 @@
 \n
         <tal:block tal:condition="python: len(listboxline_list) > 1">\n
           <tal:block tal:condition="python: is_domain_tree_mode">\n
-            <tal:block tal:define="domain_list python: selection.getDomainList()" tal:condition="python: len(domain_list) > 0">\n
+            <tal:block tal:define="domain_list python: selection.getDomainList()"\n
+                       tal:condition="domain_list">\n
               <table:table-row>\n
                 <table:table-cell office:value-type=\'string\'>\n
                   <text:p tal:content="python: domain_list[-1]"/>\n
@@ -91,18 +93,13 @@
                   <tal:block tal:condition="listboxline/isTitleLine">\n
                     <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                       <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
-                        <tal:block tal:condition="python: column_property is not None">\n
-                          <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
-                            <text:p tal:content="python: column_property">\n
-                            </text:p>\n
-                          </table:table-cell>\n
-                        </tal:block>\n
-                        <tal:block tal:condition="python: column_property is None">\n
-                          <table:table-cell  table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-colwithdrawnumns-spanned=\'1\' office:value-type=\'string\'>\n
-                            <text:p tal:content="python: \'\'">\n
-                            </text:p>\n
-                          </table:table-cell>\n
-                        </tal:block>\n
+                        <table:table-cell table:number-rows-spanned=\'1\' \n
+                                          table:style-name=\'report-column-title\'\n
+                                          table:number-columns-spanned=\'1\'\n
+                                          office:value-type=\'string\'>\n
+                          <text:p tal:content="python: column_property or \'\'">\n
+                          </text:p>\n
+                        </table:table-cell>\n
                       </tal:block>\n
                     </tal:block>\n
                   </tal:block>\n
@@ -114,9 +111,13 @@
               <table:table-row>\n
                 <tal:block tal:condition="python: listboxline.isDataLine() or listboxline.isSummaryLine()">\n
                   <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                    <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]; is_list python:same_type(column_property, []) or same_type(column_property, ())">\n
+                    <tal:block tal:define="column_property python: column_item[1];\n
+                                           column_id python: column_item[0];\n
+                                           is_list python:same_type(column_property, []) or same_type(column_property, ());\n
+                                           is_float python: isinstance(column_property, (int, long, float));">\n
                       <tal:block tal:condition="python: is_list">\n
-                        <table:table-cell tal:define="field python: editable_fields.get(column_id, None)" tal:attributes="table:style-name python:isinstance(column_property, (int, long, float)) and \'report-stat2-sans-bold\' or \'report-content-heading2\'">\n
+                        <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                                          tal:attributes="table:style-name python:is_float and \'report-stat2-sans-bold\' or \'report-content-heading2\'">\n
                           <text:p tal:condition="python: field is None" tal:content="python: column_property">\n
                           </text:p>\n
                           <text:p tal:condition="python: field is not None"\n
@@ -125,13 +126,43 @@
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is not None and not is_list">\n
-                        <table:table-cell tal:define="field python: editable_fields.get(column_id, None)" tal:attributes="table:style-name python:isinstance(column_property, (int, long, float)) and \'report-stat2-sans-bold\' or \'report-content-heading2\'">\n
-                          <text:p tal:condition="python: field is None" tal:content="python: column_property">\n
-                          </text:p>\n
+                        <tal:block tal:condition="is_float">\n
+                         <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                                           tal:attributes="office:value column_property"\n
+                                           office:value-type="float"\n
+                                           table:style-name="report-stat2-sans-bold">\n
+                          <text:p tal:condition="python: field is None"\n
+                                  tal:content="python: column_property"/>\n
                           <text:p tal:condition="python: field is not None"\n
-                                tal:content="python: field.render_pdf(column_property)">\n
+                                  tal:content="python: field.render_pdf(column_property)">\n
                           </text:p>\n
-                        </table:table-cell>\n
+                         </table:table-cell>\n
+                        </tal:block>\n
+                        <tal:block tal:condition="not: is_float">\n
+                          <tal:block tal:condition="python: isinstance(column_property, DateTime)">\n
+                           <table:table-cell tal:define="field python: editable_fields.get(column_id, None);"\n
+                                             tal:attributes="office:date-value python: column_property.strftime(\'%Y-%m-%dT%H:%M:%S\')"\n
+                                             table:style-name="report-content-date"\n
+                                             office:value-type="date">\n
+\n
+                            <text:p tal:condition="python: field is None"\n
+                                    tal:content="python: column_property"/>\n
+                            <text:p tal:condition="python: field is not None"\n
+                                    tal:content="python: field.render_pdf(column_property)">\n
+                            </text:p>\n
+                           </table:table-cell>\n
+                          </tal:block>\n
+                          <tal:block tal:condition="python:not isinstance(column_property, DateTime)">\n
+                           <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                                             table:style-name="report-content-heading2">\n
+                            <text:p tal:condition="python: field is None"\n
+                                    tal:content="python: column_property"/>\n
+                            <text:p tal:condition="python: field is not None"\n
+                                    tal:content="python: field.render_pdf(column_property)">\n
+                            </text:p>\n
+                           </table:table-cell>\n
+                          </tal:block>\n
+                        </tal:block>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is None">\n
                         <table:table-cell office:value-type=\'string\' table:style-name=\'report-content-heading2\' table:number-columns-spanned=\'1\'>\n
@@ -144,17 +175,24 @@
                 </tal:block>\n
                 <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
                   <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
-                    <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
+                    <tal:block tal:define="column_property python: column_item[1];\n
+                                           column_id python: column_item[0]">\n
                       <tal:block tal:condition="python: column_property is not None">\n
-                        <table:table-cell table:style-name="report-stat2-sans-bold-with-lines"  table:number-columns-spanned=\'1\'  tal:define="field python: editable_fields.get(column_id, None)"> \n
-                          <text:p  tal:condition="python: field is None" tal:content="python: column_property">\n
+                        <!-- TODO: use a macro for field value rendering -->\n
+                        <table:table-cell table:style-name="report-stat2-sans-bold-with-lines"\n
+                                          table:number-columns-spanned=\'1\'\n
+                                          tal:define="field python: editable_fields.get(column_id, None)"> \n
+                          <text:p tal:condition="python: field is None"\n
+                                  tal:content="python: column_property">\n
                           </text:p>\n
-                          <text:p  tal:condition="python: field is not None" tal:content="python:field.render_pdf(column_property)">\n
+                          <text:p tal:condition="python: field is not None"\n
+                                  tal:content="python:field.render_pdf(column_property)">\n
                           </text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
                       <tal:block tal:condition="python: column_property is None">\n
-                        <table:table-cell table:style-name="report-stat2-sans-bold-with-lines"  table:number-columns-spanned=\'1\' >\n
+                        <table:table-cell table:style-name="report-stat2-sans-bold-with-lines"\n
+                                          table:number-columns-spanned=\'1\' >\n
                         </table:table-cell>\n
                       </tal:block>\n
                     </tal:block>\n
