@@ -2166,7 +2166,8 @@ class TestAccounting(ERP5TypeTestCase):
         'stop_action')
     # setting a dummy relationship is not enough, resource must be a
     # currency
-    transaction.setResource(transaction.getDestinationSection())
+    transaction.setResourceValue(
+         self.portal.product_module.newContent(portal_type='Product'))
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
         transaction,
@@ -2568,11 +2569,13 @@ class TestAccounting(ERP5TypeTestCase):
     category = self.vendor.getGroupValue()
     self.assertNotEquals(category, None)
     transaction = self.createAccountingTransaction(
-                                    source_section_value=category)
+                                    source_section_value=category,
+                                    check_consistency=0)
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transaction, 'stop_action')
     transaction = self.createAccountingTransaction(
-                                    destination_section_value=category)
+                                    destination_section_value=category,
+                                    check_consistency=0)
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transaction, 'stop_action')
 
