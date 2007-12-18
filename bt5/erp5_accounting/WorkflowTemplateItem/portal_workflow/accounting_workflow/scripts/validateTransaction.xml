@@ -76,95 +76,90 @@ from Products.ERP5Type.Message import Message\n
 transaction = state_change[\'object\']\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-# do we have to check transaction is in openned periods ? \n
+# XXX manually default start date to stop date\n
+if not transaction.getStartDate() and transaction.getStopDate():\n
+  transaction.setStartDate(transaction.getStopDate())\n
+\n
+# Check constraints\n
+transaction.Base_checkConsistency()\n
+\n
+# Check that the transaction is in an open accounting period when we validate\n
+# it.\n
 skip_period_validation = state_change[\'kwargs\'].get(\n
                               \'skip_period_validation\', 0)\n
 transition = state_change[\'transition\']\n
 if transition.id in (\'plan_action\', \'confirm_action\') :\n
   skip_period_validation = 1\n
 \n
-# Get sections and a currency.\n
 source_section = transaction.getSourceSectionValue(\n
                        portal_type=[\'Organisation\', \'Person\'])\n
-if source_section is None:\n
-  raise ValidationFailed(N_(\'Source Section is not Defined.\'))\n
-\n
 destination_section = transaction.getDestinationSectionValue(\n
-                portal_type=[\'Organisation\', \'Person\'])\n
-# if it\'s not an invoice, then we can validate without destination\n
-if destination_section is None and \\\n
-    transaction.getPortalType() in transaction.getPortalInvoiceTypeList():\n
-  raise ValidationFailed(N_(\'Destination Section is not Defined.\'))\n
+                       portal_type=[\'Organisation\', \'Person\'])\n
 \n
-currency = transaction.getResource(portal_type = \'Currency\')\n
-if not currency :\n
-  raise ValidationFailed(N_(\'Currency is not Defined.\'))\n
+if source_section is None and destination_section is None:\n
+  raise ValidationFailed(N_(\'At Least One Section Must be Defined\'))\n
 \n
-# XXX manually default start date to stop date\n
-if not transaction.getStartDate() and transaction.getStopDate():\n
-  transaction.setStartDate(transaction.getStopDate())\n
+# check that no categories are used for section\n
+if transaction.getSourceSectionValue(portal_type=\'Category\') is not None or\\\n
+    transaction.getDestinationSectionValue(portal_type=\'Category\') is not None:\n
+  raise ValidationFailed(N_(\'Using Category for Section is Invalid\'))\n
 \n
-      \n
 transaction_line_list = transaction.getMovementList(\n
         portal_type=transaction.getPortalAccountingMovementTypeList())\n
-if not transaction.getStartDate() :\n
-  raise ValidationFailed(N_(\'Date is not Defined\'))\n
-else:\n
-  if not skip_period_validation :\n
-    # check the date is in an opened period\n
-    if source_section is not None:\n
-      # if we don\'t have any accounts on this side, we don\'t enforce date\n
-      # checks\n
-      valid_date = False\n
-      no_accounts = True\n
-      for line in transaction_line_list:\n
-        if line.getSource():\n
-          no_accounts = False\n
-      if no_accounts:\n
+\n
+if not skip_period_validation :\n
+  # check the date is in an opened period\n
+  if source_section is not None:\n
+    # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
+    valid_date = False\n
+    no_accounts = True\n
+    for line in transaction_line_list:\n
+      if line.getSource():\n
+        no_accounts = False\n
+    if no_accounts:\n
+      valid_date = True\n
+    transaction_date = transaction.getStartDate().earliestTime()\n
+    openned_accounting_period_list = source_section.searchFolder(\n
+                               portal_type="Accounting Period",\n
+                               # planned is for b/w compatibility\n
+                               simulation_state=(\'planned\', \'started\'))\n
+    if not len(source_section.contentValues(\n
+             filter=dict(portal_type="Accounting Period"))):\n
+      # if the entity doesn\'t have any accounting period, we can\n
+      # consider that they do not want to use accounting periods or\n
+      # we do not account from their side.\n
+      valid_date = True\n
+    for apd in openned_accounting_period_list:\n
+      apd = apd.getObject()\n
+      if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
-      transaction_date = transaction.getStartDate().earliestTime()\n
-      openned_accounting_period_list = source_section.searchFolder(\n
-                                 portal_type="Accounting Period",\n
-                                 # planned is for b/w compatibility\n
-                                 simulation_state=(\'planned\', \'started\'))\n
-      if not len(source_section.contentValues(\n
-               filter=dict(portal_type="Accounting Period"))):\n
-        # if the entity doesn\'t have any accounting period, we can\n
-        # consider that they do not want to use accounting periods or\n
-        # we do not account from their side.\n
+    if not valid_date:\n
+      raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
+                                "for source section"))\n
+  # do the same for destination section \n
+  if destination_section is not None:\n
+    # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
+    valid_date = False\n
+    no_accounts = True\n
+    for line in transaction_line_list:\n
+      if line.getDestination():\n
+        no_accounts = False\n
+    if no_accounts:\n
+      valid_date = True\n
+    transaction_date = transaction.getStopDate().earliestTime()\n
+    openned_accounting_period_list = destination_section.searchFolder(\n
+                               portal_type = "Accounting Period",\n
+                               simulation_state=(\'planned\', \'started\'))\n
+    if not len(destination_section.contentValues(\n
+             filter=dict(portal_type="Accounting Period"))):\n
+      valid_date = True\n
+    for apd in openned_accounting_period_list:\n
+      apd = apd.getObject()\n
+      if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
-      for apd in openned_accounting_period_list:\n
-        apd = apd.getObject()\n
-        if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
-          valid_date = True\n
-      if not valid_date:\n
-        raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
-                                  "for source section"))\n
-    # do the same for destination section \n
-    if destination_section is not None:\n
-      # if we don\'t have any accounts on this side, we don\'t enforce date\n
-      # checks\n
-      valid_date = False\n
-      no_accounts = True\n
-      for line in transaction_line_list:\n
-        if line.getDestination():\n
-          no_accounts = False\n
-      if no_accounts:\n
-        valid_date = True\n
-      transaction_date = transaction.getStopDate().earliestTime()\n
-      openned_accounting_period_list = destination_section.searchFolder(\n
-                                 portal_type = "Accounting Period",\n
-                                 simulation_state=(\'planned\', \'started\'))\n
-      if not len(destination_section.contentValues(\n
-               filter=dict(portal_type="Accounting Period"))):\n
-        valid_date = True\n
-      for apd in openned_accounting_period_list:\n
-        apd = apd.getObject()\n
-        if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
-          valid_date = True\n
-      if not valid_date:\n
-        raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
-                                  "for destination section"))\n
+    if not valid_date:\n
+      raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
+                                "for destination section"))\n
 
 
 ]]></string> </value>
@@ -239,9 +234,8 @@ else:\n
                             <string>skip_period_validation</string>
                             <string>transition</string>
                             <string>source_section</string>
-                            <string>None</string>
                             <string>destination_section</string>
-                            <string>currency</string>
+                            <string>None</string>
                             <string>transaction_line_list</string>
                             <string>False</string>
                             <string>valid_date</string>
