@@ -57,6 +57,7 @@ class AccountingTransactionLine(DeliveryLine):
                     , PropertySheet.Task
                     , PropertySheet.Arrow
                     , PropertySheet.Price
+                    , PropertySheet.AccountingTransactionLine
                     )
 
   # Declarative interfaces

@@ -63,7 +63,39 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Amount
                       , PropertySheet.Reference
                       , PropertySheet.PaymentCondition
+                      , PropertySheet.AccountingTransaction
                       )
+    
+    def hasSourceSectionAccounting(self):
+      """Return true if we should take into account accounting for source
+      section.
+      """
+      section = self.getSourceSectionValue()
+      if section is not None:
+        preference_tool = getToolByName(self, 'portal_preferences')
+        preferred_section_category = preference_tool.\
+                getPreferredAccountingTransactionSectionCategory()
+        if preferred_section_category:
+          if section.getPortalType() == 'Person':
+            return 0
+          return section.isMemberOf(preferred_section_category)
+      return 0
+
+    def hasDestinationSectionAccounting(self):
+      """Return true if we should take into account accounting for destination
+      section.
+      """
+      section = self.getDestinationSectionValue()
+      if section is not None:
+        preference_tool = getToolByName(self, 'portal_preferences')
+        preferred_section_category = preference_tool.\
+                getPreferredAccountingTransactionSectionCategory()
+        if preferred_section_category:
+          if section.getPortalType() == 'Person':
+            return 0
+          return section.isMemberOf(preferred_section_category)
+      return 0
+    
 
 # Compatibility
 # It may be necessary to create an alias after removing the Transaction class
