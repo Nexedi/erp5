@@ -16,6 +16,7 @@ from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, superGetAttr, SkinDataCleanup, SkinnableObjectManager
 from thread import get_ident
 from zLOG import LOG
+from Acquisition import aq_base
 
 """
   This patch modifies the way CMF Portal Skins gets a skin by its name from
@@ -69,7 +70,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
         return resolve[name]
       except KeyError:
         if not ignore.has_key(name):
-          portal_skins = self.portal_skins.aq_base
+          portal_skins = aq_base(self.portal_skins)
           try:
             skin_selection_mapping = portal_skins._v_skin_location_list
           except AttributeError:
