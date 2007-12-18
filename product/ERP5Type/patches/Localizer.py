@@ -48,29 +48,34 @@ def Localizer_translate(self, domain, msgid, lang=None, mapping=None, *args, **k
 
     # Get the Localizer catalog id
     catalog_id = message_catalog_aliases.get(domain, domain)
-    if catalog_id not in self.objectIds():
+    catalog_obj = self._getOb(catalog_id, None)
+    if catalog_obj is None:
       # No catalog found: use the default one
-      catalog_id = 'default'
-    catalog_obj = self[catalog_id]
+      catalog_obj = self['default']
 
     # Call the Message Catalog gettext method
     params = {}
-    for key in ('lang', 'add', 'default'):
-      if key in kw:
+    for key in ('add', 'default'):
+      try:
         params[key] = kw[key]
+      except KeyError:
+        pass
     if lang is not None:
       params['lang'] = lang
-    if 'target_language' in kw:
-      params['lang'] = kw['target_language']
+    else:
+      try:
+        params['lang'] = kw['target_language']
+      except KeyError:
+        pass
     translated_str = catalog_obj.gettext(msgid, **params)
 
     # Map the translated string with given parameters
-    if type(mapping) is type({}) and len(mapping):
+    if isinstance(mapping, dict) and mapping:
       unicode_mapping = {}
       if not isinstance(translated_str, unicode):
         translated_str = translated_str.decode('utf8')
       # make sure all values in the mapping are unicode
-      for k, v in mapping.items():
+      for k, v in mapping.iteritems():
         if isinstance(v, str):
           v = v.decode('utf8')
         elif isinstance(v, Message):
