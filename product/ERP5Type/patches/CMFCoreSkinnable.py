@@ -69,7 +69,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
       try:
         return resolve[name]
       except KeyError:
-        if not ignore.has_key(name) and name != 'portal_skins':
+        if not ignore.has_key(name):
           try:
             portal_skins = aq_base(self.portal_skins)
           except AttributeError:
@@ -131,7 +131,7 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname):
       if sf is not None:
         skinname = sf.getDefaultSkin()
   tid = get_ident()
-  SKINDATA[tid] = (skinname, {}, {})
+  SKINDATA[tid] = (skinname, {'portal_skins': None}, {})
   REQUEST = getattr(self, 'REQUEST', None)
   if REQUEST is not None:
     REQUEST._hold(SkinDataCleanup(tid))
