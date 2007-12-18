@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -51,14 +54,14 @@
   <tal:block tal:define="title here/Title">\n
     <tal:block metal:use-macro="here/main_template/macros/master">\n
       <tal:block metal:fill-slot="main">\n
-        <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+        <tal:block tal:condition="portal/portal_membership/isAnonymousUser">\n
           <tal:block tal:define="dummy python: request.RESPONSE.redirect(\'%s/login_form\' % url)" />\n
         </tal:block>\n
-        <div tal:condition="python: not here.portal_membership.isAnonymousUser()"\n
+        <div tal:condition="python: not portal.portal_membership.isAnonymousUser()"\n
              class="index_html">\n
           <h2 i18n:translate="" i18n:domain="ui">Welcome to ERP5</h2>\n
           <table border="1">\n
-            <tr tal:define="module_list here/ERP5Site_getModuleItemList;\n
+            <tr tal:define="module_list portal/ERP5Site_getModuleItemList;\n
                 module_len python: len(module_list);\n
                 col_size python: 12;\n
                 col_len python: module_len % col_size and (module_len + col_size) / col_size or (module_len) / col_size">\n

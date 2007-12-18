@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -57,7 +60,7 @@
   <tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
              tal:define="dummy here/setupCurrentSkin;" />\n
   <tal:block tal:define="response request/RESPONSE;\n
-             mtool here/portal_membership;\n
+             mtool portal/portal_membership;\n
              isAnon mtool/isAnonymousUser|nothing;">\n
     <tal:block tal:condition="isAnon">\n
       <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n

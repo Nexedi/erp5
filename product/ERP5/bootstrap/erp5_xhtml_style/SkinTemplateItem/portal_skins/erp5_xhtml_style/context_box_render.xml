@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -65,7 +68,7 @@
                   tal:content="jump/name" i18n:translate="" i18n:domain="ui" />\n
         </tal:block>\n
         <tal:block tal:condition="preferred_html_style_developper_mode">\n
-          <tal:block tal:condition="python: here.getPortalTypeName() in here.portal_types.objectIds() and here.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
+          <tal:block tal:condition="python: here.getPortalTypeName() in portal.portal_types.objectIds() and portal.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Developper Mode --</option>\n
             <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types.getTypeInfo(here).absolute_url(),)"\n
                     i18n:translate="" i18n:domain="ui">\n
@@ -73,9 +76,9 @@
                                            i18n:name="portal_type" i18n:translate="" i18n:domain="ui" />\'\n
             </option>\n
           </tal:block>\n
-          <tal:block tal:condition="here/portal_workflow/Base_getSourceVisibility">\n
+          <tal:block tal:condition="portal/portal_workflow/Base_getSourceVisibility">\n
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
-            <tal:block tal:repeat="workflow python: here.portal_workflow.getWorkflowsFor(here)">\n
+            <tal:block tal:repeat="workflow python: portal.portal_workflow.getWorkflowsFor(here)">\n
               <option tal:attributes="value python: \'%s/manage_properties\' % (workflow.absolute_url(), )" tal:content="workflow/title" />\n
             </tal:block>\n
           </tal:block>\n
@@ -245,7 +248,7 @@
         <tal:block tal:condition="list_mode">\n
           <span class="separator"></span>\n
           <a tal:condition="search_actions" class="find" title="Find"\n
-             tal:attributes="href python: here.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
+             tal:attributes="href python: portal.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
              i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Find</span>\n
@@ -262,7 +265,7 @@
             <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
           </button>\n
           <a tal:condition="sort_actions" class="sort" title="Sort"\n
-             tal:attributes="href python: here.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
+             tal:attributes="href python: portal.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
              i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>\n
@@ -271,13 +274,13 @@
         <span tal:condition="exchange_actions | report_actions"\n
               class="separator"></span>\n
         <a tal:condition="exchange_actions" class="import_export" title="Import / Export"\n
-           tal:attributes="href python: here.ERP5Site_renderCustomLink(exchange_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_exchange\')"\n
+           tal:attributes="href python: portal.ERP5Site_renderCustomLink(exchange_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_exchange\')"\n
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>\n
         </a>\n
         <a tal:condition="report_actions" class="report" title="Report"\n
-           tal:attributes="href python: here.ERP5Site_renderCustomLink(report_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_report\')"\n
+           tal:attributes="href python: portal.ERP5Site_renderCustomLink(report_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_report\')"\n
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Report</span>\n
@@ -297,7 +300,7 @@
           <tal:block tal:condition="ui_actions">\n
             <span class="separator"></span>\n
             <a class="configure" title="Configure"\n
-               tal:attributes="href python: here.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
+               tal:attributes="href python: portal.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
                i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">Configure</span>\n
@@ -309,7 +312,7 @@
       <span class="second">\n
         <a tal:condition="preferred_html_style_contextual_help"\n
            class="jump_help" title="Help"\n
-           tal:attributes="href python: here.ERP5Site_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))"\n
+           tal:attributes="href python: portal.ERP5Site_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))"\n
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Help</span>\n
@@ -322,7 +325,7 @@
         </a>\n
         <a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
            title="Activity Pending"\n
-           tal:attributes="href python: here.portal_membership.checkPermission(\'View management screens\', here.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],here.portal_activities.getUrl(), ) or \'#\'"\n
+           tal:attributes="href python: portal.portal_membership.checkPermission(\'View management screens\', portal.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],portal.portal_activities.getUrl(), ) or \'#\'"\n
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
