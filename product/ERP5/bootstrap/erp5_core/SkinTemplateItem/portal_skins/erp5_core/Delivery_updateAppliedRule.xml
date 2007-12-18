@@ -96,7 +96,7 @@ if applied_rule is marker:\n
 elif applied_rule is None:\n
   pass  \n
 elif applied_rule:\n
-  delivery.updateAppliedRule(rule_id=applied_rule, **kw)\n
+  delivery.updateAppliedRule(rule_reference=applied_rule, **kw)\n
 </string> </value>
         </item>
         <item>
