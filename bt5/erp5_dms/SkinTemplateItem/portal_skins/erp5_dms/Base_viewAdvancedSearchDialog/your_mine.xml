@@ -3,24 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>CheckBoxField</string>
-        </tuple>
-        <none/>
+        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>newest</string> </value>
+            <value> <string>your_mine</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -169,7 +160,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Only newest versions</string> </value>
+                    <value> <string>Only my documents</string> </value>
                 </item>
               </dictionary>
             </value>

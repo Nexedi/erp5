@@ -82,10 +82,10 @@ if hasattr(context, \'asText\'):\n
 argument_names = (\'advanced_search_text\', \n
                   \'title\',\n
                   \'reference\',\n
-                  \'SearchableText\', \n
-                  \'SearchableText_any\',\n
-                  \'SearchableText_all\', \n
-                  \'SearchableText_phrase\',)\n
+                  \'searchabletext\', \n
+                  \'searchabletext_any\',\n
+                  \'searchabletext_all\', \n
+                  \'searchabletext_phrase\',)\n
 if selection is not None:\n
   params = selection.getParams()\n
 else:\n
@@ -101,7 +101,7 @@ if not search_string:\n
   return document_text[:300]\n
 \n
 search_argument_list = context.Base_parseSearchString(search_string)\n
-search_words = search_argument_list.get(\'SearchableText\')\n
+search_words = search_argument_list.get(\'searchabletext\')\n
 \n
 if search_words in (\'\', None,):\n
   # the searched words are empty (e.g. because we used only parameters \n

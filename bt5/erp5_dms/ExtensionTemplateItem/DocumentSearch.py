@@ -41,7 +41,7 @@ Multiple arguments:
     - arg:all translates into empty tuple, which implies all available values
     - state (simulation_state), type (portal_type)
 
-Everything else is treated as SearchableText
+Everything else is treated as searchabletext
 """
 
 # XXX score:
@@ -92,12 +92,12 @@ def parsestates(s):
     return s.replace('"','').replace("'","")
 
 def analyze(params):
-    params['SearchableText']=''
+    params['searchabletext']=''
     params['simulation_state']=simulation_states
     def cutter(s):
         ss=s.split(':')
         if len(ss)==1:
-            params['SearchableText']+=ss[0]
+            params['searchabletext']+=ss[0]
         if len(ss)==2:
             try:
                 ps=paramsmap.get(ss[0])(ss[1])
@@ -116,7 +116,7 @@ def parseSearchString(searchstring):
     l=r.split(searchstring)
     print l
     map(analyze(params),l)
-    params['SearchableText']=params['SearchableText'].strip()
+    params['searchabletext']=params['searchabletext'].strip()
     return params
 
 if __name__=='__main__':

@@ -68,7 +68,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-The main search script. Receives one big string - a SearchableText, in\n
+The main search script. Receives one big string - a searchabletext, in\n
 the search syntax, parses the string using external method Base_parseSearchString,\n
 then does the following:\n
 - processes arguments for searching by any category\n
@@ -80,17 +80,17 @@ then does the following:\n
 """\n
 \n
 # if no args we return empty list\n
-# we use only SearchableText - all params are passed through this\n
+# we use only searchabletext - all params are passed through this\n
 \n
-# SearchableText can be supplied in request or stored in selection\n
-sstr = context.REQUEST.get(\'SearchableText\')\n
+# searchabletext can be supplied in request or stored in selection\n
+sstr = context.REQUEST.get(\'searchabletext\')\n
 \n
 if sstr:\n
-  context.portal_selections.setSelectionParamsFor(\'search_params_selection\', dict(SearchableText=sstr))\n
+  context.portal_selections.setSelectionParamsFor(\'search_params_selection\', dict(searchabletext=sstr))\n
 else:\n
   params = context.portal_selections.getSelectionParamsFor(\'search_params_selection\')\n
   if params:\n
-    sstr = params.get(\'SearchableText\')\n
+    sstr = params.get(\'searchabletext\')\n
 \n
 if not sstr: return []\n
 \n
@@ -116,13 +116,13 @@ if not args.has_key(\'portal_type\') or args[\'portal_type\'] == ():\n
 #  args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=modemap[mode])\n
 \n
 # we always do boolean because we want these options in search dialog\n
-args[\'SearchableText\'] = dict(query=args[\'SearchableText\'], search_mode=\'in_boolean_mode\')\n
+args[\'searchabletext\'] = dict(query=args[\'searchabletext\'], search_mode=\'in_boolean_mode\')\n
 \n
 # a hack because SQLCatalog wants table.key now \n
 # dunno if it is a bug or a feature\n
-if args.has_key(\'SearchableText\'):\n
-  args[\'full_text.SearchableText\'] = args[\'SearchableText\']\n
-  args.pop(\'SearchableText\')\n
+if args.has_key(\'searchabletext\'):\n
+  args[\'full_text.SearchableText\'] = args[\'searchabletext\']\n
+  args.pop(\'searchabletext\')\n
 \n
 cf = args.get(\'creation_from\')\n
 ct = args.get(\'creation_to\')\n

@@ -1,3 +1,6 @@
+2007-12-18 Yusei
+* Fixed wrong field names around search dialog.
+
 2007-12-11 Yusei
 * Fixed dependencies. erp5_dms depends on erp5_crm. Because Document Ingestion Message is based on Event portal type.
 

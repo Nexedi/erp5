@@ -95,7 +95,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>SearchableText</string>
+                        <string>your_searchabletext</string>
                       </list>
                     </value>
                 </item>

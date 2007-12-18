@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
-        </tuple>
-        <none/>
+        <global name="StringField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -20,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>version</string> </value>
+            <value> <string>your_version</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -94,13 +91,13 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>SearchableText_any</string>
-                        <string>SearchableText_all</string>
-                        <string>SearchableText_phrase</string>
-                        <string>SearchableText_without</string>
+                        <string>your_searchabletext_any</string>
+                        <string>your_searchabletext_all</string>
+                        <string>your_searchabletext_phrase</string>
+                        <string>your_searchabletext_without</string>
                         <string>my_search_portal_type</string>
-                        <string>creation_from</string>
-                        <string>creation_to</string>
+                        <string>your_creation_from</string>
+                        <string>your_creation_to</string>
                       </list>
                     </value>
                 </item>
@@ -108,11 +105,11 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>reference</string>
-                        <string>version</string>
-                        <string>language</string>
-                        <string>mine</string>
-                        <string>newest</string>
+                        <string>your_reference</string>
+                        <string>your_version</string>
+                        <string>your_language</string>
+                        <string>your_mine</string>
+                        <string>your_newest</string>
                         <string>my_created_within</string>
                       </list>
                     </value>

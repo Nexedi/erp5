@@ -73,25 +73,25 @@ method.\n
 """\n
 req = context.REQUEST\n
 \n
-search_straight = req.get(\'SearchableText\', \'\')\n
+search_straight = req.get(\'searchabletext\', \'\')\n
 if search_straight != \'\':\n
   return search_straight\n
 \n
 # words to search in \'any of the words\' form - left intact\n
-search_string = req.get(\'SearchableText_any\',\'\')\n
+search_string = req.get(\'searchabletext_any\',\'\')\n
 \n
 # exact phrase to search for - double-quoted\n
-search_phrase = req.get(\'SearchableText_phrase\',\'\')\n
+search_phrase = req.get(\'searchabletext_phrase\',\'\')\n
 if search_phrase != "":\n
   search_string += \' "\' + search_phrase + \'"\'\n
 \n
 # search "with all of the words" - each word prefixed by "+"\n
-search_all = req.get(\'SearchableText_all\',\'\')\n
+search_all = req.get(\'searchabletext_all\',\'\')\n
 if search_all != "":\n
   search_string += \' \' + \' \'.join(\'+\' + word for word in search_all.split(\' \'))\n
 \n
 # search without these words - every word prefixed by "-"\n
-search_without = req.get(\'SearchableText_without\',\'\')\n
+search_without = req.get(\'searchabletext_without\',\'\')\n
 if search_without!="":\n
   search_string += \' \' + \' \'.join(\'-\' + word for word in search_without.split(\' \'))\n
 \n

@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
-        </tuple>
-        <none/>
+        <global name="StringField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SearchableText_all</string> </value>
+            <value> <string>your_searchabletext_without</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -243,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Containing all of the words</string> </value>
+                    <value> <string>Without the words</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
