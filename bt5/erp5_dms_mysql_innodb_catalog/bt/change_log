@@ -1,3 +1,6 @@
+2007-12-18 yusei
+*Fixed wrong field names in erp5_dms.
+
 2007-12-10 yusei
 * Update SQLCatalog_makeAdvancedSearchQuery for renaming external method in erp5_dms.
 

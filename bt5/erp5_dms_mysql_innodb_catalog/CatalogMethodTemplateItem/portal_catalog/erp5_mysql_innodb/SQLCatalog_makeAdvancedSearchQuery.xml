@@ -99,14 +99,14 @@ modemap = { \'natural\' : 0,\n
             \'boolean\' : \'in_boolean_mode\',\n
             \'expanded\': \'with_query_expansion\'}\n
 if mode and modemap.has_key(mode):\n
-  args[\'SearchableText\'] = dict(query = args[\'SearchableText\'], \n
+  args[\'searchabletext\'] = dict(query = args[\'searchabletext\'], \n
                                 search_mode = modemap[mode])\n
 \n
 # a hack because SQLCatalog wants table.key now \n
 # dunno if it is a bug or a feature\n
-if args.has_key(\'SearchableText\'):\n
-  args[\'full_text.SearchableText\'] = args[\'SearchableText\']\n
-  args.pop(\'SearchableText\')\n
+if args.has_key(\'searchabletext\'):\n
+  args[\'full_text.SearchableText\'] = args[\'searchabletext\']\n
+  args.pop(\'searchabletext\')\n
 \n
 creation_from = kw.get(\'creation_from\')\n
 creation_to = kw.get(\'creation_to\')\n
