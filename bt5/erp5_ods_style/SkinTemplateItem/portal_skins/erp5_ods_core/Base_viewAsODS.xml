@@ -66,6 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.getPortalObject().portal_skins.changeSkin(\'ODS\')\n
+container.REQUEST.set(\'portal_skin\', \'ODS\') # Some TALES expressions checks this\n
 return getattr(context, form_id)()\n
 </string> </value>
         </item>
@@ -112,6 +113,7 @@ return getattr(context, form_id)()\n
                             <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>container</string>
                             <string>getattr</string>
                           </tuple>
                         </value>
