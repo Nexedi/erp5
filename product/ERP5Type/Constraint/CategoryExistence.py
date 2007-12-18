@@ -74,8 +74,6 @@ class CategoryExistence(Constraint):
         error_message = 'message_category_not_associated_with_portal_type'
       elif self._calculateArity(obj, base_category, portal_type) == 0:
         error_message = 'message_category_not_set'
-        if base_category == 'destination_section':
-          import pdb; pdb.set_trace()
       else:
         error_message = None
       
