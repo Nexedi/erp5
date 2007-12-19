@@ -291,7 +291,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_translateString("%s Style" % preferences.getPreference(\'preferred_report_style\', \'Print\'))</string> </value>
+            <value> <string>python: request.get(\'your_portal_skin\', None) is None and context.Base_translateString("%s Style" % preferences.getPreference(\'preferred_report_style\', \'Print\')) or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
