@@ -74,12 +74,21 @@ XXX - This script must be verified, written with clean syntax\n
 """\n
 document = state_change[\'object\']\n
 kw = state_change[\'kwargs\']\n
-metadata_field_list = (\'title\', \'subject\', \'description\', \'reference\', \'version\', \'language\') # XXX hardcoded?\n
+\n
+# XXX hardcoded?\n
+# key is a name of erp5 field.\n
+# value is a name of document metadata.\n
+metadata_field_mapping_dict = {\'title\':\'title\',\n
+                               \'subject\':\'keyword\',\n
+                               \'description\':\'description\',\n
+                               \'reference\':\'reference\',\n
+                               \'version\':\'version\',\n
+                               \'language\':\'language\'}\n
 \n
 # edit metadata (only if we have OOo file)\n
 if document.hasBaseData():\n
   new_metadata = {}\n
-  for field in metadata_field_list:\n
+  for field in metadata_field_mapping_dict.keys():\n
     value = kw.get(field, None)\n
     if value is None:\n
       value_list = kw.get(\'%s_list\' % field, None)\n
@@ -89,7 +98,8 @@ if document.hasBaseData():\n
         else:\n
           value = \'\'\n
     if value is not None:\n
-      new_metadata[field] = value    \n
+      metadata_key = metadata_field_mapping_dict[field]\n
+      new_metadata[metadata_key] = value\n
   if new_metadata:\n
     # edit metadata via server\n
     document.activate().updateBaseMetadata(**new_metadata)\n
@@ -147,7 +157,7 @@ if document.hasBaseData():\n
                             <string>_getitem_</string>
                             <string>document</string>
                             <string>kw</string>
-                            <string>metadata_field_list</string>
+                            <string>metadata_field_mapping_dict</string>
                             <string>_getattr_</string>
                             <string>new_metadata</string>
                             <string>_getiter_</string>
@@ -158,6 +168,7 @@ if document.hasBaseData():\n
                             <string>len</string>
                             <string>map</string>
                             <string>str</string>
+                            <string>metadata_key</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
