@@ -79,7 +79,7 @@ kw = state_change[\'kwargs\']\n
 # key is a name of erp5 field.\n
 # value is a name of document metadata.\n
 metadata_field_mapping_dict = {\'title\':\'title\',\n
-                               \'subject\':\'keyword\',\n
+                               \'subject\':\'keywords\',\n
                                \'description\':\'description\',\n
                                \'reference\':\'reference\',\n
                                \'version\':\'version\',\n
