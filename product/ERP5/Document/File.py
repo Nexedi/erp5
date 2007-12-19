@@ -122,7 +122,7 @@ class File(Document, CMFFile, ConversionCacheMixin):
         filename = getattr(file, 'filename', None)
         # if file field is empty(no file is uploaded),
         # filename is empty string.
-        if filename is not in (None, ''):
+        if filename not in (None, ''):
           kw['source_reference'] = filename
       del kw['file']
     Base._edit(self, **kw)
