@@ -23,6 +23,7 @@ CREATE TABLE `message_queue` (
   KEY (`path`),
   KEY (`method_id`),
   KEY `processing_node_processing` (`processing_node`, `processing`),
+  KEY `processing_node_date` (`processing_node`, `date`),
   KEY (`priority`),
   KEY (`tag`)
 ) TYPE = InnoDB;

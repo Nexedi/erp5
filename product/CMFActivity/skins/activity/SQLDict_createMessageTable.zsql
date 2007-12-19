@@ -26,6 +26,7 @@ CREATE TABLE `message` (
   KEY (`path`),
   KEY (`method_id`),
   KEY `processing_node_processing` (`processing_node`, `processing`),
+  KEY `processing_node_date` (`processing_node`, `date`),
   KEY (`priority`),
   KEY (`tag`),
   KEY (`order_validation_text`)
