@@ -240,20 +240,28 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
     if action_box_name:
       variable_match = dict([(x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()])
       variable_match.setdefault('portal_type', portal_type_list)
-      if not (guard is None or guard.check(security_manager, self, portal)):
+
+      is_permitted_worklist = 0
+      if guard is None:
+        is_permitted_worklist = 1
+      elif Guard_checkWithoutRoles(guard, security_manager, self, portal):
+        is_permitted_worklist = 1
         variable_match[SECURITY_PARAMETER_ID] = guard.roles
-      format_data = TemplateDict()
-      format_data._push(info)
-      format_data._push({'portal_type': ' OR '.join(variable_match['portal_type']),
-                         'local_roles': ';'.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
-      variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
-                                               'worklist_title': action_box_name,
-                                               'worklist_id': worklist_id,
-                                               'workflow_title': self.title,
-                                               'workflow_id': self.id,
-                                               'action_box_url': worklist_definition.actbox_url,
-                                               'action_box_category': worklist_definition.actbox_category}
-      variable_match_dict[worklist_id] = variable_match
+
+      if is_permitted_worklist:
+        format_data = TemplateDict()
+        format_data._push(info)
+        format_data._push({'portal_type': ' OR '.join(variable_match['portal_type']),
+                           'local_roles': ';'.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
+        variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
+                                                 'worklist_title': action_box_name,
+                                                 'worklist_id': worklist_id,
+                                                 'workflow_title': self.title,
+                                                 'workflow_id': self.id,
+                                                 'action_box_url': worklist_definition.actbox_url,
+                                                 'action_box_category': worklist_definition.actbox_category}
+        variable_match_dict[worklist_id] = variable_match
+
   if len(variable_match_dict) == 0:
     return None
   return variable_match_dict
