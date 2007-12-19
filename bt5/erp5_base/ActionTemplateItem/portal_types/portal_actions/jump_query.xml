@@ -50,7 +50,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-<string></string>
+                <string>View</string>
               </tuple>
             </value>
         </item>
