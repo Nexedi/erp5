@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
 from Products.ERP5.Document.Delivery import Delivery
 from zLOG import LOG
+from warnings import warn
 
 class PackingList(Delivery):
     """
@@ -122,9 +123,15 @@ class PackingList(Delivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id="default_delivery_rule", **kw):
+    def updateAppliedRule(self, rule_id=None, rule_reference=None, **kw):
+      """XXX FIXME: Kept for compatibility.
+      updateAppliedRule must be called with a rule_reference in a workflow
+      script.
       """
-        XXX FIXME: Kept for compatibility
-        updateAppliedRule must be call with the rule_id in workflow script
-      """
-      Delivery.updateAppliedRule(self, rule_id, **kw)
+      if rule_id is None and rule_reference is None:
+        warn('Relying on a default order rule is deprecated; ' \
+             'rule_reference must be specified explicitly.',
+             DeprecationWarning)
+        rule_reference = 'default_delivery_rule'
+      Delivery.updateAppliedRule(self, rule_id=rule_id, 
+                                 rule_reference=rule_reference, **kw)
