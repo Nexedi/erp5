@@ -67,6 +67,13 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import Message\n
 \n
+# XXX for now, we always use the default Base_getODSStyleSheet\n
+# we use to have Base_getODSListStyleSheet with a line at the bottom of\n
+# the page, for better print display. Now we rather agreed that\n
+# ods_style is a style for export, not report and the rendering appearance\n
+# was not so important.\n
+return context.Base_getODSStyleSheet\n
+\n
 translate = lambda msg: Message(\'ui\', msg)\n
 request = context.REQUEST\n
 landscape = int(request.get(\'landscape\', 0))\n
@@ -128,9 +135,9 @@ else:\n
                           <tuple>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>translate</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translate</string>
                             <string>request</string>
                             <string>int</string>
                             <string>landscape</string>
