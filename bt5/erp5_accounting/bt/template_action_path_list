@@ -1,5 +1,3 @@
-
-
 Account Module | jump_active_accounting_pref
 Account Module | view
 Account | jump_active_accounting_pref
@@ -12,18 +10,23 @@ Accounting Rule Cell | view
 Accounting Rule Cell | view_destination
 Accounting Transaction Line | view
 Accounting Transaction Line | view_destination
+Accounting Transaction Module | account_statement_export
 Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | balance_sheet_report
 Accounting Transaction Module | bank_accounts_report
 Accounting Transaction Module | create_related_payments
+Accounting Transaction Module | general_ledger_export
 Accounting Transaction Module | general_ledger_report
+Accounting Transaction Module | journal_export
 Accounting Transaction Module | journal_from_selection
 Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
 Accounting Transaction Module | jump_bank_accounts
 Accounting Transaction Module | profit_and_loss_report
 Accounting Transaction Module | search
+Accounting Transaction Module | third_parties_export
 Accounting Transaction Module | third_parties_report
+Accounting Transaction Module | trial_balance_export
 Accounting Transaction Module | trial_balance_report
 Accounting Transaction Module | view
 Accounting Transaction | add_accounting_transaction_line
