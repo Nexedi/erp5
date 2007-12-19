@@ -1,12 +1,6 @@
-Account Module | account_statement_report
-Account Module | balance_sheet_report
-Account Module | bank_accounts_report
-Account Module | general_ledger_report
-Account Module | journal_report
+
+
 Account Module | jump_active_accounting_pref
-Account Module | profit_and_loss_report
-Account Module | third_parties_report
-Account Module | trial_balance_report
 Account Module | view
 Account | jump_active_accounting_pref
 Account | jump_to_accounting
