@@ -1,3 +1,6 @@
+2007-12-19 Yusei
+* Removed unused scripts in document_interaction_workflow.
+
 2007-12-18 Yusei
 * Fixed wrong field names around search dialog. (Note: Please update erp5_dms_mysql_innodb_catalog together.)
 
