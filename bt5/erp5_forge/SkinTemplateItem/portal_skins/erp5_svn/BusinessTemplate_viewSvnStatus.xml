@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -156,6 +153,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         winInit();\n
         if (winList[\'captionWindow\']){\n
           winList[\'captionWindow\'].open();\n
+          winList[\'captionWindow\'].close();\n
         }\n
       </script>\n
       <input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"/> <span style="color: black;">Show unmodified files</span>\n
