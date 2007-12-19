@@ -130,7 +130,7 @@
                          <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
                                            tal:attributes="office:value column_property"\n
                                            office:value-type="float"\n
-                                           table:style-name="report-stat2-sans-bold">\n
+                                           table:style-name="figure">\n
                           <text:p tal:condition="python: field is None"\n
                                   tal:content="python: column_property"/>\n
                           <text:p tal:condition="python: field is not None"\n
@@ -142,7 +142,7 @@
                           <tal:block tal:condition="python: isinstance(column_property, DateTime)">\n
                            <table:table-cell tal:define="field python: editable_fields.get(column_id, None);"\n
                                              tal:attributes="office:date-value python: column_property.strftime(\'%Y-%m-%dT%H:%M:%S\')"\n
-                                             table:style-name="report-content-date"\n
+                                             table:style-name="date"\n
                                              office:value-type="date">\n
 \n
                             <text:p tal:condition="python: field is None"\n
