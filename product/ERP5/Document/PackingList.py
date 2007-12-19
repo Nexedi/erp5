@@ -129,7 +129,7 @@ class PackingList(Delivery):
       script.
       """
       if rule_id is None and rule_reference is None:
-        warn('Relying on a default order rule is deprecated; ' \
+        warn('Relying on a default delivery rule is deprecated; ' \
              'rule_reference must be specified explicitly.',
              DeprecationWarning)
         rule_reference = 'default_delivery_rule'
