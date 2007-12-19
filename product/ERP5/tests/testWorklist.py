@@ -51,6 +51,8 @@ class TestWorklist(ERP5TypeTestCase):
   actbox_owner_name = 'owner_todo'
   worklist_assignor_owner_id = 'assignor_owner_worklist'
   actbox_assignor_owner_name = 'assignor_owner_todo'
+  worklist_desactivated_id = '%s_desactivated' % worklist_owner_id
+  actbox_desactivated_by_expression = '%s_desactivated' % actbox_owner_name
 
   def getTitle(self):
     return "Worklist"
@@ -143,17 +145,23 @@ class TestWorklist(ERP5TypeTestCase):
     workflow = self.getWorkflowTool()[self.checked_workflow]
     worklists = workflow.worklists
 
-    for worklist_id, actbox_name, role in [
-          (self.worklist_assignor_id, self.actbox_assignor_name, 'Assignor'),
-          (self.worklist_owner_id, self.actbox_owner_name, 'Owner'),
-          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name, 'Assignor; Owner')]:
+    for worklist_id, actbox_name, role, expr in [
+          (self.worklist_assignor_id, self.actbox_assignor_name, 
+           'Assignor', None),
+          (self.worklist_owner_id, self.actbox_owner_name, 
+           'Owner', None),
+          (self.worklist_desactivated_id, self.actbox_desactivated_by_expression, 
+           'Owner', 'python: 0'),
+          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name, 
+           'Assignor; Owner', None)]:
       worklists.addWorklist(worklist_id)
       worklist_definition = worklists._getOb(worklist_id)
       worklist_definition.setProperties('',
           actbox_name='%s (%%(count)s)' % (actbox_name, ),
           props={'guard_roles': role,
                  'var_match_portal_type': self.checked_portal_type,
-                 'var_match_validation_state': self.checked_validation_state})
+                 'var_match_validation_state': self.checked_validation_state,
+                  'guard_expr': expr})
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
