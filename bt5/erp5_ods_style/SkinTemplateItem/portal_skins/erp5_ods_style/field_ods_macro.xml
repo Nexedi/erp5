@@ -52,20 +52,99 @@
 \n
 <office:body metal:define-macro="form_layout">\n
   <office:spreadsheet>\n
-    <tal:block metal:define-macro="field">\n
 \n
+\n
+    <!-- Render the field in the bottom group. `field` must be defined.\n
+    The field in the bottom group, can be ListBoxField, MatrixBoxField or a ProxyField to one of thoses.\n
+    -->\n
+    <tal:block metal:define-macro="bottom_group_field">\n
       <tal:block tal:condition="python: field.meta_type == \'MatrixBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'MatrixBox\')">\n
         <tal:block  tal:define="matrixbox python:field;">\n
           <tal:block metal:use-macro="here/matrixbox_ods_macro/macros/matrixbox" />\n
         </tal:block>\n
       </tal:block>\n
-\n
       <tal:block tal:condition="python: field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
         <tal:block  tal:define="listbox python:field;" >\n
           <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox" />\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
+\n
+\n
+    <!-- Render a value for a field in a Listbox / MatrixBox. `value` must be defined,\n
+  `field` is optional and is only defined when we have an editable field for this column or cell.\n
+    -->\n
+    <tal:block metal:define-macro="cell_value">\n
+      <tal:block  tal:define="is_list python:same_type(value, []) or same_type(value, ());\n
+                              is_float python: isinstance(value, (int, long, float));">\n
+\n
+\n
+        <tal:block tal:condition="python: is_list">\n
+          <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                            tal:attributes="table:style-name python:is_float and \'figure\' or \'text\'">\n
+            <text:p tal:condition="python: field is None" \n
+                    tal:content="python: value">\n
+            </text:p>\n
+            <text:p tal:condition="python: field is not None"\n
+                    tal:content="python: field.render_pdf(value)">\n
+            </text:p>\n
+          </table:table-cell>\n
+        </tal:block>\n
+        <tal:block tal:condition="python: value is not None and not is_list">\n
+          <tal:block tal:condition="is_float">\n
+           <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                             tal:attributes="office:value value;\n
+                                             table:style-name string:${style_prefix}figure"\n
+                             office:value-type="float"\n
+                             table:style-name="figure">\n
+            <text:p tal:condition="python: field is None"\n
+                    tal:content="python: value"/>\n
+            <text:p tal:condition="python: field is not None"\n
+                    tal:content="python: field.render_pdf(value)">\n
+            </text:p>\n
+           </table:table-cell>\n
+          </tal:block>\n
+          <tal:block tal:condition="not: is_float">\n
+            <tal:block tal:condition="python: isinstance(value, DateTime)">\n
+             <table:table-cell tal:define="field python: editable_fields.get(column_id, None);"\n
+                               tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
+                                               table:style-name string:${style_prefix}date"\n
+                               table:style-name="date"\n
+                               office:value-type="date">\n
+\n
+              <text:p tal:condition="python: field is None"\n
+                      tal:content="python: value"/>\n
+              <text:p tal:condition="python: field is not None"\n
+                      tal:content="python: field.render_pdf(value)">\n
+              </text:p>\n
+             </table:table-cell>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:not isinstance(value, DateTime)">\n
+             <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                               tal:attributes="table:style-name string:${style_prefix}text"\n
+                               table:style-name="text">\n
+              <text:p tal:condition="python: field is None"\n
+                      tal:content="python: value"/>\n
+              <text:p tal:condition="python: field is not None"\n
+                      tal:content="python: field.render_pdf(value)">\n
+              </text:p>\n
+             </table:table-cell>\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
+        <tal:block tal:condition="python: value is None">\n
+          <table:table-cell office:value-type=\'string\'\n
+                            tal:attributes="table:style-name string:${style_prefix}text"\n
+                            table:style-name=\'text\'\n
+                            table:number-columns-spanned=\'1\'>\n
+            <text:p tal:content="python: \'\'">\n
+            </text:p>\n
+          </table:table-cell>\n
+        </tal:block>\n
+\n
+      </tal:block>\n
+    </tal:block>\n
+\n
   </office:spreadsheet>\n
 </office:body>\n
 </tal:block>\n

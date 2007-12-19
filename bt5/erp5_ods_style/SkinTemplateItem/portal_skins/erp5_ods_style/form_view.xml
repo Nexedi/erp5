@@ -141,7 +141,7 @@ dQEAAAAA</string> </value>
         </tal:block>\n
         <tal:block tal:define="field_list python:form.get_fields_in_group(\'bottom\')">\n
           <tal:block tal:repeat="field field_list">\n
-            <tal:block metal:use-macro="here/field_ods_macro/macros/field" />\n
+            <tal:block metal:use-macro="here/field_ods_macro/macros/bottom_group_field" />\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n

@@ -62,7 +62,7 @@
                              global column_len python:5">\n
                              <!-- TODO: calculate column_len based on the first listbox (or selection_column if exists)-->\n
 \n
-      <tal:block tal:define="portal_object here/portal_url/getPortalObject"> \n
+      <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
         <tal:block tal:condition="not: sheet_per_reportsection">\n
           <table:table tal:attributes="table:name python:here.getProperty(\'title\')">\n
           <!-- at least one table-column element is required for ODF to validate -->\n
