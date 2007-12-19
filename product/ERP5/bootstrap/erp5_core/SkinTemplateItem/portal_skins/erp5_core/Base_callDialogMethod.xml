@@ -86,7 +86,8 @@ def isListBox(field):\n
 from Products.Formulator.Errors import FormValidationError\n
 from ZTUtils import make_query\n
 \n
-request_form = context.REQUEST.form\n
+request = container.REQUEST\n
+request_form = request.form\n
 error_message = \'\'\n
 \n
 # Make this script work alike wether called from another script or by a request\n
@@ -156,16 +157,15 @@ try:\n
   # It is necessary to force editable_mode before validating\n
   # data. Otherwise, field appears as non editable.\n
   # This is the pending of form_dialog.\n
-  request = context.REQUEST\n
   editable_mode = request.get(\'editable_mode\', 1)\n
   request.set(\'editable_mode\', 1)\n
-  form.validate_all_to_request(context.REQUEST)\n
+  form.validate_all_to_request(request)\n
   request.set(\'editable_mode\', editable_mode)\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
-  context.REQUEST.set(\'field_errors\', field_errors)\n
-  return form(context.REQUEST)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
 \n
 # Use REQUEST.redirect if possible. It will not be possible if at least one of these is true :\n
 #  * we got an import_file,\n
@@ -177,7 +177,7 @@ listbox_id_list = [] # There should not be more than one listbox - but this give
 file_id_list = [] # For uploaded files.\n
 for field in form.get_fields():\n
   k = field.id\n
-  v = context.REQUEST.get(k, MARKER)\n
+  v = request.get(k, MARKER)\n
   if v is not MARKER:\n
     if isListBox(field):\n
       listbox_id_list.append(k)\n
@@ -243,7 +243,13 @@ url_params_string = make_query(clean_kw)\n
 # XXX: We always redirect in report mode to make sure portal_skin\n
 # parameter is taken into account by SkinTool.\n
 # If url is too long, we do not redirect to avoid crash.\n
-if (not(can_redirect) or len(url_params_string) > 2000) and dialog_category != "object_report": # XXX: 2000 is an arbitrary value resulted from trial and error.\n
+# XXX: 2000 is an arbitrary value resulted from trial and error.\n
+if (not(can_redirect) or len(url_params_string) > 2000):\n
+  if \'portal_skin\' in clean_kw:\n
+    new_skin_name = clean_kw[\'portal_skin\']\n
+    context.getPortalObject().portal_skins.changeSkin(new_skin_name)\n
+    request.set(\'portal_skin\', new_skin_name)\n
+\n
   # If we cannot redirect, then call the form directly.\n
   dialog_form = getattr(context, dialog_method)\n
   # XXX: this is a hack that should not be needed anymore with the new listbox.\n
@@ -251,7 +257,7 @@ if (not(can_redirect) or len(url_params_string) > 2000) and dialog_category != "
   # that depend on it (eg. Show All). This is really related to\n
   # current ListBox implementation which edit Selection\'s last_url\n
   # with the content of REQUEST.URL\n
-  context.REQUEST.set(\'URL\', \'%s/%s\' % (context.absolute_url(), dialog_method))\n
+  request.set(\'URL\', \'%s/%s\' % (context.absolute_url(), dialog_method))\n
   return dialog_form(**kw)\n
 \n
 if error_message != \'\':\n
@@ -269,7 +275,7 @@ else:\n
                             , dialog_method\n
                             )\n
 \n
-return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+return request.RESPONSE.redirect(redirect_url)\n
 \n
 # vim: syntax=python\n
 
@@ -284,6 +290,12 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -326,16 +338,17 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
+                            <string>request</string>
                             <string>request_form</string>
                             <string>error_message</string>
+                            <string>context</string>
                             <string>_getitem_</string>
                             <string>value</string>
                             <string>None</string>
                             <string>getattr</string>
                             <string>form</string>
                             <string>hasattr</string>
-                            <string>request</string>
                             <string>editable_mode</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
@@ -368,6 +381,7 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>selected_uids</string>
                             <string>clean_kw</string>
                             <string>url_params_string</string>
+                            <string>new_skin_name</string>
                             <string>dialog_form</string>
                             <string>_apply_</string>
                             <string>redirect_url</string>
