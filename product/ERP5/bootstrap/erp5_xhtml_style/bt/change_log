@@ -1,3 +1,6 @@
+2007-12-19 yo
+* Put ListBox_asHTML as a Page Template. It has been present as a Filesystem Page Template for a long time.
+
 2007-12-18 yo
 * Acquire skins and tools from a portal, whenever possible.
 
