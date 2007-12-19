@@ -61,11 +61,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z0_drop_email</string> </value>
+            <value> <string>z0_drop_versioning</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>DROP TABLE IF EXISTS email;</string> </value>
+            <value> <string>DROP TABLE IF EXISTS versioning;</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -99,7 +99,7 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>DROP TABLE IF EXISTS email;</string> </value>
+                        <value> <string>DROP TABLE IF EXISTS versioning;</string> </value>
                     </item>
                   </dictionary>
                 </state>
