@@ -98,7 +98,7 @@ if selection_name is not None:\n
   if checked_uid_list:\n
     getObject = portal.portal_catalog.getObject\n
     for uid in checked_uid_list:\n
-      report_section_list.extend(getReportSectionListForObject(getObject(doc)))\n
+      report_section_list.extend(getReportSectionListForObject(getObject(uid)))\n
   else:\n
     # get all documents in the selection\n
     for doc in portal.portal_selections.callSelectionFor(selection_name, context=form):\n

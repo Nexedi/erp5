@@ -3,18 +3,21 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
-        </tuple>
-        <none/>
+        <global name="ListField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>portal_skin</string> </value>
+            <value> <string>your_print_mode</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -29,8 +32,8 @@
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -56,14 +59,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,11 +75,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -92,11 +95,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -124,20 +127,10 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -146,7 +139,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -157,23 +152,33 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -197,23 +202,15 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>ODS</string> </value>
+                    <value> <string>list</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -232,24 +229,34 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Portal Skin</string> </value>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Export Mode</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -268,18 +275,31 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_preferences/getPreferredReportStyle</string> </value>
+            <value> <string>python: getattr(context, request[\'form_id\']).pt == \'form_list\'</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>context/Base_getExportModeItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

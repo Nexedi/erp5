@@ -65,19 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().portal_skins.changeSkin(\'ODS\')\n
-request = container.REQUEST\n
-request.set(\'portal_skin\', \'ODS\') # Some TALES expressions checks this\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
+N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
-if target_language:\n
-  request[\'AcceptLanguage\'].set(target_language, 10)\n
-\n
-if print_mode == \'list_view\' or print_mode == \'list_view_separate_sheet\':\n
-  if print_mode == \'list_view_separate_sheet\':\n
-    request.set(\'sheet_per_report_section\', 1)\n
-  return context.Folder_viewContentListAsODSReport()\n
-\n
-return getattr(context, form_id)()\n
+return [\n
+  (\'\', \'\'),\n
+  ( N_(\'List of Documents\'), \'list\'),\n
+  ( N_(\'Default Export of each Document\'), \'list_view\' ),\n
+  ( N_(\'Default Export of each Document (one sheet per view)\'), \'list_view_separate_sheet\'),\n
+]\n
 </string> </value>
         </item>
         <item>
@@ -93,8 +89,14 @@ return getattr(context, form_id)()\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\', target_language=\'\', print_mode=\'\', **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,22 +116,15 @@ return getattr(context, form_id)()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>target_language</string>
-                            <string>print_mode</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>_getitem_</string>
-                            <string>getattr</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>N_</string>
                           </tuple>
                         </value>
                     </item>
@@ -141,16 +136,12 @@ return getattr(context, form_id)()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-                <string></string>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewAsODS</string> </value>
+            <value> <string>Base_getExportModeItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
