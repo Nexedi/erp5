@@ -68,7 +68,9 @@
             <value> <string>portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-style = context.getPreferredReportStyle()\n
+style = container.REQUEST.get(\'your_portal_skin\',\n
+                              context.getPreferredReportStyle())\n
+\n
 item_list = [(\'\', \'\')]\n
 \n
 if style == \'ODS\':\n
@@ -131,6 +133,7 @@ return item_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>container</string>
                             <string>style</string>
                             <string>item_list</string>
                           </tuple>
