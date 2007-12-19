@@ -9,22 +9,20 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE `message_queue` (
-  `uid` int(11) NOT NULL,
-  `date` datetime,
-  `path` VARCHAR(255),
-  `method_id` VARCHAR(255),
-  `processing_node` INT DEFAULT -1,
-  `processing` INT DEFAULT 0,
-  `processing_date` datetime,
-  `priority` INT DEFAULT 0,
-  `tag` VARCHAR(255),
-  `message` LONGBLOB,
-  PRIMARY KEY  (`uid`),
-  KEY `date` (`date`),
-  KEY `path` (`path`),
-  KEY `method_id` (`method_id`),
+  `uid` INT UNSIGNED NOT NULL,
+  `date` DATETIME NOT NULL,
+  `path` VARCHAR(255) NOT NULL,
+  `method_id` VARCHAR(255) NOT NULL,
+  `processing_node` SMALLINT NOT NULL DEFAULT -1,
+  `processing` TINYINT NOT NULL DEFAULT 0,
+  `processing_date` DATETIME,
+  `priority` TINYINT NOT NULL DEFAULT 0,
+  `tag` VARCHAR(255) NOT NULL,
+  `message` LONGBLOB NOT NULL,
+  PRIMARY KEY (`uid`),
+  KEY (`path`),
+  KEY (`method_id`),
   KEY `processing_node_processing` (`processing_node`, `processing`),
-  KEY `processing_date` (`processing_date`),
-  KEY `priority` (`priority`),
-  KEY `tag` (`tag`)
+  KEY (`priority`),
+  KEY (`tag`)
 ) TYPE = InnoDB;
