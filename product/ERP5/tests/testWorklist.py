@@ -44,6 +44,7 @@ class TestWorklist(ERP5TypeTestCase):
 
   checked_portal_type = 'Organisation'
   checked_validation_state = 'draft'
+  not_checked_validation_state = 'not_draft'
   checked_workflow = 'validation_workflow'
   worklist_assignor_id = 'assignor_worklist'
   actbox_assignor_name = 'assignor_todo'
@@ -53,6 +54,8 @@ class TestWorklist(ERP5TypeTestCase):
   actbox_assignor_owner_name = 'assignor_owner_todo'
   worklist_desactivated_id = '%s_desactivated' % worklist_owner_id
   actbox_desactivated_by_expression = '%s_desactivated' % actbox_owner_name
+  worklist_wrong_state_id = '%s_wrong_state' % worklist_owner_id
+  actbox_wrong_state = '%s_wrong_state' % actbox_owner_name
 
   def getTitle(self):
     return "Worklist"
@@ -145,22 +148,24 @@ class TestWorklist(ERP5TypeTestCase):
     workflow = self.getWorkflowTool()[self.checked_workflow]
     worklists = workflow.worklists
 
-    for worklist_id, actbox_name, role, expr in [
+    for worklist_id, actbox_name, role, expr, state in [
           (self.worklist_assignor_id, self.actbox_assignor_name, 
-           'Assignor', None),
+           'Assignor', None, self.checked_validation_state),
           (self.worklist_owner_id, self.actbox_owner_name, 
-           'Owner', None),
+           'Owner', None, self.checked_validation_state),
           (self.worklist_desactivated_id, self.actbox_desactivated_by_expression, 
-           'Owner', 'python: 0'),
+           'Owner', 'python: 0', self.checked_validation_state),
+          (self.worklist_wrong_state_id, self.actbox_wrong_state, 
+           'Owner', None, self.not_checked_validation_state),
           (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name, 
-           'Assignor; Owner', None)]:
+           'Assignor; Owner', None, self.checked_validation_state)]:
       worklists.addWorklist(worklist_id)
       worklist_definition = worklists._getOb(worklist_id)
       worklist_definition.setProperties('',
           actbox_name='%s (%%(count)s)' % (actbox_name, ),
           props={'guard_roles': role,
                  'var_match_portal_type': self.checked_portal_type,
-                 'var_match_validation_state': self.checked_validation_state,
+                 'var_match_validation_state': state,
                   'guard_expr': expr})
 
   def clearCache(self):
