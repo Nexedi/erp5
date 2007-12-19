@@ -57,6 +57,11 @@ class TestWorklist(ERP5TypeTestCase):
   worklist_wrong_state_id = '%s_wrong_state' % worklist_owner_id
   actbox_wrong_state = '%s_wrong_state' % actbox_owner_name
 
+  worklist_int_variable_id = 'int_value_workflist'
+  actbox_int_variable_name = 'int_value_todo'
+  int_catalogued_variable_id = 'int_index'
+  int_value = 1
+
   def getTitle(self):
     return "Worklist"
 
@@ -135,6 +140,7 @@ class TestWorklist(ERP5TypeTestCase):
   def createDocument(self):
     module = self.getPortal().getDefaultModule(self.checked_portal_type)
     result = module.newContent(portal_type=self.checked_portal_type)
+    result.setProperty(self.int_catalogued_variable_id, self.int_value)
     assert result.getValidationState() == self.checked_validation_state
     return result
 
@@ -144,21 +150,37 @@ class TestWorklist(ERP5TypeTestCase):
     self.assertNotEquals(left_parenthesis_offset, -1)
     return int(action_name[left_parenthesis_offset + 1:-1])
 
+  def associatePropertySheet(self):
+    from Products.ERP5Type.Base import _aq_reset
+    ti = self.getTypesTool().getTypeInfo(self.checked_portal_type)
+    ti.property_sheet_list = list(ti.property_sheet_list) + \
+                                ['SortIndex']
+    # reset aq_dynamic cache
+    _aq_reset()
+
+  def addWorkflowCataloguedVariable(self):
+    workflow = self.getWorkflowTool()[self.checked_workflow]
+    workflow.variables.addVariable(self.int_catalogued_variable_id)
+    variable = getattr(workflow.variables, self.int_catalogued_variable_id)
+
   def createWorklist(self):
     workflow = self.getWorkflowTool()[self.checked_workflow]
     worklists = workflow.worklists
 
-    for worklist_id, actbox_name, role, expr, state in [
+    for worklist_id, actbox_name, role, expr, state, int_variable in [
           (self.worklist_assignor_id, self.actbox_assignor_name, 
-           'Assignor', None, self.checked_validation_state),
+           'Assignor', None, self.checked_validation_state, None),
           (self.worklist_owner_id, self.actbox_owner_name, 
-           'Owner', None, self.checked_validation_state),
+           'Owner', None, self.checked_validation_state, None),
           (self.worklist_desactivated_id, self.actbox_desactivated_by_expression, 
-           'Owner', 'python: 0', self.checked_validation_state),
+           'Owner', 'python: 0', self.checked_validation_state, None),
           (self.worklist_wrong_state_id, self.actbox_wrong_state, 
-           'Owner', None, self.not_checked_validation_state),
+           'Owner', None, self.not_checked_validation_state, None),
           (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name, 
-           'Assignor; Owner', None, self.checked_validation_state)]:
+           'Assignor; Owner', None, self.checked_validation_state, None),
+          (self.worklist_int_variable_id, self.actbox_int_variable_name, 
+           None, None, None, str(self.int_value)),
+    ]:
       worklists.addWorklist(worklist_id)
       worklist_definition = worklists._getOb(worklist_id)
       worklist_definition.setProperties('',
@@ -166,6 +188,9 @@ class TestWorklist(ERP5TypeTestCase):
           props={'guard_roles': role,
                  'var_match_portal_type': self.checked_portal_type,
                  'var_match_validation_state': state,
+                 # Variable value is saved as string in worklist
+                 'var_match_%s' % self.int_catalogued_variable_id: \
+                                                            int_variable,
                   'guard_expr': expr})
 
   def clearCache(self):
@@ -184,6 +209,8 @@ class TestWorklist(ERP5TypeTestCase):
     self.createManagerAndLogin()
     self.createUsers()
     self.logMessage("Create worklist")
+    self.associatePropertySheet()
+    self.addWorkflowCataloguedVariable()
     self.createWorklist()
     self.logMessage("Create document as Manager")
     document = self.createDocument()
@@ -333,6 +360,32 @@ class TestWorklist(ERP5TypeTestCase):
                     if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
       self.logout()
+
+    # Check if int variable are managed by the worklist
+    user_id = 'manager'
+    self.login(user_id)
+    result = workflow_tool.listActions(object=document)
+    self.logMessage("Check %s worklist with int value as %s" % \
+                                   (user_id, self.int_value))
+    entry_list = [x for x in result \
+                  if x['name'].startswith(self.actbox_int_variable_name)]
+    self.assertEquals(len(entry_list), 1)
+
+    # Change int value on document
+    new_value = self.int_value + 1
+    document.setProperty(self.int_catalogued_variable_id, new_value)
+    get_transaction().commit()
+    self.tic()
+    self.clearCache()
+
+    result = workflow_tool.listActions(object=document)
+    self.logMessage("Check %s worklist with int value as %s" % \
+                                   (user_id, new_value))
+    entry_list = [x for x in result \
+                  if x['name'].startswith(self.actbox_int_variable_name)]
+    self.assertEquals(len(entry_list), 0)
+
+    self.logout()
 
 def test_suite():
   suite = unittest.TestSuite()
