@@ -27,12 +27,19 @@
 ##############################################################################
 
 from DateTime import DateTime as DateTimeKlass
+import math
+from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS
 
 STATE_KEY = 'str'
 
 def DateTime__setstate__(self, state):
   if isinstance(state, tuple):
-    self._parse_args(*state)
+    t, tz = state
+    ms = (t - math.floor(t))
+    s,d = _calcSD(t)
+    x = _calcDependentSecond(tz, t)
+    yr, mo, dy, hr, mn, sc = _calcYMDHMS(x, ms)
+    self._parse_args(yr, mo, dy, hr, mn, sc, tz, t, d, s)
   elif len(state) != 1 or STATE_KEY not in state:
     # For original pickle representation
     self.__dict__.update(state)
@@ -46,3 +53,19 @@ def DateTime__getstate__(self):
   return (self._t, self._tz)
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
+
+if __name__ == '__main__':
+  for i in ('2007/01/02 12:34:56.789',
+            '2007/01/02 12:34:56.789 GMT+0200',
+            '2007/01/02 12:34:56.789 JST',
+            '2007/01/02 12:34:56.789 +0300',
+            '2007/01/02 12:34:56.789 +0430',
+            '2007/01/02 12:34:56.789 +1237',
+            ):
+    a = DateTimeKlass(i)
+    b = DateTimeKlass()
+    b.__setstate__(a.__getstate__())
+    print a, a.__dict__ == b.__dict__
+    for i in a.__dict__.keys():
+      if a.__dict__[i] != b.__dict__[i]:
+        print i, a.__dict__[i], b.__dict__[i]
