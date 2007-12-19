@@ -83,8 +83,11 @@ if document.hasBaseData():\n
     value = kw.get(field, None)\n
     if value is None:\n
       value_list = kw.get(\'%s_list\' % field, None)\n
-      if value_list is not None and len(value_list)>0:\n
-        value = \' \'.join(map(str, value_list))\n
+      if value_list is not None:\n
+        if len(value_list)>0:\n
+          value = \' \'.join(map(str, value_list))\n
+        else:\n
+          value = \'\'\n
     if value is not None:\n
       new_metadata[field] = value    \n
   if new_metadata:\n
