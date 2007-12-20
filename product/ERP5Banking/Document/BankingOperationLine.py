@@ -105,3 +105,10 @@ class BankingOperationLine(BaobabMixin, AccountingTransactionLine):
     getter for destination payment
     """
     return "account_module/bank_account"
+
+  security.declareProtected(Permissions.View, 'getBaobabVariationText')
+  def getBaobabVariationText(self, **kw):
+    """
+    getter for variation text
+    """
+    return ""
