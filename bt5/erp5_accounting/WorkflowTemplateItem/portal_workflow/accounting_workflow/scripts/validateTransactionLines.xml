@@ -120,7 +120,7 @@ for line in transaction.contentValues(filter=dict(\n
         # accounting.\n
         bank_account_currency = bank_account.getProperty(\'price_currency\')\n
         if bank_account_currency is not None and \\\n
-              bank_account_currency != transaction_line.getResource():\n
+              bank_account_currency != line.getResource():\n
           raise ValidationFailed, N_(\n
               "Bank Account ${bank_account_reference} "\n
               "uses ${bank_account_currency} as default currency",\n
@@ -215,7 +215,6 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>None</string>
                             <string>unicode</string>
                             <string>bank_account_currency</string>
-                            <string>transaction_line</string>
                           </tuple>
                         </value>
                     </item>
