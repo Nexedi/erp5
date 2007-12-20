@@ -212,6 +212,30 @@ class Category(Folder):
       return ''.join(logical_title_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getIndentedTitleAndId')
+    def getIndentedTitleAndId(self, item_method='getTitleAndId'):
+      """
+        Returns title or id, indented from base_category.
+      """
+      path_len = 0
+      base = self.getBaseCategory()
+      current = self
+      while not current is base :
+        path_len += 1
+        current = aq_parent(current)
+
+      # it s better for the user to display something than only ''...
+      logical_title_list = []
+
+      if path_len >= 2:
+        logical_title_list.append('&nbsp;' * 4 * (path_len - 1))
+      logical_title = getattr(self, item_method)()
+      if logical_title in [None, '']:
+        logical_title = self.getId()
+      logical_title_list.append(logical_title)
+      return ''.join(logical_title_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getTranslatedIndentedTitle')
     def getTranslatedIndentedTitle(self):
       """
@@ -429,6 +453,17 @@ class Category(Folder):
       """
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='indented_title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                     'getCategoryChildIndentedTitleAndIdItemList')
+    def getCategoryChildIndentedTitleAndIdItemList(self,
+                                              recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getIndentedTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+          display_id='indented_title_and_id', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                      'getCategoryChildTranslatedIndentedTitleItemList')
@@ -832,4 +867,3 @@ class BaseCategory(Category):
 
 InitializeClass( Category )
 InitializeClass( BaseCategory )
-
