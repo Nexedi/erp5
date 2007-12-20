@@ -74,7 +74,7 @@ N_ = container.Base_translateString\n
 portal_type = request[\'portal_type\']\n
 simulation_state = request[\'simulation_state\']\n
 at_date = request[\'at_date\'].latestTime()\n
-from_date = request.get(\'from_date\', at_date.earliestTime())\n
+from_date = request.get(\'from_date\') or at_date.earliestTime()\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
                                      request[\'section_category\'])\n
 payment_mode = request.get(\'payment_mode\')\n
