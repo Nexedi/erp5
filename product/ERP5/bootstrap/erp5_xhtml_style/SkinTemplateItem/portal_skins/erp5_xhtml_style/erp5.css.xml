@@ -840,6 +840,10 @@ fieldset.bottom .field .input {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/report.png\');\n
 }\n
 \n
+#context_bar .tool_buttons .fast_input .image {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/fast_input.png\');\n
+}\n
+\n
 #context_bar .tool_buttons .cut .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/editcut.png\');\n
 }\n

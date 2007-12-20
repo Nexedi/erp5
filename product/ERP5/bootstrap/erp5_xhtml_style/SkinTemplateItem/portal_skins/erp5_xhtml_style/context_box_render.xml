@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -172,6 +169,7 @@
             exchange_actions actions/object_exchange | nothing;\n
             report_actions actions/object_report | nothing;\n
             button_actions actions/object_button | nothing;\n
+            fast_input_actions actions/object_fast_input | nothing;\n
             sort_actions actions/object_sort | nothing;\n
             ui_actions actions/object_ui | nothing;\n
             print_actions actions/object_print | nothing;\n
@@ -284,6 +282,12 @@
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Report</span>\n
+        </a>\n
+        <a tal:condition="fast_input_actions" class="fast_input" title="Fast Input"\n
+           tal:attributes="href python: portal.ERP5Site_renderCustomLink(fast_input_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_fast_input\')"\n
+           i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description" i18n:translate="" i18n:domain="ui">Fast Input</span>\n
         </a>\n
         <tal:block tal:condition="button_actions">\n
           <span class="separator"></span>\n
