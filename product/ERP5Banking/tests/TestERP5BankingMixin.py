@@ -765,7 +765,7 @@ class TestERP5BankingMixin:
                                          site=site)
 
 
-  def createBankAccount(self, person, account_id, currency, amount, **kw):
+  def createBankAccount(self, person, account_id, currency, amount, inv_date=None, **kw):
     """
     Create and initialize a bank account for a person
     """
@@ -806,10 +806,12 @@ class TestERP5BankingMixin:
                                                                                 site_value=self.testsite,
                                                                                 stop_date=DateTime().Date())
 
-      
+    if inv_date is None:
+      inv_date = DateTime()
     inventory = self.bank_account_inventory.newContent(id=bank_account.getInternalBankAccountNumber(),
-                                           portal_type='Bank Account Inventory',
-                                           destination_payment_value=bank_account,)
+                                                       portal_type='Bank Account Inventory',
+                                                       destination_payment_value=bank_account,
+                                                       stop_date=inv_date)
     account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
     inventory_line = inventory.newContent(id=account_inventory_line_id,
                                           portal_type='Bank Account Inventory Line',
