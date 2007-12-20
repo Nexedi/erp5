@@ -682,7 +682,7 @@ class TestIngestion(ERP5TypeTestCase):
     xmlob = parseString(s)
     title = xmlob.getElementsByTagName('dc:title')[0].childNodes[0].data
     self.assertEquals(title, u'another title')
-    subject = xmlob.getElementsByTagName('dc:keyword')[0].childNodes[0].data
+    subject = xmlob.getElementsByTagName('meta:keyword')[0].childNodes[0].data
     self.assertEquals(subject, u'another subject')
     description = xmlob.getElementsByTagName('dc:description')[0].childNodes[0].data
     self.assertEquals(description, u'another description')
