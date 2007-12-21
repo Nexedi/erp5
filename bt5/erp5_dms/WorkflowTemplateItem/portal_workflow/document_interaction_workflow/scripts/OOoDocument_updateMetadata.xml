@@ -102,7 +102,7 @@ if document.hasBaseData():\n
       new_metadata[metadata_key] = value\n
   if new_metadata:\n
     # edit metadata via server\n
-    document.activate().updateBaseMetadata(**new_metadata)\n
+    document.activate().Document_tryToUpdateBaseMetadata(**new_metadata)\n
 
 
 ]]></string> </value>
