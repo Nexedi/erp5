@@ -35,6 +35,7 @@ import urllib2, urllib
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
+from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
@@ -233,6 +234,8 @@ class ContributionTool(BaseTool):
       # For temp_object creation, use the standard method
       return BaseTool.newContent(self, id=id, portal_type=portal_type, temp_object=1, **kw)
 
+    document = None
+
     # Try to find the file_name
     file_name = None
     mime_type = None
@@ -301,6 +304,33 @@ class ContributionTool(BaseTool):
     # parameter
     # LOG('new content', 0, "%s -- %s" % (file_name, mime_type))
 
+
+    #
+    # Check if same file is already exists. if it exists, then update it.
+    # 
+    if portal_type is None:
+      content_type_registry = getToolByName(self, 'content_type_registry')
+      portal_type = content_type_registry.findTypeName(file_name, None, None)
+      property_dict = self.getMatchedFileNamePatternDict(file_name)
+      reference = property_dict.get('reference', None)
+      version  = property_dict.get('version', None)
+      language  = property_dict.get('language', None)
+      if portal_type and reference and version and language:
+        portal_catalog = getToolByName(self, 'portal_catalog')
+        document = portal_catalog.getResultValue(portal_type=portal_type,
+                                                 reference=reference,
+                                                 version=version,
+                                                 language=language)
+        if document is not None:
+          # document is already uploaded. So overrides file.
+          if not _checkPermission(Permissions.ModifyPortalContent, document):
+            raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
+          document.edit(file=kw['file'])
+          return document
+
+    #
+    # Strong possibility of a new file.
+    #
     try:
       self._checkId(file_name)
     except BadRequest:
@@ -357,6 +387,29 @@ class ContributionTool(BaseTool):
     """
     pass
 
+  security.declareProtected(Permissions.ModifyPortalContent,'getMatchedFileNamePatternDict')
+  def getMatchedFileNamePatternDict(self, file_name):
+    """
+      Get matched group dict of file name parsing regular expression.
+    """
+    property_dict = {}
+
+    if file_name is None:
+      return property_dict
+
+    regex_text = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
+    if regex_text in ('', None):
+      # we must have file name regular expression defined in preferences
+      raise ValueError, '[DMS] No file name regular expression defined in preferences.'
+    if regex_text:
+      pattern = re.compile(regex_text)
+      if pattern is not None:
+        try:
+          property_dict = pattern.match(file_name).groupdict()
+        except AttributeError: # no match
+          pass
+    return property_dict
+
   security.declareProtected(Permissions.ModifyPortalContent,'getPropertyDictFromFileName')
   def getPropertyDictFromFileName(self, file_name):
     """
@@ -365,19 +418,8 @@ class ContributionTool(BaseTool):
     """
     if file_name is None:
       return {}
-    property_dict = {}
-    rx_src = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
-    if rx_src in ('', None):
-      # we must have file name regular expression defined in preferences
-      raise ValueError, '[DMS] No file name regular expression defined in preferences.'
-    if rx_src:
-      rx_parse = re.compile(rx_src)
-      if rx_parse is not None:
-        try:
-          property_dict = rx_parse.match(file_name).groupdict()
-        except AttributeError: # no match
-          pass
-    method = self._getTypeBasedMethod('getPropertyDictFromFileName', 
+    property_dict = self.getMatchedFileNamePatternDict(file_name)
+    method = self._getTypeBasedMethod('getPropertyDictFromFileName',
         fallback_script_id = 'ContributionTool_getPropertyDictFromFileName')
     property_dict = method(file_name, property_dict)
     if property_dict.get('portal_type', None) is not None:
