@@ -319,8 +319,6 @@ class TestIngestion(ERP5TypeTestCase):
         # PDF has not implemented _convertToBaseFormat() so can not be converted
         self.assertEquals(context.getExternalProcessingState(), 'uploaded')
       else:
-        if context.getExternalProcessingState()=='uploaded':
-          import pdb;pdb.set_trace()
         self.assertEquals(context.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
         self.assert_('magic' in context.SearchableText())
         self.assert_('magic' in str(context.asText()))
