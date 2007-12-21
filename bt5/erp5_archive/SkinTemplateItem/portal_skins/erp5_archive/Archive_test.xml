@@ -101,7 +101,7 @@ if getattr(context, \'getStopDate\', None) is not None:\n
   if log:\n
     context.log("obj stop date %s" %context.getStopDate(), "min %s, max %s" %(min_stop_date, max_stop_date))\n
   if max_stop_date is not None:\n
-    result = result and (context.getStopDate() <= max_stop_date)\n
+    result = result and (context.getStopDate() < max_stop_date)\n
   if min_stop_date is not None:\n
     result = result and (context.getStopDate() >= min_stop_date)\n
 if log:\n
