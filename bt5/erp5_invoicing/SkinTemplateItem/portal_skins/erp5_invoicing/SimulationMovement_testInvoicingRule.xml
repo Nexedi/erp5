@@ -70,9 +70,16 @@
 parent = movement.getParentValue()\n
 if parent.getPortalType() == \'Applied Rule\':\n
   parent_rule = parent.getSpecialiseValue()\n
-  if parent_rule.getPortalType() in [\'Order Rule\', \'Delivery Rule\']:\n
-    return True\n
-return False\n
+  if parent_rule.getPortalType() not in [\'Order Rule\', \'Delivery Rule\']:\n
+    return False\n
+\n
+source_section = movement.getSourceSection()\n
+destination_section = movement.getDestinationSection()\n
+if source_section == destination_section or source_section is None \\\n
+    or destination_section is None:\n
+  return False\n
+\n
+return True\n
 </string> </value>
         </item>
         <item>
@@ -127,8 +134,11 @@ return False\n
                             <string>_getattr_</string>
                             <string>parent</string>
                             <string>parent_rule</string>
-                            <string>True</string>
                             <string>False</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>None</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
