@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Worklists</string>
-          <string>WorklistDefinition</string>
-        </tuple>
-        <none/>
+        <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -24,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Planned Leave Requests (%(count)s)</string> </value>
+            <value> <string>Planned Presence Requests (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-leave_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
+presence_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Planned Leave Request</string> </value>
+            <value> <string>Planned Presence Request</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +43,7 @@ leave_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2_planned_leave_request_list</string> </value>
+            <value> <string>2_planned_presence_request_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -60,11 +57,8 @@ leave_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -83,24 +77,21 @@ leave_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Leave Request</string>
+                        <string>Presence Request</string>
                       </tuple>
                     </value>
                 </item>
