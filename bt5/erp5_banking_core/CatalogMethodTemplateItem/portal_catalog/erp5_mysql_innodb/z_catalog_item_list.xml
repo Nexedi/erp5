@@ -96,28 +96,22 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isMovement</string>
-<string>isAccountable</string>
-<string>uid</string>
-<string>getStopDate</string>
-<string>getBaobabDestinationUid</string>
-<string>getBaobabDestinationSectionUid</string>
-<string>getResourceUid</string>
-<string>getVariationText</string>
-<string>getSimulationState</string>
-<string>getAggregateUidList</string>
+                            <string>isMovement</string>
+                            <string>isAccountable</string>
+                            <string>uid</string>
+                            <string>getStopDate</string>
+                            <string>getBaobabDestinationUid</string>
+                            <string>getBaobabDestinationSectionUid</string>
+                            <string>getResourceUid</string>
+                            <string>getVariationText</string>
+                            <string>getSimulationState</string>
+                            <string>getAggregateUidList</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

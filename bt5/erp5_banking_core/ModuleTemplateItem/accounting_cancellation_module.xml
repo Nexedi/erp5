@@ -208,6 +208,9 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add HBTreeFolder2s</name>
+  </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
    <role>Manager</role>
@@ -311,6 +314,9 @@
   <permission type='tuple'>
    <name>Add Zope Tutorials</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add old_CMFActivity Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add portal content</name>
@@ -464,10 +470,6 @@
   </permission>
   <permission type='tuple'>
    <name>Edit Factories</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Edit ParsedXML</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -671,10 +673,6 @@
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>View DOM hierarchy</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
