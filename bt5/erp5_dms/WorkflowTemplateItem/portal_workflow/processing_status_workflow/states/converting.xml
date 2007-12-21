@@ -21,17 +21,20 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>empty</string> </value>
+            <value> <string>converting</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Empty</string> </value>
+            <value> <string>Converting</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>convert_action</string>
+                <string>convert_file</string>
                 <string>edit</string>
+                <string>process_file</string>
                 <string>upload_file</string>
               </tuple>
             </value>

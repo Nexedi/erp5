@@ -66,43 +66,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This script is called when a file is uploaded to an object via ERP5 standard interface.\n
-It does the following:\n
-\n
-- determines portal types appropriate for the file type uploaded, and checks if the context portal type\n
-  is one of those (this is not a complete check, but all we can do at this stage)\n
-- checks if context already has some data (we do not allow re-upload of files)\n
-Otherwise it just uploads the file, bumps up revision number and calls metadata discovery script.\n
-\n
+This is a convenient method to call both convertToBaseFormat and\n
+discoverMetadata in good order in the same transaction. This method\n
+guarantees order of calling methods. convertToBaseFormat is called first,\n
+and discoverMetadata is called after.\n
 """\n
-\n
-translateString = context.Base_translateString\n
-request = context.REQUEST\n
-current_type = context.getPortalType()\n
-file_name = file.filename\n
-\n
-# we check for appropriate file type (by extension)\n
-# ContributionTool_getCandidateTypeListByExtension script returns a tuple of\n
-# one or more possible portal types for given extension\n
-# we accept or suggest appropriate portal type\n
-ext = file_name[file_name.rfind(\'.\')+1:]\n
-candidate_type_list = context.ContributionTool_getCandidateTypeListByExtension(ext)\n
-if candidate_type_list == () and current_type != \'File\':\n
-  portal_status_message = translateString("Sorry, this is not one of ${portal_type}. This file should be uploaded into a File document.", \n
-                                    mapping = dict(portal_type = str(candidate_type_list)))\n
-  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message=portal_status_message,cancel_url = kw[\'cancel_url\']), **kw)\n
-if candidate_type_list and current_type not in candidate_type_list:\n
-  portal_status_message = translateString("Sorry, this is a ${portal_type}. This file should be uploaded into a ${appropriate_type} document.",\n
-                                mapping = dict(portal_type = current_type, appropriate_type = str(candidate_type_list)))\n
-  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message =portal_status_message, cancel_url = kw[\'cancel_url\']), **kw)\n
-\n
-context.edit(file=file)\n
-context.activate().Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)\n
-\n
-msg = translateString(\'File uploaded.\')\n
-\n
-# Return to view mode\n
-return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
+convertToBaseFormat = getattr(context, \'convertToBaseFormat\', None)\n
+if convertToBaseFormat is not None:\n
+  convertToBaseFormat()\n
+return context.discoverMetadata(file_name, user_login)\n
 </string> </value>
         </item>
         <item>
@@ -119,7 +91,7 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None,form_id=None,file=None,**kw</string> </value>
+            <value> <string>file_name=None, user_login=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,30 +111,19 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>dialog_id</string>
-                            <string>form_id</string>
-                            <string>file</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>translateString</string>
-                            <string>request</string>
-                            <string>current_type</string>
                             <string>file_name</string>
-                            <string>_getitem_</string>
-                            <string>ext</string>
-                            <string>candidate_type_list</string>
-                            <string>dict</string>
-                            <string>str</string>
-                            <string>portal_status_message</string>
-                            <string>_apply_</string>
-                            <string>msg</string>
+                            <string>user_login</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>convertToBaseFormat</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,13 +138,12 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
               <tuple>
                 <none/>
                 <none/>
-                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_uploadFile</string> </value>
+            <value> <string>Document_convertToBaseFormatAndDiscoverMetadata</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

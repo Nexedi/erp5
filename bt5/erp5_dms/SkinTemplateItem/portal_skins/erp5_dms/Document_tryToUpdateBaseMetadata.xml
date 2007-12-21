@@ -65,44 +65,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script is called when a file is uploaded to an object via ERP5 standard interface.\n
-It does the following:\n
+            <value> <string>from Products.ERP5.Document.Document import ConversionError\n
 \n
-- determines portal types appropriate for the file type uploaded, and checks if the context portal type\n
-  is one of those (this is not a complete check, but all we can do at this stage)\n
-- checks if context already has some data (we do not allow re-upload of files)\n
-Otherwise it just uploads the file, bumps up revision number and calls metadata discovery script.\n
-\n
-"""\n
-\n
-translateString = context.Base_translateString\n
-request = context.REQUEST\n
-current_type = context.getPortalType()\n
-file_name = file.filename\n
-\n
-# we check for appropriate file type (by extension)\n
-# ContributionTool_getCandidateTypeListByExtension script returns a tuple of\n
-# one or more possible portal types for given extension\n
-# we accept or suggest appropriate portal type\n
-ext = file_name[file_name.rfind(\'.\')+1:]\n
-candidate_type_list = context.ContributionTool_getCandidateTypeListByExtension(ext)\n
-if candidate_type_list == () and current_type != \'File\':\n
-  portal_status_message = translateString("Sorry, this is not one of ${portal_type}. This file should be uploaded into a File document.", \n
-                                    mapping = dict(portal_type = str(candidate_type_list)))\n
-  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message=portal_status_message,cancel_url = kw[\'cancel_url\']), **kw)\n
-if candidate_type_list and current_type not in candidate_type_list:\n
-  portal_status_message = translateString("Sorry, this is a ${portal_type}. This file should be uploaded into a ${appropriate_type} document.",\n
-                                mapping = dict(portal_type = current_type, appropriate_type = str(candidate_type_list)))\n
-  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message =portal_status_message, cancel_url = kw[\'cancel_url\']), **kw)\n
-\n
-context.edit(file=file)\n
-context.activate().Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)\n
-\n
-msg = translateString(\'File uploaded.\')\n
-\n
-# Return to view mode\n
-return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
+message = None\n
+try:\n
+  return context.updateBaseMetadata(**kw)\n
+except ConversionError, e:\n
+  message = \'Conversion Error: %s\' % (str(e) or \'undefined.\')\n
+except Exception, e:\n
+  message = \'Problem: %s\' % (repr(e) or \'undefined.\')\n
+except:\n
+  message = \'Problem: unknown\'\n
+# reach here, then exception was raised.\n
+# message must be logged in workflow.\n
+context.updateFileMetadata(comment=message)\n
+# try again\n
+context.activate(priority=3).updateBaseMetadata(**kw)\n
+return message\n
 </string> </value>
         </item>
         <item>
@@ -119,7 +98,7 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None,form_id=None,file=None,**kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,30 +118,24 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>dialog_id</string>
-                            <string>form_id</string>
-                            <string>file</string>
                             <string>kw</string>
+                            <string>Products.ERP5.Document.Document</string>
+                            <string>ConversionError</string>
+                            <string>None</string>
+                            <string>message</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>translateString</string>
-                            <string>request</string>
-                            <string>current_type</string>
-                            <string>file_name</string>
-                            <string>_getitem_</string>
-                            <string>ext</string>
-                            <string>candidate_type_list</string>
-                            <string>dict</string>
+                            <string>e</string>
                             <string>str</string>
-                            <string>portal_status_message</string>
-                            <string>_apply_</string>
-                            <string>msg</string>
+                            <string>Exception</string>
+                            <string>repr</string>
                           </tuple>
                         </value>
                     </item>
@@ -174,16 +147,12 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_uploadFile</string> </value>
+            <value> <string>Document_tryToUpdateBaseMetadata</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

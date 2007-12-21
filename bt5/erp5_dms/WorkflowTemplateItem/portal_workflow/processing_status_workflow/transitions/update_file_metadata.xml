@@ -16,12 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -39,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This workflow method is called whenever conversion has been successfull</string> </value>
+            <value> <string>This method is invoked each time a file metadata is changed.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>convert_file</string> </value>
+            <value> <string>update_file_metadata</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -61,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Convert file</string> </value>
+            <value> <string>Update File Metadata</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
