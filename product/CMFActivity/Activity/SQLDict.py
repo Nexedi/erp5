@@ -390,6 +390,13 @@ class SQLDict(RAMDict, SQLBase):
         LOG('SQLDict', WARNING, 'Exception raised when invoking messages (uid, path, method_id) %r' % ([(x[0], x[1].object_path, x[1].method_id) for x in message_uid_priority_list], ), error=sys.exc_info())
         to_free_uid_list = [x[0] for x in message_uid_priority_list]
         try:
+          # Rollback all changes made on activity connection.
+          # We will commit to make messages available, and we cannot control
+          # what was done by the activity: it might have used the activity
+          # connection. As the transaction failed, we must rollback these
+          # potential changes before being allowed to commit in
+          # makeMessageListAvailable.
+          self.SQLDict_rollback()
           makeMessageListAvailable(to_free_uid_list)
         except:
           LOG('SQLDict', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())

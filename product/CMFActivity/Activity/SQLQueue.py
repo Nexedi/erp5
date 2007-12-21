@@ -274,6 +274,13 @@ class SQLQueue(RAMQueue, SQLBase):
           value[1].is_executed = 0
           LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % (value, ), error=sys.exc_info())
           try:
+            # Rollback all changes made on activity connection.
+            # We will commit to make messages available, and we cannot control
+            # what was done by the activity: it might have used the activity
+            # connection. As the transaction failed, we must rollback these
+            # potential changes before being allowed to commit in
+            # makeMessageListAvailable.
+            self.SQLQueue_rollback()
             makeMessageListAvailable([value[0]])
           except:
             LOG('SQQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
