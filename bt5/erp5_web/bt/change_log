@@ -1,3 +1,6 @@
+2007-12-21 Yusei
+* Update file contribution part. Please update erp5_web and erp5_dms together.
+
 2007-11-28 Yusei
 * Remove hardcoded ingestion email address from WebSite_viewContributeRenderer. Please use Email Ingestion Address preference instead.
 
