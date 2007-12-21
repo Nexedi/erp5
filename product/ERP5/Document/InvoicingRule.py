@@ -86,23 +86,12 @@ class InvoicingRule(Rule):
     # XXX Isn't it better to share the code with expand method
     context_movement = applied_rule.getParentValue()
 
-    # Do not invoice within the same entity or whenever entities are not all
-    # defined.
-    # It could be OK to invoice within different entities of the same
-    # company if we wish to get some internal analytical accounting but that
-    # requires some processing to produce a balance sheet.
-    source_section = context_movement.getSourceSection()
-    destination_section = context_movement.getDestinationSection()
-    if source_section == destination_section or source_section is None \
-        or destination_section is None:
-      return []
-
     # XXX Harcoded list
     invoice_line = {
         'source': context_movement.getSource(),
-        'source_section': source_section,
+        'source_section': context_movement.getSourceSection(),
         'destination': context_movement.getDestination(),
-        'destination_section': destination_section,
+        'destination_section': context_movement.getDestinationSection(),
         'start_date': context_movement.getStartDate(),
         'stop_date': context_movement.getStopDate(),
         'resource': context_movement.getResource(),
