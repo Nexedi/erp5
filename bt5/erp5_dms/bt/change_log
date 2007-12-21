@@ -1,5 +1,7 @@
 2007-12-21 Yusei
 * Refactored ingestion system. Please use revision 18459 or newer of ERP5 and ERP5OOo.
+* version up (0.9.1 -> 0.9.2)
+* add maintainer (yusei).
 
 2007-12-19 Yusei
 * Removed unused scripts in document_interaction_workflow.
