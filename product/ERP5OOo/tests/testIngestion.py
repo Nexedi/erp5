@@ -319,6 +319,8 @@ class TestIngestion(ERP5TypeTestCase):
         # PDF has not implemented _convertToBaseFormat() so can not be converted
         self.assertEquals(context.getExternalProcessingState(), 'uploaded')
       else:
+        if context.getExternalProcessingState()=='uploaded':
+          import pdb;pdb.set_trace()
         self.assertEquals(context.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
         self.assert_('magic' in context.SearchableText())
         self.assert_('magic' in str(context.asText()))
@@ -539,10 +541,18 @@ class TestIngestion(ERP5TypeTestCase):
     context = self.getDocument('one')
     return self.assertEquals(context.getExternalProcessingState(), 'uploaded')
 
+  def stepCheckConvertingState(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if the document is in "converting" processing state
+      (ie. a file upload has been done and the document is converting)
+    """
+    context = self.getDocument('one')
+    return self.assertEquals(context.getExternalProcessingState(), 'converting')
+
   def stepCheckConvertedState(self, sequence=None, sequence_list=None, **kw):
     """
       Check if the document is in "converted" processing state
-      (ie. a file upload has been done and the document has
+      (ie. a file conversion has been done and the document has
       been converted)
     """
     context = self.getDocument('one')
@@ -568,27 +578,74 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(document.getRevision(), '1')
     document.reindexObject()
     get_transaction().commit()
-    self.tic()
 
-  def stepDialogUpload(self, sequence=None, sequence_list=None, **kw):
+  def stepUploadFromViewForm(self, sequence=None, sequence_list=None, **kw):
     """
-      Upload a file using the dialog script Document_uploadFile
-      and make sure this increases the revision
+      Upload a file from view form and make sure this increases the revision
     """
     context = self.getDocument('one')
     f = makeFileUpload('TEST-en-002.doc')
     revision = context.getRevision()
-    context.Document_uploadFile(file=f)
+    context.edit(file=f)
     self.assertEquals(context.getRevision(), str(int(revision) + 1))
     context.reindexObject()
     get_transaction().commit()
+
+  def stepUploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
+    """
+      Upload a file from contribution.
+    """
+    f = makeFileUpload('TEST-en-002.doc')
+    self.portal.portal_contributions.newContent(id='one', file=f)
+    get_transaction().commit()
+
+  def stepReuploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
+    """
+      Upload a file from contribution form and make sure this update existing
+      document and don't make a new document.
+    """
+    context = self.getDocument('one')
+    revision = context.getRevision()
+    number_of_document = len(self.portal.document_module.objectIds())
+    self.assert_('This document is modified.' not in context.asText())
+
+    f = makeFileUpload('TEST-en-002-modified.doc')
+    f.filename = 'TEST-en-002.doc'
+
+    self.portal.portal_contributions.newContent(file=f)
+    get_transaction().commit()
     self.tic()
+    get_transaction().commit()
+    self.assertEquals(context.getRevision(), str(int(revision) + 1))
+    self.assert_('This document is modified.' in context.asText())
+    self.assertEquals(len(self.portal.document_module.objectIds()),
+                      number_of_document)
+
+    context.reindexObject()
+    get_transaction().commit()
+
+  def stepUploadAnotherTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
+    """
+      Upload another file from contribution.
+    """
+    f = makeFileUpload('ANOTHE-en-001.doc')
+    self.portal.portal_contributions.newContent(id='two', file=f)
+
+    get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
+
+    context = self.getDocument('two')
+    self.assert_('This is a another very interesting document.' in context.asText())
+    self.assertEquals(context.getReference(), 'ANOTHE')
+    self.assertEquals(context.getVersion(), '001')
+    self.assertEquals(context.getLanguage(), 'en')
 
   def stepDiscoverFromFilename(self, sequence=None, sequence_list=None, **kw):
     """
-      Upload a file using the dialog script Document_uploadFile.
-      This should trigger metadata discovery and we should have
-      basic coordinates immediately, from first stage.
+      Upload a file using contribution tool. This should trigger metadata
+      discovery and we should have basic coordinates immediately,
+      from first stage.
     """
     context = self.getDocument('one')
     file_name = 'TEST-en-002.doc'
@@ -605,7 +662,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(property_dict['subject_list'], ['keywords'])
     # Then make sure metadata discovery works
     f = makeFileUpload(file_name)
-    context.Document_uploadFile(file=f)
+    context.edit(file=f)
     self.assertEquals(context.getReference(), 'TEST')
     self.assertEquals(context.getLanguage(), 'en')
     self.assertEquals(context.getVersion(), '002')
@@ -639,7 +696,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     context = self.getDocument('one')
     f = makeFileUpload('TEST-en-002.doc')
-    context.Document_uploadFile(file=f)
+    context.edit(file=f)
     get_transaction().commit()
     self.tic()
     # Then make sure content discover works
@@ -990,11 +1047,13 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCreateTextDocument'
                  ,'stepCheckEmptyState'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
                  ,'stepCheckConvertedState'
-                 ,'stepDialogUpload'
+                 ,'stepUploadFromViewForm'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
                  ,'stepCheckConvertedState'
-                 ,'stepDiscoverFromFilename'
-                 ,'stepCheckConvertedContent'
                 ]
     self.playSequence(step_list, quiet)
 
@@ -1014,8 +1073,9 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_04_MetadataExtraction')
     step_list = [ 'stepCleanUp'
-                 ,'stepCreateTextDocument'
+                 ,'stepUploadTextFromContributionTool'
                  ,'stepSetSimulatedDiscoveryScript'
+                 ,'stepTic'
                  ,'stepTestMetadataSetting'
                 ]
     self.playSequence(step_list, quiet)
@@ -1030,7 +1090,10 @@ class TestIngestion(ERP5TypeTestCase):
     if not quiet: printAndLog('test_04_MetadataEditing')
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
-                 ,'stepDialogUpload'
+                 ,'stepUploadFromViewForm'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepEditMetadata'
                  ,'stepCheckChangedMetadata'
                 ]
@@ -1100,7 +1163,10 @@ class TestIngestion(ERP5TypeTestCase):
     if not quiet: printAndLog('test_07_SnapshotGeneration')
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
-                 ,'stepDialogUpload'
+                 ,'stepUploadFromViewForm'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepCheckHasNoSnapshot'
                  ,'stepCreateSnapshot'
                  ,'stepTryRecreateSnapshot'
@@ -1149,22 +1215,37 @@ class TestIngestion(ERP5TypeTestCase):
     step_list = [ 'stepCleanUp' 
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderFICU'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderCUFI'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderUIFC'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderICUF'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderUFCI'
                 ]
@@ -1186,6 +1267,25 @@ class TestIngestion(ERP5TypeTestCase):
                 ]
     self.playSequence(step_list, quiet)
 
+  def test_12_UploadTextFromContributionTool(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Make sure that when upload file from contribution tool, it creates a new
+      document in document module. when reupload same filename file, then it
+      does not create a new document and update existing document.
+    """
+    if not run: return
+    if not quiet: printAndLog('test_12_ReUploadSameFilenameFile')
+    step_list = [ 'stepCleanUp'
+                 ,'stepUploadTextFromContributionTool'
+                 ,'stepCheckConvertingState'
+                 ,'stepTic'
+                 ,'stepCheckConvertedState'
+                 ,'stepDiscoverFromFilename'
+                 ,'stepTic'
+                 ,'stepReuploadTextFromContributionTool'
+                 ,'stepUploadAnotherTextFromContributionTool'
+                ]
+    self.playSequence(step_list, quiet)
 
 # Missing tests
 """
