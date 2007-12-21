@@ -1830,7 +1830,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql_src = self.getCatalogTool()(src__=1, **catalog_kw)
     self.failUnless("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src)
 
-  def test_SearchOnOwner(self):
+  def test_SearchOnOwner(self, quiet=quiet, run=run_all_test):
+    if not run: return  
     # owner= can be used a search key in the catalog to have all documents for
     # a specific owner and on which he have the View permission.
     obj = self._makeOrganisation(title='The Document')
@@ -2021,7 +2022,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet(['little_owner'], [x.owner for x in result])
 
-  def test_ExactMatchSearch(self):
+  def test_ExactMatchSearch(self, quiet=quiet, run=run_all_test):
+    if not run: return
     # test exact match search with queries
     doc = self._makeOrganisation(title='Foo%')
     other_doc = self._makeOrganisation(title='FooBar')
@@ -2035,7 +2037,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
        ctool(portal_type='Organisation', title=dict(query='Foo%',
                                                     key='ExactMatch'))])
 
-  def test_KeywordSearch(self):
+  def test_KeywordSearch(self, quiet=quiet, run=run_all_test):
+    if not run: return  
     # test keyword search with queries
     doc = self._makeOrganisation(description='Foo')
     other_doc = self._makeOrganisation(description='Foobar')
@@ -2050,7 +2053,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                                          key='Keyword'))]))
 
 
-  def test_ignore_empty_string(self):
+  def test_ignore_empty_string(self, quiet=quiet, run=run_all_test):
+    if not run: return  
     # ERP5Catalog ignore empty strings by default
     doc_with_title = self._makeOrganisation(title='X')
     doc_with_empty_title = self._makeOrganisation(title='')
