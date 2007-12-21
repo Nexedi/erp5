@@ -204,6 +204,13 @@
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
         </button>\n
+        <button class="clone" type="submit" title="Clone"\n
+                tal:condition="python: not list_mode"\n
+                tal:attributes="name python: \'Base_createCloneDocument:method\'"\n
+                i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>\n
+        </button>\n
         <button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
