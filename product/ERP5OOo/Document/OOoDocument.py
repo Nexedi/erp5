@@ -38,7 +38,9 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
+from Products.ERP5.Document.Document import ConversionCacheMixin
+from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5.Document.File import _unpackData
 from zLOG import LOG, ERROR
 
@@ -139,6 +141,13 @@ class OOoDocument(File, ConversionCacheMixin):
   rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
   rx_compr = re.compile('\s+')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'isSupportBaseDataConversion')
+  def isSupportBaseDataConversion(self):
+    """
+    OOoDocument is needed to conversion to base format.
+    """
+    return True
+
   def _setFile(self, data, precondition=None):
     File._setFile(self, data, precondition=precondition)
     if self.hasBaseData():
@@ -170,7 +179,7 @@ class OOoDocument(File, ConversionCacheMixin):
       return File.index_html(self, REQUEST, RESPONSE)
     # Make sure file is converted to base format
     if not self.hasBaseData():
-      self.convertToBaseFormat()
+      raise NotConvertedError
     # Else try to convert the document and return it
     mime, result = self.convert(format=format, display=display, **kw)
     if not mime:
@@ -215,7 +224,7 @@ class OOoDocument(File, ConversionCacheMixin):
       to provide an extensive list of conversion formats.
     """
     if not self.hasBaseData():
-      self.convertToBaseFormat()
+      raise NotConvertedError
 
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()
@@ -288,7 +297,7 @@ class OOoDocument(File, ConversionCacheMixin):
       Communicates with server to convert a file 
     """
     if not self.hasBaseData():
-      self.convertToBaseFormat()
+      raise NotConvertedError
     if format == 'text-content':
       # Extract text from the ODF file
       cs = cStringIO.StringIO()
@@ -333,7 +342,8 @@ class OOoDocument(File, ConversionCacheMixin):
     is_html = 0
     original_format = format
     if format == 'base-data':
-      if not self.hasBaseData(): self.convertToBaseFormat()
+      if not self.hasBaseData():
+        raise NotConvertedError
       return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
       format_list = [x for x in self.getTargetFormatList()
@@ -360,7 +370,7 @@ class OOoDocument(File, ConversionCacheMixin):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
     # Check if we have already a base conversion
     if not self.hasBaseData():
-      self.convertToBaseFormat()
+      raise NotConvertedError
     # Return converted file
     if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
       has_format = self.hasConversion(format=format)
@@ -482,24 +492,26 @@ class OOoDocument(File, ConversionCacheMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateBaseMetadata')
-  def updateBaseMetadata(self, *arg, **kw):
+  def updateBaseMetadata(self, **kw):
     """
       Updates metadata information in the converted OOo document
       based on the values provided by the user. This is implemented
       through the invocation of the conversion server.
     """
-    data = self.getBaseData()
-    if data in ('', None):
-      raise ValueError, "OOoDocument: BaseData is empty. Document is not converted yet."
+    if not self.hasBaseData():
+      raise NotConvertedError
+
+    self.clearConversionCache()
 
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
-                                       enc(_unpackData(data)),
+                                       enc(_unpackData(self.getBaseData())),
                                        kw)
     if response_code == 200:
       # successful meta data extraction
       self._setBaseData(dec(response_dict['data']))
+      self.updateFileMetadata() # record in workflow history # XXX must put appropriate comments.
     else:
       # Explicitly raise the exception!
       raise ConversionError("OOoDocument: error getting document metadata %s:%s"

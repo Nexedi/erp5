@@ -98,6 +98,8 @@ class SnapshotMixin:
 
 class ConversionError(Exception):pass
 
+class NotConvertedError(Exception):pass
+
 class ConversionCacheMixin:
   """
     This class provides a generic API to store in the ZODB
@@ -921,7 +923,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       returns properties which should be set on the document
     """
     if not self.hasBaseData():
-      self.convertToBaseFormat()
+      raise NotConvertedError
     method = self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
     return method()
@@ -1165,26 +1167,15 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
     """
     try:
-      msg = self._convertToBaseFormat() # Call implemetation method
+      message = self._convertToBaseFormat() # Call implemetation method
       self.clearConversionCache() # Conversion cache is now invalid
-      if msg is None:
-        msg = 'Converted to %s.' % self.getBaseContentType()
-      self.convertFile(comment=msg) # Invoke workflow method
-    except NotImplementedError:# we don't do any workflow action if nothing has been done
-      msg = '' 
-    except ConversionError, e:
-      msg = 'Problem: %s' % (str(e) or 'undefined.')
-      #self.processFile(comment=msg)
-      raise ConversionError, msg
-    except Fault, e:
-      msg = 'Problem: %s' % (repr(e) or 'undefined.')
-      #self.processFile(comment=msg)
-      raise Fault, msg
-    except socket.error, e:
-      msg = 'Problem: %s' % (repr(e) or 'undefined.')
-      #self.processFile(comment=msg)
-      raise socket.error, msg
-    return msg
+      if message is None:
+        # XXX Need to translate.
+        message = 'Converted to %s.' % self.getBaseContentType()
+      self.convertFile(comment=message) # Invoke workflow method
+    except NotImplementedError:
+      message = ''
+    return message
 
   def _convertToBaseFormat(self):
     """
@@ -1203,6 +1194,14 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       links (in combindation with populate).
     """
     raise NotImplementedError
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'isSupportBaseDataConversion')
+  def isSupportBaseDataConversion(self):
+    """
+    This is a public interface to check a document that is support conversion
+    to base format and can be overridden in subclasses.
+    """
+    return False
 
   def convertFile(self, **kw):
     """

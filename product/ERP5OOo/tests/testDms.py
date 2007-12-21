@@ -444,6 +444,8 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     doc.edit(file=makeFileUpload('import_data_list.ods'))
     doc.publish()
     get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
 
     uf = self.portal.acl_users
     uf._doAddUser('member_user2', 'secret', ['Member'], [])
