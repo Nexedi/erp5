@@ -211,7 +211,7 @@ class ArchiveTool(BaseTool):
                                              REQUEST=REQUEST, RESPONSE=RESPONSE)
 
     # Create inventory just before finish of hot reindexing
-    inventory_date = str(archive.getStopDateRangeMax())
+    inventory_date = archive.getStopDateRangeMax()
     self.activate(passive_commit=1,
                   after_method_id=('playBackRecordedObjectList'),
                   priority=5).runInventoryMethod(archive.id,
