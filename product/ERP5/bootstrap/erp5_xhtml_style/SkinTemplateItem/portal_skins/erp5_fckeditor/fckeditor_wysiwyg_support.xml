@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -59,9 +56,10 @@
                        cleaninput         python: cleaninput.replace(\'\\x27\',\'\\x5C\\x27\');\n
                        cleaninput         python: cleaninput.replace(\'\\r\',\'\\x5C\\x72\');\n
                        cleaninput         python: cleaninput.replace(\'\\n\',\'\\x5C\\x6E\');\n
-                       portal_url         here/portal_url;\n
+                       site_root          python: getattr(here, \'getWebSiteValue\', here.getPortalObject)();\n
+                       portal_url         python: site_root.absolute_url();\n
                        server_url         request/BASE0;\n
-                       portal_path        python: portal_url.replace(server_url, \'\')+\'/\';\n
+                       portal_path        python: portal_url.replace(server_url, \'\') + \'/\';\n
                        isInFactory        python: test(\'/portal_factory\'in request.URLPATH0, 1, 0);\n
                        isRegisteredFolder python: test(here.Title() and here.isPrincipiaFolderish, 1,0);\n
                        isRegisteredPA     python: test(here.Title() and here.meta_type==\'PloneArticle\', 1,0);\n
