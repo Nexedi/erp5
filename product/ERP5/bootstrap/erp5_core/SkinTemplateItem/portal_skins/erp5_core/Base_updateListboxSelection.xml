@@ -65,23 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
+            <value> <string>selection_name = context.REQUEST.get(\'selection_name\', None)\n
+listbox_uid =context.REQUEST.get(\'listbox_uid\', None)\n
+uids = context.REQUEST.get(\'uids\', None)\n
 \n
-request = context.REQUEST\n
-\n
-#return request\n
-\n
-context.Base_updateListboxSelection()\n
-\n
-kw = { \'selection_index\': selection_index,\n
-       \'selection_name\': selection_name,\n
-      }\n
-\n
-# Default behaviour is not as great but returns something\n
-kw.update(request.form)\n
-if kw.has_key(\'listbox_uid\'): del kw[\'listbox_uid\']\n
-if kw.has_key(\'list_start\'): del kw[\'list_start\']\n
-request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
+if selection_name is not None:\n
+  context.portal_selections.updateSelectionCheckedUidList(listbox_uid = listbox_uid,\n
+                                                     uids=uids,\n
+                                                     selection_name=selection_name)\n
 </string> </value>
         </item>
         <item>
@@ -97,8 +88,14 @@ request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\', selection_index=\'\', selection_name=\'\'</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,22 +115,18 @@ request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
-                            <string>selection_index</string>
-                            <string>selection_name</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>kw</string>
-                            <string>_write_</string>
+<string>context</string>
+                            <string>None</string>
+                            <string>selection_name</string>
+                            <string>listbox_uid</string>
+                            <string>uids</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,16 +138,12 @@ request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-                <string></string>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_updateListboxSelection</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
