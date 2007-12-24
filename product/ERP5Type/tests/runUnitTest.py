@@ -14,7 +14,7 @@ if os.name == 'nt':
 
 __doc__ = """%(program)s: unit test runner for the ERP5 Project
 
-usage: %(program)s [options] [UnitTest1[.TestClass1[.testMethod]] [UnitTest2]]
+usage: %(program)s [options] [UnitTest1[.TestClass1[.testMethod]] [...]]
 
 Options:
   -v, --verbose              produce verbose output
