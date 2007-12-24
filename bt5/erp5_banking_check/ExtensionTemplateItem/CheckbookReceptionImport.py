@@ -17,10 +17,10 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
   #self.log("import checkbook", "file_item_list = %s" %(file_item_list,))
   for item in file_item_list:
     checkbook_id = item.xpath("string(@id)")
-    check_quantity = str(item.xpath("string(./check_quantity)"))
+    check_quantity = int(float(item.xpath("string(./check_quantity)")))
     reference_min = str(item.xpath("string(./reference_min)"))
     reference_max = str(item.xpath("string(./reference_max)"))
-    quantity = str(item.xpath("string(./quantity)"))
+    quantity = int(float(item.xpath("string(./quantity)")))
     internal_account_number = item.xpath("string(./numero_interne)")
     checkbook_type = item.xpath("string(./checkbook_type)")
     type = str(item.xpath("string(./checkbook_type)"))
@@ -53,7 +53,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
     if is_checkbook:
       for amount in resource.objectValues(
           portal_type="Checkbook Model Check Amount Variation"):
-        resource_amount_dict["%i" % amount.getQuantity()] = "check_amount/%s" % \
+        resource_amount_dict[int(amount.getQuantity())] = "check_amount/%s" % \
                                                        amount.getRelativeUrl()
     for  (account, account_dict) in checkbook_dict.items():
       for (gid, item_dict) in account_dict.items():
