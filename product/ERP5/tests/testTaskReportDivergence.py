@@ -139,7 +139,9 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     sequence_list = SequenceList()
 
     # Test with a simply order without cell
-    sequence_string = 'stepCreateOrganisation ' + \
+    sequence_string = '\
+                      stepLogin \
+                      stepCreateOrganisation ' + \
                       self.default_task_sequence + '\
                       stepCheckTaskReportIsSolved \
                       stepChangeTaskReportDestination \
