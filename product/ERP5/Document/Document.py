@@ -1066,7 +1066,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       Converts the content of the document to a textual representation.
     """
     mime, data = self.convert(format='txt')
-    return data
+    return str(data)
 
   security.declareProtected(Permissions.View, 'asEntireHTML')
   def asEntireHTML(self):
