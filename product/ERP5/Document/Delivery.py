@@ -330,12 +330,16 @@ class Delivery(XMLObject, ImmobilisationDelivery):
          divergence_list.extend(movement.getDivergenceList())
       return divergence_list
 
-    def updateCausalityState(self,**kw):
+    def updateCausalityState(self, **kw):
       """
       This is often called as an activity, it will check if the
       deliver is convergent, and if so it will put the delivery
       in a solved state, if not convergent in a diverged state
       """
+      updateCausalityState = UnrestrictedMethod(self._updateCausalityState)
+      return updateCausalityState(**kw)
+
+    def _updateCausalityState(self, **kw):
       if getattr(self, 'diverge', None) is not None \
             and getattr(self, 'converge', None) is not None:
         if self.isDivergent(**kw):
