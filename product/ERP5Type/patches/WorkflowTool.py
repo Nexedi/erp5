@@ -152,7 +152,8 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
                        }
         }
         acceptable_key_dict:
-        ['foo', 'baz']
+        {'foo': None,
+         'baz': None}
       Output a 2-tuple:
         (
           [{'workflow_A/worklist_AA': {'foo': (1, 2)}
@@ -165,7 +166,6 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
           {} # Contains metadata information, one entry per worklist.
         )
   """
-  acceptable_key_dict = acceptable_key_dict.copy()
   # One entry per worklist group, based on filter criterions.
   worklist_set_dict = {}
   metadata_dict = {}
