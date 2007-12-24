@@ -442,7 +442,7 @@ class TestERP5BankingCheckPaymentMixin:
     FIXME: check if the transition fails when a category or property is invalid.
     """
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(),
-                     self.check_payment.getTotalPrice(fast=0, portal_type = 'Cash Delivery Cell'))
+                     self.check_payment.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
     self.workflow_tool.doActionFor(self.check_payment, 'deliver_action', wf_id='check_payment_workflow')
     self.assertEqual(self.check_payment.getSimulationState(), 'delivered')
 

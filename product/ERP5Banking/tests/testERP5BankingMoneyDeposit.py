@@ -282,14 +282,13 @@ class TestERP5BankingMoneyDepositMixin:
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 120000)
 
   def stepDeliverMoneyDeposit(self, sequence=None, sequence_list=None, **kwd):
-
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(),
-                     self.money_deposit.getTotalPrice(fast=0, portal_type = 'Cash Delivery Cell'))
+                     self.money_deposit.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
     self.workflow_tool.doActionFor(self.money_deposit, 'deliver_action', wf_id='money_deposit_workflow')
     self.assertEqual(self.money_deposit.getSimulationState(), 'delivered')
     
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
-    self.assertEqual(20000.0, self.money_deposit.getTotalPrice(fast=0, portal_type = 'Cash Delivery Cell'))
+    self.assertEqual(20000.0, self.money_deposit.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
