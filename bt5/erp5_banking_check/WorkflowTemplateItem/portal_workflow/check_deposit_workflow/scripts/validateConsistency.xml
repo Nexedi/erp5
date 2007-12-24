@@ -102,7 +102,7 @@ if destination_bank_account is not None:\n
     raise ValidationFailed, (msg,)\n
 \n
 # Check if the total price is equal to the total asset price.\n
-if transaction.getTotalPrice(portal_type = \'Check Operation Line\') != transaction.getSourceTotalAssetPrice():\n
+if transaction.getTotalPrice(fast=0, portal_type = \'Check Operation Line\') != transaction.getSourceTotalAssetPrice():\n
   msg = Message(domain=\'ui\', message="Total price doesn\'t match.")\n
   raise ValidationFailed, (msg,)\n
 \n
