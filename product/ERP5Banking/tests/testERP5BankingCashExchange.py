@@ -332,9 +332,9 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of lines
     self.assertEqual(len(self.cash_exchange.objectValues()), 2)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.cash_exchange.getTotalQuantity(fast=0, deliveryLineType="Incoming Cash Exchange Line"), 17.0)
+    self.assertEqual(self.cash_exchange.getTotalQuantity(fast=0, portal_type="Incoming Cash Exchange Line"), 17.0)
     # Check the total price
-    self.assertEqual(self.cash_exchange.getTotalPrice(fast=0, deliveryLineType="Incoming Cash Exchange Line"), 10000 * 3.0 + 10000 * 2.0 + 200 * 5.0 + 200 * 7.0)
+    self.assertEqual(self.cash_exchange.getTotalPrice(fast=0, portal_type="Incoming Cash Exchange Line"), 10000 * 3.0 + 10000 * 2.0 + 200 * 5.0 + 200 * 7.0)
 
 
   def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -427,9 +427,9 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.cash_exchange.objectValues()), 4)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.cash_exchange.getTotalQuantity(fast=0, deliveryLineType="Outgoing Cash Exchange Line"), 34.0)
+    self.assertEqual(self.cash_exchange.getTotalQuantity(fast=0, portal_type="Outgoing Cash Exchange Line"), 34.0)
     # check the total price
-    self.assertEqual(self.cash_exchange.getTotalPrice(fast=0, deliveryLineType="Outgoing Cash Exchange Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
+    self.assertEqual(self.cash_exchange.getTotalPrice(fast=0, portal_type="Outgoing Cash Exchange Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
 
 
 
