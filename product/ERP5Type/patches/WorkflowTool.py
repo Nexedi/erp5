@@ -380,12 +380,21 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
         if not isinstance(criterion_value, ExclusionList):
           criterion_id_dict[criterion_id] = None
     criterion_id_list = criterion_id_dict.keys()
+    class_dict = dict([(name, value.__class__) for name, value in \
+                       zip(catalog_result.names(), catalog_result[0])])
     # Group all worklists concerned by a set of criterion values in
     # criterion_value_to_worklist_key_dict
     # key: criterion value tuple, in the same order as in criterion_id_list
     # value: list of ids of every concerned worklist
     criterion_value_to_worklist_key_dict = {}
     for worklist_id, criterion_dict in grouped_worklist_dict.iteritems():
+      # Transtype values to match catalog-provided type.
+      for criterion_id in criterion_id_list:
+        criterion_value_list = criterion_dict[criterion_id]
+        expected_class = class_dict[criterion_id]
+        if not isinstance(criterion_value_list[0], expected_class):
+          criterion_dict[criterion_id] = [expected_class(x) for x in
+                                          criterion_value_list]
       # Get all the possible combinations of values for all criterions for this
       # worklist. Worklist filtering on portal_type='Foo' and 
       # validation_state in ['draft', 'validated'] is "interested" by both 
