@@ -1246,16 +1246,16 @@ class Catalog(Folder,
       for table in self.getCatalogSearchTableIds():
         field_list = self._getCatalogSchema(table=table)
         for field in field_list:
-          keys[field] = 1
-          keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
+          keys[field] = None
+          keys['%s.%s' % (table, field)] = None  # Is this inconsistent ?
       for related in self.getSQLCatalogRelatedKeyList():
         related_tuple = related.split('|')
         related_key = related_tuple[0].strip()
-        keys[related_key] = 1
+        keys[related_key] = None
       for scriptable in self.getSQLCatalogScriptableKeyList():
         scriptable_tuple = scriptable.split('|')
         scriptable = scriptable_tuple[0].strip()
-        keys[scriptable] = 1
+        keys[scriptable] = None
       keys = keys.keys()
       keys.sort()
       return keys
