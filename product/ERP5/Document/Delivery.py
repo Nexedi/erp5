@@ -34,9 +34,9 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
-from zLOG import LOG
-from zLOG import PROBLEM
+from zLOG import LOG, PROBLEM
 
 class Delivery(XMLObject, ImmobilisationDelivery):
     """
@@ -654,8 +654,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
-                          **kw):
+    def updateAppliedRule(self, *args, **kw):
       """
       Create a new Applied Rule if none is related, or call expand
       on the existing one.
@@ -666,6 +665,11 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       If no rule is found, simply pass rule_reference to _createAppliedRule,
       to keep compatibility vith the previous behaviour
       """
+      updateAppliedRule = UnrestrictedMethod(self._updateAppliedRule)
+      return updateAppliedRule(*args, **kw)
+
+    def _updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
+                           **kw):
       if rule_id is not None:
         from warnings import warn
         warn('rule_id to updateAppliedRule is deprecated; use rule_reference instead',
@@ -736,12 +740,16 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           activate_kw=activate_kw, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
+    def expand(self, *args,**kw):
       """
         Reexpand applied rule
         
         Also reexpand all rules related to movements
       """
+      expand = UnrestrictedMethod(self._expand)
+      return expand(*args, **kw)
+
+    def _expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
       excluded_rule_path_list = []
       if applied_rule_id is not None:
         my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
