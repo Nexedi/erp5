@@ -262,11 +262,15 @@ class SQLQueue(RAMQueue, SQLBase):
         # Try to invoke
         try:
           activity_tool.invoke(value[1])
-          # Commit so that if a message raises it doesn't causes previous
-          # successfull messages to be rolled back. This commit might fail,
-          # so it is protected the same way as activity execution by the
-          # same "try" block.
-          get_transaction().commit()
+          if value[1].is_executed:
+            # Commit so that if a message raises it doesn't causes previous
+            # successfull messages to be rolled back. This commit might fail,
+            # so it is protected the same way as activity execution by the
+            # same "try" block.
+            get_transaction().commit()
+          else:
+            # This message failed, revert.
+            abortTransactionSynchronously()
         except:
           # We must make sure that the message is not set as executed.
           # It is possible that the message is executed but the commit
@@ -280,7 +284,7 @@ class SQLQueue(RAMQueue, SQLBase):
             # connection. As the transaction failed, we must rollback these
             # potential changes before being allowed to commit in
             # makeMessageListAvailable.
-            self.SQLQueue_rollback()
+            activity_tool.SQLQueue_rollback()
             makeMessageListAvailable([value[0]])
           except:
             LOG('SQQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
