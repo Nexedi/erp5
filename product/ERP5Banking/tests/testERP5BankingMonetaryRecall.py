@@ -394,7 +394,6 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
-    #import pdb;pdb.set_trace()
     self.assertTrue('Insufficient balance' in "%s" %(msg,))
 
 
@@ -540,7 +539,6 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # get the delivery cell
     cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/cancelled')
     # check the destination variation text is redefine on destination
-    #import pdb;pdb.set_trace()
     self.assertEqual(cell.getBaobabDestinationVariationText(), 'cash_status/retired\nemission_letter/p\nvariation/2003')
 
   def stepResetInventory(self, 
