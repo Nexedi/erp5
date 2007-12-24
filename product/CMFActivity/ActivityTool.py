@@ -103,7 +103,7 @@ class Message:
   """
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
     if isinstance(obj, str):
-      self.object_path = obj.split('/')
+      self.object_path = tuple(obj.split('/'))
     else:
       self.object_path = obj.getPhysicalPath()
     if type(active_process) is StringType:
