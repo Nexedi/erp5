@@ -2142,6 +2142,42 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.flushAllActivities(silent=1, loop_size=100)
     self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
 
+  def test_88_ProcessingMultipleMessagesMustRevertIndividualMessagesOnError(self, quiet=0, run=run_all_test):
+    """
+      Check that, on queues which support it, processing a batch of multiple
+      messages doesn't cause failed ones to becommited along with succesful
+      ones.
+
+      Queues supporting message batch processing:
+       - SQLQueue
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck processing a batch of messages with failures'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    active_obj = obj.activate(activity='SQLQueue')
+    def appendToTitle(self, to_append, fail=False):
+      self.setTitle(self.getTitle() + to_append)
+      if fail:
+        raise ValueError, 'This method always fail'
+    Organisation.appendToTitle = appendToTitle
+    obj.setTitle('a')
+    active_obj.appendToTitle('b')
+    active_obj.appendToTitle('c', fail=True)
+    active_obj.appendToTitle('d')
+    object_id = obj.getId()
+    get_transaction().commit()
+    self.assertEqual(obj.getTitle(), 'a')
+    self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 3)
+    self.flushAllActivities(silent=1, loop_size=100)
+    self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 1)
+    self.assertEqual(obj.getTitle(), 'abd')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
