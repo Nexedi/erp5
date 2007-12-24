@@ -232,12 +232,12 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin, ERP5TypeTestCase
   def stepDeliverInternalMoneyPayment(self, sequence=None, sequence_list=None, **kwd):
 
     self.assertEqual(self.internal_money_payment.getSourceTotalAssetPrice(),
-                     self.internal_money_payment.getTotalPrice(portal_type = 'Cash Delivery Cell'))
+                     self.internal_money_payment.getTotalPrice(fast=0, portal_type = 'Cash Delivery Cell'))
     self.workflow_tool.doActionFor(self.internal_money_payment, 'deliver_action', wf_id='internal_money_payment_workflow')
     self.assertEqual(self.internal_money_payment.getSimulationState(), 'delivered')
     
     self.assertEqual(self.internal_money_payment.getSourceTotalAssetPrice(), 20000.0)
-    self.assertEqual(20000.0, self.internal_money_payment.getTotalPrice(portal_type = 'Cash Delivery Cell'))
+    self.assertEqual(20000.0, self.internal_money_payment.getTotalPrice(fast=0, portal_type = 'Cash Delivery Cell'))
 
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):

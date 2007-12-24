@@ -309,9 +309,9 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of lines
     self.assertEqual(len(self.monetary_recall.objectValues()), 1)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.monetary_recall.getTotalQuantity(), 5.0)
+    self.assertEqual(self.monetary_recall.getTotalQuantity(fast=0), 5.0)
     # Check the total price
-    self.assertEqual(self.monetary_recall.getTotalPrice(), 10000 * 5.0)
+    self.assertEqual(self.monetary_recall.getTotalPrice(fast=0), 10000 * 5.0)
 
 
   def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
@@ -368,9 +368,9 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of monetary recall lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.monetary_recall.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
-    self.assertEqual(self.monetary_recall.getTotalQuantity(), 5.0 + 12.0 + 24)
+    self.assertEqual(self.monetary_recall.getTotalQuantity(fast=0), 5.0 + 12.0 + 24)
     # chect the total price
-    self.assertEqual(self.monetary_recall.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
+    self.assertEqual(self.monetary_recall.getTotalPrice(fast=0), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
   def stepTryConfirmMonetaryRecallWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -412,9 +412,9 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_recall.objectValues()), 2)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.monetary_recall.getTotalQuantity(), 5.0 + 12.0)
+    self.assertEqual(self.monetary_recall.getTotalQuantity(fast=0), 5.0 + 12.0)
     # check the total price
-    self.assertEqual(self.monetary_recall.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
+    self.assertEqual(self.monetary_recall.getTotalPrice(fast=0), 10000 * 5.0 + 200 * 12.0)
 
 
   def stepConfirmMonetaryRecall(self, sequence=None, sequence_list=None, **kwd):

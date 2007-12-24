@@ -401,9 +401,9 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     # Check number of lines
     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(deliveryLineType="Incoming Cash Balance Regulation Line"), 17.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, deliveryLineType="Incoming Cash Balance Regulation Line"), 17.0)
     # Check the total price
-    self.assertEqual(self.cash_balance_regulation.getTotalPrice(deliveryLineType="Incoming Cash Balance Regulation Line"), 10000 * 5.0 + 200 * 12.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, deliveryLineType="Incoming Cash Balance Regulation Line"), 10000 * 5.0 + 200 * 12.0)
 
 
   def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -489,9 +489,9 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 4)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(deliveryLineType="Outgoing Cash Balance Regulation Line"), 34.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, deliveryLineType="Outgoing Cash Balance Regulation Line"), 34.0)
     # check the total price
-    self.assertEqual(self.cash_balance_regulation.getTotalPrice(deliveryLineType="Outgoing Cash Balance Regulation Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, deliveryLineType="Outgoing Cash Balance Regulation Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
 
 
 

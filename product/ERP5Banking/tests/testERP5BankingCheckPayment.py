@@ -235,7 +235,7 @@ class TestERP5BankingCheckPaymentMixin:
     # call set source to go into the interaction workflow to update local roles
     self.check_payment._setSource(self.bi_counter.getRelativeUrl())
     self.assertNotEqual(self.check_payment, None)
-    self.assertEqual(self.check_payment.getTotalPrice(), 0.0)
+    self.assertEqual(self.check_payment.getTotalPrice(fast=0), 0.0)
     self.assertEqual(self.check_payment.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
     self.assertEqual(self.check_payment.getAggregateFreeText(), self.check_1.getReference())
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(), 20000.0)
@@ -395,7 +395,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEqual(self.check_payment.getSimulationState(), 'confirmed')
 
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(),
-                     - self.check_payment.getTotalPrice(portal_type = 'Banking Operation Line'))
+                     - self.check_payment.getTotalPrice(fast=0, portal_type = 'Banking Operation Line'))
 
   def stepCheckConfirmedInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -442,7 +442,7 @@ class TestERP5BankingCheckPaymentMixin:
     FIXME: check if the transition fails when a category or property is invalid.
     """
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(),
-                     self.check_payment.getTotalPrice(portal_type = 'Cash Delivery Cell'))
+                     self.check_payment.getTotalPrice(fast=0, portal_type = 'Cash Delivery Cell'))
     self.workflow_tool.doActionFor(self.check_payment, 'deliver_action', wf_id='check_payment_workflow')
     self.assertEqual(self.check_payment.getSimulationState(), 'delivered')
 

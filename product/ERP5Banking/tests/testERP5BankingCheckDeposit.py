@@ -194,7 +194,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                                                               resource_value=self.currency_1,
                                                               external_software_value=None,)
     self.assertNotEqual(self.check_deposit, None)
-    self.assertEqual(self.check_deposit.getTotalPrice(), 0.0)
+    self.assertEqual(self.check_deposit.getTotalPrice(fast=0), 0.0)
     self.assertEqual(self.check_deposit.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
     self.assertEqual(self.check_deposit.getSourceTotalAssetPrice(), 2000.0)
     # the initial state must be draft
@@ -246,7 +246,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Send the check deposit document to first validation level
     """
-    self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 2000.0)
+    self.assertEqual(self.check_deposit.getTotalPrice(fast=0, portal_type="Check Operation Line"), 2000.0)
     self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'planned')
     self.assertEqual(len(self.check_deposit.contentValues(filter = {'portal_type' : 'Incoming Check Deposit Line'})), 1)
@@ -256,7 +256,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Send the check deposit document to first validation level
     """
-    self.assertEqual(self.check_deposit.getTotalPrice(portal_type="Check Operation Line"), 2000.0)
+    self.assertEqual(self.check_deposit.getTotalPrice(fast=0, portal_type="Check Operation Line"), 2000.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     #self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'draft')

@@ -297,9 +297,9 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     # Check number of lines
     self.assertEqual(len(self.cash_to_currency_purchase.objectValues()), 1)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.cash_to_currency_purchase.getTotalQuantity(deliveryLineType="Incoming Cash To Currency Purchase Line"), 5.0)
+    self.assertEqual(self.cash_to_currency_purchase.getTotalQuantity(fast=0, deliveryLineType="Incoming Cash To Currency Purchase Line"), 5.0)
     # Check the total price
-    self.assertEqual(self.cash_to_currency_purchase.getTotalPrice(deliveryLineType="Incoming Cash To Currency Purchase Line"), 20 * 5.0)
+    self.assertEqual(self.cash_to_currency_purchase.getTotalPrice(fast=0, deliveryLineType="Incoming Cash To Currency Purchase Line"), 20 * 5.0)
 
 
   def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
@@ -392,9 +392,9 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.cash_to_currency_purchase.objectValues()), 3)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.cash_to_currency_purchase.getTotalQuantity(deliveryLineType="Outgoing Cash To Currency Purchase Line"), 130.0)
+    self.assertEqual(self.cash_to_currency_purchase.getTotalQuantity(fast=0, deliveryLineType="Outgoing Cash To Currency Purchase Line"), 130.0)
     # check the total price
-    self.assertEqual(self.cash_to_currency_purchase.getTotalPrice(deliveryLineType="Outgoing Cash To Currency Purchase Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 120.0)
+    self.assertEqual(self.cash_to_currency_purchase.getTotalPrice(fast=0, deliveryLineType="Outgoing Cash To Currency Purchase Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 120.0)
 
 
 

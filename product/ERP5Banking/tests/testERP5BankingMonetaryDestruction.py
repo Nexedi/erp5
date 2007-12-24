@@ -462,9 +462,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # Check number of lines
     self.assertEqual(len(self.monetary_destruction.objectValues()), 1)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.monetary_destruction.getTotalQuantity(), 5.0)
+    self.assertEqual(self.monetary_destruction.getTotalQuantity(fast=0), 5.0)
     # Check the total price
-    self.assertEqual(self.monetary_destruction.getTotalPrice(), 10000 * 5.0)
+    self.assertEqual(self.monetary_destruction.getTotalPrice(fast=0), 10000 * 5.0)
 
 
   def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
@@ -561,9 +561,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # Check number of monetary destruction lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 3)
     # Check quantity, same as checkTotal + coin of 200: 5 for 1992 and 7 for 2003
-    self.assertEqual(self.monetary_destruction.getTotalQuantity(), 5.0 + 24.0 + 12)
+    self.assertEqual(self.monetary_destruction.getTotalQuantity(fast=0), 5.0 + 24.0 + 12)
     # chect the total price
-    self.assertEqual(self.monetary_destruction.getTotalPrice(), 10000 * 5.0 + 5000 * 24.0 + 200 * 12)
+    self.assertEqual(self.monetary_destruction.getTotalPrice(fast=0), 10000 * 5.0 + 5000 * 24.0 + 200 * 12)
 
   def stepTryPlannedMonetaryDestructionWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -609,9 +609,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 2)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, banknotes : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.monetary_destruction.getTotalQuantity(), 5.0 + 24.0)
+    self.assertEqual(self.monetary_destruction.getTotalQuantity(fast=0), 5.0 + 24.0)
     # check the total price
-    self.assertEqual(self.monetary_destruction.getTotalPrice(), 10000 * 5.0 + 5000 * 24.0)
+    self.assertEqual(self.monetary_destruction.getTotalPrice(fast=0), 10000 * 5.0 + 5000 * 24.0)
 
 
   def stepPlannedMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):

@@ -301,9 +301,9 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     # Check number of lines
     self.assertEqual(len(self.classification_survey.objectValues()), 2)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.classification_survey.getTotalQuantity(deliveryLineType="Incoming Classification Survey Line"), 17.0)
+    self.assertEqual(self.classification_survey.getTotalQuantity(fast=0, deliveryLineType="Incoming Classification Survey Line"), 17.0)
     # Check the total price
-    self.assertEqual(self.classification_survey.getTotalPrice(deliveryLineType="Incoming Classification Survey Line"), 10000 * 5.0 + 200 * 12.0)
+    self.assertEqual(self.classification_survey.getTotalPrice(fast=0, deliveryLineType="Incoming Classification Survey Line"), 10000 * 5.0 + 200 * 12.0)
 
 
   def stepCreateValidOutgoingLineForInternalBanknote(self, sequence=None, sequence_list=None, **kwd):
@@ -399,9 +399,9 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin, ERP5TypeTestCase
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.classification_survey.objectValues()), 4)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.classification_survey.getTotalQuantity(), (5.0 + 12.0) * 2.0)
+    self.assertEqual(self.classification_survey.getTotalQuantity(fast=0), (5.0 + 12.0) * 2.0)
     # check the total price
-    self.assertEqual(self.classification_survey.getTotalPrice(), (10000 * 5.0 + 200 * 12.0) * 2.0)
+    self.assertEqual(self.classification_survey.getTotalPrice(fast=0), (10000 * 5.0 + 200 * 12.0) * 2.0)
 
 
   def stepConfirmClassificationSurvey(self, sequence=None, sequence_list=None, **kwd):

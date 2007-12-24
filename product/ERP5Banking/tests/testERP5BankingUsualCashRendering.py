@@ -297,9 +297,9 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of lines
     self.assertEqual(len(self.usual_cash_rendering.objectValues()), 1)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.usual_cash_rendering.getTotalQuantity(), 5.0)
+    self.assertEqual(self.usual_cash_rendering.getTotalQuantity(fast=0), 5.0)
     # Check the total price
-    self.assertEqual(self.usual_cash_rendering.getTotalPrice(), 10000 * 5.0)
+    self.assertEqual(self.usual_cash_rendering.getTotalPrice(fast=0), 10000 * 5.0)
 
 
   def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
@@ -356,9 +356,9 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of vault transfer lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.usual_cash_rendering.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
-    self.assertEqual(self.usual_cash_rendering.getTotalQuantity(), 5.0 + 12.0 + 24)
+    self.assertEqual(self.usual_cash_rendering.getTotalQuantity(fast=0), 5.0 + 12.0 + 24)
     # chect the total price
-    self.assertEqual(self.usual_cash_rendering.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
+    self.assertEqual(self.usual_cash_rendering.getTotalPrice(fast=0), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
   def stepTryPlanUsualCashRenderingWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -398,9 +398,9 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check number of lines (line1 + line2)
     self.assertEqual(len(self.usual_cash_rendering.objectValues()), 2)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.usual_cash_rendering.getTotalQuantity(), 5.0 + 12.0)
+    self.assertEqual(self.usual_cash_rendering.getTotalQuantity(fast=0), 5.0 + 12.0)
     # check the total price
-    self.assertEqual(self.usual_cash_rendering.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
+    self.assertEqual(self.usual_cash_rendering.getTotalPrice(fast=0), 10000 * 5.0 + 200 * 12.0)
 
 
   def stepPlanUsualCashRendering(self, sequence=None, sequence_list=None, **kwd):
