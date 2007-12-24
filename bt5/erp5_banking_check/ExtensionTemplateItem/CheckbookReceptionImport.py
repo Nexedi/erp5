@@ -68,6 +68,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
         if is_checkbook:
           listbox_line['check_amount'] = resource_amount_dict[item_dict['check_quantity']]
         listbox.append(listbox_line)
+        i += 1
     listbox_dict[resource_relative_url] = listbox
   # First make sure there is no errors
   message = None
@@ -81,7 +82,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
                                        resource=resource_relative_url,
                                        REQUEST=REQUEST)
     if error_value:
-      message = field_error_dict.values()[0].error_text
+      message = ', '.join([str(x.error_text) for x in field_error_dict.itervalues()])
       redirect_url = '%s/view?%s' % ( self.absolute_url()
                                 , 'portal_status_message=%s' % message)
       REQUEST['RESPONSE'].redirect( redirect_url )
