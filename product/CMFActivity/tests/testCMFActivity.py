@@ -1968,18 +1968,22 @@ class TestCMFActivity(ERP5TypeTestCase):
         # Remove one entry from object list: this is understood by caller as a
         # success for this entry.
         object_list.pop()
-    Organisation.modifySQLAndFail = modifySQLAndFail
     def dummy(self):
       pass
-    Organisation.dummy = dummy
-    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    group_method_id = '%s/modifySQLAndFail' % (obj.getPath(), )
-    obj.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
-    obj2 = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    obj2.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
-    get_transaction().commit()
-    self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    try:
+      Organisation.modifySQLAndFail = modifySQLAndFail
+      Organisation.dummy = dummy
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      group_method_id = '%s/modifySQLAndFail' % (obj.getPath(), )
+      obj.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
+      obj2 = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      obj2.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    finally:
+      delattr(Organisation, 'modifySQLAndFail')
+      delattr(Organisation, 'dummy')
 
   def test_84_ActivityModificationsViaCMFActivityConnectionRolledBackOnErrorSQLQueue(self, quiet=0, run=run_all_test):
     """
@@ -2018,12 +2022,15 @@ class TestCMFActivity(ERP5TypeTestCase):
           )
       # Fail
       raise ValueError, 'This method always fail'
-    Organisation.modifySQLAndFail = modifySQLAndFail
-    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    obj.activate(activity='SQLQueue').modifySQLAndFail()
-    get_transaction().commit()
-    self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    try:
+      Organisation.modifySQLAndFail = modifySQLAndFail
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      obj.activate(activity='SQLQueue').modifySQLAndFail()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    finally:
+      dellatr(Organisation, 'modifySQLAndFail')
 
   def test_85_MessagePathMustBeATuple(self, quiet=0, run=run_all_test):
     """
@@ -2081,19 +2088,26 @@ class TestCMFActivity(ERP5TypeTestCase):
           )
       # Fail
       raise ValueError, 'This method always fail'
-    activity_tool.__class__.invoke = modifySQLAndFail
-    activity_tool.__class__.invokeGroup = modifySQLAndFail
     def dummy(self):
       pass
-    Organisation.dummy = dummy
-    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    group_method_id = '%s/dummy' % (obj.getPath(), )
-    obj.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
-    obj2 = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    obj2.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
-    get_transaction().commit()
-    self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    invoke = activity_tool.__class__.invoke
+    invokeGroup = activity_tool.__class__.invokeGroup
+    try: 
+      activity_tool.__class__.invoke = modifySQLAndFail
+      activity_tool.__class__.invokeGroup = modifySQLAndFail
+      Organisation.dummy = dummy
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      group_method_id = '%s/dummy' % (obj.getPath(), )
+      obj.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
+      obj2 = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      obj2.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    finally:
+      delattr(Organisation, 'dummy')
+      activity_tool.__class__.invoke = invoke
+      activity_tool.__class__.invokeGroup = invokeGroup
   
   def test_87_ActivityToolInvokeFailureDoesNotCommitCMFActivitySQLConnectionSQLQueue(self, quiet=0, run=run_all_test):
     """
@@ -2131,16 +2145,23 @@ class TestCMFActivity(ERP5TypeTestCase):
           )
       # Fail
       raise ValueError, 'This method always fail'
-    activity_tool.__class__.invoke = modifySQLAndFail
-    activity_tool.__class__.invokeGroup = modifySQLAndFail
     def dummy(self):
       pass
-    Organisation.dummy = dummy
-    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    obj.activate(activity='SQLQueue').dummy()
-    get_transaction().commit()
-    self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    invoke = activity_tool.__class__.invoke
+    invokeGroup = activity_tool.__class__.invokeGroup
+    try:
+      activity_tool.__class__.invoke = modifySQLAndFail
+      activity_tool.__class__.invokeGroup = modifySQLAndFail
+      Organisation.dummy = dummy
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      obj.activate(activity='SQLQueue').dummy()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    finally:
+      delattr(Organisation, 'dummy')
+      activity_tool.__class__.invoke = invoke
+      activity_tool.__class__.invokeGroup = invokeGroup
 
   def test_88_ProcessingMultipleMessagesMustRevertIndividualMessagesOnError(self, quiet=0, run=run_all_test):
     """
@@ -2165,18 +2186,21 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.setTitle(self.getTitle() + to_append)
       if fail:
         raise ValueError, 'This method always fail'
-    Organisation.appendToTitle = appendToTitle
-    obj.setTitle('a')
-    active_obj.appendToTitle('b')
-    active_obj.appendToTitle('c', fail=True)
-    active_obj.appendToTitle('d')
-    object_id = obj.getId()
-    get_transaction().commit()
-    self.assertEqual(obj.getTitle(), 'a')
-    self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 3)
-    self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 1)
-    self.assertEqual(obj.getTitle(), 'abd')
+    try:
+      Organisation.appendToTitle = appendToTitle
+      obj.setTitle('a')
+      active_obj.appendToTitle('b')
+      active_obj.appendToTitle('c', fail=True)
+      active_obj.appendToTitle('d')
+      object_id = obj.getId()
+      get_transaction().commit()
+      self.assertEqual(obj.getTitle(), 'a')
+      self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 3)
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 1)
+      self.assertEqual(obj.getTitle(), 'abd')
+    finally:
+      delattr(Organisation, 'appendToTitle')
 
 def test_suite():
   suite = unittest.TestSuite()
