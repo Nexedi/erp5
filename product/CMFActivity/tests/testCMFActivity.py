@@ -39,6 +39,7 @@ from Products.ERP5Type.Document.Organisation import Organisation
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from ZODB.POSException import ConflictError
+from DateTime import DateTime
 
 try:
   from transaction import get as get_transaction
@@ -1925,6 +1926,61 @@ class TestCMFActivity(ERP5TypeTestCase):
     get_transaction().commit()
     message_list = activity_tool.getMessageList()
     self.assertEquals(len(message_list), 2)
+
+  def activityModificationsViaCMFActivityConnectionRolledBackOnError(self, activity):
+    activity_tool = self.getActivityTool()
+    def modifySQLAndFail(self, connection_id):
+      # Add a dumy activity which will not be executed
+      # Modified table does not matter
+      self.SQLDict_writeMessageList(
+        uid_list=[0], # This uid is never automaticaly assigned (starts at 1)
+        date_list=[DateTime().Date()],
+        path_list=['dummy_activity'],
+        method_id_list=['dummy_activity'],
+        message_list=['dummy_message'],
+        priority_list=[1],
+        processing_node_list=[-4],
+        group_method_id_list=[''],
+        tag_list=[''],
+        order_validation_text_list=['']
+        )
+      # Fail
+      raise ValueError, 'This method always fail'
+    Organisation.modifySQLAndFail = modifySQLAndFail
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    obj.activate(activity=activity).modifySQLAndFail()
+    get_transaction().commit()
+    self.flushAllActivities(silent=1, loop_size=100)
+    self.assertEquals(activity_tool.countMessage(path='dummy_activity'), 0)
+  
+
+  def test_83_ActivityModificationsViaCMFActivityConnectionRolledBackOnErrorSQLDict(self, quiet=0, run=run_all_test):
+    """
+      When an activity modifies tables through CMFActivity SQL connection and
+      raises, check that its changes are correctly rolled back.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck activity modifications via CMFActivity connection are rolled back on error (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    self.activityModificationsViaCMFActivityConnectionRolledBackOnError('SQLDict')
+
+  def test_84_ActivityModificationsViaCMFActivityConnectionRolledBackOnErrorSQLQeue(self, quiet=0, run=run_all_test):
+    """
+      When an activity modifies tables through CMFActivity SQL connection and
+      raises, check that its changes are correctly rolled back.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck activity modifications via CMFActivity connection are rolled back on error (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    self.activityModificationsViaCMFActivityConnectionRolledBackOnError('SQLQueue') 
 
 def test_suite():
   suite = unittest.TestSuite()
