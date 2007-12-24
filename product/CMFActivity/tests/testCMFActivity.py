@@ -2030,7 +2030,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.flushAllActivities(silent=1, loop_size=100)
       self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
-      dellatr(Organisation, 'modifySQLAndFail')
+      delattr(Organisation, 'modifySQLAndFail')
 
   def test_85_MessagePathMustBeATuple(self, quiet=0, run=run_all_test):
     """
