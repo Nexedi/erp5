@@ -371,45 +371,46 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
     flexibility point of view: if it must ever be changed into a cursor, this
     code will keep working nicely without needing to rewind the cursor.
   """
-  # List all unique criterions in criterion_id_list
-  criterion_id_dict = {}
-  for worklist in grouped_worklist_dict.itervalues():
-    for criterion_id, criterion_value in worklist.iteritems():
-      if not isinstance(criterion_value, ExclusionList):
-        criterion_id_dict[criterion_id] = None
-  criterion_id_list = criterion_id_dict.keys()
-  # Group all worklists concerned by a set of criterion values in
-  # criterion_value_to_worklist_key_dict
-  # key: criterion value tuple, in the same order as in criterion_id_list
-  # value: list of ids of every concerned worklist
-  criterion_value_to_worklist_key_dict = {}
-  for worklist_id, criterion_dict in grouped_worklist_dict.iteritems():
-    # Get all the possible combinations of values for all criterions for this
-    # worklist. Worklist filtering on portal_type='Foo' and 
-    # validation_state in ['draft', 'validated'] is "interested" by both 
-    # ('Foo', 'draft') and ('Foo', 'validated'). This generates both tuples
-    # when given initial filter.
-    criterion_value_key_list = ensemblistMultiply([criterion_dict[x] for x in \
-                                                   criterion_id_list])
-    for criterion_value_key in criterion_value_key_list:
-      if criterion_value_key not in criterion_value_to_worklist_key_dict:
-        criterion_value_to_worklist_key_dict[criterion_value_key] = []
-      criterion_value_to_worklist_key_dict[criterion_value_key].append(
-        worklist_id)
-  # Read catalog result and distribute to matching worklists
   worklist_result_dict = {}
-  for result_line in catalog_result:
-    criterion_value_key = tuple([result_line[x] for x in criterion_id_list])
-    if criterion_value_key not in criterion_value_to_worklist_key_dict:
-      LOG('WorkflowTool_listActions', WARNING,
-          'No worklist can be found for result combination %s' % \
-          (repr(criterion_value_key), ))
-      continue
-    for worklist_id in \
-        criterion_value_to_worklist_key_dict[criterion_value_key]:
-      count = worklist_result_dict.get(worklist_id, 0)
-      worklist_result_dict[worklist_id] = count + \
-                                          int(result_line[COUNT_COLUMN_TITLE])
+  if len(catalog_result) > 0:
+    # List all unique criterions in criterion_id_list
+    criterion_id_dict = {}
+    for worklist in grouped_worklist_dict.itervalues():
+      for criterion_id, criterion_value in worklist.iteritems():
+        if not isinstance(criterion_value, ExclusionList):
+          criterion_id_dict[criterion_id] = None
+    criterion_id_list = criterion_id_dict.keys()
+    # Group all worklists concerned by a set of criterion values in
+    # criterion_value_to_worklist_key_dict
+    # key: criterion value tuple, in the same order as in criterion_id_list
+    # value: list of ids of every concerned worklist
+    criterion_value_to_worklist_key_dict = {}
+    for worklist_id, criterion_dict in grouped_worklist_dict.iteritems():
+      # Get all the possible combinations of values for all criterions for this
+      # worklist. Worklist filtering on portal_type='Foo' and 
+      # validation_state in ['draft', 'validated'] is "interested" by both 
+      # ('Foo', 'draft') and ('Foo', 'validated'). This generates both tuples
+      # when given initial filter.
+      criterion_value_key_list = ensemblistMultiply([criterion_dict[x] for x in \
+                                                     criterion_id_list])
+      for criterion_value_key in criterion_value_key_list:
+        if criterion_value_key not in criterion_value_to_worklist_key_dict:
+          criterion_value_to_worklist_key_dict[criterion_value_key] = []
+        criterion_value_to_worklist_key_dict[criterion_value_key].append(
+          worklist_id)
+    # Read catalog result and distribute to matching worklists
+    for result_line in catalog_result:
+      criterion_value_key = tuple([result_line[x] for x in criterion_id_list])
+      if criterion_value_key not in criterion_value_to_worklist_key_dict:
+        LOG('WorkflowTool_listActions', WARNING,
+            'No worklist can be found for result combination %s' % \
+            (repr(criterion_value_key), ))
+        continue
+      for worklist_id in \
+          criterion_value_to_worklist_key_dict[criterion_value_key]:
+        count = worklist_result_dict.get(worklist_id, 0)
+        worklist_result_dict[worklist_id] = count + \
+                                            int(result_line[COUNT_COLUMN_TITLE])
   return worklist_result_dict
 
 def generateActionList(worklist_metadata, worklist_result, portal_url):
