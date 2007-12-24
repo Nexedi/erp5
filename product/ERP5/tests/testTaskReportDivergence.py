@@ -93,6 +93,18 @@ class TestTaskReportDivergenceMixin(TestTaskMixin):
     task_report = sequence.get('task_report')
     task_report.edit(start_date=self.datetime + 15)
 
+  def stepSetStrictSecurity(self, sequence=None, sequence_list=None, **kw):
+    portal = self.getPortal()
+    simulation_tool = portal.portal_simulation
+    rule_tool = portal.portal_rules
+    uf = self.getPortal().acl_users
+    if not uf.getUser('manager'):
+      uf._doAddUser('manager', '', ['Manager'], [])
+    self.login('manager')
+    simulation_tool.Base_setDefaultSecurity()
+    rule_tool.Base_setDefaultSecurity()
+    self.logout()
+
 class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) :
 
   run_all_test = 1
@@ -120,7 +132,10 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     if not run: return
     sequence_list = SequenceList()
 
-    sequence_string = self.default_task_sequence + '\
+    sequence_string = '\
+                      stepSetStrictSecurity \
+                      ' + \
+                      self.default_task_sequence + '\
                       stepCheckTaskReportIsSolved \
                       stepChangeTaskReportLineQuantity \
                       stepCheckTaskReportIsCalculating \
@@ -140,6 +155,7 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     # Test with a simply order without cell
     sequence_string = '\
+                      stepSetStrictSecurity \
                       stepLogin \
                       stepCreateOrganisation ' + \
                       self.default_task_sequence + '\
@@ -161,7 +177,9 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     sequence_list = SequenceList()
 
     # Test with a simply order without cell
-    sequence_string = self.default_task_sequence + '\
+    sequence_string = '\
+                      stepSetStrictSecurity \
+                      ' + self.default_task_sequence + '\
                       stepCheckTaskReportIsSolved \
                       stepChangeTaskReportStartDate \
                       stepCheckTaskReportIsCalculating \
