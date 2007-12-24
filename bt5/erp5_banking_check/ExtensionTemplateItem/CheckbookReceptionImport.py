@@ -14,7 +14,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
   file_item_list = xml_content.xpath('//object')
   # First, construct a dictionnary for every resource
   import_dict = {}
-  self.log("import checkbook", "file_item_list = %s" %(file_item_list,))
+  #self.log("import checkbook", "file_item_list = %s" %(file_item_list,))
   for item in file_item_list:
     checkbook_id = item.xpath("string(@id)")
     check_quantity = str(item.xpath("string(./check_quantity)"))
@@ -36,7 +36,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
   #self.log("import checkbook", "item_dict = %s" %(item_dict,))
   listbox_dict = {}
   for (checkbook_type, checkbook_dict) in import_dict.items():
-    self.log("checkbook_type %s, checkbook_dict %s" %(checkbook_type, checkbook_dict), "")
+    #self.log("checkbook_type %s, checkbook_dict %s" %(checkbook_type, checkbook_dict), "")
     listbox = []
     i = 0
     resource_list = self.portal_catalog(portal_type=['Checkbook Model',
@@ -57,7 +57,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
                                                        amount.getRelativeUrl()
     for  (account, account_dict) in checkbook_dict.items():
       for (gid, item_dict) in account_dict.items():
-        self.log("is checkbook ? %s" %is_checkbook, "will fill value %s" %(item_dict,))
+        #self.log("is checkbook ? %s" %is_checkbook, "will fill value %s" %(item_dict,))
         listbox_line = {}
         listbox_line['listbox_key'] = '%05i' % i
         listbox_line['reference_range_min'] = item_dict['reference_min']
@@ -97,7 +97,4 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
     message = Message(domain='ui', message='File Imported successfully')
     self.setImported(1)
   return message
-
-
-
 
