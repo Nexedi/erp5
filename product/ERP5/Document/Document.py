@@ -175,7 +175,9 @@ class ConversionCacheMixin:
     if mime is not None:
       self._cached_mime[tformat] = mime
     if data is not None:
-      self._cached_data[tformat] = data
+      self._cached_data[tformat] = aq_base(data) # Use of aq_base 
+        # is useful to remove the wrapper from a temp object
+        # which may have been used to generate data
       self.updateConversion(**format)
     self._p_changed = 1
 

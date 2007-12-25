@@ -42,6 +42,8 @@ from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.File import File
+from Products.ERP5.Document.Document import ConversionError
+
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from OFS.content_types import guess_content_type
@@ -379,13 +381,12 @@ class Image(File, OFSImage):
       else:
           from popen2 import popen2
           if resolution is None:
-            imgout, imgin = popen2('convert -quality %s -geometry %sx%s -%s %s-'
-                            % (quality, width, height, frame, format))
+            cmd = 'convert -quality %s -geometry %sx%s -%s %s-' % (
+                    quality, width, height, frame, format)
           else:
-            # LOG('Resolution',0,str(resolution))
             cmd = 'convert -density %sx%s -quality %s -geometry %sx%s -%s %s-' % (
                     resolution, resolution, quality, width, height, frame, format)
-            imgout, imgin = popen2(cmd)
+          imgout, imgin = popen2(cmd)
 
       def writeData(stream, data):
         if isinstance(data, str):
@@ -401,6 +402,8 @@ class Image(File, OFSImage):
       imgin.close()
       newimg.write(imgout.read())
       imgout.close()
+      if not newimg.tell():
+        raise ConversionError('Image conversion failed (empty file).')
       newimg.seek(0)
       return newimg
 

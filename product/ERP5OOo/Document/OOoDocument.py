@@ -37,6 +37,7 @@ from OFS.Image import Pdata
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5.Document.Document import ConversionError
@@ -310,7 +311,7 @@ class OOoDocument(File, ConversionCacheMixin):
       z.close()
       return 'text/plain', s
     server_proxy = self._mkProxy()
-    
+
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(_unpackData(self.getBaseData())),
                                        None,
@@ -321,7 +322,7 @@ class OOoDocument(File, ConversionCacheMixin):
       # This is for backward compatibility with older oood version returning
       # only response_dict
       response_dict = generate_result
-      
+
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
@@ -401,7 +402,7 @@ class OOoDocument(File, ConversionCacheMixin):
                                        portal_type='Image',
                                        temp_object=1)
         temp_image._setData(data)
-        mime, data = temp_image.convert(format, display=display)
+        mime, data = temp_image.convert(original_format, display=display)
         self.setConversion(data, mime, format=format, display=display)
     if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
       return self.getConversion(format=format)
@@ -426,7 +427,7 @@ class OOoDocument(File, ConversionCacheMixin):
     """
     if zip_file is None:
       format_list = [x for x in self.getTargetFormatList()
-                                                if x.startswith('html')]
+                                if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
       mime, data = self._convert(format)
       archive_file = cStringIO.StringIO()
@@ -437,13 +438,16 @@ class OOoDocument(File, ConversionCacheMixin):
       must_close = 0
     for f in zip_file.infolist():
       file_name = f.filename
-      if not file_name.endswith('html'):
+      if not file_name.endswith('html'): # XXX - we must add here more values in order to
+                                         # support multi-page HTML conversions
+                                         # such as for presentations.
         document = self.get(file_name, None)
         if document is not None:
           self.manage_delObjects([file_name])
-        self.portal_contributions.newContent(id=file_name, container=self,
-                                             file_name=file_name,
-                                             data=zip_file.read(file_name))
+        newContent = UnrestrictedMethod(self.portal_contributions.newContent)
+        newContent(id=file_name, container=self,
+                   file_name=file_name,
+                   data=zip_file.read(file_name))
     if must_close:
       zip_file.close()
       archive_file.close()
