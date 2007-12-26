@@ -546,59 +546,61 @@ def WorkflowTool_listActions(self, info=None, object=None):
 WorkflowTool.listActions = WorkflowTool_listActions
 
 def WorkflowTool_refreshWorklistCache(self):
-  # XXX: Code below is duplicated from WorkflowTool_listActions
-  info = self._getOAI(None)
-  worklist_dict = {}
-  wf_ids = self.getWorkflowIds()
-  for wf_id in wf_ids:
-    wf = self.getWorkflowById(wf_id)
-    if wf is not None:
-      a = wf.getWorklistVariableMatchDict(info)
-      if a is not None:
-        worklist_dict[wf_id] = a
-  # End of duplicated code
-  if len(worklist_dict):
-    self.Base_zCreateWorklistTable() # Create (or flush existing) table
-    portal_catalog = getToolByName(self, 'portal_catalog')
-    search_result = portal_catalog.unrestrictedSearchResults
-    acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
-    # XXX: those hardcoded lists should be grabbed from the table dynamicaly
-    # (and cached).
-    table_column_id_set = ImmutableSet([
-      COUNT_COLUMN_TITLE, 'security_uid', 'simulation_state',
-      'validation_state', 'portal_type', 'owner'])
-    security_column_id_list = ['security_uid', 'owner']
-    (worklist_list_grouped_by_condition, worklist_metadata) = \
-      groupWorklistListByCondition(
-        worklist_dict=worklist_dict,
-        acceptable_key_dict=acceptable_key_dict)
-    assert COUNT_COLUMN_TITLE in table_column_id_set
-    for grouped_worklist_dict in worklist_list_grouped_by_condition:
-      # Generate the query for this worklist_list
-      (total_criterion_id_list, query) = \
-        getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
-      for criterion_id in total_criterion_id_list:
-        assert criterion_id in table_column_id_set
-      for security_column_id in security_column_id_list:
-        assert security_column_id not in total_criterion_id_list
-        assert security_column_id in table_column_id_set
-        total_criterion_id_list.append(security_column_id)
-      group_by_expression = ', '.join(total_criterion_id_list)
-      assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-      select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
-                                                  group_by_expression)
-      search_result_kw = {'select_expression': select_expression,
-                          'group_by_expression': group_by_expression,
-                          'query': query}
-      #LOG('refreshWorklistCache', WARNING, 'Using query: %s' % \
-      #    (search_result(src__=1, **search_result_kw), ))
-      catalog_brain_result = search_result(**search_result_kw)
-      value_column_dict = dict([(x, []) for x in table_column_id_set])
-      for catalog_brain_line in catalog_brain_result.dictionaries():
-        for column_id, value in catalog_brain_line.iteritems():
-          if column_id in value_column_dict:
-            value_column_dict[column_id].append(value)
-      if len(value_column_dict[COUNT_COLUMN_TITLE]):
-        self.Base_zInsertIntoWorklistTable(**value_column_dict)
+  Base_zInsertIntoWorklistTable = getattr(self, 'Base_zInsertIntoWorklistTable', None)
+  if Base_zInsertIntoWorklistTable is not None:
+    # XXX: Code below is duplicated from WorkflowTool_listActions
+    info = self._getOAI(None)
+    worklist_dict = {}
+    wf_ids = self.getWorkflowIds()
+    for wf_id in wf_ids:
+      wf = self.getWorkflowById(wf_id)
+      if wf is not None:
+        a = wf.getWorklistVariableMatchDict(info)
+        if a is not None:
+          worklist_dict[wf_id] = a
+    # End of duplicated code
+    if len(worklist_dict):
+      self.Base_zCreateWorklistTable() # Create (or flush existing) table
+      portal_catalog = getToolByName(self, 'portal_catalog')
+      search_result = portal_catalog.unrestrictedSearchResults
+      acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
+      # XXX: those hardcoded lists should be grabbed from the table dynamicaly
+      # (and cached).
+      table_column_id_set = ImmutableSet([
+        COUNT_COLUMN_TITLE, 'security_uid', 'simulation_state',
+        'validation_state', 'portal_type', 'owner'])
+      security_column_id_list = ['security_uid', 'owner']
+      (worklist_list_grouped_by_condition, worklist_metadata) = \
+        groupWorklistListByCondition(
+          worklist_dict=worklist_dict,
+          acceptable_key_dict=acceptable_key_dict)
+      assert COUNT_COLUMN_TITLE in table_column_id_set
+      for grouped_worklist_dict in worklist_list_grouped_by_condition:
+        # Generate the query for this worklist_list
+        (total_criterion_id_list, query) = \
+          getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
+        for criterion_id in total_criterion_id_list:
+          assert criterion_id in table_column_id_set
+        for security_column_id in security_column_id_list:
+          assert security_column_id not in total_criterion_id_list
+          assert security_column_id in table_column_id_set
+          total_criterion_id_list.append(security_column_id)
+        group_by_expression = ', '.join(total_criterion_id_list)
+        assert COUNT_COLUMN_TITLE not in total_criterion_id_list
+        select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
+                                                    group_by_expression)
+        search_result_kw = {'select_expression': select_expression,
+                            'group_by_expression': group_by_expression,
+                            'query': query}
+        #LOG('refreshWorklistCache', WARNING, 'Using query: %s' % \
+        #    (search_result(src__=1, **search_result_kw), ))
+        catalog_brain_result = search_result(**search_result_kw)
+        value_column_dict = dict([(x, []) for x in table_column_id_set])
+        for catalog_brain_line in catalog_brain_result.dictionaries():
+          for column_id, value in catalog_brain_line.iteritems():
+            if column_id in value_column_dict:
+              value_column_dict[column_id].append(value)
+        if len(value_column_dict[COUNT_COLUMN_TITLE]):
+          Base_zInsertIntoWorklistTable(**value_column_dict)
 
 WorkflowTool.refreshWorklistCache = WorkflowTool_refreshWorklistCache
