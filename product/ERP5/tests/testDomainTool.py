@@ -147,7 +147,7 @@ class TestDomainTool(ERP5TypeTestCase):
 
     # ignore simulation rules, which are now predicates
     rule_query = Query(operator='AND', portal_type=['!=%s' % x for x in
-      domain_tool.getPortalRuleTypeList()])
+      domain_tool.getPortalRuleTypeList() + ('Base Domain',)])
 
     # Test with order line and predicate to none
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
