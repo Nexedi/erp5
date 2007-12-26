@@ -272,7 +272,7 @@ VALUES\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="getViewPermissionOwner[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="(getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or \'\'" type="string" optional>,\n
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="id[loop_item]" type="string" optional>,\n
@@ -346,7 +346,7 @@ VALUES\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="getViewPermissionOwner[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="(getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or \'\'" type="string" optional>,\n
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="id[loop_item]" type="string" optional>,\n

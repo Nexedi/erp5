@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -354,7 +351,7 @@ VALUES\n
 (\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="getViewPermissionOwner[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="(getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or \'\'" type="string" optional>,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,\n
@@ -395,9 +392,11 @@ VALUES\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -436,7 +435,7 @@ VALUES\n
 (\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="getViewPermissionOwner[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="(getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or \'\'" type="string" optional>,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,\n
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,\n
