@@ -67,6 +67,8 @@
             <key> <string>_body</string> </key>
             <value> <string>"""This is the action for the Base_viewPrintDialog.\n
 """\n
+# prevent lose checked itens after click to print\n
+context.Base_updateListboxSelection()\n
 \n
 if target_language:\n
   container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
@@ -128,9 +130,9 @@ return getattr(context, form_id)()\n
                             <string>target_language</string>
                             <string>kw</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>_getitem_</string>
                             <string>container</string>
-                            <string>context</string>
                             <string>getattr</string>
                           </tuple>
                         </value>
