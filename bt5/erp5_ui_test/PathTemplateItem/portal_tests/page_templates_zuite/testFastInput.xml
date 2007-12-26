@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,7 +66,7 @@
 <!-- Purpose is to make sure the dialog in list mode generates its own selection name -->\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_fastinput&name=fast_input&category=object_exchange&action=string:%24{object_url}/Foo_viewFastInput"></td>\n
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_fastinput&name=fast_input&category=object_fast_input&action=string:%24{object_url}/Foo_viewFastInput"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -84,7 +81,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Import / Export</td>\n
+  <td>link=Fast Input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
