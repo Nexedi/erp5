@@ -96,7 +96,7 @@ CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
   `security_uid` INT UNSIGNED,\n
   `path` varchar(255) NOT NULL default \'\',\n
-  `owner` varchar(32) default \'\',\n
+  `owner` varchar(32) NOT NULL default \'\',\n
   `relative_url` varchar(255) NOT NULL default \'\',\n
   `parent_uid` BIGINT UNSIGNED default \'0\',\n
   `id` varchar(255) default \'\',\n
@@ -173,7 +173,7 @@ CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
   `security_uid` INT UNSIGNED,\n
   `path` varchar(255) NOT NULL default \'\',\n
-  `owner` varchar(32) default \'\',\n
+  `owner` varchar(32) NOT NULL default \'\',\n
   `relative_url` varchar(255) NOT NULL default \'\',\n
   `parent_uid` BIGINT UNSIGNED default \'0\',\n
   `id` varchar(255) default \'\',\n
