@@ -295,17 +295,32 @@ class SQLDict(RAMDict, SQLBase):
       return [], 0, None
 
   def finalizeMessageExecution(self, activity_tool, message_uid_priority_list):
+    """
+      If everything was fine, delete all messages.
+      If anything failed, make successfull messages available (if any), and
+      the following rules apply to failed messages:
+        - Failures due to ConflictErrors cause messages to be postponed,
+          but their priority is *not* increased.
+        - Failures of messages already above maximum priority cause them to
+          be put in a permanent-error state.
+        - In all other cases, priotity is increased and message is delayed.
+    """
     def makeMessageListAvailable(uid_list):
       self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
     deletable_uid_list = []
     delay_uid_list = []
     final_error_uid_list = []
+    make_available_uid_list = []
     message_with_active_process_list = []
+    something_failed = (len([x for x in message_uid_priority_list if not x[1].is_executed]) != 0)
     for uid, m, priority in message_uid_priority_list:
       if m.is_executed:
-        deletable_uid_list.append(uid)
-        if m.active_process:
-          message_with_active_process_list.append(m)
+        if something_failed:
+          make_available_uid_list.append(uid)
+        else:
+          deletable_uid_list.append(uid)
+          if m.active_process:
+            message_with_active_process_list.append(m)
       else:
         if type(m.exc_type) is ClassType and \
            issubclass(m.exc_type, ConflictError):
@@ -317,16 +332,10 @@ class SQLDict(RAMDict, SQLBase):
             # Immediately update, because values different for every message
             activity_tool.SQLDict_setPriority(
               uid=[uid],
-              delay=VALIDATION_ERROR_DELAY,
               priority=priority + 1)
           except:
             LOG('SQLDict', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
-          try:
-            makeMessageListAvailable(delay_uid_list)
-          except:
-            LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
-          else:
-            LOG('SQLDict', TRACE, 'Freed message %r' % (uid, ))
+          delay_uid_list.append(uid)
     if len(deletable_uid_list):
       try:
         activity_tool.SQLDict_delMessage(uid=deletable_uid_list)
@@ -340,18 +349,20 @@ class SQLDict(RAMDict, SQLBase):
         activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
       except:
         LOG('SQLDict', TRACE, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
-      try:
-        makeMessageListAvailable(delay_uid_list)
-      except:
-        LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (delay_uid_list, ), error=sys.exc_info())
-      else:
-        LOG('SQLDict', TRACE, 'Freed messages %r' % (delay_uid_list, ))
+      make_available_uid_list += delay_uid_list
     if len(final_error_uid_list):
       try:
         activity_tool.SQLDict_assignMessage(uid=final_error_uid_list,
                                             processing_node=INVOKE_ERROR_STATE)
       except:
         LOG('SQLDict', WARNING, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+    if len(make_available_uid_list):
+      try:
+        makeMessageListAvailable(make_available_uid_list)
+      except:
+        LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (make_available_uid_list, ), error=sys.exc_info())
+      else:
+        LOG('SQLDict', TRACE, 'Freed messages %r' % (make_available_uid_list, ))
     for m in message_with_active_process_list:
       active_process = activity_tool.unrestrictedTraverse(m.active_process)
       if not active_process.hasActivity():
@@ -409,10 +420,8 @@ class SQLDict(RAMDict, SQLBase):
           LOG('SQLDict', PANIC,
               'abort failed, thus some objects may be modified accidentally')
           return True # Stop processing messages for this tic call for this queue.
-      # Only abort if nothing succeeded.
-      # This means that when processing multiple messages, failed ones must not cause
-      # bad things to happen if transaction is commited.
-      if len([x for x in message_uid_priority_list if x[1].is_executed]) == 0:
+      # Abort if something failed.
+      if len([x for x in message_uid_priority_list if not x[1].is_executed]) != 0:
         endTransaction = abortTransactionSynchronously
       else:
         endTransaction = get_transaction().commit
