@@ -1899,7 +1899,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
-    self.assertSameSet([None], [x.owner for x in result])
+    self.assertSameSet([''], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the object
     obj = folder.newContent(portal_type='Organisation')
@@ -1916,7 +1916,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
-    self.assertSameSet([None], [x.owner for x in result])
+    self.assertSameSet([''], [x.owner for x in result])
 
     # Check that Owner is not catalogued when he can't view the 
     # object and when the portal type does not acquire the local roles.
@@ -1933,7 +1933,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet([None], [x.owner for x in result])
+    self.assertSameSet([''], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the 
     # object and when the portal type does not acquire the local roles.
@@ -1985,7 +1985,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet([None], [x.owner for x in result])
+    self.assertSameSet([''], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the 
     # object and when the portal type acquires the local roles.
