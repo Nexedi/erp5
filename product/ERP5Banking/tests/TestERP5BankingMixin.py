@@ -1139,11 +1139,13 @@ class TestERP5BankingMixin:
   def checkWorklist(self, document):
     """
     """
-    document.portal_caches.clearAllCache()
+    portal = self.getPortalObject()
+    portal.portal_caches.clearAllCache()
+    portal.portal_workflow.refreshWorklistCache()
     portal_type = document.getPortalType()
     state = document.getSimulationState()
     workflow_id = '%s_workflow' % portal_type.lower().replace(' ', '_')
-    actions = self.getPortal().portal_actions.listFilteredActionsFor(document)
+    actions = portal.portal_actions.listFilteredActionsFor(document)
     found = 0
     for action in actions['global']:
       if action.get('workflow_id', None) == workflow_id:
