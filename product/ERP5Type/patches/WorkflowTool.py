@@ -666,6 +666,9 @@ class WorkflowHistoryList(Persistent):
     def __mul__(self, x):
         return self.__class__(tuple(self) * x)
 
+    def __nonzero__(self):
+        return len(self._slots) != 0 or self._prev is not None
+
     def __repr__(self):
         #return '%s' % repr(tuple(self.__iter__()))
         return '<%s object at 0x%x %r>' % (self.__class__.__name__, id(self), tuple(self))
