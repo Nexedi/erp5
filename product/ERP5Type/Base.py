@@ -68,6 +68,7 @@ from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from string import join
 import sys, re
@@ -3095,6 +3096,10 @@ class Base( CopyContainer,
     """Assign Local Roles to Groups on self, based on Portal Type Role
     Definitions and "ERP5 Role Definition" objects contained inside self.
     """
+    updateLocalRolesOnSecurityGroups = UnrestrictedMethod(self._updateLocalRolesOnSecurityGroups)
+    return updateLocalRolesOnSecurityGroups(**kw)
+
+  def _updateLocalRolesOnSecurityGroups(self, **kw):
     self._getTypesTool().getTypeInfo(self)\
                           .updateLocalRolesOnSecurityGroups(self, **kw)
 
