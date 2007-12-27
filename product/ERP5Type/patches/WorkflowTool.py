@@ -631,8 +631,10 @@ class WorkflowHistoryList(Persistent):
         if index == -1:
             return self._slots[-1]
         elif isinstance(index, (int, long)):
-            # XXX this implementation is not so good, but rarely used.
-            return tuple(self)[index]
+            iterator = self.__iter__()
+            for i in xrange(index):
+                iterator.next()
+            return iterator.next()
         elif isinstance(index, slice):
             return self.__class__((self[x] for x in
                                    xrange(*index.indices(len(self)))))
