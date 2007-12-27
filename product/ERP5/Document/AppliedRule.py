@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zLOG import LOG
 
@@ -93,6 +94,10 @@ class AppliedRule(XMLObject):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
+      expand = UnrestrictedMethod(self._expand)
+      return expand(**kw)
+
+    def _expand(self, **kw):
       tv = getTransactionalVariable(self)
       cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
       cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
