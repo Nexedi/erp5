@@ -29,6 +29,9 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, NegatedQuery
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
 from sets import ImmutableSet
+from Acquisition import aq_base
+from Persistence import Persistent
+from Globals import PersistentMapping
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -141,7 +144,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
     conditions.
     Strip any variable which is not a catalog column.
     Returns metadata in a separate dict.
-  
+
     Example:
       Input:
         worklist_dict:
@@ -366,7 +369,7 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
     Build a dictionnary summing up which value combination interests which
     worklist, then iterate catalog result lines and give results to
     corresponding worklists.
-    
+
     It is better to avoid reading multiple times the catalog result from
     flexibility point of view: if it must ever be changed into a cursor, this
     code will keep working nicely without needing to rewind the cursor.
@@ -396,8 +399,8 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
           criterion_dict[criterion_id] = [expected_class(x) for x in
                                           criterion_value_list]
       # Get all the possible combinations of values for all criterions for this
-      # worklist. Worklist filtering on portal_type='Foo' and 
-      # validation_state in ['draft', 'validated'] is "interested" by both 
+      # worklist. Worklist filtering on portal_type='Foo' and
+      # validation_state in ['draft', 'validated'] is "interested" by both
       # ('Foo', 'draft') and ('Foo', 'validated'). This generates both tuples
       # when given initial filter.
       criterion_value_key_list = ensemblistMultiply([criterion_dict[x] for x in \
@@ -541,7 +544,7 @@ def WorkflowTool_listActions(self, info=None, object=None):
       id=('_getWorklistActionList', user, portal_url),
       cache_factory = 'erp5_ui_short')
     actions.extend(_getWorklistActionList())
-  return actions 
+  return actions
 
 WorkflowTool.listActions = WorkflowTool_listActions
 
@@ -604,3 +607,103 @@ def WorkflowTool_refreshWorklistCache(self):
           Base_zInsertIntoWorklistTable(**value_column_dict)
 
 WorkflowTool.refreshWorklistCache = WorkflowTool_refreshWorklistCache
+
+class WorkflowHistoryList(Persistent):
+    _bucket_size = 16
+
+    def __init__(self, iterable=None, prev=None):
+        self._prev = prev
+        self._slots = []
+        if iterable is not None:
+            for x in iterable:
+                self.append(x)
+
+    def __add__(self, iterable):
+        return self.__class__(tuple(self) + tuple(iterable))
+
+    def __contains__(self, item):
+        return item in tuple(self)
+
+    def __eq__(self, other):
+        return tuple(self) == tuple(other)
+
+    def __getitem__(self, index):
+        if index == -1:
+            return self._slots[-1]
+        elif isinstance(index, (int, long)):
+            # XXX this implementation is not so good, but rarely used.
+            return tuple(self)[index]
+        elif isinstance(index, slice):
+            return self.__class__((self[x] for x in
+                                   xrange(*index.indices(len(self)))))
+        else:
+            raise TypeError, 'tuple indices must be integers'
+
+    def __getslice__(self, start, end):
+        return self.__getitem__(slice(start, end))
+
+    def __getstate__(self):
+        return (self._prev, self._slots)
+
+    def __iter__(self):
+        bucket = self
+        stack = []
+        while bucket is not None:
+            stack.append(bucket)
+            bucket = bucket._prev
+        for i in reversed(stack):
+            for j in i._slots:
+                yield j
+
+    def __len__(self):
+        length = len(self._slots)
+        bucket = self._prev
+        while bucket is not None:
+            length += len(bucket._slots)
+            bucket = bucket._prev
+        return length
+
+    def __mul__(self, x):
+        return self.__class__(tuple(self) * x)
+
+    def __repr__(self):
+        #return '%s' % repr(tuple(self.__iter__()))
+        return '<%s object at 0x%x %r>' % (self.__class__.__name__, id(self), tuple(self))
+
+    def __rmul__(self, x):
+        return self.__class__(x * tuple(self))
+
+    def __setstate__(self, state):
+        self._prev, self._slots = state
+
+    def append(self, value):
+        if len(self._slots) < self._bucket_size:
+            self._slots.append(value)
+            self._p_changed = 1
+        else:
+            self._prev = self.__class__(self._slots, prev=self._prev)
+            self._slots = [value]
+
+def WorkflowTool_setStatusOf(self, wf_id, ob, status):
+    """ Append an entry to the workflow history.
+
+    o Invoked by workflow definitions.
+    """
+    wfh = None
+    has_history = 0
+    if getattr(aq_base(ob), 'workflow_history', None) is not None:
+        history = ob.workflow_history
+        if history is not None:
+            has_history = 1
+            wfh = history.get(wf_id, None)
+            if wfh is not None and not isinstance(wfh, WorkflowHistoryList):
+                wfh = WorkflowHistoryList(list(wfh))
+                ob.workflow_history[wf_id] = wfh
+    if wfh is None:
+        wfh = WorkflowHistoryList()
+        if not has_history:
+            ob.workflow_history = PersistentMapping()
+        ob.workflow_history[wf_id] = wfh
+    wfh.append(status)
+
+WorkflowTool.setStatusOf = WorkflowTool_setStatusOf
