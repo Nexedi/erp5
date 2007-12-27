@@ -65,9 +65,9 @@ class SQLCache(BaseCache):
     
   cache_expire_check_interval = 3600
     
-  create_table_sql = '''CREATE TABLE %s(cache_id VARCHAR(970) NOT NULL, 
+  create_table_sql = '''CREATE TABLE %s(cache_id VARBINARY(970) NOT NULL, 
                                          value LONGTEXT,
-                                         scope VARCHAR(20),
+                                         scope VARBINARY(20),
                                          stored_at INT,
                                          cache_duration INT DEFAULT 0,
                                          calculation_time FLOAT,
