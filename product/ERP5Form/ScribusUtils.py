@@ -214,14 +214,10 @@ class ManageModule:
       del default_groups[0:]
       for page_iterator in range(global_properties['page']):
         page_number = 'page_%s' % str(page_iterator)
-        
-	
-	default_groups.append(page_number)
+  default_groups.append(page_number)
     # default_groups list completed, need to update the form_groups
     # renaming form default group with list's first item
-    form_view_id_object.rename_group('Default',
-                                     default_groups[0]
-                                     )
+    form_view_id_object.rename_group('Default',default_groups[0])
     # adding all other items
     for group in default_groups[0:]:
       form_view_id_object.add_group(group)
@@ -642,7 +638,8 @@ class ManageFiles:
       # splitting this string to get the list of objects
       for image in result[1].split('\n'):
         temp_jpg = open('/tmp/%s' % image, 'r')
-        form_page_id = object_names['page'] + str(image_number)
+        form_page_id = ob
+        ject_names['page'] + str(image_number)
         addImage = skin_folder.manage_addProduct['OFSP'].manage_addImage
         addImage(form_page_id,temp_jpg,"background image")
         image_number += 1
@@ -674,7 +671,7 @@ class ManageFiles:
     pdf_file.seek(0)
     # saving content
     temp_pdf.write(pdf_file.read())
-    temp_pdf.close()	  
+    temp_pdf.close()    
     width_groups = []
     height_groups = []
     # launching first soft to convert from PDF to PPM
@@ -824,11 +821,11 @@ class ManageCSS:
       properties_page['actual_width'] = width_groups[page_iterator]
       properties_page['actual_height'] = height_groups[page_iterator]
       actual_width = width_groups[page_iterator]
-      actual_height = height_groups[page_iterator] 	
+      actual_height = height_groups[page_iterator]  
       #properties_css_background['margin-top'] = \
       #   str((y_pos -10))+ 'px'
       #properties_css_background['margin-left']= \
-      #   str((x_pos- 5))+   'px'	
+      #   str((x_pos- 5))+   'px' 
     else:
       # margin-top = page height
       properties_css_page['margin-top'] = "%spx" %(page_height + 20)
@@ -876,7 +873,7 @@ class ManageCSS:
       # be found from the current's page top left corner.
       # that's why Y position must be updated
 
-      scaling_factor1= (page_width)/(properties_page['actual_width'])		
+      scaling_factor1= (page_width)/(properties_page['actual_width'])   
       scaling_factor2= (page_height)/(properties_page['actual_height'])
 
       properties_field['position_y'] = \
@@ -1505,7 +1502,7 @@ class ScribusParser:
         #and 'ANTOOLTIP'
         #
         object_properties = {} 
-	page_properties = {}
+  page_properties = {}
         # getting object position and size
         object_properties['position_x'] = \
               sp.getObjectTooltipProperty('XPOS',
