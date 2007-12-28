@@ -214,10 +214,12 @@ class ManageModule:
       del default_groups[0:]
       for page_iterator in range(global_properties['page']):
         page_number = 'page_%s' % str(page_iterator)
-  default_groups.append(page_number)
+        default_groups.append(page_number)
     # default_groups list completed, need to update the form_groups
     # renaming form default group with list's first item
-    form_view_id_object.rename_group('Default',default_groups[0])
+    form_view_id_object.rename_group('Default',
+                                     default_groups[0]
+				     )
     # adding all other items
     for group in default_groups[0:]:
       form_view_id_object.add_group(group)
@@ -637,9 +639,8 @@ class ManageFiles:
       # in our case the result of the ls.
       # splitting this string to get the list of objects
       for image in result[1].split('\n'):
-        temp_jpg = open('/tmp/%s' % image, 'r')
-        form_page_id = ob
-        ject_names['page'] + str(image_number)
+        temp_jpg = open('%s%s' % (directory_tmp,image), 'r')
+        form_page_id = object_names['page'] + str(image_number)
         addImage = skin_folder.manage_addProduct['OFSP'].manage_addImage
         addImage(form_page_id,temp_jpg,"background image")
         image_number += 1
@@ -1502,7 +1503,7 @@ class ScribusParser:
         #and 'ANTOOLTIP'
         #
         object_properties = {} 
-  page_properties = {}
+        page_properties = {}
         # getting object position and size
         object_properties['position_x'] = \
               sp.getObjectTooltipProperty('XPOS',
