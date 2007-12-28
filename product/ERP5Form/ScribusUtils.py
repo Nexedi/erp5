@@ -173,8 +173,8 @@ class ManageModule:
         dict(lines=def_lineNumberInList,
              columns=[('id', 'ID'),
                       ('title', 'Title'),
-                      ('description','Description'),
-                      ('translated_simulation_state','State')],
+                      ('description', 'Description'),
+                      ('translated_simulation_state', 'State')],
              list_action='list',
              search=1,
              select=1,
@@ -207,7 +207,7 @@ class ManageModule:
     if option_html !=1:
       # using default ERP5 positioning convention
       # based on 'left'/'right'/etc.
-      default_groups = ['left','right','center','bottom','hidden']
+      default_groups = ['left', 'right', 'center', 'bottom', 'hidden']
     else:
       # using special page positioning convention for
       # pdf-like rendering
@@ -217,9 +217,7 @@ class ManageModule:
         default_groups.append(page_number)
     # default_groups list completed, need to update the form_groups
     # renaming form default group with list's first item
-    form_view_id_object.rename_group('Default',
-                                     default_groups[0]
-				     )
+    form_view_id_object.rename_group('Default', default_groups[0])
     # adding all other items
     for group in default_groups[0:]:
       form_view_id_object.add_group(group)
@@ -229,7 +227,7 @@ class ManageModule:
     values['title'] = str(object_portal_type)
     values['row_length'] = 4
     values['name'] = object_names['view_id']
-    if option_html ==1:
+    if option_html == 1:
       # this is the name of the new form, compatible either with html_style
       # and xhtml_style.
       values['pt'] = "form_render_PDFeForm"
@@ -244,7 +242,7 @@ class ManageModule:
     values['unicode_mode'] = 0
     # using the dict declared just above to set the attributes
     for key, value in values.items():
-      setattr(form,key,value)
+      setattr(form, key, value)
     return (default_groups)
 
   security.declarePublic('setFieldsInObjectForm')
@@ -295,16 +293,16 @@ class ManageModule:
           #field_tales = field_values['tales']
           # creating new field in form
           form_view_id_object.manage_addField(field_id,
-                                            field_title,
-                                            field_type)
+                                              field_title,
+                                              field_type)
           # move fields to destination group
           form_view_id_object.move_field_group(field_id,
-                                             default_groups[0],
-                                             field_order)
+                                               default_groups[0],
+                                               field_order)
           # recover field
-          access_field = getattr(form_view_id_object,field_id)
+          access_field = getattr(form_view_id_object, field_id)
           if field_type == 'CheckBoxField':
-            test_name= field_id[3:]
+            test_name = field_id[3:]
             tales = {field_id : {'default' : 'here'+ '/'+ test_name}}
 
             forms = [object_names['view_id']]
@@ -335,12 +333,12 @@ class ManageModule:
           # when there are several pages in the document. In such case
           # the script find automatically the closest available value.
           print "  can not add %s to dict : %s already used by %s " % \
-                (field_id,field_nb,field_nb_dict[field_nb])
-          field_nb = field_nb +1
+                (field_id, field_nb, field_nb_dict[field_nb])
+          field_nb = field_nb + 1
           while field_nb in field_nb_dict.keys():
             # trying next value
             field_nb = field_nb + 1
-        print "  add %s to %s" % (field_id,field_nb)
+        print "  add %s to %s" % (field_id, field_nb)
         # value is available, no problem to link field_id to this field_nb
         field_nb_dict[field_nb] = field_id
 
@@ -367,7 +365,7 @@ class ManageModule:
     # updating field properties
     # iterating fields
     for field_id in global_properties['object'].keys():
-      field_attributes = getattr(form,field_id)
+      field_attributes = getattr(form, field_id)
       #print "   %s => %s" % (field_id,field_attributes.values.keys())
       for attr_id, attr_val in \
          global_properties['object'][field_id]['attributes'].items():
@@ -376,17 +374,18 @@ class ManageModule:
 
 
   security.declarePublic('setModulePortalType')
-  def setModulePortalType(self,portal_types,
-                    object_portal_type_id,
-                    module_portal_type,
-                    object_names):
+  def setModulePortalType(self, 
+                          portal_types,
+                          object_portal_type_id,
+                          module_portal_type,
+                          object_names):
     """
     set portal_type for the module containing objects.
     returns nothing
     """
     portal_types.manage_addTypeInformation('ERP5 Type Information'
-                ,typeinfo_name = 'ERP5Type: ERP5 Folder'
-                ,id = module_portal_type)
+                , typeinfo_name = 'ERP5Type: ERP5 Folder'
+                , id = module_portal_type)
     # getting portal_type access to be able to modify attributes
     module_portal_type_value = portal_types[module_portal_type]
     # set alowed content type
@@ -422,9 +421,9 @@ class ManageModule:
       name = 'ERP5Type: ERP5 ' + object_portal_type # use with PropertySheet
     else:
       name = 'ERP5Type: ERP5 Document'  # use with local properties
-    portal_types.manage_addTypeInformation('ERP5 Type Information',
-                                          typeinfo_name = name,
-                                          id = object_portal_type_id)
+    portal_types.manage_addTypeInformation( 'ERP5 Type Information',
+                                            typeinfo_name = name,
+                                            id = object_portal_type_id)
     object_portal_type_value = portal_types[object_portal_type_id]
 
     # cleaning all default actions
@@ -467,11 +466,11 @@ class ManageModule:
 
   security.declarePublic('registerModule')
   def registerModule(self,
-                           portal,
-                           module_id,
-                           module_portal_type,
-                           object_portal_type,
-                           module_title):
+                     portal,
+                     module_id,
+                     module_portal_type,
+                     object_portal_type,
+                     module_title):
     """
     register Module inside ERP5 instance
     """
@@ -512,7 +511,7 @@ class ManageFiles:
     create an ERP5 DTML Document in the folder related
     to factory and save the content of the CSS string
     """
-    factory.addDTMLDocument(form_css_id,"css",form_css_content)
+    factory.addDTMLDocument(form_css_id, "css", form_css_content)
 
 
   security.declarePublic('importFile')
@@ -528,7 +527,7 @@ class ManageFiles:
     expressions
     """
     pdf_file.seek(0)
-    factory.addPDFForm(object_names['view_pdf'],object_title,pdf_file)
+    factory.addPDFForm(object_names['view_pdf'], object_title, pdf_file)
     # iterating objects in skin_folder
     for c in skin_folder.objectValues():
       if c.getId() == object_names['view_pdf']:
@@ -559,8 +558,8 @@ class ManageFiles:
 
               else:
                 TALES = "python: here.getProperty('" + cell_name[3:] +"')"
-            print "   %s > %s " % (cell_name,TALES)
-            c.setCellTALES(cell_name,TALES)
+            print "   %s > %s " % (cell_name, TALES)
+            c.setCellTALES(cell_name, TALES)
 
   def getPDFFile(self, file_descriptor):
     """ Get file content """
@@ -644,10 +643,10 @@ class ManageFiles:
       # in our case the result of the ls.
       # splitting this string to get the list of objects
       for image in result[1].split('\n'):
-        temp_jpg = open('%s%s' % (directory_tmp,image), 'r')
+        temp_jpg = open('%s%s' % (directory_tmp, image), 'r')
         form_page_id = object_names['page'] + str(image_number)
         addImage = skin_folder.manage_addProduct['OFSP'].manage_addImage
-        addImage(form_page_id,temp_jpg,"background image")
+        addImage(form_page_id, temp_jpg, "background image")
         image_number += 1
     # deleting all temporary files
     result = commands.getstatusoutput('rm -f /tmp/tmp*') # JPS-XXX Extremely 
@@ -657,7 +656,7 @@ class ManageFiles:
     size_x = desired_height
     size_y = desired_width
 
-    return (size_x, size_y,real_size_x,real_size_y)
+    return (size_x, size_y, real_size_x, real_size_y)
 
   security.declarePublic('getPageattributes')
   def getPageattributes (self,
@@ -702,16 +701,15 @@ class ManageFiles:
       actual_page_width = real_size_y[page_iterator]
       width_groups.append(actual_page_width)
       height_groups.append(actual_page_height)
-    return (width_groups,height_groups)
+    return (width_groups, height_groups)
 
   security.declarePublic('setPropertySheetAndDocument')
   def setPropertySheetAndDocument(self,
-                       global_properties,
-                       object_portal_type,
-                       generator,
-                       skin_folder,
-                       object_names
-                       ):
+                                  global_properties,
+                                  object_portal_type,
+                                  generator,
+                                  skin_folder,
+                                  object_names):
     """
     recover personal properties from dict global_properties
     and save them in a propertysheet
@@ -732,7 +730,7 @@ class ManageFiles:
         if field_id.startswith('my_') and not (
            field_id.startswith('my_source') or
            field_id.startswith('my_destination') or
-           field_id in ('my_start_date','my_stop_date')):
+           field_id in ('my_start_date', 'my_stop_date')):
           field_type = global_properties['object'][field_id]['data_type']
           field_default = global_properties['object'][field_id]['default']
           personal_properties = { 'id' : field_id[3:],
@@ -755,9 +753,9 @@ class ManageFiles:
       # you must also specify Document type to comply with class declared in 
       # the Document. For that see 'setObjectPortalType' method 
       ## generate PropertySheet
-      generator.generateLocalPropertySheet(name_file,personal_properties_list)
+      generator.generateLocalPropertySheet(name_file, personal_properties_list)
       ## generate Document
-      generator.generateLocalDocument(name_file,object_portal_type)
+      generator.generateLocalDocument(name_file, object_portal_type)
 
 
 class ManageCSS:
@@ -857,23 +855,23 @@ class ManageCSS:
 
 
   security.declarePublic('setFieldProperties')
-  def setFieldProperties(self
-            ,properties_css_dict
-            ,field
-            ,page_width
-            ,page_height
-            ,page_iterator
-            ,page_gap
-            ,keep_page
-            ,original_page_width
-            ,original_page_height
-            ,properties_page,actual_width,actual_height):
+  def setFieldProperties( self
+                        , properties_css_dict
+                        , field
+                        , page_width
+                        , page_height
+                        , page_iterator
+                        , page_gap
+                        , keep_page
+                        , original_page_width
+                        , original_page_height
+                        , properties_page,actual_width,actual_height):
     """
     recover all CSS data relative to the current page_object (field)
     and save these informations in the output dict
     """
     (field_name, properties_field) = field
-    print "   => %s : %s" % (field_name,properties_field['rendering'])
+    print "   => %s : %s" % (field_name, properties_field['rendering'])
 
     # updating field properties if necessary
     if keep_page == 1:
@@ -882,8 +880,8 @@ class ManageCSS:
       # be found from the current's page top left corner.
       # that's why Y position must be updated
 
-      scaling_factor1= (page_width)/(properties_page['actual_width'])   
-      scaling_factor2= (page_height)/(properties_page['actual_height'])
+      scaling_factor1 = page_width/properties_page['actual_width']
+      scaling_factor2 = page_height/properties_page['actual_height']
 
       properties_field['position_y'] = \
          str(float(properties_field['position_y']) - \
@@ -907,9 +905,9 @@ class ManageCSS:
     properties_css_object_err_d['padding'] = '0px'
     # getting field height
     properties_css_object_stand['height'] = \
-        str(scaling_factor2 *float(properties_field['size_y'])) + 'px'
+        str(scaling_factor2 * float(properties_field['size_y'])) + 'px'
     properties_css_object_error['height'] = \
-        str(scaling_factor2 *float(properties_field['size_y'])) + 'px'
+        str(scaling_factor2 * float(properties_field['size_y'])) + 'px'
     # defining font-size from height - 2 (this value seems to have a good
     # rendering on Mozilla and Konqueror)
     # do not match for TextArea (as it is a multiline object)
@@ -965,13 +963,13 @@ class ManageCSS:
       # single rendering (like StringField, TextArea, etc.).
       # Do not need any special treatment
       properties_css_object_stand['width'] = \
-        str(scaling_factor1 *float(properties_field['size_x'])) + 'px'
+        str(scaling_factor1 * float(properties_field['size_x'])) + 'px'
       properties_css_object_error['width'] = \
-        str(scaling_factor1 *float(properties_field['size_x'])) + 'px'
+        str(scaling_factor1 * float(properties_field['size_x'])) + 'px'
       properties_css_object_stand['margin-left'] = \
-        str((scaling_factor1 *float(properties_field['position_x']))) + 'px'
+        str((scaling_factor1 * float(properties_field['position_x']))) + 'px'
       properties_css_object_error['margin-left'] = \
-        str((scaling_factor1 *float(properties_field['position_x']))) + 'px'
+        str((scaling_factor1 * float(properties_field['position_x']))) + 'px'
       # in case of checkboxfield, '_class_2' is used because field is rendered
       # as two fields, the first one hidden. (supports xhtml_style)
       # UPDATE : modified because need to keep compatibility with html_style
@@ -1038,7 +1036,7 @@ class ManageCSS:
         # defining global field rendering (for Date), ignoring for the moment
         # the whole part about the time
         if properties_field['input_order'] in \
-             ['day/month/year','dmy','month/day/year','mdy']:
+             ['day/month/year', 'dmy', 'month/day/year', 'mdy']:
           # specified input order. must be dd/mm/yyyy or mm/dd/yyyy (year is
           # the last field).
           # processing first field
@@ -1155,9 +1153,9 @@ class ManageCSS:
     return properties_css_dict
 
   security.declarePublic('setFinalProperties')
-  def setFinalProperties(self
-                        ,properties_css_dict
-                        ,page_height):
+  def setFinalProperties( self
+                        , properties_css_dict
+                        , page_height):
     """
     adding 'page_end' class to add a div at the end of the last page
     in order to display the full last page under Konqueror
@@ -1166,14 +1164,12 @@ class ManageCSS:
     """
     properties_css_page = {}
     properties_css_page['position'] = 'relative'
-    properties_css_page['margin-top'] = "%spx" % str( page_height)
+    properties_css_page['margin-top'] = "%spx" % str(page_height)
     properties_css_dict['head']['page_end'] = properties_css_page
     return properties_css_dict
 
   security.declarePublic('generateOutputContent')
-  def generateOutputContent(self
-                     ,properties_css_dict
-                     ):
+  def generateOutputContent(self, properties_css_dict):
     """
     return a string containing the whole content of the CSS output
     from properties_css_dict
@@ -1200,7 +1196,7 @@ class ManageCSS:
     for class_name in properties_css_dict['standard'].keys():
       class_properties = properties_css_dict['standard'][class_name]
       output_string = "." + str(class_name) + " {" \
-                      + "; ".join(["%s:%s" % (id,val) for id, 
+                      + "; ".join(["%s:%s" % (id, val) for id, 
                         val in class_properties.items()]) \
                       + "}"
       form_css_content += output_string + "\n"
@@ -1226,15 +1222,15 @@ class ManageCSS:
     return form_css_content
 
   security.declarePublic('createOutputFile')
-  def createOutputFile(self
-                      ,form_css_content
-                      ,form_css_id
-                      ,factory):
+  def createOutputFile( self
+                      , form_css_content
+                      , form_css_id
+                      , factory):
     """
     add a new file_object in zope, named form_css_id and containing
     the form_css_content
     """
-    factory.addDTMLDocument(form_css_id,"css",form_css_content)
+    factory.addDTMLDocument(form_css_id, "css", form_css_content)
 
 
 class ScribusParser:
@@ -1264,12 +1260,12 @@ class ScribusParser:
         return object_dict[check_key]
       else:
         # check_key is null, logging and asigning default value
-        LOG("WARNING : " + str(object_name),0,"invalid " + str(check_key) \
+        LOG("WARNING : " + str(object_name), 0, "invalid " + str(check_key) \
         + ": using " + str(default_value))
         return default_value
     else:
       # check_key is null, logging and asigning default value
-      LOG("WARNING : " + str(object_name),0,"no " + str(check_key) \
+      LOG("WARNING : " + str(object_name), 0, "no " + str(check_key) \
       + ": using " + str(default_value))
       return default_value
 
@@ -1302,7 +1298,7 @@ class ScribusParser:
       # the content does not comply with the Scribus document
       # specification
       print " Bad Scribus document format : no 'Version' property "
-      return (None,keep_page,0)
+      return (None, keep_page, 0)
     else:  
 
       version = dom_root.attributes["Version"].value
@@ -1350,7 +1346,7 @@ class ScribusParser:
 
               if node_name == 'ANNAME':
                 if node_value != '':
-                  field_name = node_value.replace(' ','_')
+                  field_name = node_value.replace(' ', '_')
 
             if field_name != '' :
               #if 'PAGEOBJECT' has a valid name, then adding it to the global
@@ -1366,7 +1362,7 @@ class ScribusParser:
             returned_page_dict[page_number] = returned_page_object_list
 
         print "=> end ScribusParser.getXmlObjectPropertiesDict"
-        return (returned_page_dict,keep_page,0)
+        return (returned_page_dict, keep_page, 0)
 
         # end parsing document version 1.2.*
 
@@ -1410,17 +1406,18 @@ class ScribusParser:
 
             if node_name == 'ANNAME':
               if node_value != '':
-                field_name = node_value.replace(' ','_')
+                field_name = node_value.replace(' ', '_')
                 print "> found field : %s" % field_name
             elif node_name == 'OwnPage':
               field_OwnPage = node_value
             elif node_name == 'XPOS':
               print "   > updating Xpos : %s - %s = %s" % \
-                  (scratch_left+int(float(node_value)),scratch_left,node_value)
+                  (scratch_left+int(float(node_value)), scratch_left, 
+                      node_value)
               node_value = str(int(float(node_value)) - scratch_left)
             elif node_name == 'YPOS':
               print "   > updating Ypos : %s - %s = %s" % \
-                  (scratch_top+int(float(node_value)),scratch_top,node_value)
+                  (scratch_top+int(float(node_value)), scratch_top, node_value)
               node_value = str(int(float(node_value)) - scratch_top)
 
             returned_page_object[node_name] = node_value
@@ -1434,7 +1431,7 @@ class ScribusParser:
               print "  > adding new page"
               returned_page_dict[field_OwnPage] = []
             returned_page_dict[field_OwnPage].append(returned_page_object)
-        return (returned_page_dict,keep_page,page_gap)
+        return (returned_page_dict, keep_page, page_gap)
 
 
   security.declarePublic('getPropertiesConversionDict')
@@ -1520,7 +1517,7 @@ class ScribusParser:
           # modifying this field to make it compatible with new convention
           print "        => first element = " + \
                 str(tooltipfield_properties_list[0] + " is digit...")
-          LOG("WARNING : " + str(object_name),0,"out-of-date " \
+          LOG("WARNING : " + str(object_name), 0, "out-of-date " \
              + "for tooltipfield, please check naming_conventions")
           temp_nb = tooltipfield_properties_list[0]
           # deleting actual entry
@@ -1547,23 +1544,23 @@ class ScribusParser:
         object_properties = {} 
         page_properties = {}
         # getting object position and size
-        object_properties['position_x'] = \
-              sp.getObjectTooltipProperty('XPOS',
+        object_properties['position_x'] = sp.getObjectTooltipProperty(\
+                                          'XPOS',
                                           '0',
                                           object_name,
                                           object_content)
-        object_properties['position_y'] = \
-              sp.getObjectTooltipProperty('YPOS',
+        object_properties['position_y'] = sp.getObjectTooltipProperty(\
+                                          'YPOS',
                                           '0',
                                           object_name,
                                           object_content)
-        object_properties['size_x'] = \
-             sp.getObjectTooltipProperty('WIDTH',
-                                         '100',
-                                         object_name,
-                                         object_content)
-        object_properties['size_y'] = \
-              sp.getObjectTooltipProperty('HEIGHT',
+        object_properties['size_x'] = sp.getObjectTooltipProperty(\
+                                          'WIDTH',
+                                          '100',
+                                          object_name,
+                                          object_content)
+        object_properties['size_y'] = sp.getObjectTooltipProperty(\
+                                          'HEIGHT',
                                            '17',
                                           object_name,
                                           object_content)
@@ -1604,7 +1601,7 @@ class ScribusParser:
             temp_order = 'right'
           else :
             temp_order = 'left'
-        object_properties['order'] =  temp_order
+        object_properties['order'] = temp_order
 
         # getting special ANFLAG sub-properties
         temp_ANFLAG = long(sp.getObjectTooltipProperty('ANFLAG',
@@ -1665,9 +1662,9 @@ class ScribusParser:
         # first checking user specifications in tooltipfield
         object_properties['maximum_input'] = \
               sp.getObjectTooltipProperty('maximum_input',
-                                        0,
-                                        object_name,
-                                        tooltipfield_properties_dict)
+                                          0,
+                                          object_name,
+                                          tooltipfield_properties_dict)
         # if returned value is empty, then trying 'ANMC' Scribus property
         if object_properties['maximum_input'] == 0:
           object_properties['maximum_input'] = \
@@ -1856,12 +1853,12 @@ class ScribusParser:
           if len(nb_property_nbkey_list) == 0:
             print "    => 'nb' list empty : adding without sorting"
             # list is empty : adding value without sort
-            nb_property_nbkey_list.insert(0,(nb_value,object_name))
+            nb_property_nbkey_list.insert(0, (nb_value,object_name))
           elif nb_property_nbkey_list[len(nb_property_nbkey_list)-1][0] <= \
               nb_value:
             print "    => 'nb' end : adding at the end"
             # last element is smaller than new element : adding at the end
-            nb_property_nbkey_list.append((nb_value,object_name))
+            nb_property_nbkey_list.append((nb_value, object_name))
           else:
             print "    => checking for place to add the element"
             # searching where to insert the element in the ordered list
@@ -1875,15 +1872,18 @@ class ScribusParser:
                 # inserting new couple (nb_value,object_name) here
                 print "      inserting here : " + str(temp_value) + \
                     "/" + str(nb_value)
-                nb_property_nbkey_list.insert(temp_key,(nb_value,object_name))
+                nb_property_nbkey_list.insert(temp_key, (nb_value, 
+                  object_name))
                 # element has been insered , 
                 # no need to continue the search => breaking
                 break
         else:
           # object has no nb property. logging and adding it to the list of
           # nb-less objects. Script will automatically find a 'nb' value for this element
-          LOG("WARNING : " + str(object_name),0,"no 'nb' defined : finding a free slot")
-          print "      => no 'nb' property specified : post-processing will try to define one"
+          LOG("WARNING : " + str(object_name), 0, 
+              "no 'nb' defined : finding a free slot")
+          print "      => no 'nb' property specified : post-processing "\
+              "will try to define one"
           nb_property_nonbkey_list.append(object_name)
 
         # adding current object with its relative properties to the dict
@@ -1900,10 +1900,11 @@ class ScribusParser:
         # and addind it to the end of the final nb-list
         # to give them a 'nb' property
         nb_property_nbkey_list.append((object_position,object_name))
-        print "    => 'nb' found for %s : %s" % (object_name,object_position)
+        print "    => 'nb' found for %s : %s" % (object_name, object_position)
 
       # now all page_object are referenced in the list, we just need to sort
-      # the elements in the good order. for that a new list of objects is needed
+      # the elements in the good order. for that a new list of objects 
+      #is needed
       returned_object_list = []
       for nb_ind in range(len(nb_property_nbkey_list)):
         # iterating through final nb-list
@@ -1912,7 +1913,7 @@ class ScribusParser:
         # setting object's 'nb' property
         returned_object_dict[nb_value]['nb'] = nb_ind + 1
         # add the object at the end of the new list
-        returned_object_list.append((nb_value,returned_object_dict[nb_value]))
+        returned_object_list.append((nb_value, returned_object_dict[nb_value]))
 
       # adding returned list of object to the page dict
       # before going to the next page
@@ -1948,8 +1949,7 @@ class ScribusParser:
                          field,
                          option_html,
                          page_id,
-                         global_properties
-                         ):
+                         global_properties):
     """
     get only useful field attributes from properties_field
     and save them in global_properties
@@ -2028,7 +2028,7 @@ class ScribusParser:
       # radio fields have not been tested for the moment
       items = []
       for word_item in properties_field['item'].split('|'):
-        items.append((word_item,word_item.capitalize()))
+        items.append((word_item, word_item.capitalize()))
       object_dict['attributes'] = items
     #elif object_dict['erp_type'] == 'CheckBoxField':
       # checkboxfield needs to have their field data updated
