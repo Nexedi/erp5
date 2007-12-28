@@ -208,11 +208,9 @@ class XMLMatrix(Folder):
           j += 1
         i += 1
 
-      # Create the movement dictionnary
-      movement[base_id]={}
       # Look at each dimension i of the previous index
       for i in self.index[base_id].keys():
-        movement[base_id][i]={}
+        movement[i] = {}
         # If the new index has the same dimensionality
         # Look at new location of cells
         if new_index[base_id].has_key(i):
@@ -221,7 +219,7 @@ class XMLMatrix(Folder):
             new_place = new_index[base_id][i].get(my_id)
             old_place = self.index[base_id][i][my_id]
             # create a movement in dimension i between old_place and new_place
-            movement[base_id][i][old_place] = new_place
+            movement[i][old_place] = new_place
 
       # Rename every 'object_id' by 'temp_object_id'
       object_id_list = []
@@ -262,11 +260,11 @@ class XMLMatrix(Folder):
             # We are looking inside the movement dictionnary where
             # we should move the object, so for example
             # 'qantity_2_5' is renamed as 'quantity_4_3'
-            if movement[base_id].has_key(i):
-              if movement[base_id][i].has_key(old_place):
+            if movement.has_key(i):
+              if movement[i].has_key(old_place):
                 # Replace the place of the cell only if there where a change
-                if (movement[base_id][i][old_place]) != None:
-                  object_place[i] = str(movement[base_id][i][old_place])
+                if (movement[i][old_place]) != None:
+                  object_place[i] = str(movement[i][old_place])
                   to_delete = 0
                 else:
                   object_place[i] = None
@@ -274,7 +272,7 @@ class XMLMatrix(Folder):
             # XXX In this case, we delete every cell wich are not in the
             # movement dictionnary, may be this is very bad, so may be
             # we need to add an extra check here, ie if
-            # if movement[base_id][i].has_key(old_place) returns None,
+            # if movement[i].has_key(old_place) returns None,
             # We may want to keep the cell, but only if we are sure
             # the movement dictionnary will not define a new cell with this id
 
