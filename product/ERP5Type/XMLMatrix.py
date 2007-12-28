@@ -197,14 +197,13 @@ class XMLMatrix(Folder):
         # Create an index for this base_id
         self.index[base_id] = PersistentMapping()
 
-      new_index[base_id] = PersistentMapping()
       # Recreate a new index for the new range defined in *kw
       i = 0
       for index_ids in kw:
-        new_index[base_id][i] = PersistentMapping()
+        new_index[i] = PersistentMapping()
         j = 0
         for my_id in index_ids:
-          new_index[base_id][i][my_id] = j
+          new_index[i][my_id] = j
           j += 1
         i += 1
 
@@ -213,10 +212,10 @@ class XMLMatrix(Folder):
         movement[i] = {}
         # If the new index has the same dimensionality
         # Look at new location of cells
-        if new_index[base_id].has_key(i):
+        if new_index.has_key(i):
           # Look at each index in a given dimension i
           for my_id in self.index[base_id][i].keys():
-            new_place = new_index[base_id][i].get(my_id)
+            new_place = new_index[i].get(my_id)
             old_place = self.index[base_id][i][my_id]
             # create a movement in dimension i between old_place and new_place
             movement[i][old_place] = new_place
@@ -252,7 +251,7 @@ class XMLMatrix(Folder):
         object_place = object_id[len(base_id)+1:].split('_')
         to_delete = 1
         # We must have the same number of dimensions
-        if len(object_place) == len(new_index[base_id]):
+        if len(object_place) == len(new_index):
           # Let us browse each dimension of the previous index
           for i in range(len(object_place)):
             # Build each part of the nex id by looking up int. values
@@ -309,7 +308,7 @@ class XMLMatrix(Folder):
                                                # from catalog automaticaly
       # We don't need the old index any more, we
       # can set the new index
-      self.index[base_id] = new_index[base_id]
+      self.index[base_id] = new_index
 
     security.declareProtected( Permissions.ModifyPortalContent, 'setCellRange' )
     def setCellRange(self, *kw, **kwd):
