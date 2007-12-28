@@ -1838,28 +1838,6 @@ class TestPropertySheet:
       self.assertRaises(ValueError, getattr, not_ok, 'attr')
       self.assertFalse(hasattr(not_ok, 'attr'))
 
-    def test_renameObjectsPreservesUid(self, quiet=quiet, run=run_all_test):
-      """Test that object renaming preserves original uid.
-         This features allows to avoid reindexing all related objects, as it
-         can be extremely costly.
-      """
-      if not run: return
-      folder = self.getOrganisationModule()
-      initial_id = 'foo'
-      final_id = 'bar'
-      folder.newContent(portal_type='Organisation', id=initial_id)
-      get_transaction().commit()
-      self.tic()
-      folder = self.getOrganisationModule()
-      document = folder[initial_id]
-      initial_uid = document.uid
-      folder.manage_renameObjects([initial_id], [final_id])
-      get_transaction().commit()
-      self.tic()
-      folder = self.getOrganisationModule()
-      document = folder[final_id]
-      self.assertEqual(initial_uid, document.uid)
-
     def test_renameObjectsReindexSubobjects(self, quiet=quiet, run=run_all_test):
       """Test that renaming an object with subobjects causes them to be
          reindexed (their path must be updated).
