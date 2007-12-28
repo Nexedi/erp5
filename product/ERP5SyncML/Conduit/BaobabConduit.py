@@ -971,7 +971,7 @@ class BaobabConduit(ERP5Conduit):
       if inventory_path is not None:
         result_list.append(inventory_path)
         vault_path = self.vault_code_to_path.get(vault_code)
-        if vault_path is not None:
+        if vault_path not in (None, ''):
           result_list.append(vault_path)
         elif vault_code is not None:
           raise ValueError, '%s is not a known vault import codification' % (vault_code, )
