@@ -145,7 +145,7 @@ class CopyContainer:
       and linked to objects inside the renamed object
 
       """
-      ob=self.restrictedTraverse(id)
+      ob = self._getOb(id)
       # Make sure there is no activities pending on that object
       try:
         portal_activities = getToolByName(self, 'portal_activities')
