@@ -285,6 +285,17 @@ class XMLMatrix(Folder):
             # Theses two lines are very important, if the object is renamed
             # then we must uncatalog the previous one
             o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
+            # Force a new uid to be allocated, because unindexObject creates
+            # an activity which will later delete lines from catalog based
+            # on their uid, and it is not garanted that indexation will happen
+            # after this deletion.
+            # It is bad to waste uids, but this data structure offers no
+            # alternative because cell id gives its index in the matrix,
+            # so reordering axes requires the cell id to change.
+            # XXX: It can be improved, but requires most of this file to be
+            # rewritten, and compatibility code must be written as data
+            # structure would most probably change.
+            o.uid = None
           o.reindexObject() # we reindex in case position has changed
                             # uid should be consistent
         else:
