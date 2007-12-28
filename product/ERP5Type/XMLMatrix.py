@@ -194,17 +194,18 @@ class XMLMatrix(Folder):
       # Recreate a new index for the new range defined in *kw
       i = 0
       for index_ids in kw:
-        new_index[i] = PersistentMapping()
+        temp = PersistentMapping()
         j = 0
         for my_id in index_ids:
-          new_index[i][my_id] = j
+          temp[my_id] = j
           j += 1
+        new_index[i] = temp
         i += 1
 
       if self.index.has_key(base_id):
         # Look at each dimension i of the previous index
         for i in self.index[base_id].keys():
-          movement[i] = {}
+          temp = {}
           # If the new index has the same dimensionality
           # Look at new location of cells
           if new_index.has_key(i):
@@ -213,7 +214,8 @@ class XMLMatrix(Folder):
               new_place = new_index[i].get(my_id)
               old_place = self.index[base_id][i][my_id]
               # create a movement in dimension i between old_place and new_place
-              movement[i][old_place] = new_place
+              temp[old_place] = new_place
+          movement[i] = temp
 
       # Rename every 'object_id' by 'temp_object_id'
       object_id_list = []
