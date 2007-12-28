@@ -631,6 +631,9 @@ class WorkflowHistoryList(Persistent):
         if index == -1:
             return self._slots[-1]
         elif isinstance(index, (int, long)):
+            if index < 0:
+                # XXX this implementation is not so good, but rarely used.
+                index += len(self)
             iterator = self.__iter__()
             for i in xrange(index):
                 iterator.next()
