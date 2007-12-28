@@ -205,17 +205,17 @@ class XMLMatrix(Folder):
       if self.index.has_key(base_id):
         # Look at each dimension i of the previous index
         for i in self.index[base_id].keys():
-          temp = {}
           # If the new index has the same dimensionality
           # Look at new location of cells
           if new_index.has_key(i):
+            temp = {}
             # Look at each index in a given dimension i
             for my_id in self.index[base_id][i].keys():
               new_place = new_index[i].get(my_id)
               old_place = self.index[base_id][i][my_id]
               # create a movement in dimension i between old_place and new_place
               temp[old_place] = new_place
-          movement[i] = temp
+            movement[i] = temp
 
       # Rename every 'object_id' by 'temp_object_id'
       object_id_list = []
