@@ -218,11 +218,8 @@ class XMLMatrix(Folder):
         if new_index[base_id].has_key(i):
           # Look at each index in a given dimension i
           for my_id in self.index[base_id][i].keys():
-            new_place=None
+            new_place = new_index[base_id][i].get(my_id)
             old_place = self.index[base_id][i][my_id]
-            if my_id in new_index[base_id][i].keys():
-              # if my_id still exists in the new_index
-              new_place = new_index[base_id][i][my_id]
             # create a movement in dimension i between old_place and new_place
             movement[base_id][i][old_place] = new_place
 
