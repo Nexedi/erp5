@@ -213,11 +213,11 @@ class XMLMatrix(Folder):
       # Look at each dimension i of the previous index
       for i in self.index[base_id].keys():
         movement[base_id][i]={}
-        # Look at each index in a given dimension i
-        for my_id in self.index[base_id][i].keys():
-          # If the new index has the same dimensionality
-          # Look at new location of cells
-          if new_index[base_id].has_key(i):
+        # If the new index has the same dimensionality
+        # Look at new location of cells
+        if new_index[base_id].has_key(i):
+          # Look at each index in a given dimension i
+          for my_id in self.index[base_id][i].keys():
             new_place=None
             old_place = self.index[base_id][i][my_id]
             if my_id in new_index[base_id][i].keys():
