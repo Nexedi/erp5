@@ -174,15 +174,13 @@ class XMLMatrix(Folder):
                                '_setCellRange' )
     def _setCellRange(self, *kw, **kwd):
       """
-          Set a new range for a matrix, this method can
-          also handle a changement of the size of a matrix
+          Set a new range for a matrix.
+          If needed, it will resize and/or reorder matrix content.
       """
-      movement = {}  # We will put in this dictionnary the previous and new
-                     # id of a given cell
-      new_index = PersistentMapping() # new_index defines the relation
-                                      # between keys and ids of cells
+      movement = {} # Maps original cell id to its new id for each moved cell.
+      new_index = PersistentMapping()
 
-      base_id= kwd.get('base_id', "cell")
+      base_id = kwd.get('base_id', 'cell')
       if getattr(aq_base(self), 'index', None) is None:
         self.index = PersistentMapping()
 
@@ -191,7 +189,7 @@ class XMLMatrix(Folder):
       if current_range == list(kw): # kw is a tuple
         return
 
-      # Recreate a new index for the new range defined in *kw
+      # Create the new index for the range given in *kw
       i = 0
       for index_ids in kw:
         temp = PersistentMapping()
@@ -203,25 +201,21 @@ class XMLMatrix(Folder):
         i += 1
 
       if self.index.has_key(base_id):
-        # Look at each dimension i of the previous index
+        # Compute cell movement from their position in previous range to their
+        # position in the new range.
         for i, i_value in self.index[base_id].iteritems():
-          # If the new index has the same dimensionality
-          # Look at new location of cells
           if new_index.has_key(i):
             temp = {}
-            # Look at each index in a given dimension i
             for my_id, my_value in i_value.iteritems():
-              # create a movement in dimension i between old_place and new_place
               temp[my_value] = new_index[i].get(my_id)
             movement[i] = temp
 
-      # Rename every 'object_id' by 'temp_object_id'
+      # List all valid cell ids for current base_id.
       object_id_list = []
       for obj in self.objectValues():
         object_id = obj.getId()
         if object_id.find(base_id) == 0:
-          # We want to make sure we have only base_id, ex: foo_0_0 and
-          # not foo_bar_0_0
+          # Check that all '_'-separated fields are of int type.
           if (object_id) > len(base_id):
             try:
               int(object_id[len(base_id)+1:].split('_')[0])
@@ -233,14 +227,16 @@ class XMLMatrix(Folder):
             except (ValueError, KeyError):
               pass
 
+      # Prepend 'temp_' to all cells, to avoid id conflicts while renaming.
       for object_id in object_id_list:
         new_name = 'temp_' + object_id
         obj = self._getOb(object_id)
-        obj.isIndexable = 0 # block reindexing at this time
+        obj.isIndexable = 0 # Disable reindexing while moving cells
         obj.id = new_name
         self._setObject(new_name, aq_base(obj))
         self._delObject(object_id)
 
+      # Rename all cells to their final name.
       for object_id in object_id_list:
         # Retrieve the place of the object, for movement_0_0 it is ['0','0']
         object_place = object_id[len(base_id)+1:].split('_')
