@@ -223,7 +223,7 @@ class XMLMatrix(Folder):
                                             # during this transaction,
                                             # then we do not need to
                                             # work on it
-              object_id_list += [object_id]
+              object_id_list.append(object_id)
             except (ValueError, KeyError):
               pass
 
