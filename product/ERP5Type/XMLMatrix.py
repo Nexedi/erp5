@@ -212,22 +212,20 @@ class XMLMatrix(Folder):
 
       # List all valid cell ids for current base_id.
       object_id_list = []
-      base_id_len = len(base_id)
-      for object_id in self.objectIds():
-        object_id_list = object_id.split('_')
-        if len(object_id_list) > 1 and object_id_list.pop(0) == base_id:
-          try:
-            # Check that all '_'-separated fields are of int type (once
-            # base_id is poped).
-            [int(x) for x in object_id_list]
-            self._getOb(object_id) # If the object was created
-                                   # during this transaction,
-                                   # then we do not need to
-                                   # work on it
-          except (ValueError, KeyError):
-            pass
-          else:
-            object_id_list.append(object_id)
+      for obj in self.objectValues():
+        object_id = obj.getId()
+        if object_id.find(base_id) == 0:
+          # Check that all '_'-separated fields are of int type.
+          if (object_id) > len(base_id):
+            try:
+              int(object_id[len(base_id)+1:].split('_')[0])
+              test = self._getOb(object_id) # If the object was created
+                                            # during this transaction,
+                                            # then we do not need to
+                                            # work on it
+              object_id_list.append(object_id)
+            except (ValueError, KeyError):
+              pass
 
       # Prepend 'temp_' to all cells, to avoid id conflicts while renaming.
       for object_id in object_id_list:
