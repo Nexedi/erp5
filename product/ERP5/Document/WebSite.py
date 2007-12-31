@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.WebSection import WebSection, WEBSECTION_KEY
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface, Cache
+from Products.ERP5Type.Cache import CachingMethod
 
 from Globals import get_request
 from Persistence import Persistent
@@ -148,7 +149,7 @@ class WebSite(WebSection):
         BeforeTraverse.registerBeforeTraverse(item, WebSiteTraversalHook(), handle)
       WebSection.manage_afterAdd(self, item, container)
 
-    # Experimental methods 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
     def getPermanentURLList(self, document):
       """
         Return a list of URLs which exist in the site for
@@ -158,4 +159,48 @@ class WebSite(WebSection):
         all documents in each of them to build a reverse
         mapping of getPermanentURL
       """
-      pass
+      return map(lambda x:x.getPermanentURL(document), self.getWebSectionValueList())
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValueList')
+    def getWebSectionValueList(self, document):
+      """
+        Returns a list of sections which a given document is
+        part of.
+
+        This could be implemented either by testing all sections
+        and building a cache or by using the predicate API
+        to find which sections apply.
+      """
+      def getWebSectionUidList(section):
+        result = [section.getUid()]
+        for o in section.contentValues(portal_type='Web Section'):
+          result.extend(getWebSectionUidList(o))
+        return result
+
+      _getWebSectionUidList = CachingMethod(getWebSectionUidList,
+                         id='WebSite._getWebSectionUidList',
+                         cache_factory='erp5_content_medium')
+
+      section_list = self.portal_domains.searchPredicateList(document, 
+                        portal_type='Web Section',
+                        uid=_getWebSectionUidList(self))
+
+      section_dict = {}
+
+      for section in section_list:
+        section_dict[section.getPhysicalPath()] = section
+
+      # Eliminate path
+      for section in section_list:
+        path = section.getPhysicalPath()
+        for i in range(0, len(path)-1):
+          sub_path = path[0:i]
+          if section_dict.has_key(sub_path):
+            del section_dict[sub_path]
+
+      section_list = section_dict.values()
+
+      # Sort by Index
+      section_list.sort(lambda x,y: cmp(x.getIntIndex(), y.getIntIndex()))
+
+      return section_list
