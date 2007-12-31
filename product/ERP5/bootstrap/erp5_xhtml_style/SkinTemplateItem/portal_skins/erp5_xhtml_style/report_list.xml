@@ -54,23 +54,25 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:define-macro="master">\n
-    <tal:block tal:define="form_action string:Base_doSelect;\n
-               form_id form/id;\n
-               list_mode python: True;\n
-               listmode_default_listbox python:getattr(form, \'listbox\', None);\n
-               selection_name listmode_default_listbox/selection_name | nothing;\n
-               selection_index request/selection_index | python:0;\n
-               dummy python: selection_name and request.set(\'selection_name\', selection_name);\n
-               local_parameter_list local_parameter_list | python: {};\n
-               dummy python: local_parameter_list.update({\'selection_name\': selection_name, \'selection_index\': selection_index, \'form_id\': form_id});\n
-               title here/getTranslatedTitle | here/Title">\n
-      <tal:block metal:use-macro="here/main_template/macros/master">\n
-        <tal:block metal:fill-slot="context_bar">\n
-          <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
-        </tal:block>\n
-        <tal:block metal:fill-slot="main">\n
-          <tal:block metal:define-slot="main" />\n
+  <tal:block tal:define="title string:${template/title_or_id} - ${here/Title}">\n
+    <tal:block  metal:use-macro="here/list_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <tal:block metal:use-macro="here/form_render/macros/master" />\n
+        <tal:block tal:define="portal_object here/getPortalObject">\n
+          <tal:block tal:repeat="report_item report_method">\n
+            <tal:block tal:define="here python: report_item.getObject(portal_object);\n
+                       dummy python: report_item.pushReport(portal_object)">\n
+              <span tal:condition="report_item/getTitle"\n
+                    tal:content="report_item/getTitle"\n
+                    tal:attributes="class string:report_title_level_${report_item/getLevel}" />\n
+              <tal:block tal:condition="report_item/getFormId">\n
+                <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
+                  <tal:block metal:use-macro="here/form_render/macros/master" />\n
+                </tal:block>\n
+              </tal:block>\n
+              <tal:block tal:define="dummy python:report_item.popReport(portal_object)" />\n
+            </tal:block>\n
+          </tal:block>\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
@@ -90,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>list_main</string> </value>
+            <value> <string>report_list</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
