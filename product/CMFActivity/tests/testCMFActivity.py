@@ -42,6 +42,7 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 import cPickle as pickle
 from Products.CMFActivity.ActivityTool import Message
+import random
 
 try:
   from transaction import get as get_transaction
@@ -2201,6 +2202,42 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.assertEqual(obj.getTitle(), 'abd')
     finally:
       delattr(Organisation, 'appendToTitle')
+
+  def test_89_RequestIsolationInsideSameTic(self, quiet=0, run=run_all_test):
+    """
+      Check that request information do not leak from one activity to another
+      inside the same TIC invocation.
+      This only apply to queues supporting batch processing:
+        - SQLQueue
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck request isolation between messages of the same batch'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation', title='Pending')
+    marker_id = 'marker_%i' % (random.randint(1, 10), )
+    def putMarkerValue(self, marker_id):
+      self.REQUEST.set(marker_id, 1)
+    def checkMarkerValue(self, marker_id):
+      if self.REQUEST.get(marker_id) is not None:
+        self.setTitle('Failed')
+      else:
+        self.setTitle('Success')
+    try:
+      Organisation.putMarkerValue = putMarkerValue
+      Organisation.checkMarkerValue = checkMarkerValue
+      obj.activate(activity='SQLQueue', tag='set_first').putMarkerValue(marker_id=marker_id)
+      obj.activate(activity='SQLQueue', after_tag='set_first').checkMarkerValue(marker_id=marker_id)
+      self.assertEqual(obj.getTitle(), 'Pending')
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(obj.getTitle(), 'Success')
+    finally:
+      delattr(Organisation, 'putMarkerValue')
+      delattr(Organisation, 'checkMarkerValue')
 
 def test_suite():
   suite = unittest.TestSuite()
