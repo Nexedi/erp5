@@ -38,7 +38,78 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 
+from cStringIO import StringIO
+from mimetypes import guess_type
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+from email.MIMEBase import MIMEBase
+from email.Header import make_header
+from email import Encoders
+
 from zLOG import LOG, INFO
+
+def buildEmailMessage(from_url, to_url, msg=None,
+                      subject=None, attachment_list=None,
+                      extra_headers=None):
+  """
+    Builds a mail message which is ready to be
+    sent by Zope MailHost.
+
+    * attachment_list is a list of dictionnaries with those keys:
+     - name : name of the attachment,
+     - content: data of the attachment
+     - mime_type: mime-type corresponding to the attachment
+    * extra_headers is a dictionnary of custom headers to add to the email.
+      "X-" prefix is automatically added to those headers.
+  """
+
+  if attachment_list == None:
+    # Create non multi-part MIME message.
+    message = MIMEText(msg, _charset='utf-8')
+    attachment_list = []
+  else:
+    # Create multi-part MIME message.
+    message = MIMEMultipart()
+    message.preamble = "If you can read this, your mailreader\n" \
+                        "can not handle multi-part messages!\n"
+    message.attach(MIMEText(msg, _charset='utf-8'))
+
+  if extra_headers:
+    for k, v in extra_headers.items():
+      message.add_header('X-%s' % k, v)
+
+  message.add_header('Subject',
+                      make_header([(subject, 'utf-8')]).encode())
+  message.add_header('From', from_url)
+  message.add_header('To', to_url)
+
+  for attachment in attachment_list:
+    if attachment.has_key('name'):
+      attachment_name = attachment['name']
+    else:
+      attachment_name = ''
+    # try to guess the mime type
+    if not attachment.has_key('mime_type'):
+      type, encoding = guess_type( attachment_name )
+      if type != None:
+        attachment['mime_type'] = type
+      else:
+        attachment['mime_type'] = 'application/octet-stream'
+
+    # attach it
+    if attachment['mime_type'] == 'text/plain':
+      part = MIMEText(attachment['content'], _charset='utf-8')
+    else:
+      #  encode non-plaintext attachment in base64
+      part = MIMEBase(*attachment['mime_type'].split('/', 1))
+      part.set_payload(attachment['content'])
+      Encoders.encode_base64(part)
+
+    part.add_header('Content-Disposition',
+                    'attachment; filename=%s' % attachment_name)
+    message.attach(part)
+
+  return message
 
 class NotificationTool(BaseTool):
   """
@@ -86,8 +157,14 @@ class NotificationTool(BaseTool):
       message -- the text of the message (already translated)
 
       attachment_list -- attached documents (optional)
+
+    TODO: support default notification email
     """
     catalog_tool = getToolByName(self, 'portal_catalog')
+
+    # Default Values
+    portal = self.getPortalObject()
+    default_email = portal.email_from_address
 
     # Change all strings to object values
     if isinstance(sender, basestring):
@@ -100,32 +177,37 @@ class NotificationTool(BaseTool):
         email_from_address = email_value.asText()
     if not email_from_address:
       # If we can not find a from address then
-      # we fallback to portal values
-      portal = self.getPortalObject()
-      email_from_address = portal.email_from_address
+      # we fallback to default values
+      email_from_address = default_email
 
     # To is a list - let us find all members
     if isinstance(recipient, basestring):
-      recipient = [recipient]
-    to_list = []
-    for user in recipient:
-      user_value = catalog_tool(portal_type='Person', reference=user)[0]
-      if user_value is not None:
-        to_list.append(user_value)
+      recipient = catalog_tool(portal_type='Person', reference=recipient)
+
+    # If no recipient is defined, just send an email to the
+    # default mail address defined at the CMF site root.
+    if recipient is None:
+      mailhost = getattr(self.getPortalObject(), 'MailHost', None)
+      if mailhost is None:
+        raise AttributeError, "Cannot find a MailHost object"
+      mail_message = buildEmailMessage(email_from_address, default_email, 
+                                       msg=message, subject=subject,
+                                       attachment_list=attachment_list)
+      return mailhost.send(mail_message.as_string(), default_email, email_from_address)
 
     # Default implementation is to send an active message to everyone
-    for person in to_list:
+    for person in recipient:
       email_value = person.getDefaultEmailValue()
       if email_value is not None:
         # Activity can not handle attachment
         # Queuing messages has to be managed by the MTA
         email_value.send(
-              from_url=email_from_address,
-              to_url=email_value.asText(),
-              subject=subject,
-              msg=message,
-              attachment_list=attachment_list)
-    
+                          from_url=email_from_address,
+                          to_url=email_value.asText(),
+                          subject=subject,
+                          msg=message,
+                          attachment_list=attachment_list)
+
     # Future implemetation could consist in implementing
     # policies such as grouped notification (per hour, per day,
     # per week, etc.) depending on user preferences. It
