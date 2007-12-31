@@ -52,7 +52,7 @@ MAX_VALIDATED_LIMIT = 1000
 READ_MESSAGE_LIMIT = 1000
 # Stop electing more messages for processing if more than this number of
 # objects are impacted by elected messages.
-MAX_GROUPED_OBJECTS = 500
+MAX_GROUPED_OBJECTS = 100
 
 class SQLDict(RAMDict, SQLBase):
   """
