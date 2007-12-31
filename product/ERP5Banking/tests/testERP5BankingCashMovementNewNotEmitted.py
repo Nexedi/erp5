@@ -66,10 +66,10 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     return "ERP5BankingCashMovementNewNotEmitted"
 
   def getCashMovementModule(self):
-    return getattr(self.getPortal(), 'cash_movement_new_not_emmited_module', None)
+    return getattr(self.getPortal(), 'cash_movement_new_not_emmited_module')
 
   def getMonetaryReceptionModule(self):
-    return getattr(self.getPortal(), 'monetary_reception_module', None)
+    return getattr(self.getPortal(), 'monetary_reception_module')
 
   def afterSetUp(self):
     """
