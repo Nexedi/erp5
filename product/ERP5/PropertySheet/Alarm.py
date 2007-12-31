@@ -46,7 +46,23 @@ class Alarm:
             'description' : 'the method used to know if there is a problem',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'solve_method_id',
+            'description' : 'the method used to solve problems if any.',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'alarm_notification_mode',
+            'description' : 'defines the notification mode of an Alarm.'
+                            'Never, on sense or always.',
+            'type'        : 'selection',
+            'select_variable' : 'getAlarmNotificationModeSelectionList',
+            'mode'        : 'w' },
+        {   'id'          : 'alarm_notification_mode_selection',
+            'description' : 'List of possible values for alarm_notification_mode',
+            'type'        : 'tokens',
+            'default'     : ['always','sense','never'],
+            'mode'        : ''},
     )
 
-    _categories = ( 'group', 'site')
+    _categories = ( 'group', 'site', # XXX Why ?
+                    'destination')
 
