@@ -65,8 +65,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>active_process = context.getPortalObject().restrictedTraverse(active_process)\n
-return active_process.getResultList()\n
+            <value> <string>"""\n
+  Returns a list of all alarms in \n
+  the form of report sections.\n
+\n
+  TODO: cache this result in RAM \n
+  on a per transaction level.\n
+"""\n
+REQUEST = context.REQUEST\n
+if display_success is None: display_success = REQUEST.form.get(\'display_success\')\n
+if display_raw_result is None: display_raw_result = REQUEST.form.get(\'display_raw_result\')\n
+\n
+from Products.ERP5Form.Report import ReportSection\n
+result = []\n
+\n
+for alarm in context.contentValues():\n
+  if alarm.isEnabled() and \\\n
+    (display_success or alarm.sense()) and\\\n
+    (display_raw_result or alarm.getReportMethodId()):\n
+    if alarm.getReportMethodId():\n
+      form_id = alarm.getReportMethodId()\n
+    else:\n
+      form_id = \'Alarm_viewReport\'\n
+    result.append(\n
+      ReportSection(\n
+        title=alarm.getTitle(),\n
+        path=alarm.getPhysicalPath(),\n
+        level=1,\n
+        form_id=form_id,\n
+        listbox_display_mode=\'FlatListMode\')\n
+      )\n
+\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +113,7 @@ return active_process.getResultList()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process=None, **kw</string> </value>
+            <value> <string>display_success=None, display_raw_result=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,16 +133,25 @@ return active_process.getResultList()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>active_process</string>
+                            <string>display_success</string>
+                            <string>display_raw_result</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>REQUEST</string>
+                            <string>None</string>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>result</string>
+                            <string>_getiter_</string>
+                            <string>alarm</string>
+                            <string>form_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -126,12 +165,13 @@ return active_process.getResultList()\n
             <value>
               <tuple>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_getActiveProcessResultList</string> </value>
+            <value> <string>AlarmTool_getReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

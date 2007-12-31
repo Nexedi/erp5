@@ -44,7 +44,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>AlarmTool_viewAlarmReportList</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This dialog provides fields to configure how to render the results of all alarms on a single page.</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -62,6 +66,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,44 +75,36 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>your_display_success</string>
+                        <string>your_display_raw_result</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
-                        <string>my_periodicity_start_date</string>
-                        <string>my_periodicity_stop_date</string>
-                        <string>sense</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_report_method_id</string>
-                        <string>my_active_sense_method_id</string>
-                        <string>my_sense_method_id</string>
-                        <string>my_solve_method_id</string>
-                        <string>my_enabled</string>
-                        <string>my_alarm_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -115,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_view</string> </value>
+            <value> <string>AlarmTool_viewAlarmReportListDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,11 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Alarm_view</string> </value>
+            <value> <string>AlarmTool_viewAlarmReportListDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -139,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Alarm</string> </value>
+            <value> <string>Alarm Report</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

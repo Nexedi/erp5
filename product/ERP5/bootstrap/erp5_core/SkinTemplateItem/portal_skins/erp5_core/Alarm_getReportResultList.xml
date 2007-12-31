@@ -66,29 +66,19 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Returns active processes related to an Alarm \n
-  ordered by data. sense_value is calculated\n
-  using the Alarm itself.\n
-\n
-  TODO: optimisation of list method to compute values\n
-        only on the currently displayed range\n
-  TODO2: optimisation of sense_value through cache\n
+  Returns the list of results of the specified process\n
+  or of the last process if nothing specified.\n
 """\n
 \n
-def sort_date(a,b):\n
-  return - cmp(a.getStartDate(), b.getStartDate())\n
+if active_process is None:\n
+  active_process = context.getLastActiveProcess()\n
+else:\n
+  active_process = context.getPortalObject().restrictedTraverse(active_process)\n
 \n
-process_list = context.getCausalityRelatedValueList()\n
-process_list.sort(sort_date)\n
-return_list = []\n
-for process in process_list:\n
-  process_id = process.getId()\n
-  start_date = process.getStartDate()\n
-  sense_value = context.sense(process=process)\n
-  return_list.append(context.asContext(process_id=process.getId(), \n
-                     start_date=process.getStartDate(),\n
-                     sense_value=sense_value))\n
-return return_list\n
+if active_process is not None:\n
+  return active_process.getResultList()\n
+\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -105,7 +95,7 @@ return return_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>active_process=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,23 +115,17 @@ return return_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>active_process</string>
                             <string>kw</string>
-                            <string>sort_date</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>process_list</string>
-                            <string>return_list</string>
-                            <string>_getiter_</string>
-                            <string>process</string>
-                            <string>process_id</string>
-                            <string>start_date</string>
-                            <string>sense_value</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,12 +137,14 @@ return return_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_getOrderedActiveProcessList</string> </value>
+            <value> <string>Alarm_getReportResultList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

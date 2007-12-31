@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -43,14 +43,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This form displays all reports for all Alarms which are active and are failing.</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,11 +62,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>Default</string>
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -77,27 +74,19 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Default</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -113,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_viewLatestResult</string> </value>
+            <value> <string>AlarmTool_viewAlarmReportList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,7 +110,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ActiveProcess_showReport</string> </value>
+            <value> <string>AlarmTool_viewAlarmReportList</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>report_list</string> </value>
+        </item>
+        <item>
+            <key> <string>report_method</string> </key>
+            <value> <string>AlarmTool_getReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -133,11 +130,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Alarm Reports</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
