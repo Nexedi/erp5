@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import types
+
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -228,10 +230,20 @@ class Alarm(XMLObject, PeriodicityMixin):
   """
   An Alarm is in charge of checking anything (quantity of a certain
   resource on the stock, consistency of some order,....) periodically.
+  This check can span over multiple activities through an active
+  process.
 
-  It should also provide a solution if something wrong happens.
+  An Alarm is capable of displaying the last result of the check
+  process which was run in background. The result can be provided
+  either as a boolean value (alarm was raised or not) or 
+  in the form of an HTML report which is intended to be 
+  displayed in a control center. Moreover, user may be notified
+  automatically of alarm failures.
 
-  Some information should be displayed to the user, and also notifications.
+  Alarm may also provide a solution if something wrong happens. This
+  solution takes the form of a script which can be invoked
+  by the administrator or by the user by clicking on a button
+  displayed in the Alarm control center.
   """
 
   # CMF Type Definition
@@ -261,95 +273,184 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     This method returns only True or False. 
     It simply tells if this alarm is currently
-    active or not. It is activated when it is doing some calculation with
-    activeSense or solve.
+    active or not. An Alarm is said to be active whenever
+    some calculation is undergoing either as part
+    of the sensing process (activeSense) or as part
+    of the problem resolution process (solve).
     """
     return self.hasActivity(only_valid=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'activeSense')
-  def activeSense(self):
+  def activeSense(self, fixit=0):
     """
-    This method checks if there is a problem. This method can launch a very long
-    activity. We don't care about the response, we just want to start
-    some calculations. Results should be read with the method 'sense'
-    later.
+    This method launches the sensing process as activities.
+    It is intended to launch a very long process made
+    of many activities. It returns nothing since the results
+    are collected in an active process.
 
+    The result of the sensing process can be obtained by invoking
+    the sense method or by requesting a report.
     """
-    # Set the new date
-    LOG('activeSense, self.getPath()',0,self.getPath())
+    # LOG('activeSense, self.getPath()',0,self.getPath())
 
+    # Set the next date at which this method should be invoked
     self.setNextAlarmDate()
+
+    # Find the active sensing method and invoke it
+    # as an activity so that we can benefit from
+    # distribution of alarm processing as soon as possible
     method_id = self.getActiveSenseMethodId()
-    if method_id is not None:
-      method = getattr(self.activate(),method_id)
-      return method()
+    if method_id not in (None, ''):
+      # A tag is provided as a parameter in order to be
+      # able to notify the user after all processes are ended
+      # We do some inspection to keep compatibility
+      # (because fixit and tag were not set previously)
+      tag='Alarm_activeSense_%s' % self.getId()
+      kw = {}
+      method = getattr(self, method_id)
+      name_list = method.func_code.co_varnames
+      if 'fixit' in name_list or (method.func_defaults is not None
+        and len(method.func_defaults) < len(name_list)):
+        # New API - also if variable number of named parameters
+        getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag)
+      else:
+        # Old API
+        getattr(self.activate(tag=tag), method_id)()
+      if self.isAlarmNotificationMode():
+        self.activate(after_tag=tag).notify()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'sense')
-  def sense(self):
+  def sense(self, process=None):
     """
     This method returns True or False. False for no problem, True for problem.
 
-    This method should respond quickly.  Basically the response depends on some
-    previous calculation made by activeSense.
+    This method should respond very quickly.
+
+    Complex alarms should use activity based calculations through
+    the activeSense method.
+
+    The process parameter can be used to retrive sense values for 
+    past processes.
     """
-    value = False
     method_id = self.getSenseMethodId()
-    process = self.getLastActiveProcess()
     if process is None:
-      return value
-    if method_id is not None:
-      method = getattr(self,method_id)
-      value = method()
-    else:
-      for result in process.getResultList():
-        if result.severity > result.INFO:
-          value = True
-          break
-    process.setSenseValue(value)
-    return value
+      process = self.getLastActiveProcess()
+
+    # First case - simple cron style alarm
+    # with no results
+    if process is None and method_id in (None, ''):
+      return None
+
+    # Second case - this alarm does not use an
+    # active process. This is perfectly acceptable
+    # in some cases, whenever the sense calculation
+    # is really fast.
+    if process is None:
+      method = getattr(self, method_id)
+      return method()
+
+    # Third case - this alarm uses an
+    # active process and a method_id is defined
+    if method_id not in (None, ''):
+      method = getattr(self, method_id)
+      return method(process=process)
+
+    # Fourth case - this alarm uses an
+    # active process but no method_id is defined
+    for result in process.getResultList():
+      # This is useful is result is returned as a Return instance
+      if result.severity > result.INFO:
+        return True
+      # This is the default case
+      if getattr(result, 'result'):
+        return True
+
+    return False
+    # This comment here is kept for historical reasons
+    # There used to be a call to process.setSenseValue(value)
+    # This means that each time an alarm is displayed,
+    # we modify it to keep its latest sense result somewhere
+    # This was bad for two reasons: first of all, it is
+    # actually a caching problem, and if necesssary,
+    # this caching problem should be solved by using caches.
+    # Then, if caching is required, it may not only be
+    # at display time and not only for sense(). So, the
+    # baseline is to use caches and if necessary to develop
+    # a new cache plugin which uses ZODB to store values
+    # for a long time.
 
   security.declareProtected(Permissions.View, 'report')
-  def report(self, process=None):
+  def report(self, reset=0, process=None):
     """
-    This methods produces a report (HTML)
-    This generate the output of the results. It can be used to nicely
-    explain the problem. We don't do calculation at this time, it should
-    be made by activeSense.
+    This methods produces a report (HTML) to display
+    the results of the sensing process.
+
+    The report is intended to provide a nice visualisation
+    of the sensing process, of problems which may occur or
+    of the fact that there was no problem. No calculation
+    should be made normally at this time (or very fast calculation).
+    Complex alarms should implement calculation through
+    the invocation of activeSense.
+
+    Report implementation is normally made using an
+    ERP5 Form.
     """
-    method_id = self.getReportMethodId(None)
-    #LOG('Alarm.report, method_id',0,method_id)
-    if method_id is None:
-        return ''
-    method = getattr(self,method_id)
-    process = self.getLastActiveProcess()
-    result = None
-    if process is not None:
-      result = method(process=process)
-    return result
+    if process is None:
+      process = self.getLastActiveProcess().getRelativeUrl()
+    elif not type(process) in types.StringTypes:
+      process = process.getRelativeUrl()
+    list_action = _getViewFor(self, view='report')
+    if getattr(aq_base(list_action), 'isDocTemp', 0):
+      return apply(list_action, (self, self.REQUEST),
+                   process=process, reset=reset)
+    else:
+      return list_action(process=process, reset=reset)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'solve')
   def solve(self):
     """
-    This method tries solves the problem detected by sense.
+    This method tries resolve a problems detected by an Alarm
+    within the sensing process. Problem resolution is
+    implemented by an external script.
 
-    This solve the problem if there is a problem detected by sense. If
-    no problems, then nothing to do here.
+    If no external script is dehfined, activeSense is invoked 
+    with fixit=1
     """
-    pass
+    method_id = self.getSolveMethodId()
+    if method_id not in (None, ''):
+      method = getattr(self.activate(), method_id)
+      return method()
+    return self.activeSense(fixit=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'notify')
-  def _notify(self):
+  def notify(self):
     """
     This method is called to notify people that some alarm has
-    been sensed.
-
-    for example we can send email.
-
-    We define nothing here, because we will use an interaction workflow.
+    been sensed. Notification consists of sending an email
+    to the system address if nothing was defined or to 
+    notify all agents defined on the alarm if specified.
     """
-    pass
+    notification_tool = getToolByName(self, 'portal_notifications')
+    candidate_list = self.getDestinationValueList()
+    if candidate_list:
+      recipient = candidate_list
+    else:
+      recipient = None
+    if self.sense():
+      prefix = 'ERROR'
+    else:
+      prefix = 'INFO'
+    notification_tool.sendMessage(recipient=candidate_list, 
+                subject='[%s] ERP5 Alarm Notification: %s' %
+                  (prefix, self.getTitle()),
+                message="""
+Alarm Title: %s
 
-  notify = WorkflowMethod(_notify, id='notify')
+Alarm Description:
+%s
+
+Alarm URL: %s
+""" % (self.getTitle(), self.getDescription(), self.absolute_url()))
 
   security.declareProtected(Permissions.View, 'getLastActiveProcess')
   def getLastActiveProcess(self):
@@ -359,13 +460,14 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     active_process_list = self.getCausalityRelatedValueList(
                                   portal_type='Active Process')
+
     def sort_date(a, b):
       return cmp(a.getStartDate(), b.getStartDate())
+
     active_process_list.sort(sort_date)
-    active_process = None
-    if len(active_process_list)>0:
-      active_process = active_process_list[-1]
-    return active_process
+    if len(active_process_list) > 0:
+      return active_process_list[-1]
+    return None
 
   security.declareProtected(Permissions.ModifyPortalContent, 
                             'newActiveProcess')
