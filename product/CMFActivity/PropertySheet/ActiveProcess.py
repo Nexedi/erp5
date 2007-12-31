@@ -48,12 +48,7 @@ class ActiveProcess:
             'type'        : 'date',
             'default'     : None,
             'mode'        : 'w' },
-        {   'id'          : 'sense_value',
-            'description' : 'true if there is a problem',
-            'type'        : 'boolean',
-            'default'     : 0,
-            'mode'        : 'w' },
-         )
+        )
 
 
     _categories = ( 'causality', )
