@@ -30,14 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Coordinate import Coordinate
-from cStringIO import StringIO
-from mimetypes import guess_type
-
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.Header import make_header
-from email import Encoders
+from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 
 no_crawl_protocol_list = ['mailto', 'javascript', ]
 no_host_protocol_list = ['mailto', 'news', 'javascript',]
@@ -157,59 +150,16 @@ class Url(Coordinate, Base, UrlMixIn):
     mailhost = getattr(self.getPortalObject(), 'MailHost', None)
     if mailhost is None:
       raise AttributeError, "Cannot find a MailHost object"
-    else:
-      if from_url is None:
-        from_url = self.getUrlString(None)
-      if to_url is None:
-        to_url = self.getUrlString(None)
-      if from_url is None or to_url is None:
-        raise AttributeError, "No mail defined"
+    if from_url is None:
+      from_url = self.getUrlString(None)
+    if to_url is None:
+      to_url = self.getUrlString(None)
+    if from_url is None or to_url is None:
+      raise AttributeError, "No mail defined"
 
-      if attachment_list == None:
-        # Create non multi-part MIME message.
-        message = MIMEText(msg, _charset='utf-8')
-        attachment_list = []
-      else:
-        # Create multi-part MIME message.
-        message = MIMEMultipart()
-        message.preamble = "If you can read this, your mailreader\n" \
-                           "can not handle multi-part messages!\n"
-        message.attach(MIMEText(msg, _charset='utf-8'))
-      
-      if extra_headers:
-        for k, v in extra_headers.items():
-          message.add_header('X-%s' % k, v)
+    message = buildEmailMessage(from_url, to_url, msg=msg,
+                                subject=subject, attachment_list=attachment_list,
+                                extra_headers=extra_headers)
 
-      message.add_header('Subject',
-                         make_header([(subject, 'utf-8')]).encode())
-      message.add_header('From', from_url)
-      message.add_header('To', to_url)
-      
-      for attachment in attachment_list:
-        if attachment.has_key('name'):
-          attachment_name = attachment['name']
-        else:
-          attachment_name = ''
-        # try to guess the mime type
-        if not attachment.has_key('mime_type'):
-          type, encoding = guess_type( attachment_name )
-          if type != None:
-            attachment['mime_type'] = type
-          else:
-            attachment['mime_type'] = 'application/octet-stream'
-
-        # attach it
-        if attachment['mime_type'] == 'text/plain':
-          part = MIMEText(attachment['content'], _charset='utf-8')
-        else:
-          #  encode non-plaintext attachment in base64
-          part = MIMEBase(*attachment['mime_type'].split('/', 1))
-          part.set_payload(attachment['content'])
-          Encoders.encode_base64(part)
-
-        part.add_header('Content-Disposition',
-                        'attachment; filename=%s' % attachment_name)
-        message.attach(part)
-
-      # send mail to user
-      mailhost.send(message.as_string(), to_url, from_url)
+    # send mail to user
+    mailhost.send(message.as_string(), to_url, from_url)
