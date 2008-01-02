@@ -780,7 +780,6 @@ class ActivityTool (Folder, UniqueObject):
     def invoke(self, message):
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
-        import pdb; pdb.set_trace()
         base_chain = [aq_base(x) for x in self.aq_chain]
         # Grab existig request (last chain item) and create a copy.
         request_container = base_chain.pop()
