@@ -260,19 +260,20 @@
                       type="hidden" value="1" name="listbox_uid:list"\n
                       tal:attributes="value python: line.getUid() or \'\';\n
                                       name string:${field_id}_uid:list" />\n
-                   <div class="right_title">\n
-                     <span tal:condition="not: repeat/valueY/index" tal:content="structure html">value</span>\n
+                    <div class="right_title"\n
+                         tal:condition="not: repeat/valueY/index">\n
+                     <span tal:replace="structure html">value</span>\n
                    </div>\n
                    <div tal:attributes="id python: \'%s%s%s\' % (foo2, \'data\', foo)">\n
                      <div class="left_data" tal:condition="repeat/valueY/index">\n
                        <span style="color: green; font-size: 12px;" tal:content="title" i18n:domain="ui" i18n:translate=""> ID\n
                        </span>\n
-                       <span style="color: green;">&nbsp:&nbsp</span>\n
+                       <span style="color: green;">&nbsp;:&nbsp;</span>\n
                        <tal:block tal:condition="show_search_line">\n
-                         <span id="data_short" tal:content="python: data_short"/>\n
+                         <span id="data_short" tal:content="data_short"/>\n
                        </tal:block>\n
                        <tal:block tal:condition="not:show_search_line">\n
-                         <span id="data_long" tal:content="python: original_value"/>\n
+                         <span tal:replace="structure html">value</span>\n
                        </tal:block>\n
                       </div>\n
                   </div>\n
