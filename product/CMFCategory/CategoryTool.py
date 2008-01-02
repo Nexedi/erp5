@@ -1293,11 +1293,40 @@ class CategoryTool( UniqueObject, Folder, Base ):
           if getattr(aq_base(o),
                     'notifyAfterUpdateRelatedContent', None) is not None:
             o.notifyAfterUpdateRelatedContent(previous_category_url,
-                                              new_category_url)
+                                              new_category_url) # XXX - wrong programming Approach
+                                                                # for ERP5 - either use interaction
+                                                                # workflows or interactors rather
+                                                                # than creating notifyWhateverMethod
 
         else:
           LOG('CMFCategory', PROBLEM,
               'updateRelatedContent: %s does not exist' % brain.path)
+
+      for brain in self.Base_zSearchRelatedObjectsByPredicate(
+                                              category_uid = context.getUid()):
+        o = brain.getObject()
+        if o is not None:
+          category_list = []
+          for category in self.getMembershipCriterionCategoryList(o):
+            new_category = self.updateRelatedCategory(category,
+                                                      previous_category_url,
+                                                      new_category_url)
+            category_list.append(new_category)
+          self._setMembershipCriterionCategoryList(o, category_list)
+
+          if getattr(aq_base(o),
+                    'notifyAfterUpdateRelatedContent', None) is not None:
+            o.notifyAfterUpdateRelatedContent(previous_category_url,
+                                              new_category_url) # XXX - wrong programming Approach
+                                                                # for ERP5 - either use interaction
+                                                                # workflows or interactors rather
+                                                                # than creating notifyWhateverMethod
+
+        else:
+          LOG('CMFCategory', PROBLEM,
+              'updateRelatedContent: %s does not exist' % brain.path)
+
+
 
       aq_context = aq_base(context)
       # Update related recursively if required
