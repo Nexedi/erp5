@@ -778,7 +778,28 @@ class ActivityTool (Folder, UniqueObject):
         activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
-      message(self)
+      if getattr(self, 'aq_chain', None) is not None:
+        # Grab existing acquisition chain and extrach base objects.
+        base_chain = [aq_base(x) for x in object.aq_chain]
+        # Grab existig request (last chain item) and create a copy.
+        request_container = base_chain.pop()
+        request = request_container.REQUEST
+        # XXX: REQUEST.clone() requires PARENTS to be set, and it's not when
+        # runing unit tests. Recreate it if it does not exist.
+        parents = getattr(request, 'PARENTS', None)
+        if parents is None:
+          LOG('CMFActivity.ActivityTool.invoke', INFO, 'PARENTS is not defined in REQUEST. It should only happen in unit tests.')
+          request['PARENTS'] = object.aq_chain[:]
+        new_request_container = request_container.__class__(REQUEST=request.clone())
+        # Recreate acquisition chain.
+        my_self = new_request_container
+        base_chain.reverse()
+        for item in base_chain:
+          my_self = item.__of__(my_self)
+      else:
+        my_self = self
+        LOG('CMFActivity.ActivityTool.invoke', INFO, 'Strange: invoke is called outside of acquisition context.')
+      message(my_self)
 
     def invokeGroup(self, method_id, message_list):
       # Invoke a group method.
