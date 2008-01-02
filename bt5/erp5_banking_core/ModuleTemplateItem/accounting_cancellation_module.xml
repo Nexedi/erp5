@@ -315,9 +315,6 @@
    <name>Add Zope Tutorials</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add old_CMFActivity Tools</name>
-  </permission>
   <permission type='tuple'>
    <name>Add portal content</name>
    <role>Assignor</role>

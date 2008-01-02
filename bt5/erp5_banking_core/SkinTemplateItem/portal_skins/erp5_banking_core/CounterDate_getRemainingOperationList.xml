@@ -94,7 +94,8 @@ if site_uid is not None:\n
               or (portal_type == \'Check Payment\' and \n
                    simulation_state in (\'planned\', \'ordered\') \\\n
                  ) \\\n
-              or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\'):\n
+              or (portal_type == \'Monetary Destruction\' and simulation_state == \'confirmed\') \\\n
+              or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\' and document.getSourceSection() is not None):\n
          continue\n
       if portal_type in (\'Cash Movement\', \'Cash Movement New Not Emmited\'):\n
          if not (\n

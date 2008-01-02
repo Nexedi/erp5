@@ -211,6 +211,9 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add HBTreeFolder2s</name>
+  </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
    <role>Manager</role>
@@ -475,10 +478,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Edit ParsedXML</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
   </permission>
@@ -682,10 +681,6 @@
    <role>Author</role>
    <role>Manager</role>
    <role>Member</role>
-  </permission>
-  <permission type='tuple'>
-   <name>View DOM hierarchy</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>View History</name>
