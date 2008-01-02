@@ -65,11 +65,17 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                        <string>Assistant</string>
+                        <string>Reviewer</string>
                       </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -84,10 +90,10 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
+                        <string>Assistant</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                        <string>Assistant</string>
+                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>

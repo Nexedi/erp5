@@ -80,6 +80,11 @@ if source is None:\n
   msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
   raise ValidationFailed, (msg,)\n
 \n
+destination_payment = transaction.getDestinationPayment()\n
+if destination_payment is None:\n
+  msg = Message(domain=\'ui\', message=\'No account defined.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
 if sum([len(x.getAggregateList()) for x in transaction.objectValues(portal_type=[\'Checkbook Delivery Line\'])]) == 0:\n
   msg = Message(domain=\'ui\', message=\'No checkbook selected for delivery.\')\n
   raise ValidationFailed, (msg,)  \n
@@ -171,6 +176,7 @@ for line in line_list:\n
                             <string>None</string>
                             <string>source</string>
                             <string>msg</string>
+                            <string>destination_payment</string>
                             <string>sum</string>
                             <string>append</string>
                             <string>$append0</string>

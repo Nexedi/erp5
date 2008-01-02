@@ -38,7 +38,7 @@
             <value>
               <tuple>
                 <string>cancel</string>
-                <string>cancel_action</string>
+                <string>deliver_to_cancel_action</string>
               </tuple>
             </value>
         </item>
