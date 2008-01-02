@@ -780,7 +780,8 @@ class ActivityTool (Folder, UniqueObject):
     def invoke(self, message):
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
-        base_chain = [aq_base(x) for x in object.aq_chain]
+        import pdb; pdb.set_trace()
+        base_chain = [aq_base(x) for x in self.aq_chain]
         # Grab existig request (last chain item) and create a copy.
         request_container = base_chain.pop()
         request = request_container.REQUEST
@@ -789,7 +790,7 @@ class ActivityTool (Folder, UniqueObject):
         parents = getattr(request, 'PARENTS', None)
         if parents is None:
           LOG('CMFActivity.ActivityTool.invoke', INFO, 'PARENTS is not defined in REQUEST. It should only happen in unit tests.')
-          request['PARENTS'] = object.aq_chain[:]
+          request['PARENTS'] = self.aq_chain[:]
         new_request_container = request_container.__class__(REQUEST=request.clone())
         # Recreate acquisition chain.
         my_self = new_request_container
