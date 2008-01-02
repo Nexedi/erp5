@@ -73,6 +73,7 @@
                     , \'currency_cash_portal_type\'  :  None\n
                     , \'read_only\'           : False\n
                     , \'column_base_category\'               : \'variation\'\n
+                    , \'check_float\'               : 0\n
                     }\n
 \n
 return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
