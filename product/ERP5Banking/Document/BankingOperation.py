@@ -37,6 +37,8 @@ from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 from AccessControl.PermissionRole import PermissionRole
 from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
+from Products.ERP5Type.Base import Base
+
 
 class BankingOperation(BaobabMixin, AccountingTransaction):
 
@@ -247,3 +249,11 @@ InventoryLine.getBaobabSourceProjectUid__roles__ = PermissionRole(Permissions.Vi
 
 InventoryLine.getBaobabDestinationProjectUid = lambda x: x.getDestinationProjectUid()
 InventoryLine.getBaobabDestinationProjectUid__roles__ = PermissionRole(Permissions.View)
+
+
+def getDeliveryValue(self):
+  """
+  """
+  return self
+
+Base.getDeliveryValue = getDeliveryValue
