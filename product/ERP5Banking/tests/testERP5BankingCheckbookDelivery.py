@@ -59,6 +59,7 @@ class TestERP5BankingCheckbookDeliveryMixin:
                      id='checkbook_delivery', portal_type='Checkbook Delivery',
                      source_value=self.source_site, destination_value=None,
                      resource_value=self.currency_1,
+                     destination_payment_value=self.bank_account_2,
                      start_date=self.date)
     self.line_2 = self.checkbook_delivery.newContent(quantity=1,
                                  resource_value=self.check_model_1,
@@ -196,6 +197,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     self.checkbook_delivery = self.checkbook_delivery_module.newContent(
                      id='checkbook_delivery', portal_type='Checkbook Delivery',
                      source_value=self.source_site, destination_value=None,
+                     destination_payment_value=self.bank_account_2,
                      resource_value=self.currency_1,
                      start_date=self.date)
     # check its portal type
