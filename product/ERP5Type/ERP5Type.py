@@ -570,9 +570,11 @@ class ERP5TypeInformation( FactoryTypeInformation,
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
-      group_id_generator = getattr( ob,
+      parent = ob.aq_parent
+      group_id_generator = getattr( parent,
                              ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
                              None )
+      group_id_generator = group_id_generator.__of__(ob)
       if group_id_generator is None:
         raise RuntimeError, '%s script was not found' % \
                               ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
