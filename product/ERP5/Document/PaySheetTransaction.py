@@ -487,24 +487,25 @@ class PaySheetTransaction(Invoice):
         quantity = cell_dict['quantity']
         price = cell_dict['price']
 
-        cell_list.append(cell_dict)
+        if quantity:
+          cell_list.append(cell_dict)
 
-        # update the base_participation
-        base_participation_list = service.getBaseAmountList(base=1)
-        for base_participation in base_participation_list:
-          if quantity:
-            if base_amount_dict.has_key(base_participation) and \
-                base_amount_dict[base_participation].has_key(share):
-              old_val = base_amount_dict[base_participation][share]
-            else:
-              old_val = 0
-            new_val = old_val + quantity
-            if not base_amount_dict.has_key(base_participation):
-              base_amount_dict[base_participation]={}
+          # update the base_participation
+          base_participation_list = service.getBaseAmountList(base=1)
+          for base_participation in base_participation_list:
+            if quantity:
+              if base_amount_dict.has_key(base_participation) and \
+                  base_amount_dict[base_participation].has_key(share):
+                old_val = base_amount_dict[base_participation][share]
+              else:
+                old_val = 0
+              new_val = old_val + quantity
+              if not base_amount_dict.has_key(base_participation):
+                base_amount_dict[base_participation]={}
 
-            if price:
-              new_val = round((old_val + quantity*price), precision) 
-            base_amount_dict[base_participation][share] = new_val
+              if price:
+                new_val = round((old_val + quantity*price), precision) 
+              base_amount_dict[base_participation][share] = new_val
 
       if cell_list:
         # create the PaySheetLine
@@ -558,7 +559,7 @@ class PaySheetTransaction(Invoice):
       id_list = model_reference_dict[key]
       model = self.getPortalObject().restrictedTraverse(key)
       if model is None:
-        LOG("copyInheritanceSubObjects,", 0, "can't find model %s" % key)
+        LOG("getInheritedObjectValueList :", 0, "can't find model %s" % key)
 
       for id in id_list:
         object = model._getOb(id)
