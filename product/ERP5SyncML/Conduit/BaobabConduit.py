@@ -659,7 +659,7 @@ class BaobabConduit(ERP5Conduit):
                , 200
                , 'no bank account found'
                )
-            raise KeyError, 'No bank account Found'
+            raise KeyError, 'No bank account Found with number %r' % (bank_account_number, )
 
 
     """
