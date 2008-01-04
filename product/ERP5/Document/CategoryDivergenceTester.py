@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.ObjectMessage import ObjectMessage
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5.Document.PropertyDivergenceTester import \
                                                PropertyDivergenceTester
 
@@ -73,11 +73,11 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
     solver_script_list = self.getSolverScriptList()
     if solver_script_list is None:
       solver_script_list = []
-    solver_script_list=self._splitStringList(solver_script_list)
+    solver_script_list = self._splitStringList(solver_script_list)
 
+    delivery_mvt = simulation_movement.getDeliveryValue()
     for tested_property_id, tested_property_title in \
                                   self._splitStringList(tested_property):
-      delivery_mvt = simulation_movement.getDeliveryValue()
       message = None
       delivery_mvt_category_list = \
           delivery_mvt.getPropertyList(tested_property_id)
@@ -111,10 +111,10 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
         simulation_mvt_property = ' , '.join(simulation_category_title_list)
         
         message = ObjectMessage(
-                     object_relative_url= delivery_mvt.getRelativeUrl(),   
-                     simulation_movement = simulation_movement,
-                     decision_value = delivery_mvt_property ,
-                     prevision_value = simulation_mvt_property,
+                     object_relative_url=delivery_mvt.getRelativeUrl(),   
+                     simulation_movement=simulation_movement,
+                     decision_value=delivery_mvt_property ,
+                     prevision_value=simulation_mvt_property,
                      tested_property=tested_property_id, 
                      message=tested_property_title,
                      solver_script_list=solver_script_list
