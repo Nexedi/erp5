@@ -509,13 +509,13 @@ class PaySheetTransaction(Invoice):
       if cell_list:
         # create the PaySheetLine
         pay_sheet_line = paysheet.createPaySheetLine(
-                                              title     = title,
-                                              res       = res,
-                                              int_index = int_index,
-                                              desc      = desc,
-                                              base_amount_list = base_amount_list,
-                                              cell_list = cell_list,
-                                              categories= categories)
+                                            title     = title,
+                                            res       = res,
+                                            int_index = int_index,
+                                            desc      = desc,
+                                            base_amount_list = base_amount_list,
+                                            cell_list = cell_list,
+                                            categories= categories)
         pay_sheet_line_list.append(pay_sheet_line)
 
 
