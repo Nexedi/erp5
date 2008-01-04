@@ -31,8 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5Type.ObjectMessage import ObjectMessage
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 
 class PropertyDivergenceTester(XMLObject):
   """
@@ -63,10 +62,10 @@ class PropertyDivergenceTester(XMLObject):
 
   def test(self, simulation_movement):
     """
-    This is the fast method to test, return 0 or 1.
+    This is the fast method to test, return True or False.
     It depends if the simulation_movement is divergent or not.
     """
-    return len(self.explain(simulation_movement))
+    return len(self.explain(simulation_movement)) != 0
 
   def explain(self, simulation_movement):
     """
@@ -82,13 +81,11 @@ class PropertyDivergenceTester(XMLObject):
       solver_script_list = [] 
     solver_script_list = self._splitStringList(solver_script_list)
 
+    delivery_mvt = simulation_movement.getDeliveryValue()
     for tested_property_id, tested_property_title in \
                        self._splitStringList(tested_property):
-      
-      delivery_mvt = simulation_movement.getDeliveryValue()
       delivery_mvt_property = delivery_mvt.getProperty(tested_property_id)
       simulation_mvt_property = simulation_movement.getProperty(tested_property_id)
-      
       if delivery_mvt_property != simulation_mvt_property:
         message = ObjectMessage(
                    object_relative_url=delivery_mvt.getRelativeUrl(),
