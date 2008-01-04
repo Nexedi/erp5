@@ -37,7 +37,7 @@ from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 from AccessControl.PermissionRole import PermissionRole
 from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Document.Currency import Currency
 
 
 class BankingOperation(BaobabMixin, AccountingTransaction):
@@ -256,4 +256,4 @@ def getDeliveryValue(self):
   """
   return self
 
-Base.getDeliveryValue = getDeliveryValue
+Currency.getDeliveryValue = getDeliveryValue
