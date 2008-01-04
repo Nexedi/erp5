@@ -74,7 +74,6 @@ class PaySheetModel(TradeCondition, XMLMatrix):
     override of the function getCell to ba able to search a cell on the
     inheritance model
     '''
-    LOG('getCell ', 0, kw)
     cell = XMLMatrix.getCell(self, *kw, **kwd)
 
     # if cell not found, look on the inherited models
