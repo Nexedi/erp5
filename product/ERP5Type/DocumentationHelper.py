@@ -338,10 +338,6 @@ class PortalDocumentationHelper(DocumentationHelper):
   """
   """
 
-class PortalTypeDocumentationHelper(DocumentationHelper):
-  """
-  """
-
 class ClassDocumentationHelper(DocumentationHelper):
   """
   """
@@ -597,6 +593,136 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     raise NotImplemented
 
 InitializeClass(DCWorkflowDocumentationHelper)
+
+class BusinessTemplateDocumentationHelper(DocumentationHelper):
+  """
+    Provides access to all documentation information
+    of a business template.
+  """
+
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # API Implementation
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return self.getDocumentedObject().getTitleOrId()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return "Business Template"
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
+  def getSectionList(self):
+    """
+    Returns a list of documentation sections
+    """
+    return map(lambda x: x.__of__(self), [
+      DocumentationSection(
+        id='portal_type',
+        title='Portal Types',
+        class_name='PortalTypeDocumentationHelper',
+        uri_list=self.getPortalTypeURIList(),
+      ),
+      DocumentationSection(
+        id='workflow',
+        title='Workflows',
+        class_name='DCWorkflowDocumentationHelper',
+        uri_list=self.getDCWorkflowURIList(),
+      ),
+      DocumentationSection(
+        id='interaction',
+        title='Interaction Workflows',
+        class_name='InteractionWorkflowStateDocumentationHelper',
+        uri_list=self.getInteractionWorkflowURIList(),
+      ),
+      DocumentationSection(
+        id='skin_folder',
+        title='Skin Folders',
+        class_name='SkinFolderDocumentationHelper',
+        uri_list=self.getSkinFolderURIList(),
+      ),
+    ])
+
+  # Specific methods
+  security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
+  def getDescription(self):
+    """
+    Returns the title of the documentation helper
+    """
+    raise NotImplemented
+
+
+InitializeClass(BusinessTemplateDocumentationHelper)
+
+
+class PortalTypeDocumentationHelper(DocumentationHelper):
+  """
+    Provides access to all documentation information
+    of a portal type. Accessors and methods are documented
+    by generating a temporary instance which provides
+    an access to the property holder and allows
+    reusing PortalTypeInstanceDocumentationHelper
+  """
+
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # API Implementation
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return self.getDocumentedObject().getTitleOrId()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return "Portal Type"
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
+  def getSectionList(self):
+    """
+    Returns a list of documentation sections
+    """
+    return map(lambda x: x.__of__(self), [
+      DocumentationSection(
+        id='action',
+        title='Actions',
+        class_name='ActionDocumentationHelper',
+        uri_list=self.getActionURIList(),
+      ),
+      DocumentationSection(
+        id='local_role',
+        title='Local Role Definitions',
+        class_name='LocalRoleDefinitionDocumentationHelper',
+        uri_list=self.getDCWorkflowURIList(),
+      ),
+      # XXX - add here all sections of a portal type instance
+    ])
+
+  # Specific methods
+  security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
+  def getDescription(self):
+    """
+    Returns the title of the documentation helper
+    """
+    raise NotImplemented
+
+
+InitializeClass(PortalTypeDocumentationHelper)
+
+
+
 
 
 #############################################################################
