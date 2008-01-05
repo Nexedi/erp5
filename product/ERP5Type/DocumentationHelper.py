@@ -2,6 +2,8 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
+from Products.CMFCore.utils import getToolByName
+
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions
@@ -52,17 +54,24 @@ class DocumentationHelper(Implicit):
     self.uri = uri
 
   def getDocumentedObject(self):
-    from zLOG import LOG
-    if '/' in self.uri:
+    if '/' in self.uri and '#' not in self.uri:
       # URI refers to a portal object
       # and is a relative URL
-      documented_object = self.getPortalObject().portal_categories.resolveCategory(uri)
+      documented_object = self.getPortalObject().portal_categories.resolveCategory(self.uri)  
+    elif '/' in self.uri and '#' in self.uri:
+      url, method = self.uri.split('#') 
+      # if / in method, method's not an acessor but a workflow method
+      documented_object = self.getPortalObject().unrestrictedTraverse(url)
+      if '/' not in method:
+        documented_object = self.getPortalObject().unrestrictedTraverse(url)
+        documented_object = getattr(documented_object, method, None)
+      else:
+        wf_url = 'portal_workflow/%s' % method
+        documented_object = self.getPortalObject().unrestrictedTraverse(wf_url)
     else:
       # URI refers to a python class / method
       import imp
       module_list = self.uri.split('.')
-      LOG('module_list', 0, repr(module_list))
-      LOG('uri', 0, repr(self.uri))
       base_module = module_list[0]
       if base_module == 'Products':
         # For now, we do not even try to import
@@ -74,10 +83,9 @@ class DocumentationHelper(Implicit):
           documented_object = getattr(documented_object, key)
       else:
         raise NotImplemented
-        # fp, pathname, description = imp.find_module(base_module)
-        # documented_object = imp.load_module(fp, pathname, description)
+        #fp, pathname, description = imp.find_module(base_module)
+        #documented_object = imp.load_module(fp, pathname, description)
 
-    LOG('documented_object', 0, repr(documented_object))
     return documented_object
 
   def getTitle(self):
@@ -141,10 +149,10 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def __init__(self, uri):
-    self.instance_uri = uri
+    self.uri = uri
 
   def getInstance(self):
-    return self.getPortalObject().restrictedTraverse(self.instance_uri)
+    return self.getPortalObject().restrictedTraverse(self.uri)
 
   # API Implementation
   security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
@@ -173,12 +181,18 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
         #class_name='InstancePropertyDocumentationHelper',
         #uri_list=self.getClassPropertyURIList(),
       #),
-      #DocumentationSection(
-        #id='accessor',
-        #title='Accessors',
-        #class_name='AccessorDocumentationHelper',
-        #uri_list=self.getClassPropertyURIList(),
-      #),
+      DocumentationSection(
+        id='workflow_method',
+        title='Workflow Method',
+        class_name='WorkflowMethodDocumentationHelper',
+        uri_list=self.getWorkflowMethodURIList(inherited=0),
+      ),
+      DocumentationSection(
+        id='accessor',
+        title='Accessor',
+        class_name='AccessorMethodDocumentationHelper',
+        uri_list=self.getAccessorMethodURIList(inherited=0),
+      ),
       DocumentationSection(
         id='class_method',
         title='Class Methods',
@@ -210,19 +224,49 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     return self._getPropertyHolder().getAccessorMethodIdList()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getWorkflowMethodItemList' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodURIList' )
+  def getAccessorMethodURIList(self, inherited=1, local=1):
+    """
+    Returns a list of URIs to accessor methods
+    """
+    method_id_list = self.getAccessorMethodIdList(inherited=inherited, local=local)
+    klass = self.getInstance().__class__
+    class_name = klass.__name__
+    module = klass.__module__
+    uri_prefix = '%s.%s.' % (module, class_name)
+    return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodItemList' )
   def getWorkflowMethodItemList(self):
     """
     """
     return self._getPropertyHolder().getWorkflowMethodItemList()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getWorkflowMethodIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowObject' )
+  def getWorkflowObject(self):
+    """
+    """
+    return self._getPropertyHolder()
+  
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodIdList' )
   def getWorkflowMethodIdList(self):
     """
     """
-    return self._getPropertyHolder().getWorkflowMethodIdList()
+    return self._getPropertyHolder().getWorkflowMethodIdList()    
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getActionMethodItemList' )
+  def getWorkflowMethodURIList(self, inherited=1, local=1):
+    """
+    Returns a list of URIs to workflow  methods
+    """
+    method_id_list = self.getWorkflowMethodIdList(inherited=inherited, local=local)
+    klass = self.getInstance().__class__
+    class_name = klass.__name__
+    module = klass.__module__
+    uri_prefix = '%s.%s.' % (module, class_name)
+    return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
+
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getActionMethodItemList' )
   def getActionMethodItemList(self):
     """
     """
@@ -302,6 +346,14 @@ class ClassDocumentationHelper(DocumentationHelper):
   """
   """
 
+class AccessorDocumentationHelper(DocumentationHelper):
+  """
+  """
+class WorkflowDocumentationHelper(DocumentationHelper):
+  """
+  """
+
+
 class ClassMethodDocumentationHelper(DocumentationHelper):
   """
     Provides documentation about a class method
@@ -327,8 +379,52 @@ class ClassMethodDocumentationHelper(DocumentationHelper):
     """
     return self.getDocumentedObject().__name__
 
-
 InitializeClass(ClassMethodDocumentationHelper)
+
+class AccessorMethodDocumentationHelper(DocumentationHelper):
+  """
+    Provides documentation about an accessor
+  """
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def __init__(self, uri):
+    self.uri = uri
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
+  def getDescription(self):
+    return self.getDocumentedObject().__doc__
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return self.getDocumentedObject().func_code.__module__
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return self.getDocumentedObject().__name__
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getArgCount' )
+  def getArgCount(self):
+    """
+    Returns the number of args of the accessor
+    """
+    return self.getDocumentedObject().func_code.co_argcount
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getVarNames' )
+  def getVarNames(self):
+    """
+    Returns the list of args of the accessor
+    """
+    return self.getDocumentedObject().func_code.co_varnames
+
+
+InitializeClass(AccessorMethodDocumentationHelper)
 
 class CallableDocumentationHelper(DocumentationHelper):
   """
@@ -342,10 +438,65 @@ class PropertyDocumentationHelper(DocumentationHelper):
   """
   """
 
-class WorkflowDocumentationHelper(DocumentationHelper):
+class WorkflowMethodDocumentationHelper(DocumentationHelper):
   """
+    Provides documentation about a workflow method
   """
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def __init__(self, uri):
+    self.uri = uri
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
+  def getDescription(self):
+    return self.getDocumentedObject().__dict__['description']
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return self.getDocumentedObject().__module__
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return self.getDocumentedObject().__dict__['title']
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationState' )
+  def getDestinationState(self):
+    """
+    Returns the destination_state of the transition workflow method
+    """
+    return self.getDocumentedObject().__dict__['new_state_id']
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType' )
+  def getTriggerType(self):
+    """
+    Returns the trigger type of the workflow method
+    """
+    TT = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
+    TT_id = self.getDocumentedObject().__dict__['trigger_type']
+    return TT[TT_id]
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLocalRoles' )
+  def getLocalRoles(self):
+    """
+    Returns the local roles of the workflow method
+    """
+    return self.getDocumentedObject().__ac_local_roles__
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds' )
+  def getAvailableStateIds(self):
+    """
+    Returns available states in the workflow
+    """
+    return self.getDocumentedObject().getAvailableStateIds()
+
+InitializeClass(WorkflowMethodDocumentationHelper)
 
 
 if 0:
