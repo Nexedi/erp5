@@ -523,7 +523,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return map(lamda x: x.__of__(self), [
+    return map(lambda x: x.__of__(self), [
       DocumentationSection(
         id='state',
         title='Workflow States',
