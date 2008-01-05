@@ -349,10 +349,6 @@ class ClassDocumentationHelper(DocumentationHelper):
 class AccessorDocumentationHelper(DocumentationHelper):
   """
   """
-class WorkflowDocumentationHelper(DocumentationHelper):
-  """
-  """
-
 
 class ClassMethodDocumentationHelper(DocumentationHelper):
   """
@@ -498,6 +494,113 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
 
 InitializeClass(WorkflowMethodDocumentationHelper)
 
+class DCWorkflowDocumentationHelper(DocumentationHelper):
+  """
+    Provides access to all documentation information
+    of a workflow.
+  """
+
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # API Implementation
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return self.getDocumentedObject().getTitleOrId()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return "DC Workflow"
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
+  def getSectionList(self):
+    """
+    Returns a list of documentation sections
+    """
+    return map(lamda x: x.__of__(self), [
+      DocumentationSection(
+        id='state',
+        title='Workflow States',
+        class_name='DCWorkflowStateDocumentationHelper',
+        uri_list=self.getStateURIList(),
+      ),
+      DocumentationSection(
+        id='transition',
+        title='Workflow Transitions',
+        class_name='DCWorkflowTransitionDocumentationHelper',
+        uri_list=self.getStateURIList(),
+      ),
+      DocumentationSection(
+        id='variable',
+        title='Workflow Variables',
+        class_name='DCWorkflowVariableDocumentationHelper',
+        uri_list=self.getVariableURIList(),
+      ),
+      DocumentationSection(
+        id='variable',
+        title='Workflow Permissions',
+        class_name='PermissionDocumentationHelper',
+        uri_list=self.getPermissionURIList(),
+      ),
+    ])
+
+  # Specific methods
+  security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
+  def getDescription(self):
+    """
+    Returns the title of the documentation helper
+    """
+    raise NotImplemented
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
+  def getVariableURIList(self):
+    """
+    """
+    raise NotImplemented
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getStateURIList' )
+  def getStateURIList(self):
+    """
+    """
+    raise NotImplemented
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
+  def getVariableURIList(self):
+    """
+    """
+    raise NotImplemented
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionURIList' )
+  def getPermissionURIList(self):
+    """
+    """
+    raise NotImplemented
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getGraphImageURL' )
+  def getGraphImageURL(self):
+    """
+      Returns a URL to a graphic representation of the workflow
+    """
+    raise NotImplemented
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getGraphImageData' )
+  def getGraphImageData(self):
+    """
+      Returns the graphic representation of the workflow as a PNG file
+    """
+    raise NotImplemented
+
+InitializeClass(DCWorkflowDocumentationHelper)
+
+
+#############################################################################
+#############################################################################
 
 if 0:
   if 0:
