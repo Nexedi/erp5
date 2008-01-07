@@ -78,7 +78,7 @@ params = {\n
         context.portal_categories.tax_category.employee_share.getUid(),\n
     \'to_date\' : paysheet.getStartDate(),\n
     \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
-    #\'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+    \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
     \'precision\' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),\n
     \'resource_category\' : [\'base_amount/base_salary\',]\n
     #\'src__\' : 1\n

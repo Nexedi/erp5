@@ -76,7 +76,7 @@ search_params = \\\n
    \'portal_type\'         : \'Pay Sheet Transaction\',\n
    \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
    \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
-#   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
   }\n
 \n
 paysheet_list = accounting_module.searchFolder( **search_params)\n
