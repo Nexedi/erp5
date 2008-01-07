@@ -576,6 +576,7 @@ class PDFForm(File):
       return None
     context = { 'here' : self.aq_parent,
                 'context' : self.aq_parent,
+                'cell_name' : cell_name,
                 'request' : REQUEST }
     context.update (kwargs)
     __traceback_info__ = 'Evaluating cell "%s"' % cell_name
