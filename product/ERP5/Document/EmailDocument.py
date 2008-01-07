@@ -31,13 +31,14 @@ from DateTime import DateTime
 from time import mktime
 from Globals import get_request
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Base import WorkflowMethod
-from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.CMFCore.utils import _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
+from Products.ERP5.Document.Document import ConversionError
 from Products.CMFDefault.utils import isHTMLSafe
 
 from email import message_from_string
@@ -399,6 +400,9 @@ class EmailDocument(File, TextDocument):
       TODO2: consider turning this method into a general method for
       any ERP5 document.
     """
+    if not _checkPermission(Permissions.View, self):
+      raise Unauthorized
+
     # Prepare header data
     if body is None:
       body = self.asText()
@@ -440,11 +444,19 @@ class EmailDocument(File, TextDocument):
           # If this is a document, use 
           mime_type = attachment.getContentType() # WARNING - this could fail since getContentType
                                                   # is not (yet) part of Document API
-          mime_type, attached_data = attachment.convert(mime_type)
+          try:
+            mime_type, attached_data = attachment.convert(mime_type)
+          except ConversionError:
+            mime_type = attachment.getBaseContentType()
+            attached_data = attachment.getBaseData()
         else:
           mime_type = 'application/pdf'
           attached_data = attachment.asPDF() # XXX - Not implemented yet
                                                 # should provide a default printout
+
+        if not isinstance(attached_data, str):
+          attached_data = str(attached_data)
+
         if not mime_type:
           mime_type = 'application/octet-stream'
         # Use appropriate class based on mime_type
@@ -461,7 +473,7 @@ class EmailDocument(File, TextDocument):
           Encoders.encode_base64(attached_message)
         attached_message.add_header('Content-Disposition', 'attachment', filename=attachment.getReference())
         message.attach(attached_message)
-  
+
       # Send the message
       if download:
         return message.as_string() # Only for debugging purpose
