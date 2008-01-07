@@ -84,9 +84,9 @@ except:\n
   message = \'Problem: unknown\'\n
 # reach here, then exception was raised.\n
 # message must be logged in workflow.\n
-self.processFile(comment=message)\n
+context.processFile(comment=message)\n
 # try again.\n
-self.activate(priority=3).convertToBaseFormat()\n
+context.activate(priority=3).convertToBaseFormat()\n
 return message\n
 </string> </value>
         </item>
@@ -101,6 +101,10 @@ return message\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -136,12 +140,11 @@ return message\n
                             <string>None</string>
                             <string>message</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>e</string>
                             <string>str</string>
                             <string>repr</string>
                             <string>Exception</string>
-                            <string>self</string>
                           </tuple>
                         </value>
                     </item>
