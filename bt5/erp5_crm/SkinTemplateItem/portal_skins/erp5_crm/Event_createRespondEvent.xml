@@ -66,7 +66,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># this script allows to create a new follow up ticket for a given event\n
-\n
 event_object = context\n
 event_module = context.getPortalObject().getDefaultModule(\n
                                           respond_event_portal_type)\n
@@ -78,8 +77,11 @@ respond_event = event_module.newContent(\n
                        start_date=DateTime(),\n
                        source=context.getDefaultDestination(),\n
                        destination=context.getDefaultSource(),\n
-                       causality=context.getRelativeUrl(),\n
+                       causality=context.getRelativeUrl(),                      \n
 )\n
+\n
+if respond_event_quotation:\n
+  respond_event.edit(text_content=context.getReplyBody())\n
 # Change the state to outgoing\n
 respond_event.plan()\n
 </string> </value>
@@ -104,7 +106,7 @@ respond_event.plan()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>respond_event_portal_type, respond_event_title, respond_event_description=\'\'</string> </value>
+            <value> <string>respond_event_portal_type, respond_event_title, respond_event_quotation, respond_event_description=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,7 +126,7 @@ respond_event.plan()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -132,6 +134,7 @@ respond_event.plan()\n
                           <tuple>
                             <string>respond_event_portal_type</string>
                             <string>respond_event_title</string>
+                            <string>respond_event_quotation</string>
                             <string>respond_event_description</string>
                             <string>context</string>
                             <string>event_object</string>

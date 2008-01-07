@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,12 +78,14 @@ for history_item in history[::-1]:\n
     respond_event_portal_type = history_item[\'respond_event_portal_type\']\n
     respond_event_title = history_item[\'respond_event_title\']\n
     respond_event_description = history_item[\'respond_event_description\']\n
+    respond_event_quotation = history_item[\'respond_event_quotation\']\n
     break\n
 \n
 if respond_event_portal_type is not None:\n
   event.Event_createRespondEvent(respond_event_portal_type,\n
                                  respond_event_title,\n
-                                 respond_event_description)\n
+                                 respond_event_quotation,\n
+                                 respond_event_description,)\n
 </string> </value>
         </item>
         <item>
@@ -146,6 +145,7 @@ if respond_event_portal_type is not None:\n
                             <string>history_item</string>
                             <string>respond_event_title</string>
                             <string>respond_event_description</string>
+                            <string>respond_event_quotation</string>
                           </tuple>
                         </value>
                     </item>

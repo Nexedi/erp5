@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -87,6 +84,7 @@
                         <string>your_respond_event_title</string>
                         <string>your_respond_event_description</string>
                         <string>your_workflow_action</string>
+                        <string>your_respond_event_quotation</string>
                       </list>
                     </value>
                 </item>
