@@ -134,6 +134,8 @@ class TestXHTML(ERP5TypeTestCase):
 
 def validate_xhtml(source):
   import popen2
+  if not os.path.exists('/usr/bin/tidy'):
+    raise IOError, 'tidy is not installed at /usr/bin/tidy'
   stdout, stdin, stderr = popen2.popen3('/usr/bin/tidy -e -q -utf8')
   stdin.write(source)
   stdin.close()
