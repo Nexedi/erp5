@@ -302,7 +302,49 @@ class TestCRMMailSend(ERP5TypeTestCase):
         part = i
     self.assert_(len(part.get_payload(decode=True))>0)
 
+  def test_MailRespond(self):
+    """
+    Test we can answer an incoming event and quote it
+    """
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(id='1',
+                                                    portal_type='Campaign',
+                                                    title='Advertisement')
+    # Create a event
+    ticket.Ticket_newEvent(portal_type='Mail Message',
+                           title='Our new product',
+                           description='Buy this now!',
+                           direction='incoming')
 
+    # Set sender and attach a document to the event.
+    event = self.portal.event_module.objectValues()[0]
+    event.edit(source='person_module/me',
+               destination='person_module/sender',
+               text_content='This is an advertisement mail.')
+    first_event_id = event.getId()
+    self.getWorkflowTool().doActionFor(event, 'respond_action', 
+                                       wf_id='event_workflow',
+                                       respond_event_quotation = 1,
+                                       respond_event_portal_type = "Mail Message",
+                                       respond_event_title = "Answer",
+                                       respond_event_description = "Answer Advertissement Mail",
+                                       )
+
+    self.assertEqual(event.getSimulationState(), "responded")
+    # answer event must have been created
+    self.assertEqual(len(self.portal.event_module), 2)
+    for ev in self.portal.event_module.objectValues():
+      if ev.getId() != first_event_id:
+        answer_event = ev
+
+    # check properties of answer event
+    self.assertEqual(answer_event.getSimulationState(), "planned")
+    self.assertEqual(answer_event.getCausality(), event.getRelativeUrl())
+    self.assertEqual(answer_event.getDestination(), 'person_module/me')
+    self.assertEqual(answer_event.getSource(), 'person_module/sender')
+    self.assertEqual(answer_event.getTextContent(), '> This is an advertisement mail.')
+
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCRMMailIngestion))
