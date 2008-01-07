@@ -27,8 +27,13 @@
 
 import unittest
 import os
+import email
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5OOo.tests.testIngestion import conversion_server_host
+from Products.ERP5OOo.tests.testIngestion import FILE_NAME_REGULAR_EXPRESSION
+from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
+
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for CRM.
@@ -167,7 +172,139 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 ##    event = self._ingestMail('utf8')
 ##
 
+TEST_HOME = os.path.dirname(__file__)
+
+def openTestFile(filename):
+  return file(os.path.join(TEST_HOME, 'test_data', 'crm_emails', filename))
+
+class TestCRMMailSend(ERP5TypeTestCase):
+  """Test Mail Sending for CRM
+  """
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_web', 'erp5_dms',
+            'erp5_dms_mysql_innodb_catalog', 'erp5_crm')
+
+  def afterSetUp(self):
+    portal = self.portal
+    if 'portal_transforms' not in portal.objectIds():
+      # XXX this should be done in bt5 (or ERP5Site, as install order is
+      # important)
+      # install needed tools
+      dispatcher = portal.manage_addProduct 
+      dispatcher['MimetypesRegistry'].manage_addTool('MimeTypes Registry')
+      dispatcher['PortalTransforms'].manage_addTool('Portal Transforms')
+
+    # create customer organisation and person
+    if 'customer' not in portal.organisation_module.objectIds():
+      customer_organisation = portal.organisation_module.newContent(
+              id='customer',
+              portal_type='Organisation',
+              title='Customer')
+      portal.person_module.newContent(
+              id='sender',
+              title='Sender',
+              subordination_value=customer_organisation,
+              default_email_text='sender@customer.com')
+      # also create the recipient
+      portal.person_module.newContent(
+              id='me',
+              title='Me',
+              default_email_text='me@erp5.org')
+
+    # set preference
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
+    default_pref.enable()
+
+    # make sure customers are available to catalog
+    get_transaction().commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    get_transaction().abort()
+    # clear modules if necessary
+    for module in (self.portal.event_module,):
+      module.manage_delObjects(list(module.objectIds()))
+    get_transaction().commit()
+    self.tic()
+
+  def test_MailAttachment(self):
+    """Make sure that document is correctly attached in email"""
+    # Add a document which will be attached.
+
+    # pdf
+    f = openTestFile('sample_attachment.pdf')
+    document_pdf = self.portal.document_module.newContent(id='1',
+                                                          portal_type='PDF')
+    document_pdf.edit(file=f, reference='sample_attachment.pdf')
+
+    get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
+
+    # odt
+    f = openTestFile('sample_attachment.odt')
+    document_odt = self.portal.document_module.newContent(id='2',
+                                                          portal_type='Text')
+    document_odt.edit(file=f, reference='sample_attachment.odt')
+
+    get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
+
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(id='1',
+                                                    portal_type='Campaign',
+                                                    title='Advertisement')
+    # Create a event
+    ticket.Ticket_newEvent(portal_type='Mail Message',
+                           title='Our new product',
+                           description='Buy this now!',
+                           direction='outgoing')
+
+    # Set sender and attach a document to the event.
+    event = self.portal.event_module.objectValues()[0]
+    event.edit(source='person_module/me',
+               destination='person_module/sender',
+               aggregate=[document_pdf.getRelativeUrl(),
+                          document_odt.getRelativeUrl(),],
+               text_content='This is an advertisement mail.')
+
+    mail_text = event.send(download=True)
+
+    # Check mail text.
+    message = email.message_from_string(mail_text)
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+
+    # Check attachment
+    # pdf
+    self.assert_('sample_attachment.pdf' in 
+                 [i.get_filename() for i in message.get_payload()])
+    part = None
+    for i in message.get_payload():
+      if i.get_filename()=='sample_attachment.pdf':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), str(document_pdf.getData()))
+    # odt
+    self.assert_('sample_attachment.odt' in 
+                 [i.get_filename() for i in message.get_payload()])
+    part = None
+    for i in message.get_payload():
+      if i.get_filename()=='sample_attachment.odt':
+        part = i
+    self.assert_(len(part.get_payload(decode=True))>0)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCRMMailIngestion))
+  suite.addTest(unittest.makeSuite(TestCRMMailSend))
   return suite
