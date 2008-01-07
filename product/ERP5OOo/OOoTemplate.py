@@ -184,7 +184,12 @@ class OOoTemplate(ZopePageTemplate):
         memory_file.seek(0)
         self.OLE_documents_zipstring = memory_file.read()
       self.content_type = builder.getMimeType()
-      file = builder.prepareContentXml()
+      #get XSL stylesheet from portal_skins
+      xsl_dtml = getattr(self, 'ERP5OOoTemplate_ooo2zpt', None)
+      xsl_content = None
+      if xsl_dtml is not None:
+        xsl_content = xsl_dtml()
+      file = builder.prepareContentXml(xsl_content)
 
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 

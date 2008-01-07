@@ -134,27 +134,46 @@ class OOoBuilder(Implicit):
   def getMimeType(self):
     return self.extract('mimetype')
 
-  def prepareContentXml(self) :
+  def prepareContentXml(self, xsl_content=None):
     """
       extracts content.xml text and prepare it :
         - add tal namespace
         - indent the xml
     """
-    import pprint
     content_xml = self.extract('content.xml')
-    reader = PyExpat.Reader()
-    document = reader.fromString(content_xml)
-    document_element = document.documentElement
-    from xml.dom.ext import PrettyPrint
     output = StringIO()
-    PrettyPrint(document_element, output)
-    return output.getvalue().replace(
-      "office:version='1.0'",
-      """ xmlns:tal='http://xml.zope.org/namespaces/tal'
-          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
-          xmlns:metal='http://xml.zope.org/namespaces/metal'
-          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
-         office:version='1.0'""")
+    try:
+      import libxml2
+      import libxslt
+      if xsl_content is None:
+        raise ImportError
+      stylesheet_doc = libxml2.parseDoc(xsl_content)
+      stylesheet = libxslt.parseStylesheetDoc(stylesheet_doc)
+      content_doc = libxml2.parseDoc(content_xml)
+      result_doc = stylesheet.applyStylesheet(content_doc, None)
+      buff = libxml2.createOutputBuffer(output, 'utf-8')
+      result_doc.saveFormatFileTo(buff, 'utf-8', 1)
+      stylesheet_doc.freeDoc(); content_doc.freeDoc(); result_doc.freeDoc()
+      return output.getvalue().replace(
+        'office:version="1.0">',
+        """ xmlns:tal="http://xml.zope.org/namespaces/tal"
+            xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+            xmlns:metal="http://xml.zope.org/namespaces/metal"
+            tal:attributes="dummy python:request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8')"
+          office:version="1.0">""")
+    except ImportError:
+      reader = PyExpat.Reader()
+      document = reader.fromString(content_xml)
+      document_element = document.documentElement
+      from xml.dom.ext import PrettyPrint
+      PrettyPrint(document_element, output)
+      return output.getvalue().replace(
+        "office:version='1.0'",
+        """ xmlns:tal='http://xml.zope.org/namespaces/tal'
+            xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+            xmlns:metal='http://xml.zope.org/namespaces/metal'
+            tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+          office:version='1.0'""")
 
   def addFileEntry(self, full_path, media_type, content=None):
       """ Add a file entry to the manifest and possibly is content """
