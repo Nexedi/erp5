@@ -1,3 +1,6 @@
+2008-01-07 Nicolas
+Add new XSL stylesheet for ERP5 OOo Templates which able to transform any CDATA section, tagged with 'TALES' in style name, into attribute tal:content
+
 2007-11-29 yusei
 * Membership criteria list in Predicate_view is sorted. Please use revision 17909 or newer version of CMFCategory.
 
