@@ -121,6 +121,10 @@
                           <string>expiration_date</string>
                           <string>Expiration Date</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -176,6 +180,10 @@
                           <string>expiration_date</string>
                           <string>Expiration Date</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -225,6 +233,10 @@
                         <tuple>
                           <string>expiration_date</string>
                           <string>Expiration Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
