@@ -76,7 +76,7 @@ except ConversionError, e:\n
   message = \'Conversion Error: %s\' % (str(e) or \'undefined.\')\n
 except Fault, e:\n
   message = \'XMLFault: %s\' % (repr(e) or \'undefined.\')\n
-except socket.error, e:\n
+except SocketError, e:\n
   message = \'Socket Error: %s\' % (repr(e) or \'undefined.\')\n
 except Exception, e:\n
   message = \'Problem: %s\' % (repr(e) or \'undefined.\')\n
