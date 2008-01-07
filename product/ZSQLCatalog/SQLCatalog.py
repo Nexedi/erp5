@@ -79,7 +79,8 @@ UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300
 MAX_PATH_LEN = 255
 RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
-                     'format', 'search_mode', 'operator', 'selection_domain', 'selection_report')
+                     'format', 'search_mode', 'operator', 'selection_domain', 'selection_report',
+                     'extra_key_list', )
 
 valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)') # Nicer
 
@@ -2336,6 +2337,10 @@ class Catalog(Folder,
 
     from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
     if len(kw):
+      if kw.has_key('select_expression_key'):
+        select_expression_key = kw['select_expression_key']
+        if type(select_expression_key) is type('a'):
+          select_expression_key = [select_expression_key]
       if kw.has_key('select_expression'):
         select_expression_list.append(kw['select_expression'])
       if kw.has_key('group_by_expression'):
@@ -2382,6 +2387,9 @@ class Catalog(Folder,
         new_sort_index = []
         for (original_key, so, as_type) in sort_index:
           key = getNewKeyAndUpdateVariables(original_key)
+          if key is None:
+            if original_key in select_expression_key:
+              key = original_key
           if key is not None:
             sort_key_list.append(key)
             if as_type == 'int':
