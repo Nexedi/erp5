@@ -473,7 +473,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>Results</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
