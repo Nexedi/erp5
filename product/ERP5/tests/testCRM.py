@@ -233,7 +233,9 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.tic()
 
   def test_MailAttachmentPdf(self):
-    """Make sure that pdf document is correctly attached in email"""
+    """
+    Make sure that pdf document is correctly attached in email
+    """
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
@@ -288,7 +290,9 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assertEqual(part.get_payload(decode=True), str(document_pdf.getData()))
 
   def test_MailAttachmentText(self):
-    """Make sure that text document is correctly attached in email"""
+    """
+    Make sure that text document is correctly attached in email
+    """
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
@@ -343,7 +347,9 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assert_(len(part.get_payload(decode=True))>0)
 
   def test_MailAttachmentFile(self):
-    """Make sure that file document is correctly attached in email"""
+    """
+    Make sure that file document is correctly attached in email
+    """
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
@@ -398,7 +404,9 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assert_(len(part.get_payload(decode=True))>0)
 
   def test_MailAttachmentImage(self):
-    """Make sure that image document is correctly attached in email"""
+    """
+    Make sure that image document is correctly attached in email
+    """
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
@@ -453,7 +461,9 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
 
   def test_MailAttachmentWebPage(self):
-    """Make sure that webpage document is correctly attached in email"""
+    """
+    Make sure that webpage document is correctly attached in email
+    """
     # Add a document which will be attached.
 
     document_html = self.portal.web_page_module.newContent(id='5',
