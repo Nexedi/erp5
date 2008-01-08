@@ -1,6 +1,10 @@
+Alarm Tool | alarm_report
 Alarm Tool | view
-Alarm | latest_result
+Alarm | custom_report
+Alarm | notification
 Alarm | periodicity
+Alarm | solve
+Alarm | standard_report
 Alarm | view
 Applied Rule | view
 Base Category | view
