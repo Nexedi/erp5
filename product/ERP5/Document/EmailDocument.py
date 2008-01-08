@@ -40,6 +40,15 @@ from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
 from Products.CMFDefault.utils import isHTMLSafe
+try:
+  from Products.MimetypesRegistry.common import MimeTypeException
+except ImportError:
+  class MimeTypeException(Exception):
+    """
+    A dummy exception class which is used when MimetypesRegistry product is
+    not installed yet.
+    """
+  
 
 from email import message_from_string
 from email.Header import decode_header
@@ -440,15 +449,36 @@ class EmailDocument(File, TextDocument):
       # Attach files
       document_type_list = self.getPortalDocumentTypeList()
       for attachment in self.getAggregateValueList():
+        mime_type = None
+        attached_data = None
         if attachment.getPortalType() in document_type_list:
-          # If this is a document, use 
-          mime_type = attachment.getContentType() # WARNING - this could fail since getContentType
-                                                  # is not (yet) part of Document API
-          try:
-            mime_type, attached_data = attachment.convert(mime_type)
-          except ConversionError:
-            mime_type = attachment.getBaseContentType()
-            attached_data = attachment.getBaseData()
+          # If this is a document, use
+
+          # WARNING - this could fail since getContentType
+          # is not (yet) part of Document API
+          if getattr(attachment, 'getContentType', None) is not None:
+            mime_type = attachment.getContentType()
+          elif getattr(attachment, 'getTextFormat', None) is not None:
+            mime_type = attachment.getTextFormat()
+          else:
+            raise ValueError, "Cannot find mimetype of the document."
+
+          if mime_type is not None:
+            try:
+              mime_type, attached_data = attachment.convert(mime_type)
+            except ConversionError:
+              mime_type = attachment.getBaseContentType()
+              attached_data = attachment.getBaseData()
+            except (NotImplementedError, MimeTypeException):
+              pass
+
+          if attached_data is None:
+            if getattr(attachment, 'getTextContent', None) is not None:
+              attached_data = attachment.getTextContent()
+            elif getattr(attachment, 'getData', None) is not None:
+              attached_data = attachment.getData()
+            elif getattr(attachment, 'getBaseData', None) is not None:
+              attached_data = attachment.getBaseData()
         else:
           mime_type = 'application/pdf'
           attached_data = attachment.asPDF() # XXX - Not implemented yet
