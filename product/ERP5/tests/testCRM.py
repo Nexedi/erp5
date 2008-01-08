@@ -555,6 +555,122 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assertEqual(answer_event.getTextContent(), '> This is an advertisement mail.')
 
 
+  def test_MailAttachmentFileWithoutDMS(self):
+    """
+    Make sure that file document is correctly attached in email
+    """
+    # Add a document on a person which will be attached.
+
+    def add_document(filename, id, container, portal_type):
+      f = openTestFile(filename)
+      document = container.newContent(id=id, portal_type=portal_type)
+      document.edit(file=f, reference=filename)
+      return document
+
+    # txt
+    document_txt = add_document('sample_attachment.txt', '2',
+                                self.portal.person_module['me'], 'File')
+
+    get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
+
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(id='1',
+                                                    portal_type='Campaign',
+                                                    title='Advertisement')
+    # Create a event
+    ticket.Ticket_newEvent(portal_type='Mail Message',
+                           title='Our new product',
+                           description='Buy this now!',
+                           direction='outgoing')
+
+    # Set sender and attach a document to the event.
+    event = self.portal.event_module.objectValues()[0]
+    event.edit(source='person_module/me',
+               destination='person_module/sender',
+               aggregate=document_txt.getRelativeUrl(),
+               text_content='This is an advertisement mail.')
+
+    mail_text = event.send(download=True)
+
+    # Check mail text.
+    message = email.message_from_string(mail_text)
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+
+    # Check attachment
+    # txt
+    self.assert_('sample_attachment.txt' in 
+                 [i.get_filename() for i in message.get_payload()])
+    part = None
+    for i in message.get_payload():
+      if i.get_filename()=='sample_attachment.txt':
+        part = i
+    self.assert_(len(part.get_payload(decode=True))>0)
+
+
+
+  def test_MailAttachmentImageWithoutDMS(self):
+    """
+    Make sure that image document is correctly attached in email without dms
+    """
+    # Add a document on a person which will be attached.
+
+    def add_document(filename, id, container, portal_type):
+      f = openTestFile(filename)
+      document = container.newContent(id=id, portal_type=portal_type)
+      document.edit(file=f, reference=filename)
+      return document
+
+    # gif
+    document_gif = add_document('sample_attachment.gif', '1',
+                                self.portal.person_module['me'], 'Image')
+
+    get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
+
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(id='1',
+                                                    portal_type='Campaign',
+                                                    title='Advertisement')
+    # Create a event
+    ticket.Ticket_newEvent(portal_type='Mail Message',
+                           title='Our new product',
+                           description='Buy this now!',
+                           direction='outgoing')
+
+    # Set sender and attach a document to the event.
+    event = self.portal.event_module.objectValues()[0]
+    event.edit(source='person_module/me',
+               destination='person_module/sender',
+               aggregate=document_gif.getRelativeUrl(),
+               text_content='This is an advertisement mail.')
+
+    mail_text = event.send(download=True)
+
+    # Check mail text.
+    message = email.message_from_string(mail_text)
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+
+    # Check attachment
+    # gif
+    self.assert_('sample_attachment.gif' in 
+                 [i.get_filename() for i in message.get_payload()])
+    part = None
+    for i in message.get_payload():
+      if i.get_filename()=='sample_attachment.gif':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCRMMailIngestion))
