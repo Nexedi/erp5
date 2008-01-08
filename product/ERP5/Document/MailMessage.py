@@ -38,6 +38,8 @@ import smtplib
 
 from zLOG import LOG
 
+_MARKER = []
+
 class MailMessage(Event, CMFMailInMessage):
   """
   LEGACY
@@ -109,3 +111,18 @@ class MailMessage(Event, CMFMailInMessage):
       header += "\n"
       msg = header + msg
       self.MailHost.send( msg )
+
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
+  def getTextContent(self, default=_MARKER):
+    """
+    Overload EmailDocument method to add backward compatibility layer
+    """
+    if getattr(self, 'body', None) is not None:
+      return self.getBody(default)
+    else:
+      if default is _MARKER:
+        return Event.getTextContent(self)
+      else:
+        return Event.getTextContent(self, default)
+        
