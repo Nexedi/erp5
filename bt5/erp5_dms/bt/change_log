@@ -1,3 +1,8 @@
+2008-1-8 Yusei
+* Added another follow_up field relate
+document to person and organisation
+in several document view forms.
+
 2007-12-21 Yusei
 * Refactored ingestion system. Please use revision 18459 or newer of ERP5 and ERP5OOo.
 * version up (0.9.1 -> 0.9.2)

@@ -119,6 +119,7 @@
                         <string>my_translated_external_processing_state_title</string>
                         <string>my_revision</string>
                         <string>my_follow_up_title</string>
+                        <string>my_follow_up_title_list</string>
                       </list>
                     </value>
                 </item>

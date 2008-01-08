@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -82,7 +79,12 @@ def getValueIfAvailable(category):\n
   return ob \n
 \n
 object_list = [getValueIfAvailable(category) for category in category_list]\n
-return [o for o in object_list if o is not None]\n
+object_list = [o for o in object_list if o is not None]\n
+\n
+if portal_type_list is not None:\n
+  object_list = [o for o in object_list if o.portal_type in portal_type_list]\n
+\n
+return object_list\n
 </string> </value>
         </item>
         <item>
@@ -105,7 +107,7 @@ return [o for o in object_list if o is not None]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category</string> </value>
+            <value> <string>base_category, portal_type_list=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,13 +127,14 @@ return [o for o in object_list if o is not None]\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>base_category</string>
+                            <string>portal_type_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>category_list</string>
@@ -154,7 +157,9 @@ return [o for o in object_list if o is not None]\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
