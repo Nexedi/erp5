@@ -2,6 +2,7 @@
 * Added another follow_up field relate
 document to person and organisation
 in several document view forms.
+* Removed Conference portal type from follow_up field. It does not exists now.
 
 2007-12-21 Yusei
 * Refactored ingestion system. Please use revision 18459 or newer of ERP5 and ERP5OOo.
