@@ -419,6 +419,8 @@ class TestAlarm(ERP5TypeTestCase):
     skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 'raise Exception')
     del skin_folder
     alarm = self.newAlarm()
+    get_transaction().commit()
+    self.tic()
     now = DateTime()
     alarm.setActiveSenseMethodId(sense_method_id)
     self.assertEquals(alarm.isActive(), 0)
