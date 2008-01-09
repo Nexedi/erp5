@@ -2334,7 +2334,8 @@ class Catalog(Folder,
     where_expression = ''
     select_expression = ''
     group_by_expression = ''
-
+    select_expression_key = ''
+    
     from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
     if len(kw):
       if kw.has_key('select_expression_key'):
