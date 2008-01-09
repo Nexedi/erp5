@@ -39,6 +39,8 @@ from types import StringType
 from zLOG import LOG
 from Products.Formulator.DummyField import fields
 from Globals import get_request
+from AccessControl import Unauthorized
+from AccessControl import getSecurityManager
 
 # Max. number of catalog result
 MAX_SELECT = 30
@@ -707,16 +709,24 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 menu_item_list.append(('', ''))
                 # If the length is 0, raise an error
                 if field.get_value('allow_creation') == 1 :
+                  user = getSecurityManager().getUser()
+                  getDefaultModule = field.getDefaultModule
                   # XXX
                   for portal_type in portal_type_list:
-                    translated_portal_type = Message(domain='erp5_ui',
-                                                     message=portal_type)
-                    message = Message(
-                            domain='erp5_ui', message='New ${portal_type}',
-                            mapping={'portal_type': translated_portal_type})
-                    menu_item_list.append((message, 
-                                           '%s%s' % (NEW_CONTENT_PREFIX, 
-                                                     portal_type)))
+                    try:
+                      module = getDefaultModule(portal_type)
+                    except ValueError:
+                      pass
+                    else:
+                      if portal_type in module.getVisibleAllowedContentTypeList():
+                        translated_portal_type = Message(domain='erp5_ui',
+                                                         message=portal_type)
+                        message = Message(
+                                domain='erp5_ui', message='New ${portal_type}',
+                                mapping={'portal_type': translated_portal_type})
+                        menu_item_list.append((message, 
+                                               '%s%s' % (NEW_CONTENT_PREFIX, 
+                                                         portal_type)))
                 REQUEST.set(relation_item_id, menu_item_list)
                 raising_error_needed = 1
                 raising_error_value = 'relation_result_empty'
