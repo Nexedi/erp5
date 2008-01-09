@@ -58,6 +58,21 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates we need to run the test.
+      This method is called during the initialization of the unit test by
+      the unit test framework in order to know which business templates
+      need to be installed to run the test on.
+    """
+    return ('erp5_base',
+            'erp5_trade',
+            'erp5_accounting',
+            'erp5_banking_core',
+            'erp5_banking_inventory',
+            'erp5_banking_cash',
+            'erp5_banking_check',
+            'erp5_banking_cash_movement_new_not_emitted')
 
   def getTitle(self):
     """
@@ -66,7 +81,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     return "ERP5BankingCashMovementNewNotEmitted"
 
   def getCashMovementModule(self):
-    return getattr(self.getPortal(), 'cash_movement_new_not_emmited_module')
+    return getattr(self.getPortal(), 'cash_movement_new_not_emitted_module')
 
   def getMonetaryReceptionModule(self):
     return getattr(self.getPortal(), 'monetary_reception_module')
@@ -111,26 +126,26 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     self.checkResourceCreated()
-    self.assertEqual(self.cash_movement_module.getPortalType(), 'Cash Movement New Not Emmited Module')
+    self.assertEqual(self.cash_movement_module.getPortalType(), 'Cash Movement New Not Emitted Module')
     self.assertEqual(len(self.cash_movement_module.objectValues()), 0)
 
   def stepCreateCashMovement(self, sequence=None, sequence_list=None, 
                              none_destination=0, **kwd):
     self.cash_movement = self.cash_movement_module.newContent(
       id='cash_movement_1',
-      portal_type='Cash Movement New Not Emmited', 
+      portal_type='Cash Movement New Not Emitted', 
       source=self.vault_source.getRelativeUrl(),
-      destination=self.vault_destination.getRelativeUrl(), 
+      destination_section_value=self.madrid,
       description='test',
       start_date=self.date,
       source_total_asset_price=2000000.0)
-
     self.stepTic()
     self.assertEqual(len(self.cash_movement_module.objectValues()), 1)
     self.cash_movement = getattr(self.cash_movement_module, 'cash_movement_1')
-    self.assertEqual(self.cash_movement.getPortalType(), 'Cash Movement New Not Emmited')
-    self.assertEqual(self.cash_movement.getSource(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_neufs_non_emis_en_transit_allant_a/madrid')
-    self.assertEqual(self.cash_movement.getDestination(), 'site/testsite/madrid/caveau/serre/encaisse_des_billets_neufs_non_emis')
+    self.assertEqual(self.cash_movement.getPortalType(), 'Cash Movement New Not Emitted')
+    self.assertEqual(self.cash_movement.getDestinationSection(), 'site/testsite/madrid')
+    self.assertEqual(self.cash_movement.getBaobabSource(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_neufs_non_emis_en_transit_allant_a/madrid')
+    self.assertEqual(self.cash_movement.getBaobabDestination(), 'site/testsite/madrid/caveau/serre/encaisse_des_billets_neufs_non_emis')
     self.setDocumentSourceReference(self.cash_movement)
 
 
@@ -172,7 +187,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     global_dict['cash_status'] = 'new_not_emitted'
     global_dict['resource'] = self.billet_10000
 
-    self.createCashContainer(self.cash_movement, 'Cash Movement New Not Emmited Container', global_dict, new_cash_container_list, 'Cash Movement New Not Emmited Line')
+    self.createCashContainer(self.cash_movement, 'Cash Movement New Not Emitted Container', global_dict, new_cash_container_list, 'Cash Movement New Not Emitted Line')
 
     self.stepTic()
     self.assertEqual(len(self.cash_movement.objectValues()), 3)
@@ -182,7 +197,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     Stop the cash_movement and check it
     """
     self.workflow_tool.doActionFor(self.cash_movement, 'stop_action',
-                  wf_id='cash_movement_new_not_emmited_workflow', stop_date=self.date)
+                  wf_id='cash_movement_new_not_emitted_workflow', stop_date=self.date)
     self.stepTic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'stopped')
@@ -191,7 +206,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     """
     Confirm the cash_movement and check it
     """
-    self.workflow_tool.doActionFor(self.cash_movement, 'confirm_action', wf_id='cash_movement_new_not_emmited_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'confirm_action', wf_id='cash_movement_new_not_emitted_workflow')
     self.stepTic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'confirmed')
@@ -200,7 +215,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     """
     Start the cash_movement and check it
     """
-    self.workflow_tool.doActionFor(self.cash_movement, 'start_action', wf_id='cash_movement_new_not_emmited_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'start_action', wf_id='cash_movement_new_not_emitted_workflow')
     self.stepTic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'started')
@@ -210,7 +225,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     Deliver the cash_movement with a good user
     and check that the deliver of a cash tranfer have achieved
     """
-    self.workflow_tool.doActionFor(self.cash_movement, 'deliver_action', wf_id='cash_movement_new_not_emmited_workflow')
+    self.workflow_tool.doActionFor(self.cash_movement, 'deliver_action', wf_id='cash_movement_new_not_emitted_workflow')
     self.stepTic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'delivered')
@@ -220,7 +235,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     Check the cash delivery line
     """
     self.valid_line_1 = getattr(self.cash_movement, 'movement')
-    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Movement New Not Emmited Line')
+    self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Movement New Not Emitted Line')
     self.assertEqual(self.valid_line_1.getResourceValue(), self.billet_10000)
     self.assertEqual(self.valid_line_1.getPrice(), 10000.0)
     self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
@@ -230,8 +245,8 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/new_not_emitted')
     self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
     self.assertEqual(cell.getResourceValue(), self.billet_10000)
-    self.assertEqual(cell.getSourceValue(), self.vault_source)
-    self.assertEqual(cell.getDestinationValue(), self.vault_destination)
+    self.assertEqual(cell.getBaobabSourceValue(), self.vault_source)
+    self.assertEqual(cell.getBaobabDestinationValue(), self.vault_destination)
     self.assertEqual(cell.getQuantity(), 200.0)
 
 
@@ -242,7 +257,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # check the cash delivery line
     self.container_1 = getattr(self.cash_movement, '1')
     # check its portal type
-    self.assertEqual(self.container_1.getPortalType(), 'Cash Movement New Not Emmited Container')
+    self.assertEqual(self.container_1.getPortalType(), 'Cash Movement New Not Emitted Container')
     self.assertEqual(self.container_1.getReference(), 'unit_test_1')
     self.assertEqual(self.container_1.getCashNumberRangeStart(), '0')
     self.assertEqual(self.container_1.getCashNumberRangeStop(), '100')
@@ -266,9 +281,9 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # chek the value of the banknote
     self.assertEqual(cell.getPrice(), 10000.0)
     # check the source vault is caisse_1
-    self.assertEqual(cell.getSourceValue(), self.vault_source)
+    self.assertEqual(cell.getBaobabSourceValue(), self.vault_source)
     # check the destination vault is caisse_2
-    self.assertEqual(cell.getDestinationValue(), self.vault_destination)
+    self.assertEqual(cell.getBaobabDestinationValue(), self.vault_destination)
     self.assertEqual(cell.getQuantity(), 100.0)
 
 
@@ -279,7 +294,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # check the cash delivery line
     self.container_2 = getattr(self.cash_movement, '2')
     # check its portal type
-    self.assertEqual(self.container_2.getPortalType(), 'Cash Movement New Not Emmited Container')
+    self.assertEqual(self.container_2.getPortalType(), 'Cash Movement New Not Emitted Container')
     self.assertEqual(self.container_2.getReference(), 'unit_test_2')
     self.assertEqual(self.container_2.getCashNumberRangeStart(), '100')
     self.assertEqual(self.container_2.getCashNumberRangeStop(), '200')
@@ -303,8 +318,8 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # chek the value of the banknote
     self.assertEqual(cell.getPrice(), 10000.0)
     # check the source vault is caisse_1
-    self.assertEqual(cell.getSourceValue(), self.vault_source)
-    self.assertEqual(cell.getDestinationValue(), self.vault_destination)
+    self.assertEqual(cell.getBaobabSourceValue(), self.vault_source)
+    self.assertEqual(cell.getBaobabDestinationValue(), self.vault_destination)
     self.assertEqual(cell.getQuantity(), 100.0)
 
 
