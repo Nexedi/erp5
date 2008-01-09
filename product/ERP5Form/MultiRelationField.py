@@ -722,7 +722,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                         translated_portal_type = Message(domain='erp5_ui',
                                                          message=portal_type)
                         message = Message(
-                                domain='erp5_ui', message='New ${portal_type}',
+                                domain='erp5_ui', message='Add ${portal_type}',
                                 mapping={'portal_type': translated_portal_type})
                         menu_item_list.append((message, 
                                                '%s%s' % (NEW_CONTENT_PREFIX, 
