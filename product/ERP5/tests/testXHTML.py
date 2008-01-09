@@ -195,7 +195,11 @@ def addTestMethodDynamically():
             method_name = 'test%s%s' % (portal_type, view_name)
             setattr(TestXHTML, method_name, method)
 
-addTestMethodDynamically()
+# tidy may not be installed in livecd. Then we will skip xhtml validation tests.
+if not os.path.exists('/usr/bin/tidy'):
+  print '*** tidy is not installed at /usr/bin/tidy ***'
+else:
+  addTestMethodDynamically()
 
 def test_suite():
   suite = unittest.TestSuite()
