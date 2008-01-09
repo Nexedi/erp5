@@ -1307,12 +1307,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
         o = brain.getObject()
         if o is not None:
           category_list = []
-          for category in self.getMembershipCriterionCategoryList(o):
+          for category in o.getMembershipCriterionCategoryList():
             new_category = self.updateRelatedCategory(category,
                                                       previous_category_url,
                                                       new_category_url)
             category_list.append(new_category)
-          self._setMembershipCriterionCategoryList(o, category_list)
+          o._setMembershipCriterionCategoryList(category_list)
 
           if getattr(aq_base(o),
                     'notifyAfterUpdateRelatedContent', None) is not None:
