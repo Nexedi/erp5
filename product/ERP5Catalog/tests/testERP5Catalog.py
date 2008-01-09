@@ -1849,7 +1849,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                          owner='somebody else')])
 
 
-  def test_SubDocumentsSecurityIndexing(self):
+  def test_SubDocumentsSecurityIndexing(self, quiet=quiet, run=run_all_test):
+    if not run: return    
     # make sure indexing of security on sub-documents works as expected
     uf = self.getPortal().acl_users
     uf._doAddUser('bob', '', ['Member'], [])
