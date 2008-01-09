@@ -510,7 +510,9 @@ class TestCRMMailSend(ERP5TypeTestCase):
     for i in message.get_payload():
       if i.get_filename()=='sample_attachment.html':
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document_html.getTextContent()))
+    self.assertEqual(part.get_payload(decode=True),
+                     str(document_html.getTextContent()))
+    self.assertEqual(part.get_content_type(), 'text/html')
 
   def test_MailRespond(self):
     """
