@@ -846,7 +846,7 @@ class Base( CopyContainer,
     try:
       property_holder = Base.aq_portal_type[aq_key]
       accessor = getattr(property_holder, id, None)
-      if isinstance(accessor, tuple):
+      if type(accessor) is tuple:
         if id not in RESERVED_TUPLE_PROPERTY:
           property_holder.createAccessor(id)
           accessor = getattr(property_holder, id, None)
