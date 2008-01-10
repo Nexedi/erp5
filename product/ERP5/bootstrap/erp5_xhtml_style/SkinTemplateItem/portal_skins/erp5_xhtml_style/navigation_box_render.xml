@@ -92,7 +92,7 @@
                 i18n:translate="" i18n:domain="ui">Select Favorite</span>\n
         </button>\n
       </span>\n
-      <span class="separator"></span>\n
+      <span class="separator"><!--separator--></span>\n
       <span id="modules">\n
         <select name="select_module"\n
                 tal:define="module_list here/ERP5Site_getModuleItemList;"\n
@@ -130,7 +130,7 @@
                 i18n:translate="" i18n:domain="ui">Select Language</span>\n
         </button>\n
       </span>\n
-      <span class="separator"></span>\n
+      <span class="separator"><!--separator--></span>\n
       <span id="search">\n
         <input type="text" name="field_your_search_text" />\n
         <button type="submit" name="Base_searchResultList:method" title="Search"\n

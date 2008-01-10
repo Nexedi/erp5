@@ -89,7 +89,7 @@
       </button>\n
     </span>\n
 \n
-    <span class="separator"></span>\n
+    <span class="separator"><!--separator--></span>\n
 \n
     <span id="action" metal:define-macro="action">\n
       <select name="select_action"\n
@@ -174,7 +174,7 @@
             ui_actions actions/object_ui | nothing;\n
             print_actions actions/object_print | nothing;\n
             list_mode list_mode | nothing">\n
-        <span class="separator"></span>\n
+        <span class="separator"><!--separator--></span>\n
         <tal:block tal:condition="list_mode | nothing">\n
           <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
                   i18n:attributes="title" i18n:domain="ui">\n
@@ -191,7 +191,7 @@
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>\n
           </button>\n
-          <span class="separator"></span>\n
+          <span class="separator"><!--separator--></span>\n
         </tal:block>\n
         <button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method" title="Print"\n
                 i18n:attributes="title" i18n:domain="ui">\n
@@ -218,7 +218,7 @@
         </button>\n
         <tal:block tal:condition="not: list_mode">\n
           <tal:block tal:condition="request/selection_index | nothing">\n
-            <span class="separator"></span>\n
+            <span class="separator"><!--separator--></span>\n
             <a class="jump_first" title="First"\n
                tal:attributes="href python: \'portal_selections/viewFirst?%s\' % (http_parameters, )"\n
                i18n:attributes="title" i18n:domain="ui">\n
@@ -251,7 +251,7 @@
           </tal:block>\n
         </tal:block>\n
         <tal:block tal:condition="list_mode">\n
-          <span class="separator"></span>\n
+          <span class="separator"><!--separator--></span>\n
           <a tal:condition="search_actions" class="find" title="Find"\n
              tal:attributes="href python: portal.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
              i18n:attributes="title" i18n:domain="ui">\n
@@ -277,7 +277,7 @@
           </a>\n
         </tal:block>\n
         <span tal:condition="exchange_actions | report_actions"\n
-              class="separator"></span>\n
+              class="separator"><!--separator--></span>\n
         <a tal:condition="exchange_actions" class="import_export" title="Import / Export"\n
            tal:attributes="href python: portal.ERP5Site_renderCustomLink(exchange_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_exchange\')"\n
            i18n:attributes="title" i18n:domain="ui">\n
@@ -297,7 +297,7 @@
           <span class="description" i18n:translate="" i18n:domain="ui">Fast Input</span>\n
         </a>\n
         <tal:block tal:condition="button_actions">\n
-          <span class="separator"></span>\n
+          <span class="separator"><!--separator--></span>\n
           <tal:block tal:repeat="button_action button_actions">\n
             <a tal:attributes="href python: \'%s%s%s\' % (button_action[\'url\'], \'?\' in button_action[\'url\'] and \'&amp;\' or \'?\', http_parameters)">\n
               <img i18n:attributes="title" i18n:domain="ui"\n
@@ -309,7 +309,7 @@
         </tal:block>\n
         <tal:block tal:condition="list_mode">\n
           <tal:block tal:condition="ui_actions">\n
-            <span class="separator"></span>\n
+            <span class="separator"><!--separator--></span>\n
             <a class="configure" title="Configure"\n
                tal:attributes="href python: portal.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
                i18n:attributes="title" i18n:domain="ui">\n
