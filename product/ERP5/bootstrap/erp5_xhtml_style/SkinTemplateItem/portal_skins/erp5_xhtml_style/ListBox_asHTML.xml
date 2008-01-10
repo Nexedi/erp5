@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -88,6 +85,7 @@
       <tal:block tal:condition="expand">\n
         <table tal:condition="is_domain_tree_mode"\n
           style="width: 100%;" cellpadding="0" cellspacing="0"\n
+          summary="This table contains the domain tree with the switch button"\n
           tal:define="selected_domain_path here/getSelectedDomainPath">\n
           <tr>\n
             <td valign="top">\n
@@ -102,6 +100,7 @@
                 </tal:block>\n
               </select>\n
               <table id="listbox_domain_tree_table" cellpadding="0"\n
+                summary="This table contains the domain tree"\n
                 tal:attributes="id string:${field_id}_domain_tree_table"\n
                 tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False);\n
                             total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">\n
@@ -137,7 +136,8 @@
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
       <tal:block metal:fill-slot="ListBoxBody">\n
         <div class="ListSummary">\n
-          <table cellpadding="0" cellspacing="0">\n
+          <table cellpadding="0" cellspacing="0"\n
+                 summary="This table contains the listbox headers">\n
             <tr>\n
               <td style="height: 10px">\n
                 <img src="Left.png" alt="left"\n
@@ -228,7 +228,8 @@
           </table>\n
         </div>\n
         <div class="ListContent">\n
-          <table cellpadding="0" cellspacing="0">\n
+          <table cellpadding="0" cellspacing="0"\n
+                 summary="This table contains the listbox content">\n
             <tr id="listbox_label_line" tal:attributes="id string:${field_id}_label_line">\n
               <td tal:condition="is_report_tree_mode"\n
                 class="Data" style="width: 50px; text-align: left; vertical-align: middle">\n
@@ -384,8 +385,20 @@
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ListBox_asHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
