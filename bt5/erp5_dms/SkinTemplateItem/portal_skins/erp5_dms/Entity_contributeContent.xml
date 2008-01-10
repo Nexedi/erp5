@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5.Document.Document import ConversionError\n
+from xmlrpclib import Fault\n
+from socket import error as SocketError\n
+\n
+kw = {}\n
+kw[\'classification\'] = classification\n
+kw[\'file\'] = file\n
+\n
+# We want to discover metadata synchronously\n
+kw[\'discover_metadata\'] = 0\n
+\n
+editable_mode = 1\n
+filename = getattr(file, \'filename\', None)\n
+# try to ingest file\n
+failure = 0\n
+new_content = None\n
+merged_content = None\n
+\n
+# This must works always.\n
+new_content = context.portal_contributions.newContent(**kw)\n
+\n
+# Append the context document into follow_up.\n
+follow_up_list = new_content.getFollowUpValueList()\n
+follow_up_list.append(context)\n
+new_content.setFollowUpValueList([i.getRelativeUrl() for i in follow_up_list])\n
+\n
+try:\n
+  new_content.processFile()\n
+  merged_content = new_content.Document_convertToBaseFormatAndDiscoverMetadata(file_name=filename)\n
+except ConversionError, Fault:\n
+  # there are errors during ingestion content\n
+  failure = 1\n
+  msg = \'Sorry, there was a problem during conversion of your document.\'\n
+except SocketError:\n
+  # conversion server is down\n
+  failure = 1\n
+  msg = \'Sorry, the conversion server is down. Please try again later.\'\n
+except (TypeError, KeyError, AttributeError):\n
+  # there\'s an unknow  error occured\n
+  failure = 1\n
+  msg = \'Sorry, unknow error occured.\'\n
+\n
+target = None\n
+if merged_content is not None:\n
+  target = merged_content\n
+elif new_content is not None:\n
+  target = new_content\n
+else:\n
+  target = context\n
+\n
+if failure:\n
+  msg = context.Base_translateString(msg)\n
+  return target.Base_redirect(\'view\',\n
+                              keep_items=dict(portal_status_message=msg,\n
+                                              editable_mode=0))\n
+# successful ingestion, show appropriate message\n
+if merged_content is not None and merged_content is not new_content:\n
+  msg = context.Base_translateString(\'Document successfully updated\')\n
+  target = merged_content\n
+else:\n
+  msg = context.Base_translateString(\'Document successfully uploaded\')\n
+  target = new_content\n
+\n
+return target.Base_redirect(\'view\',\n
+                            keep_items=dict(portal_status_message=msg, \n
+                                            editable_mode=editable_mode))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>file, classification, **kwargs</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>file</string>
+                            <string>classification</string>
+                            <string>kwargs</string>
+                            <string>Products.ERP5.Document.Document</string>
+                            <string>ConversionError</string>
+                            <string>xmlrpclib</string>
+                            <string>Fault</string>
+                            <string>socket</string>
+                            <string>error</string>
+                            <string>SocketError</string>
+                            <string>kw</string>
+                            <string>_write_</string>
+                            <string>editable_mode</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>filename</string>
+                            <string>failure</string>
+                            <string>new_content</string>
+                            <string>merged_content</string>
+                            <string>_apply_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>follow_up_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>msg</string>
+                            <string>TypeError</string>
+                            <string>KeyError</string>
+                            <string>AttributeError</string>
+                            <string>target</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Entity_contributeContent</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

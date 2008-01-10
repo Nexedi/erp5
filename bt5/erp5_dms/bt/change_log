@@ -1,3 +1,7 @@
+2008-1-10 Yusei
+* Added document import dialog for Person/Organisation.
+* Added related document list view for Person/Document. This replaces the default document list view.
+
 2008-1-8 Yusei
 * Added another follow_up field relate
 document to person and organisation
