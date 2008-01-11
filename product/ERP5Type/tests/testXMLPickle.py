@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    TAHARA Yusei <yusei@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
