@@ -359,5 +359,5 @@ class MovementHistoryListBrain(InventoryListBrain):
         timezone = obj.getStartDate().timezone()
       else:
         timezone = obj.getStopDate().timezone()
-    self.date = self.date.toZone(timezone)
+      self.date = self.date.toZone(timezone)
 
