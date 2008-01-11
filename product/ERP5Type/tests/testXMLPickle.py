@@ -58,7 +58,8 @@ class TestXMLPickle(unittest.TestCase):
     obj.data.append(pattern)
 
     pickled_string = pickle.dumps(obj)
-    xmldata = str(ppml.ToXMLloads(pickled_string))
+    f = StringIO(pickled_string)
+    xmldata = str(ppml.ToXMLUnpickler(f).load())
 
     output = StringIO()
 
