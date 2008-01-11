@@ -31,7 +31,7 @@ from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
                                     importLocalDocument, \
@@ -1085,6 +1085,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
+    new_category = False
     if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
       category_tool = portal.portal_categories
@@ -1121,6 +1122,9 @@ class CategoryTemplateItem(ObjectTemplateItem):
             object_uid = container[category_id].getUid()
             subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
             container.manage_delObjects([category_id])
+          else:
+            # mark that we installed a new category to call aq_reset later
+            new_category = True
           category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
           if object_uid is not None:
             category.setUid(object_uid)
@@ -1163,6 +1167,9 @@ class CategoryTemplateItem(ObjectTemplateItem):
           # XXX call backup here
           subobjects_dict = self._backupObject('backup', trashbin, container_path, category_id)
           container.manage_delObjects([category_id])
+        else:
+          # mark that we installed a new category to call aq_reset later
+          new_category = True
         category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
         for prop in obj.propertyIds():
           if prop not in ('id', 'uid'):
@@ -1186,7 +1193,10 @@ class CategoryTemplateItem(ObjectTemplateItem):
             subobject = connection.importFile(subobject_data)
             if subobject_id not in category.objectIds():
               category._setObject(subobject_id, subobject)
-
+    if new_category:
+      # reset accessors if we installed a new category
+      _aq_reset()
+              
 
 class SkinTemplateItem(ObjectTemplateItem):
 
