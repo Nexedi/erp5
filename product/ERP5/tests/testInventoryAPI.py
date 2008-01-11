@@ -842,7 +842,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r) 
     r_bases = getMovementHistoryList()._class.__bases__
     brain_class = r_bases[2].__name__
-    self.assertEquals('InventoryListBrain', brain_class,
+    self.assertEquals('MovementHistoryListBrain', brain_class,
       "unexpected brain class for getMovementHistoryList InventoryListBrain"
       " != %s (bases %s)" % (brain_class, r_bases))
   
@@ -1103,6 +1103,39 @@ class TestMovementHistoryList(InventoryAPITestCase):
                         from_date=DateTime(2006, 01, 02),
                         to_date=DateTime(2006, 01, 03),
                         section_uid=self.mirror_section.getUid())), 1)
+  
+
+  def test_BrainDateTimeZone(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100,
+                       start_date=DateTime('2001/02/03 04:05 GMT+3'))
+    movement_history_list = getMovementHistoryList(
+                                section_uid=self.section.getUid())
+    self.assertEquals(len(movement_history_list), 1)
+    brain = movement_history_list[0]
+    self.assertEquals(DateTime('2001/02/03 04:05 GMT+3'), brain.date)
+    self.assertEquals('GMT+3', brain.date.timezone())
+
+  def test_BrainDateTimeZoneStopDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100,
+                       start_date=DateTime('2001/02/03 04:05 GMT+2'),
+                       stop_date=DateTime('2001/02/03 04:05 GMT+3'))
+    movement_history_list = getMovementHistoryList(
+                        mirror_section_uid=self.section.getUid())
+    self.assertEquals(len(movement_history_list), 1)
+    brain = movement_history_list[0]
+    self.assertEquals(DateTime('2001/02/03 04:05 GMT+2'), brain.date)
+    self.assertEquals('GMT+2', brain.date.timezone())
+
+  def test_BrainEmptyDate(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100,)
+    movement_history_list = getMovementHistoryList(
+                                section_uid=self.section.getUid())
+    self.assertEquals(len(movement_history_list), 1)
+    brain = movement_history_list[0]
+    self.assertEquals(None, brain.date)
 
   def test_SortOnDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList

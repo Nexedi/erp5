@@ -342,3 +342,22 @@ class DeliveryListBrain(InventoryListBrain):
                       list(self.getPortalFutureInventoryStateList()) + \
                       list(self.getPortalReservedInventoryStateList()) + \
                       list(self.getPortalCurrentInventoryStateList()))
+
+
+class MovementHistoryListBrain(InventoryListBrain):
+  """Brain for getMovementHistoryList
+  """
+  def __init__(self):
+    if not self.date:
+      return
+    # convert the date in the movement's original timezone.
+    # This is a somehow heavy operation, but fortunatly it's only called when
+    # the brain is accessed from the Shared.DC.ZRDB.Results.Results instance
+    obj = self.getObject()
+    if obj is not None:
+      if self.node_relative_url == obj.getSource():
+        timezone = obj.getStartDate().timezone()
+      else:
+        timezone = obj.getStopDate().timezone()
+    self.date = self.date.toZone(timezone)
+

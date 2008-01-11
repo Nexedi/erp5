@@ -626,7 +626,7 @@ precision</string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string>InventoryListBrain</string> </value>
+            <value> <string>MovementHistoryListBrain</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
