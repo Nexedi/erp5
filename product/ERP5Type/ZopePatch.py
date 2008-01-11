@@ -55,6 +55,7 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailTemplates
+from Products.ERP5Type.patches import persistent_patch
 
 # for python2.3 compatibility
 import threading
