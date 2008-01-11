@@ -1,3 +1,6 @@
+-2008-1-11 Yusei
+* Added mimetypes_registry, portal_transforms in Tools. Please use revision 18669 or newer of ERP5Type.
+
 2007-10-30 yo
 * Set pricing_interaction_workflow to Campaign, Fax Message, Letter, Mail Message, Meeting, Note, Phone Call, Sale Opportunity, Support Request, Visit and Web Message.
 
