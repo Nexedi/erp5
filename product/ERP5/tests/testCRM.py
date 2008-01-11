@@ -40,33 +40,27 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
   """
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_web', 'erp5_dms',
-            'erp5_dms_mysql_innodb_catalog', 'erp5_crm')
+    return ('erp5_base', 'erp5_crm', 'erp5_web',
+            'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
 
   def afterSetUp(self):
     portal = self.portal
-    if 'portal_transforms' not in portal.objectIds():
-      # XXX this should be done in bt5 (or ERP5Site, as install order is
-      # important)
-      # install needed tools
-      dispatcher = portal.manage_addProduct 
-      dispatcher['MimetypesRegistry'].manage_addTool('MimeTypes Registry')
-      dispatcher['PortalTransforms'].manage_addTool('Portal Transforms')
-      
-      # XXX this should not be necessary either 
-      # set prefered file name regular expression
-      pref = portal.portal_preferences.default_site_preference
-      pref.setPreferredDocumentFileNameRegularExpression('.*')
-      pref.setPreferredDocumentReferenceRegularExpression('.*')
-      pref.enable()
 
-      # XXX do this in ERP5Site.py ?
-      # sets up content type registry
-      ctr = self.portal.content_type_registry
+    # XXX this should not be necessary either 
+    # set prefered file name regular expression
+    pref = portal.portal_preferences.default_site_preference
+    pref.setPreferredDocumentFileNameRegularExpression('.*')
+    pref.setPreferredDocumentReferenceRegularExpression('.*')
+    pref.enable()
+
+    # XXX do this in ERP5Site.py ?
+    # sets up content type registry
+    ctr = self.portal.content_type_registry
+    if ctr.getPredicate('mail_message') is None:
       ctr.addPredicate('mail_message', 'extension')
-      ctr.getPredicate('mail_message').edit(extensions='eml')
-      ctr.assignTypeName('mail_message', 'Mail Message')
-      ctr.reorderPredicate('mail_message', 0)
+    ctr.getPredicate('mail_message').edit(extensions='eml')
+    ctr.assignTypeName('mail_message', 'Mail Message')
+    ctr.reorderPredicate('mail_message', 0)
 
     # create customer organisation and person
     if 'customer' not in portal.organisation_module.objectIds():
@@ -182,18 +176,11 @@ class TestCRMMailSend(ERP5TypeTestCase):
   """
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_web', 'erp5_dms',
-            'erp5_dms_mysql_innodb_catalog', 'erp5_crm')
+    return ('erp5_base', 'erp5_crm', 'erp5_web',
+            'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
 
   def afterSetUp(self):
     portal = self.portal
-    if 'portal_transforms' not in portal.objectIds():
-      # XXX this should be done in bt5 (or ERP5Site, as install order is
-      # important)
-      # install needed tools
-      dispatcher = portal.manage_addProduct 
-      dispatcher['MimetypesRegistry'].manage_addTool('MimeTypes Registry')
-      dispatcher['PortalTransforms'].manage_addTool('Portal Transforms')
 
     # create customer organisation and person
     if 'customer' not in portal.organisation_module.objectIds():
