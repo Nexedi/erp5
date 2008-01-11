@@ -31,9 +31,9 @@ try:
   import persistent
 except ImportError:
   import sys
-  import new
+  import types
   from ZODB import PersistentList
-  persistent = new.module('persistent')
+  persistent = types.ModuleType('persistent')
   persistent.list = PersistentList
   sys.modules['persistent'] = persistent
   sys.modules['persistent.list'] = persistent.list
