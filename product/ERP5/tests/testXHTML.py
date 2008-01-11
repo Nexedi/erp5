@@ -144,8 +144,8 @@ def validate_xhtml(source):
     if len(data) >= 2:
       if data[1].startswith('Error: '):
         return False
-      elif data[1].startswith('Warning: '):
-        return False
+#       elif data[1].startswith('Warning: '):
+#         return False
   return True
 
 
