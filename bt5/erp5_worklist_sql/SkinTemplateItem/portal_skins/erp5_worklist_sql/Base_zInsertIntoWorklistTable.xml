@@ -30,7 +30,79 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>causality_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>count</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>creation_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>destination_reference</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>event_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>float_index</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>grouping_reference</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>has_cell_content</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>immobilisation_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>int_index</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>invoice_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>modification_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>opportunity_state</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -42,7 +114,25 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>parent_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>payment_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>portal_type</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>reference</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -55,6 +145,24 @@
                             </item>
                             <item>
                                 <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>source_reference</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>string_index</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>title</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -78,6 +186,24 @@
 <string>simulation_state</string>
 <string>validation_state</string>
 <string>owner</string>
+<string>parent_uid</string>
+<string>title</string>
+<string>opportunity_state</string>
+<string>causality_state</string>
+<string>invoice_state</string>
+<string>payment_state</string>
+<string>event_state</string>
+<string>immobilisation_state</string>
+<string>reference</string>
+<string>grouping_reference</string>
+<string>source_reference</string>
+<string>destination_reference</string>
+<string>string_index</string>
+<string>int_index</string>
+<string>float_index</string>
+<string>has_cell_content</string>
+<string>creation_date</string>
+<string>modification_date</string>
                           </list>
                         </value>
                     </item>
@@ -93,7 +219,25 @@ security_uid\r\n
 portal_type\r\n
 simulation_state\r\n
 validation_state\r\n
-owner</string> </value>
+owner\r\n
+parent_uid\r\n
+title\r\n
+opportunity_state\r\n
+causality_state\r\n
+invoice_state\r\n
+payment_state\r\n
+event_state\r\n
+immobilisation_state\r\n
+reference\r\n
+grouping_reference\r\n
+source_reference\r\n
+destination_reference\r\n
+string_index\r\n
+int_index\r\n
+float_index\r\n
+has_cell_content\r\n
+creation_date\r\n
+modification_date</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -109,7 +253,9 @@ owner</string> </value>
 
 INSERT INTO\n
   worklist_cache\n
-  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`)\n
+  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`, `parent_uid`, `title`,`opportunity_state`, `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
+   `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
+   `modification_date`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(count))">\n
   (\n
@@ -118,7 +264,25 @@ VALUES\n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="parent_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="title[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="immobilisation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="grouping_reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="source_reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="destination_reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="string_index[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="int_index[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="float_index[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="has_cell_content[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="creation_date[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="modification_date[loop_item]" type="datetime" optional>\n
   )\n
   <dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>
@@ -163,7 +327,9 @@ VALUES\n
 
 INSERT INTO\n
   worklist_cache\n
-  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`)\n
+  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`, `parent_uid`, `title`,`opportunity_state`, `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
+   `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
+   `modification_date`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(count))">\n
   (\n
@@ -172,7 +338,25 @@ VALUES\n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="parent_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="title[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="immobilisation_state[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="grouping_reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="source_reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="destination_reference[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="string_index[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="int_index[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="float_index[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="has_cell_content[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="creation_date[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="modification_date[loop_item]" type="datetime" optional>\n
   )\n
   <dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>

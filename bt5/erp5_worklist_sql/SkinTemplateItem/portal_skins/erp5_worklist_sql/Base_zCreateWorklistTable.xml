@@ -73,6 +73,24 @@ CREATE TABLE `worklist_cache` (\n
   `portal_type` VARCHAR(255) NOT NULL,\n
   `validation_state` VARCHAR(255) NULL,\n
   `simulation_state` VARCHAR(255) NULL,\n
+  `parent_uid` BIGINT UNSIGNED default \'0\',\n
+  `title` varchar(255) default \'\',\n
+  `opportunity_state` varchar(255) default \'\',\n
+  `causality_state` varchar(255) default \'\',\n
+  `invoice_state` varchar(255) default \'\',\n
+  `payment_state` varchar(255) default \'\',\n
+  `event_state` varchar(255) default \'\',\n
+  `immobilisation_state` varchar(255) default \'\',\n
+  `reference` varchar(255) binary default \'\',\n
+  `grouping_reference` varchar(255) default \'\',\n
+  `source_reference` varchar(255) default \'\',\n
+  `destination_reference` varchar(255) default \'\',\n
+  `string_index` varchar(255),\n
+  `int_index` INT,\n
+  `float_index` real,\n
+  `has_cell_content` bool,\n
+  `creation_date` datetime,\n
+  `modification_date` datetime,\n
   KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
   KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `owner`),\n
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
@@ -126,6 +144,24 @@ CREATE TABLE `worklist_cache` (\n
   `portal_type` VARCHAR(255) NOT NULL,\n
   `validation_state` VARCHAR(255) NULL,\n
   `simulation_state` VARCHAR(255) NULL,\n
+  `parent_uid` BIGINT UNSIGNED default \'0\',\n
+  `title` varchar(255) default \'\',\n
+  `opportunity_state` varchar(255) default \'\',\n
+  `causality_state` varchar(255) default \'\',\n
+  `invoice_state` varchar(255) default \'\',\n
+  `payment_state` varchar(255) default \'\',\n
+  `event_state` varchar(255) default \'\',\n
+  `immobilisation_state` varchar(255) default \'\',\n
+  `reference` varchar(255) binary default \'\',\n
+  `grouping_reference` varchar(255) default \'\',\n
+  `source_reference` varchar(255) default \'\',\n
+  `destination_reference` varchar(255) default \'\',\n
+  `string_index` varchar(255),\n
+  `int_index` INT,\n
+  `float_index` real,\n
+  `has_cell_content` bool,\n
+  `creation_date` datetime,\n
+  `modification_date` datetime,\n
   KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
   KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `owner`),\n
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
