@@ -40,6 +40,8 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
   """
 
   def getBusinessTemplateList(self):
+    # In this test, We will attach some document portal types in event.
+    # So we add DMS and Web.
     return ('erp5_base', 'erp5_crm', 'erp5_web',
             'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
 
@@ -176,6 +178,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
   """
 
   def getBusinessTemplateList(self):
+    # In this test, We will attach some document portal types in event.
+    # So we add DMS and Web.
     return ('erp5_base', 'erp5_crm', 'erp5_web',
             'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
 
