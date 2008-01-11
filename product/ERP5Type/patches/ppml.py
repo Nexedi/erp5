@@ -662,28 +662,6 @@ def save_unicode(self, tag, data):
 
 ppml.save_unicode = save_unicode
 
-def save_object(self, tag, data):
-    if len(data)==5:
-        #OBJECT
-        v='('+data[2]
-        x=data[3][1:]
-        stop=string.rfind(x,'t')  # This seems
-        if stop>=0: x=x[:stop]    # wrong!
-        v=save_put(self, v+x+'o', data[1])
-        v=v+data[4]+'b' # state
-        return v
-    else:
-        #REDUCE
-        #data does not contain state.(See Object.__setstate__ definition)
-        #So, we can assume that this is a reduce. (Yusei)
-        v='('+data[2]
-        v=save_put(self, data[2]+data[3], data[1])
-        v=v+'R'
-        return v
-
-ppml.save_object = save_object
-
-
 class xmlPickler(NoBlanks, xyap):
     # XXX fix a bug in xyap.
     def unknown_endtag(self, tag):
