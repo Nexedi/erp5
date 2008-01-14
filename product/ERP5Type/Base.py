@@ -707,10 +707,14 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
                       'WARNING! Can not initialize %s on %s' % \
                         (method_id, str(klass)))
               else:
-                prop_holder.security.declareProtected(Permissions.AccessContentsInformation,
-                                                      method_id)
+                # set a default security, if this method is not already
+                # protected.
+                if method_id not in prop_holder.security.names:
+                  prop_holder.security.declareProtected(
+                      Permissions.AccessContentsInformation, method_id)
                 prop_holder.registerWorkflowMethod(method_id, wf_id, tr_id,
                                                        tdef.once_per_transaction)
+
 
 class Base( CopyContainer,
             PortalContent,
