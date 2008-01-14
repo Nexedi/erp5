@@ -504,6 +504,10 @@
                           <string>Organisation</string>
                           <string>Organisation</string>
                         </tuple>
+                        <tuple>
+                          <string>Project</string>
+                          <string>Project</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -570,7 +574,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getRelatedObjectTitleList(\'follow_up\', portal_type_list=[i[0] for i in field.get_value(\'portal_type\')])</string> </value>
+            <value> <string>python:here.Base_getRelatedObjectTitleList(\'follow_up\')</string> </value>
         </item>
       </dictionary>
     </pickle>

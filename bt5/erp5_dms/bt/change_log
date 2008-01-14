@@ -1,5 +1,6 @@
 2008-1-14 Yusei
-* Enable group field on document view always.
+* Enable group and site fields on document view always.
+* Merge two follow_up fields to one.
 
 2008-1-10 Yusei
 * Added document import dialog for Person/Organisation.
