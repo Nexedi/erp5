@@ -1,6 +1,7 @@
 2008-1-14 Yusei
 * Enable group and site fields on document view always.
 * Merge two follow_up fields to one.
+* Added scriptable keys in Catalog Methods. please also use newer erp5_core(rev 670).
 
 2008-1-10 Yusei
 * Added document import dialog for Person/Organisation.
