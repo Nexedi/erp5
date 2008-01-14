@@ -101,8 +101,20 @@ class ERP5UserManager(BasePlugin):
             try:
               # get assignment
               assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
+              valid_assignment_list = []
+              # check dates if exist
+              login_date = DateTime()
+              for assignment in assignment_list:
+                if assignment.getStartDate() is not None and \
+                       assignment.getStartDate() > login_date:
+                  continue
+                if assignment.getStopDate() is not None and \
+                       assignment.getStopDate() < login_date:
+                  continue
+                valid_assignment_list.append(assignment)
+                
               if pw_validate(user.getPassword(), password) and \
-                     len(assignment_list): #user.getCareerRole() == 'internal':
+                     len(valid_assignment_list): #user.getCareerRole() == 'internal':
                 return login, login # use same for user_id and login
             finally:
               setSecurityManager(sm)

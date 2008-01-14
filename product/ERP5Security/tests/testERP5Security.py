@@ -42,6 +42,7 @@ try:
   from Interface.Verify import verifyClass
 except ImportError:
   from zope.interface.verify import verifyClass
+from DateTime import DateTime
 
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
@@ -95,13 +96,16 @@ class TestUserManagement(ERP5TypeTestCase):
     self.failUnless(isinstance(self.getUserFolder(),
         PluggableAuthService.PluggableAuthService))
 
-  def _makePerson(self, open_assignment=1, **kw):
+  def _makePerson(self, open_assignment=1, assignment_start_date=None,
+                  assignment_stop_date=None, **kw):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
                      portal_type='Person', **kw)
-    assignment = new_person.newContent(portal_type = 'Assignment')
+    assignment = new_person.newContent(portal_type = 'Assignment',
+                                       start_date=assignment_start_date,
+                                       stop_date=assignment_stop_date,)
     if open_assignment:
       assignment.open()
     get_transaction().commit()
@@ -207,6 +211,30 @@ class TestUserManagement(ERP5TypeTestCase):
     assi.close()
     self._assertUserDoesNotExists('the_user', 'secret')
 
+
+  def test_AssignmentWithDate(self):
+    """Tests a person with an assignment with correct date is a valid user."""
+    date = DateTime()
+    p = self._makePerson(reference='the_user', password='secret',
+                         assignment_start_date=date-5,
+                         assignment_stop_date=date+5)
+    self._assertUserExists('the_user', 'secret')
+
+  def test_AssignmentWithBadStartDate(self):
+    """Tests a person with an assignment with bad start date is not a valid user."""
+    date = DateTime()
+    p = self._makePerson(reference='the_user', password='secret',
+                         assignment_start_date=date+1,
+                         assignment_stop_date=date+5)
+    self._assertUserDoesNotExists('the_user', 'secret')
+
+  def test_AssignmentWithBadStopDate(self):
+    """Tests a person with an assignment with bad stop date is not a valid user."""
+    date = DateTime()
+    p = self._makePerson(reference='the_user', password='secret',
+                         assignment_start_date=date-5,
+                         assignment_stop_date=date-1)
+    self._assertUserDoesNotExists('the_user', 'secret')
 
 class TestLocalRoleManagement(ERP5TypeTestCase):
   """Tests Local Role Management with ERP5Security.
