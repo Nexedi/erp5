@@ -1,6 +1,5 @@
 Invoice Line | Discount
 Invoice Line | Invoice Cell
-Invoice Line | Invoice Cell
 Invoice Transaction Rule | Accounting Rule Cell
 Invoice Transaction Rule | Category Divergence Tester
 Invoice Transaction Rule | Predicate
