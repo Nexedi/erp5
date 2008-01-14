@@ -476,6 +476,31 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     value = organisation.getDescription()
     self.assertEquals(value, "toto,('description',),bad")
 
+  def test_regular_expression(self):
+    # test that we can add an interaction by defining methods using regular
+    # expression
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'regexp',
+            method_id='set.*',
+            after_script_name=('afterEdit',))
+
+    call_list = self.portal.REQUEST['call_list'] = []
+    self.script.ZPythonScript_edit('sci',
+        'container.REQUEST["call_list"].append(1)')
+    self.createData()
+    organisation = self.organisation
+    # all methods matching set.* regular expression are matched
+    organisation.setDescription('')
+    self.assertEquals(len(call_list), 1)
+    organisation.setTitle('')
+    self.assertEquals(len(call_list), 2)
+    organisation.getDescription()
+    self.assertEquals(len(call_list), 2)
+    organisation.edit(description='desc')
+    self.assertEquals(len(call_list), 3)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInteractionWorkflow))
