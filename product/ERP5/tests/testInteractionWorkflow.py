@@ -30,8 +30,8 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
-from Products.ERP5.Document.Organisation import Organisation
 from AccessControl.SecurityManagement import newSecurityManager
+import Products.ERP5Type
 
 class TestInteractionWorkflow(ERP5TypeTestCase):
 
@@ -50,6 +50,14 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
+  def beforeTearDown(self):
+    Organisation = Products.ERP5Type.Document.Organisation.Organisation
+    Organisation.security.names.pop('doSomethingStupid', None)
+    if hasattr(Organisation, 'doSomethingStupid'):
+      delattr(Organisation, 'doSomethingStupid')
+    if hasattr(Organisation, 'doSomethingStupid__roles__'):
+      delattr(Organisation, 'doSomethingStupid__roles__')
+
   def login(self, quiet=0):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
@@ -61,6 +69,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
       """
       """
       self.setDescription(value)
+    Organisation = Products.ERP5Type.Document.Organisation.Organisation
     Organisation.doSomethingStupid = doSomethingStupid
     portal_type = self.getTypeTool()['Organisation']
     portal_type.base_category_list = ['size']
@@ -499,6 +508,58 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     self.assertEquals(len(call_list), 2)
     organisation.edit(description='desc')
     self.assertEquals(len(call_list), 3)
+
+
+  def test_security(self):
+    # wrapping a method in an interaction workflow adds a default security to
+    # this method if the method does not exists.
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'default',
+            method_id='nonExistantMethod',
+            after_script_name=('afterEdit',))
+    self.script.ZPythonScript_edit('sci', '')
+    self.createData()
+    # the default security is "Access contents information"
+    self.organisation.manage_permission(
+                      'Access contents information', ['Role1'], 0)
+    self.assertEquals(self.organisation.nonExistantMethod__roles__,
+                      ('Role1',))
+    
+  def test_security_defined(self):
+    # wrapping a method in an interaction workflow adds a default security to
+    # this method, but does not override existing security definition
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'default',
+            method_id='setDescription',
+            after_script_name=('afterEdit',))
+    self.script.ZPythonScript_edit('sci', '')
+    self.createData()
+    # This rely on the fact that 'setDescription' is protected with 'Modify
+    # portal content'
+    self.organisation.manage_permission(
+                     'Modify portal content', ['Role2'], 0)
+    self.assertEquals(self.organisation.setDescription__roles__,
+                      ('Role2',))
+
+  def test_security_defined_on_class(self):
+    # wrapping a method in an interaction workflow adds a default security to
+    # this method, but does not override existing security definition (defined
+    # on the class)
+    Organisation = Products.ERP5Type.Document.Organisation.Organisation
+    Organisation.security.declarePrivate('doSomethingStupid')
+    Organisation.security.apply(Organisation)
+
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'default',
+            method_id='doSomethingStupid',
+            after_script_name=('afterEdit',))
+    self.script.ZPythonScript_edit('sci', '')
+    self.createData()
+
+    self.assertEquals(self.organisation.doSomethingStupid__roles__, ())
 
 
 def test_suite():
