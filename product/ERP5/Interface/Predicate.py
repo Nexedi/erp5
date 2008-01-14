@@ -45,11 +45,14 @@ class Predicate(Interface):
     implemented by subclasses.
   """
 
-  def test(context):
+  def test(context, tested_base_category_list=None):
+    """A Predicate can be tested on a given context.
+
+      Parameters can passed in order to ignore some conditions:
+      - tested_base_category_list:  this is the list of category that we do
+        want to test. For example, we might want to test only the
+        destination or the source of a predicate.
     """
-      A Predicate can be tested on a given context
-    """
-    pass
 
   def asSQLExpression():
     """
@@ -57,4 +60,4 @@ class Predicate(Interface):
       can be useful to create reporting trees based on the
       ZSQLCatalog
     """
-    pass
+
