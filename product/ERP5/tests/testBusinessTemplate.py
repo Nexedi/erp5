@@ -4553,7 +4553,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     if present:
       self.assertEqual(0, len(wf_ids))
 
-  def test_34_PartialWorkflowChain(self, quiet=quiet, run=run_all_test):
+  def test_34_RemovePartialWorkflowChain(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Upgrade Form'
@@ -4609,6 +4609,117 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCustomWorkflowChain \
                        \
                        UninstallBusinessTemplate \
+                       Tic \
+                       CheckOriginalWorkflowChain \
+                       CheckWorkflowChainExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def stepCopyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Copy business template
+    """
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    import_bt = sequence.get('current_bt')
+    cb_data = template_tool.manage_copyObjects([import_bt.getId()])
+    copied, = template_tool.manage_pasteObjects(cb_data)
+    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
+
+  def stepRemoveWorkflowFromBusinessTemplate(self, sequence=None, 
+                                             sequence_list=None, **kw):
+    """
+    Remove workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    current_twi = list(bt.getTemplateWorkflowIdList())
+    current_twi.remove(sequence.get('workflow_id', ''))
+    bt.edit(template_workflow_id_list=current_twi)
+
+  def stepRemoveWorkflowChainFromBusinessTemplate(self, sequence=None, 
+                                                  sequence_list=None, **kw):
+    """
+    Remove workflow chain to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    workflow_id = sequence.get('workflow_id', '')
+    new_value = []
+    workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
+    for workflow_chain in workflow_chain_list:
+      portal_type, wkflow_id = workflow_chain.split(' | ')
+      if wkflow_id != workflow_id:
+        new_value.append(workflow_chain)
+    bt.edit(template_portal_type_workflow_chain_list=new_value)
+
+  def test_35_UpdatePartialWorkflowChain(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Upgrade Form'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CheckOriginalWorkflowChain \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       CheckEmptyWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       CheckOriginalWorkflowChain \
+                       Tic \
+                       \
+                       CreateCustomWorkflow \
+                       CheckCustomWorkflowChain \
+                       CreateCustomBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveWorkflow \
+                       CheckOriginalWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckCustomWorkflowChain \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       RemoveWorkflowFromBusinessTemplate \
+                       RemoveWorkflowChainFromBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       Tic \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckOriginalWorkflowChain \
                        CheckWorkflowChainExists \
