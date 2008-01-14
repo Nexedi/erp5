@@ -1,3 +1,6 @@
+2008-1-14 Yusei
+* Enable group field on document view always.
+
 2008-1-10 Yusei
 * Added document import dialog for Person/Organisation.
 * Added related document list view for Person/Document. This replaces the default document list view.
