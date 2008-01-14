@@ -1,3 +1,6 @@
+2008-01-14 Yusei
+* Added scriptable key field in business template. Please use revision 18701 or newer of ERP5 product.
+
 2008-01-07 Nicolas
 Add new XSL stylesheet for ERP5 OOo Templates which able to transform any CDATA section, tagged with 'TALES' in style name, into attribute tal:content
 
