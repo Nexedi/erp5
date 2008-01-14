@@ -1024,8 +1024,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     props = {}
     if cbt is not None:
       for id, wf_ids in cbt.items():
-        if id != "Geek Object":
-          props['chain_%s' % id] = ','.join(wf_ids)
+        wf_ids = list(wf_ids)
+        if id == "Geek Object":
+          wf_ids.remove(wf_id)
+        props['chain_%s' % id] = ','.join(wf_ids)
     pw.manage_changeWorkflows('', props=props)
 
   def stepCheckWorkflowExists(self, sequence=None, sequence_list=None, **kw):
@@ -4438,6 +4440,151 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
 
+  def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a custom workflow
+    """
+    pw = self.getWorkflowTool()
+    pw.manage_addWorkflow('dc_workflow (Web-configurable workflow)', 
+                          'custom_geek_workflow')
+    workflow = pw._getOb('custom_geek_workflow', None)
+    self.failUnless(workflow is not None)
+    sequence.edit(workflow_id=workflow.getId())
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        props['chain_%s' % id] = ','.join(wf_ids)
+    key = 'chain_Geek Object'
+    if props.has_key(key):
+      props[key] = '%s,custom_geek_workflow' % props[key]
+    else:
+      props['chain_Geek Object'] = 'custom_geek_workflow'
+    pw.manage_changeWorkflows('', props=props)
+
+  def stepCreateCustomBusinessTemplate(self, sequence=None, 
+                                       sequence_list=None, **kw):
+    """
+    Create a custom Business Template
+    """
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    template.edit(title='custom geek template',
+                  version='1.0',
+                  description='custom bt for unit_test')
+    sequence.edit(export_bt=template)
+
+  def stepCheckCustomWorkflowChain(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check custom workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', 'custom_geek_workflow'))
+
+  def stepCheckOriginalWorkflowChain(self, sequence=None, 
+                                     sequence_list=None, **kw):
+    """
+    Check original workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', ))
+
+  def stepCheckEmptyWorkflowChain(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check that workflow chain is empty
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+          break
+    if present:
+      self.assertEqual(0, len(wf_ids))
+
+  def test_34_PartialWorkflowChain(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Upgrade Form'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CheckOriginalWorkflowChain \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       CheckEmptyWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       CheckOriginalWorkflowChain \
+                       Tic \
+                       \
+                       CreateCustomWorkflow \
+                       CheckCustomWorkflowChain \
+                       CreateCustomBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveWorkflow \
+                       CheckOriginalWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckCustomWorkflowChain \
+                       \
+                       UninstallBusinessTemplate \
+                       Tic \
+                       CheckOriginalWorkflowChain \
+                       CheckWorkflowChainExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
 def test_suite():
   suite = unittest.TestSuite()
