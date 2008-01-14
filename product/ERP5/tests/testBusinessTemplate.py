@@ -91,6 +91,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.getPortal().manage_delObjects(['geek_module'])
     if 'geek_workflow' in self.getWorkflowTool().objectIds():
       self.getWorkflowTool().manage_delObjects(['geek_workflow'])
+    if 'custom_geek_workflow' in self.getWorkflowTool().objectIds():
+      self.getWorkflowTool().manage_delObjects(['custom_geek_workflow'])
     pw = self.getWorkflowTool()
     cbt = pw._chains_by_type
     props = {}
