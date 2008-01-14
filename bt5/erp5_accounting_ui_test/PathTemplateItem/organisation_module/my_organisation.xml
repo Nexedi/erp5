@@ -90,7 +90,6 @@
             <value>
               <tuple>
                 <string>group/demo_group/sub1</string>
-                <string>role/internal</string>
                 <string>price_currency/currency_module/euro</string>
                 <string>region/region</string>
               </tuple>
@@ -117,92 +116,10 @@
                   <none/>
                 </tuple>
                 <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Tue</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Aug</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>38576.9166667</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>15</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Tuesday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>August</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>1155592800000</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>8</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Tue.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>am</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Aug.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>1155592800.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+2</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>2006</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.916666666664</float> </value>
-                    </item>
-                  </dictionary>
+                  <tuple>
+                    <float>1155592800.0</float>
+                    <string>GMT+2</string>
+                  </tuple>
                 </state>
               </object>
             </value>
