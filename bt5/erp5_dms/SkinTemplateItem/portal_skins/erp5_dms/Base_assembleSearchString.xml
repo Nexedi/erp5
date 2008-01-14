@@ -133,6 +133,13 @@ for category in (\'group\', \'site\', \'function\', \'publication_section\', \'c
   if category_value:\n
     search_string += \' %s:%s\' % (category, category_value)\n
 \n
+# Category title search\n
+for category in (\'contributor_title\', ):\n
+  category_value = req.get(category)\n
+  if category_value:\n
+    search_string += \' %s:%s\' % (category, category_value)\n
+\n
+\n
 #only my docs\n
 mine = req.get(\'mine\')\n
 if mine:\n
