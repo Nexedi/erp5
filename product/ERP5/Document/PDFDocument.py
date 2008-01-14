@@ -165,6 +165,10 @@ class PDFDocument(Image, ConversionCacheMixin):
     NOTE: XXX check that command exists and was executed
     successfully
     """
+    try:
+      return self._content_information.copy()
+    except AttributeError:
+      pass
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(_unpackData(self.data))
     tmp.seek(0)
@@ -179,4 +183,12 @@ class PDFDocument(Image, ConversionCacheMixin):
       key = item_list[0].strip()
       value = ':'.join(item_list[1:]).strip()
       result[key] = value
-    return result
+    self._content_information = result
+    return result.copy()
+
+  def _setFile(self, data, precondition=None):
+    try:
+      del self._content_information
+    except AttributeError:
+      pass
+    Image._setFile(self, data, precondition)
