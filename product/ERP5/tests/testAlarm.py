@@ -452,6 +452,43 @@ class TestAlarm(ERP5TypeTestCase):
     # Chen that the second alarm execution did happen
     self.assertNotEquals(alarm.getLastActiveProcess(), None)
 
+  def test_16_uncatalog(self, quiet=0, run=run_all_test):
+    """
+    Check that deleting a alarm uncatalogs it.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Uncatalog'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    alarm = self.newAlarm()
+    get_transaction().commit()
+    self.tic()
+
+    now = DateTime()
+    date = addToDate(now, day=1)
+    alarm.setPeriodicityStartDate(date)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(alarm.getAlarmDate(), date)
+
+    # This should not do change the alarm date
+    alarm.setNextAlarmDate(current_date=now)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(alarm.getAlarmDate(), date)
+
+    # Delete the alarm
+    a_tool = self.getAlarmTool()
+    alarm_uid = alarm.getUid()
+    a_tool.manage_delObjects(uids=[alarm_uid])
+    get_transaction().commit()
+    self.tic()
+    # Check that related entry was removed
+    sql_connection = self.getSQLConnection()
+    sql = 'select * from alarm where uid=%s' % alarm_uid
+    result = sql_connection.manage_test(sql)
+    self.assertEquals(0, len(result))
 
 def test_suite():
   suite = unittest.TestSuite()
