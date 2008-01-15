@@ -85,6 +85,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """Remove objects created tests."""
     if 'erp5_geek' in self.getSkinsTool().objectIds():
       self.getSkinsTool().manage_delObjects(['erp5_geek'])
+      ps = self.getSkinsTool()
+      for skin_name, selection in ps.getSkinPaths():
+        new_selection = []
+        selection = selection.split(',')
+        for skin_id in selection:
+          if skin_id != 'erp5_geek':
+            new_selection.append(skin_id)
+        ps.manage_skinLayers(skinpath=tuple(new_selection), 
+                             skinname=skin_name, add_skin=1)
     if 'Geek Object' in self.getTypeTool().objectIds():
       self.getTypeTool().manage_delObjects(['Geek Object', 'Geek Module'])
     if 'geek_module' in self.getPortal().objectIds():
