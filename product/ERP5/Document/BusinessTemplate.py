@@ -1586,6 +1586,12 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             chain_dict['chain_%s' % portal_type] = ', '.join(
                                               old_chain_workflow_id_set.keys())
           else:
+            # Check if it has normally to remove a workflow chain, in order to
+            # improve the error message
+            for wf_id in self._objects[path].split(', '):
+              if wf_id.startswith('-'):
+                raise ValueError, '"%s" is not a workflow ID for %s' % \
+                                  (wf_id, portal_type)
             chain_dict['chain_%s' % portal_type] = self._objects[path]
         else:
           chain_dict['chain_%s' % portal_type] = self._objects[path]
