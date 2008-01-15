@@ -356,12 +356,12 @@
                           <string>Step Title</string>
                         </tuple>
                         <tuple>
-                          <string>step_actor</string>
-                          <string>Step Actor</string>
-                        </tuple>
-                        <tuple>
                           <string>step_description</string>
                           <string>Step Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>step_actor</string>
+                          <string>Step Actor</string>
                         </tuple>
                       </list>
                     </value>
