@@ -2,12 +2,6 @@
  <portal_type id="Document Analysis Lexicon">
   <item>DocumentAnalysisLexicon</item>
  </portal_type>
- <portal_type id="Feature">
-  <item>Folder</item>
-  <item>XMLObject</item>
-  <item>DublinCore</item>
-  <item>Document</item>
- </portal_type>
  <portal_type id="Test Case">
   <item>SortIndex</item>
  </portal_type>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -121,7 +118,9 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/TestCase_vi
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/TestCase_generateTestCaseStepList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -174,6 +173,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/TestCase_vi
                             <string>line_id</string>
                             <string>item</string>
                             <string>_write_</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

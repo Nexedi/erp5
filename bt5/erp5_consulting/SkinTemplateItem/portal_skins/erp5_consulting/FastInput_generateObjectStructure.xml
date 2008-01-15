@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -350,7 +347,9 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/FastInput_generateObjectStructure</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -417,6 +416,7 @@ return printed\n
                             <string>line_levels</string>
                             <string>level_depth</string>
                             <string>required_level</string>
+                            <string>_inplacevar_</string>
                             <string>None</string>
                             <string>valid_level</string>
                             <string>field_to_test</string>

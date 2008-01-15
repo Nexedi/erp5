@@ -3,15 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5OOo.OOoTemplate</string>
-          <string>OOoTemplate</string>
-        </tuple>
-        <none/>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
