@@ -164,12 +164,14 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       node_uid = movement.getDestinationUid()
       if not node_uid:
         raise ValueError, "No destination uid for %s" % movement
+      resource_uid = movement.getResourceUid()
 
       stock_list = current_stock.setdefault(
                          InventoryKey(node_uid=node_uid,
                                       section_uid=section_uid), [])
       for inventory in getInventoryList(
                               node_uid=node_uid,
+                              resource_uid=resource_uid,
                               group_by_node=1,
                               group_by_resource=1,
                               **default_inventory_params):
@@ -177,7 +179,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
           stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
-                   resource_uid=inventory.resource_uid,
+                   resource_uid=resource_uid,
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))
     
@@ -187,6 +189,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       if not node_uid:
         raise ValueError, "No destination uid for %s" % movement
       mirror_section_uid = movement.getSourceSectionUid()
+      resource_uid = movement.getResourceUid()
 
       stock_list = current_stock.setdefault(
                          InventoryKey(node_uid=node_uid,
@@ -195,6 +198,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       for inventory in getInventoryList(
                               node_uid=node_uid,
                               mirror_section_uid=mirror_section_uid,
+                              resource_uid=resource_uid,
                               group_by_node=1,
                               group_by_mirror_section=1,
                               group_by_resource=1,
@@ -204,7 +208,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    source_section_uid=mirror_section_uid,
-                   resource_uid=inventory.resource_uid,
+                   resource_uid=resource_uid,
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))
 
@@ -214,6 +218,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       if not node_uid:
         raise ValueError, "No destination uid for %s" % movement
       payment_uid = movement.getDestinationPaymentUid()
+      resource_uid = movement.getResourceUid()
 
       stock_list = current_stock.setdefault(
                          InventoryKey(node_uid=node_uid,
@@ -222,6 +227,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       for inventory in getInventoryList(
                               node_uid=node_uid,
                               payment_uid=payment_uid,
+                              resource_uid=resource_uid,
                               group_by_node=1,
                               group_by_payment=1,
                               group_by_resource=1,
@@ -231,7 +237,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    destination_payment_uid=payment_uid,
-                   resource_uid=inventory.resource_uid,
+                   resource_uid=resource_uid,
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))
 

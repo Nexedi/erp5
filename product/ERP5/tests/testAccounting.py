@@ -895,6 +895,138 @@ class TestClosingPeriod(AccountingTestCase):
                   accounting_currency_precision)
 
 
+  def test_createBalanceOnMirrorSectionMultiCurrencySameMirrorSection(self):
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        title='Yen',
+        resource='currency_module/yen',
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_asset_debit=1.1,
+                    source_debit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_asset_credit=1.1,
+                    source_credit=100)))
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        title='Dollar',
+        resource='currency_module/usd',
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_asset_debit=2.2,
+                    source_debit=200),
+               dict(source_value=self.account_module.receivable,
+                    source_asset_credit=2.2,
+                    source_credit=200)))
+    get_transaction().commit()
+    self.tic()
+
+    period.AccountingPeriod_createBalanceTransaction(
+                          profit_and_loss_account=pl.getRelativeUrl())
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEquals(3, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEquals(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+
+    self.assertEquals(self.section,
+                      balance_transaction.getDestinationSectionValue())
+    self.assertEquals(None, balance_transaction.getSourceSection())
+    self.assertEquals(DateTime(2007, 1, 1),
+                      balance_transaction.getStartDate())
+    self.assertEquals('currency_module/euro',
+                      balance_transaction.getResource())
+
+    # this should create a balance with 3 lines,
+    #   pl                 = 3.3 D     ( resource acquired )
+    #   receivable/client1 =     1.1 C ( resource yen ) qty=100
+    #   receivable/client1 =     2.2 C ( resource usd ) qyt=200
+    
+    accounting_currency_precision = \
+        self.portal.currency_module.euro.getQuantityPrecision()
+    self.assertEquals(accounting_currency_precision, 2)
+
+    movement_list = balance_transaction.getMovementList()
+    self.assertEquals(3, len(movement_list))
+    client1_movement_list = [m for m in movement_list
+     if m.getSourceSectionValue() == organisation_module.client_1]
+    self.assertEquals(2, len(client1_movement_list))
+    yen_movement = [x for x in client1_movement_list if
+                    x.getResource() == 'currency_module/yen'][0]
+    self.assertEquals([], yen_movement.getValueList('destination_section'))
+    self.assertEquals(None, yen_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      yen_movement.getDestinationValue())
+    self.assertEquals(organisation_module.client_1,
+                      yen_movement.getSourceSectionValue())
+    self.assertAlmostEquals(1.1,
+          yen_movement.getDestinationInventoriatedTotalAssetCredit(),
+          accounting_currency_precision)
+    self.assertEquals(None, yen_movement.getSourceTotalAssetPrice())
+    self.assertEquals(100, yen_movement.getDestinationCredit())
+
+    dollar_movement = [x for x in client1_movement_list if
+                    x.getResource() == 'currency_module/usd'][0]
+    self.assertEquals([], dollar_movement.getValueList('destination_section'))
+    self.assertEquals(None, dollar_movement.getSource())
+    self.assertEquals(self.account_module.receivable,
+                      dollar_movement.getDestinationValue())
+    self.assertEquals(organisation_module.client_1,
+                      dollar_movement.getSourceSectionValue())
+    self.assertAlmostEquals(2.2,
+          dollar_movement.getDestinationInventoriatedTotalAssetCredit(),
+          accounting_currency_precision)
+    self.assertEquals(None, dollar_movement.getSourceTotalAssetPrice())
+    self.assertEquals(200, dollar_movement.getDestinationCredit())
+
+    get_transaction().commit()
+    self.tic()
+
+    # now check content of stock table
+    q = self.portal.erp5_sql_connection.manage_test
+    self.assertEquals(1, q(
+      "SELECT count(*) FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(3.3, q(
+      "SELECT total_price FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(3.3, q(
+      "SELECT quantity FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(self.portal.currency_module.euro.getUid(), q(
+      "SELECT resource_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(self.section.getUid(), q(
+      "SELECT section_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(None, q(
+      "SELECT mirror_section_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(pl.getUid(), q(
+      "SELECT node_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(None, q(
+      "SELECT mirror_node_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(DateTime(2007, 1, 1), q(
+      "SELECT date FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+
+
   def test_AccountingPeriodWorkflow(self):
     """Tests that accounting_period_workflow creates a balance transaction.
     """
