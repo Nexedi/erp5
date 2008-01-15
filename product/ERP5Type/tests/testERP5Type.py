@@ -1860,6 +1860,18 @@ class TestPropertySheet:
       subdocument_catalogged_path = self.getPortalObject().portal_catalog.getSQLCatalog()[subdocument.uid].path
       self.assertEqual(subdocument.getPath(), subdocument_catalogged_path)
 
+    def test_getCreationDate(self, quiet=quiet, run=run_all_test):
+      """
+      Check that getCreationDate does not acquire creation_date property from
+      site.
+      """
+      if not run: return
+      portal = self.getPortalObject()
+      folder = self.getOrganisationModule()
+      object = folder.newContent(portal_type='Organisation')
+      self.assertNotEquals(object.getCreationDate(), portal.CreationDate())
+      self.assertNotEquals(object.getCreationDate(), folder.getCreationDate())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
