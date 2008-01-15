@@ -34,6 +34,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from zLOG import LOG
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+from Products.ERP5Type.RoleInformation import RoleInformation
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url
@@ -4743,6 +4744,87 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def stepCreatePortalTypeRole(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create portal type role
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    role = RoleInformation('geek_role_definition', 
+                           title='Geek Role Definition')
+    setattr(pt, '_roles', [role])
+    sequence.edit(portal_type_role='geek_role_definition')
+
+  def stepAddPortalTypeRolesToBusinessTemplate(self, sequence=None, 
+                                              sequence_list=None, **kw):
+    """
+    Add type role to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    ptype_ids = []
+    ptype_ids.append(sequence.get('object_ptype_id', ''))
+    ptype_ids.append(sequence.get('module_ptype_id', ''))
+    self.assertEqual(len(ptype_ids), 2)
+    bt.edit(template_portal_type_roles_list=ptype_ids)
+
+  def stepCheckPortalTypeRoleExists(self, sequence=None, 
+                                    sequence_list=None, **kw):
+    """
+    Cehck that portal type role exist
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    role_list = pt._roles
+    self.assertTrue('geek_role_definition' in \
+                        [x.id for x in role_list])
+
+  def test_36_CheckPortalTypeRoles(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Portal Type Roles'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreatePortalTypeRole \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddPortalTypeToBusinessTemplate \
+                       AddPortalTypeRolesToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       RemovePortalType \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckPortalTypeExists \
+                       CheckPortalTypeRoleExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckPortalTypeRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
   def stepModifyPortalType(self, sequence=None, sequence_list=None, **kw):
     """
     Modify Portal Type
@@ -4759,13 +4841,26 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb('Geek Object', None)
     object_type.title = object_type.title[len('Modified '):]
 
-  def test_36_UpdatePortalType(self, quiet=quiet, run=run_all_test):
+  def stepCheckModifiedPortalTypeExists(self, sequence=None, 
+                                        sequence_list=None, **kw):
+    """
+    Check presence of modified portal type
+    """
+    self.stepCheckPortalTypeExists(sequence=sequence, 
+                                   sequence_list=sequence_list, **kw)
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_type = pt._getOb(object_id, None)
+    self.failUnless(object_type.title.startswith('Modified '))
+
+  def test_37_UpdatePortalType(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Update Portal Type'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
+
     sequence_string = '\
                        CreatePortalType \
                        CreateFirstAction \
@@ -4786,6 +4881,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CreateSecondAction \
                        CheckSecondActionExists \
+                       CreatePortalTypeRole \
+                       CheckPortalTypeRoleExists \
                        \
                        ModifyPortalType \
                        \
@@ -4804,8 +4901,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        InstallWithoutForceBusinessTemplate \
                        Tic \
                        \
+                       CheckModifiedPortalTypeExists \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
+                       CheckPortalTypeRoleExists \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
