@@ -458,6 +458,20 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('attachment; filename="import_data_list.pdf"',
                       response.headers['content-disposition'])
 
+  def test_01_getCreationDate(self):
+    """
+    Check getCreationDate on all document type, as those documents 
+    are not associated to edit_workflow.
+    """
+    portal = self.getPortalObject()
+    for document_type in portal.getPortalDocumentTypeList():
+      module = portal.getDefaultModule(document_type)
+      obj = module.newContent(portal_type=document_type)
+      self.assertNotEquals(obj.getCreationDate(),
+                           module.getCreationDate())
+      self.assertNotEquals(obj.getCreationDate(),
+                           portal.CreationDate())
+
 
 def test_suite():
   suite = unittest.TestSuite()
