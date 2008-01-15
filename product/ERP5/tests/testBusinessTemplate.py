@@ -2123,6 +2123,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     template = sequence.get('current_bt')
     template.build()
 
+  def stepEditBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Edit Business Template
+    """
+    template = sequence.get('current_bt')
+    template.edit()
+
   def stepSaveBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Export Business Template
@@ -4565,7 +4572,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def test_34_RemovePartialWorkflowChain(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test Upgrade Form'
+      message = 'Test Remove Chain'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
@@ -4666,7 +4673,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def test_35_UpdatePartialWorkflowChain(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test Upgrade Form'
+      message = 'Test Update Workflow Chain'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
@@ -4732,6 +4739,73 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        CheckOriginalWorkflowChain \
                        CheckWorkflowChainExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def stepModifyPortalType(self, sequence=None, sequence_list=None, **kw):
+    """
+    Modify Portal Type
+    """
+    pt = self.getTypeTool()
+    object_type = pt._getOb('Geek Object', None)
+    object_type.title = 'Modified %s' % object_type.title
+
+  def stepUnmodifyPortalType(self, sequence=None, sequence_list=None, **kw):
+    """
+    Unmodify Portal Type
+    """
+    pt = self.getTypeTool()
+    object_type = pt._getOb('Geek Object', None)
+    object_type.title = object_type.title[len('Modified '):]
+
+  def test_36_UpdatePortalType(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Update Portal Type'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateFirstAction \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemovePortalType \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckFirstActionExists \
+                       \
+                       CreateSecondAction \
+                       CheckSecondActionExists \
+                       \
+                       ModifyPortalType \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       EditBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       SaveBusinessTemplate \
+                       \
+                       UnmodifyPortalType \
+                       \
+                       ImportBusinessTemplate \
+                       Tic \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
