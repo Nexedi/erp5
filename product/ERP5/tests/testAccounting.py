@@ -781,6 +781,9 @@ class TestClosingPeriod(AccountingTestCase):
 
 
   def test_createBalanceOnMirrorSectionMultiCurrency(self):
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
     organisation_module = self.organisation_module
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
@@ -815,7 +818,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_credit=200)))
 
     period.AccountingPeriod_createBalanceTransaction(
-                              profit_and_loss_account=None)
+                      profit_and_loss_account=pl.getRelativeUrl())
     accounting_transaction_list = self.accounting_module.contentValues()
     self.assertEquals(3, len(accounting_transaction_list))
     balance_transaction_list = self.accounting_module.contentValues(
@@ -879,12 +882,12 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(200., client2_movement.getDestinationCredit())
 
     pl_movement_list = [m for m in movement_list
-                         if m.getDestination() is None]
+                         if m.getDestinationValue() == pl]
     self.assertEquals(1, len(pl_movement_list))
     pl_movement = pl_movement_list[0]
     self.assertEquals([], pl_movement.getValueList('resource'))
     self.assertEquals(None, pl_movement.getSource())
-    self.assertEquals(None,
+    self.assertEquals(pl,
                       pl_movement.getDestinationValue())
     self.assertEquals(None,
                       pl_movement.getSourceSection())
@@ -893,6 +896,39 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertAlmostEquals(3.3,
                   pl_movement.getDestinationDebit(),
                   accounting_currency_precision)
+    
+    get_transaction().commit()
+    self.tic()
+
+    # now check content of stock table
+    q = self.portal.erp5_sql_connection.manage_test
+    self.assertEquals(1, q(
+      "SELECT count(*) FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(3.3, q(
+      "SELECT total_price FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(3.3, q(
+      "SELECT quantity FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(self.portal.currency_module.euro.getUid(), q(
+      "SELECT resource_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(self.section.getUid(), q(
+      "SELECT section_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(None, q(
+      "SELECT mirror_section_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(pl.getUid(), q(
+      "SELECT node_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(None, q(
+      "SELECT mirror_node_uid FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
+    self.assertEquals(DateTime(2007, 1, 1), q(
+      "SELECT date FROM stock WHERE portal_type="
+      "'Balance Transaction Line'")[0][0])
 
 
   def test_createBalanceOnMirrorSectionMultiCurrencySameMirrorSection(self):
