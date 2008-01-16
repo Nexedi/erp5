@@ -1,5 +1,5 @@
 2008-01-16 kazuhiko
-* enable acquire_local_roles on Supply Link, Supply Chain, Supply Node and Supply Chain Module.
+* enable acquire_local_roles on Supply Link, Supply Node and Supply Chain Module.
 
 2007-11-14 kazuhiko
 * check if simulation state is draft or not before calling 'calculate' workflow method otherwise causality state can remain calculating.
