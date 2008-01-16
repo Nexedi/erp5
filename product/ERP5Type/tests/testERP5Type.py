@@ -1056,9 +1056,11 @@ class TestPropertySheet:
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
       if 'destination' not in person_ti.base_category_list:
-          person_ti.base_category_list = tuple(list(
+        person_ti.base_category_list = tuple(list(
                 self.getTypesTool().getTypeInfo('Person').base_category_list) +
                 ['destination', ])
+        _aq_reset()
+
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       other_pers = self.getPersonModule().newContent(id='2', portal_type='Person')
       other_pers_title = 'This is the title we should acquire'
