@@ -1612,7 +1612,18 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       portal_type = path_splitted[1]
       id = 'chain_%s' % portal_type
       if id in chain_dict.keys():
-        del chain_dict[id]
+        chain = chain_dict[id]
+        # It should be better to use regexp
+        chain = chain.replace(' ', '')
+        workflow_list = chain.split(',')
+        workflow_id = self._objects[path]
+        for i in range(workflow_list.count(workflow_id)):
+          workflow_list.remove(workflow_id)
+        chain = ', '.join(workflow_list)
+        if chain == '':
+          del chain_dict[id]
+        else:
+          chain_dict[id] = chain
     context.portal_workflow.manage_changeWorkflows('', props=chain_dict)
 
   def preinstall(self, context, installed_bt, **kw):
