@@ -78,19 +78,19 @@
     </style:style>\n
     \n
     <style:style style:name="Tableau1.A" style:family="table-column"> \n
-      <style:properties style:column-width="2cm" style:rel-column-width="1500*"/>\n
+      <style:properties style:column-width="1cm" style:rel-column-width="800*"/>\n
     </style:style> \n
     <style:style style:name="Tableau1.B" style:family="table-column"> \n
-      <style:properties style:column-width="2.5cm" style:rel-column-width="1200*"/> \n
+      <style:properties style:column-width="2.5cm" style:rel-column-width="2500*"/>\n
     </style:style> \n
     <style:style style:name="Tableau1.C" style:family="table-column"> \n
-      <style:properties style:column-width="7cm" style:rel-column-width="4030*"/> \n
+      <style:properties style:column-width="8cm" style:rel-column-width="5380*"/> \n
     </style:style> \n
     <style:style style:name="Tableau1.D" style:family="table-column"> \n
-      <style:properties style:column-width="5cm" style:rel-column-width="3200*"/>\n
-    </style:style>\n
+      <style:properties style:column-width="2.5cm" style:rel-column-width="1600*"/> \n
+    </style:style> \n
     <style:style style:name="Tableau1.E" style:family="table-column"> \n
-      <style:properties style:column-width="2.5cm" style:rel-column-width="1200*"/>\n
+      <style:properties style:column-width="2.5cm" style:rel-column-width="2000*"/>\n
     </style:style>\n
         \n
     <style:style style:name="Tableau1.A1" style:family="table-cell">\n
@@ -203,6 +203,7 @@
       <table:table-column table:style-name="Tableau1.B"/>\n
       <table:table-column table:style-name="Tableau1.C"/>\n
       <table:table-column table:style-name="Tableau1.D"/>\n
+      <table:table-column table:style-name="Tableau1.E"/>\n
       \n
       <table:table-header-rows>\n
         <table:table-row>\n
@@ -210,10 +211,13 @@
             <text:p text:style-name=\'P1\'>No</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
-            <text:p text:style-name=\'P1\'>Actor</text:p>\n
+            <text:p text:style-name=\'P1\'>Title</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
             <text:p text:style-name=\'P1\'>Description</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'P1\'>Actor</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.D1\'>\n
             <text:p text:style-name=\'P1\'>Requirements</text:p>\n
@@ -225,10 +229,13 @@
           <text:p text:style-name=\'P2\' tal:content=\'repeat/step/number\'>Index</text:p>\n
         </table:table-cell>\n
         <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
-          <text:p text:style-name=\'P2\' tal:content=\'python: step.getObject().getSourceSectionTitle()\'>Actor</text:p>\n
+          <text:p text:style-name=\'P2\' tal:content=\'python: step.getObject().getTitle()\'>Index</text:p>\n
         </table:table-cell>\n
         <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
           <text:p text:style-name=\'P2\' tal:content=\'python: step.getObject().getDescription()\'>Description</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'P2\' tal:content=\'python: step.getObject().getSourceSectionTitle()\'>Actor</text:p>\n
         </table:table-cell>\n
         <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.D2\'>\n
           <tal:block tal:condition="python: step.getObject().getRequirementList()">\n
