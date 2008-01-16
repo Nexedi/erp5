@@ -472,6 +472,14 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertNotEquals(obj.getCreationDate(),
                            portal.CreationDate())
 
+  def test_Base_getConversionFormatItemList(self):
+    # tests Base_getConversionFormatItemList script (requires oood)
+    self.assertTrue(('Text CSV', 'csv') in
+        self.portal.Base_getConversionFormatItemList(base_content_type=
+                  'application/vnd.oasis.opendocument.spreadsheet'))
+    self.assertTrue(('DocBook', 'docbook.xml') in
+        self.portal.Base_getConversionFormatItemList(base_content_type=
+                  'application/vnd.oasis.opendocument.text'))
 
 def test_suite():
   suite = unittest.TestSuite()
