@@ -193,11 +193,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # erp5_core tests
     def testERP5CoreHasParentBaseCategory(self):
-      # Test if erp5_common parent base category was imported successfully
+      # Test if erp5_core parent base category was imported successfully
       self.assertNotEquals(getattr(self.getCategoryTool(), 'parent', None), None)
 
     def testERP5CoreHasImageType(self):
-      # Test if erp5_common parent base category was imported successfully
       self.assertNotEquals(getattr(self.getTypeTool(), 'Image', None), None)
 
     # Business Template Tests
