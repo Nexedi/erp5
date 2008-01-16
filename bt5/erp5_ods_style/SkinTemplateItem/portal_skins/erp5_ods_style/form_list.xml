@@ -85,7 +85,7 @@
                         <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
                           <tal:block tal:condition="python: column_property is not None" >\n
                             <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
-                              <text:p tal:content="python: column_property">\n
+                              <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property">\n
                               </text:p>\n
                             </table:table-cell>\n
                           </tal:block>\n

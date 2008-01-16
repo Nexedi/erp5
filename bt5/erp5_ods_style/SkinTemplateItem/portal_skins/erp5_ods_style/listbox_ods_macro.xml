@@ -100,7 +100,8 @@
                                           table:style-name=\'report-column-title\'\n
                                           table:number-columns-spanned=\'1\'\n
                                           office:value-type=\'string\'>\n
-                          <text:p tal:content="python: column_property or \'\'">\n
+                          <text:p i18n:translate="" i18n:domain="ui" \n
+                                  tal:content="python: column_property or \'\'">\n
                           </text:p>\n
                         </table:table-cell>\n
                       </tal:block>\n
