@@ -1,3 +1,6 @@
+2008-01-16 kazuhiko
+* enable acquire_local_roles on Transformation Transformed Resource and Transformation Module.
+
 2007-09-25 yo
 * Set module group on portal types.
 
