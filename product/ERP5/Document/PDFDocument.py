@@ -189,6 +189,6 @@ class PDFDocument(Image, ConversionCacheMixin):
   def _setFile(self, data, precondition=None):
     try:
       del self._content_information
-    except AttributeError:
+    except (AttributeError, KeyError):
       pass
     Image._setFile(self, data, precondition)
