@@ -978,11 +978,12 @@ class TestPropertySheet:
                         'storage_id': 'default_organisation',
                         'type':       'content',
                         'portal_type': ('Organisation', ),
-                        'acquired_property_id': ('title', ),
+                        'acquired_property_id': ('title', 'description'),
                         'mode':       'w', }'''
 
     def test_18_SimpleContentAccessor(self,quiet=quiet, run=run_all_test):
       """Tests a simple content accessor.
+      This tests content accessors, for properties that have class methods.
       """
       if not run: return
       # For testing purposes, we add a default_organisation inside a person, 
@@ -1003,7 +1004,72 @@ class TestPropertySheet:
                         default_organisation.getPortalTypeName())
       self.assertEquals('The organisation title',
                         default_organisation.getTitle())
+
+      # make sure this new organisation is indexed
+      get_transaction().commit()
+      self.assertEquals(1, len([m for m in
+        self.portal.portal_activities.getMessageList()
+        if m.method_id == 'immediateReindexObject' 
+            and m.object_path == default_organisation.getPhysicalPath()]))
+      self.tic()
+
+      # edit once again, this time no new organisation is created, the same is
+      # edited, and reindexed
+      self.assertEquals(1, len(person.objectIds()))
+      self.assertFalse(person._p_changed)
+      person.setDefaultOrganisationTitle('New title')
+      self.assertEquals('New title',
+                        default_organisation.getTitle())
+      get_transaction().commit()
+      self.assertEquals(1, len([m for m in
+        self.portal.portal_activities.getMessageList()
+        if m.method_id == 'immediateReindexObject' 
+            and m.object_path == default_organisation.getPhysicalPath()]))
+      self.tic()
+
+
+    def test_18_SimpleContentAccessorWithGeneratedAccessor(self):
+      # test reindexing of content accessors, on acquired properties which are
+      # _aq_dynamic generated accessors.
+      # This is test is very similar to test_18_SimpleContentAccessor, but we
+      # use description instead of title, because Description accessors are
+      # generated. 
+      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      self.assertTrue(hasattr(person, 'getDefaultOrganisationDescription'))
+      self.assertTrue(hasattr(person, 'setDefaultOrganisationDescription'))
+      person.setDefaultOrganisationDescription('The organisation desc')
+
+      default_organisation = person._getOb('default_organisation', None)
+      self.assertNotEquals(None, default_organisation)
+      self.assertEquals('Organisation',
+                        default_organisation.getPortalTypeName())
+      self.assertEquals('The organisation desc',
+                        default_organisation.getDescription())
+
+      # make sure this new organisation is indexed
+      get_transaction().commit()
+      self.assertEquals(1, len([m for m in
+        self.portal.portal_activities.getMessageList()
+        if m.method_id == 'immediateReindexObject' 
+            and m.object_path == default_organisation.getPhysicalPath()]))
+      self.tic()
+
+      # edit once again, this time no new organisation is created, the same is
+      # edited, and reindexed
+      self.assertEquals(1, len(person.objectIds()))
+      self.assertFalse(person._p_changed)
+      person.setDefaultOrganisationDescription('New description')
+      self.assertEquals('New description',
+                        default_organisation.getDescription())
+      get_transaction().commit()
+      self.assertEquals(1, len([m for m in
+        self.portal.portal_activities.getMessageList()
+        if m.method_id == 'immediateReindexObject' 
+            and m.object_path == default_organisation.getPhysicalPath()]))
+      self.tic()
     
+
     def test_18b_ContentAccessorWithIdClash(self):
       """Tests a content setters do not set the property on acquired object
       that may have the same id, using same scenario as test_18
