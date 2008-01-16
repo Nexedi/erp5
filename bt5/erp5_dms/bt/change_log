@@ -1,3 +1,6 @@
+2008-1-16 Yusei
+* Added generic pdf viewer for pdf preview.
+
 2008-1-14 Yusei
 * Enable group and site fields on document view always.
 * Merge two follow_up fields to one.
