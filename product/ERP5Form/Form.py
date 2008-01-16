@@ -123,7 +123,9 @@ class TALESValue(StaticValue):
       # Proxyfield stores the "real" field in the request. Look if the
       # corresponding field exists in request, and use it as field in the
       # TALES context 
-      field = REQUEST.get('field__proxyfield_%s_%s' % (field.id, id), field)
+      field = REQUEST.get(
+        'field__proxyfield_%s_%s_%s' % (field.id, field._p_oid, id),
+        field)
 
     kw['field'] = field
 
@@ -259,7 +261,9 @@ def getFieldValue(self, field, id, **kw):
 def get_value(self, id, **kw):
   REQUEST = get_request()
   if REQUEST is not None:
-    field = REQUEST.get('field__proxyfield_%s_%s' % (self.id, id), self)
+    field = REQUEST.get(
+      'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
+      self)
   else:
     field = self
 
