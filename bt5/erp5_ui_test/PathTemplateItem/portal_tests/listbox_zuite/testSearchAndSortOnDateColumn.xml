@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -147,7 +144,7 @@
 <!-- ASC -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -168,7 +165,7 @@
 <!-- DESC -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

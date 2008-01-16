@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -97,17 +94,17 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -127,7 +124,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -137,7 +134,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -147,7 +144,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -178,12 +175,12 @@
 <!-- click the ID -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>link=ID</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -198,7 +195,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -208,7 +205,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -239,12 +236,12 @@
 <!-- click the ID again -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>link=ID</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -259,7 +256,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -269,7 +266,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -300,12 +297,12 @@
 <!-- click the Title -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>link=Title</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -315,7 +312,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -330,7 +327,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -361,12 +358,12 @@
 <!-- click the Title again -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>link=Title</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -376,7 +373,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -391,7 +388,7 @@
 </tr>\n
 <tr>\n
 \t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/a</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
