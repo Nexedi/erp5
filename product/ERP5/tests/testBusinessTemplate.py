@@ -84,6 +84,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   def beforeTearDown(self):
     """Remove objects created tests."""
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id != "Geek Object":
+          props['chain_%s' % id] = ', '.join(wf_ids)
+    pw.manage_changeWorkflows('', props=props)
     if 'erp5_geek' in self.getSkinsTool().objectIds():
       self.getSkinsTool().manage_delObjects(['erp5_geek'])
       ps = self.getSkinsTool()
@@ -103,14 +111,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.getWorkflowTool().manage_delObjects(['geek_workflow'])
     if 'custom_geek_workflow' in self.getWorkflowTool().objectIds():
       self.getWorkflowTool().manage_delObjects(['custom_geek_workflow'])
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id != "Geek Object":
-          props['chain_%s' % id] = ','.join(wf_ids)
-    pw.manage_changeWorkflows('', props=props)
     get_transaction().commit()
     self._ignore_log_errors()
 
