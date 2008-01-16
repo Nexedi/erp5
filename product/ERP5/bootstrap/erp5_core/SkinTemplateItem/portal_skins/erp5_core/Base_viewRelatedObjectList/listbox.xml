@@ -15,7 +15,6 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
-                <string>sort_columns</string>
                 <string>sort</string>
                 <string>list_method</string>
                 <string>count_method</string>
@@ -197,17 +196,6 @@
                     <key>                 <string>sort</string> </key>
                     <value>
                       <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>None</string>
-                          <string>None</string>
-                        </tuple>
-                      </list>
                     </value>
                 </item>
                 <item>
