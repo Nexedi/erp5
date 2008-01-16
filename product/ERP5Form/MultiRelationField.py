@@ -339,7 +339,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         selection_name_html = ''
       # Generate plan link
       html_string += '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
-                       '<img src="%s/images/jump.png" />' \
+                       '<img src="%s/images/jump.png" alt="jump" />' \
                      '</a>' % \
                 (here.absolute_url(), 
                  field.get_value('jump_method'), 
