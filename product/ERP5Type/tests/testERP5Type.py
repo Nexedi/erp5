@@ -57,6 +57,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
 
   def tearDown(self):
     """Clean up """
+    get_transaction().abort()
     ttool = self.getTypesTool()
     class_tool = self.getClassTool()
     # remove all property sheet we added to type informations
@@ -70,6 +71,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
           # could break next tests.
           removeLocalPropertySheet(psheet)
       ti.property_sheet_list = ps_list
+    get_transaction().commit()
     _aq_reset()
     ERP5TypeTestCase.tearDown(self)
     
