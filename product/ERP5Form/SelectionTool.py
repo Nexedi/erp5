@@ -419,12 +419,30 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         selection.edit(sort_on=sort_on)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionQuickSortOrder')
-    def setSelectionQuickSortOrder(self, selection_name, sort_on, REQUEST=None,
+    def setSelectionQuickSortOrder(self, REQUEST=None, selection_name=None, sort_on=None,
                                    query_string=None, form_id=None):
       """
         Defines the sort order of the selection directly from the listbox
         In this method, sort_on is just a string that comes from url
       """
+      # selection_name, sort_on and form_id params are kept only for bacward compatibilty
+      # as some test call setSelectionQuickSortOrder in url with these params
+      if sort_on is None:
+        listbox_id, sort_on = REQUEST.form["setSelectionQuickSortOrder"].split(".", 1)
+
+      if form_id is None:
+        if REQUEST.form.has_key('dialog_id'):
+          form_id = REQUEST.form['dialog_id']
+        else:
+          form_id = REQUEST.form['form_id']
+      if selection_name is None:
+        if REQUEST.form.has_key('selection_name'):
+          selection_name = REQUEST.form['selection_name']
+        else:
+          object_path = REQUEST.form['object_path']
+          o = self.restrictedTraverse(object_path)
+          form = getattr(o, form_id)
+          selection_name = form[listbox_id].get_value('selection_name')
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         current_sort_on = self.getSelectionSortOrder(selection_name)
