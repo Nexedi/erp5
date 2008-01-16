@@ -230,7 +230,8 @@
             </tr>\n
           </table>\n
         </div>\n
-        <div class="ListContent content">\n
+        <div class="ListContent content"\n
+             tal:define="dummy python:len(line_list) and line_list[0].render()">\n
 \n
 <input type="hidden" name="listbox_uid:list" value="" />\n
 \n
