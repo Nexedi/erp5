@@ -289,6 +289,37 @@ class TestProxyField(unittest.TestCase):
     proxy_field.manage_edit_surcharged_xmlrpc(dict())
     self.assertTrue(proxy_field.is_delegated('title'))
 
+  def test_same_field_id_in_proxy_field_and_template_field(self):
+    """
+    Test a case that if proxy field id is same as template field id.
+    """
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_string', 'String', 'StringField')
+    # Use different id to the template field.
+    proxy_field2 = self.addField(self.container.Base_view,
+                                'my_another_string', '', 'ProxyField')
+    # Use same id to the template field.
+    proxy_field1 = self.addField(self.container.Base_view,
+                                'my_string', '', 'ProxyField')
+    proxy_field2.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                         field_id='my_string',))
+    proxy_field1.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                         field_id='my_string',))
+
+    def make_dummy_getter(value):
+      def method():
+        return value
+      return method
+
+    self.container.getAnotherString = make_dummy_getter('WAAA')
+    self.container.getString = make_dummy_getter('123')
+
+    # First, call field which the id is different to the template field's.
+    self.assertEqual('WAAA', proxy_field2.get_value('default'))
+
+    # Next, call field which the id is same to the template field's.
+    self.assertEqual('123', proxy_field1.get_value('default'))
+
 
 class TestFieldValueCache(unittest.TestCase):
   """Tests field value caching system
