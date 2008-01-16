@@ -417,6 +417,12 @@ button span {\n
   color: #000;\n
 }\n
 \n
+button.sort_button {\n
+  background-color: inherit;\n
+  color: inherit;\n
+  border-width: 0;\n
+}\n
+\n
 img {\n
   border: 0;\n
 }\n

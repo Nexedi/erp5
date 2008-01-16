@@ -1,3 +1,6 @@
+2008-01-16 aurel
+* sort on listbox column is now a POST and no  longer a GET
+
 2007-12-19 yo
 * Put ListBox_asHTML as a Page Template. It has been present as a Filesystem Page Template for a long time.
 
