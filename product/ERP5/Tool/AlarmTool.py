@@ -54,6 +54,7 @@ except ImportError:
 
 last_tic = time.time()
 last_tic_lock = threading.Lock()
+current_node = None
 
 class AlarmTool(BaseTool):
   """
@@ -193,8 +194,9 @@ class AlarmTool(BaseTool):
       in zope.conf. The Default is every 5 seconds.
     """
     # only start when we are the alarmNode or if it's empty
-    if (self.alarmNode == self.getCurrentNode()) \
-      or not self.alarmNode:
+    alarmNode = self.getAlarmNode()
+    if (not alarmNode) \
+      or (alarmNode == self.getCurrentNode()):
       global last_tic
       last_tic_lock.acquire(1)
       try:
@@ -206,18 +208,20 @@ class AlarmTool(BaseTool):
 
   def getCurrentNode(self):
       """ Return current node in form ip:port """
-      port = ''
-      from asyncore import socket_map
-      for k, v in socket_map.items():
-          if hasattr(v, 'port'):
-              # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-              type = str(getattr(v, '__class__', 'unknown'))
-              if type == 'ZServer.HTTPServer.zhttp_server':
-                  port = v.port
-                  break
-      ip = socket.gethostbyname(socket.gethostname())
-      currentNode = '%s:%s' %(ip, port)
-      return currentNode
+      global current_node
+      if current_node is None:
+        port = ''
+        from asyncore import socket_map
+        for k, v in socket_map.items():
+            if hasattr(v, 'port'):
+                # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
+                type = str(getattr(v, '__class__', 'unknown'))
+                if type == 'ZServer.HTTPServer.zhttp_server':
+                    port = v.port
+                    break
+        ip = socket.gethostbyname(socket.gethostname())
+        current_node = '%s:%s' %(ip, port)
+      return current_node
       
   security.declarePublic('getAlarmNode')
   def getAlarmNode(self):
