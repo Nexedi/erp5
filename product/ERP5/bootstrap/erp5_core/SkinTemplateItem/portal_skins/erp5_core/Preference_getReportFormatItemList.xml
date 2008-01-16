@@ -67,9 +67,11 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
+request = container.REQUEST\n
 \n
-style = container.REQUEST.get(\'your_portal_skin\',\n
-                              context.getPreferredReportStyle())\n
+style = request.get(\'your_portal_skin\',\n
+        request.get(\'field_your_portal_skin\',\n
+                              context.getPreferredReportStyle()))\n
 \n
 item_list = [(\'\', \'\')]\n
 \n
@@ -134,6 +136,7 @@ return item_list\n
                             <string>portal</string>
                             <string>N_</string>
                             <string>container</string>
+                            <string>request</string>
                             <string>style</string>
                             <string>item_list</string>
                           </tuple>
