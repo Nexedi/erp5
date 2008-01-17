@@ -98,7 +98,7 @@ class Setter(Method):
                       DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
-      if self._reindex: instance.reindexObject() # XXX Should the Setter check
+        instance.reindexObject() # XXX Should the Setter check
                                                  # if the property value has changed
                                                  # to decide reindexing, like edit() ?
 

@@ -98,7 +98,7 @@ class DefaultSetter(Method):
                       DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
-      if self._reindex: instance.reindexObject()
+        instance.reindexObject()
 
 class ListSetter(DefaultSetter):
 
@@ -122,8 +122,7 @@ class ListSetter(DefaultSetter):
                       DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
-
-      if self._reindex: instance.reindexObject()
+        instance.reindexObject()
 
 Setter = ListSetter
 
@@ -196,7 +195,7 @@ class SetSetter(Method):
                       DeprecationWarning)
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
-      if self._reindex: instance.reindexObject()
+        instance.reindexObject()
 
 class DefaultGetter(Method):
     """
