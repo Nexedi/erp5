@@ -2497,7 +2497,9 @@ class ListBox(ZMIField):
         # here the field can be a a proxyfield target, in this case just find
         # back the original proxy field so that renderer's calls to .get_value
         # are called on the proxyfield.
-        field = request.get('field__proxyfield_%s_%s' % (self.id, id), self)
+        field = request.get(
+          'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
+          self)
         return self.widget.render(field, self.generate_field_key(), None,
                                   request,
                                   render_format=kw.get('render_format'))
