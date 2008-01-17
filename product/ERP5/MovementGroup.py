@@ -405,6 +405,33 @@ class SectionPathMovementGroup(RootMovementGroup):
 
 allow_class(SectionPathMovementGroup)
 
+class PaymentPathMovementGroup(RootMovementGroup):
+  """ Groups movement that have the same source_payment and
+  destination_payment"""
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    source_payment_list = movement.getSourcePaymentList()
+    destination_payment_list = movement.getDestinationPaymentList()
+    source_payment_list.sort()
+    destination_payment_list.sort()
+
+    self.source_payment_list = source_payment_list
+    self.destination_payment_list = destination_payment_list
+
+    self.setGroupEdit(
+        source_payment_list=source_payment_list,
+        destination_payment_list=destination_payment_list
+    )
+
+  def test(self, movement):
+    source_payment_list = movement.getSourcePaymentList()
+    destination_payment_list = movement.getDestinationPaymentList()
+    source_payment_list.sort()
+    destination_payment_list.sort()
+    return source_payment_list == self.source_payment_list and \
+        destination_payment_list == self.destination_payment_list
+
+
 class TradePathMovementGroup(RootMovementGroup):
   """
   Group movements that have the same source_trade and the same
