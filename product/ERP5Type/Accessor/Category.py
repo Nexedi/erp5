@@ -64,6 +64,7 @@ class ListSetter(Method):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
 Setter = ListSetter
 
@@ -98,6 +99,7 @@ class DefaultSetter(Method):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
 class SetSetter(Method):
     """
@@ -142,6 +144,7 @@ class SetSetter(Method):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
 
 class DefaultGetter(Method):

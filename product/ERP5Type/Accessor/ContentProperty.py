@@ -209,6 +209,7 @@ class Setter(Method):
       # We return the first available object in the list
       o = None
       available_id = None
+      modified_object_list = ()
       for k in self._storage_id_list:
         o = instance._getOb(k, None)
         if o is None: available_id = k
@@ -220,6 +221,7 @@ class Setter(Method):
             o.setProperty(self._acquired_property, *args, **kw)
           else:
             o._setProperty(self._acquired_property, *args, **kw)
+          modified_object_list = (o, )
       if o is None and available_id is not None:
         from Products.ERP5Type.Utils import assertAttributePortalType
         assertAttributePortalType(instance, available_id, self._portal_type)
@@ -233,6 +235,8 @@ class Setter(Method):
           o.setProperty(self._acquired_property, *args, **kw)
         else:
           o._setProperty(self._acquired_property, *args, **kw)
+        modified_object_list = (o, )
+      return modified_object_list
 
 class ListGetter(Method):
     """

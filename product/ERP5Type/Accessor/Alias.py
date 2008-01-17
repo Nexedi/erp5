@@ -54,8 +54,14 @@ class Reindex(Method):
 
     def __call__(self, instance, *args, **kw):
       method = getattr(instance, self._accessor_id)
-      method(*args, **kw)
-      instance.reindexObject()
+      modified_object_list = method(*args, **kw)
+      # private methods can return a list of modified objects that this
+      # accessor have to reindex
+      if modified_object_list:
+        for modified_object in modified_object_list:
+          modified_object.reindexObject()
+      else:
+        instance.reindexObject()
 
 class Dummy(Reindex):
     """
@@ -80,3 +86,4 @@ class Dummy(Reindex):
     def __call__(self, instance, *args, **kw):
       method = getattr(instance, self._accessor_id)
       method(*args, **kw)
+

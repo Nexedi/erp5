@@ -69,6 +69,7 @@ class Setter(Method):
 
     def __call__(self, instance, *args, **kw):
       value = args[0]
+      modified_object_list = []
       if not self._reindex:
         # Modify the property
         if value in self._null:
@@ -87,10 +88,13 @@ class Setter(Method):
                 instance._setObject(self._storage_id, o)
                 o = getattr(instance, self._storage_id)
               o.manage_upload(file = file_upload)
+              modified_object_list = [o]
           else:
             LOG('ERP5Type WARNING',0,'%s is not an instance of FileUpload' % str(file_upload))
         else:
           setattr(instance, self._storage_id, self._cast(args[0]))
+          modified_object_list.append(instance)
+        return modified_object_list
       else:
         # Call the private setter
         warnings.warn("The reindexing accessors are deprecated.\n"

@@ -188,6 +188,7 @@ class SetSetter(Method):
             # The list has no default property -> it is empty
             new_list_value = []
           setattr(instance, self._storage_id, tuple(new_list_value))
+        return (instance, )
       else:
         # Call the private setter
         warnings.warn("The reindexing accessors are deprecated.\n"

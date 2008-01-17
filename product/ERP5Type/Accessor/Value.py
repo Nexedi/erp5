@@ -61,6 +61,7 @@ class SetSetter(Method):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
     psyco.bind(__call__)
 
@@ -84,6 +85,7 @@ class ListSetter(SetSetter):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
     psyco.bind(__call__)
 
@@ -108,6 +110,7 @@ class DefaultSetter(SetSetter):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
     psyco.bind(__call__)
 
@@ -497,6 +500,7 @@ class UidListSetter(UidSetSetter):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
 UidSetter = UidListSetter
 
@@ -519,6 +523,7 @@ class UidDefaultSetter(UidSetSetter):
                       "Please use Alias.Reindex instead.",
                       DeprecationWarning)
         instance.reindexObject()
+      return (instance, )
 
 class DefaultIdGetter(Method):
     """
