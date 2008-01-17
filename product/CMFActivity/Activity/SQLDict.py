@@ -100,6 +100,14 @@ class SQLDict(RAMDict, SQLBase):
     if len(uid_list)>0:
       activity_tool.SQLDict_delMessage(uid = uid_list)
 
+  def finishQueueMessage(self, activity_tool_path, m):
+    # Nothing to do in SQLDict.
+    pass
+
+  def finishDeleteMessage(self, activity_tool_path, m):
+    # Nothing to do in SQLDict.
+    pass
+
   # Registration management
   def registerActivityBuffer(self, activity_buffer):
     pass

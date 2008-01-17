@@ -84,6 +84,14 @@ class SQLQueue(RAMQueue, SQLBase):
     #LOG("prepareDeleteMessage", 0, str(m.__dict__))
     activity_tool.SQLQueue_delMessage(uid = [m.uid])
 
+  def finishQueueMessage(self, activity_tool_path, m):
+    # Nothing to do in SQLQueue.
+    pass
+
+  def finishDeleteMessage(self, activity_tool_path, m):
+    # Nothing to do in SQLQueue.
+    pass
+
   def getReservedMessageList(self, activity_tool, date, processing_node, limit=None):
     """
       Get and reserve a list of messages.
