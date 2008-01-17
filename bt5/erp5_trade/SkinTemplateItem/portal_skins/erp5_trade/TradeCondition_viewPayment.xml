@@ -87,7 +87,12 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_efficiency</string>
+                        <string>listbox_payment_date</string>
+                        <string>listbox_payment_end_of_month</string>
+                        <string>listbox_payment_term</string>
+                      </list>
                     </value>
                 </item>
                 <item>

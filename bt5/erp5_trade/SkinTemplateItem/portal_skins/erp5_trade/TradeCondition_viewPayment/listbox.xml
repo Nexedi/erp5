@@ -18,6 +18,7 @@
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
                 <string>domain_root_list</string>
                 <string>report_root_list</string>
               </list>
@@ -128,7 +129,7 @@
                         </tuple>
                         <tuple>
                           <string>payment_date</string>
-                          <string>Payment Date</string>
+                          <string>Absolute Payment Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -144,6 +145,33 @@
                         <tuple>
                           <string>trade_date</string>
                           <string>Reference date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>Percentage Of Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_term</string>
+                          <string>Payment Delay</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_end_of_month</string>
+                          <string>Payment At The End Of Month</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_date</string>
+                          <string>Payment Date</string>
                         </tuple>
                       </list>
                     </value>
