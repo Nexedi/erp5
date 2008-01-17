@@ -303,10 +303,10 @@ class TestProxyField(unittest.TestCase):
                                    'my_string', 'String', 'StringField')
     # Use different id to the template field.
     proxy_field2 = self.addField(self.container.Base_view,
-                                'my_another_string', '', 'ProxyField')
+                                 'my_another_string', '', 'ProxyField')
     # Use same id to the template field.
     proxy_field1 = self.addField(self.container.Base_view,
-                                'my_string', '', 'ProxyField')
+                                 'my_string', '', 'ProxyField')
     proxy_field2.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                          field_id='my_string',))
     proxy_field1.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
