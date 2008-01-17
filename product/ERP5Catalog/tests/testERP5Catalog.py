@@ -2088,6 +2088,69 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(set([doc_with_empty_region_title]),
         searchResults(ignore_empty_string=0, region_title=''))
 
+  def test_complex_query(self, quiet=quiet, run=run_all_test):
+    # Make sure that complex query works on real environment.
+    if not run: return
+
+    catalog = self.getCatalogTool()
+    person_module = self.getPersonModule()
+
+    # Add categories
+    portal_category = self.getCategoryTool()
+    africa = portal_category.region.newContent(id='africa')
+    asia = portal_category.region.newContent(id='asia')
+    europe = portal_category.region.newContent(id='europe')
+
+    # A from Africa
+    person_module.newContent(id='A', first_name='A', last_name='ERP5',
+                             region='africa')
+
+    # B from Asia
+    person_module.newContent(id='B', first_name='B', last_name='ZOPE',
+                             region='asia')
+
+    # C from Europe
+    person_module.newContent(id='C', first_name='C', last_name='PYTHON',
+                             region='europe')
+
+    # D from ????
+    person_module.newContent(id='D', first_name='D', last_name='ERP5')
+
+    get_transaction().commit()
+    self.tic()
+
+    # simple query
+    query = Query(portal_type='Person')
+    self.assertEqual(len(catalog(query=query)), 4)
+
+    # complex query
+    query = ComplexQuery(Query(portal_type='Person'),
+                         Query(region_uid=asia.getUid()),
+                         operator='AND')
+    self.assertEqual(len(catalog(query=query)), 1)
+
+    # complex query
+    query = ComplexQuery(Query(portal_type='Person'),
+                         Query(region_uid=(africa.getUid(), asia.getUid())),
+                         operator='AND')
+    self.assertEqual(len(catalog(query=query)), 2)
+
+    # more complex query
+    query_find_european = ComplexQuery(Query(portal_type='Person'),
+                                       Query(region_uid=europe.getUid()),
+                                       operator='AND')
+    self.assertEqual(len(catalog(query=query_find_european)), 1)
+    
+    query_find_name_erp5 = ComplexQuery(Query(portal_type='Person'),
+                                        Query(title='%ERP5'),
+                                        operator='AND')
+    self.assertEqual(len(catalog(query=query_find_name_erp5)), 2)
+
+    query = ComplexQuery(query_find_european,
+                         query_find_name_erp5,
+                         operator='OR')
+    self.assertEqual(len(catalog(query=query)), 3)
+
 
 def test_suite():
   suite = unittest.TestSuite()
