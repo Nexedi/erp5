@@ -736,6 +736,21 @@ class ERP5TypeInformation( FactoryTypeInformation,
         return self.manage_editActionsForm(REQUEST,
             manage_tabs_message='Actions reordered.')
 
+    def PrincipiaSearchSource(self):
+      # Support for "Find" tab in ZMI
+      search_source_list =[ self.getId(),
+         self.factory, self.permission, self.init_script,
+         ' '.join(self.property_sheet_list),
+         ' '.join(self.base_category_list) ]
+      for ai in self._actions:
+        search_source_list.extend([ai.title, ai.id, ai.getActionExpression(),
+          ai.getCondition() ])
+      for ri in self._roles:
+        search_source_list.extend([ri.id, ri.title, ri.description,
+          ri.getCondition(), ri.base_category_script ])
+      return ' '.join(search_source_list)
+    
+
 InitializeClass( ERP5TypeInformation )
 
 def manage_addERP5TIForm(self, REQUEST):
