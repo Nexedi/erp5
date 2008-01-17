@@ -193,6 +193,14 @@ class OOoTemplate(ZopePageTemplate):
 
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
+  security.declareProtected('Change Page Templates', 'pt_edit')
+  def pt_edit(self, text, content_type):
+    if content_type:
+      self.content_type = str(content_type)
+    if hasattr(text, 'read'):
+      text = text.read()
+    self.write(text)
+
   security.declareProtected('Change Page Templates', 'doSettings')
   def doSettings(self, REQUEST, title, ooo_stylesheet):
     """
