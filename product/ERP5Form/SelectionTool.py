@@ -419,7 +419,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         selection.edit(sort_on=sort_on)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionQuickSortOrder')
-    def setSelectionQuickSortOrder(self, REQUEST=None, selection_name=None, sort_on=None,
+    def setSelectionQuickSortOrder(self, selection_name=None, sort_on=None, REQUEST=None,
                                    query_string=None, form_id=None):
       """
         Defines the sort order of the selection directly from the listbox
