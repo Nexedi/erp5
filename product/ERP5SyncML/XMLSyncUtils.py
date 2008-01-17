@@ -1487,11 +1487,27 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     """
     object_list = domain.getObjectList()
     gid_list = [domain.getGidFromObject(x) for x in object_list]
+    domain_path = domain.getPath()
+    subscriber_path = subscriber.getPath()
+    while len(gid_list):
+      sliced_gid_list = [gid_list.pop() for i in gid_list[:self.MAX_OBJECTS]]
+      #Split List Processing in activities
+      self.activate(activity='SQLQueue',
+                    tag=domain.getId()).activateDeleteRemainObjectList(domain_path,
+                                                                       subscriber_path,
+                                                                       sliced_gid_list)
+
+  def activateDeleteRemainObjectList(self, domain_path, subscriber_path, gid_list):
+    """
+    Execute Deletion in Activities
+    """
+    domain = self.unrestrictedTraverse(domain_path)
+    subscriber = self.unrestrictedTraverse(subscriber_path)
     destination = self.unrestrictedTraverse(domain.getDestinationPath())
     conduit_name = subscriber.getConduit()
     conduit = self.getConduitByName(conduit_name)
     for gid in gid_list:
-      if gid not in subscriber.getGidList():
+      if subscriber.getSignatureFromGid(gid) is None:
         object_id = b16decode(gid)
         conduit.deleteObject(object=destination, object_id=object_id)
 
