@@ -90,6 +90,9 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
                                 from_date=from_date,\n
                                 at_date=at_date,\n
                                 section_uid=section_uid,\n
+                                portal_type=portal.getPortalAccountingMovementTypeList(),\n
+      # note that we pass both portal_type and parent_portal_type because some transactions\n
+      # may contain some non accounting lines that are in stock table (eg. Pay Sheet Lines)\n
                                 parent_portal_type=portal_type,\n
                                 simulation_state=simulation_state,\n
                                 sort_on=((\'stock.date\', \'ASC\'),\n
