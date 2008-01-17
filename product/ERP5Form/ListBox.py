@@ -2255,14 +2255,12 @@ class ListBoxListRenderer(ListBoxRenderer):
 
       if line.isSummary():
         listboxline.markSummaryLine()
-        # XXX What is this "+ 1"?
-        listboxline.setSectionDepth(line.getDepth() + 1)
-        context = line.getContext()
-        if context is not None:
-          section_name = context.getTitleOrId() or None
-        else:
-          section_name = None
-        listboxline.setSectionName(section_name)
+        # XXX It was line.getDepth()+1 before, but
+        # it probably make no sense so I (seb) removed this
+        listboxline.setSectionDepth(line.getDepth())
+        # Do not get the context again, it was already computed
+        # in getReportSectionList
+        listboxline.setSectionName(line.domain_title)
         listboxline.setSectionFolded(not line.isOpen())
 
       if line.getBrain() is not None:
