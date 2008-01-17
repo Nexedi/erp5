@@ -63,84 +63,13 @@
                editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n
                editable_fields python: dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
-               is_domain_tree_mode selection/domain_tree_mode | nothing;\n
-               is_report_tree_mode selection/report_tree_mode | nothing;" i18n:domain="ui">\n
+               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list);\n
+               is_report_tree_mode selection/report_tree_mode | nothing;\n
+               max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);\n
+               is_domain_tree_mode selection/domain_tree_mode | nothing;" i18n:domain="ui">\n
 \n
-        <tal:block tal:condition="python: len(listboxline_list) > 1">\n
-          <tal:block tal:condition="python: is_domain_tree_mode">\n
-            <tal:block tal:define="domain_list python: selection.getDomainList()"\n
-                       tal:condition="domain_list">\n
-              <table:table-row>\n
-                <table:table-cell office:value-type=\'string\'>\n
-                  <text:p tal:content="python: domain_list[-1]"/>\n
-                </table:table-cell>\n
-              </table:table-row>\n
-            </tal:block>\n
-          </tal:block>\n
-          <tal:block tal:repeat="listboxline python: listboxline_list">\n
-            <tal:block metal:define-slot="for_form_list"\n
-                       tal:condition="listboxline/isTitleLine | is_report_tree_mode">\n
-              <tal:block metal:define-slot="list_header">\n
-                <table:table-row table:style-name=\'ro4\'>\n
-                  <tal:block tal:condition="python: is_report_tree_mode">\n
-                    <table:table-cell table:style-name=\'report-column-title\'\n
-                                      table:number-columns-spanned=\'1\'\n
-                                      office:value-type=\'string\'>\n
-                      <tal:block tal:condition="listboxline/getSectionName">\n
-                        <text:p tal:content="listboxline/getSectionName"/>\n
-                      </tal:block>\n
-                    </table:table-cell>\n
-                  </tal:block>\n
+        <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>\n
 \n
-                  <tal:block tal:condition="listboxline/isTitleLine">\n
-                    <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                      <tal:block tal:define="column_property python: column_item[1];\n
-                                             column_id python: column_item[0]">\n
-                        <table:table-cell table:number-rows-spanned=\'1\' \n
-                                          table:style-name=\'report-column-title\'\n
-                                          table:number-columns-spanned=\'1\'\n
-                                          office:value-type=\'string\'>\n
-                          <text:p i18n:translate="" i18n:domain="ui" \n
-                                  tal:content="python: column_property or \'\'">\n
-                          </text:p>\n
-                        </table:table-cell>\n
-                      </tal:block>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                </table:table-row>\n
-              </tal:block>\n
-            </tal:block>\n
-\n
-            <tal:block tal:condition="not:listboxline/isTitleLine">\n
-              <table:table-row>\n
-                <tal:block tal:condition="python: listboxline.isDataLine() or listboxline.isSummaryLine()">\n
-                  <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                    <tal:block tal:define="column_property python: column_item[1];\n
-                                           value column_property;\n
-                                           column_id python: column_item[0];\n
-                                           style_prefix string:;\n
-                                           field python: editable_fields.get(column_id, None);">\n
-                      <tal:block metal:use-macro="here/field_ods_macro/macros/cell_value"/>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                </tal:block>\n
-\n
-                <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
-                  <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
-                    <tal:block tal:define="column_property python: column_item[1];\n
-                                           value column_property;\n
-                                           column_id python: column_item[0];\n
-                                           style_prefix string:stat-;\n
-                                           field python: editable_fields.get(column_id, None);">\n
-                      <tal:block metal:use-macro="here/field_ods_macro/macros/cell_value"/>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                </tal:block>\n
-              </table:table-row>\n
-            </tal:block>\n
-          </tal:block>\n
-\n
-          \n
           <table:table-row metal:define-slot="table_bottom_line">\n
             <tal:block tal:repeat="listboxline python: listboxline_list">\n
               <tal:block tal:condition="listboxline/isTitleLine">\n
@@ -156,7 +85,6 @@
           </table:table-row>\n
         </tal:block>\n
       </tal:block>\n
-    </tal:block>\n
   </office:spreadsheet>\n
 </office:body>\n
 </tal:block>\n

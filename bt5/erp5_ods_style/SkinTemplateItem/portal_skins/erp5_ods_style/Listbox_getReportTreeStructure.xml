@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+structure = {}\n
+structure[\'line\'] = None\n
+structure[\'line_list\'] = []\n
+\n
+def order_line_list(line_list, current_structure, depth=0, index=0, last_dict=None):\n
+  if index < len(line_list):\n
+    listbox_line = line_list[index]\n
+    section_depth = listbox_line.getSectionDepth()\n
+    if listbox_line.isDataLine():\n
+      section_depth += 1\n
+    if section_depth == (depth +1):\n
+      last_dict = {\'line\':listbox_line, \'line_list\':[]}\n
+      current_structure[\'line_list\'].append(last_dict)\n
+      index += 1\n
+    elif section_depth == (depth +2):\n
+      new_depth = section_depth\n
+      new_structure = {\'line\':listbox_line, \'line_list\':[]}\n
+      last_dict[\'line_list\'].append(new_structure)\n
+      index += 1\n
+      index = order_line_list(line_list, new_structure, depth=new_depth, index=index, last_dict=last_dict)\n
+    elif section_depth > (depth +2):\n
+      raise ValueError, "A depth is missing"\n
+    else:\n
+      return index\n
+  if index < len(line_list):\n
+    index = order_line_list(line_list, current_structure, depth=depth, index=index, last_dict=last_dict)\n
+  return index\n
+\n
+\n
+order_line_list(listbox_line_list, structure, depth=-1, index=0)\n
+\n
+return structure\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox_line_list=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox_line_list</string>
+                            <string>structure</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>order_line_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_getReportTreeStructure</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
