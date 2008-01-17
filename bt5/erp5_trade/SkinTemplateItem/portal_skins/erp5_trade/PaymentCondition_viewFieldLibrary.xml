@@ -47,6 +47,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -97,7 +101,6 @@
                         <string>my_title</string>
                         <string>my_quantity</string>
                         <string>my_efficiency</string>
-                        <string>my_payment_date</string>
                         <string>my_source_payment</string>
                         <string>my_destination_payment</string>
                       </list>
@@ -112,6 +115,7 @@
                         <string>my_payment_end_of_month</string>
                         <string>my_payment_additional_term</string>
                         <string>my_trade_date</string>
+                        <string>my_payment_date</string>
                       </list>
                     </value>
                 </item>
@@ -120,7 +124,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentCondition_view</string> </value>
+            <value> <string>PaymentCondition_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,7 +132,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PaymentCondition_view</string> </value>
+            <value> <string>PaymentCondition_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -144,7 +148,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payment Condition</string> </value>
+            <value> <string>Payment Condition Field Library</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
