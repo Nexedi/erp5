@@ -23,7 +23,7 @@ Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
 Accounting Transaction Module | jump_bank_accounts
 Accounting Transaction Module | profit_and_loss_report
-Accounting Transaction Module | search
+Accounting Transaction Module | search_transactions
 Accounting Transaction Module | third_parties_export
 Accounting Transaction Module | third_parties_report
 Accounting Transaction Module | trial_balance_export

@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>search</string> </value>
+            <value> <string>search_transactions</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Search</string> </value>
+            <value> <string>Search Transactions</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
