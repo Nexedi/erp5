@@ -79,7 +79,11 @@ if object is None:\n
   return []\n
 \n
 for base_category in base_category_list:\n
-  for o in object.getValueList(base_category):\n
+  if base_category == \'parent\':\n
+    o_list = [object.getParentValue()]\n
+  else:\n
+    o_list = object.getValueList(base_category)\n
+  for o in o_list:\n
     for user, role_list in o.get_local_roles():\n
       for role in role_list:\n
         category_dict.setdefault(role, []).append(user)\n
@@ -153,6 +157,7 @@ return category_dict\n
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>_getattr_</string>
+                            <string>o_list</string>
                             <string>o</string>
                             <string>user</string>
                             <string>role_list</string>
