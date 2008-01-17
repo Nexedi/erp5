@@ -106,6 +106,12 @@ class TestFloatField(unittest.TestCase):
     self.assertEquals('12.34', self.field.render("12.34"))
     self.assertEquals('not float', self.field.render("not float"))
 
+  def test_percent_style_render_string_value(self):
+    self.field.values['input_style'] = '-12.3%'
+    self.field.values['editable'] = 0
+    self.assertEquals('-12.34%', self.field.render("-0.1234"))
+    self.assertEquals('not float', self.field.render("not float"))
+
   def test_render_big_numbers(self):
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
