@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -107,13 +104,13 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- sort by title, to reset any sort on preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>link=Account Name</td>\n
+  <td>//button[@title=\'Account Name\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <!-- sort by preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>link=GAP No</td>\n
+  <td>//button[@title=\'GAP No\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -142,7 +139,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- sort by preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>link=GAP No</td>\n
+  <td>//button[@title=\'GAP No\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -170,7 +167,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- make sure we end up sorting in ASCENDING-->\n
   <td>clickAndWait</td>\n
-  <td>link=GAP No</td>\n
+  <td>//button[@title=\'GAP No\']</td>\n
   <td></td>\n
 </tr>\n
 \n
