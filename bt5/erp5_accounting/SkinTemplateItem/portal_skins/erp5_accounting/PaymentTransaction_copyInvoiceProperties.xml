@@ -65,34 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG = lambda msg:context.log("PaymentTransaction_copyInvoiceProperties", msg)\n
-LOG = lambda msg:None\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
 \n
 payment_transaction = context\n
-LOG("start, payment_transaction = %s @ %s"%(payment_transaction, payment_transaction.getPath()))\n
-invoice_transaction = payment_transaction.getCausalityValue()\n
-LOG("invoice_transaction = %s"%invoice_transaction)\n
 \n
-categories = {}\n
-if invoice_transaction.getResourceValue() is not None : \n
-  categories[\'resource\'] = invoice_transaction.getResource()\n
-\n
-LOG("payment_transaction categories = %s" % categories )\n
-payment_transaction.edit(\n
-   ### FIXME: the date must be set on the simulation movement\n
-   start_date   = invoice_transaction.TradeCondition_getDueDate()\n
- , reference    = invoice_transaction.getReference()\n
- , **categories\n
-)\n
-\n
-if payment_transaction.getSimulationState() == "draft": \n
+if payment_transaction.getSimulationState() == "draft":\n
   payment_transaction.portal_workflow.doActionFor(\n
-                                  payment_transaction,\n
-                                  \'plan_action\',\n
-                                  comment="Initialized by Delivery Builder")\n
-  LOG("payment simulation state set to planned")\n
-\n
-LOG("end")\n
+     payment_transaction, \'plan_action\',\n
+     comment=Message(\'erp5_ui\', "Initialized by Delivery Builder"))\n
 </string> </value>
         </item>
         <item>
@@ -135,15 +115,11 @@ LOG("end")\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>LOG</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>context</string>
                             <string>payment_transaction</string>
                             <string>_getattr_</string>
-                            <string>invoice_transaction</string>
-                            <string>categories</string>
-                            <string>None</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
