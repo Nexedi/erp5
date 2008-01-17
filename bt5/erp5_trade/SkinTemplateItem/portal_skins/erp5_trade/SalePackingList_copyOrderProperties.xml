@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = context\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
+\n
+packing_list = context\n
  \n
 # First, copy Order properties\n
 packing_list.PackingList_copyOrderProperties()\n
@@ -75,10 +77,8 @@ packing_list_state = packing_list.getSimulationState()\n
 \n
 if packing_list_state == "draft":\n
   packing_list.portal_workflow.doActionFor(\n
-                                  packing_list,\n
-                                  \'confirm_action\',\n
-                                  wf_id=\'packing_list_workflow\',\n
-                                  comment="Initialized by Delivery Builder")\n
+     packing_list, \'confirm_action\',\n
+     comment=Message(\'erp5_ui\', "Initialized by Delivery Builder"))\n
 \n
 # First set the packing_list in the building state\n
 packing_list.startBuilding()\n
@@ -127,6 +127,8 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
