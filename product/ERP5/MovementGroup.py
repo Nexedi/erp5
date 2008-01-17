@@ -1103,7 +1103,6 @@ allow_class(DestinationMovementGroup)
 class DestinationDecisionMovementGroup(PropertyMovementGroup):
   """Group movements having the same destination decision."""
   _property = 'destination_decision'
-
 allow_class(DestinationDecisionMovementGroup)
 
 class SourceProjectMovementGroup(PropertyMovementGroup):
@@ -1138,3 +1137,9 @@ class QuantityUnitMovementGroup(PropertyMovementGroup):
   """ Group movements that have the same quantity unit."""
   _property = 'quantity_unit'
 allow_class(QuantityUnitMovementGroup)
+
+class PaymentModeMovementGroup(PropertyMovementGroup):
+  """ Group movements that have the same payment mode."""
+  _property = 'payment_mode'
+allow_class(PaymentModeMovementGroup)
+
