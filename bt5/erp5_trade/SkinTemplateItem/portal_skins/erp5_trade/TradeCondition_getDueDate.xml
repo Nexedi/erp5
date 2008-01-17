@@ -67,42 +67,60 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# TODO: this script is not well tested and not fully implemented (look at the case dict) \n
+# TODO: this script is not well tested and not fully implemented\n
 \n
 from DateTime import DateTime\n
-LOG = lambda msg:context.log("TradeCondition_getDueDate", msg)\n
-LOG = lambda msg:None\n
+\n
+if context.getPortalType() == \'Payment Condition\':\n
+  delivery = context.getParentValue()\n
+  payment_condition = context\n
+else:\n
+  delivery = context\n
+  payment_condition = context.getDefaultPaymentConditionValue()\n
+\n
+# Absolute payment date has priority\n
+if payment_condition.getPaymentDate():\n
+  return payment_condition.getPaymentDate()\n
+\n
+def OrderDateGetter(invoice):\n
+  def getter():\n
+    packing_list = invoice.getCausalityValue(\n
+                     portal_type=context.getPortalDeliveryTypeList())\n
+    if packing_list:\n
+      order = packing_list.getCausalityValue(\n
+                     portal_type=context.getPortalOrderTypeList())\n
+      return order.getStartDate() # TODO start or stop ? -> based on source/destination\n
+  return getter\n
+\n
+def PackingListDateGetter(invoice):\n
+  def getter():\n
+    packing_list = invoice.getCausalityValue(\n
+                     portal_type=context.getPortalDeliveryTypeList())\n
+    if packing_list:\n
+      return packing_list.getStartDate() # TODO start or stop ? -> based on source/destination\n
+  return getter\n
 \n
 case = {\n
-  None:           context.getStartDate,\n
-  \'invoice\':      context.getStartDate,\n
-  \'order\':        context.getStartDate,   #order.getStartDate,\n
-  \'packing list\': context.getStartDate,   #packing_list.getTargetStopDate,\n
+  \'invoice\':      delivery.getStartDate,\n
+  \'order\':        OrderDateGetter(delivery),\n
+  \'packing list\': PackingListDateGetter(delivery),\n
 }\n
-LOG("context.getTradeDateId() => %s "%context.getPaymentConditionTradeDate())\n
-due_date = case.get(context.getPaymentConditionTradeDate(), context.getStartDate)()\n
-due_date += context.getPaymentConditionPaymentTerm(0)\n
 \n
-peom = context.getPaymentConditionPaymentEndOfMonth()\n
-LOG("poem : %s"%peom)\n
-pt = context.getPaymentConditionPaymentTerm()\n
-LOG("pt : %s"%pt)\n
-pat = context.getPaymentConditionPaymentAdditionalTerm()\n
-LOG("pat : %s"%pat)\n
+due_date = case.get(payment_condition.getTradeDate(), delivery.getStartDate)()\n
+due_date += payment_condition.getPaymentTerm(0)\n
 \n
-if peom:\n
+pat = payment_condition.getPaymentAdditionalTerm()\n
+\n
+if payment_condition.getPaymentEndOfMonth():\n
   i = 0\n
   month = due_date.month()\n
   while (month == (due_date + i).month()):\n
     i += 1\n
   due_date = (due_date + i - 1)\n
-  if pt != None:\n
-    due_date += pt\n
-  if pat != None:\n
+  if pat:\n
     due_date += pat\n
 else:\n
-  ##TODO: test this part\n
-  if pat not in [None,\'\',0]:\n
+  if pat:\n
     i = 0\n
     month = due_date.month()\n
     while (month == (due_date + i).month()):\n
@@ -161,15 +179,15 @@ return due_date\n
                         <value>
                           <tuple>
                             <string>DateTime</string>
-                            <string>LOG</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>delivery</string>
+                            <string>payment_condition</string>
+                            <string>OrderDateGetter</string>
+                            <string>PackingListDateGetter</string>
                             <string>case</string>
                             <string>due_date</string>
                             <string>_inplacevar_</string>
-                            <string>peom</string>
-                            <string>pt</string>
                             <string>pat</string>
                             <string>i</string>
                             <string>month</string>
