@@ -1914,6 +1914,44 @@ class TestInvoice(TestPackingListMixin,
           """)
     sequence_list.play(self, quiet=quiet)
 
+  def test_invoice_transaction_line_resource(self):
+    # tests that simulation movements corresponding to accounting line have a
+    # good resource in the simulation
+    
+    sequence_list = SequenceList()
+    sequence = sequence_list.addSequenceString('''
+      stepCreateEntities
+      stepCreateCurrency
+      stepCreateSaleInvoiceTransactionRule
+      stepCreateOrder
+      stepSetOrderProfile
+      stepSetOrderPriceCurrency
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepOrderOrder
+      stepTic
+    ''')
+    sequence_list.play(self, quiet=1)
+    order = sequence.get('order')
+    order_price_currency = order.getPriceCurrency()
+    self.assertNotEquals(None, order_price_currency)
+    related_applied_rule = order.getCausalityRelatedValue(
+                             portal_type='Applied Rule')
+    delivery_movement = related_applied_rule.contentValues()[0]
+    invoice_applied_rule = delivery_movement.contentValues()[0]
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule.contentValues()[0]
+    self.assertEquals(order_price_currency,
+          invoice_transaction_movement.getResource())
+    # TODO: price currency have to be copied on simulation movements too
+    # self.assertEquals(order_price_currency,
+    #      invoice_transaction_movement.getPriceCurrency())
+
 #class TestPurchaseInvoice(TestInvoice):
 #  order_portal_type = 'Purchase Order'
 #  order_line_portal_type = 'Purchase Order Line'
