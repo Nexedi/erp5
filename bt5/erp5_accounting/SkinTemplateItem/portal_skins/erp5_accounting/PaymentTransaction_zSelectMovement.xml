@@ -49,6 +49,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>max_movement_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>order_by_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -70,6 +76,7 @@
 <string>from_table_list</string>
 <string>where_expression</string>
 <string>order_by_expression</string>
+<string>max_movement_date</string>
                           </list>
                         </value>
                     </item>
@@ -88,7 +95,8 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>from_table_list:list\r\n
 where_expression\r\n
-order_by_expression</string> </value>
+order_by_expression\r\n
+max_movement_date</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -153,17 +161,23 @@ WHERE\n
     AND <dtml-var where_expression> \n
   </dtml-if>\n
 \n
-    AND parent.uid = catalog.parent_uid\n
+  AND parent.uid = catalog.parent_uid\n
   AND grandparent.uid = parent.parent_uid\n
-  AND grandparent.simulation_state  in (\'confirmed\', \'stopped\', \'delivered\')\n
 \n
-  AND movement.source_uid is not NULL\n
+  AND ((\n
+        grandparent.simulation_state  NOT IN (\'cancelled\', \'deleted\')\n
+    AND ( movement.start_date < <dtml-sqlvar max_movement_date type="datetime"> OR \n
+          movement.stop_date < <dtml-sqlvar max_movement_date type="datetime"> )\n
+  ) OR (\n
+        grandparent.simulation_state  in (\'confirmed\', \'stopped\', \'delivered\')\n
+  ))\n
+\n
   AND movement.uid = catalog.uid\n
   AND movement.resource_uid is not NULL\n
   AND category.category_uid is NULL\n
 \n
 <dtml-if order_by_expression>\n
-ORDER BY <dtml-var order_by_expression>\n
+  ORDER BY <dtml-var order_by_expression>\n
 </dtml-if>
 
 ]]></string> </value>
@@ -229,17 +243,23 @@ WHERE\n
     AND <dtml-var where_expression> \n
   </dtml-if>\n
 \n
-    AND parent.uid = catalog.parent_uid\n
+  AND parent.uid = catalog.parent_uid\n
   AND grandparent.uid = parent.parent_uid\n
-  AND grandparent.simulation_state  in (\'confirmed\', \'stopped\', \'delivered\')\n
 \n
-  AND movement.source_uid is not NULL\n
+  AND ((\n
+        grandparent.simulation_state  NOT IN (\'cancelled\', \'deleted\')\n
+    AND ( movement.start_date < <dtml-sqlvar max_movement_date type="datetime"> OR \n
+          movement.stop_date < <dtml-sqlvar max_movement_date type="datetime"> )\n
+  ) OR (\n
+        grandparent.simulation_state  in (\'confirmed\', \'stopped\', \'delivered\')\n
+  ))\n
+\n
   AND movement.uid = catalog.uid\n
   AND movement.resource_uid is not NULL\n
   AND category.category_uid is NULL\n
 \n
 <dtml-if order_by_expression>\n
-ORDER BY <dtml-var order_by_expression>\n
+  ORDER BY <dtml-var order_by_expression>\n
 </dtml-if>
 
 ]]></string> </value>
