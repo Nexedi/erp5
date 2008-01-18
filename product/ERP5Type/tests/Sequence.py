@@ -136,18 +136,20 @@ class SequenceList:
   def __init__(self):
     self._sequence_list = []
 
-  def addSequence(self,sequence):
+  def addSequence(self, sequence):
     self._sequence_list.append(sequence)
 
-  def addSequenceString(self,sequence_string):
+  def addSequenceString(self, sequence_string):
     """
     The sequence string should be a string of method names
     separated by spaces or \n
+
+    returns the sequence for those steps.
     """
     step_list = sequence_string.split()
-    self.addSequenceStringList(step_list)
+    return self.addSequenceStringList(step_list)
 
-  def addSequenceStringList(self,step_list):
+  def addSequenceStringList(self, step_list):
     step_list
     sequence = Sequence()
     for step in step_list:
@@ -156,6 +158,7 @@ class SequenceList:
           step = step[4:]
         sequence.addStep(step)
     self.addSequence(sequence)
+    return sequence
 
   def play(self, context, quiet=0):
     i = 1
