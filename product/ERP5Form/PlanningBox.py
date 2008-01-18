@@ -1113,6 +1113,8 @@ class BasicStructure:
     # save modifications at selection
     self.getSelectionTool().setSelectionParamsFor(self.selection_name,
                                             kw, REQUEST = self.REQUEST)
+    # update self.params
+    self.params = kw
 
     ############## DEFINING STAT METHOD ##############
     stat_method = self.field.get_value('stat_method')
