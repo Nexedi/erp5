@@ -431,10 +431,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         listbox_id, sort_on = REQUEST.form["setSelectionQuickSortOrder"].split(".", 1)
 
       if form_id is None:
-        if REQUEST.form.has_key('dialog_id'):
-          form_id = REQUEST.form['dialog_id']
-        else:
-          form_id = REQUEST.form['form_id']
+        if REQUEST is not None:
+          if REQUEST.form.has_key('dialog_id'):
+            form_id = REQUEST.form['dialog_id']
+          else:
+            form_id = REQUEST.form['form_id']
       if selection_name is None:
         if REQUEST.form.has_key('selection_name'):
           selection_name = REQUEST.form['selection_name']
