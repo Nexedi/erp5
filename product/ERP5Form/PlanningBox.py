@@ -1235,16 +1235,24 @@ class BasicStructure:
   getSelectionTool = lazyMethod(getSelectionTool)
 
   def getPortalTypeList(self):
-    """Return the list of portal types for filtering. Return None when empty.
+    """
+    Return the list of portal types for filtering. Return None when empty.
     """
     portal_types = [c[0] for c in self.field.get_value('portal_types')]
     return portal_types or None
 
   getPortalTypeList = lazyMethod(getPortalTypeList)
 
-  def getReportGroupList(self, report_tree_list=[], sec_layer_method_name=None,show_stat=0):
+  def getReportGroupList(self, report_tree_list=[], \
+                  sec_layer_method_name=None,show_stat=0):
     """
-    XXX DESC
+    report_group_list is another structure based on report_tree but
+    taking care of the object activities. 
+    This returns a list of object_tree_lines composing the planning,
+    whatever the current group depth, just listing all of them
+          
+    XXX rafael report_group is a tuple, maybe create ReportGroup Class
+    is more consistent.
     """
     # Defining the Main Layer Object List
     main_object_list = self.getObjectList(self.list_method)
@@ -1364,7 +1372,8 @@ class BasicStructure:
 
   def buildLaneTreeList(self):
     """
-    XXX DESC
+    buildSecondaryTreeList uses makeTreeList for lane_path. (Old zoom level)
+    Generates a tree from one domain, this will be used for create Lane Axis.
     """
     if self.params.get('lane_path', None):
       default_selection_lane_path = self.params.get('lane_path')
@@ -1384,7 +1393,7 @@ class BasicStructure:
 
     self.REQUEST['selection_name'] = self.selection_name
     self.REQUEST['form_id'] = self.form.id
-    # building report_tree_list
+    # building lane_tree_list
     lane_tree_list = makeTreeList(here=self.context, form=self.form,
                                     root_dict=None,
                                     report_path=default_selection_lane_path,
@@ -1402,7 +1411,8 @@ class BasicStructure:
 
   def buildReportTreeList(self):
     """
-    XXX DESC
+     buildSecondaryTreeList uses makeTreeList for report_path.
+     Generates a list of TreeLine that will be use for generates the Report Axis
     """
     report_depth = self.REQUEST.get('report_depth',None)
     # In report tree mode, need to remember if the items have to be displayed
