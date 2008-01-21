@@ -56,7 +56,8 @@ def grep(self, pattern, A=0, B=0, r=1, i=0):
          '/'.join(path_element_list[:-1]), path_element_list[-1])
       html_element_list.append(
         '<a href="%s/manage_workspace">%s</a>&nbsp;<a href="%s">'
-        '<img border="0" src="/misc_/ExternalEditor/edit_icon"/></a> %s<br/>'
+        '<img border="0" src="/misc_/ExternalEditor/edit_icon" '\
+            'alt="externalEditor Icon"/></a> %s<br/>'
          % (path, path, external_editor_link, line.replace('\n', '<br/>')))
 
   html_element_list.extend(['</body>', '</html>'])
