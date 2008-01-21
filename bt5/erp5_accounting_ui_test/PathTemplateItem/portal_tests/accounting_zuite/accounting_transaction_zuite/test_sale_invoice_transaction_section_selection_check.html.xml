@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test Section Selection for Sale Invoice Transaction</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test Section Selection for Sale Invoice Transaction.\n
+</td></tr>\n
+<!-- XXX we do not need init method here ! -->\n
+</thead><tbody tal:define="init_method string:">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+<!-- Setup {{{ -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>(\'group/demo_group\', \'group/demo_group\')</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Add an accounting transaction and select an orgaisation as section {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>label=Add Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Object Created.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_my_source_section</td>\n
+  <td>label=My Organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>My Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_edit:method\'][1]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Data Updated.</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Modify Preference -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_unsetDocumentSectionPreference</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>(None, None)</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Activity -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Open the transaction view and check section value. -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>label=Accounting</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=My Sale Invoice Transaction</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_source_section</td>\n
+  <td>organisation_module/my_organisation</td>\n
+</tr>\n
+\n
+<!-- Reset Preference -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>(\'group/demo_group\', \'group/demo_group\')</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_sale_invoice_transaction_section_selection_check.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

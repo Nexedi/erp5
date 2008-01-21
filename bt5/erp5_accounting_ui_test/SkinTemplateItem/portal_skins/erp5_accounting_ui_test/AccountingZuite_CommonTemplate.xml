@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -72,6 +69,8 @@
       <td>Reset Successfully.</td>\n
       <td></td>\n
     </tr>\n
+\n
+    <tal:block tal:condition="init_method">\n
     <tr>\n
       <td>open</td>\n
       <td tal:content="string:$base_url/accounting_module/$init_method" />\n
@@ -82,7 +81,6 @@
       <td>Accounting Transactions Created.</td>\n
       <td></td>\n
     </tr>\n
-\n
     <tr>\n
       <td>open</td>\n
       <td>${base_url}/Zuite_waitForActivities</td>\n
@@ -93,6 +91,8 @@
       <td>Done.</td>\n
       <td></td>\n
     </tr>\n
+    </tal:block>\n
+\n
     <tr>\n
       <td>open</td>\n
       <td>${base_url}</td>\n

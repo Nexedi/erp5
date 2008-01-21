@@ -1,3 +1,6 @@
+2008-01-21 yusei
+* Add tests for section selection box.
+
 2006-09-25 jerome
 * Add tests for bank accounts
 * Add tests for accounting transaction inputing
