@@ -65,25 +65,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>section_cat = context.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
-if section_cat in (None, \'\') : \n
-  section_cat = context.getPortalDefaultSectionCategory()\n
+            <value> <string>section = context.portal_preferences.getPreferredSectionCategory() or\\\n
+                       context.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
 \n
-section_cat_obj = None\n
+section_value = None\n
 result = []\n
 \n
-if section_cat is not None:\n
-  # get the organisations belonging to this group\n
-  section_cat_obj = context.portal_categories.resolveCategory(section_cat)\n
+if section is not None:\n
+  section_value = context.portal_categories.resolveCategory(section)\n
 \n
-if section_cat_obj is not None:\n
-  result = section_cat_obj.getGroupRelatedValueList(portal_type=\'Organisation\')\n
+if section_value is not None:\n
+  result = section_value.getGroupRelatedValueList(portal_type=\'Organisation\')\n
 \n
-current_source_section = context.getSourceSectionValue()\n
-if current_source_section is not None and current_source_section not in result:\n
-  result.append(current_source_section)\n
+current_destination_section = context.getDestinationSectionValue()\n
 \n
-# convert to ListField format\n
+if current_destination_section is not None and current_destination_section not in result:\n
+  result.append(current_destination_section)\n
+\n
 return [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
 </string> </value>
         </item>
@@ -129,11 +127,11 @@ return [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>section_cat</string>
+                            <string>section</string>
                             <string>None</string>
-                            <string>section_cat_obj</string>
+                            <string>section_value</string>
                             <string>result</string>
-                            <string>current_source_section</string>
+                            <string>current_destination_section</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -154,7 +152,7 @@ return [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransaction_getSourceSectionItemList</string> </value>
+            <value> <string>AccountingTransaction_getDestinationSectionItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -1,3 +1,6 @@
+2008-1-21 yusei
+* Section drop down list in accounting transactions should always show existing values.(bug #510)
+
 2008-1-18 yusei
 * proxify accounting transaction view forms.
 

@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getPreferredSectionItemList</string> </value>
+            <value> <string>here/AccountingTransaction_getDestinationSectionItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
