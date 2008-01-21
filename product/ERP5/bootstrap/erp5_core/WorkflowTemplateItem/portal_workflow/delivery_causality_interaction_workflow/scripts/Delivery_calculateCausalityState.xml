@@ -68,10 +68,8 @@
             <value> <string>delivery = state_change[\'object\']\n
 \n
 getCausalityState = getattr(delivery, \'getCausalityState\', None)\n
-getSimulationState = getattr(delivery, \'getSimulationState\', None)\n
 \n
-if getCausalityState is not None and getCausalityState() != \'draft\' and \\\n
-   getSimulationState is not None and getSimulationState() != \'draft\':\n
+if getCausalityState is not None and getCausalityState() != \'draft\':\n
   delivery.calculate()\n
 </string> </value>
         </item>

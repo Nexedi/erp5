@@ -75,10 +75,8 @@ if delivery_movement is not None:\n
   # getCausalityState will always be present. This getattr test needs to be removed once\n
   # Payment Transaction is linked to a correct causality workflow.\n
   getCausalityState = getattr(delivery, \'getCausalityState\', None)\n
-  getSimulationState = getattr(delivery, \'getSimulationState\', None)\n
 \n
-  if getCausalityState is not None and getCausalityState() != \'draft\' and \\\n
-     getSimulationState is not None and getSimulationState() != \'draft\':\n
+  if getCausalityState is not None and getCausalityState() != \'draft\':\n
     delivery.activate(\n
         after_path_and_method_id=(delivery_movement.getPath(),\n
         (\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))).calculate()\n
@@ -151,7 +149,6 @@ if delivery_movement is not None:\n
                             <string>delivery</string>
                             <string>getattr</string>
                             <string>getCausalityState</string>
-                            <string>getSimulationState</string>
                           </tuple>
                         </value>
                     </item>
