@@ -68,6 +68,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 # TODO: this script is not well tested and not fully implemented\n
+# TODO: this is actually PaymentCondition_getDueDate\n
 \n
 from DateTime import DateTime\n
 \n
@@ -208,6 +209,10 @@ return due_date\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>TradeCondition_getDueDate</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
