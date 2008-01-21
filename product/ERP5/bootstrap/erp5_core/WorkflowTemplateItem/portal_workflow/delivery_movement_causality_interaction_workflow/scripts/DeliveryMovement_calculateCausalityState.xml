@@ -70,8 +70,8 @@
 delivery = delivery_movement.getExplanationValue()\n
 \n
 # Check that getCausalityState is available.\n
-# For instance, Accounting Trnsaction Lines\n
-# can be contained in a Accounring Rule Cell\n
+# For instance, Accounting Transaction Lines\n
+# can be contained in a Accounting Rule Cell\n
 # of a Invoice Transaction Rule, and none of\n
 # these provide a causality workflow, but\n
 # Accounting Transaction Line is also a\n
