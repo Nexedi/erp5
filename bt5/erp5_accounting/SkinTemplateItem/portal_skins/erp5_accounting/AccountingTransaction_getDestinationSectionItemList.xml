@@ -82,7 +82,7 @@ current_destination_section = context.getDestinationSectionValue()\n
 if current_destination_section is not None and current_destination_section not in result:\n
   result.append(current_destination_section)\n
 \n
-return [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
+return [(\'\', \'\')]+[(i.getTitle(), i.getRelativeUrl()) for i in result]\n
 </string> </value>
         </item>
         <item>

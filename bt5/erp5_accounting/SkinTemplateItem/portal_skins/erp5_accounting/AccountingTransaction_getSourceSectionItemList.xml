@@ -84,7 +84,7 @@ if current_source_section is not None and current_source_section not in result:\
   result.append(current_source_section)\n
 \n
 # convert to ListField format\n
-return [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
+return [(\'\', \'\')]+[(i.getTitle(), i.getRelativeUrl()) for i in result]\n
 </string> </value>
         </item>
         <item>
