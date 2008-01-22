@@ -98,7 +98,7 @@ if listbox is None:\n
       container_dict[\'cash_number_range_stop\'] = cash_container.getCashNumberRangeStop()\n
       container_dict[\'resource_translated_title\'] = container_line.getResourceTranslatedTitle()\n
       container_dict[\'quantity\'] = container_line.getQuantity()\n
-      container_dict[\'total_price\'] = container_line.getTotalPrice()\n
+      container_dict[\'total_price\'] = container_line.getTotalPrice(fast=0)\n
       container_dict[\'selection\'] = 0\n
       container_dict[\'uid\'] = \'new_%s\' %(cash_container.getUid(),)   #cash_container.getReference().replace(\'/\', \'_\'),)\n
 \n
