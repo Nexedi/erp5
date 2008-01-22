@@ -214,9 +214,9 @@ else: \n
                                                                  ,**inventory_kw\n
                                                                  )\n
 #context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
-                                                                #, ignore_variation=0,src__=1\n
-                                                               #,**inventory_kw\n
-                                                              #))\n
+#                                                                , ignore_variation=0,src__=1\n
+#                                                               ,**inventory_kw\n
+#                                                              ))\n
 \n
 if summarise:\n
   total_quantity = 0\n

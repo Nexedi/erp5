@@ -84,6 +84,14 @@ for object in object_to_check_list:\n
         context.log(\'Error on \', (context.getRelativeUrl(),node_url))\n
         msg = Message(domain=\'ui\',message=\'Sorry, wrong source or destination\')\n
         raise ValidationFailed, (msg,)\n
+  if baobab_source is not None and object.getBaobabSourceUid() is None:\n
+    context.log(\'Error on \', (context.getRelativeUrl(),baobab_source))\n
+    msg = Message(domain=\'ui\',message=\'Sorry, wrong source or destination\')\n
+    raise ValidationFailed, (msg,)\n
+  if baobab_destination is not None and object.getBaobabDestinationUid() is None:\n
+    context.log(\'Error on \', (context.getRelativeUrl(),baobab_destination))\n
+    msg = Message(domain=\'ui\',message=\'Sorry, wrong source or destination\')\n
+    raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
