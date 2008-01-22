@@ -2443,11 +2443,11 @@ class Base( CopyContainer,
     return self.getId()
   
   # This method allows to sort objects in list is a more reasonable way
-  security.declareProtected(Permissions.View, 'getIntId')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getIntId')
   def getIntId(self):
     try:
       return int(self.getId())
-    except TypeError:
+    except ValueError:
       return None
 
   # Default views - the default security in CMFCore
