@@ -46,7 +46,7 @@ from OFS.Traversable import NotFound
 
 import re
 
-from zLOG import LOG, PROBLEM, WARNING
+from zLOG import LOG, PROBLEM, WARNING, ERROR
 
 _marker = object()
 
@@ -1071,7 +1071,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 if category_value is None :
                   message = "category does not exists for %s (%s)"%(
                                        context.getPath(), category_list)
-                  LOG('CMFCategory', PROBLEM, message)
+                  LOG('CMFCategory', ERROR, message)
                   raise CategoryError (message)
                 else :
                   result.append('%s/%s' % (base_category_id, category_value.getRelativeUrl()))
@@ -1080,7 +1080,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 if category_value is None :
                   message = "category does not exists for %s (%s)"%(
                                        context.getPath(), category_list)
-                  LOG('CMFCategory', PROBLEM, message)
+                  LOG('CMFCategory', ERROR, message)
                   raise CategoryError (message)
                 else :
                   result.append(category_value.getRelativeUrl())
