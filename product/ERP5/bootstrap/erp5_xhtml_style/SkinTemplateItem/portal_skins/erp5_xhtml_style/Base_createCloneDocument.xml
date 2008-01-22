@@ -82,6 +82,14 @@ if clone:\n
 else:\n
   portal_type = form_data[\'clone_portal_type\']\n
 \n
+parent = context.getParentValue()\n
+allowed_type_list = parent.getVisibleAllowedContentTypeList()\n
+if portal_type not in allowed_type_list:\n
+  return context.ERP5Site_redirect(\'%s/%s/view\' % (\n
+        parent.getUrl(), context.getId()),\n
+        keep_items={\'portal_status_message\':\n
+           translateString("You are not allowed to clone this object.")})\n
+\n
 # prepare query params\n
 kw = {\'portal_type\' : portal_type}\n
 \n
@@ -162,6 +170,8 @@ return new_object.Base_redirect(form_id, \n
                             <string>form_data</string>
                             <string>portal_type</string>
                             <string>_getitem_</string>
+                            <string>parent</string>
+                            <string>allowed_type_list</string>
                             <string>kw</string>
                             <string>getattr</string>
                             <string>None</string>
