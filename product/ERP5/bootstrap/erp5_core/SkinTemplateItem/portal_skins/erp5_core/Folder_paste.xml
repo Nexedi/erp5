@@ -78,7 +78,7 @@ if context.cb_dataValid:\n
   except AttributeError:\n
     error_message = N_(\'Sorry+you+can+not+paste+theses+Items+here\')\n
   else:\n
-    allowed_type_list = [x.id for x in context.getVisibleAllowedContentTypeList()]\n
+    allowed_type_list = [x for x in context.getVisibleAllowedContentTypeList()]\n
     for portal_type in portal_type_list:\n
       if portal_type not in allowed_type_list:\n
         error_message = N_(\'Sorry+you+can+not+paste+theses+Items+here\')\n
