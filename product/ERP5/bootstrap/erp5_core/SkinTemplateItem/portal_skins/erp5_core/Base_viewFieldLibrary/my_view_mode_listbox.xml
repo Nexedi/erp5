@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -345,7 +342,12 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -531,11 +533,8 @@ string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getI
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
