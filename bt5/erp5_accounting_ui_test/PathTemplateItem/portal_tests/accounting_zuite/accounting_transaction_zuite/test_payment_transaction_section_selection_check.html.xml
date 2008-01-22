@@ -93,7 +93,7 @@ Test Section Selection for Payment Transaction.\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>field_my_destination_section</td>\n
+  <td>field_my_source_section</td>\n
   <td>label=My Organisation</td>\n
 </tr>\n
 <tr>\n
@@ -151,7 +151,7 @@ Test Section Selection for Payment Transaction.\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>field_my_destination_section</td>\n
+  <td>field_my_source_section</td>\n
   <td>organisation_module/my_organisation</td>\n
 </tr>\n
 \n

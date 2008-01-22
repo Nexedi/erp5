@@ -68,6 +68,7 @@
             <value> <string>preference = context.portal_preferences.accounting_zuite_preference\n
 preference.setPreferredAccountingTransactionSectionCategory(\'group/demo_group\')\n
 preference.setPreferredSectionCategory(\'group/demo_group\')\n
+preference.setPreferredAccountingTransactionSourceSection(\'organisation_module/my_organisation\')\n
 \n
 return str((preference.getPreferredSectionCategory(), preference.getPreferredAccountingTransactionSectionCategory()))\n
 </string> </value>
