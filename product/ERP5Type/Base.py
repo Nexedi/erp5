@@ -2447,7 +2447,7 @@ class Base( CopyContainer,
   def getIntId(self):
     try:
       return int(self.getId())
-    except ValueError:
+    except (ValueError, TypeError):
       return None
 
   # Default views - the default security in CMFCore
