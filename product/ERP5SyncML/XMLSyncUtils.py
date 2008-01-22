@@ -50,6 +50,7 @@ try:
   from Ft.Xml.Domlette import PrettyPrint
 except ImportError:
   from xml.dom.ext import PrettyPrint
+from xml.dom import minidom
 
 class XMLSyncUtilsMixin(SyncCode):
 
@@ -449,14 +450,14 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     erp5diff = ERP5Diff()
     erp5diff.compare(old_xml, object_xml)
-    #minidom is buggy, add namespace declaration, and version, only if attribute version doesn't exists
-    ns = 'http://www.xmldb.org/xupdate'
-    if not erp5diff._result.documentElement.hasAttributeNS(ns, 'version'):
-      attr_version = erp5diff._result.createAttributeNS(ns, 'version')
+    if isinstance(erp5diff._result, minidom.Document):
+      #XXX While ERP5Diff use minidom, this part needs to be keeped.
+      #minidom is buggy, add namespace declaration, and version attributes
+      attr_version = erp5diff._result.createAttributeNS(None, 'version')
       attr_version.value = '1.0'
       erp5diff._result.documentElement.setAttributeNodeNS(attr_version)
-      attr_ns = erp5diff._result.createAttributeNS(ns, 'xmlns:xupdate')
-      attr_ns.value = ns
+      attr_ns = erp5diff._result.createAttributeNS(None, 'xmlns:xupdate')
+      attr_ns.value = 'http://www.xmldb.org/xupdate'
       erp5diff._result.documentElement.setAttributeNodeNS(attr_ns)
       xupdate = erp5diff._result.toxml('utf-8')
     else:
