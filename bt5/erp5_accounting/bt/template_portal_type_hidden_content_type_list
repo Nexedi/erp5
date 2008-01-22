@@ -2,5 +2,9 @@ Accounting Transaction Module | Balance Transaction
 Accounting Transaction | Accounting Transaction Line
 Balance Transaction | Balance Transaction Line
 Payment Transaction | Accounting Transaction Line
+Preference | Accounting Transaction
+Preference | Payment Transaction
+Preference | Purchase Invoice Transaction
+Preference | Sale Invoice Transaction
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
 Sale Invoice Transaction | Sale Invoice Transaction Line

@@ -11,6 +11,12 @@
  <portal_type id="Payment Transaction">
   <item>Accounting Transaction Line</item>
  </portal_type>
+ <portal_type id="Preference">
+  <item>Payment Transaction</item>
+  <item>Accounting Transaction</item>
+  <item>Sale Invoice Transaction</item>
+  <item>Purchase Invoice Transaction</item>
+ </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Purchase Invoice Transaction Line</item>
  </portal_type>
