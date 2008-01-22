@@ -71,7 +71,16 @@ if resource in (None,\'None\'):\n
   resource = request.get(\'field_my_resource\',None)\n
 item_model = context.getPortalObject().restrictedTraverse(resource)\n
 \n
-return item_model.getVariationRangeCategoryItemList(display_id=\'title\',display_base_category=0)\n
+variation_list = item_model.getVariationRangeCategoryItemList(display_id=\'title\',display_base_category=0)\n
+\n
+# The 50 one is the default one\n
+def sort_variation_list(a, b):\n
+  if a[0] == \'50\':\n
+    return -1\n
+  return cmp(a[0], b[0])\n
+\n
+variation_list.sort(sort_variation_list)\n
+return variation_list\n
 </string> </value>
         </item>
         <item>
@@ -127,6 +136,8 @@ return item_model.getVariationRangeCategoryItemList(display_id=\'title\',display
                             <string>None</string>
                             <string>resource</string>
                             <string>item_model</string>
+                            <string>variation_list</string>
+                            <string>sort_variation_list</string>
                           </tuple>
                         </value>
                     </item>
