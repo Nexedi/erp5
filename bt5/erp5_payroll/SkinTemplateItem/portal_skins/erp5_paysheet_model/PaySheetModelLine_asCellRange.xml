@@ -78,7 +78,9 @@ def framing(cell, name):\n
     e.g. : \'2682.0 <= Tranche B < 10728\'\n
   \'\'\'\n
   if cell is None:\n
-    raise "PaySheetModelLine_asCellRange Error", "cell is None"\n
+    # This error happens when the cell is not found in the parent model or any\n
+    # inherited model.\n
+    raise "PaySheetModelLine_asCellRange Error", "cell is None for %s" % name\n
   return \'%s <= %s < %s\' % (str(cell.getQuantityRangeMin()), name,\n
       str(cell.getQuantityRangeMax()))\n
 \n
@@ -93,7 +95,8 @@ if matrixbox :\n
     base_category_list = resource.getVariationBaseCategoryList()\n
     for base_category in base_category_list:\n
       category_cell_range = []\n
-      category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,))\n
+      category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,),\n
+                                                                checked_permission=\'View\')\n
       for category_item in category_item_list:\n
         if base_category == \'salary_range\':\n
           category_cell_range.append((category_item[1],\\\n
