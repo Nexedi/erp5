@@ -478,6 +478,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Edit ParsedXML</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
   </permission>
@@ -681,6 +685,10 @@
    <role>Author</role>
    <role>Manager</role>
    <role>Member</role>
+  </permission>
+  <permission type='tuple'>
+   <name>View DOM hierarchy</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>View History</name>

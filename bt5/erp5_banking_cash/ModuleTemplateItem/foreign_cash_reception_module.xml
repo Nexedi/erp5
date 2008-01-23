@@ -472,6 +472,9 @@
    <name>Edit Factories</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Edit ParsedXML</name>
+  </permission>
   <permission type='tuple'>
    <name>Edit ReStructuredText</name>
    <role>Manager</role>
@@ -673,6 +676,9 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>View DOM hierarchy</name>
   </permission>
   <permission type='tuple'>
    <name>View History</name>
