@@ -100,7 +100,7 @@ if destination is None:\n
 \n
 # check we are in an opened accounting day\n
 transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate())\n
-transaction.Baobab_checkCounterOpened(site=destination)\n
+transaction.Baobab_checkCounterOpened(destination)\n
 \n
 site = transaction.getDestinationValue()\n
 # I comment theses lines, because it\'s not necessary to control if all counter is opened or not at the moment : CISSE\n
