@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getVariationRangeCategoryItemList</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
