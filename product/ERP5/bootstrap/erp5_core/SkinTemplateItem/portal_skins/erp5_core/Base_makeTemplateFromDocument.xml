@@ -68,7 +68,7 @@
             <value> <string>portal_preferences = context.portal_preferences\n
 \n
 preference = portal_preferences.getActivePreference()\n
-if preference.getPreferenceState()!=\'enabled\':\n
+if preference is None or preference.getPreferenceState()!=\'enabled\':\n
   p = portal_preferences.newContent()\n
   p.setTitle(\'Document Template Container\')\n
   p.enable()\n
@@ -135,6 +135,7 @@ return context.Base_redirect(form_id,\n
                             <string>context</string>
                             <string>portal_preferences</string>
                             <string>preference</string>
+                            <string>None</string>
                             <string>p</string>
                             <string>parent</string>
                             <string>document_id</string>
