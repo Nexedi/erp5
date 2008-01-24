@@ -1,3 +1,6 @@
+2008-01-24 Yusei
+* Added a user interface for template system(manage template of document).
+
 2008-01-14 Yusei
 * Added scriptable key field in business template. Please use revision 18701 or newer of ERP5 product.
 

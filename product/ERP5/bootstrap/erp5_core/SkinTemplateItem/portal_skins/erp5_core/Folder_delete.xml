@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -110,7 +107,7 @@ elif uids is not None:\n
   # Check if there is some related objets.\n
   object_used = 0\n
 \n
-  object_list = [x.getObject() for x in context.portal_catalog(uid=uids)]\n
+  object_list = [x.getObject() for x in context.Folder_getDeleteObjectList(uid=uids)]\n
   object_used = sum([Object_hasRelation(x) for x in object_list])\n
 \n
   if object_used > 0:\n
@@ -130,7 +127,7 @@ elif uids is not None:\n
 \n
       history_dict = object.Base_getWorkflowHistory()\n
       history_dict.pop(\'edit_workflow\', None)\n
-      if history_dict == {}:\n
+      if history_dict == {} or object.aq_parent.portal_type==\'Preference\':\n
         object_to_remove_list.append(object)\n
       else:\n
         # If a workflow manage a history, \n
@@ -140,9 +137,15 @@ elif uids is not None:\n
     # Remove some objects\n
     try:\n
       if object_to_remove_list != []:\n
-        context.manage_delObjects(\n
-                      uids=[x.getUid() for x in object_to_remove_list],\n
-                      REQUEST=REQUEST)\n
+        if context.portal_type==\'Preference\':\n
+          context.manage_delObjects(\n
+                        ids=[x.getId() for x in object_to_remove_list],\n
+                        REQUEST=REQUEST)\n
+          context.portal_caches.clearCacheFactory(\'erp5_ui_medium\')\n
+        else:\n
+          context.manage_delObjects(\n
+                        uids=[x.getUid() for x in object_to_remove_list],\n
+                        REQUEST=REQUEST)\n
     except ConflictError:\n
       raise\n
     except Exception, message:\n
@@ -287,6 +290,7 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
                             <string>object_ids</string>
                             <string>comment</string>
                             <string>not_deleted_count</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
