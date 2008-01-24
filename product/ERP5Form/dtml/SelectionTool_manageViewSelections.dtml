@@ -24,7 +24,8 @@ This page show the active selections for the current user.
 
   <dtml-in getSelectionNameList>
    <tr>
-    <td><a href="manage_deleteSelection?selection_name=<dtml-var sequence-item>">Delete</a></td>
+    <td><a href="manage_deleteSelection?selection_name=<dtml-var sequence-item>">Delete (user)</a></td>
+    <td><a href="manage_deleteGlobalSelection?selection_name=<dtml-var sequence-item>">Delete (Global)</a></td>
     <td> <dtml-var sequence-item></td>
     <td> <dtml-var
       expr="getSelectionParams(_['sequence-item'])" html_quote></td>

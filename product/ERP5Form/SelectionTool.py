@@ -99,6 +99,17 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         return REQUEST.RESPONSE.redirect('%s/%s' %
                 (self.absolute_url(), 'manage_viewSelections'))
 
+    security.declareProtected( ERP5Permissions.ManagePortal
+                             , 'manage_deleteGlobalSelection' )
+    def manage_deleteGlobalSelection(self, selection_name, REQUEST=None):
+      """
+        Relete a specified selection
+      """
+      self._deleteGlobalSelectionFromContainer(selection_name)
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect('%s/%s' %
+                (self.absolute_url(), 'manage_viewSelections'))
+
     # storages of SelectionTool
     storage_list = ('Persistent Mapping', 'Memcached Tool')
 
@@ -1249,6 +1260,19 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       else:
         del(self._getPersistentContainer(user_id)[selection_name])
 
+    def _deleteGlobalSelectionFromContainer(self, selection_name):
+      id_list = []
+      if self.isMemcachedUsed():
+        for k in self._getMemcachedContainer().keys():
+          if k.split('-')[1] == selection_name:
+            del(self._getMemcachedContainer()[k])
+      else:
+        if getattr(aq_base(self), 'selection_data', None) is not None:
+          for user_id in self.selection_data.keys():
+            mapping = self._getPersistentContainer(user_id)
+            if mapping.has_key(selection_name):
+              del(mapping[selection_name])
+
     def _getSelectionNameListFromContainer(self):
       if self.isMemcachedUsed():
         return []
@@ -1258,14 +1282,14 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         return self._getPersistentContainer(user_id).keys()
 
     def _getMemcachedContainer(self):
-      value = getattr(self, '_v_selection_data', None)
+      value = getattr(aq_base(self), '_v_selection_data', None)
       if value is None:
         value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
         setattr(self, '_v_selection_data', value)
       return value
 
     def _getPersistentContainer(self, user_id):
-      if getattr(self, 'selection_data', None) is None:
+      if getattr(aq_base(self), 'selection_data', None) is None:
         self.selection_data = PersistentMapping()
       if not self.selection_data.has_key(user_id):
         self.selection_data[user_id] = SelectionPersistentMapping()
