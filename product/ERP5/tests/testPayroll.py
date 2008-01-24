@@ -1042,6 +1042,113 @@ class TestPayroll(TestPayrollMixin):
     sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     self.assertEqual(len(sub_object_list), 11)
     
+  def test_07_model_getCell(self, quiet=QUIET, 
+      run=RUN_ALL_TESTS):
+    '''
+      Model objects have a overload method called getCell. This method first
+      call the XMLMatrix.getCell and if the cell is not found, call
+      getCell method in all it's inherited model until the cell is found or
+      the cell have been searched on all inherited models.
+
+      TODO : Currently, the method use a Depth-First Search algorithm, it will
+      be better to use Breadth-First Search one.
+      more about this on :
+        - http://en.wikipedia.org/wiki/Breadth-first_search
+        - http://en.wikipedia.org/wiki/Depth-first_search
+    '''
+    if not run: return
+    if not quiet:
+      self.logMessage('Model getCell')
+
+    # create 3 models
+    model_employee = self.paysheet_model_module.newContent(id='model_employee',
+        portal_type='Pay Sheet Model')
+    model_employee.edit(variation_settings_category_list=
+        self.variation_settings_category_list)
+
+    model_company = self.paysheet_model_module.newContent(id='model_company',
+        portal_type='Pay Sheet Model')
+    model_company.edit(variation_settings_category_list=
+        self.variation_settings_category_list)
+
+    model_country = self.paysheet_model_module.newContent(id='model_country',
+        portal_type='Pay Sheet Model')
+    model_country.edit(variation_settings_category_list=
+        self.variation_settings_category_list)
+
+    # add some cells in the models
+    model_employee.updateCellRange(base_id='cell')
+    self.addSlice(model_employee, 'salary_range/%s' % \
+        self.france_settings_slice_a, 0, self.plafond)
+
+    model_company.updateCellRange(base_id='cell')
+    self.addSlice(model_company, 'salary_range/%s' % \
+        self.france_settings_slice_b, self.plafond, self.plafond*4)
+
+    model_country.updateCellRange(base_id='cell')
+    self.addSlice(model_country, 'salary_range/%s' % \
+        self.france_settings_slice_c, self.plafond*4, self.plafond*8)
+    
+    # inherite from each other
+    model_employee.setSpecialiseValue(model_company)
+    model_company.setSpecialiseValue(model_country)
+
+
+    # check getCell results
+
+    # check model_employee could access all cells
+    cell_a = model_employee.getCell('salary_range/%s' % \
+                        self.france_settings_slice_a)
+    self.assertNotEqual(cell_a, None)
+    self.assertEqual(cell_a.getQuantityRangeMin(), 0)
+    self.assertEqual(cell_a.getQuantityRangeMax(), self.plafond)
+
+    cell_b = model_employee.getCell('salary_range/%s' % \
+                        self.france_settings_slice_b)
+    self.assertNotEqual(cell_b, None)
+    self.assertEqual(cell_b.getQuantityRangeMin(), self.plafond)
+    self.assertEqual(cell_b.getQuantityRangeMax(), self.plafond*4)
+
+    cell_c = model_employee.getCell('salary_range/%s' % \
+                        self.france_settings_slice_c)
+    self.assertNotEqual(cell_c, None)
+    self.assertEqual(cell_c.getQuantityRangeMin(), self.plafond*4)
+    self.assertEqual(cell_c.getQuantityRangeMax(), self.plafond*8)
+
+    # check model_company could access just it's own cell and this of the country
+    # model
+    cell_a = model_company.getCell('salary_range/%s' % \
+                        self.france_settings_slice_a)
+    self.assertEqual(cell_a, None)
+
+    cell_b = model_company.getCell('salary_range/%s' % \
+                        self.france_settings_slice_b)
+    self.assertNotEqual(cell_b, None)
+    self.assertEqual(cell_b.getQuantityRangeMin(), self.plafond)
+    self.assertEqual(cell_b.getQuantityRangeMax(), self.plafond*4)
+
+    cell_c = model_company.getCell('salary_range/%s' % \
+                        self.france_settings_slice_c)
+    self.assertNotEqual(cell_c, None)
+    self.assertEqual(cell_c.getQuantityRangeMin(), self.plafond*4)
+    self.assertEqual(cell_c.getQuantityRangeMax(), self.plafond*8)
+
+    # check model_country could access just it's own cell
+    # model
+    cell_a = model_country.getCell('salary_range/%s' % \
+                        self.france_settings_slice_a)
+    self.assertEqual(cell_a, None)
+
+    cell_b = model_country.getCell('salary_range/%s' % \
+                        self.france_settings_slice_b)
+    self.assertEqual(cell_b, None)
+
+    cell_c = model_country.getCell('salary_range/%s' % \
+                        self.france_settings_slice_c)
+    self.assertNotEqual(cell_c, None)
+    self.assertEqual(cell_c.getQuantityRangeMin(), self.plafond*4)
+    self.assertEqual(cell_c.getQuantityRangeMax(), self.plafond*8)
+
 
 import unittest
 def test_suite():
