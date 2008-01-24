@@ -1079,15 +1079,17 @@ class TestPayroll(TestPayrollMixin):
     # add some cells in the models
     model_employee.updateCellRange(base_id='cell')
     self.addSlice(model_employee, 'salary_range/%s' % \
-        self.france_settings_slice_a, 0, self.plafond)
+        self.france_settings_slice_a, 0, 1)
 
     model_company.updateCellRange(base_id='cell')
     self.addSlice(model_company, 'salary_range/%s' % \
-        self.france_settings_slice_b, self.plafond, self.plafond*4)
+        self.france_settings_slice_b, 2, 3)
+    self.addSlice(model_company, 'salary_range/%s' % \
+        self.france_settings_forfait, 20, 30)
 
     model_country.updateCellRange(base_id='cell')
     self.addSlice(model_country, 'salary_range/%s' % \
-        self.france_settings_slice_c, self.plafond*4, self.plafond*8)
+        self.france_settings_slice_c, 4, 5)
     
     # inherite from each other
     model_employee.setSpecialiseValue(model_company)
@@ -1101,19 +1103,25 @@ class TestPayroll(TestPayrollMixin):
                         self.france_settings_slice_a)
     self.assertNotEqual(cell_a, None)
     self.assertEqual(cell_a.getQuantityRangeMin(), 0)
-    self.assertEqual(cell_a.getQuantityRangeMax(), self.plafond)
+    self.assertEqual(cell_a.getQuantityRangeMax(), 1)
 
     cell_b = model_employee.getCell('salary_range/%s' % \
                         self.france_settings_slice_b)
     self.assertNotEqual(cell_b, None)
-    self.assertEqual(cell_b.getQuantityRangeMin(), self.plafond)
-    self.assertEqual(cell_b.getQuantityRangeMax(), self.plafond*4)
+    self.assertEqual(cell_b.getQuantityRangeMin(), 2)
+    self.assertEqual(cell_b.getQuantityRangeMax(), 3)
+
+    cell_forfait = model_employee.getCell('salary_range/%s' % \
+                        self.france_settings_forfait)
+    self.assertNotEqual(cell_forfait, None)
+    self.assertEqual(cell_forfait.getQuantityRangeMin(), 20)
+    self.assertEqual(cell_forfait.getQuantityRangeMax(), 30)
 
     cell_c = model_employee.getCell('salary_range/%s' % \
                         self.france_settings_slice_c)
     self.assertNotEqual(cell_c, None)
-    self.assertEqual(cell_c.getQuantityRangeMin(), self.plafond*4)
-    self.assertEqual(cell_c.getQuantityRangeMax(), self.plafond*8)
+    self.assertEqual(cell_c.getQuantityRangeMin(), 4)
+    self.assertEqual(cell_c.getQuantityRangeMax(), 5)
 
     # check model_company could access just it's own cell and this of the country
     # model
@@ -1124,14 +1132,20 @@ class TestPayroll(TestPayrollMixin):
     cell_b = model_company.getCell('salary_range/%s' % \
                         self.france_settings_slice_b)
     self.assertNotEqual(cell_b, None)
-    self.assertEqual(cell_b.getQuantityRangeMin(), self.plafond)
-    self.assertEqual(cell_b.getQuantityRangeMax(), self.plafond*4)
+    self.assertEqual(cell_b.getQuantityRangeMin(), 2)
+    self.assertEqual(cell_b.getQuantityRangeMax(), 3)
+
+    cell_forfait = model_company.getCell('salary_range/%s' % \
+                        self.france_settings_forfait)
+    self.assertNotEqual(cell_forfait, None)
+    self.assertEqual(cell_forfait.getQuantityRangeMin(), 20)
+    self.assertEqual(cell_forfait.getQuantityRangeMax(), 30)
 
     cell_c = model_company.getCell('salary_range/%s' % \
                         self.france_settings_slice_c)
     self.assertNotEqual(cell_c, None)
-    self.assertEqual(cell_c.getQuantityRangeMin(), self.plafond*4)
-    self.assertEqual(cell_c.getQuantityRangeMax(), self.plafond*8)
+    self.assertEqual(cell_c.getQuantityRangeMin(), 4)
+    self.assertEqual(cell_c.getQuantityRangeMax(), 5)
 
     # check model_country could access just it's own cell
     # model
@@ -1143,11 +1157,15 @@ class TestPayroll(TestPayrollMixin):
                         self.france_settings_slice_b)
     self.assertEqual(cell_b, None)
 
+    cell_forfait = model_country.getCell('salary_range/%s' % \
+                        self.france_settings_forfait)
+    self.assertEqual(cell_forfait, None)
+
     cell_c = model_country.getCell('salary_range/%s' % \
                         self.france_settings_slice_c)
     self.assertNotEqual(cell_c, None)
-    self.assertEqual(cell_c.getQuantityRangeMin(), self.plafond*4)
-    self.assertEqual(cell_c.getQuantityRangeMax(), self.plafond*8)
+    self.assertEqual(cell_c.getQuantityRangeMin(), 4)
+    self.assertEqual(cell_c.getQuantityRangeMax(), 5)
 
 
 import unittest
