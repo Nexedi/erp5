@@ -62,7 +62,7 @@ class XMLObject( Folder ):
       {    'id'             : portal_type
          , 'meta_type'      : meta_type
          , 'description'    : "ERP5 default document. Supports synchronisation and XML."
-         , 'icon'           : 'document.gif'
+         , 'icon'           : 'document_icon.gif'
          , 'product'        : 'ERP5Type'
          , 'factory'        : 'addXMLObject'
          , 'immediate_view' : 'XMLObject_view'
