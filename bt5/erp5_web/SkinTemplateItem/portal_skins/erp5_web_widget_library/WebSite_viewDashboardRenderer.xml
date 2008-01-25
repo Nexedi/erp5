@@ -50,11 +50,8 @@
 <tal:block metal:define-macro="act">\n
  <tal:block tal:define="tasks python: list(here.WebSite_getPendingEventInfoList())[:TASK_LEN];">\n
     <div class="boxHeader" >\n
-      <a  i18n:translate="" i18n:domain="ui"\n
-        tal:attributes="href string: search_area/WebSite_viewPendingEventList">\n
-        Act <span class="details">(<span class="newItem" tal:content="python:len(tasks)"/>\n
-        <tal:block i18n:translate="" i18n:domain="ui">total</tal:block>)</span>\n
-      </a>\n
+      <a tal:attributes="href string: search_area/WebSite_viewPendingEventList"\n
+         tal:content="python: \'%s (%s %s)\' % (here.Base_translateString(\'Act\'), len(tasks), here.Base_translateString(\'total\'))" />\n
     </div>\n
     <div class="boxContent">\n
       <ul>\n
@@ -62,11 +59,11 @@
          <tal:block tal:condition="python:doc is not None">\n
           <a tal:define="url python: \'%s/view\' % doc.absolute_url()"\n
             tal:attributes="href url">\n
-            <span tal:replace="doc/portal_type"/>:\n
+            <span tal:replace="python: doc.getTranslatedPortalType()"/>:\n
             <span tal:replace="doc/getTitle"/>\n
             <span tal:condition="python: hasattr(doc, \'getVersion\') and doc.getVersion()" \n
                         tal:replace="python: \'ver. %s\' % doc.getVersion()"/>\n
-            (<span tal:content="python: (getattr(doc, \'getValidationStateTitle\',None) and doc.getValidationStateTitle()) or (getattr(doc, \'getSimulationStateTitle\', None) and doc.getSimulationStateTitle())" \n
+            (<span tal:content="python: (getattr(doc, \'getTranslatedValidationStateTitle\',None) and doc.getTranslatedValidationStateTitle()) or (getattr(doc, \'getSimulationStateTitle\', None) and doc.getTranslatedSimulationStateTitle())" \n
                     tal:attributes="class doc/getTranslatedValidationStateTitle|doc/getTranslatedSimulationStateTitle|nothing"/>)\n
           </a>\n
          </tal:block>\n
@@ -96,7 +93,7 @@
             <tal:block tal:replace="newsitem/getTitleOrId"\n
                        tal:on-error="string:"/>\n
           </a>\n
-          <tal:block tal:replace="python: \'(%s)\' % newsitem.getPortalType()"\n
+          <tal:block tal:replace="python: \'(%s)\' % newsitem.getTranslatedPortalType()"\n
                      tal:on-error="string:"/>\n
         </li>\n
       </ul>\n
