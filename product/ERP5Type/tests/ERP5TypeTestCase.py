@@ -419,6 +419,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getTrashTool(self):
       return getToolByName(self.getPortal(), 'portal_trash', None)
 
+    def getPasswordTool(self):
+      return getToolByName(self.getPortal(), 'portal_password', None)
+
     def getSkinsTool(self):
       return getToolByName(self.getPortal(), 'portal_skins', None)
 
