@@ -68,6 +68,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """Validates the transaction for both source and destination section.\n
+\n
+XXX why proxy role ???\n
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n

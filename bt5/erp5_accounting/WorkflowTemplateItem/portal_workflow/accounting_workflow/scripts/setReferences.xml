@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change[\'object\']\n
+            <value> <string>"""Set automatic references on the document.\n
+"""\n
+\n
+transaction = state_change[\'object\']\n
 \n
 # Get sections.\n
 source_section = transaction.getSourceSection()\n

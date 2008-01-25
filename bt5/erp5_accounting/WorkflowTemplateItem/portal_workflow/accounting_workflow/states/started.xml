@@ -17,11 +17,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Started state is a state where the user can modify the transaction, then go back to Stopped state, which will check transaction validity.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deleted</string> </value>
+            <value> <string>started</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,12 +31,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Modifable</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>stop</string>
+                <string>stop_action</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -51,41 +54,65 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

@@ -49,6 +49,7 @@
                 <string>View</string>
                 <string>Access contents information</string>
                 <string>Add portal content</string>
+                <string>Delete objects</string>
               </tuple>
             </value>
         </item>

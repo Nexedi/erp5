@@ -21,23 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Define Account Balance</string> </value>
+            <value> <string>Modify Transaction</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=balance_action&button_title=Define+Account+Balance
-
-]]></string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=restart_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>setReferences</string> </value>
+            <value> <string>start</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This user actions should only be used to set up the balanche of all accounts when a company migrates to ERP5 from another ERP</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -47,19 +43,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>balance_action</string> </value>
+            <value> <string>restart_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateBalanceTransaction</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Define Account Balance</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -71,47 +67,20 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>expr</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
         <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: here.getPortalType() == \'Balance Transaction\'</string> </value>
         </item>
       </dictionary>
     </pickle>
