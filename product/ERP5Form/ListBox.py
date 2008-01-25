@@ -791,7 +791,13 @@ class ListBoxRenderer:
   def getListActionUrl(self):
     """Return the URL of the list action.
     """
-    list_action_part_list = [self.getContext().absolute_url(), '/', self.field.get_value('list_action')]
+    list_action = self.field.get_value('list_action')
+    if '/' in list_action:
+      # This is a 'real' URL
+      return list_action
+    else:
+      # This is only a method name. Let us build the URL
+      list_action_part_list = [self.getContext().absolute_url(), '/', list_action]
     if '?' in list_action_part_list[-1]:
       list_action_part_list.append('&reset=1')
     else:
