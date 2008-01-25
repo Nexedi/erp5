@@ -31,12 +31,16 @@
 """
 
 import unittest
+
+from Testing import ZopeTestCase
+from DateTime import DateTime
+from Products.CMFCore.utils import _checkPermission
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from DateTime import DateTime
 
 SOURCE = 'source'
 DESTINATION = 'destination'
@@ -105,7 +109,7 @@ class AccountingTestCase(ERP5TypeTestCase):
   rather than modifying default documents. 
   """
   
-  username = 'username'
+  username = ZopeTestCase.user_name
 
   @reindex
   def _makeOne(self, portal_type='Accounting Transaction', lines=None,
@@ -143,7 +147,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     return tr
 
 
-  def login(self):
+  def login(self, name=username):
     """login with Assignee, Assignor & Author roles."""
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor', 'Author'], [])
@@ -459,6 +463,47 @@ class TestTransactionValidation(AccountingTestCase):
       if line.getDestinationId() == 'receivable':
         line.setDestinationAssetDebit(38.99)
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+
+  def test_AccountingWorkflow(self):
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           source_credit=500)))
+    
+    doActionFor = self.portal.portal_workflow.doActionFor
+    self.assertEquals('draft', transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content', transaction))
+                    
+    doActionFor(transaction, 'plan_action')
+    self.assertEquals('planned', transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content', transaction))
+
+    doActionFor(transaction, 'confirm_action')
+    self.assertEquals('confirmed', transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content', transaction))
+
+    doActionFor(transaction, 'stop_action')
+    self.assertEquals('stopped', transaction.getSimulationState())
+    self.assertFalse(_checkPermission('Modify portal content', transaction))
+    
+    doActionFor(transaction, 'restart_action')
+    self.assertEquals('started', transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content', transaction))
+
+    doActionFor(transaction, 'stop_action')
+    self.assertEquals('stopped', transaction.getSimulationState())
+    self.assertFalse(_checkPermission('Modify portal content', transaction))
+
+    doActionFor(transaction, 'deliver_action')
+    self.assertEquals('delivered', transaction.getSimulationState())
+    self.assertFalse(_checkPermission('Modify portal content', transaction))
 
 
 class TestClosingPeriod(AccountingTestCase):
