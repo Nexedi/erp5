@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -73,9 +70,15 @@
   The edit_document_url is used to define the URL to return to\n
   after editing the document.\n
 """\n
+\n
+# This is required in case of field using \'is_web_mode\' in TALES expression\n
+context.REQUEST.set(\'is_web_mode\', 1)\n
+\n
 # Retrieve the edit action\n
 edit_method = getattr(context, form_action)\n
-return edit_method(form_id, editable_mode=editable_mode, ignore_layout=ignore_layout, **kw)\n
+return edit_method(form_id, editable_mode=editable_mode, \n
+                   ignore_layout=ignore_layout, \n
+                   **kw)\n
 </string> </value>
         </item>
         <item>
@@ -130,8 +133,9 @@ return edit_method(form_id, editable_mode=editable_mode, ignore_layout=ignore_la
                             <string>editable_mode</string>
                             <string>ignore_layout</string>
                             <string>kw</string>
-                            <string>getattr</string>
+                            <string>_getattr_</string>
                             <string>context</string>
+                            <string>getattr</string>
                             <string>edit_method</string>
                             <string>_apply_</string>
                           </tuple>
