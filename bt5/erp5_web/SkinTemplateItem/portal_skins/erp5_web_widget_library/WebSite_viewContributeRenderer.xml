@@ -98,10 +98,10 @@
         <img src="send_by_mail" border="0"/>\n
         <tal:block  i18n:translate="" i18n:domain="ui">Click here to contribute by Email</tal:block></a>\n
       &nbsp;\n
-      <input type="submit" name="Memo_makeOOoTemplate:method" value="Make Template" id="maketemplatebutton" disabled="disabled"\n
+      <input i18n:domain="ui" i18n:attributes="value" type="submit" name="Memo_makeOOoTemplate:method" value="Make Template" id="maketemplatebutton" disabled="disabled"\n
              style="width:100px;background-image:none;"/>\n
       &nbsp;\n
-      <input type="submit" name="WebSite_contributeContent:method" value="Contribute"/>\n
+      <input i18n:domain="ui" i18n:attributes="value" type="submit" name="WebSite_contributeContent:method" value="Contribute"/>\n
     </div>\n
       \n
       \n
@@ -128,7 +128,7 @@
         <textarea cols="80" rows="2" name="link_description"></textarea>\n
       </div>\n
     </div>\n
-    <input style="float:right" type="submit" name="WebSite_linkContent:method" value="Contribute"/>\n
+    <input i18n:domain="ui" i18n:attributes="value" style="float:right" type="submit" name="WebSite_linkContent:method" value="Contribute"/>\n
     <div class="clear"></div>\n
   </div>\n
   \n

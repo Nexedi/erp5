@@ -88,7 +88,7 @@ Description:\n
                       i18n:translate="" i18n:domain="ui">Standard Type</option>\n
             </tal:block>\n
           </select>\n
-          <input type="submit" name="search_area/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
+          <input i18n:domain="ui" i18n:attributes="value" type="submit" name="search_area/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
         </div>\n
         <div class="searchOptions">\n
           <a tal:attributes="href string: search_area/Base_viewAdvancedSearchDialog" i18n:translate="" i18n:domain="ui">Advanced Search</a> | <a href="javascript:void 0" onclick="javascript:openTips();" value="" i18n:translate="" i18n:domain="ui">Search Tips</a>\n
@@ -170,13 +170,14 @@ Description:\n
                     tal:attributes="value ptype"  tal:content="python:ptype"\n
                     i18n:translate="" i18n:domain="ui">Standard Type</option>\n
         </select>\n
-        <input type="submit" name="WebSite_postQueryWithType:method" value="Send Query to Expert"/>\n
+        <input type="submit" i18n:domain="ui" i18n:attributes="value" name="WebSite_postQueryWithType:method" value="Send Query to Expert"/>\n
         <div class="clear"></div>\n
       </div>\n
     </div>\n
   \n
   </div>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
