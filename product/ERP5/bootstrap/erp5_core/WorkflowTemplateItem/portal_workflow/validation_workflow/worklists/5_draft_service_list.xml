@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Organisations to validate (%(count)s)</string> </value>
+            <value> <string>Services to validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-organisation_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
+service_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Organisations to validate</string> </value>
+            <value> <string>Services to validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ organisation_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2_draft_organisation_list</string> </value>
+            <value> <string>5_draft_service_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -57,11 +57,8 @@ organisation_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,24 +78,21 @@ organisation_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Organisation</string>
+                        <string>Service</string>
                       </tuple>
                     </value>
                 </item>
