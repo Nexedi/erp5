@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -71,7 +68,7 @@
             <value> <string>"""\n
   This script is a sample script skeleton (part of erp5_web)\n
   which can be used to create user (Person object) \n
-  \n
+\n
   Notes:\n
     - the script is normally executed by anonymous user with Manager proxy roles which \n
       you have to turn on after adjusting this script to your needs.\n
@@ -81,45 +78,38 @@
 """\n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
-# validate form manually\n
-form = context.WebSite_viewRegistrationDialog\n
-try:\n
-  form.validate_all_to_request(context.REQUEST)\n
-except (FormValidationError, ValidationError,), validation_errors:\n
-  context.REQUEST.set(\'field_errors\', form.ErrorFields(validation_errors))  \n
-  return form()\n
+# Call Base_edit\n
+result, result_type = context.Base_edit(form_id, silent_mode=1, field_prefix=\'your_\')\n
 \n
-# extract only user details\n
-kw = context.REQUEST\n
-filtered_kw = {}\n
-prefix = \'field_your_\'\n
-for key in kw.keys():\n
-  if key.startswith(prefix):\n
-    filtered_kw[key.replace(prefix, \'\')] = kw[key]\n
-    \n
-# adjust to your needs\n
-person_group = \'\'\n
-person_function = \'\'\n
-person_site = \'\'\n
-person_role = \'internal\'\n
+# Return if not appropriate\n
+if result_type != \'edit\':\n
+  return result\n
+kw, encapsulated_editor_list = result\n
+\n
+# Set default values\n
+person_group = kw.get(\'group\', \'\')\n
+person_function = kw.get(\'function\', \'\')\n
+person_site = kw.get(\'site\', \'\')\n
+person_role = kw.get(\'role\', \'\')\n
+kw.setdefault(\'reference\', kw[\'default_email_text\'])\n
 \n
 # create Person account\n
 person_module = context.getPortalObject().person_module\n
 person = person_module.newContent(portal_type = \'Person\', \n
-                                  **filtered_kw)\n
+                                  **kw)\n
 person.validate()\n
 person.immediateReindexObject()\n
 \n
-# create default career\n
-career = person.newContent(portal_type = \'Career\', \n
-                           id = \'default_career\', \n
-                           group = person_group, \n
+# Create default career\n
+career = person.newContent(portal_type = \'Career\',\n
+                           id = \'default_career\',\n
+                           group = person_group,\n
                            function = person_function,\n
                            role = person_role)\n
-# create assignment\n
-assignment = person.newContent(portal_type = \'Assignment\', \n
-                               group = person_group, \n
-                               function = person_function, \n
+# Create assignment\n
+assignment = person.newContent(portal_type = \'Assignment\',\n
+                               group = person_group,\n
+                               function = person_function,\n
                                site = person_site)\n
 assignment.open()\n
 \n
@@ -151,7 +141,7 @@ return website.Base_redirect(\'view\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -179,30 +169,28 @@ return website.Base_redirect(\'view\', \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>form</string>
-                            <string>validation_errors</string>
-                            <string>kw</string>
-                            <string>filtered_kw</string>
-                            <string>prefix</string>
                             <string>_getiter_</string>
-                            <string>key</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
+                            <string>result</string>
+                            <string>result_type</string>
+                            <string>kw</string>
+                            <string>encapsulated_editor_list</string>
                             <string>person_group</string>
                             <string>person_function</string>
                             <string>person_site</string>
                             <string>person_role</string>
+                            <string>_getitem_</string>
                             <string>person_module</string>
                             <string>_apply_</string>
                             <string>person</string>
