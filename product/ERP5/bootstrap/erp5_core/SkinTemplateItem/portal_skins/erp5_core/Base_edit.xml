@@ -67,12 +67,25 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+  This script validates a form to the current REQUEST,\n
+  processes the REQUEST to extract form data and editors,\n
+  then updates the current context with the form data\n
+  by calling edit on it or by invoking editors.\n
+\n
+  TODO: split the generic form validation logic\n
+  from the context update logic\n
+"""\n
 from Products.Formulator.Errors import FormValidationError\n
 from Products.CMFActivity.Errors import ActivityPendingError\n
 \n
 request=context.REQUEST\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
+\n
+# Extra security\n
+if request.get(\'field_prefix\', None):\n
+  field_prefix = \'my_\' # Prevent changing the prefix through publisher\n
 \n
 # Use dialog_id if present, otherwise fall back on form_id.\n
 if dialog_id not in (\'\', None):\n
@@ -81,7 +94,7 @@ if dialog_id not in (\'\', None):\n
 # Prevent users who don\'t have rights to edit the object from\n
 # editing it by calling the Base_edit script with correct\n
 # parameters directly.\n
-if not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', context) :\n
+if not silent_mode and not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', context) :\n
   redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % (context.absolute_url(), form_id, selection_index, selection_name, \'portal_status_message=You+don\\\'t+have+the+permissions+to+edit+the+object.\')\n
   return request[\'RESPONSE\'].redirect(redirect_url)\n
 \n
@@ -102,6 +115,7 @@ except FormValidationError, validation_errors:\n
       value = request.get(field_id)\n
       if callable(value):\n
         value(request)\n
+  if silent_mode: return form(request), \'form\'\n
   return form(request)\n
 \n
 def editListBox(listbox_field, listbox):\n
@@ -189,6 +203,8 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
         else:\n
           return "Cell %s does not exist" % str(k)\n
 \n
+field_prefix_len = len(field_prefix)\n
+\n
 def parseField(f):\n
   """\n
    Parse given form field, to put them in\n
@@ -201,10 +217,10 @@ def parseField(f):\n
     # call it\n
     encapsulated_editor_list.append(v)\n
   elif v is not MARKER:\n
-    if k.startswith(\'my_\'):\n
+    if k.startswith(field_prefix):\n
       # We only take into account\n
       # the object attributes\n
-      k = k[3:]\n
+      k = k[field_prefix_len:]\n
       # Form: \'\' -> ERP5: None\n
       if v == \'\':\n
         v = None\n
@@ -233,9 +249,12 @@ try:\n
     elif(field_meta_type == \'MatrixBox\'):\n
       editMatrixBox(field, request.get(field.id))\n
 \n
+  # Return parsed values \n
+  if silent_mode: return (kw, encapsulated_editor_list), \'edit\'\n
+\n
   # Maybe we should build a list of objects we need\n
   # Update basic attributes\n
-  context.edit(REQUEST=request,**kw)\n
+  context.edit(REQUEST=request, **kw)\n
   for encapsulated_editor in encapsulated_editor_list:\n
     encapsulated_editor.edit(context)\n
 except ActivityPendingError,e:\n
@@ -261,7 +280,9 @@ else:\n
                               editable_mode,\n
                               message)\n
 \n
-return request[\'RESPONSE\'].redirect(redirect_url)\n
+result = request[\'RESPONSE\'].redirect(redirect_url) \n
+if silent_mode: return result, \'redirect\'\n
+return result\n
 
 
 ]]></string> </value>
@@ -280,7 +301,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -300,7 +321,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -312,6 +333,8 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>dialog_id</string>
                             <string>ignore_layout</string>
                             <string>editable_mode</string>
+                            <string>silent_mode</string>
+                            <string>field_prefix</string>
                             <string>Products.Formulator.Errors</string>
                             <string>FormValidationError</string>
                             <string>Products.CMFActivity.Errors</string>
@@ -335,8 +358,10 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>callable</string>
                             <string>editListBox</string>
                             <string>editMatrixBox</string>
-                            <string>MARKER</string>
+                            <string>len</string>
+                            <string>field_prefix_len</string>
                             <string>kw</string>
+                            <string>MARKER</string>
                             <string>encapsulated_editor_list</string>
                             <string>parseField</string>
                             <string>message</string>
@@ -346,6 +371,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>encapsulated_editor</string>
                             <string>e</string>
                             <string>int</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
@@ -363,6 +389,8 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                 <string></string>
                 <int>0</int>
                 <int>1</int>
+                <int>0</int>
+                <string>my_</string>
               </tuple>
             </value>
         </item>
