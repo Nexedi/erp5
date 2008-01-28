@@ -65,6 +65,7 @@
               is_domain_tree_supported here/isDomainTreeSupported;\n
               is_report_tree_supported here/isReportTreeSupported;\n
               show_select_column here/showSelectColumn;\n
+\t      show_anchor_column here/showAnchorColumn;\n
               show_search_line here/showSearchLine;\n
               ">\n
   <!-- ListBox starts here.  -->\n
@@ -243,6 +244,7 @@
                   </tal:block>\n
                 </select>\n
               </td>\n
+              <td class="AnchorColumn" tal:condition="show_anchor_column" class="Data">&nbsp;</td>\n
               <td tal:condition="show_select_column"\n
                 class="Data" style="width: 50px; text-align: center; vertical-align: middle">\n
                 <input id="listbox_check_all" type="image"\n
@@ -292,7 +294,7 @@
               tal:attributes="id python: show_search_line and (\'%s_search_line\' % field_id) or (\'%s_report_depth_line\' % field_id)">\n
               <tal:block tal:condition="is_report_tree_mode">\n
                 <td class="Data" style="width: 50px; text-align: left; vertical-align: middle" colspan="1"\n
-                  tal:attributes="colspan python: show_search_line and 1 or (len(here.getSelectedColumnList()) + show_select_column + 1)"\n
+                  tal:attributes="colspan python: show_search_line and 1 or (len(here.getSelectedColumnList()) + show_select_column + show_anchor_column + 1)"\n
                   tal:define="index python: selection_index is not None and \'&amp;selection_index=%s\' % selection_index or \'\';\n
                               is_report_opened python: int(not here.getSelection().isReportOpened());\n
                               url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"\n
@@ -303,6 +305,7 @@
                                 i18n:domain="ui" i18n:translate="">Show</a>\n
                 </td>\n
               </tal:block>\n
+              <td class="AnchorColumn" tal:condition="show_anchor_column">&nbsp;</td>\n
               <td tal:condition="python: show_select_column and show_search_line"\n
                 class="Data" style="width: 50px; text-align: center; vertical-align: middle">\n
                 <input id="listbox_select" type="image" src="exec16.png"\n
@@ -329,7 +332,8 @@
 \n
             <tal:block tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
               <tr id="listbox_data_line_0" class="DataA"\n
-                tal:define="css python: test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\')"\n
+                tal:define="css python: test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');\n
+                            render_result line/render;"\n
                 tal:attributes="id string:${field_id}_data_line_${repeat/line/index}; class css">\n
                 <td tal:condition="is_report_tree_mode" class="DataA" align="left" valign="middle"\n
                   tal:attributes="class css"\n
@@ -339,7 +343,10 @@
                     tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"\n
                     tal:content="structure python: \'%s%s&nbsp;%s\' % (\'&nbsp;&nbsp;\' * line.getDepth(), line.isOpen() and \'-\' or \'+\', section_name)" />\n
                 </td>\n
-                <td tal:condition="here/showSelectColumn"\n
+                <td class="AnchorColumn" tal:condition="python:show_anchor_column and len(render_result)" class="Data" style="width: 20px;">\n
+                  <a href="#" tal:attributes="href python:render_result[0][4]"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" /></a>\n
+                </td>\n
+                <td tal:condition="show_select_column"\n
                   class="DataA" style="width: 50px; text-align: center; vertical-align: middle"\n
                   tal:attributes="class css">\n
                   <input tal:condition="python: not line.isSummary() and line.getObject() is not None"\n
@@ -349,7 +356,7 @@
                                     id string:${field_id}_cb_${line/getUid}" />\n
                   <tal:block tal:condition="python: line.isSummary() or line.getObject() is None"></tal:block>\n
                 </td>\n
-                <tal:block tal:repeat="value line/render">\n
+                <tal:block tal:repeat="value render_result">\n
                   <td tal:define="html python: value[0];\n
                                   original_value python: value[1];\n
                                   error python: value[2]"\n
@@ -369,6 +376,7 @@
             <tr tal:condition="here/showStat" id="listbox_stat_line"\n
               tal:attributes="id string:${field_id}_stat_line">\n
               <td tal:condition="is_report_tree_mode" class="Data">&nbsp;</td>\n
+              <td class="AnchorColumn" tal:condition="show_anchor_column" class="Data">&nbsp;</td>\n
               <td tal:condition="show_select_column" class="Data">&nbsp;</td>\n
               <tal:block tal:repeat="value here/getStatValueList">\n
                 <td class="Data" align="left"\n

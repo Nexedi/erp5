@@ -1089,7 +1089,14 @@ fieldset.bottom .field .input {\n
   border-collapse: collapse;\n
   border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
-  border-width: 1px;\n
+  border-top-width: 0px;\n
+  border-bottom-width: 1px;\n
+  border-left-width: 1px;\n
+  border-right-width: 1px;\n
+}\n
+\n
+.ListContent #listbox_label_line td.Data {\n
+  border-top-width: 1px;\n
 }\n
 \n
 .ListContent #listbox_label_line {\n
@@ -1099,11 +1106,14 @@ fieldset.bottom .field .input {\n
 }\n
 \n
 .ListContent #listbox_stat_line {\n
+  color: inherit;\n
+  background-color: <dtml-var listbox_stat_background_color>;\n
+}\n
+\n
+.ListContent #listbox_stat_line td.Data {\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
   border-color: <dtml-var document_border_color>;\n
-  color: inherit;\n
-  background-color: <dtml-var listbox_stat_background_color>;\n
 }\n
 \n
 .ListContent tr.DataA {\n
@@ -1137,6 +1147,14 @@ fieldset.bottom .field .input {\n
   border-right-width: 1px;\n
   padding-left: 1px;\n
   padding-right: 1px;\n
+}\n
+\n
+td.AnchorColumn {\n
+  !important\n
+  border-style:none;\n
+  border-color:<dtml-var document_border_color>;\n
+  background-color:<dtml-var document_background_color>;\n
+  border-width:0;\n
 }\n
 \n
 /* Web Page White Background */\n

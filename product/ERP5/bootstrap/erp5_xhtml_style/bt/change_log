@@ -1,3 +1,6 @@
+2008-01-28 yusei
+* Update ListBox_asHTML and erp5.css for new listbox option(anchor mode).
+
 2008-01-16 aurel
 * sort on listbox column is now a POST and no  longer a GET
 
