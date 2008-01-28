@@ -839,7 +839,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                          spec=(), filter=None, acquired_object_dict = None, **kw ):
       cache = getReadOnlyTransactionCache(self)
       if cache is not None:
-        key = ('getSingleCategoryAcquiredMembershipList', context._p_oid, base_category, base, spec,
+        key = ('getSingleCategoryAcquiredMembershipList', context.getUid(), base_category, base, spec,
                filter, str(kw))
         try:
           return cache[key]
