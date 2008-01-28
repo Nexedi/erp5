@@ -269,6 +269,14 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('select')
 
+    anchor = fields.CheckBoxField('anchor',
+                                  title='Anchor Column',
+                                  description=(
+      'An optional anchor column which can always clickable.'),
+                                  default='',
+                                  required=0)
+    property_names.append('anchor')
+
     editable_columns = fields.ListTextAreaField('editable_columns',
                                  title="Editable Columns",
                                  description=(
@@ -588,6 +596,13 @@ class ListBoxRenderer:
     return self.field.get_value('select')
 
   showSelectColumn = lazyMethod(showSelectColumn)
+
+  def showAnchorColumn(self):
+    """Return a boolean that represents whether a anchor column is displayed or not.
+    """
+    return self.field.get_value('anchor')
+
+  showAnchorColumn = lazyMethod(showAnchorColumn)
 
   def showStat(self):
     """Return a boolean that represents whether a stat line is displayed or not.
@@ -2101,7 +2116,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             url = unicode(url.decode('utf-8'))
           html = u'<a href="%s">%s</a>' % (url, processed_value)
 
-      html_list.append((html, original_value, error, editable_field))
+      html_list.append((html, original_value, error, editable_field, url))
 
     return html_list
 
