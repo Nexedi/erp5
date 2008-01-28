@@ -56,6 +56,7 @@ class TestPasswordTool(ERP5TypeTestCase):
       portal.manage_delObjects(['MailHost'])
     portal._setObject('MailHost', DummyMailHost('MailHost'))
     portal.email_from_address = 'site@example.invalid'
+    self.portal.portal_caches.clearAllCache()
 
   def beforeTearDown(self):
     get_transaction().abort()
