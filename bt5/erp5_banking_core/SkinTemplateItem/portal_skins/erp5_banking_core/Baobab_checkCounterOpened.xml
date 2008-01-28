@@ -108,7 +108,7 @@ if found == 0:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>counter, simulation_state_list=None</string> </value>
+            <value> <string>counter, simulation_state_list=None, site=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -134,7 +134,7 @@ if found == 0:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -142,6 +142,7 @@ if found == 0:\n
                           <tuple>
                             <string>counter</string>
                             <string>simulation_state_list</string>
+                            <string>site</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
@@ -149,7 +150,6 @@ if found == 0:\n
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>site</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -172,6 +172,7 @@ if found == 0:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>

@@ -102,6 +102,7 @@ for account_uid in account_uids:\n
   if parent_value.getPortalType() == \'Organisation\':\n
     acc_dict[\'activity\'] = parent_value.getActivity()\n
   acc_dict[\'currency_title\'] = account.getPriceCurrencyTitle()\n
+  acc_dict[\'bic_code\'] = account.getBicCode(None)\n
   acc_dict[\'transaction_list\'] = []\n
 \n
 # Current inventory\n
