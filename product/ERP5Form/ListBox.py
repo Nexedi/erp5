@@ -2097,6 +2097,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           # JPS-XXX - I think we should not display a URL for objects
           # which do not have the View permission
+          if type(url) == str:
+            url = unicode(url.decode('utf-8'))
           html = u'<a href="%s">%s</a>' % (url, processed_value)
 
       html_list.append((html, original_value, error, editable_field))
