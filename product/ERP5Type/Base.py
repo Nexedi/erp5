@@ -2373,6 +2373,15 @@ class Base( CopyContainer,
                                     'Default Purchase Supply Line'),
         'Sale Supply Line': dict(sale_supply_line=
                                  'Default Sale Supply Line'),
+        'Accounting Transaction Line': dict(bank='Bank',
+                                            payable='Payable',
+                                            receivable='Receivable'),
+        'Purchase Invoice Transaction Line': dict(expense='Expense',
+                                                  payable='Payable',
+                                                  refundable_vat='Refundable VAT'),
+        'Sale Invoice Transaction Line': dict(income='Income',
+                                              collected_vat='Collected VAT',
+                                              receivable='Receivable'),
     }
     method = self._getTypeBasedMethod('getIdTranslationDict')
     if method is not None:
