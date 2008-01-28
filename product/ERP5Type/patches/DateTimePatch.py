@@ -28,7 +28,7 @@
 
 from DateTime import DateTime as DateTimeKlass
 import math
-from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS
+from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS, getDefaultDateFormat, _correctYear, _calcHMS, _calcDependentSecond2
 
 STATE_KEY = 'str'
 
@@ -53,6 +53,195 @@ def DateTime__getstate__(self):
   return (self._t, self._tz)
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
+
+def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
+  # Parse date-time components from a string
+  month=year=tz=tm=None
+  spaces        =self.space_chars
+  intpat        =self.int_pattern
+  fltpat        =self.flt_pattern
+  wordpat       =self.name_pattern
+  delimiters    =self.delimiters
+  MonthNumbers  =self._monthmap
+  DayOfWeekNames=self._daymap
+  ValidZones    =self._tzinfo._zidx
+  TimeModifiers =['am','pm']
+
+  # Find timezone first, since it should always be the last
+  # element, and may contain a slash, confusing the parser.
+  st= st.strip()
+  sp=st.split()
+  tz=sp[-1]
+  if tz and (tz.lower() in ValidZones): st=' '.join(sp[:-1])
+  else: tz = None  # Decide later, since the default time zone
+  # could depend on the date.
+
+  ints,dels=[],[]
+  i,l=0,len(st)
+  while i < l:
+    while i < l and st[i] in spaces    : i=i+1
+    if i < l and st[i] in delimiters:
+      d=st[i]
+      i=i+1
+    else: d=''
+    while i < l and st[i] in spaces    : i=i+1
+
+    # The float pattern needs to look back 1 character, because it
+    # actually looks for a preceding colon like ':33.33'. This is
+    # needed to avoid accidentally matching the date part of a
+    # dot-separated date string such as '1999.12.31'.
+    if i > 0: b=i-1
+    else: b=i
+
+    ts_results = fltpat.match(st, b)
+    if ts_results:
+      s=ts_results.group(1)
+      i=i+len(s)
+      ints.append(float(s))
+      continue
+
+    #AJ
+    ts_results = intpat.match(st, i)
+    if ts_results:
+      s=ts_results.group(0)
+
+      ls=len(s)
+      i=i+ls
+      if (ls==4 and d and d in '+-' and
+          (len(ints) + (not not month) >= 3)):
+          tz='%s%s' % (d,s)
+      else:
+          v=int(s)
+          ints.append(v)
+      continue
+
+
+    ts_results = wordpat.match(st, i)
+    if ts_results:
+      o,s=ts_results.group(0),ts_results.group(0).lower()
+      i=i+len(s)
+      if i < l and st[i]=='.': i=i+1
+      # Check for month name:
+      if MonthNumbers.has_key(s):
+        v=MonthNumbers[s]
+        if month is None: month=v
+        else: raise SyntaxError, st
+        continue
+      # Check for time modifier:
+      if s in TimeModifiers:
+        if tm is None: tm=s
+        else: raise SyntaxError, st
+        continue
+      # Check for and skip day of week:
+      if DayOfWeekNames.has_key(s):
+        continue
+
+    raise SyntaxError, st
+
+  day=None
+  if ints[-1] > 60 and d not in ['.',':','/'] and len(ints) > 2:
+    year=ints[-1]
+    del ints[-1]
+    if month:
+      day=ints[0]
+      del ints[:1]
+    else:
+      month=ints[0]
+      day=ints[1]
+      del ints[:2]
+  elif month:
+    if len(ints) > 1:
+      if ints[0] > 31:
+        year=ints[0]
+        day=ints[1]
+      else:
+        year=ints[1]
+        day=ints[0]
+      del ints[:2]
+  elif len(ints) > 2:
+    if ints[0] > 31:
+      year=ints[0]
+      if ints[1] > 12:
+        day=ints[1]
+        month=ints[2]
+      else:
+        day=ints[2]
+        month=ints[1]
+    if ints[1] > 31:
+      year=ints[1]
+      if ints[0] > 12 and ints[2] <= 12:
+        day=ints[0]
+        month=ints[2]
+      elif ints[2] > 12 and ints[0] <= 12:
+        day=ints[2]
+        month=ints[0]
+    elif ints[2] > 31:
+      year=ints[2]
+      if ints[0] > 12:
+        day=ints[0]
+        month=ints[1]
+      else:
+        if datefmt=="us":
+          day=ints[1]
+          month=ints[0]
+        else:
+          day=ints[0]
+          month=ints[1]
+
+    elif ints[0] <= 12:
+      month=ints[0]
+      day=ints[1]
+      year=ints[2]
+    del ints[:3]
+
+  if day is None:
+    # Use today's date.
+    year,month,day = localtime(time())[:3]
+
+  year = _correctYear(year)
+  #handle dates before year 1000
+  #if year < 1000: raise SyntaxError, st
+
+  leap = year%4==0 and (year%100!=0 or year%400==0)
+  try:
+    if not day or day > self._month_len[leap][month]:
+      raise DateError, st
+  except IndexError:
+    raise DateError, st
+  tod=0
+  if ints:
+    i=ints[0]
+    # Modify hour to reflect am/pm
+    if tm and (tm=='pm') and i<12:  i=i+12
+    if tm and (tm=='am') and i==12: i=0
+    if i > 24: raise TimeError, st
+    tod = tod + int(i) * 3600
+    del ints[0]
+    if ints:
+      i=ints[0]
+      if i > 60: raise TimeError, st
+      tod = tod + int(i) * 60
+      del ints[0]
+      if ints:
+        i=ints[0]
+        if i > 60: raise TimeError, st
+        tod = tod + i
+        del ints[0]
+        if ints: raise SyntaxError,st
+
+
+  tod_int = int(math.floor(tod))
+  ms = tod - tod_int
+  hr,mn,sc = _calcHMS(tod_int, ms)
+  if not tz:
+    # Figure out what time zone it is in the local area
+    # on the given date.
+    x = _calcDependentSecond2(year,month,day,hr,mn,sc)
+    tz = self._calcTimezoneName(x, ms)
+
+  return year,month,day,hr,mn,sc,tz
+
+DateTimeKlass._parse = DateTime_parse
 
 if __name__ == '__main__':
   for i in ('2007/01/02 12:34:56.789',
