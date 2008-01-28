@@ -32,7 +32,6 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
@@ -109,7 +108,7 @@ class AccountingTestCase(ERP5TypeTestCase):
   rather than modifying default documents. 
   """
   
-  username = ZopeTestCase.user_name
+  username = 'username'
 
   @reindex
   def _makeOne(self, portal_type='Accounting Transaction', lines=None,
