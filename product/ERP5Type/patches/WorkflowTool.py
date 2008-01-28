@@ -446,7 +446,7 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
               'category': metadata['action_box_category']})
   return action_list
 
-def WorkflowTool_listActions(self, info=None, object=None):
+def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   """
     Returns a list of actions to be displayed to the user.
 
@@ -512,6 +512,8 @@ def WorkflowTool_listActions(self, info=None, object=None):
           acceptable_key_dict=acceptable_key_dict,
           getSecurityUidListAndRoleColumnDict=\
             getSecurityUidListAndRoleColumnDict)
+      if src__:
+        action_list = []
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
         (total_criterion_id_list, query) = \
@@ -519,31 +521,36 @@ def WorkflowTool_listActions(self, info=None, object=None):
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
         select_expression = select_expression_prefix + group_by_expression
-        search_result_kw = {'select_expression': select_expression,
-                            'group_by_expression': group_by_expression,
-                            'query': query}
-        #LOG('WorklistGeneration', WARNING, 'Using query: %s' % \
-        #    (search_result(src__=1, **search_result_kw), ))
-        catalog_brain_result = search_result(**search_result_kw)
-        grouped_worklist_result = sumCatalogResultByWorklist(
-          grouped_worklist_dict=grouped_worklist_dict,
-          catalog_result=catalog_brain_result)
-        for key, value in grouped_worklist_result.iteritems():
-          worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
-      action_list = generateActionList(worklist_metadata=worklist_metadata,
-                                       worklist_result=worklist_result_dict,
-                                       portal_url=portal_url)
-      def get_action_ident(action):
-        return '/'.join((action['workflow_id'], action['worklist_id']))
-      def action_cmp(action_a, action_b):
-        return cmp(get_action_ident(action_a), get_action_ident(action_b))
-      action_list.sort(action_cmp)
+        catalog_brain_result = search_result(select_expression=select_expression,
+                                             group_by_expression=group_by_expression,
+                                             query=query,
+                                             src__=src__)
+        if src__:
+          action_list.append(catalog_brain_result)
+        else:
+          grouped_worklist_result = sumCatalogResultByWorklist(
+            grouped_worklist_dict=grouped_worklist_dict,
+            catalog_result=catalog_brain_result)
+          for key, value in grouped_worklist_result.iteritems():
+            worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
+      if not src__:
+        action_list = generateActionList(worklist_metadata=worklist_metadata,
+                                         worklist_result=worklist_result_dict,
+                                         portal_url=portal_url)
+        def get_action_ident(action):
+          return '/'.join((action['workflow_id'], action['worklist_id']))
+        def action_cmp(action_a, action_b):
+          return cmp(get_action_ident(action_a), get_action_ident(action_b))
+        action_list.sort(action_cmp)
       return action_list
     user = str(_getAuthenticatedUser(self))
-    _getWorklistActionList = CachingMethod(_getWorklistActionList,
-      id=('_getWorklistActionList', user, portal_url),
-      cache_factory = 'erp5_ui_short')
-    actions.extend(_getWorklistActionList())
+    if src__:
+      actions = _getWorklistActionList()
+    else:
+      _getWorklistActionList = CachingMethod(_getWorklistActionList,
+        id=('_getWorklistActionList', user, portal_url),
+        cache_factory = 'erp5_ui_short')
+      actions.extend(_getWorklistActionList())
   return actions
 
 WorkflowTool.listActions = WorkflowTool_listActions
