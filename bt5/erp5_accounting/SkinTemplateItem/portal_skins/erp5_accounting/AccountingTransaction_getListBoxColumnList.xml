@@ -96,7 +96,7 @@ else:\n
 multiple_sections = len(section_dict) > min_section_count\n
 multiple_payment = len(payment_dict) > min_payment_count\n
 \n
-column_item_list = [(\'id\', \'ID\')]\n
+column_item_list = [(\'translated_id\', \'ID\')]\n
 a = column_item_list.append\n
 if source:\n
   a((\'source\', \'Account\'))\n
