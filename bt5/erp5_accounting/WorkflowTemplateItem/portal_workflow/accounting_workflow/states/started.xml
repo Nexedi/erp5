@@ -31,12 +31,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Modifable</string> </value>
+            <value> <string>Started</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
                 <string>stop</string>
                 <string>stop_action</string>
               </tuple>
