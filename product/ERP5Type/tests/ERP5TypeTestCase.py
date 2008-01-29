@@ -498,10 +498,21 @@ class ERP5TypeTestCase(PortalTestCase):
           # This prevents an infinite loop.
           count -= 1
           if count == 0:
+            # Get the last error message from error_log.
+            error_message = ''
+            error_log = self.getPortal().error_log._getLog()
+            if len(error_log):
+              error_message = '\nLast error message:\n%s\n%s\n%s\n' % (
+                error_log[0]['type'],
+                error_log[0]['value'],
+                error_log[0]['tb_text'],
+                )
             raise RuntimeError,\
-              'tic is looping forever. These messages are pending: %r' % (
+              'tic is looping forever. These messages are pending: %r %s' % (
             [('/'.join(m.object_path), m.method_id, m.processing_node, m.priority)
-            for m in portal_activities.getMessageList()],)
+            for m in portal_activities.getMessageList()],
+            error_message
+            )
           # This give some time between messages
           if count % 10 == 0:
             from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
