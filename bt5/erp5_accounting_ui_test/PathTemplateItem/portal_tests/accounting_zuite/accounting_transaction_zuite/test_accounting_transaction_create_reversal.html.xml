@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -131,22 +128,22 @@ Test for Creating Reversal Transaction for an Accounting Transaction\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
   <td>label=2 - Fixed Assets</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
   <td>label=3 - Stocks</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>20.0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
   <td>20.0</td>\n
 </tr>\n
 <tr>\n
@@ -261,32 +258,32 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
   <td>account_module/stocks</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
   <td>account_module/fixed_assets</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>20.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/input</td>\n
   <td>0.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
   <td>20.0</td>\n
 </tr>\n
 <!-- }}} -->\n

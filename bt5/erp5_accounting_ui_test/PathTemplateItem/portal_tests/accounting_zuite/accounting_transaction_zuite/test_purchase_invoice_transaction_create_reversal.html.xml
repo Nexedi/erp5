@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -137,32 +134,32 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction\n
 \n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
   <td>label=6 - Goods Purchase</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
   <td>label=4456 - Refundable VAT 10%</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/select</td>\n
   <td>label=40 - Payable</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>11.0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
   <td>1.0</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[5]/input</td>\n
   <td>10.0</td>\n
 </tr>\n
 <tr>\n
@@ -283,47 +280,47 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 <!-- Same as above, bad ordering ... -->\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
   <td>account_module/payable</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
   <td>account_module/refundable_vat</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/select</td>\n
   <td>account_module/goods_purchase</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
   <td>10.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/input</td>\n
   <td>0.0</td> \n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
   <td>1.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
-  <td>0.0</td>\n
-</tr>\n
-<tr>\n
-  <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/input</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[5]/input</td>\n
   <td>11.0</td>\n
 </tr>\n
 <!-- }}} -->\n

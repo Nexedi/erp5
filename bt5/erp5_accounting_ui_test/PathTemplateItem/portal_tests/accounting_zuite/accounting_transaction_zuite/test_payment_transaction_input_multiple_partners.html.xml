@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -111,17 +108,17 @@ Test Simple view of an Accounting Transaction\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
   <td>label=40 - Payable</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
   <td>label=41 - Receivable</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/select</td>\n
   <td>label=5 - Bank</td>\n
 </tr>\n
 <tr>\n
@@ -159,17 +156,17 @@ Test Simple view of an Accounting Transaction\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
   <td>account_module/payable</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
   <td>account_module/receivable</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/select</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[3]/select</td>\n
   <td>account_module/bank</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -177,7 +174,7 @@ Test Simple view of an Accounting Transaction\n
 <!-- Edit the party on a line {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=payable</td>\n
+  <td>link=Payable</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -205,17 +202,17 @@ Test Simple view of an Accounting Transaction\n
 <!-- Check new column is here {{{ -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
   <td>Supplier</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[3]</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]</td>\n
   <td>Client 1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[3]</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[4]</td>\n
   <td>Client 1</td>\n
 </tr>\n
 <!-- }}} -->\n
