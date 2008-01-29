@@ -2962,17 +2962,28 @@ class TestAccounting(ERP5TypeTestCase):
     # clear all existing ids in portal ids
     if hasattr(self.portal.portal_ids, 'dict_ids'):
       self.portal.portal_ids.dict_ids.clear()
-    accounting_transaction = self.createAccountingTransaction()
+    accounting_transaction = self.createAccountingTransaction(
+                                  start_date=DateTime(2001, 01, 01),
+                                  stop_date=DateTime(2001, 01, 01))
     self.portal.portal_workflow.doActionFor(
           accounting_transaction, 'stop_action')
-    self.assertEquals('1', accounting_transaction.getSourceReference())
-    self.assertEquals('1', accounting_transaction.getDestinationReference())
+    self.assertEquals('2001-1', accounting_transaction.getSourceReference())
+    self.assertEquals('2001-1', accounting_transaction.getDestinationReference())
 
-    other_transaction = self.createAccountingTransaction()
+    other_transaction = self.createAccountingTransaction(
+                                  start_date=DateTime(2001, 01, 01),
+                                  stop_date=DateTime(2001, 01, 01))
     other_transaction.setDestinationSectionValue(self.other_vendor)
     self.portal.portal_workflow.doActionFor(other_transaction, 'stop_action')
-    self.assertEquals('2', other_transaction.getSourceReference())
-    self.assertEquals('1', other_transaction.getDestinationReference())
+    self.assertEquals('2001-2', other_transaction.getSourceReference())
+    self.assertEquals('2001-1', other_transaction.getDestinationReference())
+
+    next_year_transaction = self.createAccountingTransaction(
+                                  start_date=DateTime(2002, 01, 01),
+                                  stop_date=DateTime(2002, 01, 01))
+    self.portal.portal_workflow.doActionFor(next_year_transaction, 'stop_action')
+    self.assertEquals('2002-1', next_year_transaction.getSourceReference())
+    self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
 
 
 def test_suite():

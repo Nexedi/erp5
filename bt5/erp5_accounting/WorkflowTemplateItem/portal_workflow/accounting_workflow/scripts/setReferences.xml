@@ -84,15 +84,18 @@ if transaction.getPortalType() == \'Sale Invoice Transaction\':\n
 \n
 # Generate new values for Source Reference and Destination Reference.\n
 if not transaction.getSourceReference():\n
-  source_id_group = (\'accounting\', \'section\', source_section)\n
+  year = transaction.getStartDate().year()\n
+  source_id_group = (\'accounting\', \'section\', source_section, year)\n
   source_reference = transaction.generateNewId(id_group=source_id_group,\n
                                                default=1)\n
-  transaction.setSourceReference(source_reference)\n
+  transaction.setSourceReference(\'%s-%s\' % (year, source_reference))\n
+\n
 if not transaction.getDestinationReference():\n
-  destination_id_group = (\'accounting\', \'section\', destination_section)\n
+  year = transaction.getStopDate().year()\n
+  destination_id_group = (\'accounting\', \'section\', destination_section, year)\n
   destination_reference = transaction.generateNewId(\n
                               id_group=destination_id_group, default=1)\n
-  transaction.setDestinationReference(destination_reference)\n
+  transaction.setDestinationReference(\'%s-%s\' % (year, destination_reference))\n
 </string> </value>
         </item>
         <item>
@@ -149,6 +152,7 @@ if not transaction.getDestinationReference():\n
                             <string>destination_section</string>
                             <string>invoice_id_group</string>
                             <string>invoice_reference</string>
+                            <string>year</string>
                             <string>source_id_group</string>
                             <string>source_reference</string>
                             <string>destination_id_group</string>
