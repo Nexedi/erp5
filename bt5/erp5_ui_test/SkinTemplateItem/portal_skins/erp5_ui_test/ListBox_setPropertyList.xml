@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -97,6 +94,7 @@
   field_global_attributes = \'\',\n
   field_search = \'checked\',\n
   field_select = \'checked\',\n
+  field_anchor = \'\',\n
   field_domain_tree = \'\',\n
   field_domain_root_list = \'\',\n
   field_report_tree = \'\',\n
