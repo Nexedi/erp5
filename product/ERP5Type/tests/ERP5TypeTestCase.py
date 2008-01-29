@@ -502,10 +502,11 @@ class ERP5TypeTestCase(PortalTestCase):
             error_message = ''
             error_log = self.getPortal().error_log._getLog()
             if len(error_log):
+              last_log = error_log[-1]
               error_message = '\nLast error message:\n%s\n%s\n%s\n' % (
-                error_log[0]['type'],
-                error_log[0]['value'],
-                error_log[0]['tb_text'],
+                last_log['type'],
+                last_log['value'],
+                last_log['tb_text'],
                 )
             raise RuntimeError,\
               'tic is looping forever. These messages are pending: %r %s' % (
