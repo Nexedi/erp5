@@ -311,8 +311,11 @@ class TestERP5BankingCheckPaymentMixin:
         self.failUnless(message.find('Bank account is not sufficient')>=0)
       self.assertEqual(new_payment.getSimulationState(), 'planned')
       get_transaction().commit()
+      self.workflow_tool.doActionFor(new_payment, 'reject_action', 
+                                     wf_id='check_payment_workflow')
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
                                      wf_id='check_payment_workflow')
+            
     else:
       self.workflow_tool.doActionFor( 
                         new_payment, 'confirm_action', 
@@ -325,6 +328,8 @@ class TestERP5BankingCheckPaymentMixin:
                            'check_payment_workflow','deliver_action')
         LOG('self.assertWorkflowTransitionFails message',0,message)
         self.failUnless(message.find('There are operations pending for this vault')>=0)
+      self.workflow_tool.doActionFor(new_payment, 'reject_action', 
+                                     wf_id='check_payment_workflow')
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
                                      wf_id='check_payment_workflow')
 
