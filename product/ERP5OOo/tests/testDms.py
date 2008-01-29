@@ -484,6 +484,67 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.portal.Base_getConversionFormatItemList(base_content_type=
                   'application/vnd.oasis.opendocument.text'))
 
+  def test_06_ProcessingStateOfAClonedDocument(self,quiet=QUIET,run=RUN_ALL_TEST):
+    """
+    Check that the processing state of a cloned document
+    is not draft
+    """
+    if not run: return
+    printAndLog('\nProcessing State of a Cloned Document')
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+
+    self.assertEquals('converting', document.getExternalProcessingState())
+    get_transaction().commit()
+    self.assertEquals('converting', document.getExternalProcessingState())
+    self.tic()
+    self.assertEquals('converted', document.getExternalProcessingState())
+
+    # Clone document
+    container = document.getParentValue()
+    clipboard = container.manage_copyObjects(ids=[document.getId()])
+    paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
+    new_document = container[paste_result[0]['new_id']]
+
+    self.assertEquals('uploaded', new_document.getExternalProcessingState())
+    get_transaction().commit()
+    self.assertEquals('uploaded', new_document.getExternalProcessingState())
+    self.tic()
+    self.assertEquals('converted', new_document.getExternalProcessingState())
+
+  def test_07_EmbeddedDocumentOfAClonedDocument(self,quiet=QUIET,run=RUN_ALL_TEST):
+    """
+    Check the validation state of embedded document when its container is
+    cloned
+    """
+    if not run: return
+    printAndLog('\nValidation State of a Cloned Document')
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+
+    sub_document = document.newContent(portal_type='Image')
+    self.assertEquals('embedded', sub_document.getValidationState())
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('embedded', sub_document.getValidationState())
+
+    # Clone document
+    container = document.getParentValue()
+    clipboard = container.manage_copyObjects(ids=[document.getId()])
+
+    paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
+    new_document = container[paste_result[0]['new_id']]
+
+    new_sub_document_list = new_document.contentValues(portal_type='Image')
+    self.assertEquals(1, len(new_sub_document_list))
+    new_sub_document = new_sub_document_list[0]
+    self.assertEquals('embedded', new_sub_document.getValidationState())
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('embedded', new_sub_document.getValidationState())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
