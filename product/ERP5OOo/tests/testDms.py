@@ -325,19 +325,20 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
 
-  def no_test_05_UniqueReference(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_05_UniqueReference(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test automatic setting of unique reference
     """
     if not run: return
     printAndLog('\nTest Automatic Setting Unique Reference')
+    raise NotImplementedError
     # create three empty test documents
     # run setUniqueReference on the second
     # reference of the second doc should now be TEST-auto-2
     # run setUniqueReference('uniq') on the third
     # reference of the third doc should now be TEST-uniq-1
 
-  def no_test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test explicit relations.
       Explicit relations are just like any other relation, so no need to test them here
@@ -345,6 +346,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     printAndLog('\nTest Explicit Relations')
+    raise NotImplementedError
     # create test documents:
     # (1) TEST, 002, en
     # (2) TEST, 003, en
@@ -355,12 +357,13 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     # getSimilarCloudValueList on 4 should return 2, 3 and 5
     # getSimilarCloudValueList(depth=1) on 4 should return 3 and 5
 
-  def no_test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
       Test implicit (wiki-like) relations.
     """
     # XXX this test should be extended to check more elaborate language selection
     if not run: return
+    raise NotImplementedError
     printAndLog('\nTest Implicit Relations')
     # create docs to be referenced:
     # (1) TEST, 002, en
@@ -458,7 +461,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('attachment; filename="import_data_list.pdf"',
                       response.headers['content-disposition'])
 
-  def test_01_getCreationDate(self):
+  def test_05_getCreationDate(self):
     """
     Check getCreationDate on all document type, as those documents 
     are not associated to edit_workflow.
