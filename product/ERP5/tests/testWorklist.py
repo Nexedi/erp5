@@ -289,6 +289,10 @@ class TestWorklist(ERP5TypeTestCase):
       entry_list = [x for x in result \
                     if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
+      self.logMessage("Check %s worklist as Owner and Assignor" % user_id)
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_owner_name)]
+      self.assertEquals(len(entry_list), 0)
       self.logout()
     for user_id in ('foo', ):
       self.login(user_id)
@@ -303,6 +307,12 @@ class TestWorklist(ERP5TypeTestCase):
       entry_list = [x for x in result \
                     if x['name'].startswith(self.actbox_owner_name)]
       self.assertEquals(len(entry_list), 0)
+      self.logMessage("Check %s worklist as Owner and Assignor" % user_id)
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_assignor_owner_name)]
+      self.assertEquals(len(entry_list), 1)
+      self.assertEquals(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
       self.logout()
 
     # Define foo and bar as Assignee
