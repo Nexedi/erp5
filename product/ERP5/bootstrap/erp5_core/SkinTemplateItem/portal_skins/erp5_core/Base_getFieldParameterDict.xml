@@ -69,19 +69,26 @@
   Get default relation string field parameters\n
   based on its id\n
 """\n
-id = context.getId()\n
-if not id.startswith(\'my_\'): return {} # this should not happen\n
+field_id = context.getId()\n
+if not field_id.startswith(\'my_\'): return {} # this should not happen\n
 \n
-if id.endswith(\'_relative_url\'): idx = 2\n
-elif id.endswith(\'_title\'): idx = 1\n
+is_list = 0\n
+if field_id.endswith(\'_relative_url\'): idx = 2\n
+elif field_id.endswith(\'_title\'): idx = 1\n
+elif field_id.endswith(\'_title_list\'):\n
+  idx = 2\n
+  is_list = 1\n
 else: idx = 0\n
 \n
 # can it be translated title, or something else?\n
 \n
-pieces = id.split(\'_\')\n
+pieces = field_id.split(\'_\')\n
 parameter_dict = dict()\n
 parameter_dict[\'base_category\'] = \'_\'.join(pieces[1:-idx])\n
-parameter_dict[\'catalog_index\'] = \'_\'.join(pieces[-idx:])\n
+if is_list == 0:\n
+  parameter_dict[\'catalog_index\'] = \'_\'.join(pieces[-idx:])\n
+else:\n
+  parameter_dict[\'catalog_index\'] = \'_\'.join(pieces[-idx:-1])  \n
 return parameter_dict\n
 </string> </value>
         </item>
@@ -93,6 +100,12 @@ return parameter_dict\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -127,7 +140,8 @@ return parameter_dict\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>id</string>
+                            <string>field_id</string>
+                            <string>is_list</string>
                             <string>idx</string>
                             <string>pieces</string>
                             <string>dict</string>
