@@ -53,17 +53,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -91,9 +88,6 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
