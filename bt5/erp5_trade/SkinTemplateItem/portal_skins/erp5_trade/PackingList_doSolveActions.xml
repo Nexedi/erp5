@@ -76,7 +76,8 @@ split_and_defer = 0\n
 \n
 if listbox is not None:\n
     context.updateAppliedRule("default_delivery_rule")\n
-    for line in listbox:\n
+    for line_key in listbox:\n
+        line = listbox[line_key]\n
         url = line[\'listbox_key\']\n
         quantity = line[\'quantity\']\n
         movement = context.restrictedTraverse(url)\n
@@ -169,8 +170,9 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>split_and_defer</string>
                             <string>None</string>
                             <string>_getiter_</string>
-                            <string>line</string>
+                            <string>line_key</string>
                             <string>_getitem_</string>
+                            <string>line</string>
                             <string>url</string>
                             <string>quantity</string>
                             <string>movement</string>
