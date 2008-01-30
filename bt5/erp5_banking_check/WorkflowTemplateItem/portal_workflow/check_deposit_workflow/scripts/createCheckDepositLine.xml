@@ -119,7 +119,9 @@ line.setDestinationPaymentValue(transaction.getDestinationPaymentValue())\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>

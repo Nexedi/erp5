@@ -72,6 +72,8 @@ result = []\n
 resultContainer = {}\n
 result_line = []\n
 \n
+if listbox is None:\n
+  listbox = []\n
 \n
 # remove existing lines\n
 old_line = [x.getObject() for x in context.objectValues(portal_type=[\'Checkbook Delivery Line\'])]\n
@@ -166,6 +168,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>result</string>
                             <string>resultContainer</string>
                             <string>result_line</string>
+                            <string>None</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -181,7 +184,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>item</string>
                             <string>delivery_line</string>
                             <string>item_dict</string>
-                            <string>None</string>
                             <string>reference_range_min</string>
                             <string>reference_range_max</string>
                             <string>_write_</string>
