@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>selection_name = context.REQUEST.get(\'selection_name\', None)\n
+            <value> <string>selection_name = context.REQUEST.get(\'list_selection_name\', None)\n
 listbox_uid =context.REQUEST.get(\'listbox_uid\', None)\n
 uids = context.REQUEST.get(\'uids\', None)\n
 \n
@@ -122,7 +122,7 @@ if selection_name is not None:\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>None</string>
                             <string>selection_name</string>
                             <string>listbox_uid</string>
