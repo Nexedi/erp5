@@ -1,4 +1,8 @@
--2008-1-11 Yusei
+2008-1-30 Yusei
+* *_getResourceItemList script should
+return values only which user can access.
+
+2008-1-11 Yusei
 * Added mimetypes_registry, portal_transforms in Tools. Please use revision 18669 or newer of ERP5Type.
 
 2007-10-30 yo
