@@ -79,8 +79,10 @@ class Constraint:
       """Generic method used to generate error in checkConsistency.
       """
       if error_message is not None:
-        msg = ConsistencyMessage(self, obj.getRelativeUrl(),
-                                 error_message, mapping)
+        msg = ConsistencyMessage(self, 
+                                 object_relative_url=obj.getRelativeUrl(),
+                                 message=error_message, 
+                                 mapping=mapping)
         return msg
 
     def _checkConstraintCondition(self, obj):
