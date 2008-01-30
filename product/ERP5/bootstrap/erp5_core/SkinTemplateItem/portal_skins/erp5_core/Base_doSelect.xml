@@ -79,8 +79,15 @@ kw = { \'selection_index\': selection_index,\n
 \n
 # Default behaviour is not as great but returns something\n
 kw.update(request.form)\n
+\n
 if kw.has_key(\'listbox_uid\'): del kw[\'listbox_uid\']\n
 if kw.has_key(\'list_start\'): del kw[\'list_start\']\n
+\n
+if request.form.has_key(\'dialog_id\'):\n
+  form_id = request.form[\'dialog_id\']\n
+else:\n
+  form_id = request.form[\'form_id\']\n
+\n
 request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
 </string> </value>
         </item>
@@ -134,6 +141,7 @@ request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_
                             <string>request</string>
                             <string>kw</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
