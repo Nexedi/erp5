@@ -201,6 +201,7 @@ class SQLQueue(RAMQueue, SQLBase):
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:
+          m.notifyUser(activity_tool)
           final_error_uid_list.append(uid)
         else:
           try:
