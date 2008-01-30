@@ -1,21 +1,19 @@
 def ERP5Site_createModuleScribus(self, 
-    form_id=None, 
-    module_portal_type=None,
-    portal_skins_folder=None, 
-    object_portal_type=None, 
-    object_title=None, 
     module_id=None,
+    module_portal_type=None,
     module_title=None, 
+    import_pdf_file=None, 
+    import_scribus_file=None,
+    option_html=None,
+    desired_width=None, 
+    desired_height=None, 
+    object_title=None, 
+    object_portal_type=None, 
+    portal_skins_folder=None, 
+    form_id=None, 
     selection_index=None, 
     selection_name=None, 
-    import_scribus_file=None,
-    import_pdf_file=None, 
-    option_html=None,
-    desired_height=None, 
-    desired_width=None, 
-    import_image_1=None, 
-    import_image_2=None,
-    import_image_3=None, **kw) :
+    **kw):
   """ Creates a module, portal_type and ERP5Form from a scribus and
       PDFForm file"""
   context = self
@@ -54,6 +52,7 @@ def ERP5Site_createModuleScribus(self,
   desired_height = desired_height
   desired_width = desired_width
   resolution = 300 # JPS-XXX - hardcoded
+  background_format = 'jpg' # Fabien - XXX - hardcoded
   option_html = option_html
 
   # DECLARING NAMES
@@ -166,10 +165,10 @@ def ERP5Site_createModuleScribus(self,
       # used only with option_html == 1
       # recover image_size
       image_size = ManageFiles.setBackgroundPictures(import_pdf_file,
-          object_names,skin_folder,desired_height,desired_width,resolution)
+          object_names,skin_folder,desired_height,desired_width,resolution,
+          background_format)
       
-      page_height, page_width, original_page_height, original_page_width = \
-          image_size
+      page_height, page_width = image_size
       
       print "   height = " + str(page_height)
       print "   width = " + str(page_width)
@@ -213,8 +212,6 @@ def ERP5Site_createModuleScribus(self,
                                          page_id,
                                          page_height,
                                          page_width,
-                                         original_page_width,
-                                         original_page_height, 
                                          width_groups, 
                                          height_groups)
 
@@ -238,8 +235,6 @@ def ERP5Site_createModuleScribus(self,
                                             page_iterator,
                                             page_gap,
                                             keep_page,
-                                            0,
-                                            0,
                                             properties_page,
                                             actual_width,
                                             actual_height)
