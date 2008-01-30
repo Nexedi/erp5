@@ -76,11 +76,14 @@ source = ob.getSource()\n
 \n
 # check we are in an opened accounting day\n
 vault = \'%s/encaisse_des_billets_et_monnaies/sortante\' % (source, )\n
-date = ob.getStartDate()\n
+date = ob.getStopDate()\n
 ob.Baobab_checkCounterDateOpen(site=vault, date=date)\n
 \n
 # check again that the counter is open\n
 context.Baobab_checkCounterOpened(source)\n
+\n
+for outgoing_line in ob.objectValues(portal_type="Outgoing Mutilated Banknote Line"):\n
+  outgoing_line.setStartDate(date)\n
 \n
 if len(ob.objectValues(portal_type="Outgoing Mutilated Banknote Line")) == 0:\n
   msg = Message(domain = "ui", message="You must defined returned banknote.")\n
@@ -152,6 +155,8 @@ elif resource <> 0 :\n
                             <string>vault</string>
                             <string>date</string>
                             <string>context</string>
+                            <string>_getiter_</string>
+                            <string>outgoing_line</string>
                             <string>len</string>
                             <string>msg</string>
                             <string>resource</string>

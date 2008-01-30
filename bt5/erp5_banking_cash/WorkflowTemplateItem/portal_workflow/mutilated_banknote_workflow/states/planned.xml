@@ -37,8 +37,6 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>archive</string>
-                <string>archive_action</string>
                 <string>cancel</string>
                 <string>cancel_action</string>
                 <string>finish</string>
