@@ -35,7 +35,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
 from StringIO import StringIO
-from zLOG import LOG
+from zLOG import LOG, TRACE, WARNING, ERROR, INFO
 import imghdr
 import random
 import getopt, sys, os
@@ -556,91 +556,92 @@ class ManageFiles:
                             skin_folder,
                             desired_height,
                             desired_width,
-                            resolution
+                            resolution,
+                            background_format
                             ):
     """
     extract background pictures from pdf file and convert them
     in the right format (JPEG) and save them in the corresponding
     folder (skin_folder).
-    to work, this procedure needs to have pdftoppm (from Xpdf)
-    and convert (from ImageMagick) installed on the server
-    otherwise nothing is created.
-    Temp files are created in the '/tmp/' folder, and are deleted
-    once the job is done.
-    At the end, get the properties (size_x, size_y) of the first
-    image (i.e page_0) and returns them.
+    to work, this procedure needs convert (from ImageMagick) 
+    installed on the server otherwise nothing is created.
+    Temp files wich are created are deleted once the job is done.
+    At the end, return the properties (size_x, size_y) the background
+    images have.
     """
     import commands
-    import tempfile
     from tempfile import NamedTemporaryFile
     # opening new file on HDD to save PDF content
-    #temp_test= NamedTemporaryFile(mode= "w+b")
-    #tempFile= NamedTemporaryFile().name
-    ScribusUtilsTempPDF= NamedTemporaryFile(mode= "w+b")
-    ScribusUtilstempsPDFName= NamedTemporaryFile().name
-    # going to the begining of the input file
+    temp_pdf = NamedTemporaryFile()
 
-    # XXX - this is really bad because the appropriate 
-    # way to run zope is to create a local instance
-    # it should be removed XXX - some people
-    # do this just to make sure "it works" 
-    # but it is not even multiplatform
-    os.putenv('TMPDIR', '/tmp')
-    # saving content
-    temp_pdf = open(ScribusUtilstempsPDFName,'w')
+    # opening new file on HDD to save created background image content
+    temp_image = NamedTemporaryFile()
+    # this is made to have a name not yet used by the system
+    temp_image_name = temp_image.name + background_format
 
     # going to the begining of the input file
     pdf_file.seek(0)
     # saving content
-    # saving content
     temp_pdf.write(pdf_file.read())
-    temp_pdf.close()
+    temp_pdf.seek(0)
 
-    # launching first soft to convert from PDF to PPM
-    ScribusUtilstempsPPM = NamedTemporaryFile(mode="w+b")
-    ScribusUtilstempsPPMName = NamedTemporaryFile().name
-    result = commands.getstatusoutput('pdftoppm -r %s %s %s' % \
-        (resolution, ScribusUtilstempsPDFName, ScribusUtilstempsPPMName))
-    # launching second soft to convert from PPM to JPEG
-    ScribusUtilstempsJPG = NamedTemporaryFile(mode="w+b")
-    ScribusUtilstempsJPGName = NamedTemporaryFile().name
-
-    original_result= commands.getstatusoutput('identify %s' % \
-        (ScribusUtilstempsPDFName))
     result = commands.getstatusoutput('convert -density %s -resize %sx%s '\
-        '%s %s' % (resolution,desired_width,desired_height,
-          ScribusUtilstempsPPMName + '*', 'jpg:' + ScribusUtilstempsJPGName))
+        '%s %s' % (resolution, desired_width, desired_height, temp_pdf.name,
+        background_format + ':' + temp_image_name))
 
-    number = ScribusUtilstempsJPGName.find('tmp')
-    directory_tmp= ScribusUtilstempsJPGName[:(number+4)]
-
-    # getting list of JPG output files
-    result = commands.getstatusoutput('ls %s | grep  %s' % (directory_tmp, 
-      ScribusUtilstempsJPGName.split('/')[-1]))
-    # deleting all temporary files
-    # getting the original size of the file
-    real_size_x= 0
-    real_size_y= 0
-    image_number = 0
-    if result[1] != '':
-      # result[1] contains the output string from the command,
-      # in our case the result of the ls.
-      # splitting this string to get the list of objects
-      for image in result[1].split('\n'):
-        temp_jpg = open('%s%s' % (directory_tmp, image), 'r')
-        form_page_id = object_names['page'] + str(image_number)
-        addImage = skin_folder.manage_addProduct['OFSP'].manage_addImage
-        addImage(form_page_id, temp_jpg, "background image")
+    # check that the command has been done succeful
+    if result[0] != 0:
+      LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'convert command'\
+          'failed with the following error message : \n%' % result[1])
+    temp_pdf.close()
+    
+    background_image_list = []
+    # convert add a '-N' string a the end of the file name if there is more
+    # than one page in the pdf file (where N is the number of the page,
+    # begining at 0)
+    if os.path.exists(temp_image_name):
+      # thats mean there's only one page in the pdf file
+      background_image_list.append(temp_image_name)
+    else:
+      # in the case of multi-pages pdf file, we must find all files
+      image_number = 0
+      while os.path.exists(temp_image_name + '-%s' % image_number):
+        background_image_list.append(temp_image_name + '-%s' % image_number)
         image_number += 1
-    # deleting all temporary files
-    result = commands.getstatusoutput('rm -f /tmp/tmp*') # JPS-XXX Extremely 
-                                                         # dangerous
-    # open page_0's final background picture to recover size_x and size_y
-    final_image = getattr(skin_folder, object_names['page'] + '0')
-    size_x = desired_height
-    size_y = desired_width
+    
+    if not len(background_image_list):
+      LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
+          'image found')
 
-    return (size_x, size_y, real_size_x, real_size_y)
+    # get the real size of the first image
+    # this could be usefull if the user only defined one dimention
+    # and convert has calculate the other using proportionnality
+    file_result= commands.getstatusoutput('identify %s' %\
+        background_image_list[0])
+
+    real_size_x = file_result[1].split(' ')[2].split('x')[1]
+    real_size_y = file_result[1].split(' ')[2].split('x')[0]
+
+    # add images in erp5 :
+    image_number = 0
+    addImageMethod = skin_folder.manage_addProduct['OFSP'].manage_addImage
+    for background_image in background_image_list:
+      temp_background_file = open(background_image, 'r')
+      form_page_id = object_names['page'] + str(image_number)
+      addImageMethod(form_page_id, temp_background_file, "background image")
+      image_number += 1
+
+      # remove the file from the system
+      result = commands.getstatusoutput('rm -f %s' % background_image)
+
+
+
+    size_x = int(real_size_x)
+    size_y = int(real_size_y)
+    LOG('ScribusUtils.setBackgroundPictures :', INFO, 
+        'return size : x=%s, y=%s' % size_x, size_y)
+    
+    return (size_x, size_y)
 
   security.declarePublic('getPageattributes')
   def getPageattributes (self,
@@ -783,8 +784,6 @@ class ManageCSS:
           ,page_id
           ,page_height
           ,page_width
-          ,original_page_width
-          ,original_page_height
           ,width_groups,height_groups):
     """
     recover all CSS data relative to the current page and save these
@@ -847,9 +846,9 @@ class ManageCSS:
                         , page_iterator
                         , page_gap
                         , keep_page
-                        , original_page_width
-                        , original_page_height
-                        , properties_page,actual_width,actual_height):
+                        , properties_page
+                        , actual_width
+                      ,actual_height):
     """
     recover all CSS data relative to the current page_object (field)
     and save these informations in the output dict
