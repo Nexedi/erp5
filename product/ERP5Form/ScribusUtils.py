@@ -634,12 +634,10 @@ class ManageFiles:
       # remove the file from the system
       result = commands.getstatusoutput('rm -f %s' % background_image)
 
-
-
     size_x = int(real_size_x)
     size_y = int(real_size_y)
     LOG('ScribusUtils.setBackgroundPictures :', INFO, 
-        'return size : x=%s, y=%s' % size_x, size_y)
+        'return size : x=%s, y=%s' % (size_x, size_y))
     
     return (size_x, size_y)
 
@@ -784,7 +782,8 @@ class ManageCSS:
           ,page_id
           ,page_height
           ,page_width
-          ,width_groups,height_groups):
+          ,width_groups
+          ,height_groups):
     """
     recover all CSS data relative to the current page and save these
     information in the output dict
