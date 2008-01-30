@@ -2239,6 +2239,59 @@ class TestCMFActivity(ERP5TypeTestCase):
       delattr(Organisation, 'putMarkerValue')
       delattr(Organisation, 'checkMarkerValue')
 
+  def TryUserNotificationOnActivityFailure(self, activity):
+    get_transaction().commit()
+    self.tic()
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    # Use a mutable variable to be able to modify the same instance from
+    # monkeypatch method.
+    notification_done = []
+    from Products.CMFActivity.ActivityTool import Message
+    def fake_notifyUser(self, activity_tool):
+      notification_done.append(True)
+    original_notifyUser = Message.notifyUser
+    def failingMethod(self):
+      raise ValueError, 'This method always fail'
+    Message.notifyUser = fake_notifyUser
+    Organisation.failingMethod = failingMethod
+    try:
+      obj.activate(activity=activity, priority=6).failingMethod()
+      get_transaction().commit()
+      self.assertEqual(len(notification_done), 0)
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEqual(len(notification_done), 1)
+    finally:
+      Message.notifyUser = original_notifyUser
+      delattr(Organisation, 'failingMethod')
+
+
+  def test_90_userNotificationOnActivityFailureWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Check that a user notification method is called on message when activity
+      fails and will not be tried again.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck user notification sent on activity final error (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryUserNotificationOnActivityFailure('SQLDict')
+
+  def test_91_userNotificationOnActivityFailureWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Check that a user notification method is called on message when activity
+      fails and will not be tried again.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck user notification sent on activity final error (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryUserNotificationOnActivityFailure('SQLQueue')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
