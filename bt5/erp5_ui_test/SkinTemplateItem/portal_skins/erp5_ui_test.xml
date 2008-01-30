@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Folder</string>
-          <string>Folder</string>
-        </tuple>
-        <none/>
+        <global name="Folder" module="OFS.Folder"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

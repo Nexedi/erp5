@@ -184,7 +184,24 @@
 \t<td>id=listbox_next_page</td>\n
 \t<td></td>\n
 </tr>\n
-<tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
+\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Useless Field In Bar Selection Dialog</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_your_extra_text</td>\n
+  <td>Hardcoded text value</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>id=listbox_item_number</td>\n
+\t<td> - 1 item(s) selected</td>\n
+</tr>\n
+<!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
+\n
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>id=listbox_page_selection</td>\n
@@ -271,7 +288,22 @@
 \t<td>id=listbox_page_selection</td>\n
 \t<td>4 of 4</td>\n
 </tr>\n
-<tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
+<!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Useless Field In Bar Selection Dialog</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_your_extra_text</td>\n
+  <td>Hardcoded text value</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>id=listbox_item_number</td>\n
+\t<td> - 1 item(s) selected</td>\n
+</tr>\n
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>id=listbox_page_selection</td>\n
@@ -317,32 +349,32 @@
 <tr>\n
 \t<td>verifySelected</td>\n
 \t<td>id=listbox_page_selection</td>\n
-\t<td>3 of 3</td>\n
+\t<td>1 of 3</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
+\t<td>verifyElementPresent</td>\n
 \t<td>id=listbox_next_page</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
+\t<td>verifyElementNotPresent</td>\n
 \t<td>id=listbox_previous_page</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>6</td>\n
+\t<td>0</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>7</td>\n
+\t<td>1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
 \t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>8</td>\n
+\t<td>2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n

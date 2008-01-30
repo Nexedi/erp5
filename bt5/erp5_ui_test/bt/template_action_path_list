@@ -9,6 +9,7 @@ Foo Module | search
 Foo Module | sort_on
 Foo Module | view
 Foo | list
+Foo | select_bar
 Foo | view
 Foo | view_duration_field
 Foo | view_planning
