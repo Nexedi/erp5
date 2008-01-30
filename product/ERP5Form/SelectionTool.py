@@ -475,6 +475,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           new_sort_on = [(sort_on,'ascending')]
         selection.edit(sort_on=new_sort_on)
 
+        if REQUEST.form.has_key('listbox_uid') and \
+            REQUEST.form.has_key('uids'):
+          self.uncheckAll(selection_name, REQUEST.get('listbox_uid'))
+          self.checkAll(selection_name, REQUEST.get('uids'))
+
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
