@@ -1235,10 +1235,9 @@ class ScribusParser:
     This function is used to get attributes'values in an object_dict and 
     to be sure a compatible value is returned (for that use default value)
     """
-    #return object_dict.get(check_key, None) or default_value
     if object_dict.has_key(check_key):
       # 'check_key' exists
-      if len(object_dict[check_key]) != 0:
+      if len(object_dict[check_key]):
         # check_key corresponding value is not null
         # returning this value
         return object_dict[check_key]
@@ -1260,6 +1259,15 @@ class ScribusParser:
     a full dict of 'PAGE', containing a dict of 'PAGEOBJECT',
     containing a dict of all the relative attributes
     """
+
+    # XXX this is a hack to correct a scribus problem
+    # actualy scribus (version 1.3.3.12svn) use some invali xml caracters
+    # like the '&#x5;' caracter wich is a carriage return caratere, used for
+    # example in a text frame with many lines
+    # this problem is well knowed by scribus community and perhaps will be
+    # correct in futur scribus version
+    xml_string = xml_string.replace('&#x5;', '\n')
+    xml_string = xml_string.replace('&#x4;', '\t')
 
     # Create DOM tree from the xml string
     print " > create DOM tree"
@@ -1351,7 +1359,7 @@ class ScribusParser:
         # end parsing document version 1.2.*
 
       else:
-        print " found Scribus Doucment format 1.3"
+        print " found Scribus Doucment format 1.3 or higher"
         # assuming version is compliant with 1.3.* specifications
 
         keep_page = 1
