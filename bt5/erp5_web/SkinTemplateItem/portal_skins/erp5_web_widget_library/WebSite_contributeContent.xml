@@ -102,6 +102,7 @@ try:\n
   new_content = context.portal_contributions.newContent(**kw)\n
   new_content.processFile()\n
   merged_content = new_content.Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)\n
+\n
 except ConversionError, Fault:\n
   # there are errors during ingestion content\n
   failure = 1\n
@@ -136,9 +137,16 @@ else:\n
   msg = context.Base_translateString(\'Document successfully created\')\n
   target = new_content\n
 \n
-return target.Base_redirect(\'view\',\n
-                            keep_items=dict(portal_status_message=msg, \n
-                                            editable_mode=editable_mode))\n
+# Change acquisition context of document, in order to get web section layout\n
+target = context.restrictedTraverse(target.getRelativeUrl())\n
+target.REQUEST.set(\'editable_mode\', editable_mode)\n
+target.REQUEST.set(\'portal_status_message\', msg)\n
+return target.view()\n
+\n
+# XXX Do not use redirect, as it leeds to conflict error with convertion process\n
+# return target.Base_redirect(\'view\',\n
+#                             keep_items=dict(portal_status_message=msg, \n
+#                                             editable_mode=editable_mode))\n
 </string> </value>
         </item>
         <item>
