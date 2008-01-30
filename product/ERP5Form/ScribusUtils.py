@@ -446,22 +446,6 @@ class ManageModule:
           , "object_print"
           , priority=2.0
           )
-    object_portal_type_value.addAction( "history"
-          , "History"
-          , "string:${object_url}/Base_viewHistory"
-          , ""
-          , "View"
-          , "object_view"
-          , priority=99.0
-          )
-    object_portal_type_value.addAction( "metadata"
-          , "Metadata"
-          , "string:${object_url}/Base_viewMetadata"
-          , ""
-          , "Manage properties"
-          , "object_view"
-          , priority=100.0
-          )
 
 
   security.declarePublic('registerModule')
