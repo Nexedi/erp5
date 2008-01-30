@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -137,9 +134,13 @@
                                          title      python: value[1];\n
                                          sort_order python: value[2]">\n
                     <th tal:condition="sql">\n
-                      <a href="portal_selections/setSelectionQuickSortOrder?selection_name=default&amp;sort_on=id&amp;form_id=view"\n
-                        tal:attributes="href string:portal_selections/setSelectionQuickSortOrder?selection_name=${selection_name}&amp;sort_on=${sql}&amp;form_id=${form_id}"\n
-                        tal:content="title" i18n:domain="ui" i18n:translate=""/>\n
+                      <button type="submit"  class="sort_button"\n
+                        name="setSelectionQuickSortOrder:method"\n
+                        tal:attributes="title string:${title}; \n
+                                        value string:${field_id}.${sql}"\n
+                        i18n:domain="ui" i18n:attributes="title">\n
+                          <span tal:content="title" i18n:domain="ui" i18n:translate="">ID</span>\n
+                      </button>\n
                       <img tal:condition="python: sort_order == \'ascending\'"\n
                         src="1bottomarrow.png" alt="Ascending Display" title="Ascending Display"\n
                         tal:attributes="src string:${portal_url_string}/images/1bottomarrow.png"\n
@@ -238,7 +239,8 @@
   </tal:block>\n
   <!-- ListBox ends here -->\n
 \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
