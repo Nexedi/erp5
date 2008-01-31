@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: "siege" not in here.getSource("")</string> </value>
+            <value> <string>python: here.getCausalityValue() is None or "siege" not in here.getSource("")</string> </value>
         </item>
       </dictionary>
     </pickle>
