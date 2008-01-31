@@ -10,6 +10,7 @@
 __version__ = "$Revision: 1.11 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
+from Acquisition import aq_base
 from Globals import HTMLFile, MessageDialog, Persistent
 import ldap, urllib
 
@@ -108,12 +109,12 @@ class ZLDAPConnection(
     def _EntryFactory(self):
         """ Stamps out an Entry class to be used for every entry returned,
         taking into account transactional versus non-transactional """
-        return getattr(self, '_v_entryclass', self._refreshEntryClass())
+        return getattr(aq_base(self), '_v_entryclass', self._refreshEntryClass())
 
     ### Tree stuff
     def __bobo_traverse__(self, REQUEST, key):
         key=urllib.unquote(key)
-        if hasattr(self, key):
+        if getattr(self, key, None) is not None:
             return getattr(self, key)
         return self.getRoot()[key]
 
@@ -146,7 +147,7 @@ class ZLDAPConnection(
         elif o._isNew or o._isDeleted:
             oko.append(o)
         self._v_okobjects=oko
-        
+
     def tpc_finish(self, *ignored):
         " really really commit and DON'T FAIL "
         oko=self._v_okobjects
@@ -367,7 +368,7 @@ class ZLDAPConnection(
 
     def isOpen(self):
         " quickly checks to see if the connection's open "
-        if not hasattr(self, '_v_conn'):
+        if getattr(aq_base(self), '_v_conn', None) is None:
             self._v_conn = None
         if self._v_conn is None or not self.shouldBeOpen():
             return 0
@@ -413,7 +414,7 @@ class ZLDAPConnection(
 
     def _close(self):
         """ close a connection """
-        if self.getOpenConnection() == 0:
+        if self.getOpenConnection() is None:
             #I'm already closed, but someone is still trying to close me
             self._v_conn = None
             self._v_openc = 0

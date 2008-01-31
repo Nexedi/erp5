@@ -1,6 +1,7 @@
 
 __version__="$Revision: 1.3 $"[11:-2]
 
+from Acquisition import aq_base
 class LDAPConnectionAccessors:
     """ getters / setters for LDAP Properties """
 
@@ -67,7 +68,7 @@ class LDAPConnectionAccessors:
         """ self.openc means that the connection is open to Zope.  However,
         the connection to the LDAP server may or may not be opened.  If
         this returns false, we shouldn't even try connecting."""
-        return self.openc
+        return getattr(aq_base(self), 'openc', None)
 
     def setOpenConnection(self, openc):
         self._v_openc = openc
