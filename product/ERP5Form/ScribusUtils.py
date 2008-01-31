@@ -211,15 +211,27 @@ class ManageModule:
     else:
       # using special page positioning convention for
       # pdf-like rendering
-      del default_groups[0:]
       for page_iterator in range(global_properties['page']):
         page_number = 'page_%s' % str(page_iterator)
         default_groups.append(page_number)
+        
     # default_groups list completed, need to update the form_groups
-    # renaming form default group with list's first item
+    # rename the first group because it can't be removed
+    form.rename_group(form.group_list[0], default_groups[0])
+
+    # add other groups
+    if len(default_groups) > 1:
+      for group in default_groups[1:]:
+        form.add_group(group)
     form_view_id_object.rename_group('Default', default_groups[0])
+
+    # remove all other groups:
+    for existing_group in list(form.get_groups(include_empty=1)):
+      if existing_group not in default_groups:
+        form.remove_group(existing_group)
+
     # adding all other items
-    for group in default_groups[0:]:
+    for group in default_groups:
       form_view_id_object.add_group(group)
     # updating form settings
     # building dict containing (property, value)
@@ -810,25 +822,21 @@ class ManageCSS:
     if page_iterator == 0:
       # margin-top = 0 (first page)
       properties_css_page['margin-top'] = "0px"
-      properties_css_background['height'] = \
-        str(page_height) + 'px'
-      properties_css_background['width']= \
-        str (page_width) + 'px'
-      properties_page['actual_width'] = width_groups[page_iterator]
-      properties_page['actual_height'] = height_groups[page_iterator]
       #properties_css_background['margin-top'] = \
       #   str((y_pos -10))+ 'px'
       #properties_css_background['margin-left']= \
       #   str((x_pos- 5))+   'px' 
     else:
-      # margin-top = page height
-      properties_css_page['margin-top'] = "%spx" %(page_height + 20)
-      properties_page['actual_width'] = width_groups[page_iterator]
-      properties_page['actual_height'] = height_groups[page_iterator] 
-      properties_css_background['height'] = \
-        str(page_height) + 'px'
-      properties_css_background['width']= \
-        str (page_width) + 'px'
+      properties_css_page['margin-top'] = "%spx" %(40)
+
+    # set width and height on page block
+    properties_css_page['width'] = str (page_width) + 'px'
+    properties_css_page['height'] = str (page_height) + 'px'
+
+    properties_page['actual_width'] = width_groups[page_iterator]
+    properties_page['actual_height'] = height_groups[page_iterator] 
+    properties_css_background['height'] = str(page_height) + 'px'
+    properties_css_background['width'] = str (page_width) + 'px'
     # adding properties dict to global dicts
     properties_css_dict['head'][page_id] = properties_css_page
     properties_css_dict['head'][background_id] = properties_css_background
