@@ -1274,8 +1274,8 @@ class ScribusParser:
     # actualy scribus (version 1.3.3.12svn) use some invali xml caracters
     # like the '&#x5;' caracter wich is a carriage return caratere, used for
     # example in a text frame with many lines
-    # this problem is well knowed by scribus community and perhaps will be
-    # correct in futur scribus version
+    # this problem is well knowed by scribus community and seems to be
+    # corrected in the 1.3.4 instable scribus version
     xml_string = xml_string.replace('&#x5;', '\n')
     xml_string = xml_string.replace('&#x4;', '\t')
 
