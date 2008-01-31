@@ -376,10 +376,16 @@ class ProxyField(ZMIField):
     This result must not be a ProxyField.
     """
     field = self
+    chain = []
     while True:
       template_field = field.getTemplateField()
       if template_field.__class__ != ProxyField:
         break
+      if aq_base(template_field) in chain:
+        LOG('ProxyField', WARNING, 'Infinite loop detected in %s.' %
+            '/'.join(self.getPhysicalPath()))
+        return
+      chain.append(aq_base(template_field))
       field = template_field
     return template_field
 
