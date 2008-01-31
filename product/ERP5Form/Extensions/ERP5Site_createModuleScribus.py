@@ -52,7 +52,8 @@ def ERP5Site_createModuleScribus(self,
   desired_height = desired_height
   desired_width = desired_width
   resolution = 300 # JPS-XXX - hardcoded
-  background_format = 'jpg' # Fabien - XXX - hardcoded
+  background_format = 'jpg' # XXX - hardcoded
+  space_between_pages = 20 # XXX - hardcoded
   option_html = option_html
 
   # DECLARING NAMES
@@ -235,7 +236,8 @@ def ERP5Site_createModuleScribus(self,
                                             page_iterator,
                                             page_gap,
                                             keep_page,
-                                            properties_page)
+                                            properties_page,
+                                            space_between_pages)
 
 
           # recover useful page_object attributes from scribus dict
@@ -252,7 +254,8 @@ def ERP5Site_createModuleScribus(self,
 
       # add last properties to css dict, including implementation
       # of a n+1 page to prevent bug when rendering under Konqueror
-      ManageCSS.setFinalProperties(properties_css_dict,page_height)
+      ManageCSS.setFinalProperties(properties_css_dict,page_height,
+          space_between_pages)
 
       # generate output string from dict
       form_css_content = ManageCSS.generateOutputContent(properties_css_dict)
