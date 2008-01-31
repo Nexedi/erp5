@@ -856,7 +856,8 @@ class ManageCSS:
                         , page_iterator
                         , page_gap
                         , keep_page
-                        , properties_page):
+                        , properties_page
+                        , space_between_pages):
     """
     recover all CSS data relative to the current page_object (field)
     and save these informations in the output dict
@@ -918,7 +919,8 @@ class ManageCSS:
         str(12) + 'px'
       properties_css_object_error['font-size'] = \
         str(12) + 'px'
-    properties_css_object_err_d['margin-left'] = str(page_width + 20 ) + 'px'
+    properties_css_object_err_d['margin-left'] = str(page_width +
+        space_between_pages ) + 'px'
     properties_css_object_stand['margin-top'] = \
       str((scaling_factor2 *float(properties_field['position_y']))) + 'px'
     properties_css_object_error['margin-top'] = \
@@ -1146,7 +1148,8 @@ class ManageCSS:
   security.declarePublic('setFinalProperties')
   def setFinalProperties( self
                         , properties_css_dict
-                        , page_height):
+                        , page_height
+                        , space_between_pages):
     """
     adding 'page_end' class to add a div at the end of the last page
     in order to display the full last page under Konqueror
@@ -1155,7 +1158,7 @@ class ManageCSS:
     """
     properties_css_page = {}
     properties_css_page['position'] = 'relative'
-    properties_css_page['margin-top'] = "%spx" % str(page_height)
+    properties_css_page['margin-top'] = "%spx" % str(space_between_pages)
     properties_css_dict['head']['page_end'] = properties_css_page
     return properties_css_dict
 
