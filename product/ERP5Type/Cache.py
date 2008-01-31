@@ -32,7 +32,7 @@ from AccessControl.SecurityInfo import allow_class
 from CachePlugins.BaseCache import CachedMethodError
 from zLOG import LOG, WARNING
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from traceback import extract_stack
+from warnings import warn
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
 DEFAULT_CACHE_FACTORY = 'erp5_ui_short'
@@ -252,10 +252,9 @@ def disableReadOnlyTransactionCache(context):
 
 def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
   """Clear specified cache factory list."""
-  filename, line, function, text = extract_stack(limit=2)[0]
-  LOG("%s:%i" % (filename, line), \
-      WARNING, \
-      "Global function clearCache() is deprecated. Use portal_caches.clearCache() instead.")
+  warn("Global function clearCache() is deprecated. Use"
+       " portal_caches.clearCache() instead.", DeprecationWarning,
+       stacklevel=2)
   cache_storage = CachingMethod.factories
   for cf_key in cache_factory_list:
     if cache_storage.has_key(cf_key):
