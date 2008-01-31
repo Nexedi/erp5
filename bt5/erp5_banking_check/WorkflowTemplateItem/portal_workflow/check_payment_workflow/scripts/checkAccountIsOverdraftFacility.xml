@@ -68,12 +68,44 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-txn = state_change[\'object\']\n
+transaction = state_change[\'object\']\n
+date = transaction.getStartDate()\n
+source = transaction.getSource(None)\n
+if source is None:\n
+  msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
+  raise ValidationFailed, (msg,)\n
 \n
-account = txn.getDestinationPaymentValue()\n
+# check we are in an opened accounting day\n
+transaction.Baobab_checkCounterDateOpen(site=source, date=date)\n
 \n
-if not account.isOverdraftFacility():\n
-  msg = Message(domain=\'ui\', message="Can\'t sent to manual validation because of not averdraft facility for this bank account")\n
+site = transaction.getSourceValue()\n
+\n
+# For safety, check the consistency again.\n
+context.validateConsistency(state_change)\n
+\n
+line = transaction.movement\n
+bank_account = transaction.getDestinationPaymentValue()\n
+\n
+if not bank_account.isOverdraftFacility():\n
+  msg = Message(domain=\'ui\', message="Can\'t sent to manual validation because of not overdraft facility for this bank account")\n
+  raise ValidationFailed, (msg,)\n
+\n
+price = transaction.getSourceTotalAssetPrice()\n
+\n
+# this prevents multiple transactions from being committed at the same time for this bank account.\n
+bank_account.serialize()\n
+\n
+# Make sure there are no other operations pending for this account\n
+if transaction.BankAccount_isMessagePending(bank_account):\n
+  msg = Message(domain=\'ui\', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Index the banking operation line so it impacts account position\n
+transaction.BankingOperationLine_index(line)\n
+\n
+# Check if the banking operation is correct. Do not depend on catalog because line might not be indexed immediatelly.\n
+if - price != (line.getPrice() * line.getQuantity()):\n
+  msg = Message(domain=\'ui\', message=\'Banking operation and check payment price do not match.\')\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
@@ -123,10 +155,17 @@ if not account.isOverdraftFacility():\n
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>_getitem_</string>
-                            <string>txn</string>
+                            <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>account</string>
+                            <string>date</string>
+                            <string>None</string>
+                            <string>source</string>
                             <string>msg</string>
+                            <string>site</string>
+                            <string>context</string>
+                            <string>line</string>
+                            <string>bank_account</string>
+                            <string>price</string>
                           </tuple>
                         </value>
                     </item>

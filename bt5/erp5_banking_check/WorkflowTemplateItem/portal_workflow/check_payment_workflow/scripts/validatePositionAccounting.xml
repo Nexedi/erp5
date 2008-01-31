@@ -106,16 +106,17 @@ if - price != (line.getPrice() * line.getQuantity()):\n
   raise ValidationFailed, (msg,)\n
 \n
 # Test if the account balance is sufficient.\n
-error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), price)\n
-if error[\'error_code\'] == 1:\n
-  msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
-  raise ValidationFailed, (msg,)\n
-elif error[\'error_code\'] == 2:\n
-  msg = Message(domain=\'ui\', message="Bank account is not valid.")\n
-  raise ValidationFailed, (msg,)\n
-elif error[\'error_code\'] != 0:\n
-  msg = Message(domain=\'ui\', message="Unknown error code.")\n
-  raise ValidationFailed, (msg,)\n
+if state_change[\'transition\'].getId() != "agree_action":\n
+  error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), price)\n
+  if error[\'error_code\'] == 1:\n
+    msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
+    raise ValidationFailed, (msg,)\n
+  elif error[\'error_code\'] == 2:\n
+    msg = Message(domain=\'ui\', message="Bank account is not valid.")\n
+    raise ValidationFailed, (msg,)\n
+  elif error[\'error_code\'] != 0:\n
+    msg = Message(domain=\'ui\', message="Unknown error code.")\n
+    raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
