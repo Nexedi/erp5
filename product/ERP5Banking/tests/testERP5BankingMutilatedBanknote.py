@@ -357,6 +357,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues(portal_type="Exchanged Mutilated Banknote Line")), 0.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
 
+  def stepTryArchiveHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to archive with no line defined on the document
+    """
+    self.assertEqual(len(self.hq_mutilated_banknote.objectValues(portal_type="Exchanged Mutilated Banknote Line")), 0.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
+
   def stepTryFinishWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to confirm with no amount defined on the document
@@ -370,6 +377,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 0.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
+
+  def stepTryArchiveHQWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
+    """
+    Try to archive with no amount defined on the document
+    """
+    self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 0.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
 
   def stepFinishDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -766,7 +780,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
                         + 'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckHQMaculatedBanknoteInventory ' \
-                        + 'TryFinishHQWithNoLineDefined CreateHQExchangedLine Tic TryFinishHQWithNoAmountDefined FinishHQDocument Tic ' \
+                        + 'TryArchiveHQWithNoLineDefined CreateHQExchangedLine Tic TryArchiveHQWithNoAmountDefined ArchiveHQDocument Tic ' \
                         + 'HQLogout ' \
                         + 'CheckHQFinalInventoryWithPayBack '\
                         + 'CreateExchangedLine Tic FinishDocument Tic ' \
