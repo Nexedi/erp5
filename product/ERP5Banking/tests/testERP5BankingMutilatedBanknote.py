@@ -331,6 +331,8 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     Check the final inventory when document got rejected without HQ request
     """
     self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0)
+    self.checkBanknoteInventory(node_path=self.usual_vault_incomming.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=0.0)
     self.checkFinalInventory()
 
   stepCheckFinalInventoryWithNoPayBackAfterHQRequest = stepCheckFinalInventoryWithNoPayBack
@@ -426,6 +428,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
   def stepCheckFinalInventoryWithPayBack(self, sequence=None, sequence_list=None, **kwd):
     self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'variation_text': '%cash_status/valid%'})
     self.checkBanknoteInventory(node_path=self.usual_vault_incomming.getRelativeUrl(), quantity=5.0)
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=0.0)
     self.checkFinalInventory()
 
   def checkFinalInventory(self):
@@ -434,7 +437,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkBanknoteInventory(node_path=self.maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
     self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
     self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
-    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=0.0)
 
   stepCheckFinalInventoryWithPayBackAfterHQRequest = stepCheckFinalInventoryWithPayBack
 
@@ -614,6 +616,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0)
     self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=0.0)
     self.checkFinalInventory()
 
   def stepClearHQMutilatedBanknoteModule(self, sequence=None, sequence_list=None, **kw):
@@ -659,7 +662,34 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0)
     self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
     self.checkBanknoteInventory(node_path=self.usual_vault_incomming.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=5.0)
     self.checkFinalInventory()
+
+  def CheckInventoryWithIncommingBanknotes(self, node, hq_node):
+    """
+    Check that mutilated banknotes transmites by agency are in the right stock place.
+    """
+    self.checkBanknoteInventory(node_path=node.getRelativeUrl(), quantity=5.0)
+    self.checkBanknoteInventory(node_path=hq_node.getRelativeUrl(), quantity=0.0)
+
+  def stepCheckInventoryWithIncommingMutilatedBanknotes(self, sequence=None, sequence_list=None, **kwd):
+    self.CheckInventoryWithIncommingBanknotes(self.mutilated_banknote_vault, self.hq_mutilated_banknote_vault)
+
+  def stepCheckInventoryWithIncommingMaculatedBanknotes(self, sequence=None, sequence_list=None, **kwd):
+    self.CheckInventoryWithIncommingBanknotes(self.maculated_banknote_vault, self.hq_maculated_banknote_vault)
+
+  def CheckHQInventoryWithIncommingBanknotes(self, node, hq_node):
+    """
+    Check that mutilated banknotes transmites by agency are in the right stock place.
+    """
+    self.checkBanknoteInventory(node_path=node.getRelativeUrl(), quantity=0.0)
+    self.checkBanknoteInventory(node_path=hq_node.getRelativeUrl(), quantity=5.0)
+
+  def stepCheckHQInventoryWithIncommingMutilatedBanknotes(self, sequence=None, sequence_list=None, **kwd):
+    self.CheckHQInventoryWithIncommingBanknotes(self.mutilated_banknote_vault, self.hq_mutilated_banknote_vault)
+
+  def stepCheckHQInventoryWithIncommingMaculatedBanknotes(self, sequence=None, sequence_list=None, **kwd):
+    self.CheckHQInventoryWithIncommingBanknotes(self.maculated_banknote_vault, self.hq_maculated_banknote_vault)
 
   def stepSetMaculatedState(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -688,6 +718,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CreateMutilatedBanknote Tic TryStopWithNoLineDefined ' \
                         + 'CreateIncomingLine Tic TryStopWithNoAmountDefined ' \
                         + 'StopDocument Tic ' \
+                        + 'CheckInventoryWithIncommingMutilatedBanknotes ' \
                         + 'CheckMutilatedBanknoteInventory ' \
                         + 'CancelDocument Tic ' \
                         + 'CheckFinalInventoryWithNoPayBack ClearMutilatedBanknoteModule'
@@ -697,6 +728,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
                         + 'CreateIncomingLine Tic ' \
                         + 'StopDocument Tic ' \
+                        + 'CheckInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckMaculatedBanknoteInventory ' \
                         + 'TryFinishWithNoLineDefined CreateExchangedLine Tic TryFinishWithNoAmountDefined FinishDocument Tic ' \
                         + 'TryDeliverWithNoLineDefined CreateOutgoingLine Tic TryDeliverWithWrongAmountDefined DeliverDocument Tic ' \
@@ -707,18 +739,20 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CreateMutilatedBanknote Tic ' \
                         + 'CreateIncomingLine Tic ' \
                         + 'StopDocument Tic ' \
+                        + 'CheckInventoryWithIncommingMutilatedBanknotes ' \
                         + 'CreateExchangedLine Tic TryPlanWithExchangedLine DelExchangedLine Tic PlanDocument Tic ' \
                         + 'HQLogin ' \
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote Tic '\
                         + 'TryStopHQWithNoLineDefined Tic CreateHQIncomingLine Tic TryStopHQWithNoAmountDefined StopHQDocument Tic ' \
+                        + 'CheckHQInventoryWithIncommingMutilatedBanknotes ' \
                         + 'CheckHQMutilatedBanknoteInventory ' \
                         + 'TryPlanHQDocument ' \
                         + 'CancelHQDocument Tic ' \
                         + 'HQLogout ' \
-                        + 'CheckHQFinalInventoryWithNoPayBack ClearHQMutilatedBanknoteModule Tic ' \
+                        + 'CheckHQFinalInventoryWithNoPayBack ' \
                         + 'CancelDocument Tic ' \
-                        + 'CheckFinalInventoryWithNoPayBackAfterHQRequest ClearMutilatedBanknoteModule'
+                        + 'CheckFinalInventoryWithNoPayBackAfterHQRequest ClearMutilatedBanknoteModule ClearHQMutilatedBanknoteModule'
     
     # sequence 4 : ask headquarters then payback, maculated banknotes
     sequence_string_4 = 'Tic CheckObjects Tic CheckInitialInventory ' \
@@ -730,13 +764,14 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote SetHQMaculatedState Tic ' \
                         + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
+                        + 'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckHQMaculatedBanknoteInventory ' \
                         + 'TryFinishHQWithNoLineDefined CreateHQExchangedLine Tic TryFinishHQWithNoAmountDefined FinishHQDocument Tic ' \
                         + 'HQLogout ' \
-                        + 'CheckHQFinalInventoryWithPayBack ClearHQMutilatedBanknoteModule Tic '\
+                        + 'CheckHQFinalInventoryWithPayBack '\
                         + 'CreateExchangedLine Tic FinishDocument Tic ' \
                         + 'CreateOutgoingLine Tic DeliverDocument Tic ' \
-                        + 'CheckFinalInventoryWithPayBackAfterHQRequest ClearMutilatedBanknoteModule'
+                        + 'CheckFinalInventoryWithPayBackAfterHQRequest ClearMutilatedBanknoteModule ClearHQMutilatedBanknoteModule'
 
     sequence_list.addSequenceString(sequence_string_1)
     sequence_list.addSequenceString(sequence_string_2)
