@@ -261,8 +261,7 @@ class LDAPMethod(Aqueduct.BaseQuery,
 
     def _connection(self):
         ' return actual ZLDAP Connection Object '
-        if hasattr(self,'connection_id') and hasattr(self,self.connection_id):
-            return getattr(self, self.connection_id)
+        return getattr(self, self.connection_id, None)
 
     def _getConn(self):
         return self._connection().GetConnection()
@@ -316,13 +315,13 @@ class LDAPMethod(Aqueduct.BaseQuery,
         if REQUEST is None:
             if kw: REQUEST = kw
             else:
-                if hasattr(self, 'REQUEST'): REQUEST=self.REQUEST
+                if getattr(self, 'REQUEST', None) is not None: REQUEST=self.REQUEST
                 else: REQUEST={}
         c = self._getConn()
         if not c:
             raise "LDAPError", "LDAP Connection not open"
 
-        if hasattr(self, 'aq_parent'):
+        if getattr(self, 'aq_parent', None) is not None:
             p = self.aq_parent
         else: p = None
 
@@ -497,6 +496,19 @@ class LDIFMethod(LDAPMethod):
     l = ERP5LDIFRecordList(file)
     l.parse()
     res = l.all_records
+
+    def delete(c, dn):
+      try:
+        c.delete_s(dn)
+      except ldap.NO_SUCH_OBJECT:
+        pass
+
+    def add(c, dn, mod_list):
+      try:
+        c.add_s(dn, mod_list)
+      except ldap.ALREADY_EXISTS:
+        pass
+
     for record in res:
       dn = record[0]
       entry = record[1]
@@ -507,26 +519,20 @@ class LDIFMethod(LDAPMethod):
             tuple_list = entry[key]
             if key == 'delete':
               try:
-                c.delete_s(dn)
-              except ldap.NO_SUCH_OBJECT:
-                pass
-                #LOG('LDIFMethod can\'t delete NO SUCH OBJECT',0,dn)
+                delete(c, dn)
+              except ldap.SERVER_DOWN:
+                c = self._connection().GetConnection()
+                delete(c, dn)
             else:
               for mod_tuple in tuple_list:
                 c.modify_s(dn, mod_tuple)
         else:
           mod_list = modlist.addModlist(entry)
           try:
-            c.add_s(dn, mod_list)
-          except ldap.ALREADY_EXISTS:
-            pass
-            #LOG('LDIFMethod can\'t add, entry allready exists',0,dn)
-          #except ldap.SERVER_DOWN:
-            #c = self._connection().GetConnection()
-            #try:
-              #c.add_s(dn, mod_list)
-            #except ldap.ALREADY_EXISTS:
-              #pass
+            add(c, dn, mod_list)
+          except ldap.SERVER_DOWN:
+            c = self._connection().GetConnection()
+            add(c, dn, mod_list)
       else:
         LOG('LDIFMethod Type unknow',0,'')
     return res
