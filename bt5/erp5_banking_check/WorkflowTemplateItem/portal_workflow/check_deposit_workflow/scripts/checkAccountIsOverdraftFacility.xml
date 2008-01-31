@@ -70,11 +70,17 @@ from Products.ERP5Type.Message import Message\n
 \n
 txn = state_change[\'object\']\n
 \n
-account = txn.getDestinationPaymentValue()\n
+for line in  txn.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
+  \n
+  account = line.getSourcePaymentValue()\n
 \n
-if not account.isOverdraftFacility():\n
-  msg = Message(domain=\'ui\', message="Can\'t sent to manual validation because of not averdraft facility for this bank account")\n
-  raise ValidationFailed, (msg,)\n
+  if account is None:\n
+    msg = Message(domain=\'ui\', message="No account defined on line")\n
+    raise ValidationFailed, (msg,)\n
+\n
+  if not account.isOverdraftFacility():\n
+    msg = Message(domain=\'ui\', message="Can\'t sent to manual validation because of not overdraft facility for this bank account")\n
+    raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -130,8 +136,11 @@ if not account.isOverdraftFacility():\n
                             <string>Message</string>
                             <string>_getitem_</string>
                             <string>txn</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
+                            <string>line</string>
                             <string>account</string>
+                            <string>None</string>
                             <string>msg</string>
                           </tuple>
                         </value>
