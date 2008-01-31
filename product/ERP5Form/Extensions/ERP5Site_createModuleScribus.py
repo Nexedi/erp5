@@ -168,7 +168,7 @@ def ERP5Site_createModuleScribus(self,
           object_names,skin_folder,desired_height,desired_width,resolution,
           background_format)
       
-      page_height, page_width = image_size
+      page_width, page_height = image_size
       
       print "   height = " + str(page_height)
       print "   width = " + str(page_width)
@@ -206,7 +206,7 @@ def ERP5Site_createModuleScribus(self,
         width_groups,height_groups = ManageFiles.getPageattributes(
                                               global_properties,
                                               import_pdf_file)
-        properties_css_dict, properties_page, actual_width, actual_height = \
+        properties_css_dict, properties_page = \
             ManageCSS.setPageProperties( properties_css_dict,
                                          page_iterator,
                                          page_id,
@@ -235,9 +235,7 @@ def ERP5Site_createModuleScribus(self,
                                             page_iterator,
                                             page_gap,
                                             keep_page,
-                                            properties_page,
-                                            actual_width,
-                                            actual_height)
+                                            properties_page)
 
 
           # recover useful page_object attributes from scribus dict
