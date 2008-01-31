@@ -160,7 +160,10 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
       Archive HQ document.
     """
+    self.hq_mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
+    self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'archived')
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
