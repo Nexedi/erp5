@@ -34,6 +34,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from DateTime import DateTime
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -117,8 +118,11 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
+    self.future_date =  DateTime(DateTime().Date()) + 4
     self.openCounterDate(site=self.paris)
     self.openCounterDate(site=self.siege, id='counter_date_2')
+    self.openCounterDate(site=self.paris, id='counter_date_3', date=self.future_date)
+    self.openCounterDate(site=self.siege, id='counter_date_4', date=self.future_date)
     self.openCounter(site=self.paris.surface.banque_interne.guichet_1)
     self.openCounter(site=self.siege.surface.banque_interne.guichet_1, id='counter_2')
 
@@ -506,7 +510,18 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
     self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0)
 
-  stepCheckFinalInventoryWithPayBackAfterHQRequest = stepCheckFinalInventoryWithPayBack
+  def stepCheckFinalInventoryWithPayBackAfterHQRequest(self, sequence=None, sequence_list=None, **kw):
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date - 1})
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=5.0, get_inventory_kw={'at_date': self.future_date + 1})
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0, get_inventory_kw={'at_date': self.future_date - 1})
+    self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + 1})
+    for offset in (-1, 1):
+      self.checkBanknoteInventory(node_path=self.usual_vault_incomming.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.mutilated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.maculated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
 
   #
   # Headquarter part
@@ -710,11 +725,16 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check the final inventory when the mutilated payment was approved by headquaters.
     """
-    self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0)
-    self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
-    self.checkBanknoteInventory(node_path=self.usual_vault_incomming.getRelativeUrl(), quantity=0.0)
-    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=5.0)
-    self.checkFinalInventory()
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date - 1})
+    self.checkBanknoteInventory(node_path=self.hq_usual_vault_incomming.getRelativeUrl(), quantity=5.0, get_inventory_kw={'at_date': self.future_date + 1})
+    for offset in (-1, 1):
+      self.checkBanknoteInventory(node_path=self.usual_vault.getRelativeUrl(), quantity=5.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.usual_vault_incomming.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.hq_usual_vault.getRelativeUrl(), quantity=5.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.mutilated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.maculated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
+      self.checkBanknoteInventory(node_path=self.hq_maculated_banknote_vault.getRelativeUrl(), quantity=0.0, get_inventory_kw={'at_date': self.future_date + offset})
 
   def stepCheckHQFinalInventoryWithHQPayBack(self, sequence=None, sequence_list=None, **kwd):
     self.checkBanknoteInventory(node_path=self.hq_mutilated_banknote_vault.getRelativeUrl(), quantity=0.0)
@@ -763,6 +783,21 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     Inform that the banknotes are in a maculated state, not in a mutilated state.
     """
     self.hq_mutilated_banknote.setDestinationValue(self.hq_maculated_banknote_vault)
+
+  def moveToFuture(self, document):
+    """
+      Move Exchanged and Outgoing line of given document to self.future_date.
+      Also set doesment's stop date to self.future_date.
+    """
+    document.setStopDate(self.future_date)
+    for line in document.objectValues(portal_type=['Exchanged Mutilated Banknote Line', 'Outgoing Mutilated Banknote Line']):
+      line.setStartDate(self.future_date)
+
+  def stepMoveToFuture(self, sequence=None, sequence_list=None, **kwd):
+    self.moveToFuture(self.mutilated_banknote)
+
+  def stepMoveHQToFuture(self, sequence=None, sequence_list=None, **kwd):
+    self.moveToFuture(self.hq_mutilated_banknote)
 
   ##################################
   ##  Tests
@@ -825,10 +860,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckHQMaculatedBanknoteInventory ' \
                         + 'TryArchiveHQWithNoLineDefined CreateHQExchangedLine Tic TryArchiveHQWithNoAmountDefined ArchiveHQDocument Tic ' \
+                        + 'MoveHQToFuture Tic ' \
                         + 'HQLogout ' \
                         + 'CheckHQFinalInventoryWithPayBack '\
                         + 'CreateExchangedLine Tic FinishDocument Tic ' \
                         + 'CreateOutgoingLine Tic DeliverDocument Tic ' \
+                        + 'MoveToFuture Tic ' \
                         + 'CheckFinalInventoryWithPayBackAfterHQRequest ClearMutilatedBanknoteModule ClearHQMutilatedBanknoteModule'
 
     # sequence 5 : HQ, no payback, mutilated banknotes
