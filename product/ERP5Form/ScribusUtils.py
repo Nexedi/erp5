@@ -584,16 +584,20 @@ class ManageFiles:
     # saving content
     temp_pdf.write(pdf_file.read())
     temp_pdf.seek(0)
+     
+    try:
+      result = commands.getstatusoutput('convert -density %s -resize %sx%s '\
+          '%s %s' % (resolution, desired_width, desired_height, temp_pdf.name,
+          background_format + ':' + temp_image_name))
 
-    result = commands.getstatusoutput('convert -density %s -resize %sx%s '\
-        '%s %s' % (resolution, desired_width, desired_height, temp_pdf.name,
-        background_format + ':' + temp_image_name))
-
-    # check that the command has been done succeful
-    if result[0] != 0:
-      LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'convert command'\
-          'failed with the following error message : \n%' % result[1])
-    temp_pdf.close()
+      # check that the command has been done succeful
+      if result[0] != 0:
+        LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'convert command'\
+            'failed with the following error message : \n%' % result[1])
+        temp_image.close()
+        raise
+    finally:
+      temp_pdf.close()
     
     background_image_list = []
     # convert add a '-N' string a the end of the file name if there is more
@@ -608,10 +612,12 @@ class ManageFiles:
       while os.path.exists(temp_image_name + '-%s' % image_number):
         background_image_list.append(temp_image_name + '-%s' % image_number)
         image_number += 1
-    
+      
     if not len(background_image_list):
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
           'image found')
+      temp_image.close()
+      raise
 
     # get the real size of the first image
     # this could be usefull if the user only defined one dimention
@@ -619,8 +625,8 @@ class ManageFiles:
     file_result= commands.getstatusoutput('identify %s' %\
         background_image_list[0])
 
-    real_size_x = file_result[1].split(' ')[2].split('x')[1]
-    real_size_y = file_result[1].split(' ')[2].split('x')[0]
+    real_size_x = file_result[1].split(' ')[2].split('x')[0]
+    real_size_y = file_result[1].split(' ')[2].split('x')[1]
 
     # add images in erp5 :
     image_number = 0
@@ -638,7 +644,8 @@ class ManageFiles:
     size_y = int(real_size_y)
     LOG('ScribusUtils.setBackgroundPictures :', INFO, 
         'return size : x=%s, y=%s' % (size_x, size_y))
-    
+   
+    temp_image.close()
     return (size_x, size_y)
 
   security.declarePublic('getPageattributes')
@@ -809,8 +816,6 @@ class ManageCSS:
         str (page_width) + 'px'
       properties_page['actual_width'] = width_groups[page_iterator]
       properties_page['actual_height'] = height_groups[page_iterator]
-      actual_width = width_groups[page_iterator]
-      actual_height = height_groups[page_iterator]  
       #properties_css_background['margin-top'] = \
       #   str((y_pos -10))+ 'px'
       #properties_css_background['margin-left']= \
@@ -820,8 +825,6 @@ class ManageCSS:
       properties_css_page['margin-top'] = "%spx" %(page_height + 20)
       properties_page['actual_width'] = width_groups[page_iterator]
       properties_page['actual_height'] = height_groups[page_iterator] 
-      actual_width = width_groups[page_iterator-1]
-      actual_height = height_groups[page_iterator -1]
       properties_css_background['height'] = \
         str(page_height) + 'px'
       properties_css_background['width']= \
@@ -830,7 +833,7 @@ class ManageCSS:
     properties_css_dict['head'][page_id] = properties_css_page
     properties_css_dict['head'][background_id] = properties_css_background
     # return updated dict
-    return (properties_css_dict,properties_page,actual_width,actual_height)
+    return (properties_css_dict, properties_page)
 
 
 
@@ -845,9 +848,7 @@ class ManageCSS:
                         , page_iterator
                         , page_gap
                         , keep_page
-                        , properties_page
-                        , actual_width
-                      ,actual_height):
+                        , properties_page):
     """
     recover all CSS data relative to the current page_object (field)
     and save these informations in the output dict
@@ -867,7 +868,7 @@ class ManageCSS:
 
       properties_field['position_y'] = \
          str(float(properties_field['position_y']) - \
-         (actual_height + page_gap)* page_iterator)
+         (properties_page['actual_height'] + page_gap)* page_iterator)
 
     # Processing object for CSS data
     # declaring dict containing all css data
