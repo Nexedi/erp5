@@ -690,6 +690,11 @@ class ManageFiles:
     original_result= commands.getstatusoutput('identify %s' % \
         (ScribusUtilsOriginaltempsPPMName + '*'))
 
+    # this line permit to delete tempory files (about 24 Mo for each file !)
+    # it's temporary because this function mus be rewrited or deleted
+    # (perhaps setBackgroundPictures could return attributes list)
+    ScribusUtilsOriginaltempsPPMName.close()
+
     pg_nbr = len(original_result[1].split('\n'))
     real_size_x = {}
     real_size_y = {}
