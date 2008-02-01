@@ -320,6 +320,7 @@ class SQLDict(RAMDict, SQLBase):
     final_error_uid_list = []
     make_available_uid_list = []
     message_with_active_process_list = []
+    notify_user_list = []
     something_failed = (len([x for x in message_uid_priority_list if not x[1].is_executed]) != 0)
     for uid, m, priority in message_uid_priority_list:
       if m.is_executed:
@@ -334,7 +335,7 @@ class SQLDict(RAMDict, SQLBase):
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:
-          m.notifyUser(activity_tool)
+          notify_user_list.append(m)
           final_error_uid_list.append(uid)
         else:
           try:
@@ -372,6 +373,8 @@ class SQLDict(RAMDict, SQLBase):
         LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (make_available_uid_list, ), error=sys.exc_info())
       else:
         LOG('SQLDict', TRACE, 'Freed messages %r' % (make_available_uid_list, ))
+    for m in notify_user_list:
+      m.notifyUser(activity_tool)
     for m in message_with_active_process_list:
       active_process = activity_tool.unrestrictedTraverse(m.active_process)
       if not active_process.hasActivity():

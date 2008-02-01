@@ -191,6 +191,7 @@ class SQLQueue(RAMQueue, SQLBase):
     delay_uid_list = []
     final_error_uid_list = []
     message_with_active_process_list = []
+    notify_user_list = []
     for uid, m, priority in message_uid_priority_list:
       if m.is_executed:
         deletable_uid_list.append(uid)
@@ -201,7 +202,7 @@ class SQLQueue(RAMQueue, SQLBase):
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:
-          m.notifyUser(activity_tool)
+          notify_user_list.append(m)
           final_error_uid_list.append(uid)
         else:
           try:
@@ -243,6 +244,8 @@ class SQLQueue(RAMQueue, SQLBase):
                                              processing_node=INVOKE_ERROR_STATE)
       except:
         LOG('SQLQueue', WARNING, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+    for m in notify_user_list:
+      m.notifyUser(activity_tool)
     for m in message_with_active_process_list:
       active_process = activity_tool.unrestrictedTraverse(m.active_process)
       if not active_process.hasActivity():
