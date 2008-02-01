@@ -68,6 +68,7 @@
             <value> <string>from DateTime import DateTime\n
 \n
 container_portal_type_list = ["Monetary Reception",]\n
+base_price_dict = {}\n
 \n
 if listbox is None:\n
 \n
@@ -84,25 +85,54 @@ if listbox is None:\n
   container_list = []\n
   listbox = []\n
   for o in context.portal_simulation.getCurrentTrackingList(at_date= reference_date, node = node):\n
-    if o.getObject().getParentValue().getPortalType()  in container_portal_type_list:\n
-      cash_container = o.getObject()\n
+    cash_container = o.getObject()\n
+    \n
+    if cash_container.getObject().getParentValue().getPortalType()  in container_portal_type_list:\n
       # get one line in order to know some properties of the cash container\n
       container_dict = {}\n
       container_lines = cash_container.searchFolder(portal_type=\'Container Line\')\n
       if len(container_lines) == 0:\n
-        context.log("CashMovementNewNotEmmited_generateCashContainerInputDialog", "No container line finf for cash container %s" %(cash_container.getRelativeUrl(),))\n
+        context.log("CashMovementNewNotEmitted_generateCashContainerInputDialog", "No container line finf for cash container %s" %(cash_container.getRelativeUrl(),))\n
         continue\n
       container_line = container_lines[0].getObject()\n
       container_dict[\'reference\'] = cash_container.getReference()\n
       container_dict[\'cash_number_range_start\'] = cash_container.getCashNumberRangeStart()\n
       container_dict[\'cash_number_range_stop\'] = cash_container.getCashNumberRangeStop()\n
-      container_dict[\'resource_translated_title\'] = container_line.getResourceTranslatedTitle()\n
-      container_dict[\'quantity\'] = container_line.getQuantity()\n
-      container_dict[\'total_price\'] = container_line.getTotalPrice()\n
+\n
+      resource = container_line.getResource()\n
+      base_price = base_price_dict.get(resource, None)\n
+      if base_price is None:\n
+        base_price = container_line.getResourceValue().getBasePrice()\n
+        base_price_dict[resource] = base_price\n
+      container_dict[\'base_price\'] = base_price\n
+      resource_translated_title = resource_translated_title_dict.get(resource, None)\n
+      if resource_translated_title is None:\n
+        resource_translated_title = container_line.getResourceTranslatedTitle()\n
+        resource_translated_title_dict[resource] = resource_translated_title\n
+      container_dict[\'resource_translated_title\'] = resource_translated_title\n
+      quantity = container_line.getQuantity()\n
+      container_dict[\'quantity\'] = quantity\n
+      total_price = total_price_dict.get((quantity,resource), None)\n
+      if total_price is None:\n
+        total_price = container_line.getTotalPrice(fast=0)\n
+        total_price_dict[(quantity,resource)] = total_price      \n
+      container_dict[\'total_price\'] = total_price\n
       container_dict[\'selection\'] = 0\n
+      container_dict[\'date\'] = o.date\n
       container_dict[\'uid\'] = \'new_%s\' %(cash_container.getUid(),)   #cash_container.getReference().replace(\'/\', \'_\'),)\n
 \n
       listbox.append(container_dict)\n
+\n
+  def sortListbox(a, b):\n
+    result = cmp(a["date"], b["date"])\n
+    if result == 0:\n
+      result = cmp(a["base_price"], b["base_price"])\n
+      if result == 0:\n
+        result = cmp(a["reference"], b["reference"])\n
+      \n
+    return result\n
+\n
+  listbox.sort(sortListbox)\n
 \n
   context.Base_updateDialogForm(listbox=listbox\n
                                 )\n
@@ -163,6 +193,7 @@ if listbox is None:\n
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>container_portal_type_list</string>
+                            <string>base_price_dict</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -180,6 +211,14 @@ if listbox is None:\n
                             <string>_getitem_</string>
                             <string>container_line</string>
                             <string>_write_</string>
+                            <string>resource</string>
+                            <string>base_price</string>
+                            <string>resource_translated_title_dict</string>
+                            <string>resource_translated_title</string>
+                            <string>quantity</string>
+                            <string>total_price_dict</string>
+                            <string>total_price</string>
+                            <string>sortListbox</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
