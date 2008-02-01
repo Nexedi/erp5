@@ -12,12 +12,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>description</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_credit_account</string> </value>
+            <value> <string>my_account_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -54,6 +57,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -63,6 +70,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -73,16 +84,32 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>The type of the account.\n
+\n
+This category defines how the account will behave. For instance Payable or Receivable accounts will need to be used with a third party.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_credit_account</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Account_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Account Type</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -12,12 +12,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>description</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_credit_account</string> </value>
+            <value> <string>my_financial_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,6 +68,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -73,16 +80,30 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+The Financial Section for this account.\n
+\n
+Used in some reports (Profit & Loss, Balance Sheet)  and budget.
+
+]]></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_credit_account</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Account_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Financial Section</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -12,12 +12,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>whitespace_preserve</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_credit_account</string> </value>
+            <value> <string>my_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,15 +76,19 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_credit_account</string> </value>
+                    <value> <string>my_description</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Account_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
