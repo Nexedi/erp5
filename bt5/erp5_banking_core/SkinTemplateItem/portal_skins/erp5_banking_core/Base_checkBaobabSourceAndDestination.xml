@@ -70,8 +70,9 @@ from Products.ERP5Type.Message import Message\n
 \n
 object_to_check_list = [context]\n
 object_to_check_list.extend(context.getMovementList())\n
-\n
+context.log("object to check", object_to_check_list)\n
 for object in object_to_check_list:\n
+  context.log("object", object)\n
   baobab_source = object.getBaobabSource()\n
   baobab_destination = object.getBaobabDestination()\n
 \n

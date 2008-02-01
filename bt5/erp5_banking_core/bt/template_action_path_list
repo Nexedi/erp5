@@ -43,7 +43,7 @@ Counter Date Module | view
 Counter Date | counter_stock
 Counter Date | remaining_operations
 Counter Date | view
-Counter Module | print_pdf
+Counter Module | container_report
 Counter Module | vault_report
 Counter Module | view
 Counter | view
