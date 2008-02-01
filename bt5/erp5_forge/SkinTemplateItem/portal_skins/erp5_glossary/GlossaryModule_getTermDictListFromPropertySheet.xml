@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -83,7 +80,7 @@ iterate(context.portal_skins)\n
 \n
 properties = []\n
 for i in property_sheet_list:\n
-  properties.extend(context.Glossary_getPropertySheetAttributeList(i))\n
+  properties.extend(context.GlossaryModule_getPropertySheetAttributeList(i))\n
 \n
 dic = {}\n
 for i in all_field_list:\n
@@ -115,19 +112,7 @@ for (reference, business_field, title) in dic.keys():\n
                  \'title\':title,\n
                  \'description\':description})\n
 \n
-if export_tsv:\n
-  for i in result:\n
-    print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'], i[\'business_field\'],\n
-                                            i[\'title\'], i[\'description\'],)))\n
-  return printed\n
-else:\n
-  for i in result:\n
-    new_id = context.generateNewId()\n
-    context.newContent(id=new_id, portal_type=\'Glossary Term\', container=context,\n
-                       reference=i[\'reference\'], language=i[\'language\'], business_field=i[\'business_field\'],\n
-                       title=i[\'title\'], description=i[\'description\'])\n
-\n
-context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -144,7 +129,15 @@ context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>property_sheet_list, export_tsv=False, REQUEST=None, **kw</string> </value>
+            <value> <string>property_sheet_list</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,18 +157,13 @@ context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>property_sheet_list</string>
-                            <string>export_tsv</string>
-                            <string>REQUEST</string>
-                            <string>kw</string>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>ignore</string>
                             <string>all_field_list</string>
                             <string>iterate</string>
@@ -200,8 +188,6 @@ context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
                             <string>language</string>
                             <string>field</string>
                             <string>description</string>
-                            <string>map</string>
-                            <string>new_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -213,15 +199,12 @@ context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Glossary_findTermsFromPropertySheet</string> </value>
+            <value> <string>GlossaryModule_getTermDictListFromPropertySheet</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

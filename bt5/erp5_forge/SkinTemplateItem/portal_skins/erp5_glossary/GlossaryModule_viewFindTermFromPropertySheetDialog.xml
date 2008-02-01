@@ -44,7 +44,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>GlossaryModule_findTermFromPropertySheet</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -52,7 +56,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -73,9 +77,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -93,7 +95,10 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_property_sheet_list</string>
+                        <string>your_export_tsv</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -107,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryModule_viewGlossaryTermList</string> </value>
+            <value> <string>GlossaryModule_viewFindTermFromPropertySheetDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -115,11 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>GlossaryModule_viewGlossaryTermList</string> </value>
+            <value> <string>GlossaryModule_getPropertySheetAttributeList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -131,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Glossary</string> </value>
+            <value> <string>Find Terms</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

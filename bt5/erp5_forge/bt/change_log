@@ -1,3 +1,6 @@
+2008-2-1 Yusei
+* Fixed wrong name of scripts of  erp5_glossary. Use proxy-roled script to find terms.
+
 2007-10-22 Jerome
 * Added two utility scripts SkinsTool_checkDuplicateSelectionName and SkinsTool_getNotAssignedFieldList in erp5_toolbox
 
