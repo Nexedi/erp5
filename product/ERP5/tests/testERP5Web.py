@@ -209,7 +209,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     for key, item in kw.items():
       request.set('field_your_%s' %key, item)
     website = portal.web_site_module[self.website_id]
-    website.WebSite_createWebSiteAccount()
+    website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
     
     # find person object by reference
     person = website.ERP5Site_getAuthenticatedMemberPersonValue(kw['reference'])
