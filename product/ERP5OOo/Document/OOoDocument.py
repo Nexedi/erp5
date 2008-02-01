@@ -341,6 +341,7 @@ class OOoDocument(File, ConversionCacheMixin):
 
     # Make sure we can support html and pdf by default
     is_html = 0
+    requires_pdf_first = 0
     original_format = format
     if format == 'base-data':
       if not self.hasBaseData():
@@ -353,7 +354,14 @@ class OOoDocument(File, ConversionCacheMixin):
     elif format in STANDARD_IMAGE_FORMAT_LIST:
       format_list = [x for x in self.getTargetFormatList()
                                           if x.endswith(format)]
-      format = format_list[0]
+      if len(format_list):
+        format = format_list[0]
+      else:
+        # We must fist make a PDF
+        requires_pdf_first = 1
+        format_list = [x for x in self.getTargetFormatList()
+                                          if x.endswith('pdf')]
+        format = format_list[0]
     elif format == 'html':
       format_list = [x for x in self.getTargetFormatList()
                               if x.startswith('html') or x.endswith('html')]
@@ -373,7 +381,15 @@ class OOoDocument(File, ConversionCacheMixin):
     if not self.hasBaseData():
       raise NotConvertedError
     # Return converted file
-    if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+    if requires_pdf_first:
+      # We should use original_format whenever we wish to
+      # display an image version of a document which needs to go
+      # through PDF
+      if display is None:
+        has_format = self.hasConversion(format=original_format)
+      else:
+        has_format = self.hasConversion(format=original_format, display=display)
+    elif display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
       has_format = self.hasConversion(format=format)
     else:
       has_format = self.hasConversion(format=format, display=display)
@@ -395,7 +411,8 @@ class OOoDocument(File, ConversionCacheMixin):
         self.populateContent(zip_file=z)
         z.close()
         cs.close()
-      if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+      if (display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST) \
+        and not requires_pdf_first:
         self.setConversion(data, mime, format=format)
       else:
         temp_image = self.portal_contributions.newContent(
@@ -403,7 +420,18 @@ class OOoDocument(File, ConversionCacheMixin):
                                        temp_object=1)
         temp_image._setData(data)
         mime, data = temp_image.convert(original_format, display=display)
-        self.setConversion(data, mime, format=format, display=display)
+        if requires_pdf_first:
+          if display is None:
+            self.setConversion(data, mime, format=original_format)
+          else:
+            self.setConversion(data, mime, format=original_format, display=display)
+        else:
+          if display is None:
+            self.setConversion(data, mime, format=format)
+          else:
+            self.setConversion(data, mime, format=format, display=display)
+    if requires_pdf_first:
+      format = original_format
     if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
       return self.getConversion(format=format)
     else:
@@ -436,18 +464,28 @@ class OOoDocument(File, ConversionCacheMixin):
       must_close = 1
     else:
       must_close = 0
+    first_page = True
     for f in zip_file.infolist():
       file_name = f.filename
-      if not file_name.endswith('html'): # XXX - we must add here more values in order to
-                                         # support multi-page HTML conversions
-                                         # such as for presentations.
-        document = self.get(file_name, None)
-        if document is not None:
-          self.manage_delObjects([file_name])
-        newContent = UnrestrictedMethod(self.portal_contributions.newContent)
+      if file_name.endswith('html') and self.getPortalType() != 'Presentation':
+      #if file_name.endswith('html'):
+        continue
+      #if first_page and file_name.endswith('html'):
+      #  first_page = False
+      #  break
+      LOG('file_name', 0, file_name)
+      document = self.get(file_name, None)
+      if document is not None:
+        self.manage_delObjects([file_name])
+      newContent = UnrestrictedMethod(self.portal_contributions.newContent)
+      if file_name.endswith('html'):
+        newContent(id=file_name, container=self, portal_type='Web Page',
+                  file_name=file_name,
+                  data=zip_file.read(file_name))
+      else:
         newContent(id=file_name, container=self,
-                   file_name=file_name,
-                   data=zip_file.read(file_name))
+                  file_name=file_name,
+                  data=zip_file.read(file_name))
     if must_close:
       zip_file.close()
       archive_file.close()
