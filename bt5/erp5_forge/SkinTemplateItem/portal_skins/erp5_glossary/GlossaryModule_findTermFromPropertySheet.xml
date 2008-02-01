@@ -65,52 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ignore = (\'custom\',)\n
-all_field_list = []\n
-def iterate(obj):\n
-  for i in obj.objectValues():\n
-    if i.getId() in ignore:\n
-      continue\n
-    if i.meta_type==\'ERP5 Form\':\n
-      all_field_list.extend(i.objectValues())\n
-    elif i.isPrincipiaFolderish:\n
-      iterate(i)\n
-\n
-iterate(context.portal_skins)\n
-\n
-properties = []\n
-for i in property_sheet_list:\n
-  properties.extend(context.GlossaryModule_getPropertySheetAttributeList(i))\n
-\n
-dic = {}\n
-for i in all_field_list:\n
-  id = i.getId()\n
-  title = i.get_value(\'title\') or \'\'\n
-  skin_id = i.aq_parent.aq_parent.getId()\n
-  prefix = \'erp5_\'\n
-  if skin_id.startswith(prefix):\n
-    skin_id = skin_id[len(prefix):]\n
-  if id.startswith(\'my_\'):\n
-    for p in properties:\n
-      if id==\'my_%s\' % p:\n
-        key = (p, skin_id, title)\n
-        dic[key] = i\n
-  if id.startswith(\'your_\'):\n
-    for p in properties:\n
-      if id==\'your_%s\' % p:\n
-        key = (p, skin_id, title)\n
-        dic[key] = i\n
-\n
-result = []\n
-for (reference, business_field, title) in dic.keys():\n
-  language = \'en\'\n
-  field = dic[(reference, business_field, title)]\n
-  description = field.get_value(\'description\')\n
-  result.append({\'reference\':reference,\n
-                 \'language\':language,\n
-                 \'business_field\':business_field,\n
-                 \'title\':title,\n
-                 \'description\':description})\n
+            <value> <string>result = context.GlossaryModule_getTermDictListFromPropertySheet(property_sheet_list)\n
 \n
 if export_tsv:\n
   for i in result:\n
@@ -173,31 +128,13 @@ context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
                             <string>kw</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>ignore</string>
-                            <string>all_field_list</string>
-                            <string>iterate</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>properties</string>
+                            <string>result</string>
                             <string>_getiter_</string>
                             <string>i</string>
-                            <string>dic</string>
-                            <string>id</string>
-                            <string>title</string>
-                            <string>skin_id</string>
-                            <string>prefix</string>
-                            <string>_getitem_</string>
-                            <string>len</string>
-                            <string>p</string>
-                            <string>key</string>
-                            <string>_write_</string>
-                            <string>result</string>
-                            <string>reference</string>
-                            <string>business_field</string>
-                            <string>language</string>
-                            <string>field</string>
-                            <string>description</string>
                             <string>map</string>
+                            <string>_getitem_</string>
                             <string>new_id</string>
                           </tuple>
                         </value>

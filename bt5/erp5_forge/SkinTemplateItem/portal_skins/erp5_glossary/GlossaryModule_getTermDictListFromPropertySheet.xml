@@ -135,7 +135,9 @@ return result\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Authenticated</string>
                 <string>Manager</string>
+                <string>Member</string>
               </tuple>
             </value>
         </item>
