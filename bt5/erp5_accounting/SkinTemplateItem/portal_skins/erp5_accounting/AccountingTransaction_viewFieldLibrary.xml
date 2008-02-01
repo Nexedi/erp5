@@ -109,6 +109,7 @@
                         <string>my_payment_mode</string>
                         <string>my_source_payment</string>
                         <string>my_causality_title_list</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

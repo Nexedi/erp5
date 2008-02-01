@@ -120,7 +120,7 @@
                     <value>
                       <list>
                         <string>my_stop_date</string>
-                        <string>my_description</string>
+                        <string>my_comment</string>
                         <string>my_causality_title_list</string>
                         <string>my_translated_portal_type</string>
                         <string>my_translated_simulation_state_title</string>

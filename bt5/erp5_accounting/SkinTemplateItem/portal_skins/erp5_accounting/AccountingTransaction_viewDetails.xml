@@ -87,7 +87,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -121,7 +123,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_description</string>
+                        <string>my_comment</string>
                         <string>my_destination_reference</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
