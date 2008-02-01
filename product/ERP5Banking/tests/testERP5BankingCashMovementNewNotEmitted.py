@@ -71,8 +71,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_cash',
-            'erp5_banking_check',
-            'erp5_banking_cash_movement_new_not_emitted')
+            'erp5_banking_check',)
 
   def getTitle(self):
     """
