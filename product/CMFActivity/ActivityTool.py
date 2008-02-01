@@ -120,6 +120,7 @@ class Message:
     self.is_executed = 0
     self.exc_type = None
     self.exc_value = None
+    self.traceback = None
     self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info ?
