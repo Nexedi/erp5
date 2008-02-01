@@ -62,6 +62,7 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Delivery
                       , PropertySheet.Amount
                       , PropertySheet.Reference
+                      , PropertySheet.Comment
                       , PropertySheet.PaymentCondition
                       , PropertySheet.AccountingTransaction
                       )
