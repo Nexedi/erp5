@@ -117,6 +117,7 @@
                         <string>my_quantity</string>
                         <string>my_percent</string>
                         <string>planning_box</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
