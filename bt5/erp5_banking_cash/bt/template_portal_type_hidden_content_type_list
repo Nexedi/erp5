@@ -4,6 +4,9 @@ Cash Container Item | Container Line
 Cash Container | Container Line
 Cash Exchange | Incoming Cash Exchange Line
 Cash Exchange | Outgoing Cash Exchange Line
+Cash Movement New Not Emitted Container | Container Line
+Cash Movement New Not Emitted | Cash Movement New Not Emitted Container
+Cash Movement New Not Emitted | Cash Movement New Not Emitted Line
 Cash Movement | Cash Delivery Line
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line

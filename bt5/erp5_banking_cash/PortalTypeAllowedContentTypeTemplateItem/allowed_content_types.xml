@@ -25,6 +25,19 @@
  <portal_type id="Cash Movement Module">
   <item>Cash Movement</item>
  </portal_type>
+ <portal_type id="Cash Movement New Not Emitted">
+  <item>Cash Movement New Not Emitted Line</item>
+  <item>Cash Movement New Not Emitted Container</item>
+ </portal_type>
+ <portal_type id="Cash Movement New Not Emitted Container">
+  <item>Container Line</item>
+ </portal_type>
+ <portal_type id="Cash Movement New Not Emitted Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Cash Movement New Not Emitted Module">
+  <item>Cash Movement New Not Emitted</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
@@ -40,15 +53,15 @@
   <item>Cash To Currency Purchase</item>
  </portal_type>
  <portal_type id="Cash To Currency Sale">
-  <item>Outgoing Cash To Currency Sale Line</item>
   <item>Incoming Cash To Currency Sale Line</item>
+  <item>Outgoing Cash To Currency Sale Line</item>
  </portal_type>
  <portal_type id="Cash To Currency Sale Module">
   <item>Cash To Currency Sale</item>
  </portal_type>
  <portal_type id="Classification Survey">
-  <item>Outgoing Classification Survey Line</item>
   <item>Incoming Classification Survey Line</item>
+  <item>Outgoing Classification Survey Line</item>
  </portal_type>
  <portal_type id="Classification Survey Module">
   <item>Classification Survey</item>
@@ -99,15 +112,15 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Internal Money Deposit">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Internal Money Deposit Module">
   <item>Internal Money Deposit</item>
  </portal_type>
  <portal_type id="Internal Money Payment">
-  <item>Cash Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Cash Delivery Line</item>
  </portal_type>
  <portal_type id="Internal Money Payment Module">
   <item>Internal Money Payment</item>
@@ -170,9 +183,9 @@
   <item>Money Deposit Rendering</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
+  <item>Incoming Mutilated Banknote Line</item>
   <item>Outgoing Mutilated Banknote Line</item>
   <item>Exchanged Mutilated Banknote Line</item>
-  <item>Incoming Mutilated Banknote Line</item>
  </portal_type>
  <portal_type id="Mutilated Banknote Module">
   <item>Mutilated Banknote</item>

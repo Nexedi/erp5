@@ -2,6 +2,9 @@ Cash Balance Regulation | cash_balance_regulation_workflow
 Cash Balance Regulation | edit_workflow
 Cash Exchange | cash_exchange_workflow
 Cash Exchange | edit_workflow
+Cash Movement New Not Emitted | cash_movement_new_not_emitted_interaction_workflow
+Cash Movement New Not Emitted | cash_movement_new_not_emitted_workflow
+Cash Movement New Not Emitted | edit_workflow
 Cash Movement | cash_movement_workflow
 Cash Movement | edit_workflow
 Cash Sorting | cash_sorting_workflow

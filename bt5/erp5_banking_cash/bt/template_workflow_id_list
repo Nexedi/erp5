@@ -1,5 +1,6 @@
 cash_balance_regulation_workflow
 cash_exchange_workflow
+cash_movement_new_not_emitted_workflow
 cash_movement_workflow
 cash_sorting_workflow
 cash_to_currency_purchase_workflow

@@ -72,6 +72,9 @@ result = []\n
 resultContainer = {}\n
 result_line = []\n
 \n
+if listbox is None:\n
+  listbox = []\n
+\n
 def isSameSet(a, b):\n
   for i in a:\n
     if not(i in b) : return 0\n
@@ -226,6 +229,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>result</string>
                             <string>resultContainer</string>
                             <string>result_line</string>
+                            <string>None</string>
                             <string>isSameSet</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -251,6 +255,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>key</string>
                             <string>_apply_</string>
                             <string>cell</string>
+                            <string>_inplacevar_</string>
                             <string>movement_line</string>
                             <string>request</string>
                             <string>redirect_url</string>

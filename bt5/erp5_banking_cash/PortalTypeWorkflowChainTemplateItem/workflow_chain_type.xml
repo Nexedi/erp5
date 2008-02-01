@@ -12,6 +12,10 @@
   <workflow>edit_workflow, cash_movement_workflow</workflow>
  </chain>
  <chain>
+  <type>Cash Movement New Not Emitted</type>
+  <workflow>edit_workflow, cash_movement_new_not_emitted_interaction_workflow, cash_movement_new_not_emitted_workflow</workflow>
+ </chain>
+ <chain>
   <type>Cash Sorting</type>
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
@@ -41,7 +45,7 @@
  </chain>
  <chain>
   <type>Destruction Survey</type>
-  <workflow>destruction_survey_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, destruction_survey_workflow</workflow>
  </chain>
  <chain>
   <type>Foreign Cash Reception</type>
@@ -93,7 +97,7 @@
  </chain>
  <chain>
   <type>Usual Cash Transfer</type>
-  <workflow>edit_workflow, usual_cash_transfer_workflow</workflow>
+  <workflow>usual_cash_transfer_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Vault Transfer</type>

@@ -1,6 +1,7 @@
 cash_balance_regulation_module
 cash_exchange_module
 cash_movement_module
+cash_movement_new_not_emitted_module
 cash_sorting_module
 cash_to_currency_purchase_module
 cash_to_currency_sale_module

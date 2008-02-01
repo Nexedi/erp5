@@ -19,6 +19,13 @@ Cash Exchange | return
 Cash Exchange | view
 Cash Movement Module | print_pdf
 Cash Movement Module | view
+Cash Movement New Not Emitted Container | view
+Cash Movement New Not Emitted Line | view
+Cash Movement New Not Emitted Module | view
+Cash Movement New Not Emitted | coin_fastinput
+Cash Movement New Not Emitted | container
+Cash Movement New Not Emitted | fastInput
+Cash Movement New Not Emitted | view
 Cash Movement | fastinput
 Cash Movement | print_pdf
 Cash Movement | view

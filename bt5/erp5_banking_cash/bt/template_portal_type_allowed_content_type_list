@@ -7,6 +7,11 @@ Cash Exchange Module | Cash Exchange
 Cash Exchange | Incoming Cash Exchange Line
 Cash Exchange | Outgoing Cash Exchange Line
 Cash Movement Module | Cash Movement
+Cash Movement New Not Emitted Container | Container Line
+Cash Movement New Not Emitted Line | Cash Delivery Cell
+Cash Movement New Not Emitted Module | Cash Movement New Not Emitted
+Cash Movement New Not Emitted | Cash Movement New Not Emitted Container
+Cash Movement New Not Emitted | Cash Movement New Not Emitted Line
 Cash Movement | Cash Delivery Line
 Cash Sorting Module | Cash Sorting
 Cash Sorting | Incoming Cash Sorting Line

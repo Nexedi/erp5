@@ -16,6 +16,13 @@
  <portal_type id="Cash Movement">
   <item>Cash Delivery Line</item>
  </portal_type>
+ <portal_type id="Cash Movement New Not Emitted">
+  <item>Cash Movement New Not Emitted Line</item>
+  <item>Cash Movement New Not Emitted Container</item>
+ </portal_type>
+ <portal_type id="Cash Movement New Not Emitted Container">
+  <item>Container Line</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
   <item>Incoming Cash Sorting Line</item>
   <item>Outgoing Cash Sorting Line</item>
