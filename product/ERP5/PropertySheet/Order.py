@@ -35,19 +35,6 @@ class Order:
   """
 
   _properties = (
-    { 'id'          : 'received_date',
-      'description' : 'Received date',
-      'type'        : 'date',
-      'mode'        : 'w' },
-    { 'id'          : 'emit_date',
-      'description' : 'Emit date',
-      'type'        : 'date',
-      'mode'        : 'w' },
-    { 'id'          : 'errand_ratio',
-      'description' : 'Errand ratio',
-      'type'        : 'float',
-      'default'     : 0.0,
-      'mode'        : 'w' },
     { 'id'          : 'trade_condition_title',
       'description' : 'Trade condition title',
       'type'        : 'string',
