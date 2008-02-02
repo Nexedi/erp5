@@ -524,7 +524,8 @@ class Category(Folder):
       localizer = getToolByName(self, 'Localizer')
       language = localizer.get_selected_language()
       m = CachingMethod(_renderCategoryChildItemList,
-            ('Category_getCategoryChildItemList', language, self.getPath()))
+            ('Category_getCategoryChildItemList', language, self.getPath()),
+            cache_factory=cache)
 
       return m(recursive=recursive, base=base, **kw)
 
