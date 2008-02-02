@@ -1,3 +1,6 @@
+2008-2-2 Yusei
+* Prevent  adding duplicate term.
+
 2008-2-1 Yusei
 * Fixed wrong name of scripts of  erp5_glossary. Use proxy-roled script to find terms.
 

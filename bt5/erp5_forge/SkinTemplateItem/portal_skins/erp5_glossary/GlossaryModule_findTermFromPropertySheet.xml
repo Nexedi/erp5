@@ -65,22 +65,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = context.GlossaryModule_getTermDictListFromPropertySheet(property_sheet_list)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+result = context.GlossaryModule_getTermDictListFromPropertySheet(property_sheet_list)\n
 \n
 if export_tsv:\n
   for i in result:\n
-    print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'], i[\'business_field\'],\n
+    print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'],\n
+                                            i[\'business_field\'],\n
                                             i[\'title\'], i[\'description\'],)))\n
   return printed\n
 else:\n
+  portal_catalog = context.portal_catalog\n
   for i in result:\n
+    item_list = portal_catalog(portal_type=\'Glossary Term\',\n
+                               reference=i[\'reference\'], language=i[\'language\'],\n
+                               business_field=i[\'business_field\'],\n
+                               validation_state="!=deleted")\n
+    if len(item_list)>0:\n
+      continue\n
+\n
     new_id = context.generateNewId()\n
-    context.newContent(id=new_id, portal_type=\'Glossary Term\', container=context,\n
-                       reference=i[\'reference\'], language=i[\'language\'], business_field=i[\'business_field\'],\n
+    context.newContent(id=new_id, portal_type=\'Glossary Term\',\n
+                       container=context,\n
+                       reference=i[\'reference\'], language=i[\'language\'],\n
+                       business_field=i[\'business_field\'],\n
                        title=i[\'title\'], description=i[\'description\'])\n
 \n
-context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
-</string> </value>
+context.Base_redirect()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -135,6 +150,9 @@ context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
                             <string>i</string>
                             <string>map</string>
                             <string>_getitem_</string>
+                            <string>portal_catalog</string>
+                            <string>item_list</string>
+                            <string>len</string>
                             <string>new_id</string>
                           </tuple>
                         </value>
