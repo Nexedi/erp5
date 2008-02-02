@@ -316,13 +316,6 @@ class SQLQueue(RAMQueue, SQLBase):
       to_free_uid_list = [x[0] for x in message_uid_priority_list if x[0] not in processed_uid_set]
       if len(to_free_uid_list):
         try:
-          # Rollback all changes made on activity connection.
-          # We will commit to make messages available, and we cannot control
-          # what was done by the activity: it might have used the activity
-          # connection. As the transaction failed, we must rollback these
-          # potential changes before being allowed to commit in
-          # makeMessageListAvailable.
-          activity_tool.SQLQueue_rollback()
           makeMessageListAvailable(to_free_uid_list)
         except:
           LOG('SQQueue', PANIC, 'Failed to free remaining messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
