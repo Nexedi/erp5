@@ -808,8 +808,8 @@ class Arrow:
                     'source_trade', 'destination_trade',
                     'source_function', 'destination_function',
                     'source_project', 'destination_project',
-                    'source_transport', 'destination_transport',
-                    'source_advice', 'destination_advice',
+                    'source_carrier', 'destination_carrier',
+                    'source_referral', 'destination_referral',
                     # Virtual categories
                     'source_region', 'destination_region',
                     )
