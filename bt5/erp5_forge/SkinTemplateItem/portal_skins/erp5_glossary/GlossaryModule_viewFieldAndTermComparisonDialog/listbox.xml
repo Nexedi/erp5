@@ -341,7 +341,11 @@
                           <string>Meta Type</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
+                          <string>field_note</string>
+                          <string>Note</string>
+                        </tuple>
+                        <tuple>
+                          <string>field_title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -418,7 +422,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>GlossaryModule_viewFieldAndTermComparisonDialog</string> </value>
+                    <value> <string>list</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -494,7 +498,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>Field List</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -509,7 +513,11 @@
 <string></string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
+                          <string>field_note</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>field_title</string>
 <string></string>
                         </tuple>
                         <tuple>
