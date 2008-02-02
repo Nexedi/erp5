@@ -2291,6 +2291,168 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryUserNotificationOnActivityFailure('SQLQueue')
 
+  def TryUserNotificationRaise(self, activity):
+    get_transaction().commit()
+    self.tic()
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    from Products.CMFActivity.ActivityTool import Message
+    original_notifyUser = Message.notifyUser
+    def failingMethod(self, *args, **kw):
+      raise ValueError, 'This method always fail'
+    Message.notifyUser = failingMethod
+    Organisation.failingMethod = failingMethod
+    readMessageList = getattr(self.getPortalObject(), '%s_readMessageList'% (activity, ))
+    try:
+      obj.activate(activity=activity, priority=6).failingMethod()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      with_processing_len = len(readMessageList(method_id='failingMethod',
+                                                include_processing=1,
+                                                processing_node=None))
+      without_processing_len = len(readMessageList(method_id='failingMethod',
+                                                   include_processing=0,
+                                                   processing_node=None))
+      self.assertEqual(with_processing_len, 1)
+      self.assertEqual(without_processing_len, 1)
+    finally:
+      Message.notifyUser = original_notifyUser
+      delattr(Organisation, 'failingMethod')
+
+  def test_92_userNotificationRaiseWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Check that activities are not left with processing=1 when notifyUser raises.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck that activities are not left with processing=1 when notifyUser raises (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryUserNotificationRaise('SQLDict')
+
+  def test_93_userNotificationRaiseWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Check that activities are not left with processing=1 when notifyUser raises.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck that activities are not left with processing=1 when notifyUser raises (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryUserNotificationRaise('SQLQueue')
+    
+  def test_94_ActivityToolCommitFailureDoesNotCommitCMFActivitySQLConnectionSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Check that CMFActivity SQL connection is rollback if transaction commit raises.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck that activity modifications via CMFActivity connection are rolled back on commit error (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    def modifySQL(self, object_list, *arg, **kw):
+      # Only create the dummy activity if none is present: we would just
+      # generate missleading errors (duplicate uid).
+      if activity_tool.countMessage(method_id='dummy_activity') == 0:
+        # Add a dumy activity which will not be executed
+        # Modified table does not matter
+        method_id = 'dummy_activity'
+        path = '/'.join(self.getPhysicalPath())
+        message = Message(self, None, {}, method_id, (), {})
+        pickled_message = pickle.dumps(message)
+        self.SQLDict_writeMessageList(
+          uid_list=[0], # This uid is never automaticaly assigned (starts at 1)
+          date_list=[DateTime().Date()],
+          path_list=[path],
+          method_id_list=[method_id],
+          message_list=[pickled_message],
+          priority_list=[1],
+          processing_node_list=[-2],
+          group_method_id_list=[''],
+          tag_list=[''],
+          order_validation_text_list=['']
+          )
+      get_transaction().__class__.commit = fake_commit
+      object_list[:] = []
+    commit = get_transaction().__class__.commit
+    def fake_commit(*args, **kw):
+      get_transaction().__class__.commit = commit
+      raise KeyError, 'always fail'
+    try: 
+      Organisation.modifySQL = modifySQL
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      group_method_id = '%s/modifySQL' % (obj.getPath(), )
+      obj2 = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      get_transaction().commit()
+      self.tic()
+      obj.activate(activity='SQLDict', group_method_id=group_method_id).modifySQL()
+      obj2.activate(activity='SQLDict', group_method_id=group_method_id).modifySQL()
+      get_transaction().commit()
+      try:
+        self.flushAllActivities(silent=1, loop_size=100)
+      finally:
+        get_transaction().__class__.commit = commit
+      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    finally:
+      delattr(Organisation, 'modifySQL')
+  
+  def test_95_ActivityToolCommitFailureDoesNotCommitCMFActivitySQLConnectionSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Check that CMFActivity SQL connection is rollback if activity_tool.invoke raises.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck that activity modifications via CMFActivity connection are rolled back on commit error (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    def modifySQL(self, *args, **kw):
+      # Only create the dummy activity if none is present: we would just
+      # generate missleading errors (duplicate uid).
+      if activity_tool.countMessage(method_id='dummy_activity') == 0:
+        # Add a dumy activity which will not be executed
+        # Modified table does not matter
+        method_id = 'dummy_activity'
+        path = '/'.join(self.getPhysicalPath())
+        message = Message(self, None, {}, method_id, (), {})
+        pickled_message = pickle.dumps(message)
+        self.SQLDict_writeMessageList(
+          uid_list=[0], # This uid is never automaticaly assigned (starts at 1)
+          date_list=[DateTime().Date()],
+          path_list=[path],
+          method_id_list=[method_id],
+          message_list=[pickled_message],
+          priority_list=[1],
+          processing_node_list=[-2],
+          group_method_id_list=[''],
+          tag_list=[''],
+          order_validation_text_list=['']
+         )
+      get_transaction().__class__.commit = fake_commit
+    commit = get_transaction().__class__.commit
+    def fake_commit(self, *args, **kw):
+      get_transaction().__class__.commit = commit
+      raise KeyError, 'always fail'
+    try:
+      Organisation.modifySQL = modifySQL
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      get_transaction().commit()
+      self.tic()
+      obj.activate(activity='SQLQueue').modifySQL()
+      get_transaction().commit()
+      try:
+        self.flushAllActivities(silent=1, loop_size=100)
+      finally:
+        get_transaction().__class__.commit = commit
+      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+    finally:
+      delattr(Organisation, 'modifySQL')
 
 def test_suite():
   suite = unittest.TestSuite()
