@@ -65,62 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-\n
-result = []\n
-\n
-portal_catalog = context.portal_catalog\n
-portal_skins = context.portal_skins\n
-\n
-def get_term_list(business_field, reference):\n
-  term_list = portal_catalog(portal_type=\'Glossary Term\',\n
-                             validation_state=\'validated\',\n
-                             business_field=business_field,\n
-                             reference=reference)\n
-  return [i.getObject() for i in term_list]\n
-\n
-def get_field_and_reference_list(business_field):\n
-  result = []\n
-  skin_folder = getattr(portal_skins, \'erp5_%s\' % business_field, None)\n
-  if skin_folder is None:\n
-    skin_folder = getattr(portal_skins, business_field)\n
-\n
-  for i in skin_folder.objectValues():\n
-    if i.meta_type==\'ERP5 Form\':\n
-      for f in i.objectValues():\n
-        if f.id.startswith(\'my_\'):\n
-          r = f.id[3:]\n
-          result.append((f, r))\n
-        elif f.id.startswith(\'your_\'):\n
-          r = f.id[5:]\n
-          result.append((f, r))\n
-  return result\n
-\n
-business_field_list = [i for i in business_field_list if i]\n
-\n
-line_list = []\n
-c = 0\n
-for business_field in business_field_list:\n
-  for field, reference in get_field_and_reference_list(business_field):\n
-    term_list = get_term_list(business_field, reference)\n
-\n
-    field_path = \'%s/%s/%s\' % (field.aq_parent.aq_parent.getId(),\n
-                               field.aq_parent.getId(),\n
-                               field.getId())\n
-\n
-    line = newTempBase(context, \'tmp_glossary_field_%s\' %  c)\n
-    c += 1\n
-    line.edit(title=field.get_value(\'title\'),\n
-              field_path=field_path,\n
-              field_edit_url = \'%s/manage_main\' % field.absolute_url(),\n
-              reference=reference,\n
-              term_list=term_list,\n
-              field_meta_type=field.meta_type\n
-              )\n
-    line.setUid(field_path)\n
-    line_list.append(line)\n
-\n
-return line_list\n
+            <value> <string>return brain.field_edit_url\n
 </string> </value>
         </item>
         <item>
@@ -137,7 +82,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>business_field_list, **kw</string> </value>
+            <value> <string>brain, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -163,30 +108,9 @@ return line_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>business_field_list</string>
+                            <string>brain</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>result</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_catalog</string>
-                            <string>portal_skins</string>
-                            <string>get_term_list</string>
-                            <string>get_field_and_reference_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
-                            <string>line_list</string>
-                            <string>c</string>
-                            <string>business_field</string>
-                            <string>field</string>
-                            <string>reference</string>
-                            <string>term_list</string>
-                            <string>field_path</string>
-                            <string>line</string>
-                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
@@ -203,7 +127,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryModule_getBusinessFieldFieldList</string> </value>
+            <value> <string>GlossaryModule_getFieldEditUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

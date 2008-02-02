@@ -44,11 +44,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>GlossaryModule_viewFieldAndTermComparisonDialog</string> </value>
+            <value> <string>GlossaryModule_updateFieldByTerm</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>You can update existing field\'s title and description by english glossary.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -77,7 +77,9 @@
                 <item>
                     <key>                 <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -89,15 +91,15 @@
                 <item>
                     <key>                 <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_term</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key>                 <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_business_field_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -111,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryModule_viewFieldUpdateDialog</string> </value>
+            <value> <string>GlossaryModule_viewFieldAndTermComparisonDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +121,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>GlossaryModule_viewFieldUpdateDialog</string> </value>
+            <value> <string>GlossaryModule_viewFieldAndTermConparisonDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -135,7 +137,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Compare</string> </value>
+            <value> <string>Update Fields</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

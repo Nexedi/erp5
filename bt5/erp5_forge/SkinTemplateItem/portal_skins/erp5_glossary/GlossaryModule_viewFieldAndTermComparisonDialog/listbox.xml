@@ -418,7 +418,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>GlossaryModule_viewFieldAndTermConparisonDialog</string> </value>
+                    <value> <string>GlossaryModule_viewFieldAndTermComparisonDialog</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -502,6 +502,10 @@
                       <list>
                         <tuple>
                           <string>field_path</string>
+                          <string>GlossaryModule_getFieldEditUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>field_meta_type</string>
 <string></string>
                         </tuple>
                         <tuple>
