@@ -67,6 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
 node = context.REQUEST.form[\'vault\']\n
+\n
 container_portal_type_list = ["Monetary Reception",]\n
 \n
 base_price_dict = {}\n

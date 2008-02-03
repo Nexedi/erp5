@@ -67,13 +67,11 @@
             <key> <string>_body</string> </key>
             <value> <string>if isinstance(site, str):\n
   site = context.portal_categories.site.restrictedTraverse(site)\n
-orga_id = "site_%3s" %(site.getCodification())\n
-organisation = context.organisation_module[orga_id]\n
 \n
-account_list = [x for x in organisation.objectValues(portal_type=\'Bank Account\') if x.getValidationState() == \'valid\']\n
-if len(account_list)!=1:\n
-  raise ValueError, \'Must not get %d account for the organisation %s\' %(len(account_list),organisation.getTitle())\n
-return account_list[0]\n
+orga_id = "site_%3s" %(site.getCodification())\n
+org = context.organisation_module[orga_id]\n
+\n
+return org\n
 </string> </value>
         </item>
         <item>
@@ -96,7 +94,7 @@ return account_list[0]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None</string> </value>
+            <value> <string>site</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,17 +124,10 @@ return account_list[0]\n
                             <string>isinstance</string>
                             <string>str</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
                             <string>orga_id</string>
                             <string>_getitem_</string>
-                            <string>organisation</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>account_list</string>
-                            <string>len</string>
-                            <string>ValueError</string>
+                            <string>org</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,14 +139,12 @@ return account_list[0]\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getAccountForSite</string> </value>
+            <value> <string>Baobab_getAgencyForSite</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
