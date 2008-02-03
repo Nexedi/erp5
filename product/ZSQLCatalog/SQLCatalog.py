@@ -1605,7 +1605,7 @@ class Catalog(Folder,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
 
     if not self.isIndexable():
-      return None
+      return
 
     portal_catalog = self.getSiteRoot().portal_catalog # XXX-JPS - This is a hardcoded name. Weird
                                                        # Isn't self == self.getSiteRoot().portal_catalog
