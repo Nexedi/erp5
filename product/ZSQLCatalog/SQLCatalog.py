@@ -44,6 +44,7 @@ from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
 import md5
+from sets import ImmutableSet
 
 try:
   from Products.CMFCore.Expression import Expression
@@ -1708,15 +1709,15 @@ class Catalog(Folder,
         kw = {}
         if self.isMethodFiltered(method_name):
           catalogged_object_list = []
-          type_list = self.filter_dict[method_name]['type']
-          type_dict = dict(zip(type_list, type_list)) or None
-          expression = self.filter_dict[method_name]['expression_instance']
-          expression_cache_key_list = self.filter_dict[method_name].get('expression_cache_key', '').split()
+          filter = self.filter_dict[method_name]
+          type_set = ImmutableSet(filter['type']) or None
+          expression = filter['expression_instance']
+          expression_cache_key_list = filter.get('expression_cache_key', '').split()
           for object in object_list:
             # We will check if there is an filter on this
             # method, if so we may not call this zsqlMethod
             # for this object
-            if type_dict is not None and object.getPortalType() not in type_dict:
+            if type_set is not None and object.getPortalType() not in type_set:
               continue
             elif expression is not None:
               if expression_cache_key_list:
