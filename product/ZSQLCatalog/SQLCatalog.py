@@ -1704,7 +1704,6 @@ class Catalog(Folder,
       if not disable_cache:
         enableReadOnlyTransactionCache(self)
 
-      method_kw_dict = {}
       for method_name in method_id_list:
         kw = {}
         if self.isMethodFiltered(method_name):
@@ -1756,8 +1755,6 @@ class Catalog(Folder,
         if len(catalogged_object_list) == 0:
           continue
 
-        method_kw_dict[method_name] = kw
-
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
         method = getattr(self, method_name)
         if method.meta_type in ("Z SQL Method", "LDIF Method"):
@@ -1788,9 +1785,6 @@ class Catalog(Folder,
             append(value)
           kw[arg] = value_list
 
-      for method_name in method_kw_dict.keys():
-        kw = method_kw_dict[method_name]
-        method = getattr(self, method_name)
         method = aq_base(method).__of__(portal_catalog) # Use method in
                 # the context of portal_catalog
         # Alter/Create row
