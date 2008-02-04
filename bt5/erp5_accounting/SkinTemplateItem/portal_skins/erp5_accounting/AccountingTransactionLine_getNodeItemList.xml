@@ -72,6 +72,8 @@ If `mirror` is set to a true value, the list will be filtered for the mirror\n
 node.\n
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
+from AccessControl import getSecurityManager\n
+\n
 portal = context.getPortalObject()\n
 \n
 if omit_filter:\n
@@ -149,7 +151,7 @@ return getItemList( category=category,\n
                     portal_path=context.getPortalObject().getPhysicalPath(),\n
                     mirror=mirror,\n
                     omit_filter=omit_filter, # XXX possible optim: only one cache if omit_filter\n
-                    user_name=context.REQUEST.AUTHENTICATED_USER,\n
+                    user_name=str(getSecurityManager().getUser()),\n
                     simulation_state=context.getProperty(\n
                           \'simulation_state\', \'no_simulation_state\') )\n
 </string> </value>
@@ -204,6 +206,8 @@ return getItemList( category=category,\n
                             <string>omit_filter</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -215,6 +219,7 @@ return getItemList( category=category,\n
                             <string>sort</string>
                             <string>None</string>
                             <string>getItemList</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
