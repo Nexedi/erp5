@@ -299,7 +299,7 @@ class SQLQueue(RAMQueue, SQLBase):
             activity_tool.SQLQueue_rollback()
             makeMessageListAvailable([value[0]])
           except:
-            LOG('SQQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
+            LOG('SQLQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
           else:
             LOG('SQLQueue', TRACE, 'Freed message %r' % (value, ))
           try:
