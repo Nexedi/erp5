@@ -1,3 +1,6 @@
+2008-2-4 yusei
+* Optimize the query of accounting module list view.
+
 2008-1-28 yusei
 * Show translated id in accounting transaction   line listbox.
 
