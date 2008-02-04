@@ -111,7 +111,7 @@ class AccountingTransaction(Delivery):
                     self.getStartDate(),
                     self.getStopDate(), ):
         if prop:
-          text_list.append(prop)
+          text_list.append(str(prop))
       return ' '.join(text_list)
 
 # Compatibility
