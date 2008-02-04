@@ -318,9 +318,9 @@ class SQLQueue(RAMQueue, SQLBase):
         try:
           makeMessageListAvailable(to_free_uid_list)
         except:
-          LOG('SQQueue', PANIC, 'Failed to free remaining messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+          LOG('SQLQueue', PANIC, 'Failed to free remaining messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
         else:
-          LOG('SQQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
+          LOG('SQLQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
       self.finalizeMessageExecution(activity_tool, processed_message_uid_list)
     get_transaction().commit()
     return not len(message_uid_priority_list)

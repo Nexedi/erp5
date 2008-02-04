@@ -452,9 +452,9 @@ class SQLDict(RAMDict, SQLBase):
           activity_tool.SQLDict_rollback()
           makeMessageListAvailable(failed_message_uid_list)
         except:
-          LOG('SQQueue', PANIC, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
+          LOG('SQLDict', PANIC, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
         else:
-          LOG('SQQueue', TRACE, 'Freed messages %r' % (failed_message_uid_list, ))
+          LOG('SQLDict', TRACE, 'Freed messages %r' % (failed_message_uid_list, ))
         if endTransaction == abortTransactionSynchronously:
           LOG('SQLDict', PANIC, 'Failed to abort executed messages. Some objects may be modified accidentally.')
         else:
