@@ -358,14 +358,14 @@ class SQLDict(RAMDict, SQLBase):
         # If this is a conflict error, do not lower the priority but only delay.
         activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
       except:
-        LOG('SQLDict', TRACE, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
+        LOG('SQLDict', PANIC, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
       make_available_uid_list += delay_uid_list
     if len(final_error_uid_list):
       try:
         activity_tool.SQLDict_assignMessage(uid=final_error_uid_list,
                                             processing_node=INVOKE_ERROR_STATE)
       except:
-        LOG('SQLDict', WARNING, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+        LOG('SQLDict', PANIC, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
     if len(make_available_uid_list):
       try:
         makeMessageListAvailable(make_available_uid_list)
