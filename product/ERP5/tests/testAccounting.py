@@ -2986,10 +2986,10 @@ class TestAccounting(ERP5TypeTestCase):
     self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
 
   def test_SearchableText(self):
-    transaction = self.createAccountingTransaction(
-                          title='A new Transaction',
-                          description="A description",
-                          comment="Some comments")
+    transaction = self.createAccountingTransaction()
+    transaction.edit(title='A new Transaction',
+                     description="A description",
+                     comment="Some comments")
     searchable_text = transaction.SearchableText()
     self.assertTrue('A new Transaction' in searchable_text)
     self.assertTrue('A description' in searchable_text)
