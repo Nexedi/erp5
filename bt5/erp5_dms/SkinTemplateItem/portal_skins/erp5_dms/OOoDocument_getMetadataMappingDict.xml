@@ -65,41 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-when OOoDocument is edited, we update metadata in the ODF file\n
-\n
-XXX - This script must be verified, written with clean syntax\n
-"""\n
-document = state_change[\'object\']\n
-kw = state_change[\'kwargs\']\n
-\n
-# key is a name of erp5 field.\n
-# value is a name of document metadata.\n
-metadata_field_mapping_dict = document.getMetadataMappingDict()\n
-\n
-# edit metadata (only if we have OOo file)\n
-if document.hasBaseData():\n
-  new_metadata = {}\n
-  for field in metadata_field_mapping_dict.keys():\n
-    value = kw.get(field, None)\n
-    if value is None:\n
-      value_list = kw.get(\'%s_list\' % field, None)\n
-      if value_list is not None:\n
-        if len(value_list)>0:\n
-          value = \' \'.join(map(str, value_list))\n
-        else:\n
-          value = \'\'\n
-    if value is not None:\n
-      metadata_key = metadata_field_mapping_dict[field]\n
-      new_metadata[metadata_key] = value\n
-  if new_metadata:\n
-    # edit metadata via server\n
-    document.activate().Document_tryToUpdateBaseMetadata(**new_metadata)\n
-
-
-]]></string> </value>
+            <value> <string>return {\'title\':\'title\',\n
+        \'subject\':\'keywords\',\n
+        \'description\':\'description\',\n
+        \'reference\':\'reference\',\n
+        \'version\':\'version\',\n
+        \'language\':\'language\'}\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -121,7 +93,7 @@ if document.hasBaseData():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,31 +113,12 @@ if document.hasBaseData():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>document</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>metadata_field_mapping_dict</string>
-                            <string>new_metadata</string>
-                            <string>_getiter_</string>
-                            <string>field</string>
-                            <string>None</string>
-                            <string>value</string>
-                            <string>value_list</string>
-                            <string>len</string>
-                            <string>map</string>
-                            <string>str</string>
-                            <string>metadata_key</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -181,7 +134,7 @@ if document.hasBaseData():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_updateMetadata</string> </value>
+            <value> <string>OOoDocument_getMetadataMappingDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
