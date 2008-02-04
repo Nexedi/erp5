@@ -1596,6 +1596,35 @@ class TestClosingPeriod(AccountingTestCase):
 
   # TODO : test deletion ?
 
+
+class TestAccountingExport(AccountingTestCase):
+  """Test accounting export features with erp5_ods_style.
+  """
+  def getBusinessTemplateList(self):
+    return AccountingTestCase.getBusinessTemplateList(self) + (
+        'erp5_ods_style', )
+
+  def test_export_transaction(self):
+    # test we can export an accounting transaction as ODS
+    transaction = self._makeOne(lines=(
+              dict(source_value=self.account_module.payable,
+                   quantity=200),))
+    ods_data = transaction.Base_viewAsODS(
+                    form_id='AccountingTransaction_view')
+    from Products.ERP5OOo.OOoUtils import OOoParser
+    parser = OOoParser()
+    parser.openFromString(ods_data)
+    content_xml = parser.oo_files['content.xml']
+    # just make sure that we have the correct account name
+    self.assertEquals(
+        '40 - Payable',
+        self.account_module.payable.Account_getFormattedTitle())
+    # check that this account name can be found in the content
+    self.assertTrue('40 - Payable' in content_xml)
+    # check that we don't have unknown categories
+    self.assertFalse('???' in content_xml)
+
+
 class TestAccounting(ERP5TypeTestCase):
   """The first test for Accounting
   """
