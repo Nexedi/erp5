@@ -33,6 +33,8 @@ class AccountingTransaction:
   _constraints = (
     { 'id': 'section_existence',
       'description': 'Both sections must be defined for invoices',
+      'message_category_not_set':
+              'Both sections must be defined for invoices',
       'type': 'CategoryExistence',
       'destination_section' : 1,
       'source_section' : 1,
