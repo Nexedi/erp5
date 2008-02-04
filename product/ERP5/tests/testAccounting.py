@@ -3031,5 +3031,6 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestAccounts))
   suite.addTest(unittest.makeSuite(TestClosingPeriod))
   suite.addTest(unittest.makeSuite(TestTransactionValidation))
+  suite.addTest(unittest.makeSuite(TestAccountingExport))
   return suite
 
