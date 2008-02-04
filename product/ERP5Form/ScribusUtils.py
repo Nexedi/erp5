@@ -217,11 +217,12 @@ class ManageModule:
         
     # default_groups list completed, need to update the form_groups
     # rename the first group because it can't be removed
-    form.rename_group(form.group_list[0], default_groups[0])
+    if len(form.group_list):
+      form.rename_group(form.group_list[0], default_groups[0])
 
     # add other groups
-    if len(default_groups) > 1:
-      for group in default_groups[1:]:
+    for group in default_groups:
+      if group not in form.group_list:
         form.add_group(group)
     form_view_id_object.rename_group('Default', default_groups[0])
 
@@ -693,7 +694,7 @@ class ManageFiles:
     # this line permit to delete tempory files (about 24 Mo for each file !)
     # it's temporary because this function mus be rewrited or deleted
     # (perhaps setBackgroundPictures could return attributes list)
-    ScribusUtilsOriginaltempsPPMName.close()
+    ScribusUtilsOriginaltempsPPM.close()
 
     pg_nbr = len(original_result[1].split('\n'))
     real_size_x = {}
