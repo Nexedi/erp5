@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_payment</string> </value>
+            <value> <string>listbox_node</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,10 +74,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -94,7 +90,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key>                 <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -104,8 +100,8 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Third Party Bank Account</string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Node Account</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -116,15 +112,18 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.AccountingTransaction_getDestinationPaymentItemList()</string> </value>
+            <value> <string>python:cell.getObject().AccountingTransactionLine_getNodeItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

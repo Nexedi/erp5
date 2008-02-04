@@ -110,6 +110,12 @@
                         <string>my_source_payment</string>
                         <string>my_causality_title_list</string>
                         <string>my_comment</string>
+                        <string>listbox_source_credit</string>
+                        <string>listbox_source_debit</string>
+                        <string>my_source_view_listbox</string>
+                        <string>my_destination_view_listbox</string>
+                        <string>listbox_node</string>
+                        <string>listbox_mirror_node</string>
                       </list>
                     </value>
                 </item>

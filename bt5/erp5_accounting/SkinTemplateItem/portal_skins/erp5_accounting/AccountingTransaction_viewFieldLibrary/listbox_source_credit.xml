@@ -14,13 +14,13 @@
             <value>
               <list>
                 <string>title</string>
-                <string>items</string>
+                <string>precision</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_payment</string> </value>
+            <value> <string>listbox_source_credit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,7 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key>                 <string>precision</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -75,7 +75,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -87,25 +87,23 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
+                    <value> <string>my_money_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key>                 <string>precision</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Third Party Bank Account</string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Credit for Source</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -124,7 +122,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.AccountingTransaction_getDestinationPaymentItemList()</string> </value>
+            <value> <string>python: here.getQuantityPrecisionFromResource(here.getResource())</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -94,7 +94,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_title</string>
                         <string>listbox_source</string>
                         <string>listbox_source_debit</string>
                         <string>listbox_source_credit</string>

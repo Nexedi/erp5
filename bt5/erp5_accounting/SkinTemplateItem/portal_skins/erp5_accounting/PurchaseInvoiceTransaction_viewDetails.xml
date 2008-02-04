@@ -90,7 +90,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_title</string>
                         <string>listbox_source</string>
                         <string>listbox_destination</string>
                         <string>listbox_destination_credit</string>

@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key>                 <string>description</string> </key>
                     <value> <string>The description of the accounting transaction.</string> </value>
                 </item>
                 <item>
@@ -92,7 +92,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key>                 <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
               </dictionary>

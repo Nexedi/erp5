@@ -88,11 +88,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_destination</string>
                         <string>listbox_source</string>
                         <string>listbox_source_credit</string>
                         <string>listbox_source_debit</string>
-                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
