@@ -78,7 +78,7 @@
               <dictionary>
                 <item>
                     <key>                 <string>description</string> </key>
-                    <value> <string>The nameof the account</string> </value>
+                    <value> <string>The name of the account</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
