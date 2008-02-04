@@ -1211,6 +1211,22 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     """
   convertFile = WorkflowMethod(convertFile)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMetadataMappingDict')
+  def getMetadataMappingDict(self):
+    """
+    Return a dict of metadata mapping used to update base metadata of the
+    document
+    """
+    try:
+      method = self._getTypeBasedMethod('getMetadataMappingDict')
+    except KeyError, AttributeError:
+      method = None
+    if method is not None: 
+      return method()
+    else:
+      return {}
+
   security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
   def updateBaseMetadata(self, **kw):
     """
