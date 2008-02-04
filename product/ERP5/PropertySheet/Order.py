@@ -2,8 +2,9 @@
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #          Thierry Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2008 Nexedi SA and Contributors. All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
+#          Jean-Paul Smets <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -43,6 +44,18 @@ class Order:
       'acquisition_copy_value'        : 0,
       'acquisition_accessor_id'       : 'getTitle',
       'acquisition_depends'           : None,
+      'mode'        : 'w' },
+    # For compatibility only - please refrain using these properties
+    # because they are not supported anylonger. Clean approach should
+    # use CRM events for the same purpose, ie. to track the date
+    # of reception or of issuing of an order.
+    { 'id'          : 'received_date',
+      'description' : 'Received date (No longer supported)',
+      'type'        : 'date',
+      'mode'        : 'w' },
+    { 'id'          : 'emit_date',
+      'description' : 'Emit date (No longer supported)',
+      'type'        : 'date',
       'mode'        : 'w' },
   )
 
