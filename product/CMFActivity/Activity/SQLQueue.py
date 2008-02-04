@@ -288,7 +288,7 @@ class SQLQueue(RAMQueue, SQLBase):
           # It is possible that the message is executed but the commit
           # of the transaction fails
           value[1].is_executed = 0
-          LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % (value[0], value[1].object_path, value[1].method_id), error=sys.exc_info())
+          LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % ((value[0], value[1].object_path, value[1].method_id), ), error=sys.exc_info())
           try:
             # Rollback all changes made on activity connection.
             # We will commit to make messages available, and we cannot control
