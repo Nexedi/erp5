@@ -71,7 +71,7 @@ from Products.ERP5Type.Message import Message\n
 obj = state_change[\'object\']\n
 \n
 wf_h = obj.Base_getWorkflowHistory()\n
-wf_h = wf_h[\'account_transfer_workflow\'][\'item_list\']\n
+wf_h = wf_h[\'check_deposit_workflow\'][\'item_list\']\n
 \n
 manual_validation = 0\n
 waiting_state = wf_h[3]\n
