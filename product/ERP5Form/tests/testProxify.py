@@ -43,24 +43,22 @@ def get_request():
 import Globals
 Globals.get_request = get_request
 
-# Initialize ERP5Form Product to load monkey patches
-from Testing import ZopeTestCase
-ZopeTestCase.installProduct('ERP5Form')
-
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ProxyField import purgeFieldValueCache
 
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-class TestProxify(unittest.TestCase):
+class TestProxify(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Proxify"
 
   def setUp(self):
     # base field library
-    self.container = Folder('container').__of__(Folder('root'))
+    ERP5TypeTestCase.setUp(self)
+    self.container = Folder('container').__of__(Folder('root')).__of__(self.getPortal())
     self.container._setObject('Base_view',
                                ERP5Form('Base_view', 'Base'))
     base_view = self.base_view = self.container.Base_view
@@ -140,6 +138,19 @@ class TestProxify(unittest.TestCase):
     template_field = self.address_view.my_region
     template_field.values['title'] = 'Region'
     self.assertEqual(field.get_value('title'), 'Region')
+
+  def test_unproxify(self):
+    #Proxify First
+    self.address_view.proxifyField({'my_region':'Base_view.my_list_field'})
+    self.person_view.proxifyField({'my_default_region':'Address_view.my_region'})
+    purgeFieldValueCache()
+    #UnProxify
+    self.person_view.unProxifyField({'my_default_region':'on'})
+    field = self.person_view.my_default_region
+    self.assertEqual(field.meta_type, 'ListField')
+    self.assertEqual(field.get_value('title'), 'Country')
+    self.assertEqual(field.get_tales('items')._text,
+                     'here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
 
 def test_suite():
   suite = unittest.TestSuite()
