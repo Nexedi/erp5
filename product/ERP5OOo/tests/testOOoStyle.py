@@ -54,6 +54,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.tic()
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
+    # make sure selections are empty
+    self.portal.portal_selections.setSelectionFor(
+                        'person_module_selection', None)
 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)
@@ -64,7 +67,21 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue(self.skin in
               self.portal.portal_skins.getSkinSelections())
 
-  def test_list_view(self):
+  def test_form_list(self):
+    response = self.publish(
+                   '/%s/person_module/PersonModule_viewPersonList'
+                    % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_list_report_tree(self):
+    self.portal.portal_selections.setListboxDisplayMode(
+                  self.portal.REQUEST, 'DomainTreeMode',
+                  'person_module_selection')
     response = self.publish(
                    '/%s/person_module/PersonModule_viewPersonList'
                     % self.portal.getId(), self.auth)
