@@ -105,7 +105,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -126,7 +126,7 @@
                         </tuple>
                         <tuple>
                           <string>operation_date</string>
-                          <string>Date</string>
+                          <string>Accounting Operation Date</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
@@ -174,7 +174,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -217,19 +217,19 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
+                    <key>                 <string>count_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key>                 <string>default_params</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -247,10 +247,6 @@
                         <tuple>
                           <string>delivery_mirror_section_title</string>
                           <string>delivery_mirror_section_title</string>
-                        </tuple>
-                        <tuple>
-                          <string>specific_reference</string>
-                          <string>Transaction Reference</string>
                         </tuple>
                       </list>
                     </value>
@@ -276,7 +272,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
@@ -286,7 +282,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -321,7 +317,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
+                    <key>                 <string>search_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -342,7 +338,7 @@
                         </tuple>
                         <tuple>
                           <string>operation_date</string>
-                          <string>Date</string>
+                          <string>Accounting Operation Date</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
@@ -360,11 +356,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>accounting_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -375,7 +371,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>sort_columns</string> </key>
+                    <key>                 <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -387,16 +383,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_mirror_section_title</string>
-                          <string>Third Party</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>operation_date</string>
-                          <string>Date</string>
+                          <string>Accounting Operation Date</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
@@ -414,7 +406,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>stat_columns</string> </key>
+                    <key>                 <string>stat_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -429,7 +421,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>stat_method</string> </key>
+                    <key>                 <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
@@ -439,11 +431,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Accounting Transactions</string> </value>
                 </item>
                 <item>
-                    <key> <string>url_columns</string> </key>
+                    <key>                 <string>url_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
