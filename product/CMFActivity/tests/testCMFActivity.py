@@ -2454,6 +2454,68 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'modifySQL')
 
+  def TryActivityRaiseInCommitDoesNotStallActivityConection(self, activity):
+    """
+      Check that an activity which commit raises (as would a regular conflict
+      error be raised in tpc_vote) does not cause activity connection to
+      stall.
+    """
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    from Shared.DC.ZRDB.TM import TM
+    class dummy_tm(TM):
+      def tpc_vote(self, *ignored):
+        raise Exception, 'vote always raises'
+
+      def _finish(self):
+        pass
+
+      def _abort(self):
+        pass
+    dummy_tm_instance = dummy_tm()
+    def registerFailingTransactionManager(self, *args, **kw):
+      dummy_tm_instance._register()
+    try:
+      Organisation.registerFailingTransactionManager = registerFailingTransactionManager
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      get_transaction().commit()
+      self.tic()
+      now = DateTime()
+      obj.activate(activity=activity).registerFailingTransactionManager()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      get_transaction().commit()
+      # Check that cmf_activity SQL connection still works
+      connection_da_pool = self.getPortalObject().cmf_activity_sql_connection()
+      import thread
+      connection_da = connection_da_pool._db_pool[thread.get_ident()]
+      self.assertFalse(connection_da._registered)
+      connection_da_pool.query('select 1')
+      self.assertTrue(connection_da._registered)
+      get_transaction().commit()
+      self.assertFalse(connection_da._registered)
+    finally:
+      delattr(Organisation, 'registerFailingTransactionManager')
+
+  def test_96_ActivityRaiseInCommitDoesNotStallActivityConectionSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that raising in commit does not stall cmf activity SQL connection (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivityRaiseInCommitDoesNotStallActivityConection('SQLDict')
+
+  def test_97_ActivityRaiseInCommitDoesNotStallActivityConectionSQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that raising in commit does not stall cmf activity SQL connection (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivityRaiseInCommitDoesNotStallActivityConection('SQLQueue')
+
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
