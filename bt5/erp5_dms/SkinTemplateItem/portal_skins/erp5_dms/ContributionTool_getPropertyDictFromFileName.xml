@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -89,8 +86,10 @@ if property_dict.has_key(\'language\'):\n
 \n
 language = property_dict.get(\'language\', \'en\')\n
 version = property_dict.get(\'version\', \'001\')\n
+local_reference = property_dict.get(\'local_reference\', \'undefined\')\n
 local_id = property_dict.get(\'local_id\', \'undefined\')\n
 reference = property_dict.get(\'reference\', None)\n
+node_reference = property_dict.get(\'node_reference\', None)\n
 group_reference_path = property_dict.get(\'group_reference_path\', None)\n
 source_conference_reference = property_dict.get(\'source_conference_reference\', None)\n
 follow_up_reference = property_dict.get(\'follow_up_reference\', None)\n
@@ -102,6 +101,31 @@ if reference:\n
   # we get directly extracted reference in property_dict (from re pattern)\n
   # this method has highest priority\n
   pass\n
+elif node_reference:\n
+  # generate document\'s reference using project reference\n
+  reference = \'%s-%s\' % (node_reference, local_reference)\n
+  node = context.portal_catalog.getResultValue(reference=node_reference)\n
+\n
+  if node is not None:\n
+    node_portal_type = node.getPortalType()\n
+    if node_portal_type in context.getPortalTicketTypeList()+context.getPortalProjectTypeList():\n
+      # For a project or a ticket, associate it explicitely to the document\n
+      new_dict[\'follow_up\'] = node.getRelativeUrl()\n
+    elif node_portal_type == \'Category\':\n
+      # Check if it\'s a group\n
+      # FIXME XXX Maybe we want to make it usable for all categories ?\n
+      # new_dict[node.getBaseCategory().getId()] = node.getCategoryRelativeUrl()\n
+      if node.getBaseCategory().getId() == \'group\':\n
+        new_dict[\'group\'] = node.getCategoryRelativeUrl()\n
+      elif node.getBaseCategory().getId() == \'publication_section\':\n
+        new_dict[\'publication_section\'] = node.getCategoryRelativeUrl()\n
+    else:\n
+      # It seems to be a business document reference\n
+      # Should be detected automatically, and no explicit relation is required\n
+      pass\n
+\n
+# XXX Is those hardcoded part required ?\n
+# For now, keep it for compatibility\n
 elif follow_up_reference:\n
   # generate document\'s reference using project reference\n
   reference = \'P-%s-%s\' %(follow_up_reference, local_id)\n
@@ -133,6 +157,8 @@ elif group_reference_path:\n
           break\n
   if category is not None:\n
      new_dict[\'group\'] = \'/\'.join(category.getRelativeUrl().split(\'/\')[1:])\n
+\n
+\n
 else:\n
   # no reference could be found\n
   # XXX: This can break DMS/KM functionality especially revision support!\n
@@ -142,7 +168,7 @@ if reference:\n
   new_dict[\'reference\'] = reference\n
 \n
 # Set title to file_name by default\n
-new_dict[\'title\'] = property_dict.get(\'title\', file_name.split(\'.\')[0])\n
+new_dict[\'title\'] = property_dict.get(\'title\', file_name.rsplit(\'.\', 1)[0])\n
 \n
 return new_dict\n
 </string> </value>
@@ -200,15 +226,19 @@ return new_dict\n
                             <string>_write_</string>
                             <string>language</string>
                             <string>version</string>
+                            <string>local_reference</string>
                             <string>local_id</string>
                             <string>None</string>
                             <string>reference</string>
+                            <string>node_reference</string>
                             <string>group_reference_path</string>
                             <string>source_conference_reference</string>
                             <string>follow_up_reference</string>
                             <string>dict</string>
                             <string>new_dict</string>
                             <string>context</string>
+                            <string>node</string>
+                            <string>node_portal_type</string>
                             <string>project</string>
                             <string>conference</string>
                             <string>group_reference_list</string>
