@@ -294,7 +294,7 @@ class SQLDict(RAMDict, SQLBase):
         try:
           makeMessageListAvailable(to_free_uid_list)
         except:
-          LOG('SQLDict', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+          LOG('SQLDict', ERROR, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
         else:
           if len(to_free_uid_list):
             LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
@@ -350,7 +350,7 @@ class SQLDict(RAMDict, SQLBase):
       try:
         activity_tool.SQLDict_delMessage(uid=deletable_uid_list)
       except:
-        LOG('SQLDict', PANIC, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
+        LOG('SQLDict', ERROR, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
       else:
         LOG('SQLDict', TRACE, 'Deleted messages %r' % (deletable_uid_list, ))
     if len(delay_uid_list):
@@ -358,19 +358,19 @@ class SQLDict(RAMDict, SQLBase):
         # If this is a conflict error, do not lower the priority but only delay.
         activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
       except:
-        LOG('SQLDict', PANIC, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
+        LOG('SQLDict', ERROR, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
       make_available_uid_list += delay_uid_list
     if len(final_error_uid_list):
       try:
         activity_tool.SQLDict_assignMessage(uid=final_error_uid_list,
                                             processing_node=INVOKE_ERROR_STATE)
       except:
-        LOG('SQLDict', PANIC, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+        LOG('SQLDict', ERROR, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
     if len(make_available_uid_list):
       try:
         makeMessageListAvailable(make_available_uid_list)
       except:
-        LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (make_available_uid_list, ), error=sys.exc_info())
+        LOG('SQLDict', ERROR, 'Failed to unreserve %r' % (make_available_uid_list, ), error=sys.exc_info())
       else:
         LOG('SQLDict', TRACE, 'Freed messages %r' % (make_available_uid_list, ))
     try:
@@ -421,12 +421,12 @@ class SQLDict(RAMDict, SQLBase):
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', PANIC,
               'abort failed, thus some objects may be modified accidentally')
-          return True # Stop processing messages for this tic call for this queue.
+          raise
         to_free_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(to_free_uid_list)
         except:
-          LOG('SQLDict', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+          LOG('SQLDict', ERROR, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
         else:
           LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list))
       # Abort if something failed.
@@ -445,12 +445,12 @@ class SQLDict(RAMDict, SQLBase):
             abortTransactionSynchronously()
           except:
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
-            return True # Stop processing messages for this tic call for this queue.
+            raise
         failed_message_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(failed_message_uid_list)
         except:
-          LOG('SQLDict', PANIC, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
+          LOG('SQLDict', ERROR, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
         else:
           LOG('SQLDict', TRACE, 'Freed messages %r' % (failed_message_uid_list, ))
       self.finalizeMessageExecution(activity_tool, message_uid_priority_list)

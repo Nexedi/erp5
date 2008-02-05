@@ -176,7 +176,7 @@ class SQLQueue(RAMQueue, SQLBase):
         try:
           makeMessageListAvailable(to_free_uid_list)
         except:
-          LOG('SQLQueue', PANIC, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+          LOG('SQLQueue', ERROR, 'Failed to free messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
         else:
           if len(to_free_uid_list):
             LOG('SQLQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
@@ -216,14 +216,14 @@ class SQLQueue(RAMQueue, SQLBase):
           try:
             makeMessageListAvailable(delay_uid_list)
           except:
-            LOG('SQLQueue', PANIC, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
+            LOG('SQLQueue', ERROR, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
           else:
             LOG('SQLQueue', TRACE, 'Freed message %r' % (uid, ))
     if len(deletable_uid_list):
       try:
         activity_tool.SQLQueue_delMessage(uid=deletable_uid_list)
       except:
-        LOG('SQLQueue', PANIC, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
+        LOG('SQLQueue', ERROR, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
       else:
         LOG('SQLQueue', TRACE, 'Deleted messages %r' % (deletable_uid_list, ))
     if len(delay_uid_list):
@@ -231,11 +231,11 @@ class SQLQueue(RAMQueue, SQLBase):
         # If this is a conflict error, do not lower the priority but only delay.
         activity_tool.SQLQueue_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
       except:
-        LOG('SQLQueue', PANIC, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
+        LOG('SQLQueue', ERROR, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
       try:
         makeMessageListAvailable(delay_uid_list)
       except:
-        LOG('SQLQueue', PANIC, 'Failed to unreserve %r' % (delay_uid_list, ), error=sys.exc_info())
+        LOG('SQLQueue', ERROR, 'Failed to unreserve %r' % (delay_uid_list, ), error=sys.exc_info())
       else:
         LOG('SQLQueue', TRACE, 'Freed messages %r' % (delay_uid_list, ))
     if len(final_error_uid_list):
@@ -243,7 +243,7 @@ class SQLQueue(RAMQueue, SQLBase):
         activity_tool.SQLQueue_assignMessage(uid=final_error_uid_list,
                                              processing_node=INVOKE_ERROR_STATE)
       except:
-        LOG('SQLQueue', PANIC, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+        LOG('SQLQueue', ERROR, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
     try:
       for m in notify_user_list:
         m.notifyUser(activity_tool)
@@ -293,7 +293,7 @@ class SQLQueue(RAMQueue, SQLBase):
           except:
             # Unfortunately, database adapters may raise an exception against abort.
             LOG('SQLQueue', PANIC, 'abort failed, thus some objects may be modified accidentally')
-            return True # Stop processing messages for this tic call for this queue.
+            raise
           # We must make sure that the message is not set as executed.
           # It is possible that the message is executed but the commit
           # of the transaction fails
@@ -301,7 +301,7 @@ class SQLQueue(RAMQueue, SQLBase):
           try:
             makeMessageListAvailable([value[0]])
           except:
-            LOG('SQLQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
+            LOG('SQLQueue', ERROR, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
           else:
             LOG('SQLQueue', TRACE, 'Freed message %r' % (value, ))
         if time() > processing_stop_time:
@@ -314,7 +314,7 @@ class SQLQueue(RAMQueue, SQLBase):
         try:
           makeMessageListAvailable(to_free_uid_list)
         except:
-          LOG('SQLQueue', PANIC, 'Failed to free remaining messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
+          LOG('SQLQueue', ERROR, 'Failed to free remaining messages: %r' % (to_free_uid_list, ), error=sys.exc_info())
         else:
           LOG('SQLQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
       self.finalizeMessageExecution(activity_tool, processed_message_uid_list)
