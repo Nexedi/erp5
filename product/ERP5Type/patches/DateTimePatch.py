@@ -32,6 +32,18 @@ from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS, getDef
 
 STATE_KEY = 'str'
 
+class DateTimeError( Exception ):
+    pass
+
+class SyntaxError( DateTimeError ):
+    pass
+
+class DateError( DateTimeError ):
+    pass
+
+class TimeError( DateTimeError ):
+    pass
+
 def DateTime__setstate__(self, state):
   if isinstance(state, tuple):
     t, tz = state
