@@ -28,21 +28,11 @@
 
 from DateTime import DateTime as DateTimeKlass
 import math
-from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS, getDefaultDateFormat, _correctYear, _calcHMS, _calcDependentSecond2
+from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS,\
+getDefaultDateFormat, _correctYear, _calcHMS, _calcDependentSecond2, DateTimeError,\
+SyntaxError, DateError, TimeError
 
 STATE_KEY = 'str'
-
-class DateTimeError( Exception ):
-    pass
-
-class SyntaxError( DateTimeError ):
-    pass
-
-class DateError( DateTimeError ):
-    pass
-
-class TimeError( DateTimeError ):
-    pass
 
 def DateTime__setstate__(self, state):
   if isinstance(state, tuple):
