@@ -1,5 +1,4 @@
 <key_list>
- <key>delivery_mirror_section_title | delivery,catalog/title/z_delivery_related_mirror_section</key>
  <key>preferred_gap_id | category,catalog/id/z_related_preferred_gap</key>
  <key>preferred_gap_strict_membership_id | category,catalog/id/z_related_strict_membership_preferred_gap</key>
 </key_list>

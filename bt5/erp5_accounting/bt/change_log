@@ -1,3 +1,6 @@
+2008-2-5 yusei
+* Fixed third party column issue and optimize the query.
+
 2008-2-4 yusei
 * Optimize the query of accounting module list view.
 * Fix displayed value of  accounting operation date and make specific_reference column sortable.

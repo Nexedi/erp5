@@ -300,32 +300,32 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_name</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>selection_params</string>
-                            <string>select_expression</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>node</string>
-                            <string>resource</string>
-                            <string>entity</string>
-                            <string>stat</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>amount</string>
-                            <string>amount_range_min</string>
-                            <string>amount_range_max</string>
-                            <string>creation_date_range_min</string>
-                            <string>creation_date_range_max</string>
-                            <string>section_category</string>
-                            <string>count</string>
-                            <string>transaction_uid</string>
-                            <string>specific_reference</string>
-                            <string>no_limit</string>
-                            <string>search_result_keys</string>
+<string>selection</string>
+<string>selection_name</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>selection_params</string>
+<string>select_expression</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>node</string>
+<string>resource</string>
+<string>entity</string>
+<string>stat</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>amount</string>
+<string>amount_range_min</string>
+<string>amount_range_max</string>
+<string>creation_date_range_min</string>
+<string>creation_date_range_max</string>
+<string>section_category</string>
+<string>count</string>
+<string>transaction_uid</string>
+<string>specific_reference</string>
+<string>no_limit</string>
+<string>search_result_keys</string>
                           </list>
                         </value>
                     </item>
@@ -407,7 +407,7 @@ search_result_keys=\'\'</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), select_expression_key=(\'operation_date\', \'specific_reference\', \'delivery_mirror_section_title\',), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
@@ -598,10 +598,10 @@ search_result_keys=\'\'</string> </value>
         <dtml-if stat>\n
           SELECT SUM(total_price) AS total_price FROM (\n
           SELECT DISTINCT total_price, uid FROM (\n
-        </dtml-if>\n
-\n
-        <dtml-if count>\n
+        <dtml-elif count>\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
+        <dtml-else>\n
+          SELECT * from (\n
         </dtml-if>\n
 \n
 \n
@@ -625,9 +625,16 @@ search_result_keys=\'\'</string> </value>
               <dtml-unless sequence-start>,</dtml-unless>\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
+            , delivery.start_date as operation_date\n
+            , catalog.source_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
-              ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+              <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
+                <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
+                  ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+                </dtml-if>\n
+              </dtml-let>\n
             </dtml-if>\n
+            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -647,6 +654,7 @@ search_result_keys=\'\'</string> </value>
           <dtml-if "stat or omit_input or omit_output or node">\n
               stock, catalog as child, </dtml-if>\n
           <dtml-if "section_category">category, catalog as section, </dtml-if>\n
+          <dtml-if "delivery_mirror_section_title">delivery AS mirror_section_delivery, catalog AS mirror_section_catalog,</dtml-if>\n
           catalog,\n
           delivery\n
         \n
@@ -696,6 +704,11 @@ search_result_keys=\'\'</string> </value>
             AND section.uid = category.uid\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+          </dtml-if>\n
+          <dtml-if "delivery_mirror_section_title">\n
+            AND mirror_section_catalog.uid = mirror_section_delivery.destination_section_uid\n
+            AND mirror_section_delivery.uid = catalog.uid\n
+            AND <dtml-sqltest delivery_mirror_section_title type=string op=like column=mirror_section_catalog.title>\n
           </dtml-if>\n
           \n
           <dtml-comment>\n
@@ -790,10 +803,16 @@ UNION\n
               <dtml-unless sequence-start>,</dtml-unless>\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
+            , delivery.stop_date as operation_date\n
+            , catalog.destination_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
-              ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+              <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
+                <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
+                  ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+                </dtml-if>\n
+              </dtml-let>\n
             </dtml-if>\n
-\n
+            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -813,6 +832,7 @@ UNION\n
           <dtml-if "stat or omit_input or omit_output or node">\n
               stock, catalog as child, </dtml-if>\n
           <dtml-if "section_category">category, catalog as section, </dtml-if>\n
+          <dtml-if "delivery_mirror_section_title">delivery AS mirror_section_delivery, catalog AS mirror_section_catalog,</dtml-if>\n
           catalog,\n
           delivery\n
         \n
@@ -863,7 +883,12 @@ UNION\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
           </dtml-if>\n
-          \n
+          <dtml-if "delivery_mirror_section_title">\n
+            AND mirror_section_catalog.uid = mirror_section_delivery.source_section_uid\n
+            AND mirror_section_delivery.uid = catalog.uid\n
+            AND <dtml-sqltest delivery_mirror_section_title type=string op=like column=mirror_section_catalog.title>\n
+          </dtml-if>\n
+\n
           <dtml-comment>\n
           -- FIXME: we want stop date when we are destination_section and start_date when\n
           --   we are source_section (one solution is to read in stock.date, but we try\n
@@ -941,14 +966,15 @@ UNION\n
 \n
         <dtml-if "count">\n
         ) as catalog\n
-        </dtml-if>\n
-\n
-        <dtml-if "stat">\n
+        <dtml-elif "stat">\n
         ) as sb\n
+        ) as catalog\n
+        <dtml-else>\n
         ) as catalog\n
         </dtml-if>\n
 \n
         <dtml-if "not (stat or count)">\n
+            GROUP BY uid\n
           <dtml-if "query[\'order_by_expression\']">\n
             ORDER BY <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
           </dtml-if>\n
@@ -1007,7 +1033,7 @@ UNION\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), select_expression_key=(\'operation_date\', \'specific_reference\', \'delivery_mirror_section_title\',), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 \n
@@ -1198,10 +1224,10 @@ UNION\n
         <dtml-if stat>\n
           SELECT SUM(total_price) AS total_price FROM (\n
           SELECT DISTINCT total_price, uid FROM (\n
-        </dtml-if>\n
-\n
-        <dtml-if count>\n
+        <dtml-elif count>\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
+        <dtml-else>\n
+          SELECT * from (\n
         </dtml-if>\n
 \n
 \n
@@ -1225,9 +1251,16 @@ UNION\n
               <dtml-unless sequence-start>,</dtml-unless>\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
+            , delivery.start_date as operation_date\n
+            , catalog.source_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
-              ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+              <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
+                <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
+                  ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+                </dtml-if>\n
+              </dtml-let>\n
             </dtml-if>\n
+            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -1247,6 +1280,7 @@ UNION\n
           <dtml-if "stat or omit_input or omit_output or node">\n
               stock, catalog as child, </dtml-if>\n
           <dtml-if "section_category">category, catalog as section, </dtml-if>\n
+          <dtml-if "delivery_mirror_section_title">delivery AS mirror_section_delivery, catalog AS mirror_section_catalog,</dtml-if>\n
           catalog,\n
           delivery\n
         \n
@@ -1296,6 +1330,11 @@ UNION\n
             AND section.uid = category.uid\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+          </dtml-if>\n
+          <dtml-if "delivery_mirror_section_title">\n
+            AND mirror_section_catalog.uid = mirror_section_delivery.destination_section_uid\n
+            AND mirror_section_delivery.uid = catalog.uid\n
+            AND <dtml-sqltest delivery_mirror_section_title type=string op=like column=mirror_section_catalog.title>\n
           </dtml-if>\n
           \n
           <dtml-comment>\n
@@ -1390,10 +1429,16 @@ UNION\n
               <dtml-unless sequence-start>,</dtml-unless>\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
+            , delivery.stop_date as operation_date\n
+            , catalog.destination_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
-              ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+              <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
+                <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
+                  ,<dtml-var "query[\'order_by_expression\'].split(\' \')[0]">\n
+                </dtml-if>\n
+              </dtml-let>\n
             </dtml-if>\n
-\n
+            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -1413,6 +1458,7 @@ UNION\n
           <dtml-if "stat or omit_input or omit_output or node">\n
               stock, catalog as child, </dtml-if>\n
           <dtml-if "section_category">category, catalog as section, </dtml-if>\n
+          <dtml-if "delivery_mirror_section_title">delivery AS mirror_section_delivery, catalog AS mirror_section_catalog,</dtml-if>\n
           catalog,\n
           delivery\n
         \n
@@ -1463,7 +1509,12 @@ UNION\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
           </dtml-if>\n
-          \n
+          <dtml-if "delivery_mirror_section_title">\n
+            AND mirror_section_catalog.uid = mirror_section_delivery.source_section_uid\n
+            AND mirror_section_delivery.uid = catalog.uid\n
+            AND <dtml-sqltest delivery_mirror_section_title type=string op=like column=mirror_section_catalog.title>\n
+          </dtml-if>\n
+\n
           <dtml-comment>\n
           -- FIXME: we want stop date when we are destination_section and start_date when\n
           --   we are source_section (one solution is to read in stock.date, but we try\n
@@ -1541,14 +1592,15 @@ UNION\n
 \n
         <dtml-if "count">\n
         ) as catalog\n
-        </dtml-if>\n
-\n
-        <dtml-if "stat">\n
+        <dtml-elif "stat">\n
         ) as sb\n
+        ) as catalog\n
+        <dtml-else>\n
         ) as catalog\n
         </dtml-if>\n
 \n
         <dtml-if "not (stat or count)">\n
+            GROUP BY uid\n
           <dtml-if "query[\'order_by_expression\']">\n
             ORDER BY <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
           </dtml-if>\n
