@@ -296,13 +296,6 @@ class SQLQueue(RAMQueue, SQLBase):
           # of the transaction fails
           value[1].is_executed = 0
           try:
-            # Rollback all changes made on activity connection.
-            # We will commit to make messages available, and we cannot control
-            # what was done by the activity: it might have used the activity
-            # connection. As the transaction failed, we must rollback these
-            # potential changes before being allowed to commit in
-            # makeMessageListAvailable.
-            activity_tool.SQLQueue_rollback()
             makeMessageListAvailable([value[0]])
           except:
             LOG('SQLQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
