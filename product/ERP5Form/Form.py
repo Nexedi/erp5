@@ -469,7 +469,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Tabs in ZMI
     manage_options = (ZMIForm.manage_options[:5] +
-                      ({'label':'Proxify', 'action':'formProxify'},)+
+                      ({'label':'Proxify', 'action':'formProxify'},
+                       {'label':'UnProxify', 'action':'formUnProxify'}
+                      )+
                       ZMIForm.manage_options[5:])
 
     # Declarative properties
@@ -486,6 +488,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Proxify form
     security.declareProtected('View management screens', 'formProxify')
     formProxify = DTMLFile('dtml/formProxify', globals())
+
+    # Proxify form
+    security.declareProtected('View management screens', 'formUnProxify')
+    formUnProxify = DTMLFile('dtml/formUnProxify', globals())
 
     # Default Attributes
     pt = 'form_view'
@@ -783,6 +789,13 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         add_default_field_library()
         return form_order, matched
 
+    security.declareProtected('View management screens', 'getUnProxyableFieldList')
+    def getUnProxyableFieldList(self):
+      """
+      Return ProxyFields
+      """
+      return [f for f in self.objectValues() if f.meta_type == 'ProxyField']
+
     security.declareProtected('Change Formulator Forms', 'proxifyField')
     def proxifyField(self, field_dict=None, REQUEST=None):
         """Convert fields to proxy fields"""
@@ -899,6 +912,84 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     psyco.bind(__call__)
     psyco.bind(_exec)
+
+    security.declareProtected('Change Formulator Forms', 'unProxifyField')
+    def unProxifyField(self, field_dict=None, REQUEST=None):
+        """Convert proxy fields to fields"""
+        def copy(_dict):
+            new_dict = {}
+            for key, value in _dict.items():
+                if value=='':
+                    continue
+                if isinstance(aq_base(value), (Method, TALESMethod)):
+                    value = copyMethod(value)
+                elif value is not None and not isinstance(value,
+                        (str, unicode, int, long, bool, list, tuple, dict)):
+                    raise ValueError, repr(value)
+                new_dict[key] = value
+            return new_dict
+
+        def is_equal(a, b):
+            type_a = type(a)
+            type_b = type(b)
+            if type_a is not type_b:
+                return False
+            elif type_a is Method:
+                return a.method_name==b.method_name
+            elif type_a is TALESMethod:
+                return a._text==b._text
+            else:
+                return a==b
+
+        def remove_same_value(new_dict, target_dict):
+            for key, value in new_dict.items():
+                target_value = target_dict.get(key)
+                if is_equal(value, target_value):
+                    del new_dict[key]
+            return new_dict
+
+        def get_group_and_position(field_id):
+            for i in self.groups.keys():
+                if field_id in self.groups[i]:
+                    return i, self.groups[i].index(field_id)
+
+        def set_group_and_position(group, position, field_id):
+            self.field_removed(field_id)
+            self.groups[group].insert(position, field_id)
+            # Notify changes explicitly.
+            self.groups = self.groups
+
+        if field_dict is None:
+            return
+
+        for field_id in field_dict.keys():
+            # keep current group and position.
+            group, position = get_group_and_position(field_id)
+
+            # create field
+            old_proxy_field = getattr(self, field_id)
+            delegated_field = old_proxy_field.getRecursiveTemplateField()
+            if delegated_field is None:
+              break
+            self.manage_delObjects(field_id)
+            self.manage_addField(id=field_id,
+                                 title='',
+                                 fieldname=delegated_field.meta_type)
+            field = getattr(self, field_id)
+            # copy data
+            new_values = remove_same_value(copy(delegated_field.values),
+                                           field.values)
+            new_tales = remove_same_value(copy(delegated_field.tales),
+                                          field.tales)
+
+            field.values.update(new_values)
+            field.tales.update(new_tales)
+
+            # move back to the original group and position.
+            set_group_and_position(group, position, field_id)
+
+        if REQUEST is not None:
+            return self.formUnProxify(manage_tabs_message='Changed')
 
     # Overload of the Form method
     #   Use the include_disabled parameter since
