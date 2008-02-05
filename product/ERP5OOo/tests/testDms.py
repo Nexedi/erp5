@@ -498,8 +498,21 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('converting', document.getExternalProcessingState())
     get_transaction().commit()
     self.assertEquals('converting', document.getExternalProcessingState())
+
+    # Clone a uploaded document
+    container = document.getParentValue()
+    clipboard = container.manage_copyObjects(ids=[document.getId()])
+    paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
+    new_document = container[paste_result[0]['new_id']]
+
+    self.assertEquals('converting', new_document.getExternalProcessingState())
+    get_transaction().commit()
+    self.assertEquals('converting', new_document.getExternalProcessingState())
+
+    # Change workflow state to converted
     self.tic()
     self.assertEquals('converted', document.getExternalProcessingState())
+    self.assertEquals('converted', new_document.getExternalProcessingState())
 
     # Clone a converted document
     container = document.getParentValue()
