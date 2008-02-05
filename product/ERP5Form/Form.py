@@ -917,11 +917,15 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     def unProxifyField(self, field_dict=None, REQUEST=None):
         """
         Convert proxy fields to fields
-        Still Experimental, need to be tested
         """
-        def copy(_dict):
+        def copy(field, value_type):
+            mapping_dict = {'values' : 'get_recursive_orig_value',
+                            'tales'  : 'get_recursive_tales'}
             new_dict = {}
-            for key, value in _dict.items():
+            key_list = getattr(field.getRecursiveTemplateField(), value_type).keys()
+            for key in key_list:
+                method_id = mapping_dict[value_type]
+                value = getattr(field, method_id)(key)
                 if value=='':
                     continue
                 if isinstance(aq_base(value), (Method, TALESMethod)):
@@ -980,9 +984,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                                  fieldname=delegated_field.meta_type)
             field = getattr(self, field_id)
             # copy data
-            new_values = remove_same_value(copy(delegated_field.values),
+            new_values = remove_same_value(copy(old_proxy_field, 'values'),
                                            field.values)
-            new_tales = remove_same_value(copy(delegated_field.tales),
+            new_tales = remove_same_value(copy(old_proxy_field, 'tales'),
                                           field.tales)
 
             field.values.update(new_values)
