@@ -64,16 +64,13 @@ class TestAlarm(ERP5TypeTestCase):
     return "Alarm"
 
   def test_01_HasEverything(self, quiet=0, run=run_all_test):
-    # Test if portal_synchronizations was created
+    # Test if portal_alarms was created
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Has Everything ')
       LOG('Testing... ',0,'testHasEverything')
-    self.failUnless(self.getCategoryTool()!=None)
-    self.failUnless(self.getSimulationTool()!=None)
-    self.failUnless(self.getTypeTool()!=None)
-    self.failUnless(self.getSQLConnection()!=None)
-    self.failUnless(self.getCatalogTool()!=None)
+    self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
+    self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
 
   #def populate(self, quiet=1, run=1):
   def afterSetUp(self, quiet=1, run=1):
