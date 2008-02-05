@@ -434,20 +434,6 @@ class SQLDict(RAMDict, SQLBase):
         endTransaction()
       except:
         LOG('SQLDict', WARNING, 'Failed to end transaction for messages (uid, path, method_id) %r' % ([(x[0], x[1].object_path, x[1].method_id) for x in message_uid_priority_list], ), error=sys.exc_info())
-        failed_message_uid_list = [x[0] for x in message_uid_priority_list]
-        try:
-          # Rollback all changes made on activity connection.
-          # We will commit to make messages available, and we cannot control
-          # what was done by the activity: it might have used the activity
-          # connection. As the transaction failed, we must rollback these
-          # potential changes before being allowed to commit in
-          # makeMessageListAvailable.
-          activity_tool.SQLDict_rollback()
-          makeMessageListAvailable(failed_message_uid_list)
-        except:
-          LOG('SQLDict', PANIC, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
-        else:
-          LOG('SQLDict', TRACE, 'Freed messages %r' % (failed_message_uid_list, ))
         if endTransaction == abortTransactionSynchronously:
           LOG('SQLDict', PANIC, 'Failed to abort executed messages. Some objects may be modified accidentally.')
         else:
@@ -455,7 +441,14 @@ class SQLDict(RAMDict, SQLBase):
             abortTransactionSynchronously()
           except:
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
-        return True # Stop processing messages for this tic call for this queue.
+            return True # Stop processing messages for this tic call for this queue.
+        failed_message_uid_list = [x[0] for x in message_uid_priority_list]
+        try:
+          makeMessageListAvailable(failed_message_uid_list)
+        except:
+          LOG('SQLDict', PANIC, 'Failed to free remaining messages: %r' % (failed_message_uid_list, ), error=sys.exc_info())
+        else:
+          LOG('SQLDict', TRACE, 'Freed messages %r' % (failed_message_uid_list, ))
       self.finalizeMessageExecution(activity_tool, message_uid_priority_list)
     get_transaction().commit()
     return not len(message_uid_priority_list)
