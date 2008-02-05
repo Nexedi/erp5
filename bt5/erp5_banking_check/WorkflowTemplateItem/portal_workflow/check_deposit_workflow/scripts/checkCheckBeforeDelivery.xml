@@ -69,7 +69,7 @@
 from Products.ERP5Type.Message import Message\n
 \n
 obj = state_change[\'object\']\n
-context.checkUserPermission(state_change)\n
+\n
 wf_h = obj.Base_getWorkflowHistory()\n
 wf_h = wf_h[\'account_transfer_workflow\'][\'item_list\']\n
 \n
@@ -166,10 +166,10 @@ context.validateSourceAndDestination(state_change)\n
                             <string>_getitem_</string>
                             <string>obj</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>wf_h</string>
                             <string>manual_validation</string>
                             <string>waiting_state</string>
+                            <string>context</string>
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
                             <string>source_bank_account</string>
