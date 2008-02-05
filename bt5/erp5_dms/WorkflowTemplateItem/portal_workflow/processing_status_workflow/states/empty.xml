@@ -31,6 +31,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>detect_uploaded_file</string>
                 <string>edit</string>
                 <string>upload_file</string>
               </tuple>
