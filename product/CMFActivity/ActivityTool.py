@@ -248,7 +248,7 @@ Exception: %s %s
     try:
       activity_tool.MailHost.send( mail_text )
     except (socket.error, MailHostError), message:
-      LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent: %s' % (message, ))
+      LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent: %s. Exception was: %s %s\n%s' % (message, self.exc_type, self.exc_value, self.traceback))
 
   def reactivate(self, activity_tool):
     # Reactivate the original object.
