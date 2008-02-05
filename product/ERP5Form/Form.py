@@ -915,7 +915,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     security.declareProtected('Change Formulator Forms', 'unProxifyField')
     def unProxifyField(self, field_dict=None, REQUEST=None):
-        """Convert proxy fields to fields"""
+        """
+        Convert proxy fields to fields
+        Still Experimental, need to be tested
+        """
         def copy(_dict):
             new_dict = {}
             for key, value in _dict.items():
