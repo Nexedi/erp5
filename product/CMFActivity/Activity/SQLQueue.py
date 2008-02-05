@@ -284,11 +284,17 @@ class SQLQueue(RAMQueue, SQLBase):
             # This message failed, revert.
             abortTransactionSynchronously()
         except:
+          LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % ((value[0], value[1].object_path, value[1].method_id), ), error=sys.exc_info())
+          try:
+            abortTransactionSynchronously()
+          except:
+            # Unfortunately, database adapters may raise an exception against abort.
+            LOG('SQLQueue', PANIC, 'abort failed, thus some objects may be modified accidentally')
+            return True # Stop processing messages for this tic call for this queue.
           # We must make sure that the message is not set as executed.
           # It is possible that the message is executed but the commit
           # of the transaction fails
           value[1].is_executed = 0
-          LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % ((value[0], value[1].object_path, value[1].method_id), ), error=sys.exc_info())
           try:
             # Rollback all changes made on activity connection.
             # We will commit to make messages available, and we cannot control
@@ -302,12 +308,6 @@ class SQLQueue(RAMQueue, SQLBase):
             LOG('SQLQueue', PANIC, 'Failed to free message: %r' % (value, ), error=sys.exc_info())
           else:
             LOG('SQLQueue', TRACE, 'Freed message %r' % (value, ))
-          try:
-            abortTransactionSynchronously()
-          except:
-            # Unfortunately, database adapters may raise an exception against abort.
-            LOG('SQLQueue', PANIC, 'abort failed, thus some objects may be modified accidentally')
-            return True # Stop processing messages for this tic call for this queue.
         if time() > processing_stop_time:
           LOG('SQLQueue', TRACE, 'Stop processing message batch because processing delay exceeded')
           break
