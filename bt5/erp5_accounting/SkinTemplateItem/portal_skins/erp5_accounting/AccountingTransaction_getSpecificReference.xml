@@ -68,21 +68,12 @@
             <value> <string>"""Return the \'side-specific\' reference, ie. the source reference or\n
 destination reference.\n
 """\n
-if selection_name is None:\n
-  # TODO: this should definitivly be REQUEST chached\n
-  selection_name = \'accounting_selection\'\n
-\n
-section_category=context.portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
-if not section_category:\n
-  return\n
-\n
 if brain is not None:\n
   transaction = brain.getObject()\n
 else:\n
   transaction = context\n
 \n
-source_section = transaction.getSourceSectionValue()\n
-if source_section is not None and source_section.isMemberOf(section_category):\n
+if transaction.AccountingTransaction_isSourceView():\n
   return transaction.getSourceReference()\n
 return transaction.getDestinationReference()\n
 </string> </value>
@@ -139,10 +130,8 @@ return transaction.getDestinationReference()\n
                             <string>kwd</string>
                             <string>None</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>section_category</string>
                             <string>transaction</string>
-                            <string>source_section</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
