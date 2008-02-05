@@ -639,6 +639,7 @@ delivery_mirror_section_title=""</string> </value>
               <dtml-var sequence-item>\n
             </dtml-in>\n
             , delivery.start_date as operation_date\n
+            , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -817,6 +818,7 @@ UNION\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
             , delivery.stop_date as operation_date\n
+            , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -1265,6 +1267,7 @@ UNION\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
             , delivery.start_date as operation_date\n
+            , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -1443,6 +1446,7 @@ UNION\n
               <dtml-var sequence-item>\n
             </dtml-in>\n
             , delivery.stop_date as operation_date\n
+            , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
