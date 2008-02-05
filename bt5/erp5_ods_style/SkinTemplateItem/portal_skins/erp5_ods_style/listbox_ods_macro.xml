@@ -65,9 +65,31 @@
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                is_report_tree_mode selection/report_tree_mode | python: 0;\n
                is_domain_tree_mode selection/domain_tree_mode | python: 0;\n
-               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list, is_report_tree_mode=is_report_tree_mode, is_domain_tree_mode=is_domain_tree_mode);\n
+               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list[1:], is_report_tree_mode=is_report_tree_mode, is_domain_tree_mode=is_domain_tree_mode);\n
+               listboxline python:listboxline_list[0];\n
                max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);\n
                " i18n:domain="ui">\n
+\n
+            <tal:block metal:define-slot="for_form_list"\n
+                       tal:condition="listboxline/isTitleLine">\n
+              <tal:block metal:define-slot="list_header">\n
+                <table:table-row table:style-name=\'ro4\'>\n
+                  <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                    <tal:block tal:define="column_property python: column_item[1];\n
+                                           column_id python: column_item[0]">\n
+                      <table:table-cell table:number-rows-spanned=\'1\' \n
+                                        table:style-name=\'report-column-title\'\n
+                                        table:number-columns-spanned=\'1\'\n
+                                        office:value-type=\'string\'>\n
+                        <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property">\n
+                        </text:p>\n
+                      </table:table-cell>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </table:table-row>\n
+              </tal:block>\n
+            </tal:block>\n
+\n
 \n
         <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>\n
 \n
