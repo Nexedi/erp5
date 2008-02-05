@@ -27,6 +27,8 @@
 ##############################################################################
 
 from types import StringType
+from zLOG import LOG
+from zLOG import PROBLEM
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
@@ -34,6 +36,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Globals import InitializeClass, DTMLFile, get_request
+from Globals import DevelopmentMode
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -504,7 +507,15 @@ xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
     if not format and not batch_mode:
       request.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % self.content_type)
       request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
-        
+    
+    if DevelopmentMode:
+      # Validate XML in development mode
+      from Products.ERP5OOo.tests.utils import Validator
+      err_list = Validator().validate(ooo)
+      if err_list:
+        LOG('ERP5OOo', PROBLEM,
+            'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
+    
     return ooo
   
   def om_icons(self):
