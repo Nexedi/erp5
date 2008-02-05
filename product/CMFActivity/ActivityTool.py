@@ -593,7 +593,9 @@ class ActivityTool (Folder, UniqueObject):
           # because processing_node starts form 1
           if currentNode in processing_node_list:
             self.tic(processing_node_list.index(currentNode)+1)
-
+        except:
+          # Catch ALL exception to avoid killing timerserver.
+          LOG('ActivityTool', ERROR, 'process_timer received an exception', error=sys.exc_info())
         finally:
           timerservice_lock.release()
           setSecurityManager(old_sm)
@@ -609,12 +611,7 @@ class ActivityTool (Folder, UniqueObject):
 
       # Call distribute on each queue
       for activity in activity_list:
-        try:
-          activity.distribute(aq_inner(self), node_count)
-        except ConflictError:
-          raise
-        except:
-          LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity, error=sys.exc_info())
+        activity.distribute(aq_inner(self), node_count)
 
     security.declarePublic('tic')
     def tic(self, processing_node=1, force=0):
@@ -652,25 +649,15 @@ class ActivityTool (Folder, UniqueObject):
       try:
         # Wakeup each queue
         for activity in activity_list:
-          try:
-            activity.wakeup(inner_self, processing_node)
-          except ConflictError:
-            raise
-          except:
-            LOG('CMFActivity:', 100, 'Core call to wakeup failed for activity %s' % activity)
+          activity.wakeup(inner_self, processing_node)
 
         # Process messages on each queue in round robin
         has_awake_activity = 1
         while has_awake_activity:
           has_awake_activity = 0
           for activity in activity_list:
-            try:
-              activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
-              has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
-            except ConflictError:
-              raise
-            except:
-              LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity, error=sys.exc_info())
+            activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
+            has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
       finally:
         # decrease the number of active_threads
         tic_lock.acquire()
