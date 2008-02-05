@@ -115,6 +115,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>delivery_mirror_section_title</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>entity</string> </key>
                                 <value>
                                   <dictionary>
@@ -326,6 +337,7 @@
 <string>specific_reference</string>
 <string>no_limit</string>
 <string>search_result_keys</string>
+<string>delivery_mirror_section_title</string>
                           </list>
                         </value>
                     </item>
@@ -367,7 +379,8 @@ count=""\r\n
 transaction_uid=""\r\n
 specific_reference\r\n
 no_limit\r\n
-search_result_keys=\'\'</string> </value>
+search_result_keys=\'\'\r\n
+delivery_mirror_section_title=""</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
