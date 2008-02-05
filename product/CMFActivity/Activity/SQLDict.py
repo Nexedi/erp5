@@ -373,13 +373,17 @@ class SQLDict(RAMDict, SQLBase):
         LOG('SQLDict', PANIC, 'Failed to unreserve %r' % (make_available_uid_list, ), error=sys.exc_info())
       else:
         LOG('SQLDict', TRACE, 'Freed messages %r' % (make_available_uid_list, ))
-    for m in notify_user_list:
-      m.notifyUser(activity_tool)
-    for m in message_with_active_process_list:
-      active_process = activity_tool.unrestrictedTraverse(m.active_process)
-      if not active_process.hasActivity():
-        # No more activity
-        m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+    try:
+      for m in notify_user_list:
+        m.notifyUser(activity_tool)
+      for m in message_with_active_process_list:
+        active_process = activity_tool.unrestrictedTraverse(m.active_process)
+        if not active_process.hasActivity():
+          # No more activity
+          m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+    except:
+      # Notification failures must not cause this method to raise.
+      LOG('SQLDict', WARNING, 'Exception during notification phase of finalizeMessageExecution', error=sys.exc_info())
 
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):

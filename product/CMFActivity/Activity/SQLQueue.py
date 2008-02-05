@@ -244,14 +244,17 @@ class SQLQueue(RAMQueue, SQLBase):
                                              processing_node=INVOKE_ERROR_STATE)
       except:
         LOG('SQLQueue', PANIC, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
-    for m in notify_user_list:
-      m.notifyUser(activity_tool)
-    for m in message_with_active_process_list:
-      active_process = activity_tool.unrestrictedTraverse(m.active_process)
-      if not active_process.hasActivity():
-        # No more activity
-        m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
-
+    try:
+      for m in notify_user_list:
+        m.notifyUser(activity_tool)
+      for m in message_with_active_process_list:
+        active_process = activity_tool.unrestrictedTraverse(m.active_process)
+        if not active_process.hasActivity():
+          # No more activity
+          m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+    except:
+      # Notification failures must not cause this method to raise.
+      LOG('SQLQueue', WARNING, 'Exception during notification phase of finalizeMessageExecution', error=sys.exc_info())
 
   def dequeueMessage(self, activity_tool, processing_node):
     def makeMessageListAvailable(uid_list):
