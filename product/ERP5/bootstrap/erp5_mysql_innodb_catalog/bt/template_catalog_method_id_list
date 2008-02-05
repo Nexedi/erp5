@@ -14,6 +14,7 @@ erp5_mysql_innodb/z0_drop_record
 erp5_mysql_innodb/z0_drop_roles_and_users
 erp5_mysql_innodb/z0_drop_stock
 erp5_mysql_innodb/z0_drop_translation
+erp5_mysql_innodb/z0_uncatalog_alarm
 erp5_mysql_innodb/z0_uncatalog_category
 erp5_mysql_innodb/z0_uncatalog_fulltext
 erp5_mysql_innodb/z0_uncatalog_inventory
