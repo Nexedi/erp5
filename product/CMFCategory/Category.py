@@ -212,6 +212,14 @@ class Category(Folder):
       return ''.join(logical_title_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getIndentedShortTitle')
+    def getIndentedShortTitle(self):
+      """
+        Returns short_title or id, indented from base_category.
+      """
+      return self.getIndentedTitle(item_method='getShortTitle')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getIndentedTitleAndId')
     def getIndentedTitleAndId(self, item_method='getTitleAndId'):
       """
