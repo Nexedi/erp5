@@ -567,35 +567,36 @@ class ActivityTool (Folder, UniqueObject):
 
         old_sm = getSecurityManager()
         try:
-          # get owner of portal_catalog, so normally we should be able to
-          # have the permission to invoke all activities
-          user = self.portal_catalog.getWrappedOwner()
-          newSecurityManager(self.REQUEST, user)
+          try:
+            # get owner of portal_catalog, so normally we should be able to
+            # have the permission to invoke all activities
+            user = self.portal_catalog.getWrappedOwner()
+            newSecurityManager(self.REQUEST, user)
 
-          currentNode = self.getCurrentNode()
-          self.registerNode(currentNode)
-          processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
+            currentNode = self.getCurrentNode()
+            self.registerNode(currentNode)
+            processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
 
-          # only distribute when we are the distributingNode or if it's empty
-          if (self.getDistributingNode() == currentNode):
-            self.distribute(len(processing_node_list))
+            # only distribute when we are the distributingNode or if it's empty
+            if (self.getDistributingNode() == currentNode):
+              self.distribute(len(processing_node_list))
 
-          # SkinsTool uses a REQUEST cache to store skin objects, as
-          # with TimerService we have the same REQUEST over multiple
-          # portals, we clear this cache to make sure the cache doesn't
-          # contains skins from another portal.
-          stool = getToolByName(self, 'portal_skins', None)
-          if stool is not None:
-            stool.changeSkin(None)
+            # SkinsTool uses a REQUEST cache to store skin objects, as
+            # with TimerService we have the same REQUEST over multiple
+            # portals, we clear this cache to make sure the cache doesn't
+            # contains skins from another portal.
+            stool = getToolByName(self, 'portal_skins', None)
+            if stool is not None:
+              stool.changeSkin(None)
 
-          # call tic for the current processing_node
-          # the processing_node numbers are the indices of the elements in the node tuple +1
-          # because processing_node starts form 1
-          if currentNode in processing_node_list:
-            self.tic(processing_node_list.index(currentNode)+1)
-        except:
-          # Catch ALL exception to avoid killing timerserver.
-          LOG('ActivityTool', ERROR, 'process_timer received an exception', error=sys.exc_info())
+            # call tic for the current processing_node
+            # the processing_node numbers are the indices of the elements in the node tuple +1
+            # because processing_node starts form 1
+            if currentNode in processing_node_list:
+              self.tic(processing_node_list.index(currentNode)+1)
+          except:
+            # Catch ALL exception to avoid killing timerserver.
+            LOG('ActivityTool', ERROR, 'process_timer received an exception', error=sys.exc_info())
         finally:
           timerservice_lock.release()
           setSecurityManager(old_sm)
