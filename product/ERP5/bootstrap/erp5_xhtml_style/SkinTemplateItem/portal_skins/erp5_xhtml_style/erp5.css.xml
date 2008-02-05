@@ -1149,6 +1149,9 @@ fieldset.bottom .field .input {\n
   padding-right: 1px;\n
 }\n
 \n
+.ListContent .error {\n
+  color: #F00;\n
+}\n
 td.AnchorColumn {\n
   !important\n
   border-style:none;\n
