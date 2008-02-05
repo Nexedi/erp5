@@ -3109,10 +3109,6 @@ class Base( CopyContainer,
     """Assign Local Roles to Groups on self, based on Portal Type Role
     Definitions and "ERP5 Role Definition" objects contained inside self.
     """
-    updateLocalRolesOnSecurityGroups = UnrestrictedMethod(self._updateLocalRolesOnSecurityGroups)
-    return updateLocalRolesOnSecurityGroups(**kw)
-
-  def _updateLocalRolesOnSecurityGroups(self, **kw):
     self._getTypesTool().getTypeInfo(self)\
                           .updateLocalRolesOnSecurityGroups(self, **kw)
 

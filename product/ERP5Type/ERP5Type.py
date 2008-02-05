@@ -39,6 +39,7 @@ from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 # Security uses ERP5Security by default
 try:
@@ -450,7 +451,12 @@ class ERP5TypeInformation( FactoryTypeInformation,
       return factory_method(portal, id).propertyMap()
 
     security.declarePrivate('updateLocalRolesOnSecurityGroups')
-    def updateLocalRolesOnSecurityGroups(self, ob, user_name=None,
+    def updateLocalRolesOnSecurityGroups(self, *args, **kw):
+      updateLocalRolesOnSecurityGroups = \
+        UnrestrictedMethod(self._updateLocalRolesOnSecurityGroups)
+      return updateLocalRolesOnSecurityGroups(*args, **kw)
+
+    def _updateLocalRolesOnSecurityGroups(self, ob, user_name=None,
                                          reindex=True):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
