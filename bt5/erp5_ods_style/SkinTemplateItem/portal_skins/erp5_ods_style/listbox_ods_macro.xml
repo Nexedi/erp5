@@ -63,10 +63,11 @@
                editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n
                editable_fields python: dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
-               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list);\n
-               is_report_tree_mode selection/report_tree_mode | nothing;\n
+               is_report_tree_mode selection/report_tree_mode | python: 0;\n
+               is_domain_tree_mode selection/domain_tree_mode | python: 0;\n
+               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list, is_report_tree_mode=is_report_tree_mode, is_domain_tree_mode=is_domain_tree_mode);\n
                max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);\n
-               is_domain_tree_mode selection/domain_tree_mode | nothing;" i18n:domain="ui">\n
+               " i18n:domain="ui">\n
 \n
         <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>\n
 \n

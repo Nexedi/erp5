@@ -71,6 +71,12 @@ structure = {}\n
 structure[\'line\'] = None\n
 structure[\'line_list\'] = []\n
 \n
+if not (is_report_tree_mode or is_domain_tree_mode):\n
+  # When this is not a report tree, return the "plain structure"\n
+  structure[\'line\'] = None\n
+  structure[\'line_list\'] = [dict(line=x, line_list=[]) for x in listbox_line_list]\n
+  return structure\n
+\n
 def order_line_list(line_list, current_structure, depth=0, index=0, last_dict=None):\n
   if index < len(line_list):\n
     listbox_line = line_list[index]\n
@@ -95,7 +101,6 @@ def order_line_list(line_list, current_structure, depth=0, index=0, last_dict=No
     index = order_line_list(line_list, current_structure, depth=depth, index=index, last_dict=last_dict)\n
   return index\n
 \n
-\n
 order_line_list(listbox_line_list, structure, depth=-1, index=0)\n
 \n
 return structure\n
@@ -117,7 +122,7 @@ return structure\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox_line_list=None</string> </value>
+            <value> <string>listbox_line_list=None, is_report_tree_mode, is_domain_tree_mode</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,16 +142,23 @@ return structure\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>listbox_line_list</string>
+                            <string>is_report_tree_mode</string>
+                            <string>is_domain_tree_mode</string>
                             <string>structure</string>
                             <string>None</string>
                             <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>dict</string>
                             <string>order_line_list</string>
                           </tuple>
                         </value>
@@ -160,6 +172,7 @@ return structure\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
