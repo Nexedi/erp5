@@ -279,6 +279,11 @@ class ERP5TypeInformation( FactoryTypeInformation,
         # Then keep on the construction process
         ob = self._constructInstance(container, id, *args, **kw)
 
+        # Portal type has to be set before setting other attributes
+        # in order to initialize aq_dynamic
+        if hasattr(ob, '_setPortalTypeName'):
+          ob._setPortalTypeName(self.getId())
+
         # Only try to assign roles to security groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
         # which acquire their security definition from their parent
@@ -287,7 +292,13 @@ class ERP5TypeInformation( FactoryTypeInformation,
         if len(self._roles):
             self.updateLocalRolesOnSecurityGroups(ob)
 
-        ob = self._finishConstruction(ob)
+        # notify workflow after generating local roles, in order to prevent
+        # Unauthorized error on transition's condition
+        if hasattr(aq_base(ob), 'notifyWorkflowCreated'):
+          ob.notifyWorkflowCreated()
+
+        # Reindex the object at the end
+        ob.reindexObject()
 
         if self.init_script :
             # Acquire the init script in the context of this object
