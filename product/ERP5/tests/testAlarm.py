@@ -63,15 +63,6 @@ class TestAlarm(ERP5TypeTestCase):
   def getTitle(self):
     return "Alarm"
 
-  def test_01_HasEverything(self, quiet=0, run=run_all_test):
-    # Test if portal_alarms was created
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
-      LOG('Testing... ',0,'testHasEverything')
-    self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
-    self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
-
   def afterSetUp(self, quiet=1, run=1):
     self.login()
 
@@ -87,6 +78,16 @@ class TestAlarm(ERP5TypeTestCase):
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
+
+
+  def test_01_HasEverything(self, quiet=0, run=run_all_test):
+    # Test if portal_alarms was created
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Has Everything ')
+      LOG('Testing... ',0,'testHasEverything')
+    self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
+    self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
 
   def test_02_Initialization(self, quiet=0, run=run_all_test):
     """
