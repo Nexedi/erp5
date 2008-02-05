@@ -140,6 +140,9 @@ transaction.edit(aggregate=check.getRelativeUrl())\n
 \n
 context.updateBankingOperation(state_change)\n
 \n
+if no_balance_check == 1:\n
+  return\n
+\n
 # Test if the account balance is sufficient.\n
 # We do not need to serialize here because we do not make\n
 # reservation yet\n
@@ -171,7 +174,7 @@ elif error[\'error_code\'] != 0:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, **kw</string> </value>
+            <value> <string>state_change, no_balance_check=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -199,13 +202,14 @@ elif error[\'error_code\'] != 0:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>no_balance_check</string>
                             <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
@@ -242,7 +246,9 @@ elif error[\'error_code\'] != 0:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>

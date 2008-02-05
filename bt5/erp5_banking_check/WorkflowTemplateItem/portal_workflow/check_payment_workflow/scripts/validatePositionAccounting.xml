@@ -83,7 +83,7 @@ site = transaction.getSourceValue()\n
 transaction.Baobab_checkCounterOpened(site)\n
 \n
 # For safety, check the consistency again.\n
-context.validateConsistency(state_change)\n
+context.validateConsistency(state_change, no_balance_check=1)\n
 \n
 line = transaction.movement\n
 bank_account = transaction.getDestinationPaymentValue()\n
