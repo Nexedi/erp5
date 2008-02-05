@@ -83,7 +83,7 @@ def order_line_list(line_list, current_structure, depth=0, index=0, last_dict=No
     section_depth = listbox_line.getSectionDepth()\n
     if listbox_line.isDataLine():\n
       section_depth += 1\n
-    if section_depth == (depth +1):\n
+    if last_dict is None or section_depth == (depth +1):\n
       last_dict = {\'line\':listbox_line, \'line_list\':[]}\n
       current_structure[\'line_list\'].append(last_dict)\n
       index += 1\n
