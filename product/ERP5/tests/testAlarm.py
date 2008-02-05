@@ -72,19 +72,8 @@ class TestAlarm(ERP5TypeTestCase):
     self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
     self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
 
-  #def populate(self, quiet=1, run=1):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
-    portal = self.getPortal()
-    catalog_tool = self.getCatalogTool()
-    # XXX This does not works
-    #catalog_tool.reindexObject(portal)
-
-    # First reindex
-    #LOG('afterSetup',0,'portal.portal_categories.immediateReindexObject')
-    #portal.portal_categories.immediateReindexObject()
-    #LOG('afterSetup',0,'portal.portal_simulation.immediateReindexObject')
-    #portal.portal_simulation.immediateReindexObject()
 
   def newAlarm(self):
     """
