@@ -70,6 +70,10 @@
                max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);\n
                " i18n:domain="ui">\n
 \n
+            <!-- Define a slot specific for form_list, because in list mode we want to use a \n
+                 <table:table-header-rows> so that header is repeated on all pages, and we can\'t\n
+                 do this in form_view, because only one table-header-rows is allowed in <table:table>.\n
+             -->\n
             <tal:block metal:define-slot="for_form_list"\n
                        tal:condition="listboxline/isTitleLine">\n
               <tal:block metal:define-slot="list_header">\n
@@ -89,7 +93,6 @@
                 </table:table-row>\n
               </tal:block>\n
             </tal:block>\n
-\n
 \n
         <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>\n
 \n
