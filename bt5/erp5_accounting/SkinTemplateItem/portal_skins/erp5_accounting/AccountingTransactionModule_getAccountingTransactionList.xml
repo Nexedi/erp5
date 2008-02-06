@@ -96,11 +96,11 @@ if params.get(\'operation_date\', {}).get(\'query\'):\n
   ss_q = Query(format=operation_date_dict[\'format\'],\n
                type=operation_date_dict[\'type\'],\n
                **{\'delivery.start_date\':operation_date_dict[\'query\']})\n
-  params[\'source_section_where_expression\'] = ss_q()[\'where_expression\']\n
+  params[\'source_section_where_expression\'] = ss_q(datetime_search_keys=[\'delivery.start_date\'])[\'where_expression\']\n
   ds_q = Query(format=operation_date_dict[\'format\'],\n
                type=operation_date_dict[\'type\'],\n
                **{\'delivery.stop_date\':operation_date_dict[\'query\']})\n
-  params[\'destination_section_where_expression\'] = ds_q()[\'where_expression\']\n
+  params[\'destination_section_where_expression\'] = ds_q(datetime_search_keys=[\'delivery.stop_date\'])[\'where_expression\']\n
   del params[\'operation_date\']\n
 \n
 # this method can be used to build another complex query, for example\n
