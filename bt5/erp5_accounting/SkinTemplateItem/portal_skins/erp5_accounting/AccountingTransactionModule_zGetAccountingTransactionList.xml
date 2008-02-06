@@ -126,6 +126,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>destination_section_where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>entity</string> </key>
                                 <value>
                                   <dictionary>
@@ -266,6 +272,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>source_section_where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>specific_reference</string> </key>
                                 <value>
                                   <dictionary/>
@@ -338,6 +350,8 @@
 <string>no_limit</string>
 <string>search_result_keys</string>
 <string>delivery_mirror_section_title</string>
+<string>source_section_where_expression</string>
+<string>destination_section_where_expression</string>
                           </list>
                         </value>
                     </item>
@@ -380,7 +394,9 @@ transaction_uid=""\r\n
 specific_reference\r\n
 no_limit\r\n
 search_result_keys=\'\'\r\n
-delivery_mirror_section_title=""</string> </value>
+delivery_mirror_section_title=""\r\n
+source_section_where_expression\r\n
+destination_section_where_expression</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -618,9 +634,13 @@ delivery_mirror_section_title=""</string> </value>
         <dtml-elif count>\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
-          SELECT * from (\n
+          SELECT catalog.*,\n
+          <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
+          ( SELECT SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
+          ( SELECT -SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          FROM (\n
+          </dtml-let>\n
         </dtml-if>\n
-\n
 \n
 <dtml-comment>\n
          ##################\n
@@ -680,6 +700,9 @@ delivery_mirror_section_title=""</string> </value>
           delivery.uid = catalog.uid\n
           <dtml-if "query[\'where_expression\']">\n
             AND <dtml-var "query[\'where_expression\']">\n
+          </dtml-if>\n
+          <dtml-if source_section_where_expression>\n
+            AND <dtml-var source_section_where_expression>\n
           </dtml-if>\n
           <dtml-if selection_domain>\n
             AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
@@ -859,6 +882,9 @@ UNION\n
           delivery.uid = catalog.uid\n
           <dtml-if "query[\'where_expression\']">\n
             AND <dtml-var "query[\'where_expression\']">\n
+          </dtml-if>\n
+          <dtml-if destination_section_where_expression>\n
+            AND <dtml-var destination_section_where_expression>\n
           </dtml-if>\n
           <dtml-if selection_domain>\n
             AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
@@ -1250,9 +1276,13 @@ UNION\n
         <dtml-elif count>\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
-          SELECT * from (\n
+          SELECT catalog.*,\n
+          <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
+          ( SELECT SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
+          ( SELECT -SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          FROM (\n
+          </dtml-let>\n
         </dtml-if>\n
-\n
 \n
 <dtml-comment>\n
          ##################\n
@@ -1312,6 +1342,9 @@ UNION\n
           delivery.uid = catalog.uid\n
           <dtml-if "query[\'where_expression\']">\n
             AND <dtml-var "query[\'where_expression\']">\n
+          </dtml-if>\n
+          <dtml-if source_section_where_expression>\n
+            AND <dtml-var source_section_where_expression>\n
           </dtml-if>\n
           <dtml-if selection_domain>\n
             AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
@@ -1491,6 +1524,9 @@ UNION\n
           delivery.uid = catalog.uid\n
           <dtml-if "query[\'where_expression\']">\n
             AND <dtml-var "query[\'where_expression\']">\n
+          </dtml-if>\n
+          <dtml-if destination_section_where_expression>\n
+            AND <dtml-var destination_section_where_expression>\n
           </dtml-if>\n
           <dtml-if selection_domain>\n
             AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
