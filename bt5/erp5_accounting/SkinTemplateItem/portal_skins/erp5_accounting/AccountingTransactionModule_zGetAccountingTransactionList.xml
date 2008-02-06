@@ -444,6 +444,8 @@ delivery_mirror_section_title=""</string> </value>
           <dtml-unless sequence-start>,</dtml-unless>\n
           <dtml-var sequence-item>\n
         </dtml-in>\n
+        , delivery.start_date as operation_date\n
+        , \'source\' as section_mark\n
         <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
       </dtml-if>\n
     \n
@@ -461,7 +463,9 @@ delivery_mirror_section_title=""</string> </value>
       </dtml-if>\n
       <dtml-if use_movement_table> movement,  </dtml-if>\n
       <dtml-if "stat or omit_input or omit_output or node">\n
-          stock, catalog as child, </dtml-if>\n
+          stock, catalog as child,\n
+        <dtml-unless section_category>category,</dtml-unless>\n
+      </dtml-if>\n
       <dtml-if "section_category">category, catalog as section, </dtml-if>\n
       catalog,\n
       delivery\n
@@ -1072,6 +1076,8 @@ UNION\n
           <dtml-unless sequence-start>,</dtml-unless>\n
           <dtml-var sequence-item>\n
         </dtml-in>\n
+        , delivery.start_date as operation_date\n
+        , \'source\' as section_mark\n
         <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
       </dtml-if>\n
     \n
@@ -1089,7 +1095,9 @@ UNION\n
       </dtml-if>\n
       <dtml-if use_movement_table> movement,  </dtml-if>\n
       <dtml-if "stat or omit_input or omit_output or node">\n
-          stock, catalog as child, </dtml-if>\n
+          stock, catalog as child,\n
+        <dtml-unless section_category>category,</dtml-unless>\n
+      </dtml-if>\n
       <dtml-if "section_category">category, catalog as section, </dtml-if>\n
       catalog,\n
       delivery\n
