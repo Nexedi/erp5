@@ -1620,7 +1620,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder = self.getOrganisationModule()
     ob1 = folder.newContent(title='Object Title')
     ob1.manage_permission('View', ['Member'], 1)
-    ob1.manage_addLocalRoles('bob', ['Assignee'])
     ob2 = folder.newContent(title='Object Title')
     ob2.manage_addLocalRoles('bob', ['Assignee'])
     get_transaction().commit()
@@ -1663,6 +1662,24 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(1,
                 ctool.countResults(title='Object Title',
                                    local_roles='Assignee;Auditor')[0][0])
+
+    #Test if bob can't see object even if Assignee role (without View permission) is defined on object
+    ob1.manage_addLocalRoles('bob', ['Assignee'])
+    get_transaction().commit()
+    self.tic()
+    ob1.immediateReindexObject()
+    self.assertEquals(1,
+                len(ctool.searchResults(title='Object Title',
+                                        local_roles='Assignee')))
+    self.assertEquals(1,
+                ctool.countResults(title='Object Title',
+                                   local_roles='Assignee')[0][0])
+
+    # this also work for searchFolder and countFolder
+    self.assertEquals(1, len(folder.searchFolder(title='Object Title',
+                                             local_roles='Assignee')))
+    self.assertEquals(1, folder.countFolder(title='Object Title',
+                                             local_roles='Assignee')[0][0])
 
   def test_51_SearchWithKeyWords(self, quiet=quiet, run=run_all_test):
     if not run: return
