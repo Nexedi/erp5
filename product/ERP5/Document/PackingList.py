@@ -78,7 +78,7 @@ class PackingList(Delivery):
                       , PropertySheet.Arrow
                       , PropertySheet.Comment
                       , PropertySheet.Movement
-                      , PropertySheet.Task
+                      , PropertySheet.TradeCondition
                       )
 
     security.declareProtected(Permissions.AccessContentsInformation, 
