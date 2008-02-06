@@ -96,12 +96,6 @@ for line in  txn.contentValues(filter = {\'portal_type\' : \'Check Operation Lin
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

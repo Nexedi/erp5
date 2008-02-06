@@ -73,12 +73,15 @@ obj = state_change[\'object\']\n
 wf_h = obj.Base_getWorkflowHistory()\n
 wf_h = wf_h[\'check_deposit_workflow\'][\'item_list\']\n
 \n
-manual_validation = 0\n
-waiting_state = wf_h[3]\n
-if waiting_state == "waiting":\n
-  manual_validation = 1\n
 \n
-context.log("waiting state", waiting_state)\n
+for h in wf_h:\n
+  obj.log("state", h[3])\n
+  if h[3] == "plan":\n
+    manual_validation = 0\n
+    break\n
+  if h[3] == "accept":\n
+    manual_validation = 1\n
+    break\n
 \n
 if manual_validation:\n
   return\n
@@ -117,14 +120,8 @@ context.validateSourceAndDestination(state_change)\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -159,6 +156,7 @@ context.validateSourceAndDestination(state_change)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
@@ -167,12 +165,12 @@ context.validateSourceAndDestination(state_change)\n
                             <string>obj</string>
                             <string>_getattr_</string>
                             <string>wf_h</string>
-                            <string>manual_validation</string>
-                            <string>waiting_state</string>
-                            <string>context</string>
                             <string>_getiter_</string>
+                            <string>h</string>
+                            <string>manual_validation</string>
                             <string>check_operation_line</string>
                             <string>source_bank_account</string>
+                            <string>context</string>
                             <string>error</string>
                             <string>msg</string>
                           </tuple>
