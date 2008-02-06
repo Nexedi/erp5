@@ -33,6 +33,7 @@ from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5 import MovementGroup
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5.Document.OrderBuilder import OrderBuilder
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zLOG import LOG
 
@@ -176,6 +177,11 @@ class DeliveryBuilder(OrderBuilder):
       Update all lines of this transaction based on movements in the 
       simulation related to this transaction.
     """
+    updateFromSimulation = UnrestrictedMethod(self._updateFromSimulation)
+    return updateFromSimulation(delivery_relative_url,
+                                create_new_delivery=create_new_delivery)
+
+  def _updateFromSimulation(self, delivery_relative_url, create_new_delivery=1):
     # We have to get a delivery, else, raise a Error
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
 
