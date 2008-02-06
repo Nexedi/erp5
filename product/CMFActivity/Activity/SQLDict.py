@@ -446,6 +446,8 @@ class SQLDict(RAMDict, SQLBase):
           except:
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
             raise
+        for x in message_uid_priority_list:
+          x[1].is_executed = 0
         failed_message_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(failed_message_uid_list)
