@@ -636,8 +636,8 @@ destination_section_where_expression</string> </value>
         <dtml-else>\n
           SELECT catalog.*,\n
           <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
-          ( SELECT SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
-          ( SELECT -SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
+          ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
           FROM (\n
           </dtml-let>\n
         </dtml-if>\n
@@ -665,6 +665,7 @@ destination_section_where_expression</string> </value>
             , delivery.start_date as operation_date\n
             , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
+            <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
                 <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
@@ -847,6 +848,7 @@ UNION\n
             , delivery.stop_date as operation_date\n
             , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
+            <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
                 <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
@@ -1278,8 +1280,8 @@ UNION\n
         <dtml-else>\n
           SELECT catalog.*,\n
           <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
-          ( SELECT SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
-          ( SELECT -SUM(stock.total_price) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
+          ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
           FROM (\n
           </dtml-let>\n
         </dtml-if>\n
@@ -1307,6 +1309,7 @@ UNION\n
             , delivery.start_date as operation_date\n
             , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
+            <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
                 <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
@@ -1489,6 +1492,7 @@ UNION\n
             , delivery.stop_date as operation_date\n
             , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
+            <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
                 <dtml-if "not order_column in (\'operation_date\', \'specific_reference\')">\n
