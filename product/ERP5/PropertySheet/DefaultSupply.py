@@ -44,7 +44,10 @@ class DefaultSupply:
                                   'quantity_step', 'priced_quantity',
                                   'start_date', 'stop_date',
                                   'start_date_range_max',
-                                  'start_date_range_min'),
+                                  'start_date_range_min',
+                                  'comment', 'source_reference',
+                                  'destination_reference',
+                                  'p_variation_base_category_list'),
             'mode'        : 'w' },
         # Define default purchase supply line
         {   'id'          : 'purchase_supply_line',
@@ -60,7 +63,9 @@ class DefaultSupply:
                                   'quantity_step', 'priced_quantity',
                                   'start_date', 'stop_date',
                                   'start_date_range_max',
-                                  'start_date_range_min'),
+                                  'start_date_range_min',
+                                  'comment', 'source_reference',
+                                  'p_variation_base_category_list'),
             'mode'        : 'w' },
         # Define default sale supply line
         {   'id'          : 'sale_supply_line',
@@ -76,7 +81,9 @@ class DefaultSupply:
                                   'quantity_step', 'priced_quantity',
                                   'start_date', 'stop_date',
                                   'start_date_range_max',
-                                  'start_date_range_min'),
+                                  'start_date_range_min',
+                                  'comment', 'destination_reference',
+                                  'p_variation_base_category_list'),
             'mode'        : 'w' },
        )
 
