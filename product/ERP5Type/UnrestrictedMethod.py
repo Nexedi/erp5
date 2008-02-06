@@ -67,17 +67,17 @@ class UnrestrictedMethod(object):
   def __call__(self, *args, **kw):
     security_manager = getSecurityManager()
     user = security_manager.getUser()
-    uf = user.aq_inner.aq_parent
-    # XXX is it better to get roles from the parent (i.e. portal)?
-    role_list = uf.valid_roles()
     if user.getId() is None:
       # This is a special user, thus the user is not allowed to own objects.
       super_user = UnrestrictedUser(user.getUserName(), None,
-                                    role_list, user.getDomains())
+                                    user.getRoles(), user.getDomains())
     else:
+      uf = user.aq_inner.aq_parent
+      # XXX is it better to get roles from the parent (i.e. portal)?
+      role_list = uf.valid_roles()
       super_user = PrivilegedUser(user.getId(), None,
-                                  role_list, user.getDomains())
-    newSecurityManager(None, super_user.__of__(uf))
+                                  role_list, user.getDomains()).__of__(uf)
+    newSecurityManager(None, super_user)
     try:
       return self._m(*args, **kw)
     finally:
