@@ -252,8 +252,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     result = 1
     for key in property_dict:
       getter_name = 'get%s' % convertToUpperCase(key)
-      if hasattr(instance, getter_name):
-        value = getattr(instance, getter_name)()
+      getter = getattr(instance, getter_name, None)
+      if getter is not None:
+        value = getter()
         if value != property_dict[key]:
           result = 0
           break
