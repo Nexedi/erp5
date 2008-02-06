@@ -1670,7 +1670,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ob1.reindexObject()
     get_transaction().commit()
     self.tic()
-    from AccessControl import getSecurityManager
     user = getSecurityManager().getUser()
     self.assertFalse(user.has_permission('View', ob1))
     self.assertTrue(user.has_role('Assignee', ob1))
