@@ -204,7 +204,7 @@ if resource.getAccountNumberEnabled():\n
   destination_payment_value = line.getDestinationPaymentValue()\n
   # Not required any more to serialize the bank account\n
   #destination_payment_value.serialize()\n
-  context.log(\'context.getRelativeUrl() before getUid of destination payment\', context.getRelativeUrl())\n
+#  context.log(\'context.getRelativeUrl() before getUid of destination payment\', context.getRelativeUrl())\n
   if destination_payment_value is None:\n
     message = Message(domain=\'ui\', message=\'There is not destination payment on line with id: $id\', mapping={\'id\': context.getId()})\n
     raise ValueError, (message,)\n
