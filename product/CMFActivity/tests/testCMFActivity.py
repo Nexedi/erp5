@@ -2514,6 +2514,54 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryActivityRaiseInCommitDoesNotStallActivityConection('SQLQueue')
 
+  def TryActivityRaiseInCommitDoesNotLooseMessages(self, activity):
+    """
+    """
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    from Shared.DC.ZRDB.TM import TM
+    class dummy_tm(TM):
+      def tpc_vote(self, *ignored):
+        raise Exception, 'vote always raises'
+
+      def _finish(self):
+        pass
+
+      def _abort(self):
+        pass
+    dummy_tm_instance = dummy_tm()
+    def registerFailingTransactionManager(self, *args, **kw):
+      dummy_tm_instance._register()
+    try:
+      Organisation.registerFailingTransactionManager = registerFailingTransactionManager
+      obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      get_transaction().commit()
+      self.tic()
+      now = DateTime()
+      obj.activate(activity=activity).registerFailingTransactionManager()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      get_transaction().commit()
+      self.assertEquals(activity_tool.countMessage(method_id='registerFailingTransactionManager'), 1)
+    finally:
+      delattr(Organisation, 'registerFailingTransactionManager')
+
+  def test_98_ActivityRaiseInCommitDoesNotLooseMessagesSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that raising in commit does not loose messages (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivityRaiseInCommitDoesNotLooseMessages('SQLDict')
+
+  def test_99_ActivityRaiseInCommitDoesNotLooseMessagesSQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that raising in commit does not loose messages (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivityRaiseInCommitDoesNotLooseMessages('SQLQueue')
 
 
 def test_suite():
