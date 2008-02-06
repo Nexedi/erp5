@@ -1318,6 +1318,8 @@ class ERP5Generator(PortalGenerator):
                            'manage_members'))
     # actions tool
     removeActionsFromTool(p.portal_actions, ('folderContents',))
+    # properties tool
+    removeActionsFromTool(p.portal_properties, ('configPortal',))
     # remove unused action providers
     for i in ('portal_registration', 'portal_discussion', 'portal_syndication'):
       p.portal_actions.deleteActionProvider(i)
