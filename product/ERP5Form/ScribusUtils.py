@@ -606,7 +606,7 @@ class ManageFiles:
       # check that the command has been done succeful
       if result[0] != 0:
         LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'convert command'\
-            'failed with the following error message : \n%' % result[1])
+            'failed with the following error message : \n%s' % result[1])
         temp_image.close()
         raise
     finally:
