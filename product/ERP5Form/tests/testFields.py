@@ -326,6 +326,55 @@ class TestProxyField(unittest.TestCase):
     # Next, call field which the id is same to the template field's.
     self.assertEqual('123', proxy_field1.get_value('default'))
 
+  def test_dicts_cleared_on_edit(self):
+    """
+    Test that values and tales dicts are cleared when property is switched to
+    not surcharged.
+    """
+    # create a field
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'OrigTitle', 'StringField')
+    field = self.addField(self.container.Base_view,
+                                   'my_dict_test', '', 'ProxyField')
+    field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                         field_id='my_title',))
+    def surcharge_edit():
+      #surcharge from edit
+      field._surcharged_edit(dict(title='TestTitle'), ['title'])
+      self.assertTrue('title' in field.delegated_list)
+      self.assertEquals(field.values['title'], 'TestTitle')
+      self.assertTrue('title' not in field.tales)
+
+    def delegate_edit():
+      # delegate the field from edit view
+      field._surcharged_edit(dict(title='TestTitle'), [])
+      self.assertTrue('title' not in field.delegated_list)
+      self.assertTrue('title' not in field.values)
+      self.assertTrue('title' not in field.tales)
+
+    def surcharge_tales():
+      #surcharge from tales
+      field._surcharged_tales(dict(title='string:TestTitle'), ['title'])
+      self.assertTrue('title' in field.delegated_list)
+      self.assertTrue(field.values['title'], 'OrigTitle')
+      self.assertEquals(field.tales['title'], 'string:TestTitle')
+
+    def delegate_tales():
+      # delegate the field from tales view
+      field._surcharged_tales(dict(title='string:TestTitle'), [])
+      self.assertTrue('title' not in field.delegated_list)
+      self.assertTrue('title' not in field.values)
+      self.assertTrue('title' not in field.tales)
+    
+    surcharge_edit()
+    delegate_edit()
+    surcharge_edit()
+    delegate_tales()
+    surcharge_tales()
+    delegate_edit()
+    surcharge_tales()
+    delegate_tales()
+
 
 class TestFieldValueCache(unittest.TestCase):
   """Tests field value caching system
