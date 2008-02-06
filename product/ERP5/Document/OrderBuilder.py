@@ -395,7 +395,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       line_variation_category_list = dict([(variation_category, 1) \
                                           for variation_category in \
                                           line_variation_category_list]).keys()
-      delivery_line.setVariationCategoryList(line_variation_category_list)
+      line_variation_category_list.sort()
+      delivery_line.edit(variation_category_list=line_variation_category_list)
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       group_list = movement_group.getGroupList()
