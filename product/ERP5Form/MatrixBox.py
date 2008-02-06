@@ -338,11 +338,8 @@ class MatrixBoxWidget(Widget.Widget):
                         list_result_lines.append(attribute_value)
 
                   else:
-                    if my_field.get_value('hidden'):
-                      attribute_value = my_field.get_value('default',
-                            cell_index=kw, cell_position=(i,j,k))
-                    else :
-                      attribute_value = my_field.get_orig_value('default')
+                    attribute_value = my_field.get_value('default', cell=None,
+                        cell_index=kw, cell_position=(i,j,k))
                     if render_format == 'html':
                       REQUEST['cell'] = None
                       cell_body += str(my_field.render(value=attribute_value,
