@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_adoptPrevision</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>PackingList_adoptPrevision</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
