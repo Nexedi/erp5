@@ -76,8 +76,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                     self.getCategoryTool().region,
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
-    self.getPortal().portal_activities.manageClearActivities()
     get_transaction().commit()
+    self.tic()
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -1621,6 +1621,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ob1 = folder.newContent(title='Object Title')
     ob1.manage_permission('View', ['Member'], 1)
     ob2 = folder.newContent(title='Object Title')
+    ob2_id = ob2.getId()
     ob2.manage_addLocalRoles('bob', ['Assignee'])
     get_transaction().commit()
     self.tic()
@@ -1665,12 +1666,17 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     #Test if bob can't see object even if Assignee role (without View permission) is defined on object
     ob1.manage_addLocalRoles('bob', ['Assignee'])
+    ob1.manage_permission('View', ['Assignor'], 0)
+    ob1.reindexObject()
     get_transaction().commit()
     self.tic()
-    ob1.immediateReindexObject()
-    self.assertEquals(1,
-                len(ctool.searchResults(title='Object Title',
-                                        local_roles='Assignee')))
+    from AccessControl import getSecurityManager
+    user = getSecurityManager().getUser()
+    self.assertFalse(user.has_permission('View', ob1))
+    self.assertTrue(user.has_role('Assignee', ob1))
+    result_list = [r.getId() for r in ctool(title='Object Title', local_roles='Assignee')]
+    self.assertEquals(1, len(result_list))
+    self.assertEquals([ob2_id], result_list)
     self.assertEquals(1,
                 ctool.countResults(title='Object Title',
                                    local_roles='Assignee')[0][0])
