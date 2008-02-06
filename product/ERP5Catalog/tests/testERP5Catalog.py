@@ -1620,6 +1620,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder = self.getOrganisationModule()
     ob1 = folder.newContent(title='Object Title')
     ob1.manage_permission('View', ['Member'], 1)
+    ob1.manage_addLocalRoles('bob', ['Assignee'])
     ob2 = folder.newContent(title='Object Title')
     ob2.manage_addLocalRoles('bob', ['Assignee'])
     get_transaction().commit()
