@@ -2563,6 +2563,40 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryActivityRaiseInCommitDoesNotLooseMessages('SQLQueue')
 
+  def TryChangeSkinInActivity(self, activity):
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    def changeSkinToNone(self):
+      self.getPortalObject().changeSkin(None)
+    Organisation.changeSkinToNone = changeSkinToNone
+    try:
+      organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+      get_transaction().commit()
+      self.tic()
+      organisation.activate(activity=activity).changeSkinToNone()
+      get_transaction().commit()
+      self.assertEquals(len(activity_tool.getMessageList()), 1)
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEquals(len(activity_tool.getMessageList()), 0)
+    finally:
+      delattr(Organisation, 'changeSkinToNone')
+
+  def test_100_ThreeMethodsWithFailureAndFlushThemSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTry Change Skin In Activity (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryChangeSkinInActivity('SQLDict')
+
+  def test_101_TryChangeSkinInActivitySQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTry ChangeSkin In Activity (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryChangeSkinInActivity('SQLQueue')
 
 def test_suite():
   suite = unittest.TestSuite()
