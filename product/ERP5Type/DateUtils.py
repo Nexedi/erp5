@@ -70,20 +70,24 @@ def addToDate(date, to_add=None, **kw):
   for key in reverse_key_list:
     method = getattr(date, key)
     return_value[key] = method()
+
   larger_key_dict = { 'second':'minute',
                       'minute':'hour',
                       'hour'  :'day',
                       'month' :'year' }
+
   number_of_in_dict = { 'second' : number_of_seconds_in_minute,
                         'minute' : number_of_minutes_in_hour,
                         'hour'   : number_of_hours_in_day,
                         'day'    : getNumberOfDayInMonth(date),
                         'month'  : number_of_months_in_year }
+
   lesser_key_dict = {'minute':'second',
                      'hour'  :'minute',
                      'day'   :'hour',
                      'month' :'day',
                      'year'  :'month'}
+
   number_less_of_in_dict = {'minute' : number_of_seconds_in_minute,
                             'hour'   : number_of_minutes_in_hour,
                             'day'    : number_of_hours_in_day,
@@ -110,6 +114,7 @@ def addToDate(date, to_add=None, **kw):
     if key not in ('day', 'year'):
       treatNegativeValues(return_value, key)
       treatPositiveValues(return_value, key)
+
   for key in reverse_key_list[:-1]:
     if 1 > return_value[key] % 1 > 0:
       return_value[lesser_key_dict[key]] += return_value[key] % 1 * number_less_of_in_dict[key]
@@ -117,11 +122,6 @@ def addToDate(date, to_add=None, **kw):
       for local_key in return_value.keys():
         if local_key not in ('day', 'year'):
           treatPositiveValues(return_value, local_key)
-      if key in ('day', 'year') and to_add.get(key, None) is not None:
-        del to_add[key]
-
-  if to_add.get('year', None) is not None:
-    return_value['year'] = return_value['year'] + to_add['year']
 
   day_to_add = return_value['day'] - 1
   if to_add.get('day', None) is not None:
