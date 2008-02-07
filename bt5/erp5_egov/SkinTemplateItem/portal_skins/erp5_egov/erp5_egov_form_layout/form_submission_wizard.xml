@@ -222,11 +222,17 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<ul>\n
-<li><b>Fill Form</b></li>\n
-<li><a>Upload Attachments</a></li>\n
-<li><a>Submit</a></li>\n
-</ul>
+<div id="footer">\n
+Copyright&copy; Tous  Droits r&eacute;serv&eacute;s &agrave; la DGID<br/>\n
+<span class="onleft">\n
+<a href="credit.php">Cr&eacute;dits et mentions l&eacute;gales</a> -\n
+<a href="plan.php">Plan du site</a> -\n
+<a href="contact.php">Contact</a>\n
+</span>\n
+<span class="onright">\n
+<strong><a href="#top">Haut </a><br/></strong>\n
+</span><hr/>\n
+</div>
 
 ]]></string> </value>
                 </item>

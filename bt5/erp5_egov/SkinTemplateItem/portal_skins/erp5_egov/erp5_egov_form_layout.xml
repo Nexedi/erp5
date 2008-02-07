@@ -70,6 +70,7 @@
                 <string>right column (Demo)</string>
                 <string>right column (Toolbox)</string>
                 <string>footer</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -86,62 +87,62 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left column (Contents)</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>subsection_list</string>
-                        <string>section_content_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column (Debug)</string> </key>
-                    <value>
-                      <list>
-                        <string>applicable_layout</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column (Navigation)</string> </key>
-                    <value>
-                      <list>
+                        <string>admin_toolbox</string>
+                        <string>website_logo</string>
                         <string>language_selector</string>
                         <string>breadcrumb</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column (Search)</string> </key>
-                    <value>
-                      <list>
+                        <string>subsection_list</string>
+                        <string>section_content_list</string>
                         <string>your_search_text</string>
                         <string>search_action</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column transparent (Logo)</string> </key>
-                    <value>
-                      <list>
-                        <string>website_logo</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right column (Demo)</string> </key>
-                    <value>
-                      <list>
+                        <string>applicable_layout</string>
                         <string>about_box</string>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>left column (Contents)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left column (Debug)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left column (Navigation)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left column (Search)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left column transparent (Logo)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right column (Demo)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>right column (Toolbox)</string> </key>
                     <value>
-                      <list>
-                        <string>admin_toolbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -157,7 +158,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>erp5_web_default_layout</string> </value>
+            <value> <string>erp5_egov_form_layout</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

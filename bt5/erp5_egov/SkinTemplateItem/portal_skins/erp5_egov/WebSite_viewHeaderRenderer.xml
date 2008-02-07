@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div>\n
+\n
+  <div style="background-image: url(img/erp5-website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
+    \n
+    <ul class="onleft">\n
+    <li>Document : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
+    <li>Status : <span class="value"><tal:block tal:replace="here/getTranslatedValidationStateTitle"></tal:block></span></li>\n
+    <li>Type : <span class="value"><tal:block tal:replace="here/getPortalType"></tal:block></span></li>\n
+    </ul>\n
+    <span class="onright">\n
+      <a class="home" href="./home">Home</a>\n
+      <a class="help" href="./help">Help</a>\n
+    </span>\n
+    <hr/>\n
+  \n
+  </div>\n
+\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewHeaderRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

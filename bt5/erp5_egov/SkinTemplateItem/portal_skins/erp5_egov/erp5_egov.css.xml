@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/*========================================================================================\n
+  Default ERP5 Web CSS.\n
+\n
+  Guidelines (how-to create a good css):\n
+    * All measurements should be expressed with scalable units like em, ex, %.\n
+    * pt, px must be avoid expect for box borders (not sure) and tricks related to borders (like position popup of Edit Tabs)\n
+    * Test your design and layout against font size increasing/decreasing.\n
+    * Test your html code semantics value by disabling all your css.\n
+    * Don\'t put styling directives in xhtml code.\n
+\n
+  Tested Browser:\n
+    * Firefox 1.5.0.6\n
+    * Konqueror 3.4.2\n
+    * Opera 9.01\n
+    * Internet Explorer 6 (Layout: OK; Style: not OK)\n
+\n
+  TODO: * Layout is ok in ie6, now styling should be adapted to support ie6.\n
+        * The "WebWidget" class should be used somewhere to identify such objects easily\n
+          and enhance semantics.\n
+========================================================================================*/\n
+\n
+\n
+\n
+/*========================================================================================\n
+**  GENERAL STUFF\n
+**========================================================================================*/\n
+\n
+/* Good CSS directive to include in every website to reset all browser default style.\n
+------------------------------------------------------------------ */\n
+\n
+* {\n
+  padding: 0;\n
+  margin: 0;\n
+}\n
+\n
+.clear {clear: both}\n
+p.clear {display: none}\n
+\n
+img {border: 0}\n
+\n
+a:link, a:visited {text-decoration: none}\n
+a:active, a:hover {text-decoration: underline}\n
+a:link {color: #00248f}\n
+a:visited {color: #909}\n
+a:hover {color: #39f}\n
+\n
+a img, h3 img, button img, li img {vertical-align: middle}\n
+\n
+ul {list-style-position: inside}\n
+li {margin-left: 1em}\n
+\n
+.doNotDisplay {display: none}\n
+\n
+.hiddenLabel label {display: none}\n
+\n
+table {\n
+  border-collapse: collapse;\n
+  border-spacing: 0;\n
+}\n
+\n
+p {\n
+  margin: .6em 0;\n
+  text-align: justify;\n
+}\n
+\n
+/* Workflow states\n
+------------------------------------------------------------------ */\n
+\n
+span.draft       {color: #be854d}\n
+span.published,\n
+span.validated   {color: #078307}\n
+span.invalidated {color: #ab0303}\n
+span.cancelled   {color: #ccc}\n
+\n
+\n
+\n
+/* Emulate <center> html tag.\n
+   This class is called \'centered\' to not interfer with the \'center\' group\n
+   used in erp5_xhtml_style rigid positionning mechanism.\n
+------------------------------------------------------------------ */\n
+\n
+.centered,\n
+.centeredInner {\n
+  width: 100%;\n
+  text-align: center;\n
+}\n
+\n
+*.centered *,\n
+*.centeredInner * {\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
+\n
+\n
+\n
+/* Default content styling (apply to everything, site wide);\n
+   Typography & colors (fonts, color, background).\n
+------------------------------------------------------------------ */\n
+\n
+body {background: #e6e6e6 url(erp5-website-background.png) top left no-repeat}\n
+\n
+body, input, textarea, select, table {\n
+  color: #333;\n
+  font-family: Sans, Verdana, Tahoma, Georgia, Geneva, Arial, sans-serif;\n
+  font-size: 8pt; /* XXX font-size should not be expressed in pt unit.\n
+                  ** This unit is quite convinient actually because it scale well\n
+                  ** in any browser on font resizing.\n
+                  */\n
+  line-height: 1.5em; /* Let the content breathe ! This reduce the density of\n
+                      ** paragraph and make the text easier to read.\n
+                      */\n
+}\n
+\n
+.code, code {font-family: monospace}\n
+\n
+#transition_message, .warning, .error, .important {\n
+  color: #f00;\n
+  font-weight: bold;\n
+}\n
+\n
+h1 {margin: 1.3em 0}\n
+\n
+blockquote {\n
+  margin: .5em;\n
+  padding: .5em;\n
+  border-left: 2px #ddd solid;\n
+  background: #f9f9f9;\n
+}\n
+\n
+input#hidden_button {\n
+  width: 0;\n
+  height: 0;\n
+  display: inline;\n
+  border-width: 0;\n
+  float: left;\n
+}\n
+\n
+/* Login page style\n
+------------------------------------------------------------------ */\n
+\n
+div.content.login {padding: 0 1em}\n
+div.content.login fieldset {border: none}\n
+\n
+/* Breadcrumb default style\n
+------------------------------------------------------------------ */\n
+\n
+div.breadcrumb li a.selected {\n
+  border-bottom: 1px dashed #00248f; /* same color as "a:link" rule */\n
+  text-decoration: none;\n
+}\n
+\n
+div.breadcrumb li a.selected:hover {border-bottom-color: #39f} /* same as "a:hover" rule */\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_egov.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
