@@ -133,18 +133,7 @@ class ActiveObject(ExtensionClass.Base):
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
-    try:
-      return activity_tool.activateObject(self, activity, active_process, **kw)
-    except ConflictError:
-      raise
-    except:
-      LOG("CMFActivity", WARNING,
-          'could not create activity for %s' % self.getRelativeUrl(),
-          error=sys.exc_info())
-      # If the portal_activities were not created
-      # return a passive object
-      if passive_commit: get_transaction().commit()
-      return self
+    return activity_tool.activateObject(self, activity, active_process, **kw)
 
   security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):
