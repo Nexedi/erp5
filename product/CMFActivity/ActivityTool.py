@@ -789,6 +789,9 @@ class ActivityTool (Folder, UniqueObject):
         my_self = self
         LOG('CMFActivity.ActivityTool.invoke', INFO, 'Strange: invoke is called outside of acquisition context.')
       message(my_self)
+      if my_self is not self: # We rewrapped self
+        for held in my_self.REQUEST._held:
+          self.REQUEST._hold(held)
 
     def invokeGroup(self, method_id, message_list):
       # Invoke a group method.
