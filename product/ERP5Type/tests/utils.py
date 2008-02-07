@@ -55,8 +55,11 @@ class DummyMailHost(MailHost):
     portal._setObject('MailHost', DummyMailHost('MailHost'))
   """
   _last_message = ()
+  _previous_message = ()
+  _message_list = []
   def _send( self, mfrom, mto, messageText ):
     """Record message in _last_message."""
+    self._previous_message = self._last_message
     self._last_message = (mfrom, mto, messageText)
 
 class DummyTranslationService:
