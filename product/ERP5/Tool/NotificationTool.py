@@ -142,7 +142,8 @@ class NotificationTool(BaseTool):
   manage_overview = DTMLFile( 'explainNotificationTool', _dtmldir )
 
   security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
-  def sendMessage(self, sender=None, recipient=None, subject=None, message=None, attachment_list=None):
+  def sendMessage(self, sender=None, recipient=None, subject=None, 
+                  message=None, attachment_list=None):
     """
       This method provides a common API to send messages to users
       from object actions of worflow scripts.
@@ -182,7 +183,7 @@ class NotificationTool(BaseTool):
 
     # To is a list - let us find all members
     if isinstance(recipient, basestring):
-      recipient = catalog_tool(portal_type='Person', reference=recipient)
+      recipient = (recipient, )
 
     # If no recipient is defined, just send an email to the
     # default mail address defined at the CMF site root.
@@ -197,6 +198,8 @@ class NotificationTool(BaseTool):
 
     # Default implementation is to send an active message to everyone
     for person in recipient:
+      if isinstance(person, basestring):
+        person = catalog_tool(portal_type='Person', reference=person)[0]
       email_value = person.getDefaultEmailValue()
       if email_value is not None:
         # Activity can not handle attachment
@@ -207,6 +210,9 @@ class NotificationTool(BaseTool):
                           subject=subject,
                           msg=message,
                           attachment_list=attachment_list)
+      else:
+        raise AttributeError, \
+            "Can not contact the person %s" % person.getReference()
 
     # Future implemetation could consist in implementing
     # policies such as grouped notification (per hour, per day,
