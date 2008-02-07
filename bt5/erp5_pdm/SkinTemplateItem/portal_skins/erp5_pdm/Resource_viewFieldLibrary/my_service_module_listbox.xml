@@ -99,16 +99,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Base_viewSearchResultList</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
