@@ -161,9 +161,9 @@ portal_container_type_list = ('Container',)
 
 portal_container_line_type_list = ('Container Line',)
 
-portal_item_type_list = ('Piece Tissu','Nexedi VPN')
+portal_item_type_list = ()
 
-portal_discount_type_list = ('Remise',)
+portal_discount_type_list = ()
 
 portal_alarm_type_list = ('Supply Alarm Line','Alarm')
 
