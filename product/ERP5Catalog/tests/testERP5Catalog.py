@@ -1686,6 +1686,28 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(1, folder.countFolder(title='Object Title',
                                              local_roles='Assignee')[0][0])
 
+    #Test if one of user Role with View permission return Object
+    ob1.manage_addLocalRoles('bob', ['Assignee', 'Auditor'])
+    ob1.manage_permission('View', ['Assignor', 'Auditor'], 0)
+    ob1.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    user = getSecurityManager().getUser()
+    self.assertTrue(user.has_permission('View', ob1))
+    self.assertTrue(user.has_role('Assignee', ob1))
+    result_list = [r.getId() for r in ctool(title='Object Title', local_roles='Assignee')]
+    self.assertEquals(2, len(result_list))
+    self.assertEquals(2,
+                ctool.countResults(title='Object Title',
+                                   local_roles='Assignee')[0][0])
+
+    # this also work for searchFolder and countFolder
+    self.assertEquals(2, len(folder.searchFolder(title='Object Title',
+                                             local_roles='Assignee')))
+    self.assertEquals(2, folder.countFolder(title='Object Title',
+                                             local_roles='Assignee')[0][0])
+
+
   def test_51_SearchWithKeyWords(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
