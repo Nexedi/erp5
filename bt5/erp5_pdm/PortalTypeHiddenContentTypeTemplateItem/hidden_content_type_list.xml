@@ -1,10 +1,15 @@
 <hidden_content_type_list>
  <portal_type id="Component">
+  <item>Sale Supply Line</item>
   <item>Purchase Supply Line</item>
-  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Product">
-  <item>Supply Line</item>
+  <item>Sale Supply Line</item>
+  <item>Purchase Supply Line</item>
+ </portal_type>
+ <portal_type id="Service">
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Transformation Transformed Resource">
   <item>Mapped Value</item>

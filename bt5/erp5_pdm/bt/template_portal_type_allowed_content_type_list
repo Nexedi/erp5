@@ -1,9 +1,12 @@
 Component Module | Component
 Component | Purchase Supply Line
-Component | Supply Line
+Component | Sale Supply Line
 Product Module | Product
-Product | Supply Line
+Product | Purchase Supply Line
+Product | Sale Supply Line
 Service Module | Service
+Service | Purchase Supply Line
+Service | Sale Supply Line
 Transformation Module | Transformation
 Transformation Operation | Mapped Value
 Transformation Transformed Resource | Mapped Value

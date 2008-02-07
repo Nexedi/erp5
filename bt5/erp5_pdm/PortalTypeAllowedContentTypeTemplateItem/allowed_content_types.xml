@@ -1,24 +1,29 @@
 <allowed_content_type_list>
  <portal_type id="Component">
+  <item>Sale Supply Line</item>
   <item>Purchase Supply Line</item>
-  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Component Module">
   <item>Component</item>
  </portal_type>
  <portal_type id="Product">
-  <item>Supply Line</item>
+  <item>Sale Supply Line</item>
+  <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Product Module">
   <item>Product</item>
+ </portal_type>
+ <portal_type id="Service">
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Service Module">
   <item>Service</item>
  </portal_type>
  <portal_type id="Transformation">
   <item>Transformation Operation</item>
-  <item>Transformation Transformed Resource</item>
   <item>Transformation Optional Resource</item>
+  <item>Transformation Transformed Resource</item>
  </portal_type>
  <portal_type id="Transformation Module">
   <item>Transformation</item>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.ERP5Type</string>
-          <string>ERP5TypeInformation</string>
-        </tuple>
-        <none/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,8 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Product object holds the information about\n
-a manufactured product, like a pen, a bicycle...</string> </value>
+            <value> <string>A Service is a immaterial Resource that can be traded (eg. shipping, support ...)</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

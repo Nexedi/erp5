@@ -104,12 +104,6 @@ be a problem).</string> </value>
             </value>
         </item>
         <item>
-            <key> <string>group_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
               <tuple/>

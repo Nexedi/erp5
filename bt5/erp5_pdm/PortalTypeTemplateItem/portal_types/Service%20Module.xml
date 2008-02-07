@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Contains Service</string> </value>
+            <value> <string>Holds Services</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
