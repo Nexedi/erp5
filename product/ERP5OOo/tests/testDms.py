@@ -346,7 +346,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     printAndLog('\nTest Explicit Relations')
-    raise NotImplementedError
     # create test documents:
     # (1) TEST, 002, en
     # (2) TEST, 003, en
@@ -354,8 +353,25 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     # (4) TWO, 001, en
     # (5) THREE, 001, en
     # set 3 similar to 1, 4 to 3, 5 to 4
-    # getSimilarCloudValueList on 4 should return 2, 3 and 5
+    # getSimilarCloudValueList on 4 should return 1, 3 and 5
     # getSimilarCloudValueList(depth=1) on 4 should return 3 and 5
+    document1 = self.portal.document_module.newContent()
+    document2 = self.portal.document_module.newContent()
+    document3 = self.portal.document_module.newContent()
+    document4 = self.portal.document_module.newContent()
+    document5 = self.portal.document_module.newContent()
+
+    document3.setSimilarValue(document1)
+    document4.setSimilarValue(document3)
+    document5.setSimilarValue(document4)
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertSameSet([document1, document3, document5],
+                       document4.getSimilarCloudValueList())
+    self.assertSameSet([document3, document5],
+                       document4.getSimilarCloudValueList(depth=1))
 
   def test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
