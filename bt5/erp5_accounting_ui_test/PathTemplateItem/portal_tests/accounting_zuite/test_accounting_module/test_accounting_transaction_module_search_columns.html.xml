@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -120,6 +117,27 @@ Accounting Transaction Module Search Columns\n
 //tr[@id=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>2200.00</td>\n
+</tr>\n
+<!-- check source and destination section -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Client 1 Sale Invoice</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td>Client 1</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -349,6 +367,27 @@ as title is a search key -->\n
 </td>\n
   <td>7700.00</td>\n
 </tr>\n
+<!-- check source and destination section -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=First Purchase Invoice</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>First Purchase Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_source_section_title</td>\n
+  <td>Supplier</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
 <!-- }}} --> \n
 \n
 <!-- filter on Transaction Type {{{ -->\n
@@ -412,6 +451,66 @@ as title is a search key -->\n
 <!-- }}} --> \n
 \n
 <!-- filter on Date {{{ -->\n
+<!-- try equal -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>2005/01/02</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[2]/a\n
+</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<!-- check amounts for lines -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+</td>\n
+  <td>2200.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+</td>\n
+  <td>2200.0</td>\n
+</tr>\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>2200.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[10]\n
+</td>\n
+  <td>2200.00</td>\n
+</tr>\n
+\n
+<!-- try less than -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
