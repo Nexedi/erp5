@@ -2582,7 +2582,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'changeSkinToNone')
 
-  def test_100_ThreeMethodsWithFailureAndFlushThemSQLDict(self, quiet=0, run=run_all_test):
+  def test_100_TryChangeSkinInActivitySQLDict(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = '\nTry Change Skin In Activity (SQLDict)'
