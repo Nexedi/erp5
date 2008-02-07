@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -58,13 +55,6 @@ Test Accounting module listbox display values + sort on dates\n
 </td></tr>\n
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
 <tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
-\n
-<!--\n
-\n
-FIXME:\n
-  default sort uses delivery.start_date, but for Purchase, we must use delivery.stop_date\n
-\n
--->\n
 \n
 <!-- Setup {{{ -->\n
 <tr>\n
