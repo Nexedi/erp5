@@ -1,3 +1,6 @@
+2008-2-7 yusei
+* Fixed filtering bug on accounting module list view when jump in from entity.
+
 2008-2-5 yusei
 * Fixed third party column issue and optimize the query.
 

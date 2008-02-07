@@ -738,7 +738,7 @@ destination_section_where_expression</string> </value>
               <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
           -- SOURCE SECTION!!!!!\n
           <dtml-if entity>\n
-            AND delivery.source_section_uid =<dtml-var "restrictedTraverse(entity).getUid()">\n
+            AND delivery.destination_section_uid =<dtml-var "restrictedTraverse(entity).getUid()">\n
           </dtml-if>\n
           <dtml-if section_category>\n
             AND category.uid = delivery.source_section_uid\n
@@ -921,7 +921,7 @@ UNION\n
               <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
           -- DESTINATION SECTION!!!!!\n
           <dtml-if entity>\n
-            AND delivery.destination_section_uid = <dtml-var "restrictedTraverse(entity).getUid()">\n
+            AND delivery.source_section_uid = <dtml-var "restrictedTraverse(entity).getUid()">\n
           </dtml-if>\n
           <dtml-if section_category>\n
             AND category.uid = delivery.destination_section_uid\n
@@ -1382,7 +1382,7 @@ UNION\n
               <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
           -- SOURCE SECTION!!!!!\n
           <dtml-if entity>\n
-            AND delivery.source_section_uid =<dtml-var "restrictedTraverse(entity).getUid()">\n
+            AND delivery.destination_section_uid =<dtml-var "restrictedTraverse(entity).getUid()">\n
           </dtml-if>\n
           <dtml-if section_category>\n
             AND category.uid = delivery.source_section_uid\n
@@ -1565,7 +1565,7 @@ UNION\n
               <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
           -- DESTINATION SECTION!!!!!\n
           <dtml-if entity>\n
-            AND delivery.destination_section_uid = <dtml-var "restrictedTraverse(entity).getUid()">\n
+            AND delivery.source_section_uid = <dtml-var "restrictedTraverse(entity).getUid()">\n
           </dtml-if>\n
           <dtml-if section_category>\n
             AND category.uid = delivery.destination_section_uid\n
