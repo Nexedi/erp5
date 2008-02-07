@@ -47,6 +47,19 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+make per portal type field libraries, inheriting from each other.\n
+\n
+example:\n
+OrderLine<-DeliveryLine\n
+OrderLine<-DeliveryCell\n
+PurchaseTradeCondition<-PurchaseOrder<-PurchasePackingList
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -150,7 +163,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trade Sale Field Library</string> </value>
+            <value> <string>OBSOLETE! Do not use (see description)</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

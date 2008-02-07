@@ -136,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>If set, payment will occur at the end of the month of the payment term.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -160,7 +160,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Payment At The End Of Month</string> </value>
+                    <value> <string>End of Month</string> </value>
                 </item>
               </dictionary>
             </value>

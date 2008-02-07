@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.ERP5Type</string>
-          <string>ERP5TypeInformation</string>
-        </tuple>
-        <none/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -74,7 +71,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A supply line.</string> </value>
+            <value> <string>A supply line</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -109,6 +106,10 @@
         <item>
             <key> <string>init_script</string> </key>
             <value> <string>PurchaseSupplyLine_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

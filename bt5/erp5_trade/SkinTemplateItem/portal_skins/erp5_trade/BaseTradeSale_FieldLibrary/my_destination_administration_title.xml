@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The person or organisation which the invoice should be sent to and who is in charhe handling administrative paperwork for the client.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -489,7 +489,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination Administration</string> </value>
+                    <value> <string>Invoice Recipient</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

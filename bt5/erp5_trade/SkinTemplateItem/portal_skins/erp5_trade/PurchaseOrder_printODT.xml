@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>T_ = context.Base_translateString\n
+\n
+if target_language:\n
+  container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
+\n
+# check that simulation lines for VAT are correct, and have no pending activities.\n
+activity_error = \'my_activity_error\'\n
+simulation_error = \'my_simulation_error\'\n
+try:\n
+  for line in context.getMovementList():\n
+    if line.hasActivity(): raise activity_error\n
+    s_m_list = line.getOrderRelatedValueList()\n
+    if not s_m_list: raise simulation_error\n
+    for s_m in s_m_list:\n
+      if s_m.hasActivity(): raise activity_error\n
+      a_r_list = [x for x in s_m.objectValues() if x.getSpecialiseValue().getPortalType() == \'Invoicing Rule\']\n
+      if a_r_list:\n
+        a_r = a_r_list[0]\n
+        if a_r.hasActivity(): raise activity_error\n
+        inv_s_m_list = a_r.objectValues()\n
+        if inv_s_m_list:\n
+          inv_s_m = inv_s_m_list[0]\n
+          if inv_s_m.hasActivity(): raise activity_error\n
+          acc_a_r_list = [x for x in inv_s_m.objectValues() if x.getSpecialiseValue().getPortalType() == \'Invoice Transaction Rule\']\n
+          if acc_a_r_list:\n
+            acc_a_r = acc_a_r_list[0]\n
+            if acc_a_r.hasActivity(): raise activity_error\n
+            acc_s_m_list = [x for x in acc_a_r.objectValues() if \'vat\' in x.getDestinationValue().getAccountType()]\n
+            if acc_s_m_list:\n
+              acc_s_m = acc_s_m_list[0]\n
+              if acc_s_m.hasActivity(): raise activity_error\n
+            else: raise simulation_error\n
+          else: raise simulation_error\n
+        else: raise simulation_error\n
+      else: raise simulation_error\n
+except activity_error:\n
+  context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(),\n
+      T_(\'Some activities are pending, please retry in a few moments.\')))\n
+except simulation_error:\n
+  context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(),\n
+      T_(\'Simulation is missing, please retry in a few moments, and make sure you have left the %s state.\')\n
+      % T_(\'Draft\') ))\n
+else:\n
+  return context.PurchaseOrder_viewAsODT()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>target_language=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>target_language</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>T_</string>
+                            <string>_getitem_</string>
+                            <string>container</string>
+                            <string>activity_error</string>
+                            <string>simulation_error</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>s_m_list</string>
+                            <string>s_m</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>a_r_list</string>
+                            <string>a_r</string>
+                            <string>inv_s_m_list</string>
+                            <string>inv_s_m</string>
+                            <string>acc_a_r_list</string>
+                            <string>acc_a_r</string>
+                            <string>acc_s_m_list</string>
+                            <string>acc_s_m</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PurchaseOrder_printODT</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

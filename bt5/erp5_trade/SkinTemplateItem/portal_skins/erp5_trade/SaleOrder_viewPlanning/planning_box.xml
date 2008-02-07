@@ -90,7 +90,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -109,7 +109,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>report_root_list</string> </key>
+                    <key> <string>report_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -120,7 +120,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>sale_order_planning_selection</string> </value>
                 </item>
                 <item>
@@ -128,7 +128,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Sale Order Planning</string> </value>
                 </item>
               </dictionary>

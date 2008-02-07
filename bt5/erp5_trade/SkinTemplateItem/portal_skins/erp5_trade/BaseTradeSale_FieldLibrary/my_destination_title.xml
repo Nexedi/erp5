@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The organisation or person to whom merchandise or service is delivered over or provided to.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -481,7 +481,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination</string> </value>
+                    <value> <string>Recipient or Beneficiary</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

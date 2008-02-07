@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The organisation or person who pays.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -481,7 +481,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Source Payment</string> </value>
+                    <value> <string>Payee</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

@@ -49,6 +49,7 @@ Purchase Supply Line | edit_workflow
 Purchase Supply Line | supply_line_interaction_workflow
 Purchase Supply | edit_workflow
 Purchase Trade Condition | edit_workflow
+Purchase Trade Condition | validation_workflow
 Returned Sale Packing List Line | pricing_interaction_workflow
 Returned Sale Packing List | edit_workflow
 Returned Sale Packing List | packing_list_workflow
@@ -80,5 +81,6 @@ Sale Supply Line | edit_workflow
 Sale Supply Line | supply_line_interaction_workflow
 Sale Supply | edit_workflow
 Sale Trade Condition | edit_workflow
+Sale Trade Condition | validation_workflow
 Supply Line | edit_workflow
 Supply Line | supply_line_interaction_workflow

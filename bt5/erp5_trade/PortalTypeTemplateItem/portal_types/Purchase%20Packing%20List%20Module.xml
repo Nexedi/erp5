@@ -59,6 +59,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -80,7 +84,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Order...</string> </value>
+            <value> <string>Holds Purchase Packing Lists</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -107,6 +111,14 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>Purchase Packing List Module</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

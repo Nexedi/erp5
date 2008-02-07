@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -334,16 +331,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Sale Packing List Cell</string>
+                          <string>Packing List Movement</string>
                         </tuple>
                         <tuple>
                           <string>getResourceTitle</string>
@@ -360,6 +357,10 @@
                         <tuple>
                           <string>getTotalPrice</string>
                           <string>Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>Movement_getDivergenceListMessage</string>
+                          <string>Divergence</string>
                         </tuple>
                         <tuple>
                           <string>choice</string>
@@ -458,6 +459,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -496,8 +501,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>getResourceTitle</string>
+                          <string>getResourceTitle</string>
                         </tuple>
                       </list>
                     </value>
@@ -537,11 +542,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

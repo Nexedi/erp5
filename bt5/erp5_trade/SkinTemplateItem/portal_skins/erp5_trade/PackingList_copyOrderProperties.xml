@@ -65,10 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = context\n
+            <value> <string encoding="cdata"><![CDATA[
+
+packing_list = context\n
 related_order = packing_list.getCausalityValue()\n
 \n
-if packing_list.getSimulationState()==\'draft\':\n
+if 1 or packing_list.getSimulationState() == \'draft\':\n
   packing_list.edit(\n
     comment = related_order.getComment(),\n
     delivery_mode = related_order.getDeliveryMode(),\n
@@ -76,7 +78,26 @@ if packing_list.getSimulationState()==\'draft\':\n
     source_administration_value = related_order.getSourceAdministrationValue(),\n
     title = related_order.getTitle()\n
   )\n
-</string> </value>
+\n
+  # copy PaymentCondition if none is defined on Packing List\n
+  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+  if len(packing_list.contentIds(filter = filter_dict)) == 0 :\n
+    to_copy = related_order.contentIds(filter = filter_dict)\n
+    if len(to_copy)>0 :\n
+     copy_data = related_order.manage_copyObjects(ids=to_copy)\n
+     new_id_list = packing_list.manage_pasteObjects(copy_data)\n
+\n
+  # copy Discount if none is defined on Packing List\n
+  filter_dict = {\'portal_type\': \'Discount\'}\n
+  if len(packing_list.contentIds(filter = filter_dict)) == 0 :\n
+    to_copy=[]\n
+    to_copy=related_order.contentIds(filter = filter_dict)\n
+    if len(to_copy)>0 :\n
+     copy_data = related_order.manage_copyObjects(ids=to_copy)\n
+     new_id_list = packing_list.manage_pasteObjects(copy_data)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -122,6 +143,11 @@ if packing_list.getSimulationState()==\'draft\':\n
                             <string>packing_list</string>
                             <string>_getattr_</string>
                             <string>related_order</string>
+                            <string>filter_dict</string>
+                            <string>len</string>
+                            <string>to_copy</string>
+                            <string>copy_data</string>
+                            <string>new_id_list</string>
                           </tuple>
                         </value>
                     </item>

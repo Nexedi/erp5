@@ -14,12 +14,15 @@ Order Rule | Category Divergence Tester
 Order Rule | Property Divergence Tester
 Order Rule | Quantity Divergence Tester
 Purchase Order Line | Purchase Order Cell
+Purchase Order Line | Purchase Order Line
 Purchase Order Module | Purchase Order
 Purchase Order | Discount
 Purchase Order | Payment Condition
 Purchase Order | Purchase Order Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
+Purchase Packing List | Discount
+Purchase Packing List | Payment Condition
 Purchase Packing List | Purchase Packing List Line
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell

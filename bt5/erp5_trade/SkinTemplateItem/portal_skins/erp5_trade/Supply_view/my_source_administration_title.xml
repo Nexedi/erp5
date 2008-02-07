@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.RelationField</string>
-          <string>RelationStringField</string>
-        </tuple>
-        <none/>
+        <global name="RelationStringField" module="Products.ERP5Form.RelationField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -377,7 +374,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -470,7 +467,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Source Administration</string> </value>
+                    <value> <string>Invoice Sender</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

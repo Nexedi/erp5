@@ -33,7 +33,6 @@ Purchase Order Line | price_view
 Purchase Order Line | quantity_view
 Purchase Order Line | view
 Purchase Order Module | view
-Purchase Order Module | workflow_report
 Purchase Order | apply_trade_condition
 Purchase Order | jump_to_related_purchase_packing_list
 Purchase Order | payment_condition
@@ -47,11 +46,13 @@ Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
 Purchase Packing List Line | view_price
 Purchase Packing List Module | view
-Purchase Packing List Module | workflow_report
 Purchase Packing List | choose_solve_actions
 Purchase Packing List | jump_related_purchase_invoice
 Purchase Packing List | jump_related_purchase_order
+Purchase Packing List | payment_condition
+Purchase Packing List | profile_view
 Purchase Packing List | view
+Purchase Packing List | view_discount
 Purchase Supply Cell | view
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
@@ -63,9 +64,7 @@ Purchase Supply Line | variable_additional_price
 Purchase Supply Line | view
 Purchase Supply Module | view
 Purchase Supply | view
-Purchase Trade Condition Module | cvs_export
 Purchase Trade Condition Module | view
-Purchase Trade Condition Module | workflow_report
 Purchase Trade Condition | view
 Purchase Trade Condition | view_discount
 Purchase Trade Condition | view_payment
@@ -116,9 +115,7 @@ Sale Supply Line | variable_additional_price
 Sale Supply Line | view
 Sale Supply Module | view
 Sale Supply | view
-Sale Trade Condition Module | cvs_export
 Sale Trade Condition Module | view
-Sale Trade Condition Module | workflow_report
 Sale Trade Condition | view
 Sale Trade Condition | view_discount
 Sale Trade Condition | view_payment

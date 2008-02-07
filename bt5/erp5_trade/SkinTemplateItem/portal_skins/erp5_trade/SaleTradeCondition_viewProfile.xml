@@ -97,6 +97,7 @@
                         <string>my_source_decision_title</string>
                         <string>my_source_administration_title</string>
                         <string>my_source_payment_title</string>
+                        <string>my_source_project_title</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +110,7 @@
                         <string>my_destination_decision_title</string>
                         <string>my_destination_administration_title</string>
                         <string>my_destination_payment_title</string>
+                        <string>my_destination_project_title</string>
                       </list>
                     </value>
                 </item>

@@ -76,8 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
-                    <value> <string>The absolute payment date. This has priority if defined.</string> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The absolute date at which payment is expected to be made.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -92,8 +92,8 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Absolute Payment Date</string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Payment Date</string> </value>
                 </item>
               </dictionary>
             </value>

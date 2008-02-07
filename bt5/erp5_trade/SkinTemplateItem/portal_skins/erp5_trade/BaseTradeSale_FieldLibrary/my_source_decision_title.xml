@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The person or organisation in charge of handling the sales process or of taking the sales decision.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -481,7 +481,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Source Decision</string> </value>
+                    <value> <string>Seller</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

@@ -280,7 +280,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The Order which caused this Packing List.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -373,7 +373,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Causality</string> </value>
+                    <value> <string>Order</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

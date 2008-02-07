@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -50,6 +47,19 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+make per portal type field libraries, inheriting from each other.\n
+\n
+example:\n
+OrderLine<-DeliveryLine\n
+OrderLine<-DeliveryCell\n
+PurchaseTradeCondition<-PurchaseOrder<-PurchasePackingList
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -73,27 +83,7 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_destination_payment_title</string>
-                        <string>my_destination_section_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_source_administration_title</string>
                         <string>my_source_decision_destination_reference</string>
-                        <string>my_source_decision_title</string>
-                        <string>my_source_payment_title</string>
-                        <string>my_source_section_title</string>
-                        <string>my_source_title</string>
-                        <string>my_description</string>
-                        <string>my_price_currency</string>
-                        <string>my_incoterm</string>
-                        <string>my_delivery_mode</string>
-                        <string>my_group</string>
-                        <string>my_activity</string>
-                        <string>my_effective_date</string>
-                        <string>my_expiration_date</string>
-                        <string>my_comment</string>
-                        <string>my_destination_administration_title</string>
-                        <string>my_destination_decision_title</string>
                         <string>my_order</string>
                         <string>my_received_date</string>
                         <string>my_origin</string>
@@ -120,8 +110,29 @@
                         <string>my_priced_quantity</string>
                         <string>my_surcharge_ratio</string>
                         <string>my_variable_additional_price</string>
-                        <string>my_source_project_title</string>
+                        <string>my_activity</string>
+                        <string>my_comment</string>
+                        <string>my_delivery_mode</string>
+                        <string>my_description</string>
+                        <string>my_destination_administration_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_destination_payment_title</string>
                         <string>my_destination_project_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_effective_date</string>
+                        <string>my_expiration_date</string>
+                        <string>my_group</string>
+                        <string>my_incoterm</string>
+                        <string>my_price_currency</string>
+                        <string>my_source_administration_title</string>
+                        <string>my_source_decision_title</string>
+                        <string>my_source_payment_title</string>
+                        <string>my_source_project_title</string>
+                        <string>my_source_section_title</string>
+                        <string>my_source_title</string>
+                        <string>my_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -154,7 +165,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trade Purchase Field Library</string> </value>
+            <value> <string>OBSOLETE! Do not use (see description)</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

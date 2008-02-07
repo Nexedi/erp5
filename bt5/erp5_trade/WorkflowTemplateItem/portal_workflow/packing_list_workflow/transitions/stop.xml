@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>PurchasePackingList_buildInvoice</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Receive</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

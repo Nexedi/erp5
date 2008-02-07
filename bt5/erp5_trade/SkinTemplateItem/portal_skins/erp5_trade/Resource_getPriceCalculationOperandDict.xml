@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -175,12 +172,13 @@ return default\n
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>price_parameter_dict</string>
                             <string>None</string>
                             <string>unit_base_price</string>
                             <string>_getitem_</string>
                             <string>base_price</string>
+                            <string>_inplacevar_</string>
                             <string>sum</string>
                             <string>variable_value</string>
                             <string>sum_discount_ratio</string>

@@ -40,13 +40,16 @@
   <item>Discount</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
+  <item>Purchase Order Line</item>
   <item>Purchase Order Cell</item>
  </portal_type>
  <portal_type id="Purchase Order Module">
   <item>Purchase Order</item>
  </portal_type>
  <portal_type id="Purchase Packing List">
+  <item>Payment Condition</item>
   <item>Purchase Packing List Line</item>
+  <item>Discount</item>
  </portal_type>
  <portal_type id="Purchase Packing List Line">
   <item>Purchase Packing List Cell</item>
@@ -87,8 +90,8 @@
   <item>Delivery Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
-  <item>Sale Order Line</item>
   <item>Discount</item>
+  <item>Sale Order Line</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Order Line">
