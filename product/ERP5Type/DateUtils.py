@@ -40,7 +40,7 @@ security.declarePublic('addToDate', 'getClosestDate',
     'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
     'getBissextilCompliantYearFraction',
     'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
-    'roundDate', 'convertDateToHour')
+    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
@@ -51,7 +51,7 @@ number_of_seconds_in_minute = 60.
 number_of_days_in_year = 365.
 hour = 1/24.
 same_movement_interval = hour
-  
+
 accountable_days_in_month = 30.
 accountable_months_in_year = 12.
 number_of_hours_in_year  = 8760
@@ -65,30 +65,64 @@ def addToDate(date, to_add=None, **kw):
   if to_add is not None:
     kw.update(to_add)
   to_add = kw
-  for key in ('year', 'month', 'day', 'hour', 'minute', 'second'):
+  key_list = ('second', 'minute', 'hour', 'day', 'month', 'year')
+  reverse_key_list = key_list[::-1]
+  for key in reverse_key_list:
     method = getattr(date, key)
     return_value[key] = method()
-  larger_key_dict = { 'second':'minute', 'minute':'hour', 
-                      'hour':'day', 'month':'year' }
+  larger_key_dict = { 'second':'minute',
+                      'minute':'hour',
+                      'hour'  :'day',
+                      'month' :'year' }
   number_of_in_dict = { 'second' : number_of_seconds_in_minute,
                         'minute' : number_of_minutes_in_hour,
                         'hour'   : number_of_hours_in_day,
+                        'day'    : getNumberOfDayInMonth(date),
                         'month'  : number_of_months_in_year }
-              
-  for key in ('second', 'minute', 'hour', 'month'):
+  lesser_key_dict = {'minute':'second',
+                     'hour'  :'minute',
+                     'day'   :'hour',
+                     'month' :'day',
+                     'year'  :'month'}
+  number_less_of_in_dict = {'minute' : number_of_seconds_in_minute,
+                            'hour'   : number_of_minutes_in_hour,
+                            'day'    : number_of_hours_in_day,
+                            'month'  : getNumberOfDayInMonth(date),
+                            'year'   : number_of_months_in_year}
+
+  def treatNegativeValues(return_value, key):
+    while key != 'day' and (key == 'month' and return_value[key] <= 0) or \
+            (key != 'month' and return_value[key] < 0):
+      return_value[key] = return_value[key] + number_of_in_dict[key]
+      return_value[larger_key_dict[key]] = return_value[larger_key_dict[key]] - 1
+
+  def treatPositiveValues(return_value, key):
+    while key != 'day' and (key == 'month' and return_value[key] >\
+       number_of_in_dict[key]) or (key != 'month' and return_value[key] >= \
+       number_of_in_dict[key]):
+      return_value[key] = return_value[key] - number_of_in_dict[key]
+      return_value[larger_key_dict[key]] = return_value[larger_key_dict[key]] + 1
+
+  for key in key_list:
     if to_add.get(key, None) is not None:
       return_value[key] = return_value[key] + to_add[key]
-    while (key == 'month' and return_value[key] <= 0) or \
-          (key != 'month' and return_value[key] < 0):
-      return_value[key] = return_value[key] + number_of_in_dict[key]
-      return_value[ larger_key_dict[key] ] = return_value[ larger_key_dict[key] ] - 1
-    while (key == 'month' and return_value[key] > number_of_in_dict[key]) or \
-          (key != 'month' and return_value[key] >= number_of_in_dict[key]):
-      return_value[key] = return_value[key] - number_of_in_dict[key]
-      return_value[ larger_key_dict[key] ] = return_value[ larger_key_dict[key] ] + 1
-      
+      del to_add[key]
+    if key not in ('day', 'year'):
+      treatNegativeValues(return_value, key)
+      treatPositiveValues(return_value, key)
+  for key in reverse_key_list[:-1]:
+    if 1 > return_value[key] % 1 > 0:
+      return_value[lesser_key_dict[key]] += return_value[key] % 1 * number_less_of_in_dict[key]
+      return_value[key] = int(return_value[key])
+      for local_key in return_value.keys():
+        if local_key not in ('day', 'year'):
+          treatPositiveValues(return_value, local_key)
+      if key in ('day', 'year') and to_add.get(key, None) is not None:
+        del to_add[key]
+
   if to_add.get('year', None) is not None:
     return_value['year'] = return_value['year'] + to_add['year']
+
   day_to_add = return_value['day'] - 1
   if to_add.get('day', None) is not None:
     day_to_add += to_add['day']
@@ -100,9 +134,10 @@ def addToDate(date, to_add=None, **kw):
                                                 return_value['minute'],
                                                 return_value['second'],
                                                 date.timezone()))
+
   return_date += day_to_add
   return return_date
-  
+
 def getClosestDate(date=None, target_date=None, 
                    precision='month', before=1, strict=1):
   """
@@ -396,3 +431,17 @@ def createDateTimeFromMillis(millis):
   date._millis = millis
   return date
 
+def getNumberOfDayInMonth(date):
+  month = date.month()
+  if month < 10 and month != 2:
+    if month % 2 == 0:
+      return 30
+    return 31
+  elif month >=10 and month != 2:
+    if month % 2 == 0:
+      return 31
+    return 30
+  else:
+    if date.isLeapYear():
+      return 29
+    return 28
