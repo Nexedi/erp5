@@ -39,6 +39,7 @@ except ImportError:
   from Products.CMFCore import CMFCorePermissions as permissions
 
 from zLOG import LOG, WARNING
+import sys
 
 DEFAULT_ACTIVITY = 'SQLDict'
 
@@ -138,7 +139,8 @@ class ActiveObject(ExtensionClass.Base):
       raise
     except:
       LOG("CMFActivity", WARNING,
-          'could not create activity for %s' % self.getRelativeUrl())
+          'could not create activity for %s' % self.getRelativeUrl(),
+          error=sys.exc_info())
       # If the portal_activities were not created
       # return a passive object
       if passive_commit: get_transaction().commit()
