@@ -182,7 +182,7 @@ class NotificationTool(BaseTool):
       email_from_address = default_email
 
     # To is a list - let us find all members
-    if isinstance(recipient, basestring):
+    if not isinstance(recipient, (list, tuple)):
       recipient = (recipient, )
 
     # If no recipient is defined, just send an email to the
