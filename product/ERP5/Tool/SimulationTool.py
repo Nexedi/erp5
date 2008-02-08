@@ -999,8 +999,7 @@ class SimulationTool(BaseTool):
               
               # get search key definitions from portal_catalog
               ctool = getToolByName(self, 'portal_catalog')
-              portal_catalog_id = ctool.default_sql_catalog_id
-              portal_catalog = getattr(ctool, portal_catalog_id)
+              portal_catalog = ctool.getSQLCatalog()
               keyword_search_keys = list(portal_catalog.sql_catalog_keyword_search_keys)    
               datetime_search_keys = list(portal_catalog.sql_catalog_datetime_search_keys)
               full_text_search_keys = list(portal_catalog.sql_catalog_full_text_search_keys)
