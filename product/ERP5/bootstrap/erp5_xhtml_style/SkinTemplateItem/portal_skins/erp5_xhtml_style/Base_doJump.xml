@@ -66,7 +66,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># prevent lose checked itens after click to print\n
-context.Base_updateListboxSelection()\n
+# For backward compatibility, do nothing if\n
+# Base_updateListboxSelection cannot be found.\n
+Base_updateListboxSelection = getattr(context, \'Base_updateListboxSelection\', None)\n
+if Base_updateListboxSelection is not None:\n
+  Base_updateListboxSelection()\n
 \n
 if select_jump == \'\':\n
   return\n
@@ -124,8 +128,11 @@ return context.ERP5Site_redirect(select_jump,\n
                           <tuple>
                             <string>select_jump</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>getattr</string>
                             <string>context</string>
+                            <string>None</string>
+                            <string>Base_updateListboxSelection</string>
+                            <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
                             <string>_apply_</string>

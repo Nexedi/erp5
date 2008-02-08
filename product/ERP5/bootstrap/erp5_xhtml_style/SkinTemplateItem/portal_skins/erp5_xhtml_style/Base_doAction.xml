@@ -71,7 +71,11 @@ preserved_parameters={\'form_id\': form_id, \'cancel_url\': cancel_url}\n
 request = context.REQUEST\n
 \n
 # prevent lose checked itens after click to print\n
-context.Base_updateListboxSelection()\n
+# For backward compatibility, do nothing if\n
+# Base_updateListboxSelection cannot be found.\n
+Base_updateListboxSelection = getattr(context, \'Base_updateListboxSelection\', None)\n
+if Base_updateListboxSelection is not None:\n
+  Base_updateListboxSelection()\n
 \n
 Base_doAction = select_action.split()\n
 if len(Base_doAction) == 0:\n
@@ -178,6 +182,9 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
                             <string>N_</string>
                             <string>preserved_parameters</string>
                             <string>request</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>Base_updateListboxSelection</string>
                             <string>Base_doAction</string>
                             <string>len</string>
                             <string>_getitem_</string>
@@ -189,7 +196,6 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
                             <string>type_name</string>
                             <string>str</string>
                             <string>new_content</string>
-                            <string>None</string>
                             <string>template_relative_url</string>
                             <string>template</string>
                             <string>preference</string>
