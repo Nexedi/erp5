@@ -35,6 +35,7 @@ Purchase Order Line | view
 Purchase Order Module | view
 Purchase Order | apply_trade_condition
 Purchase Order | jump_to_related_purchase_packing_list
+Purchase Order | order_print
 Purchase Order | payment_condition
 Purchase Order | profile_view
 Purchase Order | view
