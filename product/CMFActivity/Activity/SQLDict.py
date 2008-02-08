@@ -288,9 +288,9 @@ class SQLDict(RAMDict, SQLBase):
               # processing_node.
               # Their dates are lower-than or equal-to now_date.
               # We read each line once so lines have distinct uids.
-              # So what remains to be filtered on are path, method_id,
-              # order_validation_text, tag
-              key = (line.path, line.method_id, line.order_validation_text, line.tag)
+              # So what remains to be filtered on are path, method_id and
+              # order_validation_text.
+              key = (line.path, line.method_id, line.order_validation_text)
               original_uid = path_and_method_id_dict.get(key)
               if original_uid is not None:
                 uid_to_duplicate_uid_list_dict.setdefault(original_uid, []).append(line.uid)
