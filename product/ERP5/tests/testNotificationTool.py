@@ -192,7 +192,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_02_noSender(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test no sender value'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -219,7 +219,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_03_noSubject(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test no subject value'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -235,7 +235,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_04_noRecipient(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test no recipient value'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -250,7 +250,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def stepCheckNotificationWithoutMessage(self, sequence=None, 
                                           sequence_list=None, **kw):
     """
-    Check that notification fails when no subject is given
+    Check that notification is send when no message is passed
     """
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject', )
@@ -263,7 +263,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_05_noMessage(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test no message value'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -279,7 +279,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def stepCheckSimpleNotification(self, sequence=None, 
                                   sequence_list=None, **kw):
     """
-    Check that notification fails when no subject is given
+    Check that notification is send in standard use case
     """
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject', message='Message')
@@ -297,7 +297,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_06_simpleMessage(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test simple message'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -313,7 +313,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def stepCheckNotificationWithAttachment(self, sequence=None, 
                                           sequence_list=None, **kw):
     """
-    Check that notification fails when no subject is given
+    Check attachment
     """
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject', message='Message',
@@ -347,7 +347,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_07_AttachmentMessage(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test attachments'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -363,7 +363,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def stepCheckMultiRecipientNotification(self, sequence=None, 
                                           sequence_list=None, **kw):
     """
-    Check that notification fails when no subject is given
+    Check that notification can be send to multiple recipient
     """
     self.portal.portal_notifications.sendMessage(
         recipient=['userA', 'userB'], subject='Subject', message='Message')
@@ -383,7 +383,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_08_MultiRecipient(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test multi recipient value'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -411,7 +411,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_08_PersonWithoutEmail(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test no email value'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
 
@@ -427,7 +427,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def test_09_InvalideRecipient(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test default sender value'
+      message = 'Test invalide recipient'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     self.assertRaises(
