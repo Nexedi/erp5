@@ -75,7 +75,7 @@ except ImportError:
       return self.function(*opts, **kw)
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
-
+ 
 UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300
 MAX_PATH_LEN = 255
@@ -113,13 +113,6 @@ def manage_addSQLCatalog(self, id, title,
   self._setObject(id, c)
   if REQUEST is not None:
     return self.manage_main(self, REQUEST,update_menu=1)
-
-def isSimpleType(value):
-  return isinstance(value, basestring) or \
-         isinstance(value, int) or \
-         isinstance(value, long) or \
-         isinstance(value, float)
-
 
 class UidBuffer(TM):
   """Uid Buffer class caches a list of reserved uids in a transaction-safe way."""
@@ -187,414 +180,6 @@ class UidBuffer(TM):
     self._register()
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
-
-
-# valid search modes for queries
-FULL_TEXT_SEARCH_MODE = 'FullText'
-EXACT_MATCH_SEARCH_MODE = 'ExactMatch'
-KEYWORD_SEARCH_MODE = 'Keyword'
-DATETIME_SEARCH_MODE = 'DateTime'
-
-
-class QueryMixin:
-  """
-    Mixing class which implements methods which are
-    common to all kinds of Queries
-  """
-
-  operator = None
-  format = None
-  type = None
-
-  def getOperator(self):
-    return self.operator
-
-  def getFormat(self):
-    return self.format
-
-  def getType(self):
-    return self.type
-
-  def getLogicalOperator(self):
-    return self.logical_operator
-
-  def _quoteSQLString(self, value):
-    """Return a quoted string of the value.
-    """
-    format = self.getFormat()
-    type = self.getType()
-    if format is not None and type is not None:
-      if type == 'date':
-        if hasattr(value, 'strftime'):
-          value = value.strftime(format)
-        if isinstance(value, basestring):
-          value = "STR_TO_DATE('%s','%s')" % (value, format)
-      if type == 'float':
-        # Make sure there is no space in float values
-        value = value.replace(' ','')
-        value = "'%s'" % value
-    else:
-      if getattr(value, 'ISO', None) is not None:
-        value = "'%s'" % value.toZone('UTC').ISO()
-      else:
-        value = "'%s'" % sql_quote(str(value))
-    return value
-
-  def _quoteSQLKey(self, key):
-    """Return a quoted string of the value.
-    """
-    format = self.getFormat()
-    type = self.getType()
-    if format is not None and type is not None:
-      if type == 'date':
-        key = "STR_TO_DATE(DATE_FORMAT(%s,'%s'),'%s')" % (key, format, format)
-      if type == 'float':
-        float_format = format.replace(' ','')
-        if float_format.find('.') >= 0:
-          precision = len(float_format.split('.')[1])
-          key = "TRUNCATE(%s,%s)" % (key, precision)
-    return key
-
-  def asSQLExpression(self, key_alias_dict=None,
-                      keyword_search_keys=None,
-                      datetime_search_keys=None,
-                      full_text_search_keys=None,
-                      ignore_empty_string=1, stat__=0):
-    """
-      Return a dictionnary containing the keys and value types:
-        'where_expression': string
-        'select_expression_list': string
-    """
-    raise NotImplementedError
-
-  def getSQLKeyList(self):
-    """
-      Return a list of keys used by this query and its subqueries.
-    """
-    raise NotImplementedError
-  
-  def getRelatedTableMapDict(self):
-    """
-      Return for each key used by this query (plus ones used by its
-      subqueries) the table alias mapping.
-    """
-    raise NotImplementedError
-
-class NegatedQuery(QueryMixin): # XXX Bad name JPS - NotQuery or NegativeQuery is better NegationQuery
-  """
-    Do a boolean negation of given query.
-  """
-
-  def __init__(self, query):
-    self._query = query
-
-  def asSQLExpression(self, *args, **kw):
-    sql_expression_dict = self._query.asSQLExpression(*args, **kw)
-    sql_expression_dict['where_expression'] = '(NOT (%s))' % \
-      (sql_expression_dict['where_expression'], )
-    return sql_expression_dict
-
-  def getSQLKeyList(self, *args, **kw):
-    return self._query.getSQLKeyList(*args, **kw)
-
-  def getRelatedTableMapDict(self, *args, **kw):
-    return self._query.getRelatedTableMapDict(*args, **kw)
-
-  # asSearchTextExpression is still not implemented
-
-allow_class(NegatedQuery)
-
-class Query(QueryMixin):
-  """
-  This allow to define constraints on a sql column
-
-  format - type date : %d/%m/%Y
-           type float : 1 234.12
-  """
-  def __init__(self, format=None, operator=None, range=None, key=None,
-                     search_mode=None, table_alias_list=None, type=None, **kw):
-    self.format = format
-    if operator is None:
-      operator = 'OR'
-    self.operator = operator
-    self.range = range
-    self.search_mode = search_mode
-    self.table_alias_list = table_alias_list
-    key_list = kw.keys()
-    if len(key_list) != 1:
-      raise KeyError, 'Query must have only one key'
-    self.key = key_list[0]
-    self.value = kw[self.key]
-    self.type = type
-    self.search_key = key
-
-  def __call__(self, **kw):
-    return self.asSQLExpression(**kw)
-
-  def getRange(self):
-    return self.range
-
-  def getTableAliasList(self):
-    return self.table_alias_list
-
-  def getRelatedTableMapDict(self):
-    result = {}
-    table_alias_list = self.getTableAliasList()
-    if table_alias_list is not None:
-      result[self.getKey()] = table_alias_list
-    return result
-
-  def getSearchMode(self):
-    """Search mode used for Full Text search
-    """
-    return self.search_mode
-
-  def asSearchTextExpression(self):
-    # This will be the standard way to represent
-    # complex values in listbox. Some fixed
-    # point must be garanteed
-    value = self.value
-    if isSimpleType(value) or isinstance(value, DateTime):
-      return str(value)
-    elif isinstance(value, (list, tuple)):
-      value = map(lambda x:str(x), value)
-      return (' %s ' % self.operator).join(value)
-
-  def asSQLExpression(self, key_alias_dict=None,
-                            keyword_search_keys=None,
-                            datetime_search_keys=None,
-                            full_text_search_keys=None,
-                            ignore_empty_string=1, stat__=0):
-    """
-    Build the sql string
-    """
-    sql_expression = ''
-    value = self.getValue()
-    key = self.getKey()
-    search_key = self.search_key
-    ignore_key = 0
-    if key_alias_dict is not None:
-      # Try to find the alias
-      if key not in key_alias_dict:
-        ignore_key=1
-      else:
-        key = key_alias_dict.get(key)
-        if key is None:
-          ignore_key=1
-    where_expression = []
-    select_expression = []
-    # Default case: variable equality
-    range_value = self.getRange()
-    format = self.getFormat()
-    if ignore_key:
-      pass    
-    elif range_value is not None:
-      if isinstance(value, (list, tuple)):
-        if format is None:
-          query_min = min(value)
-          query_max = max(value)
-        else:
-          query_min = value[0]
-          query_max = value[1]
-      else:
-        query_min=query_max=value
-      query_min = self._quoteSQLString(query_min)
-      query_max = self._quoteSQLString(query_max)
-      if range_value == 'min' :
-        where_expression.append("%s >= %s" % (key, query_min))
-      elif range_value == 'max' :
-        where_expression.append("%s < %s" % (key, query_max))
-      elif range_value == 'minmax' :
-        where_expression.append("%s >= %s and %s < %s" % (key, query_min, key, query_max))
-      elif range_value == 'minngt' :
-        where_expression.append("%s >= %s and %s <= %s" % (key, query_min, key, query_max))
-      elif range_value == 'ngt' :
-        where_expression.append("%s <= %s" % (key, query_max))
-      elif range_value == 'nlt' :
-        where_expression.append("%s > %s" % (key, query_max))
-    elif isSimpleType(value) or isinstance(value, DateTime) \
-        or (isinstance(value, (list, tuple)) and self.operator.upper() != 'IN'):
-      # Convert into lists any value which contain 'OR'
-      # Refer to _listGlobalActions DCWorkflow patch for example of use
-      if isinstance(value, basestring) \
-                and search_key != EXACT_MATCH_SEARCH_MODE:
-        value = value.split(' OR ')
-        value = map(lambda x:x.strip(), value)
-      value_list = value
-      if isSimpleType(value) or isinstance(value, DateTime):
-        value_list = [value]
-      # For security.
-      for value in value_list:
-        comparison_operator = None
-        if (value != '' or not ignore_empty_string) \
-                        and isinstance(value, basestring):
-          if '%' in value and search_key != EXACT_MATCH_SEARCH_MODE:
-            comparison_operator = 'LIKE'
-          elif search_key == DATETIME_SEARCH_MODE  or (
-               datetime_search_keys is not None and key in datetime_search_keys):
-            if len(value) >= 1 and value[0:2] in ('<=','!=','>='):
-              comparison_operator = value[0:2]
-              value = value[2:]
-            elif len(value) >= 1 and value[0] in ('=','>','<'):
-              comparison_operator = value[0]
-              value = value[1:]
-            if comparison_operator is None:
-              comparison_operator = '='
-            # this seems like a DateTime bug!
-            # 2002/02/01 ==>(UTC) 2002-01-31 22:00:00
-            # 2002-02-01 ==>(UTC) 2002-02-01 00:00:00 (!)
-            value = value.replace('-', '/') 
-            value = DateTime(value).toZone('UTC')
-          elif len(value) >= 1 and value[0:2] in ('<=','!=','>='):
-            comparison_operator = value[0:2]
-            value = value[2:]
-          elif len(value) >= 1 and value[0] in ('=','>','<'):
-            comparison_operator = value[0]
-            value = value[1:]
-          elif search_key == KEYWORD_SEARCH_MODE or (
-                   key in keyword_search_keys and
-                    search_key != EXACT_MATCH_SEARCH_MODE):
-            # We must add % in the request to simulate the catalog
-            comparison_operator = 'LIKE'
-            value = '%%%s%%' % value
-          elif search_key == FULL_TEXT_SEARCH_MODE or (
-                  key in full_text_search_keys
-                  and search_key != EXACT_MATCH_SEARCH_MODE):
-            # We must add % in the request to simulate the catalog
-            # we first check if there is a special search_mode for this key
-            # incl. table name, or for all keys of that name,
-            # or there is a search_mode supplied for all fulltext keys
-            # or we fall back to natural mode
-            search_mode=self.getSearchMode()
-            if search_mode is None:
-              search_mode = 'natural'
-            search_mode=search_mode.lower()
-            mode = full_text_search_modes.get(search_mode,'')
-            where_expression.append(
-                        "MATCH %s AGAINST ('%s' %s)" % (key, value, mode))
-            if not stat__:
-              # we return relevance as Table_Key_relevance
-              select_expression.append(
-                     "MATCH %s AGAINST ('%s' %s) AS %s_relevance" 
-                     % (key, value, mode,key.replace('.','_')))
-              # and for simplicity as Key_relevance
-              if '.' in key:
-                select_expression.append(
-                     "MATCH %s AGAINST ('%s' %s) AS %s_relevance" % 
-                     (key, value, mode,key.split('.')[1]))
-          else:
-            comparison_operator = '='
-        elif not isinstance(value, basestring):
-          comparison_operator = '='
-        if comparison_operator is not None:
-          key = self._quoteSQLKey(key)
-          value = self._quoteSQLString(value)
-          where_expression.append("%s %s %s" % 
-                                  (key, comparison_operator, value))
-
-    elif value is None:
-      where_expression.append("%s is NULL" % (key))
-    elif isinstance(value, (tuple, list)) and self.operator.upper() == 'IN':
-      if len(value) > 1:
-        escaped_value_list = [self._quoteSQLString(x) for x in value]
-        escaped_value_string = ', '.join(escaped_value_list)
-        where_expression.append("%s IN (%s)" % (key, escaped_value_string))
-      elif len(value) == 1:
-        where_expression.append("%s = %s" % (key, self._quoteSQLString(value[0])))
-      else:
-        where_expression.append('0') # "foo IN ()" is invalid SQL syntax, so use a "false" value.
-    else:
-      where_expression.append("%s = %s" % 
-           (self._quoteSQLKey(key), self._quoteSQLString(value)))
-
-    if len(where_expression)>0:
-      if len(where_expression)==1:
-        where_expression = where_expression[0]
-      else:
-        where_expression = '(%s)' % (' %s ' % self.getOperator()).join(where_expression)
-    else:
-      where_expression = '1' # It is better to have a valid default
-    return {'where_expression':where_expression,
-            'select_expression_list':select_expression}
-
-  def getKey(self):
-    return self.key
-
-  def getValue(self):
-    return self.value
-
-  def getSQLKeyList(self):
-    """
-    Returns the list of keys used by this
-    instance
-    """
-    return [self.getKey()]
-
-allow_class(Query)
-
-class ComplexQuery(QueryMixin):
-  """
-  Used in order to concatenate many queries
-  """
-  def __init__(self, *args, **kw):
-    self.query_list = args
-    self.operator = kw.pop('operator', 'AND')
-    # XXX: What is that used for ?! It's utterly dangerous.
-    self.__dict__.update(kw)
-
-  def __call__(self, **kw):
-    return self.asSQLExpression(**kw)
-
-  def getQueryList(self):
-    return self.query_list
-
-  def getRelatedTableMapDict(self):
-    result = {}
-    for query in self.getQueryList():
-      if not(isinstance(query, basestring)):
-        result.update(query.getRelatedTableMapDict())
-    return result
-
-  def asSQLExpression(self, key_alias_dict=None,
-                            ignore_empty_string=1,
-                            keyword_search_keys=None,
-                            datetime_search_keys=None,
-                            full_text_search_keys=None,
-                            stat__=0):
-    """
-    Build the sql string
-    """
-    sql_expression_list = []
-    select_expression_list = []
-    for query in self.getQueryList():
-      if isinstance(query, basestring):
-        sql_expression_list.append(query)
-      else:
-        query_result = query.asSQLExpression( key_alias_dict=key_alias_dict,
-                               ignore_empty_string=ignore_empty_string,
-                               keyword_search_keys=keyword_search_keys,
-                               full_text_search_keys=full_text_search_keys,
-                               stat__=stat__)
-        sql_expression_list.append(query_result['where_expression'])
-        select_expression_list.extend(query_result['select_expression_list'])
-    operator = self.getOperator()
-    result = {'where_expression':('(%s)' %  \
-                         (' %s ' % operator).join(['(%s)' % x for x in sql_expression_list])),
-              'select_expression_list':select_expression_list}
-    return result
-
-  def getSQLKeyList(self):
-    """
-    Returns the list of keys used by this
-    instance
-    """
-    key_list=[]
-    for query in self.getQueryList():
-      if not(isinstance(query, basestring)):
-        key_list.extend(query.getSQLKeyList())
-    return key_list
-
-allow_class(ComplexQuery)
 
 class Catalog(Folder,
               Persistent,
@@ -2191,7 +1776,12 @@ class Catalog(Folder,
     for t in self.sql_catalog_scriptable_keys:
       t = t.split('|')
       key = t[0].strip()
-      method_id = t[1].strip()
+      if len(t)>1:
+        # method defined that will generate a ComplexQuery
+        method_id = t[1].strip()
+      else:
+        # no method define, let ScriptableKey generate a ComplexQuery
+        method_id = None
       scriptable_key_dict[key] = method_id
 
     # Build the list of Queries and ComplexQueries
@@ -2210,9 +1800,14 @@ class Catalog(Folder,
         if isinstance(value, (Query, ComplexQuery)):
           current_query = value
         elif scriptable_key_dict.has_key(key):
-          # Turn this key into a query by invoking a script
-          method = getattr(self, scriptable_key_dict[key])
-          current_query = method(value) # May return None
+          if scriptable_key_dict[key] is not None:
+            # Turn this key into a query by invoking a script          
+            method = getattr(self, scriptable_key_dict[key])
+            current_query = method(value) # May return None            
+          else:
+            # let default implementation of ScriptableKey generate ComplexQuery
+            search_key_instance = getSearchKeyInstance(ScriptableKey)
+            current_query = search_key_instance.buildQuery('', value)
           if hasattr(current_query, 'order_by'): query_group_by_list = current_query.order_by
         else:
           if isinstance(value, dict):
@@ -2240,7 +1835,7 @@ class Catalog(Folder,
         sort_key_dict[sort_key] = 1
 
     related_tuples = self.getSQLCatalogRelatedKeyList(key_list=key_list)
-
+    
     # Define related maps
     # each tuple from `related_tuples` has the form (key,
     # 'table1,table2,table3/column/where_expression')
@@ -2523,7 +2118,7 @@ class Catalog(Folder,
     #LOG('queryResults',0,'kw: %s' % str(kw))
     #LOG('queryResults',0,'from_table_list: %s' % str(query['from_table_list']))
     return sql_method(src__=src__, **kw)
-
+      
   def searchResults(self, REQUEST=None, used=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     # The used argument is deprecated and is ignored
@@ -2558,7 +2153,7 @@ class Catalog(Folder,
     """
     method = getattr(self, self.sql_read_recorded_object_list)
     return method(catalog=catalog)
-
+   
   # Filtering
   def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None):
     """
@@ -2745,3 +2340,37 @@ class Catalog(Folder,
 Globals.default__class_init__(Catalog)
 
 class CatalogError(Exception): pass
+
+# hook search keys and Query implementation 
+def getSearchKeyInstance(search_key_class):
+  """ Return instance of respective search_key class.
+      We should have them initialized only once."""
+  global SEARCH_KEY_INSTANCE_POOL
+  lexer = SEARCH_KEY_INSTANCE_POOL[search_key_class]
+  return lexer 
+  
+from Query.Query import QueryMixin
+from Query.SimpleQuery import NegatedQuery, SimpleQuery
+from Query.ComplexQuery import ComplexQuery
+
+# for of backwards compatability  
+QueryMixin = QueryMixin
+Query = SimpleQuery
+NegatedQuery = NegatedQuery 
+ComplexQuery = ComplexQuery
+ 
+from Products.ZSQLCatalog.SearchKey.DefaultKey import DefaultKey
+from Products.ZSQLCatalog.SearchKey.RawKey import RawKey
+from Products.ZSQLCatalog.SearchKey.KeyWordKey import KeyWordKey
+from Products.ZSQLCatalog.SearchKey.DateTimeKey import DateTimeKey
+from Products.ZSQLCatalog.SearchKey.FullTextKey import FullTextKey
+from Products.ZSQLCatalog.SearchKey.FloatKey import FloatKey
+from Products.ZSQLCatalog.SearchKey.ScriptableKey import ScriptableKey, KeyMappingKey
+
+# pool of global preinitialized search keys instances
+SEARCH_KEY_INSTANCE_POOL = {}
+for search_key_class in (DefaultKey, RawKey, KeyWordKey, DateTimeKey, 
+                         FullTextKey, FloatKey, ScriptableKey, KeyMappingKey):
+  search_key_instance = search_key_class()
+  search_key_instance.build()
+  SEARCH_KEY_INSTANCE_POOL[search_key_class] = search_key_instance

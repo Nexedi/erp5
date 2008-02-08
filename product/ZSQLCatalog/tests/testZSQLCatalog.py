@@ -102,9 +102,11 @@ class TestQuery(unittest.TestCase):
   def testSimpleQuery(self):
     q = Query(title='Foo')
     self.assertEquals(
-          dict(where_expression="title = 'Foo'",
+          dict(where_expression="((((title = 'Foo'))))",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
 
   def testQueryMultipleKeys(self):
     # using multiple keys is invalid and raises
@@ -116,7 +118,9 @@ class TestQuery(unittest.TestCase):
     self.assertEquals(
           dict(where_expression="title is NULL",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
 
   def testEmptyQueryNotIgnoreEmptyString(self):
     q = Query(title='')
@@ -127,6 +131,7 @@ class TestQuery(unittest.TestCase):
                select_expression_list=[]),
           q.asSQLExpression(ignore_empty_string=0,
                             keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=[]))
 
   def testEmptyQuery(self):
@@ -135,52 +140,67 @@ class TestQuery(unittest.TestCase):
     self.assertEquals(
           dict(where_expression="1",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
     
   def testMultiValuedQuery(self):
     q = Query(title=['Foo', 'Bar'])
     self.assertEquals(
-          dict(where_expression="(title = 'Foo' OR title = 'Bar')",
+          dict(where_expression="(((((title = 'Foo')))) OR ((((title = 'Bar')))))",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
 
   def testINQuery(self):
     q = Query(title=['Foo', 'Bar'], operator='IN')
     self.assertEquals(
           dict(where_expression="title IN ('Foo', 'Bar')",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
 
   def testEmptyINQuery(self):
     q = Query(title=[], operator='IN')
     self.assertEquals(
           dict(where_expression="0",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
 
   def testMinQuery(self):
     q = Query(title='Foo', range='min')
     self.assertEquals(
           dict(where_expression="title >= 'Foo'",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
     
   def testMaxQuery(self):
     q = Query(title='Foo', range='max')
     self.assertEquals(
           dict(where_expression="title < 'Foo'",
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
 
   # format
   def testDateFormat(self):
-    q = Query(date=DateTime(2001, 02, 03), format='%Y/%m/%d', type='date')
+    date = DateTime(2001, 02, 03)
+    q = Query(date=date, format='%Y/%m/%d', type='date')
     self.assertEquals(
           dict(where_expression=
-            "STR_TO_DATE(DATE_FORMAT(date,'%Y/%m/%d'),'%Y/%m/%d')"
-            " = STR_TO_DATE('2001/02/03','%Y/%m/%d')",
+            "((((date >= '%s' AND date < '%s'))))" \
+                 %(date.toZone('UTC').ISO(), (date + 1).toZone('UTC').ISO()),
                select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=[], 
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
   
   # full text
   def testSimpleQueryFullText(self):
@@ -189,6 +209,7 @@ class TestQuery(unittest.TestCase):
                            select_expression_list=
                         ["MATCH title AGAINST ('Foo' ) AS title_relevance"]),
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=['title']))
 
   def testSimpleQueryFullTextSearchMode(self):
@@ -199,6 +220,7 @@ class TestQuery(unittest.TestCase):
       select_expression_list=
         ["MATCH title AGAINST ('Foo' IN BOOLEAN MODE) AS title_relevance"]),
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=['title']))
   
   def testSimpleQueryFullTextStat__(self):
@@ -209,23 +231,26 @@ class TestQuery(unittest.TestCase):
                     where_expression="MATCH title AGAINST ('Foo' )",
                     select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=['title'],
                             stat__=1))
 
   def testSimpleQueryKeywordSearchKey(self):
     q = Query(title='Foo')
-    self.assertEquals(dict(where_expression="title LIKE '%Foo%'",
+    self.assertEquals(dict(where_expression="((((title LIKE '%Foo%'))))",
                            select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=['title'],
+                            datetime_search_keys = [],
                             full_text_search_keys=[]))
 
   def testNegatedQuery(self):
     q1 = Query(title='Foo')
     q = NegatedQuery(q1)
     self.assertEquals(
-        dict(where_expression="(NOT (title = 'Foo'))",
+        dict(where_expression="(NOT (((((title = 'Foo'))))))",
                            select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=[]))
 
   # complex queries
@@ -234,9 +259,10 @@ class TestQuery(unittest.TestCase):
     q2 = Query(reference='Bar')
     q = ComplexQuery(q1, q2)
     self.assertEquals(
-        dict(where_expression="((title = 'Foo') AND (reference = 'Bar'))",
+        dict(where_expression="((((((title = 'Foo'))))) AND (((((reference = 'Bar'))))))",
                            select_expression_list=[]),
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=[]))
 
   def testNegatedComplexQuery(self):
@@ -246,35 +272,40 @@ class TestQuery(unittest.TestCase):
     q = NegatedQuery(q3)
     self.assertEquals(
       # maybe too many parents here
-     dict(where_expression="(NOT (((title = 'Foo') AND (reference = 'Bar'))))",
+     dict(where_expression="(NOT (((((((title = 'Foo'))))) AND (((((reference = 'Bar'))))))))",
           select_expression_list=[]),
      q.asSQLExpression(keyword_search_keys=[],
+                       datetime_search_keys = [],
                        full_text_search_keys=[]))
 
   
   # forced keys
   def testSimpleQueryForcedKeywordSearchKey(self):
     q = Query(title='Foo', key='Keyword')
-    self.assertEquals("title LIKE '%Foo%'",
+    self.assertEquals("((((title LIKE '%Foo%'))))",
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],
                             full_text_search_keys=[])['where_expression'])
 
   def testSimpleQueryForcedFullText(self):
     q = Query(title='Foo', key='FullText')
     self.assertEquals("MATCH title AGAINST ('Foo' )",
           q.asSQLExpression(keyword_search_keys=[],
+                            datetime_search_keys = [],                            
                             full_text_search_keys=[])['where_expression'])
 
   def testSimpleQueryForcedExactMatch(self):
     q = Query(title='Foo', key='ExactMatch')
     self.assertEquals("title = 'Foo'",
           q.asSQLExpression(keyword_search_keys=['title'],
+                            datetime_search_keys = [],  
                             full_text_search_keys=[])['where_expression'])
 
   def testSimpleQueryForcedExactMatchOR(self):
     q = Query(title='Foo% OR %?ar', key='ExactMatch')
     self.assertEquals("title = 'Foo% OR %?ar'",
           q.asSQLExpression(keyword_search_keys=['title'],
+                            datetime_search_keys = [],
                             full_text_search_keys=[])['where_expression'])
 
 
