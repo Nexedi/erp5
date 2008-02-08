@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -176,8 +173,23 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 \n
 <!-- Jump to Accounting Module {{{ -->\n
 <tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Transactions Related To This Entity:</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>specific_reference</td>\n
+  <td>2005-308</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>listbox_select</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
