@@ -355,8 +355,8 @@ class SQLDict(RAMDict, SQLBase):
             # it won't be called on the duplicate.
             message_with_active_process_list.append(m)
       else:
-        # Whatever happens, duplicate uids are to be made available. Only
-        # executed message will get to lower priority or error state.
+        # Should duplicate messages follow strictly the original message, or
+        # should they be just made available again ?
         make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
         if type(m.exc_type) is ClassType and \
            issubclass(m.exc_type, ConflictError):
