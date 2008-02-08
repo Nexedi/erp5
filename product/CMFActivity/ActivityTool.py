@@ -30,7 +30,7 @@ import socket
 import urllib
 import threading
 import sys
-from types import TupleType, StringType
+from types import StringType
 import re
 
 from Products.CMFCore import CMFCorePermissions
@@ -46,7 +46,6 @@ from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolB
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
 from Acquisition import aq_inner
-from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
 from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
