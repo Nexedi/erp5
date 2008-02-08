@@ -2598,6 +2598,33 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryChangeSkinInActivity('SQLQueue')
 
+  def test_102_CheckSQLQueueDoesNotDeleteDuplicatesBeforeExecution(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck duplicates are not deleted before execution of original message (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    check_result_dict = {}
+    def checkActivityCount(self, other_tag):
+      if len(check_result_dict) == 0:
+        check_result_dict['done'] = activity_tool.countMessage(tag=other_tag)
+    try:
+      Organisation.checkActivityCount = checkActivityCount
+      organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='b')
+      organisation.activate(activity='SQLDict', tag='b').checkActivityCount(other_tag='a')
+      get_transaction().commit()
+      self.assertEqual(len(activity_tool.getMessageList()), 2)
+      self.tic()
+      self.assertEqual(len(activity_tool.getMessageList()), 0)
+      self.assertEqual(len(check_result_dict), 1)
+      self.assertEqual(check_result_dict['done'], 1)
+    finally:
+      delattr(Organisation, 'checkActivityCount')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
