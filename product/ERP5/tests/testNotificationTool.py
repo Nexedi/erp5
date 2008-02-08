@@ -436,6 +436,41 @@ class TestNotificationTool(ERP5TypeTestCase):
       recipient='UnknowUser', subject='Subject', message='Message'
     )
 
+  def stepCheckPersonNotification(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check that notification is send when recipient is a Person
+    """
+    person = self.portal.portal_catalog(reference='userA')[0]
+    self.portal.portal_notifications.sendMessage(
+        recipient=person.getObject(), subject='Subject', message='Message')
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals(['userA@example.invalid'], mto)
+    # Check Message
+    mail_dict = decode_email(messageText)
+    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
+    self.assertEquals(mail_dict['body'], 'Message')
+    self.assertSameSet([], mail_dict['attachment_list'])
+
+  def test_10_PersonNotification(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Person recipient'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    sequence_list = SequenceList()
+    sequence_string = '\
+        AddUserA \
+        Tic \
+        CheckPersonNotification\
+        '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestNotificationTool))
