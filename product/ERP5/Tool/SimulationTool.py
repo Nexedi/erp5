@@ -956,6 +956,7 @@ class SimulationTool(BaseTool):
             date = min(date_value_list)
             if isinstance(date, DateTime):
               date = date.toZone('UTC').ISO()
+              
             # build a query for date to take range into account
             date_query_kw = {"inventory.date" : date,
                              "operator" : column_value_dict.get('date', {}).get('operator', []),
@@ -995,6 +996,18 @@ class SimulationTool(BaseTool):
               #  from_date is 2001/01/01.
               #  It is not a serious problem since MySQL detects incompatible
               #  conditions and immediately returns (with 0 rows).
+              
+              # get search key definitions from portal_catalog
+              ctool = getToolByName(self, 'portal_catalog')
+              portal_catalog_id = ctool.default_sql_catalog_id
+              portal_catalog = getattr(ctool, portal_catalog_id)
+              keyword_search_keys = list(portal_catalog.sql_catalog_keyword_search_keys)    
+              datetime_search_keys = list(portal_catalog.sql_catalog_datetime_search_keys)
+              full_text_search_keys = list(portal_catalog.sql_catalog_full_text_search_keys)
+              search_key_mapping = dict(key_alias_dict = None,
+                                        keyword_search_keys = keyword_search_keys,
+                                        datetime_search_keys = datetime_search_keys,
+                                        full_text_search_keys = full_text_search_keys)
               equal_date_query_list = []
               greater_than_date_query_list = []
               EQUAL_DATE_TABLE_ID = 'inventory_stock'
@@ -1017,17 +1030,19 @@ class SimulationTool(BaseTool):
                       *[Query(**{'%s.%s' % (GREATER_THAN_DATE_TABLE_ID, k): \
                                  v}) \
                         for k, v in non_date_value_dict.iteritems()]),
+                    # 'Use explicitly Universal' otherwise DateTime 
+                    # search key will convert it to UTC one more time
                     Query(**{'%s.date' % (GREATER_THAN_DATE_TABLE_ID, ): \
-                             '>%s' % (date.ISO(), )}),
+                             '>%s Universal' % (date.ISO(), )}), 
                     operator='AND'))
               assert len(equal_date_query_list) == \
                      len(greater_than_date_query_list)
               assert len(equal_date_query_list) > 0
               equal_date_query = ComplexQuery(operator='OR',
-                *equal_date_query_list).asSQLExpression()\
+                *equal_date_query_list).asSQLExpression(**search_key_mapping)\
                 ['where_expression']
               greater_than_date_query = ComplexQuery(operator='OR',
-                *greater_than_date_query_list).asSQLExpression()\
+                *greater_than_date_query_list).asSQLExpression(**search_key_mapping)\
                 ['where_expression']
               inventory_stock_sql_kw = \
                 self._generateSQLKeywordDictFromKeywordDict(
@@ -1422,6 +1437,7 @@ class SimulationTool(BaseTool):
       kw['movement_list_mode'] = 1
       kw.update(self._getDefaultGroupByParameters(**kw))
       sql_kw = self._generateSQLKeywordDict(**kw)
+
       return self.Resource_zGetMovementHistoryList(
                          src__=src__, ignore_variation=ignore_variation,
                          standardise=standardise,
