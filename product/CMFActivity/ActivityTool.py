@@ -68,7 +68,7 @@ NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
 # to prevent from storing a state in the ZODB (and allows to restart...)
 active_threads = 0
 max_active_threads = 1 # 2 will cause more bug to appear (he he)
-is_initialized = 0
+is_initialized = False
 tic_lock = threading.Lock() # A RAM based lock to prevent too many concurrent tic() calls
 timerservice_lock = threading.Lock() # A RAM based lock to prevent TimerService spamming when busy
 first_run = 1
@@ -349,7 +349,7 @@ class ActivityTool (Folder, UniqueObject):
       # Initialize each queue
       for activity in activity_dict.itervalues():
         activity.initialize(self)
-      is_initialized = 1
+      is_initialized = True
       
     security.declareProtected(Permissions.manage_properties, 'isSubscribed')
     def isSubscribed(self):
@@ -600,8 +600,8 @@ class ActivityTool (Folder, UniqueObject):
         Distribute load
       """
       # Initialize if needed
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
 
       # Call distribute on each queue
       for activity in activity_dict.itervalues():
@@ -613,7 +613,7 @@ class ActivityTool (Folder, UniqueObject):
         Starts again an activity
         processing_node starts from 1 (there is not node 0)
       """
-      global active_threads, is_initialized, first_run
+      global active_threads, first_run
 
       # return if the number of threads is too high
       # else, increase the number of active_threads and continue
@@ -627,7 +627,8 @@ class ActivityTool (Folder, UniqueObject):
       tic_lock.release()
 
       # Initialize if needed
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
 
       inner_self = aq_inner(self)
 
@@ -709,8 +710,8 @@ class ActivityTool (Folder, UniqueObject):
 
     security.declarePrivate('activateObject')
     def activateObject(self, object, activity, active_process, **kw):
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       self.getActivityBuffer()
       return ActiveWrapper(object, activity, active_process, **kw)
 
@@ -737,8 +738,8 @@ class ActivityTool (Folder, UniqueObject):
       return activity.unregisterMessage(activity_buffer, aq_inner(self), message)
 
     def flush(self, obj, invoke=0, **kw):
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       self.getActivityBuffer()
       if isinstance(obj, tuple):
         object_path = obj
@@ -748,14 +749,14 @@ class ActivityTool (Folder, UniqueObject):
         activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
 
     def start(self, **kw):
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       for activity in activity_dict.itervalues():
         activity.start(aq_inner(self), **kw)
 
     def stop(self, **kw):
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       for activity in activity_dict.itervalues():
         activity.stop(aq_inner(self), **kw)
 
@@ -890,8 +891,8 @@ class ActivityTool (Folder, UniqueObject):
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       self.getActivityBuffer()
       activity_dict[activity].queueMessage(aq_inner(self),
         Message(path, active_process, activity_kw, method_id, args, kw))
@@ -985,7 +986,8 @@ class ActivityTool (Folder, UniqueObject):
         List messages waiting in queues
       """
       # Initialize if needed
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
 
       message_list = []
       for activity in activity_dict.itervalues():
@@ -1042,8 +1044,8 @@ class ActivityTool (Folder, UniqueObject):
 
     security.declarePrivate('getDependentMessageList')
     def getDependentMessageList(self, message, validator_id, validation_value):
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       message_list = []
       method_id = "_validate_%s" % validator_id
       for activity in activity_dict.itervalues():
@@ -1056,8 +1058,8 @@ class ActivityTool (Folder, UniqueObject):
 
     # Required for tests (time shift)
     def timeShift(self, delay):
-      global is_initialized
-      if not is_initialized: self.initialize()
+      if not is_initialized:
+        self.initialize()
       for activity in activity_dict.itervalues():
         activity.timeShift(aq_inner(self), delay)
 
