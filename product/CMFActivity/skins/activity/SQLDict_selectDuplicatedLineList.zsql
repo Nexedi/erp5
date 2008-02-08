@@ -5,24 +5,20 @@ max_rows:0
 max_cache:0
 cache_time:0
 class_name:
-class_file:
+class_
 </dtml-comment>
 <params>
-processing_node
-uid
 path
 method_id
 group_method_id
 order_validation_text
 </params>
-DELETE FROM
+SELECT uid FROM
   message
 WHERE
-  processing_node IN (0, <dtml-sqlvar processing_node type="int">)
-  AND uid != <dtml-sqlvar uid type="int">
+  processing_node = 0
   AND path = <dtml-sqlvar path type="string">
   AND method_id = <dtml-sqlvar method_id type="string">
   AND group_method_id = <dtml-sqlvar group_method_id type="string">
   AND order_validation_text = <dtml-sqlvar order_validation_text type="string">
-<dtml-var sql_delimiter>
-COMMIT
+FOR UPDATE
