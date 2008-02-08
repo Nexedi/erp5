@@ -63,6 +63,9 @@
    <name>Add CMF Caching Policy Managers</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add CMF Calendar Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add CMF Core Tools</name>
    <role>Manager</role>
@@ -88,9 +91,6 @@
    <name>Add CMFActivity Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Add CMFCalendar Tools</name>
-  </permission>
   <permission type='tuple'>
    <name>Add CMFCategory Tools</name>
    <role>Manager</role>
@@ -98,30 +98,6 @@
   <permission type='tuple'>
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add CMFWiki Comment</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ChartObject</name>
-  </permission>
-  <permission type='list'>
-   <name>Add ChartTemplate</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Composite Elements</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Composite Slot Classs</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Composite Slots</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Composite Tools</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Composites</name>
   </permission>
   <permission type='list'>
    <name>Add Configured CMF Sites</name>
@@ -244,16 +220,11 @@
    <name>Add MessageCatalogs</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -277,9 +248,6 @@
   <permission type='tuple'>
    <name>Add ReStructuredText Documents</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add RenderableObject</name>
   </permission>
   <permission type='tuple'>
    <name>Add Session Data Manager</name>
@@ -325,14 +293,14 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Add ZGDCharts</name>
+   <name>Add ZMailIn Clients</name>
+  </permission>
+  <permission type='list'>
+   <name>Add ZMailMessages</name>
   </permission>
   <permission type='tuple'>
    <name>Add ZODB Mount Points</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add Zope Schedulers</name>
   </permission>
   <permission type='tuple'>
    <name>Add Zope Tutorials</name>
@@ -363,12 +331,6 @@
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Change CMFWiki Regulations</name>
-  </permission>
-  <permission type='list'>
-   <name>Change Composites</name>
   </permission>
   <permission type='tuple'>
    <name>Change DTML Documents</name>
@@ -415,10 +377,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change Photo</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -431,7 +389,10 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
-   <name>Change ZGDChart</name>
+   <name>Change ZMailIn</name>
+  </permission>
+  <permission type='list'>
+   <name>Change ZMailMessages</name>
   </permission>
   <permission type='tuple'>
    <name>Change bindings</name>
@@ -472,9 +433,6 @@
    <name>Copy or Move</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Create CMFWiki Page</name>
-  </permission>
   <permission type='tuple'>
    <name>Create Transient Objects</name>
    <role>Manager</role>
@@ -494,9 +452,6 @@
   <permission type='tuple'>
    <name>Download ExtFile/ExtImage</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Edit CMFWiki Page</name>
   </permission>
   <permission type='tuple'>
    <name>Edit Factories</name>
@@ -616,9 +571,6 @@
    <role>Assignor</role>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Move CMFWiki Page</name>
-  </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connection</name>
    <role>Manager</role>
@@ -626,6 +578,9 @@
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Post mail to ZMailIn</name>
   </permission>
   <permission type='tuple'>
    <name>Query Vocabulary</name>
@@ -686,9 +641,6 @@
    <name>Use Factories</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Use external editor</name>
-  </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>
    <role>Manager</role>
@@ -711,6 +663,9 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>View ZMailMessage</name>
+  </permission>
   <permission type='tuple'>
    <name>View management screens</name>
    <role>Manager</role>
@@ -726,12 +681,6 @@
   <permission type='tuple'>
    <name>WebDAV access</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>ZopeScheduler: Manage scheduling task</name>
-  </permission>
-  <permission type='list'>
-   <name>ZopeScheduler: Schedule tasks</name>
   </permission>
  </permission_list>
  <portal_type>Sale Trade Condition Module</portal_type>

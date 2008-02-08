@@ -117,14 +117,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add DCOracle2 Database Connections</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add DCOracle2 Stored Procedures</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Database Methods</name>
    <role>Manager</role>
   </permission>
@@ -245,14 +237,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
@@ -294,10 +278,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Versions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -369,10 +349,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change DCOracle2 Stored Procedures</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change DTML Documents</name>
    <role>Manager</role>
   </permission>
@@ -414,10 +390,6 @@
   </permission>
   <permission type='tuple'>
    <name>Change Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change Photo</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -512,10 +484,6 @@
   </permission>
   <permission type='tuple'>
    <name>Edit target</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Execute DCOracle2 Stored Procedures</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -698,10 +666,6 @@
   </permission>
   <permission type='tuple'>
    <name>Use Factories</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Use external editor</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
