@@ -83,6 +83,8 @@ for h in wf_h:\n
     manual_validation = 1\n
     break\n
 \n
+bank_account_dict = {}\n
+\n
 if manual_validation:\n
   return\n
 else:\n
@@ -90,7 +92,14 @@ else:\n
   for check_operation_line in obj.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
     source_bank_account = check_operation_line.getSourcePaymentValue()\n
     # Test if the account balance is sufficient.\n
-    error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getPrice())\n
+    account_path = source_bank_account.getRelativeUrl()\n
+    if bank_account_dict.has_key(account_path):\n
+      check_price = bank_account_dict[account_path] + check_operation_line.getPrice()      \n
+    else:\n
+      check_price = check_operation_line.getPrice()\n
+    bank_account_dict[account_path] = check_price\n
+    error = context.BankAccount_checkBalance(account_path, check_operation_line.getPrice())\n
+    \n
     if error[\'error_code\'] == 1:\n
       msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n
                     mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
@@ -168,8 +177,12 @@ context.validateSourceAndDestination(state_change)\n
                             <string>_getiter_</string>
                             <string>h</string>
                             <string>manual_validation</string>
+                            <string>bank_account_dict</string>
                             <string>check_operation_line</string>
                             <string>source_bank_account</string>
+                            <string>account_path</string>
+                            <string>check_price</string>
+                            <string>_write_</string>
                             <string>context</string>
                             <string>error</string>
                             <string>msg</string>

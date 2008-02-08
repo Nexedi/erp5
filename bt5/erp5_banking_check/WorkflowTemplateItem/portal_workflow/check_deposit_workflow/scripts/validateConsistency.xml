@@ -111,6 +111,8 @@ if state_change[\'transition\'].getId() == "wait_action":\n
   context.checkAccountIsOverdraftFacility(state_change)\n
     \n
 \n
+bank_account_dict = {}\n
+\n
 # Check each check operation line.\n
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
 \n
@@ -147,7 +149,13 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
   \n
   # Test if the account balance is sufficient.\n
   if state_change[\'transition\'].getId() == "plan_action":\n
-    error = context.BankAccount_checkBalance(source_bank_account.getRelativeUrl(), check_operation_line.getPrice())\n
+    account_path = source_bank_account.getRelativeUrl()\n
+    if bank_account_dict.has_key(account_path):\n
+      check_price = bank_account_dict[account_path] + check_operation_line.getPrice()      \n
+    else:\n
+      check_price = check_operation_line.getPrice()\n
+    bank_account_dict[account_path] = check_price\n
+    error = context.BankAccount_checkBalance(account_path, check_operation_line.getPrice())\n
     if error[\'error_code\'] == 1:\n
       msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n
                     mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
@@ -236,11 +244,15 @@ if transaction.getSimulationState() == "draft" and state_change[\'transition\'].
                             <string>price</string>
                             <string>destination_bank_account</string>
                             <string>context</string>
+                            <string>bank_account_dict</string>
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
                             <string>check_number</string>
                             <string>check_type</string>
                             <string>source_bank_account</string>
+                            <string>account_path</string>
+                            <string>check_price</string>
+                            <string>_write_</string>
                             <string>error</string>
                             <string>check</string>
                           </tuple>
