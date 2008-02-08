@@ -71,7 +71,7 @@ max_active_threads = 1 # 2 will cause more bug to appear (he he)
 is_initialized = False
 tic_lock = threading.Lock() # A RAM based lock to prevent too many concurrent tic() calls
 timerservice_lock = threading.Lock() # A RAM based lock to prevent TimerService spamming when busy
-first_run = 1
+first_run = True
 currentNode = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
@@ -641,7 +641,7 @@ class ActivityTool (Folder, UniqueObject):
                                 processing_node=processing_node)
         inner_self.SQLQueue_clearProcessingFlag(
                                 processing_node=processing_node)
-        first_run = 0
+        first_run = False
 
       try:
         # Wakeup each queue
