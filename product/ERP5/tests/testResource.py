@@ -48,8 +48,6 @@ class TestResource(ERP5TypeTestCase):
   sale_supply_portal_type = 'Sale Supply'
   sale_supply_line_portal_type = 'Sale Supply Line'
   sale_supply_cell_portal_type = 'Sale Supply Cell'
-  supply_line_portal_type = 'Supply Line'
-  supply_cell_portal_type = 'Supply Cell'
   variation_base_category_list = ['colour', 'size', 'morphology',
                                   'industrial_phase']
   size_list = ['size/Child','size/Man']
@@ -553,7 +551,7 @@ class TestResource(ERP5TypeTestCase):
             for pricing_param in value_list:
               self.logMessage("Creating supply line...", tab=1)
               supply_line = product.newContent(
-                    portal_type=self.supply_line_portal_type)
+                    portal_type=self.sale_supply_line_portal_type)
               # Set pricing parameter
               self.logMessage("Set %s on supply line with value %s..." % \
                               (key, str(pricing_param)), tab=1)
@@ -585,13 +583,13 @@ class TestResource(ERP5TypeTestCase):
     product.setVariationCategoryList(self.industrial_phase_category_list)
     self.logMessage("Creating supply line...", tab=1)
     supply_line = product.newContent(
-          portal_type=self.supply_line_portal_type)
+          portal_type=self.sale_supply_line_portal_type)
     supply_line.setProperty('base_price', 100)
     supply_line.setSurchargeRatioQuantityStepList([])
     supply_line.getCellKeyList(base_id='path_optional_surcharge_ratio')
     cell1 = supply_line.newCell('industrial_phase/phase1',
         base_id='path_optional_surcharge_ratio', 
-        portal_type=self.supply_cell_portal_type)
+        portal_type=self.sale_supply_cell_portal_type)
     cell1.setSurchargeRatio(20)
     cell1.setMappedValuePropertyList(["surcharge_ratio"])
     cell1.setMembershipCriterionBaseCategory('industrial_phase')
@@ -607,7 +605,7 @@ class TestResource(ERP5TypeTestCase):
     # Create requested supply line
     self.logMessage("Creating supply line...", tab=1)
     supply_line = product.newContent(
-          portal_type=self.supply_line_portal_type)
+          portal_type=self.sale_supply_line_portal_type)
     # Set pricing parameter
     supply_line.setProperty('base_price', 1)
     # Define the additional price matrix range
@@ -615,14 +613,14 @@ class TestResource(ERP5TypeTestCase):
     supply_line.getCellKeyList(base_id='path_optional_additional_price')
     cell1 = supply_line.newCell('industrial_phase/phase1',
         base_id='path_optional_additional_price', 
-        portal_type=self.supply_cell_portal_type)
+        portal_type=self.sale_supply_cell_portal_type)
     cell1.setAdditionalPrice(2)
     cell1.setMappedValuePropertyList(["additional_price"])
     cell1.setMembershipCriterionBaseCategory('industrial_phase')
     cell1.setMembershipCriterionCategory('industrial_phase/phase1')
     cell2 = supply_line.newCell('industrial_phase/phase2',
         base_id='path_optional_additional_price', 
-        portal_type=self.supply_cell_portal_type)
+        portal_type=self.sale_supply_cell_portal_type)
     cell2.setAdditionalPrice(7)
     cell2.setMappedValuePropertyList(["additional_price"])
     cell2.setMembershipCriterionBaseCategory('industrial_phase')
