@@ -265,11 +265,6 @@ class CopyContainer:
     if getattr(self_base, 'default_destination_reference', None):
       delattr(self_base, 'default_destination_reference')
     
-    # Call a type based method to reset so properties if necessary
-    script = self._getTypeBasedMethod('afterClone')
-    if script is not None and callable(script):
-      script()
-
     # Clear the workflow history
     # XXX This need to be tested again
     if getattr(self_base, 'workflow_history', _marker) is not _marker:
@@ -304,6 +299,11 @@ class CopyContainer:
     if self.getParentValue().getPortalType() == 'Preference':
       # Make this a template if our parent is a preference
       self.makeTemplate()
+
+    # Call a type based method to reset so properties if necessary
+    script = self._getTypeBasedMethod('afterClone')
+    if script is not None and callable(script):
+      script()
 
     self.__recurse('manage_afterClone', item)
 
