@@ -39,6 +39,9 @@ from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
 from Products.ERP5Type.Utils import removeLocalPropertySheet
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl import getSecurityManager
+from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import removeZODBPythonScript
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -1256,7 +1259,6 @@ class TestPropertySheet:
       """
       if not run: return
 
-      from AccessControl import getSecurityManager
       portal = self.getPortal()
 
       # turn on Person.acquire_local_roles
@@ -1940,6 +1942,29 @@ class TestPropertySheet:
       object = folder.newContent(portal_type='Organisation')
       self.assertNotEquals(object.getCreationDate(), portal.CreationDate())
       self.assertNotEquals(object.getCreationDate(), folder.getCreationDate())
+
+    def test_copyWithoutModificationRight(self, quiet=quiet, run=run_all_test):
+      """
+      Check that it is possible to copy an object on which user doesn't have
+      "Modify portal content" permission.
+      """
+      if not run: return
+      portal = self.getPortalObject()
+      folder = self.getOrganisationModule()
+      object = folder.newContent(portal_type='Organisation')
+      script_container = portal.portal_skins.custom
+      script_id = '%s_afterClone' % (object.getPortalType().replace(' ', ''), )
+      createZODBPythonScript(script_container, script_id, '', 'context.setTitle("couscous")')
+      try:
+        security_manager = getSecurityManager()
+        self.assertEquals(1, security_manager.checkPermission('Access contents information', object))
+        self.assertEquals(1, security_manager.checkPermission('Modify portal content', object))
+        object.manage_permission('Modify portal content')
+        clipboard = folder.manage_copyObjects(ids=[object.id])
+        # Test fails if this method raises.
+        folder.manage_pasteObjects(clipboard)
+      finally:
+        removeZODBPythonScript(script_container, script_id)
 
 def test_suite():
   suite = unittest.TestSuite()
