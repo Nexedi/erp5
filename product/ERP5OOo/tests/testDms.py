@@ -65,8 +65,8 @@ RUN_ALL_TEST = 1
 conversion_server_host = ('127.0.0.1', 8008)
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
-FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
-REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
+FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
+REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 
 def printAndLog(msg):
@@ -379,29 +379,76 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     # XXX this test should be extended to check more elaborate language selection
     if not run: return
-    raise NotImplementedError
     printAndLog('\nTest Implicit Relations')
     # create docs to be referenced:
     # (1) TEST, 002, en
+    filename = 'TEST-en-002.odt'
+    file = makeFileUpload(filename)
+    document1 = self.portal.portal_contributions.newContent(file=file)
+
     # (2) TEST, 002, fr
+    filename = 'TEST-fr-002.odt'
+    file = makeFileUpload(filename)
+    document2 = self.portal.portal_contributions.newContent(file=file)
+
     # (3) TEST, 003, en
+    filename = 'TEST-en-003.odt'
+    file = makeFileUpload(filename)
+    document3 = self.portal.portal_contributions.newContent(file=file)
+
     # create docs to contain references in text_content:
     # REF, 001, en; "I use reference to look up TEST"
+    filename = 'REF-en-001.odt'
+    file = makeFileUpload(filename)
+    document4 = self.portal.portal_contributions.newContent(file=file)
+
     # REF, 002, en; "I use reference to look up TEST"
+    filename = 'REF-en-002.odt'
+    file = makeFileUpload(filename)
+    document5 = self.portal.portal_contributions.newContent(file=file)
+
     # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
+    filename = 'REFLANG-en-001.odt'
+    file = makeFileUpload(filename)
+    document6 = self.portal.portal_contributions.newContent(file=file)
+
     # REFVER, 001, en: "I use reference and version to look up TEST-002"
+    filename = 'REFVER-en-001.odt'
+    file = makeFileUpload(filename)
+    document7 = self.portal.portal_contributions.newContent(file=file)
+
     # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
+    filename = 'REFVERLANG-en-001.odt'
+    file = makeFileUpload(filename)
+    document8 = self.portal.portal_contributions.newContent(file=file)
+
+    get_transaction().commit()
+    self.tic()
     printAndLog('\nTesting Implicit Predecessors')
     # the implicit predecessors should be:
     # for (1): REF-002, REFVER, REFVERLANG
+    self.assertSameSet([document5, document7, document8],
+                       document1.getImplicitPredecessorValueList())
     # for (2): REF-002, REFLANG, REFVER
+    self.assertSameSet([document5, document6, document7],
+                       document2.getImplicitPredecessorValueList())
     # for (3): REF-002
+    self.assertSameSet([document5],
+                       document3.getImplicitPredecessorValueList())
     printAndLog('\nTesting Implicit Successors')
     # the implicit successors should be:
     # for REF: (3)
+    self.assertSameSet([document3],
+                       document5.getImplicitSuccessorValueList())
     # for REFLANG: (2)
+    self.assertSameSet([document2],
+                       document6.getImplicitSuccessorValueList())
     # for REFVER: (3)
+    self.assertSameSet([document3],
+                       document7.getImplicitSuccessorValueList())
     # for REFVERLANG: (3)
+    self.assertSameSet([document3],
+                       document8.getImplicitSuccessorValueList())
 
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
