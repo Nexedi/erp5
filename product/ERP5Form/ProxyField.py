@@ -149,6 +149,7 @@ class ProxyField(ZMIField):
 
   widget = ProxyWidgetInstance
   validator = ProxyValidatorInstance
+  delegated_list = tuple()
 
   # methods screen
   security.declareProtected('View management screens',
@@ -405,16 +406,7 @@ class ProxyField(ZMIField):
     Return true if we get the value from the proxied field.
     No, if we surcharged the value on the proxy field.
     """
-    # Update old proxied field
-    try:
-      if id in self.delegated_list:
-        return False
-      else:
-        return True
-    except AttributeError:
-      # Update old proxied field
-      self.delegated_list = []
-      return True
+    return id not in self.delegated_list
 
   security.declareProtected('Access contents information', 
                             'get_recursive_orig_value')
