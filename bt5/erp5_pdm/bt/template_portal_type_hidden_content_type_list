@@ -1,7 +1,10 @@
 Component | Purchase Supply Line
 Component | Sale Supply Line
+Component | Supply Line
 Product | Purchase Supply Line
 Product | Sale Supply Line
+Product | Supply Line
 Service | Purchase Supply Line
 Service | Sale Supply Line
+Service | Supply Line
 Transformation Transformed Resource | Mapped Value

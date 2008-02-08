@@ -2,12 +2,14 @@
  <portal_type id="Component">
   <item>Sale Supply Line</item>
   <item>Purchase Supply Line</item>
+  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Component Module">
   <item>Component</item>
  </portal_type>
  <portal_type id="Product">
   <item>Sale Supply Line</item>
+  <item>Supply Line</item>
   <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Product Module">
@@ -16,6 +18,7 @@
  <portal_type id="Service">
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
+  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Service Module">
   <item>Service</item>
