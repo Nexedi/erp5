@@ -358,9 +358,8 @@ class SQLDict(RAMDict, SQLBase):
         # Whatever happens, duplicate uids are to be made available. Only
         # executed message will get to lower priority or error state.
         make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-        exc_type = m.exc_info[0]
-        if type(exc_type) is ClassType and \
-           issubclass(exc_type, ConflictError):
+        if type(m.exc_type) is ClassType and \
+           issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:
           notify_user_list.append(m)

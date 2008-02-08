@@ -115,7 +115,9 @@ class Message:
     self.args = args
     self.kw = kw
     self.is_executed = 0
-    self.exc_info = (None, None, None)
+    self.exc_type = None
+    self.exc_value = None
+    self.traceback = None
     self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info ?
@@ -197,13 +199,16 @@ class Message:
       self.is_executed = 1
     except:
       self.is_executed = 0
-      self.exc_info = sys.exc_info()
+      self.exc_type = sys.exc_info()[0]
+      self.exc_value = str(sys.exc_info()[1])
+      self.traceback = ''.join(ExceptionFormatter.format_exception(
+                               *sys.exc_info()))
       LOG('ActivityTool', WARNING,
           'Could not call method %s on object %s' % (
-          self.method_id, self.object_path), error=self.exc_info)
+          self.method_id, self.object_path), error=sys.exc_info())
       # push the error in ZODB error_log
       if getattr(activity_tool, 'error_log', None) is not None:
-        activity_tool.error_log.raising(self.exc_info)
+        activity_tool.error_log.raising(sys.exc_info())
 
   def validate(self, activity, activity_tool, check_order_validation=1):
     return activity.validate(activity_tool, self,
@@ -231,17 +236,16 @@ Subject: %s
 
 Document: %s
 Method: %s
+Exception: %s %s
 
 %s
 """ % (activity_tool.email_from_address, user_email, message,
        message, '/'.join(self.object_path), self.method_id,
-       ''.join(ExceptionFormatter.format_exception(*self.exc_info)))
+       self.exc_type, self.exc_value, self.traceback)
     try:
       activity_tool.MailHost.send( mail_text )
-    except (socket.error, MailHostError):
-      LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent.', error=sys.exc_info())
-      if self.exc_info[0] is not None:
-        LOG('ActivityTool.notifyUser', WARNING, 'Original exception', error=self.exc_info)
+    except (socket.error, MailHostError), message:
+      LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent: %s. Exception was: %s %s\n%s' % (message, self.exc_type, self.exc_value, self.traceback))
 
   def reactivate(self, activity_tool):
     # Reactivate the original object.
@@ -840,10 +844,10 @@ class ActivityTool (Folder, UniqueObject):
           new_message_list.append(m)
         except:
           m.is_executed = 0
-          m.exc_info = sys.exc_info()
+          m.exc_type = sys.exc_info()[0]
           LOG('WARNING ActivityTool', 0,
               'Could not call method %s on object %s' %
-              (m.method_id, m.object_path), error=m.exc_info)
+              (m.method_id, m.object_path), error=sys.exc_info())
 
       try:
         if len(expanded_object_list) > 0:
@@ -858,10 +862,10 @@ class ActivityTool (Folder, UniqueObject):
         # In this case, the group method completely failed.
         for m in new_message_list:
           m.is_executed = 0
-          m.exc_info = sys.exc_info()
+          m.exc_type = sys.exc_info()[0]
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
-            (method_id, expanded_object_list), error=m.exc_info)
+            (method_id, expanded_object_list), error=sys.exc_info())
       else:
         # Obtain all indices of failed messages. Note that this can be a partial failure.
         failed_message_dict = {}
@@ -885,10 +889,10 @@ class ActivityTool (Folder, UniqueObject):
               m.is_executed = 1
             except:
               m.is_executed = 0
-              m.exc_info = sys.exc_info()
+              m.exc_type = sys.exc_info()[0]
               LOG('ActivityTool', WARNING,
                   'Could not call method %s on object %s' % (
-                  m.method_id, m.object_path), error=m.exc_info)
+                  m.method_id, m.object_path), error=sys.exc_info())
 
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
