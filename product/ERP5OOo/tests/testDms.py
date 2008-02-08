@@ -574,6 +574,26 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
+  def test_08_EmbeddedDocumentState(self,quiet=QUIET,run=RUN_ALL_TEST):
+    """
+    Check the validation state of an embedded document
+    """
+    if not run: return
+    printAndLog('\nValidation State of an Embedded Document')
+    filename = 'EmbeddedImage-en-002.odt'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(0, len(document.contentValues(portal_type='Image')))
+    document.convert(format='html')
+    image_list = document.contentValues(portal_type='Image')
+    self.assertEquals(1, len(image_list))
+    image = image_list[0]
+    self.assertEquals('embedded', image.getValidationState())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
