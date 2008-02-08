@@ -331,8 +331,9 @@ class SQLDict(RAMDict, SQLBase):
           if m.active_process:
             message_with_active_process_list.append(m)
       else:
-        if type(m.exc_type) is ClassType and \
-           issubclass(m.exc_type, ConflictError):
+        exc_type = m.exc_info[0]
+        if type(exc_type) is ClassType and \
+           issubclass(exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:
           notify_user_list.append(m)
