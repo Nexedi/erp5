@@ -26,7 +26,6 @@
 from Shared.DC.ZRDB.TM import TM
 from zLOG import LOG, ERROR, INFO
 import sys
-import threading
 
 try:
   from transaction import get as get_transaction
