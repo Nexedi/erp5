@@ -76,12 +76,12 @@ class ActivityBuffer(TM):
   # at end of transaction
   def _beginAndHook(self, activity_tool):
     # LOG('ActivityBuffer', 0, '_begin %r' % (self,))
-    from ActivityTool import activity_list
+    from ActivityTool import activity_dict
     self.requires_prepare = 1
     try:
 
       # Reset registration for each transaction.
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.registerActivityBuffer(self)
 
       # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of

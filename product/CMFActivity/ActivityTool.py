@@ -78,7 +78,6 @@ ROLE_PROCESSING = 1
 
 # Activity Registration
 activity_dict = {}
-activity_list = []
 
 # Here go ActivityBuffer instances
 # Structure:
@@ -92,7 +91,6 @@ def registerActivity(activity):
   # class and create instance for each activity
   #LOG('Init Activity', 0, str(activity.__name__))
   activity_instance = activity()
-  activity_list.append(activity_instance)
   activity_dict[activity.__name__] = activity_instance
 
 class Message:
@@ -349,7 +347,7 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       from Activity import RAMQueue, RAMDict, SQLQueue, SQLDict
       # Initialize each queue
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.initialize(self)
       is_initialized = 1
       
@@ -606,7 +604,7 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized: self.initialize()
 
       # Call distribute on each queue
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.distribute(aq_inner(self), node_count)
 
     security.declarePublic('tic')
@@ -644,14 +642,14 @@ class ActivityTool (Folder, UniqueObject):
 
       try:
         # Wakeup each queue
-        for activity in activity_list:
+        for activity in activity_dict.itervalues():
           activity.wakeup(inner_self, processing_node)
 
         # Process messages on each queue in round robin
         has_awake_activity = 1
         while has_awake_activity:
           has_awake_activity = 0
-          for activity in activity_list:
+          for activity in activity_dict.itervalues():
             activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
             has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
       finally:
@@ -667,7 +665,7 @@ class ActivityTool (Folder, UniqueObject):
         obj = args[0]
       else:
         obj = self
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         if activity.hasActivity(aq_inner(self), obj, **kw):
           return 1
       return 0
@@ -746,19 +744,19 @@ class ActivityTool (Folder, UniqueObject):
         object_path = obj
       else:
         object_path = obj.getPhysicalPath()
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
 
     def start(self, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.start(aq_inner(self), **kw)
 
     def stop(self, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
@@ -933,7 +931,7 @@ class ActivityTool (Folder, UniqueObject):
       # Obtain all pending messages.
       message_list = []
       if keep:
-        for activity in activity_list:
+        for activity in activity_dict.itervalues():
           if hasattr(activity, 'dumpMessageList'):
             try:
               message_list.extend(activity.dumpMessageList(self))
@@ -990,7 +988,7 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized: self.initialize()
 
       message_list = []
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         try:
           message_list += activity.getMessageList(aq_inner(self),**kw)
         except AttributeError:
@@ -1003,7 +1001,7 @@ class ActivityTool (Folder, UniqueObject):
         Return the number of messages which match the given tag.
       """
       message_count = 0
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         message_count += activity.countMessageWithTag(aq_inner(self), value)
       return message_count
 
@@ -1020,7 +1018,7 @@ class ActivityTool (Folder, UniqueObject):
         message_uid : activities with a particular uid
       """
       message_count = 0
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         message_count += activity.countMessage(aq_inner(self), **kw)
       return message_count
 
@@ -1048,7 +1046,7 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized: self.initialize()
       message_list = []
       method_id = "_validate_%s" % validator_id
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         method = getattr(activity, method_id, None)
         if method is not None:
           result = method(aq_inner(self), message, validation_value)
@@ -1060,7 +1058,7 @@ class ActivityTool (Folder, UniqueObject):
     def timeShift(self, delay):
       global is_initialized
       if not is_initialized: self.initialize()
-      for activity in activity_list:
+      for activity in activity_dict.itervalues():
         activity.timeShift(aq_inner(self), delay)
 
 InitializeClass(ActivityTool)
