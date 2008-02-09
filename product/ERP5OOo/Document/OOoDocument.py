@@ -481,7 +481,7 @@ class OOoDocument(File, ConversionCacheMixin):
                   data=zip_file.read(file_name))
         if web_page.getValidationState() != 'embedded':
           # Make sure embedded is set until cleaner solution if found
-          web_page.embed()
+          web_page.edit()
         web_page.activate().disoverMetadata() # Maybe we should use contribution tool instead
                                               # Should be embedded
       else:
@@ -492,7 +492,7 @@ class OOoDocument(File, ConversionCacheMixin):
                   data=zip_file.read(file_name))
         if image_or_file.getValidationState() != 'embedded':
           # Make sure embedded is set until cleaner solution if found
-          image_or_file.embed()
+          image_or_file.edit()
     if must_close:
       zip_file.close()
       archive_file.close()
