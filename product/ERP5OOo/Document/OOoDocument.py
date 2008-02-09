@@ -405,6 +405,9 @@ class OOoDocument(File, ConversionCacheMixin):
         for f in z.infolist():
           fn = f.filename
           if fn.endswith('html'):
+            if self.getPortalType() == 'Presentation'\
+                  and not (fn.find('impr') >= 0):
+              continue
             data = z.read(fn)
             break
         mime = 'text/html'
