@@ -26,6 +26,7 @@ from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from ZODB.POSException import ConflictError
+from Shared.DC.ZRDB.DA import DatabaseError
 
 import sys
 
@@ -183,10 +184,23 @@ class ERP5GroupManager(BasePlugin):
                                              id='ERP5GroupManager_getGroupsForPrincipal',
                                              cache_factory='erp5_content_short')
 
-    return _getGroupsForPrincipal(
+    try:
+      return _getGroupsForPrincipal(
                 user_name=principal.getId(),
                 path=self.getPhysicalPath())
-
+    except ConflictError:
+      raise
+    except:
+      # Hiding this exception is necessary in order
+      # to be able to configure database connection
+      # on a existing site.
+      # Improved version may use ProgrammingError
+      # and DatabaseError exceptions explicitely
+      LOG('ERP5GroupManager', WARNING,
+          'could not call _getGroupsForPrincipal probably because of '
+          'misconfigured database connection',
+                  error = sys.exc_info())
+      return ()
 
 classImplements( ERP5GroupManager
                , IGroupsPlugin
