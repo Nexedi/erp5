@@ -165,7 +165,8 @@ class NotificationTool(BaseTool):
 
     # Default Values
     portal = self.getPortalObject()
-    default_email = portal.email_from_address
+    default_from_email = portal.email_from_address
+    default_to_email = portal.email_to_address
 
     # Change all strings to object values
     if isinstance(sender, basestring):
@@ -179,7 +180,7 @@ class NotificationTool(BaseTool):
     if not email_from_address:
       # If we can not find a from address then
       # we fallback to default values
-      email_from_address = default_email
+      email_from_address = default_from_email
 
     # To is a list - let us find all members
     if not isinstance(recipient, (list, tuple)):
@@ -191,10 +192,10 @@ class NotificationTool(BaseTool):
       mailhost = getattr(self.getPortalObject(), 'MailHost', None)
       if mailhost is None:
         raise AttributeError, "Cannot find a MailHost object"
-      mail_message = buildEmailMessage(email_from_address, default_email, 
+      mail_message = buildEmailMessage(email_from_address, default_to_email, 
                                        msg=message, subject=subject,
                                        attachment_list=attachment_list)
-      return mailhost.send(mail_message.as_string(), default_email, email_from_address)
+      return mailhost.send(mail_message.as_string(), default_to_email, email_from_address)
 
     # Default implementation is to send an active message to everyone
     for person in recipient:
