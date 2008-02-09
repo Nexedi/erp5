@@ -22,6 +22,7 @@
   <item>Spreadsheet</item>
  </portal_type>
  <portal_type id="Drawing">
+  <item>Web Page</item>
   <item>Role Definition</item>
   <item>Image</item>
  </portal_type>
@@ -42,14 +43,18 @@
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Presentation">
+  <item>Web Page</item>
   <item>Role Definition</item>
   <item>Image</item>
  </portal_type>
  <portal_type id="Spreadsheet">
   <item>Role Definition</item>
+  <item>Web Page</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Text">
   <item>Image</item>
+  <item>Web Page</item>
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="URL Crawler">

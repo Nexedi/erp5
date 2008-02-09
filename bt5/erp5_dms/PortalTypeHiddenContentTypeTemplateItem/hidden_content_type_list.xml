@@ -10,4 +10,20 @@
   <item>Image</item>
   <item>Presentation</item>
  </portal_type>
+ <portal_type id="Drawing">
+  <item>Web Page</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Presentation">
+  <item>Image</item>
+  <item>Web Page</item>
+ </portal_type>
+ <portal_type id="Spreadsheet">
+  <item>Image</item>
+  <item>Web Page</item>
+ </portal_type>
+ <portal_type id="Text">
+  <item>Image</item>
+  <item>Web Page</item>
+ </portal_type>
 </hidden_content_type_list>
