@@ -464,16 +464,8 @@ class OOoDocument(File, ConversionCacheMixin):
       must_close = 1
     else:
       must_close = 0
-    first_page = True
     for f in zip_file.infolist():
       file_name = f.filename
-      if file_name.endswith('html') and self.getPortalType() != 'Presentation':
-      #if file_name.endswith('html'):
-        continue
-      #if first_page and file_name.endswith('html'):
-      #  first_page = False
-      #  break
-      LOG('file_name', 0, file_name)
       document = self.get(file_name, None)
       if document is not None:
         self.manage_delObjects([file_name])
