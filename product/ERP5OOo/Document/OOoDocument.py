@@ -411,7 +411,8 @@ class OOoDocument(File, ConversionCacheMixin):
             data = z.read(fn)
             break
         mime = 'text/html'
-        self.populateContent(zip_file=z)
+        self.populateContent(zip_file=z) # Maybe some parts should be asynchronous for
+                                         # better usability
         z.close()
         cs.close()
       if (display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST) \
@@ -474,13 +475,24 @@ class OOoDocument(File, ConversionCacheMixin):
         self.manage_delObjects([file_name])
       newContent = UnrestrictedMethod(self.portal_contributions.newContent)
       if file_name.endswith('html'):
-        newContent(id=file_name, container=self, portal_type='Web Page',
+        web_page = newContent(\
+                  id=file_name, container=self, portal_type='Web Page',
                   file_name=file_name,
                   data=zip_file.read(file_name))
+        if web_page.getValidationState() != 'embedded':
+          # Make sure embedded is set until cleaner solution if found
+          web_page.embed()
+        web_page.activate().disoverMetadata() # Maybe we should use contribution tool instead
+                                              # Should be embedded
       else:
-        newContent(id=file_name, container=self,
+        image_or_file = newContent(\
+                  id=file_name, container=self,
+                  portal_type='Image', # Contribution Tool would be better here
                   file_name=file_name,
                   data=zip_file.read(file_name))
+        if image_or_file.getValidationState() != 'embedded':
+          # Make sure embedded is set until cleaner solution if found
+          image_or_file.embed()
     if must_close:
       zip_file.close()
       archive_file.close()
