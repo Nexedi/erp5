@@ -51,7 +51,7 @@ class ActiveResult:
   # getProperty default
   _MARKER = None
 
-  def __init__(self,summary='',severity=INFO,detail='',**kw):
+  def __init__(self, summary='', severity=INFO, detail='', **kw):
     """
     set all parameters
     """

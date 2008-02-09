@@ -172,7 +172,7 @@ class Message:
   def activateResult(self, activity_tool, result, object):
     if self.active_process is not None:
       active_process = activity_tool.unrestrictedTraverse(self.active_process)
-      if isinstance(result,ActiveResult):
+      if isinstance(result, ActiveResult):
         result.edit(object_path=object)
         result.edit(method_id=self.method_id)
         # XXX Allow other method_id in future
@@ -180,8 +180,8 @@ class Message:
       else:
         active_process.activateResult(
                     ActiveResult(object_path=object,
-                          method_id=self.method_id,
-                          result=result)) # XXX Allow other method_id in future
+                                 method_id=self.method_id,
+                                 result=result)) # XXX Allow other method_id in future
 
   def __call__(self, activity_tool):
     try:
