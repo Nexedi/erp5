@@ -482,7 +482,7 @@ class OOoDocument(File, ConversionCacheMixin):
         if web_page.getValidationState() != 'embedded':
           # Make sure embedded is set until cleaner solution if found
           web_page.edit()
-        web_page.activate().disoverMetadata() # Maybe we should use contribution tool instead
+        web_page.activate().discoverMetadata() # Maybe we should use contribution tool instead
                                               # Should be embedded
       else:
         image_or_file = newContent(\
