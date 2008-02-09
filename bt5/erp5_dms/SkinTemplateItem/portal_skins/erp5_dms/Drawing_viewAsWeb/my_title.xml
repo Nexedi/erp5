@@ -79,11 +79,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>css_class</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string>headline</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
