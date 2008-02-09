@@ -190,8 +190,9 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
                        today python:\'%s/%s/%s\' % (str(DateTime().year()), str(DateTime().month()),str(DateTime().day()))">\n
               <a tal:attributes="href python: \'%s/setLanePath?form_id=%s&amp;list_selection_name=%s&amp;bound_start=%s\'\n
                  % (context.absolute_url(), form_id,selection_name,today)">\n
-                <img src="/images/jump.png" title="Jump to Current Day" name="JumpToCurrentDay"\n
-                     tal:attributes="src string:${address}/images/jump.png;" />\n
+                <img src="/images/jump.png" alt="Jump" name="JumpToCurrentDay"\n
+                  tal:attributes="src string:${address}/images/jump.png; \n
+                                  title python: here.Base_translateString(\'Jump to Current Day\')"/>\n
               </a>\n
               </tal:block>\n
        </div>\n
