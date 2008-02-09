@@ -29,11 +29,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>archivePublicVersion</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Archive a document which has been replaced by a more recent version by setting the validation state to archived.</string> </value>
+            <value> <string>The publish_alive workflow method sets the validation state of the document to published_alive and archives any other published version (alive or not) of the same document in the same language.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,11 +43,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>archive</string> </value>
+            <value> <string>publish_alive</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>archived</string> </value>
+            <value> <string>published_alive</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Archive</string> </value>
+            <value> <string>Publish Alive</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

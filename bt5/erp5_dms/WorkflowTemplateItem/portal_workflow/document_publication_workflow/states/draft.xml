@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -48,12 +45,18 @@
                 <string>embed</string>
                 <string>publish</string>
                 <string>publish_action</string>
+                <string>publish_alive</string>
+                <string>publish_alive_action</string>
                 <string>release</string>
                 <string>release_action</string>
+                <string>release_alive</string>
+                <string>release_alive_action</string>
                 <string>request</string>
                 <string>request_action</string>
                 <string>share</string>
                 <string>share_action</string>
+                <string>share_alive</string>
+                <string>share_alive_action</string>
                 <string>submit</string>
                 <string>submit_action</string>
               </tuple>
@@ -77,17 +80,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>

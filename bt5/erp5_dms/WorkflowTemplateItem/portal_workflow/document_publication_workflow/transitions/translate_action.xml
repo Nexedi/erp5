@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -42,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Notify that the document was translated and that it must now be revised.</string> </value>
+            <value> <string>Notify that the document was translated or collated. Translated document must be revised before submission for publication.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -76,11 +73,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

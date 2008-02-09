@@ -74,6 +74,7 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -84,6 +85,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -102,6 +104,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -111,6 +114,7 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>

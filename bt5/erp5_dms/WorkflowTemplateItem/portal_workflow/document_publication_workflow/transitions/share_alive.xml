@@ -29,11 +29,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>archiveSharedVersion</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Archive a document which has been replaced by a more recent version by setting the validation state to archived.</string> </value>
+            <value> <string>The Share Alive workflow method sets the document validation state to shared_alive and archives any previously shared document with same version and same language.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,11 +43,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>archive</string> </value>
+            <value> <string>share_alive</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>archived</string> </value>
+            <value> <string>shared_alive</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Archive</string> </value>
+            <value> <string>Share Alive</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

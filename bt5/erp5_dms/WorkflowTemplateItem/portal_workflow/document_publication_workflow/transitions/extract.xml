@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -36,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This automatic transition is called to redraft an initially embedded object which is moved to a module.</string> </value>
+            <value> <string>This automatic transition is called to redraft an initially embedded object which is moved to a module, for example after a Copy / Paste or Clone action.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -70,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -91,11 +85,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

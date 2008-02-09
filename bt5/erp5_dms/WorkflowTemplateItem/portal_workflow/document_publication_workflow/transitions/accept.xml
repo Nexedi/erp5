@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -42,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Accept a translation </string> </value>
+            <value> <string>Accept a translation and set the validation state to submitted, waiting for further approval before publication.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

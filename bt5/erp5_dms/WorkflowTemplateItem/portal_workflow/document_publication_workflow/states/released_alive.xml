@@ -16,18 +16,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>A document shared by limited people in the organisation (ex. team, project, etc.)</string> </value>
+            <value> <string>A document which is released and and alive. It is accessible to its associates (team, project, members, partners, etc.) based on the security definition. It is modifiable by it assignees (ex. team, project, etc. for colloaborative documents) and by its assignor (ex. knowledge manager).</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>shared</string> </value>
+            <value> <string>released_alive</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -37,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Shared</string> </value>
+            <value> <string>Released Alive</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -49,8 +43,10 @@
                 <string>hide_action</string>
                 <string>publish</string>
                 <string>publish_action</string>
-                <string>release</string>
-                <string>release_action</string>
+                <string>publish_alive</string>
+                <string>publish_alive_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>
@@ -83,6 +79,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -92,6 +89,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -110,6 +108,8 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -121,6 +121,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
