@@ -37,7 +37,7 @@ class InputButtonWidget(Widget.Widget):
     Displays an input button.
 
     """
-    property_names = Widget.Widget.property_names + ['name', 'extra']
+    property_names = Widget.Widget.property_names + ['name', 'extra', 'image']
 
     default = fields.StringField('default',
                                  title='Button text',
@@ -58,14 +58,27 @@ class InputButtonWidget(Widget.Widget):
                                    description=(
         "The CSS class of the field. This can be used to style your "
         "formulator fields using cascading style sheets. Not required."),
-                                   default="hiddenLabel",
+                                   default="hidden_label",
                                    required=0)
+
+    image = fields.StringField('image',
+                          title='Image',
+                          description=(
+        "The image of the button (if any)."),
+                          default='',
+                          required=0)
 
     def render(self, field, key, value, REQUEST):
         """Render input button.
         """
-        return Widget.render_element("input",
-                              type="submit",
+        image = field.get_value('image')
+        if image:
+          html_type = "image"
+        else:
+          html_type = "submit"
+        return Widget.render_element('input',
+                              type=html_type,
+                              src=image,
                               name=field.get_value('name'),
                               css_class=field.get_value('css_class'),
                               value=field.get_value('default'),
