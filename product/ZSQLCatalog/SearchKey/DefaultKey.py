@@ -25,7 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
- 
+
 from SearchKey import SearchKey
 from pprint import pprint
 
@@ -35,7 +35,7 @@ class DefaultKey(SearchKey):
       It supports following special operator ['=', '%', '>' , '>=', '<', '<='] in
       addition to main logical operators like ['OR', 'or', 'AND', 'and'].
 
-      Examples for title column: 
+      Examples for title column:
         * 'foo or bar'  --> "title = 'foo' OR title = 'bar'"
         * 'foo or =bar'  --> "title = 'foo' OR title = 'bar'"
         * '%foo% or bar' --> "title = '%foo%' OR title = 'bar'"
@@ -48,10 +48,10 @@ class DefaultKey(SearchKey):
   default_key_type = 'default'
 
   tokens =  ('OR', 'AND', 'NOT', 'WORDSET', 'WORD',
-             'GREATERTHAN', 'GREATERTHANEQUAL', 
+             'GREATERTHAN', 'GREATERTHANEQUAL',
              'LESSTHAN', 'LESSTHANEQUAL')
 
-  sub_operators = ('GREATERTHAN', 'GREATERTHANEQUAL', 
+  sub_operators = ('GREATERTHAN', 'GREATERTHANEQUAL',
                     'LESSTHAN', 'LESSTHANEQUAL', 'NOT')
 
 
@@ -68,19 +68,19 @@ class DefaultKey(SearchKey):
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'AND'
-    return t  
+    return t
 
   def t_NOT(self, t):
     r'(\s+NOT\s+|\s+not\s+|!=)'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
-    t.value = '!=' 
-    return t     
+    t.value = '!='
+    return t
 
-  t_GREATERTHANEQUAL = r'>='  
-  t_LESSTHANEQUAL = r'<='  
+  t_GREATERTHANEQUAL = r'>='
+  t_LESSTHANEQUAL = r'<='
   t_GREATERTHAN = r'>'
-  t_LESSTHAN = r'<'     
+  t_LESSTHAN = r'<'
 
   def t_WORD(self, t):
     r'[\x7F-\xFF\w\d\/~!@#$%^&*()_+\n][\x7F-\xFF\w\d\/~!@#$%^&*()_+\n]*'
@@ -98,7 +98,7 @@ class DefaultKey(SearchKey):
     # and starting/ending with "
     value = t.value.replace('"', '').strip()
     t.value = "%s" %value
-    return t 
+    return t
 
   def quoteSQLString(self, value, format):
     """ Return a quoted string of the value. """
@@ -139,9 +139,9 @@ class DefaultKey(SearchKey):
 ##          operator_value = operator.value
 ##          where_expressions.append('%s' %operator_value)
 ##        if len(tokens):
-##          # no it's not a stand alone expression, 
+##          # no it's not a stand alone expression,
 ##          # determine it from list of tokens
 ##          operator_value, sub_tokens = self.getOperatorForTokenList(tokens)
 ##          row_tokens_values = [x.value for x in sub_tokens]
 ##          where_expressions.append("%s %s '%s'" %(key, operator_value, ' '.join(row_tokens_values)))
-##    return where_expressions, select_expressions      
+##    return where_expressions, select_expressions   

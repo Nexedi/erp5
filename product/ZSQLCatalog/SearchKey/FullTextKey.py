@@ -33,13 +33,13 @@ SEARCH_MODE_MAPPING = {'in_boolean_mode': 'IN BOOLEAN MODE',
 
 class FullTextKey(SearchKey):
   """ FullTextKey key is an ERP5 portal_catalog search key which is used to render
-      SQL expression that will try match all possible values using 
+      SQL expression that will try match all possible values using
       MySQL's fulltext search support.
-      See syntax see MySQL's FullText search reference: 
+      See syntax see MySQL's FullText search reference:
       http://dev.mysql.com/doc/refman/5.0/en/fulltext-search.html
   """
 
-  tokens =  ('PLUS', 'MINUS', 'WORD', 'GREATERTHAN', 'LESSTHAN', 'LEFTPARENTHES', 
+  tokens =  ('PLUS', 'MINUS', 'WORD', 'GREATERTHAN', 'LESSTHAN', 'LEFTPARENTHES',
              'RIGHTPARENTHES', 'TILDE', 'ASTERISK', 'DOUBLEQUOTE',)
 
   # SQL expressions patterns
@@ -50,12 +50,12 @@ class FullTextKey(SearchKey):
   t_PLUS = r'(\+)'
   t_MINUS = r'(\-)'
   t_GREATERTHAN = r'(\>)'
-  t_LESSTHAN = r'(\<)'  
-  t_LEFTPARENTHES = r'(\()'    
+  t_LESSTHAN = r'(\<)'
+  t_LEFTPARENTHES = r'(\()'
   t_RIGHTPARENTHES = r'(\))'
-  t_TILDE = r'(\~)'   
+  t_TILDE = r'(\~)'
   t_ASTERISK = r'(\*)'
-  t_DOUBLEQUOTE = r'(\")'      
+  t_DOUBLEQUOTE = r'(\")'
 
   def t_WORD(self, t):
     r'[\x7F-\xFF\w\d\/!@#$%^&_][\x7F-\xFF\w\d\/!@#$%^&_]*'
@@ -65,15 +65,15 @@ class FullTextKey(SearchKey):
     t.value = "'%s'" %word_value
     return t
 
-  def buildSQLExpression(self, key, value, 
+  def buildSQLExpression(self, key, value,
                          format=None, mode=None, range_value=None, stat__=None):
     """ Analize token list and generate SQL expressions."""
     tokens = self.tokenize(value)
     # based on type tokens we may switch to different search mode
     mode = SEARCH_MODE_MAPPING.get(mode, '')
     if mode == '':
-      # determine it based on list of tokens  i.e if we have only words 
-      # leave as its but if we have '-' or '+' use boolean mode 
+      # determine it based on list of tokens  i.e if we have only words
+      # leave as its but if we have '-' or '+' use boolean mode
       for token in tokens:
         if token.type != 'WORD':
           mode = SEARCH_MODE_MAPPING['in_boolean_mode']
@@ -90,7 +90,7 @@ class FullTextKey(SearchKey):
     where_expression = self.where_match_against %(key, value, mode)
     if not stat__:
       # stat__ is an internal implementation artifact to prevent adding
-      # select_expression for countFolder    
+      # select_expression for countFolder
       select_expression_list = [self.select_match_against_as %(key, value, mode, relevance_key1),]
       if  relevance_key2 is not None:
         select_expression_list.append(self.select_match_against_as %(key, value, mode, relevance_key2))

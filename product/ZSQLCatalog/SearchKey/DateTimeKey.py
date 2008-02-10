@@ -33,14 +33,14 @@ from DateTime import DateTime
 from SearchKey import SearchKey
 from pprint import pprint
 
- 
+
 class DateTimeKey(SearchKey):
   """ DateTimeKey key is an ERP5 portal_catalog search key which is used to render
       SQL expression that will try to match values in DateTime MySQL columns.
       It supports following special operator ['=', '%', '>' , '>=', '<', '<='] in
       addition to main logical operators like ['OR', 'or', 'AND', 'and'].
 
-      Note: because all ERP5 datetime values are indexed in MySQL in 'UTC' 
+      Note: because all ERP5 datetime values are indexed in MySQL in 'UTC'
       the respective passed date will be first converted to 'UTC' before inserted into
       respective SQL query!
 
@@ -48,15 +48,15 @@ class DateTimeKey(SearchKey):
 
         * '15/01/2008' --> "delivery.start_date = '2008-01-14 22:00'"
 
-        * '>=15/01/2008' --> "delivery.start_date >= '2008-01-14 22:00'"      
+        * '>=15/01/2008' --> "delivery.start_date >= '2008-01-14 22:00'"     
 
-        * '>=15/01/2008 or <=20/01/2008' 
+        * '>=15/01/2008 or <=20/01/2008'
           --> "delivery.start_date >= '2008-01-14 22:00' or delivery.start_date<='2008-01-19 22:00'"
 
         * '>=15/01/2008 10:00 GMT+02 OR <=20/01/2008 05:12 Universal'
           -->
-          "delivery.start_date >= '2008-01-15 08:00 Universal' 
-            OR 
+          "delivery.start_date >= '2008-01-15 08:00 Universal'
+            OR
           delivery.start_date <= '2008-01-20 05:12 Universal'
           "
   """
@@ -65,7 +65,7 @@ class DateTimeKey(SearchKey):
              'GREATERTHAN', 'GREATERTHANEQUAL',
              'LESSTHAN', 'LESSTHANEQUAL')
 
-  sub_operators =  ('GREATERTHAN', 'GREATERTHANEQUAL', 
+  sub_operators =  ('GREATERTHAN', 'GREATERTHANEQUAL',
                     'LESSTHAN', 'LESSTHANEQUAL', 'NOT', 'EQUAL',)
 
   def t_OR(self, t):
@@ -86,15 +86,15 @@ class DateTimeKey(SearchKey):
     t.value = t.value.upper().strip()
     return t
 
-  t_GREATERTHANEQUAL = r'>='  
-  t_LESSTHANEQUAL = r'<='  
+  t_GREATERTHANEQUAL = r'>=' 
+  t_LESSTHANEQUAL = r'<=' 
   t_GREATERTHAN = r'>'
   t_LESSTHAN = r'<'
   t_EQUAL = r'='
   t_DATE = r'\d{1,4}[(/|\.|\-) /.]\d{1,4}[(/|\.|\-) /.]\d{1,4}((\s.)*\d{0,2}:\d{0,2}(:\d{0,2})?)?(\sUniversal|\sGMT\+\d\d)?|\d\d\d\d%?'
 
   def quoteSQLString(self, value, format):
-    """ Return a quoted string of the value. 
+    """ Return a quoted string of the value.
         Make sure to convert it to UTC first."""
     if getattr(value, 'ISO', None) is not None:
       value = "'%s'" % value.toZone('UTC').ISO()
@@ -122,7 +122,7 @@ class DateTimeKey(SearchKey):
         # add days ofset accordingly
         format = '%%%s/%%m/%%d' %format
         date_value = '%s/01/01' %date_value
-        days_offset_map = {'=' : 366, '>' : 366, 
+        days_offset_map = {'=' : 366, '>' : 366,
                            '>=' : 366, '<': -366, '<=':-366}
         days_offset = days_offset_map[sub_operator]
 
@@ -143,10 +143,10 @@ class DateTimeKey(SearchKey):
         if sub_operator == '=':
           # transform to range 'key >= date  AND  date < key'
           query_kw = {key: (date_value, date_value + days_offset,),
-                      'range': 'minmax'} 
+                      'range': 'minmax'}
         else:
           query_kw = {key: date_value + days_offset,
-                      'range': sub_operator}   
+                      'range': sub_operator}  
         query_kw['type'] = 'date'
       else:
         # not a valid date, try to get an year range
@@ -159,7 +159,7 @@ class DateTimeKey(SearchKey):
           date_value = DateTime(date_value).toZone('UTC')
           query_kw = {key: (date_value, date_value + 366,),
                       'type': 'date',
-                      'range': 'minmax'} 
+                      'range': 'minmax'}
 
       # append only if it was possible to generate query
       if query_kw is not None:
@@ -167,7 +167,7 @@ class DateTimeKey(SearchKey):
 
     # join query list in one really big ComplexQuery
     if len(query_list):
-      complex_query = ComplexQuery(*query_list, 
+      complex_query = ComplexQuery(*query_list,
                                    **{'operator': 'AND'})
       return complex_query
 
@@ -188,7 +188,7 @@ class DateTimeKey(SearchKey):
 ##        operator_value = operator.value
 ##        where_expressions.append('%s' %operator_value)
 ##      if len(tokens):
-##        # no it's not a stand alone expression, 
+##        # no it's not a stand alone expression,
 ##        # determine it from list of tokens
 ##        operator_value, sub_tokens = self.getOperatorForTokenList(tokens)
 ##        row_tokens_values = [self.quoteSQLString(x.value, format) for x in sub_tokens]
