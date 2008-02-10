@@ -30,7 +30,7 @@ from DateTime import DateTime as DateTimeKlass
 import math
 from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS,\
 getDefaultDateFormat, _correctYear, _calcHMS, _calcDependentSecond2, DateTimeError,\
-SyntaxError, DateError, TimeError
+SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
@@ -196,6 +196,8 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       year=ints[2]
     del ints[:3]
 
+  import pdb; pdb.set_trace()
+  day = None
   if day is None:
     # Use today's date.
     year,month,day = localtime(time())[:3]
