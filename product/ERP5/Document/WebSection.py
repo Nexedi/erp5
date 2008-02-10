@@ -1,6 +1,15 @@
 ##############################################################################
 #
+# Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006-2007 Nexedi SA and Contributors. All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -8,20 +17,6 @@
 # End users who are looking for a ready-to-use solution with commercial
 # garantees and support are strongly adviced to contract a Free Software
 # Service Company
-#
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
 
@@ -37,44 +32,13 @@ from Products.ERP5Type.Base import TempBase
 from Globals import get_request
 
 from zLOG import LOG, WARNING
+import sys
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
 # Global keys used for URL generation
 WEBSECTION_KEY = 'web_section_value'
-WEBSITE_USER = 'web_site_user'
-
-Domain_getattr = Domain.inheritedAttribute('__getattr__')
-
-# We use a request key (CACHE_KEY) to store access attributes and prevent infinite recursion
-# We define a couple of reserved names for which we are not
-# going to try to do acquisition
-CACHE_KEY = 'web_site_aq_cache'
-DOCUMENT_NAME_KEY = 'web_section_document_name'
-reserved_name_dict = { 'getApplicableLayout' : 1,
-                       'getWebmaster' : 1,
-                       'getContainerLayout': 1,
-                       'isWebMode' : 1,
-                       'getLayout' : 1,
-                       'Localizer' : 1,
-                       'field_render' : 1,
-                       'getListItemUrl' : 1,
-                       'getLocalPropertyManager' : 1,
-                       'getOrderedGlobalActionList' : 1,
-                       'allow_discussion' : 1,
-                       'im_func' : 1,
-                       'im_self' : 1,
-                       'ListBox_asHTML' : 1,
-                       'id' : 1,
-                       'method_id' : 1,
-                       'role_map' : 1,
-                       'func_defaults': 1,
-                       '_v_section_webmaster': 1,
-                       'priority': 1,
-                       'to_processing_date': 1,
-                       'categories': 1,
-                     }
-reserved_name_dict_init = 0
+MARKER = []
 
 class WebSection(Domain):
     """
@@ -129,17 +93,14 @@ class WebSection(Domain):
 
     web_section_key = WEBSECTION_KEY
 
-    def _aq_dynamic(self, name):
+    security.declareProtected(Permissions.View, '__bobo_traverse__')
+    def __bobo_traverse__(self, request, name):
       """
-        Try to find a suitable document based on the
-        web site local naming policies as defined by
-        the getDocumentValue method
+        If no subobject is found through Folder API
+        then try to lookup the object by invoking getDocumentValue
       """
-      global reserved_name_dict_init
-      global reserved_name_dict
-      request = self.REQUEST
       # Register current web site physical path for later URL generation
-      if not request.has_key(self.web_section_key):
+      if request.get(self.web_section_key, MARKER) is MARKER:
         request[self.web_section_key] = self.getPhysicalPath()
         # Normalize web parameter in the request
         # Fix common user mistake and transform '1' string to boolean
@@ -149,66 +110,83 @@ class WebSection(Domain):
               request.set(web_param, True)
             else:
               request.set(web_param, False)
-      # First let us call the super method
-      dynamic = Domain._aq_dynamic(self, name)
-      if dynamic is not None:
-        return dynamic
-      # Do some optimisation here for names which can not be names of documents
-      if  reserved_name_dict.has_key(name) \
-          or name.endswith('_getDocumentValue') \
-          or name.startswith('_') or name.startswith('portal_')\
-          or name.startswith('aq_') or name.startswith('selection_') \
-          or name.startswith('sort-') or name.startswith('WebSite_') \
-          or name.startswith('WebSection_') or name.startswith('Base_'):
-        return None
-      if not reserved_name_dict_init:
-        # Feed reserved_name_dict_init with skin names
-        portal = self.getPortalObject()
-        for skin_folder in portal.portal_skins.objectValues():
-          for id in skin_folder.objectIds():
-            reserved_name_dict[id] = 1
-        for id in portal.objectIds():
-          reserved_name_dict[id] = 1
-        reserved_name_dict_init = 1
-      #LOG('aq_dynamic name',0, name)
-      if not request.has_key(CACHE_KEY):
-        request[CACHE_KEY] = {}
-      elif request[CACHE_KEY].has_key(name):
-        return request[CACHE_KEY][name]
+
+      # Normal traversal
       try:
-        portal = self.getPortalObject()
-        # Use the webmaster identity to find documents
-        if request[CACHE_KEY].has_key(WEBSITE_USER):
-          user = request[CACHE_KEY][WEBSITE_USER] # Retrieve user from request cache
-        else:
-          # Cache webmaster for faster lookup
-          if not hasattr(aq_base(self), '_v_section_webmaster'):
-            self._v_section_webmaster = self.getWebmaster()
-          user = portal.acl_users.getUserById(self._v_section_webmaster)
-          request[CACHE_KEY][WEBSITE_USER] = user # Cache user per request
-        if user is not None:
-          old_manager = getSecurityManager()
-          newSecurityManager(get_request(), user)
-        else:
-          LOG('WebSection _aq_dynamic', WARNING, 'No user defined for %s.'
-          'This will prevent accessing object through their permanent URL' % self.getWebmaster())
-        #LOG('Lookup', 0, str(name))
-        document = self.getDocumentValue(name=name, portal=portal)
-        request[CACHE_KEY][name] = document
-        if user is not None:
-          setSecurityManager(old_manager)
-      except:
-        # Cleanup non recursion dict in case of exception
-        if request[CACHE_KEY].has_key(name):
-          del request[CACHE_KEY][name]
-        raise
+        return getattr(self, name)
+      except AttributeError:
+        pass
+
+      try:
+        return self[name]
+      except KeyError:
+        pass
+
+      # Permanent URL traversal
+      # First we must get the logged user by forcing identification
+      cache = getReadOnlyTransactionCache(self)
+      # LOG('getReadOnlyTransactionCache', 0, repr(cache)) # Currently, it is always None
+      if cache is not None:
+        key = ('__bobo_traverse__', self, 'user')
+        try:
+          user = cache[key]
+        except KeyError:
+          user = MARKER
+      else:
+        user = MARKER
+      old_user = getSecurityManager().getUser()
+      if user is MARKER:
+        user = None # By default, do nothing
+        if old_user is None or old_user.getUserName() == 'Anonymous User':
+          user_folder = getToolByName(self, 'acl_users', None)
+          if user_folder is not None:
+            try:
+              if request.get('PUBLISHED', MARKER) is MARKER:
+                # request['PUBLISHED'] is required by validate
+                request.other['PUBLISHED'] = self
+                has_published = False
+              else:
+                has_published = True
+              user = user_folder.validate(request)
+              if not has_published:
+                del request.other['PUBLISHED']
+            except:
+              LOG("ERP5 WARNING",0,
+                  "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
+                  error=sys.exc_info())
+              user = None
+        if user is not None and user.getUserName() == 'Anonymous User':
+          user = None # If the user which is connected is anonymous,
+                      # do not try to change SecurityManager
+        if cache is not None:
+          cache[key] = user
+      if user is not None:
+        # We need to perform identification
+        old_manager = getSecurityManager()
+        newSecurityManager(get_request(), user)
+      # Next get the document per name
+      portal = self.getPortalObject()
+      document = self.getDocumentValue(name=name, portal=portal)
+      # Last, cleanup everything
+      if user is not None:
+        setSecurityManager(old_manager)
       if document is not None:
-        request[DOCUMENT_NAME_KEY] = name
-        document = aq_base(document.asContext(id=name, # Hide some properties to permit location the original
+        document = aq_base(document.asContext(id=name, # Hide some properties to permit locating the original
                                               original_container=document.getParentValue(),
                                               original_id=document.getId(),
                                               editable_absolute_url=document.absolute_url()))
-      return document
+        return document.__of__(self)
+
+      # Not found section
+      method = request.get('REQUEST_METHOD', 'GET')
+      if not method in ('GET', 'POST'):
+        return NullResource(self, name, request).__of__(self)
+      # Waaa. unrestrictedTraverse calls us with a fake REQUEST.
+      # There is proabably a better fix for this.
+      try:
+        request.RESPONSE.notFoundError("%s\n%s" % (name, method))
+      except AttributeError:
+        raise KeyError, name
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
     def getWebSectionValue(self):
@@ -303,7 +281,7 @@ class WebSection(Domain):
                                         fallback_script_id='WebSection_getDocumentValue')
 
       if cache is not None:
-        if not cache.has_key(key): cache[key] = method
+        if cache.get(key, MARKER) is MARKER: cache[key] = method
 
       return method(name, portal=portal, **kw)
 
