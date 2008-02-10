@@ -33,7 +33,7 @@ class ComplexQuery(QueryMixin):
   """
   Used in order to concatenate many queries
   """
-  
+
   def __init__(self, *args, **kw):
     self.query_list = args
     self.operator = kw.pop('operator', 'AND')

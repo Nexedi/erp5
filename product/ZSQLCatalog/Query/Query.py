@@ -34,10 +34,10 @@ class QueryMixin:
   operator = None
   format = None
   type = None
-  
+
   def __call__(self, **kw):
     return self.asSQLExpression(**kw)  
-  
+
   def getOperator(self):
     return self.operator
 

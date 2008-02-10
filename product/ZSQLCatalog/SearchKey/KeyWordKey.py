@@ -29,34 +29,34 @@
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery as Query
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.SQLCatalog import getSearchKeyInstance
-from Key import BaseKey
+from SearchKey import SearchKey
 from pprint import pprint
 
-class KeyWordKey(BaseKey):
+class KeyWordKey(SearchKey):
   """ KeyWordKey key is an ERP5 portal_catalog search key which is used to render
       SQL expression that will try to match all possible values in a greedy manner.
       It supports following special operator ['=', '%', '>' , '>=', '<', '<='] in
       addition to main logical operators like ['OR', 'or', 'AND', 'and'].
-      
+
       Examples for title column: 
         * 'foo or bar'  --> "title LIKE '%foo%' OR title LIKE '%bar%'"
         * 'foo or =bar'  --> "title LIKE '%foo%' OR title = 'bar'"
         * 'Organisation Module' -->  "title LIKE '%Organisation Module%'"
         * '"Organisation Module"' --> "title LIKE '%Organisation Module%'"
         * '="Organisation Module"' --> "title  = 'Organisation Module'"
-    
+
   """
-  
+
   tokens =  ('OR', 'AND', 'NOT', 
              'KEYWORD', 'WORDSET', 'WORD', 'EXPLICITEQUALLITYWORD',
              'GREATERTHAN', 'GREATERTHANEQUAL', 
              'LESSTHAN', 'LESSTHANEQUAL')
-  
+
   sub_operators = ('GREATERTHAN', 'GREATERTHANEQUAL', 
                     'LESSTHAN', 'LESSTHANEQUAL', 'NOT')
-  
+
   # this is the default operator
-  default_operator = 'like'  
+  default_operator = 'like'
   
   # if token's list starts with left sided operator
   # use this map to transfer it to range operator
@@ -98,8 +98,8 @@ class KeyWordKey(BaseKey):
     value = t.value.strip()
     # get rid of leading '='
     t.value = value[1:]
-    return t        
-    
+    return t
+
   def t_KEYWORD(self, t):
     r'%?[\x7F-\xFF\w\d/~!@#$%^&*()_+][\x7F-\xFF\w\d/~!@#$%^&*()_+]*%?'
     # KEYWORD may starts(1) and may ends (2) with '%' but always must either #1 or #2

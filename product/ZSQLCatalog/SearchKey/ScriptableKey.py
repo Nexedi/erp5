@@ -31,43 +31,42 @@ from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.SQLCatalog import getSearchKeyInstance
 from Products.PythonScripts.Utility import allow_class
 
-from Key import BaseKey
-from pprint import pprint 
+from SearchKey import SearchKey
+from pprint import pprint
 
 # these keys are used to build query in case for ScriptableKey 
 # when no key was specified in fornt of value
 DEFAULT_SEARCH_KEYS = ('SearchableText', 'reference', 'title',)
 
-class KeyMappingKey(BaseKey):
+class KeyMappingKey(SearchKey):
   """ Usable lexer class used (internally) by ScriptableKey lexer than can parse following:
       VALUE OPERATOR VALUE
-      
+
       Examples:
         * "portal_type : Person"
         * "creation_date > 2007-01-01"
   """
 
   tokens =  ('OPERATOR', 'COLONOPERATOR', 'VALUE',)
-  
+
   t_OPERATOR = r'>=|<=|>|<'
   t_VALUE = r'[\x7F-\xFF\w\d\/~!@#$^&*()_+-][\x7F-\xFF\w\d\/~!@#$^&*()_+-]*'
-    
+
   def t_COLONOPERATOR(self, t):
     r':'
     # ':' is the same as '=' (equality)
     t.value = '='
     return t
- 
-  
-class ScriptableKey(BaseKey):
+
+class ScriptableKey(SearchKey):
   """ KeyWordKey key is an ERP5 portal_catalog search key which is used to generate a 
       ComplexQuery instance out of an arbitrary search string.
-      
+
       Examples: 
         * "John Doe AND portal_type:Person AND creation_date > 2007-01-01" 
-        
+
         would be turned into following ComplexQuery:
-        
+
         *  ComplexQuery(Query(portal_type='Person'),
                        Query(creation_date='2007-01-01', operator='>'),
                        ComplexQuery(Query(searchable_text='John Doe'),
@@ -78,18 +77,18 @@ class ScriptableKey(BaseKey):
   """
   sub_operators =  ('GREATERTHAN', 'GREATERTHANEQUAL', 
                     'LESSTHAN', 'LESSTHANEQUAL',)
-  
+
   tokens =  ('OR', 'AND',  
              'DATE', 'WORD', 'KEYMAPPING',
              'GREATERTHAN', 'GREATERTHANEQUAL', 
              'LESSTHAN', 'LESSTHANEQUAL', 'EQUAL')
-             
+
   t_GREATERTHANEQUAL = r'>='  
   t_LESSTHANEQUAL = r'<='  
   t_GREATERTHAN = r'>'
   t_LESSTHAN = r'<'
-  t_EQUAL = r'='             
-             
+  t_EQUAL = r'='
+
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
     r'(\s+OR\s+|\s+or\s+)'
@@ -113,14 +112,14 @@ class ScriptableKey(BaseKey):
     value = t.value.strip()
     t.value = value
     return t 
-    
+
   def t_WORD(self, t):
     r'[\x7F-\xFF\w\d\/~!@#$^&*()_+][\x7F-\xFF\w\d\/~!@#$^&*()_+]*'
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
     value = t.value.strip()
     t.value = value
-    return t     
+    return t
 
   def buildQueryForTokenList(self, tokens):
     """ Build a ComplexQuery for a token list """
@@ -164,31 +163,31 @@ class ScriptableKey(BaseKey):
                                  **{'operator':'AND'})
     return complex_query
 
-    
   def buildQuery(self, key, value, 
                 format=None, mode=None, range_value=None, stat__=None):
     """ Build ComplexQuery from passed search string value.
         When grouping expressions we use the following assumptions 
         that 'OR' operator has higher priority in a sense:
-        
+
          * "John Doe AND portal_type:Person OR creation_date>=2005/12/12"
-         
+
          is considered as:
-         
+
          * (John Doe AND portal_type:Person) OR (creation_date>=2005/12/12)"
     """
     query_list = []
     tokens = self.tokenize(value)
-    
+
     # split tokens list into one or many OR concatanated expressions
     sub_tokens_or_groups = self.groupByLogicalOperator(tokens, 'OR')
 
     # get a ComplexQuery for a sub token list    
     for tokens_or_group in sub_tokens_or_groups:
       query_list.append(self.buildQueryForTokenList(tokens_or_group))
-      
+
     # join query list in one really big ComplexQuery
     complex_query = ComplexQuery(*query_list, 
                                  **{'operator':'OR'})      
     return complex_query
+
 allow_class(ScriptableKey)

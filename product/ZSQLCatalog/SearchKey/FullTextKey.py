@@ -26,12 +26,12 @@
 #
 ##############################################################################
 
-from Key import BaseKey
+from SearchKey import SearchKey
 
 SEARCH_MODE_MAPPING = {'in_boolean_mode': 'IN BOOLEAN MODE',
                        'with_query_expansion': 'WITH QUERY EXPANSION'}
 
-class FullTextKey(BaseKey):
+class FullTextKey(SearchKey):
   """ FullTextKey key is an ERP5 portal_catalog search key which is used to render
       SQL expression that will try match all possible values using 
       MySQL's fulltext search support.
@@ -41,12 +41,12 @@ class FullTextKey(BaseKey):
 
   tokens =  ('PLUS', 'MINUS', 'WORD', 'GREATERTHAN', 'LESSTHAN', 'LEFTPARENTHES', 
              'RIGHTPARENTHES', 'TILDE', 'ASTERISK', 'DOUBLEQUOTE',)
-             
+
   # SQL expressions patterns
   relevance = '%s_relevance'
   where_match_against = "MATCH %s AGAINST ('%s' %s)"
   select_match_against_as = "MATCH %s AGAINST ('%s' %s) AS %s"
-  
+
   t_PLUS = r'(\+)'
   t_MINUS = r'(\-)'
   t_GREATERTHAN = r'(\>)'
@@ -56,7 +56,7 @@ class FullTextKey(BaseKey):
   t_TILDE = r'(\~)'   
   t_ASTERISK = r'(\*)'
   t_DOUBLEQUOTE = r'(\")'      
-  
+
   def t_WORD(self, t):
     r'[\x7F-\xFF\w\d\/!@#$%^&_][\x7F-\xFF\w\d\/!@#$%^&_]*'
     #r'[\x7F-\xFF\w\d][\x7F-\xFF\w\d]*'

@@ -26,22 +26,22 @@
 #
 ##############################################################################
 
-from Key import BaseKey
-    
-class FloatKey(BaseKey):
+from SearchKey import SearchKey
+
+class FloatKey(SearchKey):
   """ FloatKey key is an ERP5 portal_catalog search key which is used to render
       float like SQL expression.
   """
   # default type of sub Queries to be generated out fo a search string
   default_key_type = 'float'
-  
+
   tokens =  ('OR', 'AND', 'NOT', 'FLOAT',
              'GREATERTHAN', 'GREATERTHANEQUAL', 
              'LESSTHAN', 'LESSTHANEQUAL')
-             
+
   sub_operators = ('GREATERTHAN', 'GREATERTHANEQUAL', 
                     'LESSTHAN', 'LESSTHANEQUAL', 'NOT')
-  
+
 
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
@@ -75,12 +75,12 @@ class FloatKey(BaseKey):
     # FLOAT is a float number
     value = t.value.replace('"', '').strip()
     t.value = "%s" %value
-    return t   
-  
+    return t
+
   def quoteSQLString(self, value, format):
     """ Return a quoted string of the value. """
     # Make sure there is no space in float values
-    return "'%s'" %str(value).replace(' ', '')    
+    return "'%s'" %str(value).replace(' ', '')
 
   def quoteSQLKey(self, key, format):
     """ Return a quoted string of the value. """

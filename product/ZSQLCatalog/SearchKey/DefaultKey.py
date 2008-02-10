@@ -26,15 +26,15 @@
 #
 ##############################################################################
  
-from Key import BaseKey
+from SearchKey import SearchKey
 from pprint import pprint
 
-class DefaultKey(BaseKey):
+class DefaultKey(SearchKey):
   """ DefaultKey key is an ERP5 portal_catalog search key which is used to render
       SQL expression that will try to exactly one value.
       It supports following special operator ['=', '%', '>' , '>=', '<', '<='] in
       addition to main logical operators like ['OR', 'or', 'AND', 'and'].
-      
+
       Examples for title column: 
         * 'foo or bar'  --> "title = 'foo' OR title = 'bar'"
         * 'foo or =bar'  --> "title = 'foo' OR title = 'bar'"
@@ -43,17 +43,17 @@ class DefaultKey(BaseKey):
         * '"Organisation Module"' --> "title = 'Organisation Module'"
         * '="Organisation Module"' --> "title = 'Organisation Module'"
   """
-  
+
   # default type of sub Queries to be generated out fo a search string
   default_key_type = 'default'
-  
+
   tokens =  ('OR', 'AND', 'NOT', 'WORDSET', 'WORD',
              'GREATERTHAN', 'GREATERTHANEQUAL', 
              'LESSTHAN', 'LESSTHANEQUAL')
-             
+
   sub_operators = ('GREATERTHAN', 'GREATERTHANEQUAL', 
                     'LESSTHAN', 'LESSTHANEQUAL', 'NOT')
-  
+
 
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
@@ -69,14 +69,14 @@ class DefaultKey(BaseKey):
     # otherwise it's treated as a WORD
     t.value = 'AND'
     return t  
-  
+
   def t_NOT(self, t):
     r'(\s+NOT\s+|\s+not\s+|!=)'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = '!=' 
     return t     
-    
+
   t_GREATERTHANEQUAL = r'>='  
   t_LESSTHANEQUAL = r'<='  
   t_GREATERTHAN = r'>'
@@ -89,8 +89,8 @@ class DefaultKey(BaseKey):
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
     value = t.value.strip()
     t.value = "%s" %value
-    return t     
-  
+    return t
+
   def t_WORDSET(self, t):
     r'"[\x7F-\xFF\w\d\s\/~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/~!@#$%^&*()_+]*"'
     #r'"[\x7F-\xFF\w\d\s/%][\x7F-\xFF\w\d\s/%]*"'
@@ -99,21 +99,21 @@ class DefaultKey(BaseKey):
     value = t.value.replace('"', '').strip()
     t.value = "%s" %value
     return t 
-        
+
   def quoteSQLString(self, value, format):
     """ Return a quoted string of the value. """
     if isinstance(value, (int, long,)):
       return str(value)
     return "'%s'" %value
 
-     
+
 ##  def buildSQLExpressionFromSearchString(self, key, value, format, mode, range_value, stat__):
 ##    """ Tokenize/analyze passed string value and generate SQL query expressions. """
 ##    where_expressions = []
 ##    select_expressions = []
 ##    tokens = self.tokenize(value)
 ##    operators_mapping_list = self.groupByOperator(tokens)
-##    
+##
 ##    # find if any logical operator exists
 ##    tokens_values = []
 ##    logical_operator_found = 0
@@ -122,7 +122,7 @@ class DefaultKey(BaseKey):
 ##        logical_operator_found = 1
 ##        break
 ##      tokens_values.append(token.value.replace("'", ""))
-##      
+##
 ##    # build expressions
 ##    if not logical_operator_found:
 ##      # no logical operator found so we assume that we search for a combination of words

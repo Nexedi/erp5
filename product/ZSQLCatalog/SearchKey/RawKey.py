@@ -26,7 +26,9 @@
 #
 ##############################################################################
 
-class RawKey:
+from SearchKey import SearchKey
+
+class RawKey(SearchKey):
   """ RawKey key is an ERP5 portal_catalog search key which is used to render
       SQL expression that will match exactly what's passed to it using equality ."""
 
@@ -34,8 +36,8 @@ class RawKey:
     # this key doesn't require parsing
     # It's required to implement it as it's used ONLY for ExactMath
     pass
-  
+
   def buildSQLExpression(self, key, value, 
                          format=None, mode=None, range_value=None, stat__=None):
     where_expression = "%s = '%s'" %(key, value)
-    return where_expression, [] 
+    return where_expression, []
