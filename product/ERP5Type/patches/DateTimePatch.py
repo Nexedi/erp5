@@ -196,8 +196,6 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       year=ints[2]
     del ints[:3]
 
-  import pdb; pdb.set_trace()
-  day = None
   if day is None:
     # Use today's date.
     year,month,day = localtime(time())[:3]
