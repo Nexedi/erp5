@@ -83,7 +83,7 @@ class DefaultKey(SearchKey):
   t_LESSTHAN = r'<'
 
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/~!@#$%^&*()_+\n][\x7F-\xFF\w\d\/~!@#$%^&*()_+\n]*'
+    r'[\x7F-\xFF\w\d\/\-~!@#$%^&*()_+\n][\x7F-\xFF\w\d\/\-~!@#$%^&*()_+\n]*'
     #r'[\x7F-\xFF\w\d\/%][\x7F-\xFF\w\d\/%]*'
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
