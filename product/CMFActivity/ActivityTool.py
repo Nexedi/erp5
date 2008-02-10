@@ -53,7 +53,7 @@ from BTrees.OIBTree import OIBTree
 from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
 
-from zLOG import LOG, INFO, WARNING
+from zLOG import LOG, INFO, WARNING, ERROR
 
 try:
   from Products.TimerService import getTimerService
