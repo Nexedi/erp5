@@ -2801,6 +2801,9 @@ class DocumentTemplateItem(BaseTemplateItem):
       bta.addObject(obj=obj, name=path, path=None, ext='.py')
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.py'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     text = file.read()
     self._objects[file_name[:-3]]=text
 
