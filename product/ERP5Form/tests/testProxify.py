@@ -48,17 +48,19 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ProxyField import purgeFieldValueCache
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+# install ERP5Form and load patches
+from Testing import ZopeTestCase
+ZopeTestCase.installProduct('ERP5Form')
 
-class TestProxify(ERP5TypeTestCase):
+
+class TestProxify(unittest.TestCase):
 
   def getTitle(self):
     return "Proxify"
 
   def setUp(self):
     # base field library
-    ERP5TypeTestCase.setUp(self)
-    self.container = Folder('container').__of__(Folder('root')).__of__(self.getPortal())
+    self.container = Folder('container').__of__(Folder('root'))
     self.container._setObject('Base_view',
                                ERP5Form('Base_view', 'Base'))
     base_view = self.base_view = self.container.Base_view
