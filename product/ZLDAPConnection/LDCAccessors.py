@@ -11,7 +11,7 @@ class LDAPConnectionAccessors:
           'getPW','getDN','getOpenConnection','getBrowsable',
           'shouldBeOpen','getTransactional',),),
         ('Manage properties',
-         ('setID','setTitle','setHost','setPort', 'setBindAs','setPW',
+         ('setId','setTitle','setHost','setPort', 'setBindAs','setPW',
           'setDN','setOpenConnection','setBrowsable','setBoundAs',
           'setTransactional',),),
         )
