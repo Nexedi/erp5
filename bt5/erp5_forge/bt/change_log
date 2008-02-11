@@ -1,3 +1,6 @@
+2008-2-11 Jerome
+* Add utility skin to check for dead proxyfields.
+
 2008-2-2 Yusei
 * Prevent  adding duplicate term.
 * Support updating fields by english glossary. This is useful when improve original english title and description of field.
