@@ -153,22 +153,22 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'cancelled')
 
 
-  def stepArchiveDocument(self, sequence=None, sequence_list=None, **kwd):
+  def stepDepositDocument(self, sequence=None, sequence_list=None, **kwd):
     """
-      Archive document.
+      Deposit document.
     """
-    self.workflow_tool.doActionFor(self.mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
-    self.assertEqual(self.mutilated_banknote.getSimulationState(), 'archived')
+    self.workflow_tool.doActionFor(self.mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), 'depositd')
 
-  def stepArchiveHQDocument(self, sequence=None, sequence_list=None, **kwd):
+  def stepDepositHQDocument(self, sequence=None, sequence_list=None, **kwd):
     """
-      Archive HQ document.
+      Deposit HQ document.
     """
     self.hq_mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
-    self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
+    self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
-    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'archived')
+    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'depositd')
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -390,12 +390,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues(portal_type="Exchanged Mutilated Banknote Line")), 0.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
 
-  def stepTryArchiveHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryDepositHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
-    Try to archive with no line defined on the document
+    Try to deposit with no line defined on the document
     """
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues(portal_type="Exchanged Mutilated Banknote Line")), 0.0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
 
   def stepTryFinishWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
     """
@@ -411,12 +411,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 0.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
 
-  def stepTryArchiveHQWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryDepositHQWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
     """
-    Try to archive with no amount defined on the document
+    Try to deposit with no amount defined on the document
     """
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 0.0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'archive_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
 
   def stepFinishDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -859,7 +859,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
                         + 'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckHQMaculatedBanknoteInventory ' \
-                        + 'TryArchiveHQWithNoLineDefined CreateHQExchangedLine Tic TryArchiveHQWithNoAmountDefined ArchiveHQDocument Tic ' \
+                        + 'TryDepositHQWithNoLineDefined CreateHQExchangedLine Tic TryDepositHQWithNoAmountDefined DepositHQDocument Tic ' \
                         + 'MoveHQToFuture Tic ' \
                         + 'HQLogout ' \
                         + 'CheckHQFinalInventoryWithPayBack '\
