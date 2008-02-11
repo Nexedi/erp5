@@ -65,11 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>mutilated_banknote = context.getParentValue()\n
-if not(mutilated_banknote.isSentToHeadquaters(False)) and \\\n
-   mutilated_banknote.getSimulationState() in (\'finished\', \'delivered\', \'archived\'):\n
-  return "%s/encaisse_des_billets_et_monnaies/entrante" % (mutilated_banknote.getSource(), )\n
-return None\n
+            <value> <string>ob = state_change[\'object\']\n
+\n
+ob.setSentToHeadquaters(True)\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +90,7 @@ return None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,19 +110,17 @@ return None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>ob</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>mutilated_banknote</string>
-                            <string>False</string>
-                            <string>None</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -141,7 +137,7 @@ return None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ExchangedMutilatedBanknoteLine_getBaobabDestination</string> </value>
+            <value> <string>AfterTransitionPlan</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
