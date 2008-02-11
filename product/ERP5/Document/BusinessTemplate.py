@@ -2384,6 +2384,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     bta.addFolder(name=root_path)
     for key in self._objects.keys():
       xml_data = self.generateXml(key)
+      if isinstance(xml_data, unicode):
+        xml_data = xml_data.encode('utf-8')
       name = key.split('/', 1)[1]
       bta.addObject(obj=xml_data, name=name, path=root_path)
 
