@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -161,63 +158,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 record(s)</td>\n
-</tr>\n
-<!-- check amounts for lines -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[9]/a</td>\n
-  <td>20000.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[10]/a</td>\n
-  <td>20000.0</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[9]/a</td>\n
-  <td>2200.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[10]/a</td>\n
-  <td>2200.0</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[9]/a</td>\n
-  <td>3300.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[10]/a</td>\n
-  <td>3300.0</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[9]/a</td>\n
-  <td>7700.0</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[10]/a</td>\n
-  <td>7700.0</td>\n
-</tr>\n
-\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
-  <td>33200.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
-  <td>33200.00</td>\n
+  <td>0 record(s)</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
