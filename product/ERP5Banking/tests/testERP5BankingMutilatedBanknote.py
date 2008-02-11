@@ -641,11 +641,11 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'plan_action', wf_id='mutilated_banknote_workflow')
 
-  def stepTryDeliverHQDocument(self, sequence=None, sequence_list=None, **kw):
+  def stepTryFinishHQDocument(self, sequence=None, sequence_list=None, **kw):
     """
-      It must not be possible (ie, action not present) to deliver when the document is initiated in HQ.
+      It must not be possible (ie, action not present) to finish when the document is sent to HQ.
     """
-    self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
 
   def stepFinishHQDocument(self, sequence=None, sequence_list=None, **kw):
     """
