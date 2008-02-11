@@ -158,7 +158,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       Deposit document.
     """
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
-    self.assertEqual(self.mutilated_banknote.getSimulationState(), 'depositd')
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), 'depositied')
 
   def stepDepositHQDocument(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -168,7 +168,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
-    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'depositd')
+    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'deposited')
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """
