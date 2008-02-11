@@ -147,6 +147,9 @@ class ERP5TypeInformation( FactoryTypeInformation,
     hidden_content_type_list = ()
     permission = ''
 
+    security.declareProtected(Permissions.ManagePortal, 'manage_main')
+    manage_main = FactoryTypeInformation.manage_propertiesForm
+
     # Groups are used to classify portal types (e.g. resource).
     # IMPLEMENTATION NOTE
     # The current implementation is practical but not modular at all
