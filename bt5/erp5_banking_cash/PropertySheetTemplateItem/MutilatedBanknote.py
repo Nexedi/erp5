@@ -35,6 +35,11 @@ class MutilatedBanknote:
             'description' : 'The person who said that there is a mutilated banknote',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'sent_to_headquaters',
+            'description' : 'If true, the banknotes have been sent to headquaters',
+            'type'        : 'boolean',
+            'default'     : False,
+            'mode'        : 'w' },
     )
   
 
