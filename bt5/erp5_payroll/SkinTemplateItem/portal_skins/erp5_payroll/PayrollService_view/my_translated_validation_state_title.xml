@@ -80,11 +80,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>validation_state</string> </value>
+                    <value> <string>my_translated_validation_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BasePdm_FieldLibrary</string> </value>
+                    <value> <string>Resource_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
