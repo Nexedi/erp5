@@ -166,7 +166,8 @@ class NotificationTool(BaseTool):
     # Default Values
     portal = self.getPortalObject()
     default_from_email = portal.email_from_address
-    default_to_email = portal.email_to_address
+    default_to_email = getattr(portal, 'email_to_address',
+                               default_from_email)
 
     # Change all strings to object values
     if isinstance(sender, basestring):
