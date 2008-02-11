@@ -65,18 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string>checkbook = state_change[\'object\']\n
 \n
-user_site_list = context.Baobab_getUserAssignedSiteList()\n
-if len(user_site_list) == 0:\n
-  raise ValueError, "You cannot create a CounterDate if you don\'t have an assignment."\n
-\n
-site = context.Baobab_getVaultSite(user_site_list[0])\n
-context.setSiteValue(site)\n
-context.setStartDate(DateTime(DateTime().Date()))\n
-\n
-\n
-context.assignRoleToSecurityGroup()\n
+for check in checkbook.objectValues():\n
+  check.delete()\n
+  if check.getSimulationState() != \'deleted\':\n
+    msg = Message(domain="ui", message="Sorry, no way to delete this check $id",\n
+                  mapping = {\'id\' : check.getId()})\n
+    raise ValueError, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -92,14 +88,8 @@ context.assignRoleToSecurityGroup()\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,21 +109,22 @@ context.assignRoleToSecurityGroup()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>state_change</string>
                             <string>kw</string>
-                            <string>DateTime</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>user_site_list</string>
-                            <string>len</string>
-                            <string>ValueError</string>
                             <string>_getitem_</string>
-                            <string>site</string>
+                            <string>checkbook</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>check</string>
+                            <string>Message</string>
+                            <string>msg</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
@@ -150,7 +141,7 @@ context.assignRoleToSecurityGroup()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CounterDate_init</string> </value>
+            <value> <string>Checkbook_deleteAllCheckList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

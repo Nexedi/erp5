@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 counter_date = state_change[\'object\']\n
 \n
@@ -99,7 +101,29 @@ if listbox is not None:\n
     if line["choice"] == "open":\n
       counter = context.restrictedTraverse("%s" %(line[\'listbox_key\'],))\n
       counter.open()\n
-</string> </value>
+\n
+\n
+# Set a reference\n
+site_id = counter_date.getSiteId()\n
+if site_id is None:\n
+  msg = Message(domain=\'ui\',message="You must define the site")\n
+  raise ValidationFailed (msg,)\n
+counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
+                                           portal_type=\'Counter Date\',site_id=site_id,\n
+                                           sort_on=[(\'start_date\',\'descending\')],limit=1,\n
+                                           simulation_state=(\'open\',\'closed\'))]\n
+previous_reference = None\n
+if len(counter_date_list)>0:\n
+  previous_counter_date = counter_date_list[0]\n
+  previous_reference = previous_counter_date.getReference()\n
+if previous_reference not in (\'\',None):\n
+  reference = \'%i\' % (int(previous_reference)+1)\n
+else:\n
+  reference = \'1\'\n
+counter_date.setReference(reference)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -167,6 +191,12 @@ if listbox is not None:\n
                             <string>line</string>
                             <string>context</string>
                             <string>counter</string>
+                            <string>site_id</string>
+                            <string>previous_reference</string>
+                            <string>len</string>
+                            <string>previous_counter_date</string>
+                            <string>int</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>

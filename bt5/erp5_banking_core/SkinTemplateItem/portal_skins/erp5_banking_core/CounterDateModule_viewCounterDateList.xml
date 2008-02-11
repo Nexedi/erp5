@@ -53,6 +53,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -74,7 +78,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -83,7 +87,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>

@@ -42,7 +42,6 @@
                 <string>confirm</string>
                 <string>confirm_action</string>
                 <string>delete</string>
-                <string>delete_action</string>
               </tuple>
             </value>
         </item>

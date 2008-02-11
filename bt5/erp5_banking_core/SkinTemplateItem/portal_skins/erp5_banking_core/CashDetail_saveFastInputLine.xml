@@ -67,6 +67,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from AccessControl import getSecurityManager\n
+u=getSecurityManager().getUser()\n
+ADD_PERMISSION =  \'Add portal content\'\n
+if not u.has_permission(ADD_PERMISSION,context):\n
+  raise ValueError, "How did you manage to be there ???"\n
+\n
 cell_base_id = \'movement\'\n
 line_kwd = {\'base_id\':cell_base_id}\n
 \n
@@ -379,6 +385,13 @@ else:\n
                             <string>listbox</string>
                             <string>form_id</string>
                             <string>kw</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>_getattr_</string>
+                            <string>u</string>
+                            <string>ADD_PERMISSION</string>
+                            <string>context</string>
+                            <string>ValueError</string>
                             <string>cell_base_id</string>
                             <string>line_kwd</string>
                             <string>_getitem_</string>
@@ -400,8 +413,6 @@ else:\n
                             <string>error</string>
                             <string>negative_quantity</string>
                             <string>float_quantity</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
