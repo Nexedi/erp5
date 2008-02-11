@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,9 +65,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>resource = context.getResourceValue()\n
+            <value> <string>portal_type_list = None\n
+\n
+explanation = context.getExplanationValue()\n
+if explanation is not None:\n
+  explanation_type = explanation.getPortalType()\n
+# XXX FIXME: Hardcoded values\n
+  if "Purchase" in explanation_type:\n
+    portal_type_list = ("Purchase Supply Line", "Purchase Supply Cell", "Supply Line", "Supply Cell")\n
+  elif "Sale" in explanation_type:\n
+    portal_type_list = ("Sale Supply Line", "Sale Supply Cell", "Supply Line", "Supply Cell")\n
+\n
+resource = context.getResourceValue()\n
 if resource is not None:\n
-  return resource.getPriceCalculationOperandDict(default=default, context=context, **kw)\n
+  return resource.getPriceCalculationOperandDict(default=default, context=context,\n
+      portal_type_list=portal_type_list, **kw)\n
 else:\n
   return default\n
 </string> </value>
@@ -123,10 +132,13 @@ else:\n
                           <tuple>
                             <string>default</string>
                             <string>kw</string>
+                            <string>None</string>
+                            <string>portal_type_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>explanation</string>
+                            <string>explanation_type</string>
                             <string>resource</string>
-                            <string>None</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
