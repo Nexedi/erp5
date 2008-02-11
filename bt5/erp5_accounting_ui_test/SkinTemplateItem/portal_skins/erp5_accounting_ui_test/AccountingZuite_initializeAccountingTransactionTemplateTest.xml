@@ -70,7 +70,7 @@ module = portal.accounting_module\n
 \n
 module.manage_delObjects(list(module.objectIds()))\n
 \n
-accounting_module.setProperty(\'current_content_script\', script.getId())\n
+module.setProperty(\'current_content_script\', script.getId())\n
 \n
 # test depends on this\n
 return "Accounting Transactions Created."\n
@@ -124,7 +124,6 @@ return "Accounting Transactions Created."\n
                             <string>portal</string>
                             <string>module</string>
                             <string>list</string>
-                            <string>accounting_module</string>
                             <string>script</string>
                           </tuple>
                         </value>
