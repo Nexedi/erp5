@@ -1,10 +1,4 @@
-Bug Module | list_ui
-Bug Module | search
-Bug Module | sort_on
 Bug Module | view
-Bug | history
-Bug | metadata
-Bug | print
 Bug | view
 Business Template | commit
 Business Template | svn_cleanup_locks
@@ -13,23 +7,12 @@ Business Template | svn_unversioned_files
 Business Template | update_svn_bt
 Business Template | update_svn_bt_norevert
 Business Template | view_svn_repos_infos
-External Folder | history
-External Folder | metadata
-External Folder | print
 External Folder | view
 Glossary Module | find_terms_from_property_sheet
-Glossary Module | list_ui
-Glossary Module | print_pdf
-Glossary Module | sort_on
 Glossary Module | update_fields_by_english_glossary
 Glossary Module | view
-Glossary Term | history
-Glossary Term | metadata
-Glossary Term | print_pdf
 Glossary Term | view
 Preference | subversion
 Template Tool | bt_svn_history
 Template Tool | search_portal_type
-Upload Module | list
-Upload Module | search
 Upload Module | view
