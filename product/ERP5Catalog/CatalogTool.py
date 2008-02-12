@@ -118,6 +118,8 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         allowed = {}
         for r in rolesForPermissionOn('View', ob):
           allowed[r] = 1
+        if 'Owner' in allowed:
+          del allowed['Owner']
         if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
         elif withpas:
@@ -154,9 +156,11 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         # we may sometimes catalog the owner user ID whenever the Owner
         # has view permission (see getAllowedRolesAndUsers bellow
         # as well as getViewPermissionOwner method in Base)
-        view_role_list = [role for role in user_role_list if allowed.has_key(role) and role != 'Owner']
+        view_role_list = [role for role in user_role_list if allowed.has_key(role)]
         for user, roles in localroles.items():
           for role in roles:
+            if role == 'Owner':
+              continue
             if allowed.has_key(role):
               if withnuxgroups:
                 allowed[user] = 1
@@ -168,8 +172,6 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
                 allowed[user + ':' + role] = 1
               else:
                 allowed['user:' + user + ':' + role] = 1
-        if allowed.has_key('Owner'):
-          del allowed['Owner']
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
