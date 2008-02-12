@@ -65,11 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getDestinationValue() is None:\n
-  return context.generatePredicate(membership_criterion_base_category_list = (\'resource\',),\n
-                                                   criterion_property_list = (\'start_date\',))\n
+            <value> <string>base_category_tuple = (\'resource\',)\n
 \n
-return context.generatePredicate(membership_criterion_base_category_list = (\'destination\', \'resource\'),\n
+if context.getSource():\n
+  base_category_tuple += (\'source\',)\n
+if context.getDestination():\n
+  base_category_tuple += (\'destination\',)\n
+\n
+return context.generatePredicate(membership_criterion_base_category_list = base_category_tuple,\n
                                                  criterion_property_list = (\'start_date\',))\n
 </string> </value>
         </item>
@@ -115,9 +118,10 @@ return context.generatePredicate(membership_criterion_base_category_list = (\'de
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>base_category_tuple</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
