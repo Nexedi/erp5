@@ -439,6 +439,7 @@ destination_section_where_expression</string> </value>
 <dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), select_expression_key=(\'operation_date\', \'specific_reference\', \'delivery_mirror_section_title\',), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
+<dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
 \n
 \n
 <dtml-comment>\n
@@ -635,11 +636,9 @@ destination_section_where_expression</string> </value>
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
           SELECT catalog.*,\n
-          <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
           ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
           ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
           FROM (\n
-          </dtml-let>\n
         </dtml-if>\n
 \n
 <dtml-comment>\n
@@ -716,14 +715,20 @@ destination_section_where_expression</string> </value>
           </dtml-if>\n
           <dtml-if transaction_uid>\n
             AND catalog.uid = <dtml-var transaction_uid> </dtml-if>\n
-          <dtml-if amount>\n
-            AND ABS(movement.quantity) = <dtml-sqlvar amount type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_min>\n
-            AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_max>\n
-            AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float">\n
+          <dtml-if "amount or amount_range_min or amount_range_max">\n
+            AND EXISTS\n
+              (SELECT * FROM stock, catalog as child WHERE\n
+               stock.uid=child.uid AND child.parent_uid=catalog.uid AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
+               <dtml-if amount>\n
+                 AND <dtml-sqltest amount column="ABS(stock.total_price)" type=float op=eq>\n
+               </dtml-if>\n
+               <dtml-if amount_range_min>\n
+                 AND <dtml-sqltest amount_range_min column="ABS(stock.total_price)" type=float op=ge>\n
+               </dtml-if>\n
+               <dtml-if amount_range_max>\n
+                 AND <dtml-sqltest amount_range_max column="ABS(stock.total_price)" type=float op=lt>\n
+               </dtml-if>\n
+              )\n
           </dtml-if>\n
           <dtml-if creation_date_range_min>\n
             AND catalog.creation_date >=\n
@@ -899,14 +904,20 @@ UNION\n
           </dtml-if>\n
           <dtml-if transaction_uid>\n
             AND catalog.uid = <dtml-var transaction_uid> </dtml-if>\n
-          <dtml-if amount>\n
-            AND ABS(movement.quantity) = <dtml-sqlvar amount type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_min>\n
-            AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_max>\n
-            AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float">\n
+          <dtml-if "amount or amount_range_min or amount_range_max">\n
+            AND EXISTS\n
+              (SELECT * FROM stock, catalog as child WHERE\n
+               stock.uid=child.uid AND child.parent_uid=catalog.uid AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
+               <dtml-if amount>\n
+                 AND <dtml-sqltest amount column="ABS(stock.total_price)" type=float op=eq>\n
+               </dtml-if>\n
+               <dtml-if amount_range_min>\n
+                 AND <dtml-sqltest amount_range_min column="ABS(stock.total_price)" type=float op=ge>\n
+               </dtml-if>\n
+               <dtml-if amount_range_max>\n
+                 AND <dtml-sqltest amount_range_max column="ABS(stock.total_price)" type=float op=lt>\n
+               </dtml-if>\n
+              )\n
           </dtml-if>\n
           <dtml-if creation_date_range_min>\n
             AND catalog.creation_date >=\n
@@ -1036,7 +1047,7 @@ UNION\n
 \n
 \n
 \n
-</dtml-let></dtml-let></dtml-let>\n
+</dtml-let></dtml-let></dtml-let></dtml-let>\n
 \n
 <dtml-comment> vim: syntax=dtml\n
 </dtml-comment>\n
@@ -1083,6 +1094,7 @@ UNION\n
 <dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), select_expression_key=(\'operation_date\', \'specific_reference\', \'delivery_mirror_section_title\',), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
+<dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
 \n
 \n
 <dtml-comment>\n
@@ -1279,11 +1291,9 @@ UNION\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
           SELECT catalog.*,\n
-          <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
           ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
           ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
           FROM (\n
-          </dtml-let>\n
         </dtml-if>\n
 \n
 <dtml-comment>\n
@@ -1360,14 +1370,20 @@ UNION\n
           </dtml-if>\n
           <dtml-if transaction_uid>\n
             AND catalog.uid = <dtml-var transaction_uid> </dtml-if>\n
-          <dtml-if amount>\n
-            AND ABS(movement.quantity) = <dtml-sqlvar amount type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_min>\n
-            AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_max>\n
-            AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float">\n
+          <dtml-if "amount or amount_range_min or amount_range_max">\n
+            AND EXISTS\n
+              (SELECT * FROM stock, catalog as child WHERE\n
+               stock.uid=child.uid AND child.parent_uid=catalog.uid AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
+               <dtml-if amount>\n
+                 AND <dtml-sqltest amount column="ABS(stock.total_price)" type=float op=eq>\n
+               </dtml-if>\n
+               <dtml-if amount_range_min>\n
+                 AND <dtml-sqltest amount_range_min column="ABS(stock.total_price)" type=float op=ge>\n
+               </dtml-if>\n
+               <dtml-if amount_range_max>\n
+                 AND <dtml-sqltest amount_range_max column="ABS(stock.total_price)" type=float op=lt>\n
+               </dtml-if>\n
+              )\n
           </dtml-if>\n
           <dtml-if creation_date_range_min>\n
             AND catalog.creation_date >=\n
@@ -1543,14 +1559,20 @@ UNION\n
           </dtml-if>\n
           <dtml-if transaction_uid>\n
             AND catalog.uid = <dtml-var transaction_uid> </dtml-if>\n
-          <dtml-if amount>\n
-            AND ABS(movement.quantity) = <dtml-sqlvar amount type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_min>\n
-            AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float">\n
-          </dtml-if>\n
-          <dtml-if amount_range_max>\n
-            AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float">\n
+          <dtml-if "amount or amount_range_min or amount_range_max">\n
+            AND EXISTS\n
+              (SELECT * FROM stock, catalog as child WHERE\n
+               stock.uid=child.uid AND child.parent_uid=catalog.uid AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
+               <dtml-if amount>\n
+                 AND <dtml-sqltest amount column="ABS(stock.total_price)" type=float op=eq>\n
+               </dtml-if>\n
+               <dtml-if amount_range_min>\n
+                 AND <dtml-sqltest amount_range_min column="ABS(stock.total_price)" type=float op=ge>\n
+               </dtml-if>\n
+               <dtml-if amount_range_max>\n
+                 AND <dtml-sqltest amount_range_max column="ABS(stock.total_price)" type=float op=lt>\n
+               </dtml-if>\n
+              )\n
           </dtml-if>\n
           <dtml-if creation_date_range_min>\n
             AND catalog.creation_date >=\n
@@ -1680,7 +1702,7 @@ UNION\n
 \n
 \n
 \n
-</dtml-let></dtml-let></dtml-let>\n
+</dtml-let></dtml-let></dtml-let></dtml-let>\n
 \n
 <dtml-comment> vim: syntax=dtml\n
 </dtml-comment>\n

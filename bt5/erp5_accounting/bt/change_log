@@ -1,3 +1,6 @@
+2008-2-12 yusei
+* Fixed amount search bug.
+
 2008-2-7 yusei
 * Fixed filtering bug on accounting module list view when jump in from entity.
 
