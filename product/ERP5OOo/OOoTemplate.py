@@ -33,6 +33,7 @@ from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from TAL.TALInterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Globals import InitializeClass, DTMLFile, get_request
@@ -154,6 +155,13 @@ class OOoTemplate(ZopePageTemplate):
     ZopePageTemplate.__init__(self,*args,**kw)
     # we store the attachments of the uploaded document
     self.OLE_documents_zipstring = None
+
+  # Re-define StringIO with the original one, because iHotfix may
+  # monkey patch it.
+  # XXX it might be better to simply disable iHotfix overriding
+  # StringIO.
+  def StringIO(self):
+    return FasterStringIO()
 
   def pt_upload(self, REQUEST, file=''):
     """Replace the document with the text in file."""
