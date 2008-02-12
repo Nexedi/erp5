@@ -92,7 +92,7 @@ class KeyWordKey(SearchKey):
   t_LESSTHAN = r'<'
 
   def t_EXPLICITEQUALLITYWORD(self, t):
-    r'=[\x7F-\xFF\w\d\/~!@#$^&*()_+][\x7F-\xFF\w\d\/~!@#$^&*()_+]*'
+    r'=[\x7F-\xFF\w\d\/\.~!@#$^&*()_+][\x7F-\xFF\w\d\/\.~!@#$^&*()_+]*'
     # EXPLICITEQUALLITYWORD may contain arbitrary letters and numbers without white space
     # EXPLICITEQUALLITYWORD must contain '=' at the beginning
     value = t.value.strip()
@@ -101,7 +101,7 @@ class KeyWordKey(SearchKey):
     return t
 
   def t_KEYWORD(self, t):
-    r'%?[\x7F-\xFF\w\d/~!@#$%^&*()_+][\x7F-\xFF\w\d/~!@#$%^&*()_+]*%?'
+    r'%?[\x7F-\xFF\w\d/\.~!@#$%^&*()_+][\x7F-\xFF\w\d/\.~!@#$%^&*()_+]*%?'
     # KEYWORD may starts(1) and may ends (2) with '%' but always must either #1 or #2
     # be true. It may contains arbitrary letters, numbers and white space
     value = t.value.strip()
@@ -111,7 +111,7 @@ class KeyWordKey(SearchKey):
     return t    
     
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/~!@#$^&*()_+][\x7F-\xFF\w\d\/~!@#$^&*()_+]*'
+    r'[\x7F-\xFF\w\d\/\.~!@#$^&*()_+][\x7F-\xFF\w\d\/\.~!@#$^&*()_+]*'
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
     value = t.value.strip()
@@ -119,7 +119,7 @@ class KeyWordKey(SearchKey):
     return t     
   
   def t_WORDSET(self, t):
-    r'=?"[\x7F-\xFF\w\d\s\/~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/~!@#$%^&*()_+]*"'
+    r'=?"[\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+]*"'
     # WORDSET is a combination of WORDs separated by white space
     # and starting/ending with " (optionally with '=')
     value = t.value.replace('"', '')

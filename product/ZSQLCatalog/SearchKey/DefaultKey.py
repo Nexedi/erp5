@@ -83,7 +83,7 @@ class DefaultKey(SearchKey):
   t_LESSTHAN = r'<'
 
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/\-~!@#$%^&*()_+\n][\x7F-\xFF\w\d\/\-~!@#$%^&*()_+\n]*'
+    r'[\x7F-\xFF\w\d\/\.\-~!@#$%^&*()_+\n][\x7F-\xFF\w\d\/\.\-~!@#$%^&*()_+\n]*'
     #r'[\x7F-\xFF\w\d\/%][\x7F-\xFF\w\d\/%]*'
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
@@ -92,7 +92,7 @@ class DefaultKey(SearchKey):
     return t
 
   def t_WORDSET(self, t):
-    r'"[\x7F-\xFF\w\d\s\/~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/~!@#$%^&*()_+]*"'
+    r'"[\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+]*"'
     #r'"[\x7F-\xFF\w\d\s/%][\x7F-\xFF\w\d\s/%]*"'
     # WORDSET is a combination of WORDs separated by white space
     # and starting/ending with "

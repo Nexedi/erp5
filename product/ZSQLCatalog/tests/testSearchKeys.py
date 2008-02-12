@@ -84,6 +84,7 @@ size/Child/34"""
     self.compare(DefaultKey, 
                 'S\xc3\xa9bastien or !="Doe John1" and Doe', 
                 ('WORD', 'OR', 'NOT', 'WORDSET', 'AND', 'WORD',))  
+    self.compare(DefaultKey, '.', ('WORD',))
                              
   def test_03KeyWordKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for KeyWordKey."""
@@ -105,6 +106,7 @@ size/Child/34"""
     self.compare(KeyWordKey, '=John% and >="JOHN John"', 
                             ('EXPLICITEQUALLITYWORD', 'KEYWORD', 'AND', 
                              'GREATERTHANEQUAL', 'WORDSET',))
+    self.compare(KeyWordKey, '.', ('WORD',))
                              
   def test_04DateTimeKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for DateTimeKey."""
@@ -125,6 +127,7 @@ size/Child/34"""
                  ('WORD', 'WORD',)) 
     self.compare(FullTextKey, '+John -Doe', 
                  ('PLUS', 'WORD', 'MINUS', 'WORD',)) 
+    self.compare(FullTextKey, '.', ('WORD',))
 
   def test_06ScriptableKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for ScriptableKey."""  
@@ -199,6 +202,12 @@ class TestSearchKeyQuery(ERP5TypeTestCase):
                 '%John and !=Doe%', 
                 "((((title = '%John') AND (title != 'Doe%'))))",
                 [])
+    # special chars
+    self.compare(DefaultKey,
+                 'title',
+                 '.',
+                 "((((title = '.'))))",
+                 [])
                 
   def test_02KeyWordKey(self, quiet=quiet, run=run_all_test):
     """ Check DefaultKey query generation"""
@@ -228,6 +237,12 @@ class TestSearchKeyQuery(ERP5TypeTestCase):
                 '%John Doe% or =Doe John', 
                 "((((title LIKE '%John Doe%'))) OR (((title = 'Doe John'))))",
                 [])       
+    # special chars
+    self.compare(KeyWordKey,
+                 'title',
+                 '.',
+                 "((((title LIKE '%.%'))))",
+                 [])
                 
   def test_03DateTimeKey(self, quiet=quiet, run=run_all_test):
     """ Check DefaultKey query generation"""
@@ -349,6 +364,12 @@ class TestSearchKeyQuery(ERP5TypeTestCase):
                 '1ab521ty', 
                 "delivery.stock = '1ab521ty'",
                 [])    
+    # special chars
+    self.compare(RawKey,
+                 'delivery.stock',
+                 '.',
+                 "delivery.stock = '.'",
+                 [])
                 
   def test_06FullTextKey(self, quiet=quiet, run=run_all_test):
     """ Check FullTextKey query generation"""
@@ -359,6 +380,14 @@ class TestSearchKeyQuery(ERP5TypeTestCase):
                 "MATCH full_text.SearchableText AGAINST ('john' )",
                 ["MATCH full_text.SearchableText AGAINST ('john' ) AS full_text_SearchableText_relevance", 
                 "MATCH full_text.SearchableText AGAINST ('john' ) AS SearchableText_relevance"])    
+
+    # special chars
+    self.compare(FullTextKey,
+                'full_text.SearchableText',
+                '.',
+                "MATCH full_text.SearchableText AGAINST ('.' )",
+                ["MATCH full_text.SearchableText AGAINST ('.' ) AS full_text_SearchableText_relevance",
+                "MATCH full_text.SearchableText AGAINST ('.' ) AS SearchableText_relevance"])
     
   def test_07ScriptableKey(self, quiet=quiet, run=run_all_test):
     """ Check ScriptableKey query generation"""
