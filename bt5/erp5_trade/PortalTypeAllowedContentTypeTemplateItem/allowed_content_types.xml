@@ -102,6 +102,8 @@
   <item>Sale Order</item>
  </portal_type>
  <portal_type id="Sale Packing List">
+  <item>Discount</item>
+  <item>Payment Condition</item>
   <item>Sale Packing List Line</item>
   <item>Container</item>
  </portal_type>

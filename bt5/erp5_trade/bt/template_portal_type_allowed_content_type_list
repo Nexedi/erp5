@@ -47,6 +47,8 @@ Sale Order | Sale Order Line
 Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container
+Sale Packing List | Discount
+Sale Packing List | Payment Condition
 Sale Packing List | Sale Packing List Line
 Sale Supply Line | Predicate
 Sale Supply Line | Sale Supply Cell
