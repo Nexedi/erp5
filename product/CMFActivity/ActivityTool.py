@@ -53,7 +53,7 @@ from BTrees.OIBTree import OIBTree
 from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
 
-from zLOG import LOG, INFO, WARNING, ERROR
+from zLOG import LOG, INFO, WARNING, ERROR, DEBUG
 
 try:
   from Products.TimerService import getTimerService
@@ -78,6 +78,16 @@ ROLE_PROCESSING = 1
 
 # Activity Registration
 activity_dict = {}
+
+logging = True
+
+def enableLogging():
+  global logging
+  logging = True
+
+def disableLogging():
+  global logging
+  logging = False
 
 # Here go ActivityBuffer instances
 # Structure:
@@ -273,6 +283,8 @@ class Method:
 
   def __call__(self, *args, **kw):
     m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
+    if logging:
+      LOG('Activity Tracking', DEBUG, 'queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     activity_dict[self.__activity].queueMessage(self.__passive_self.portal_activities, m)
 
 allow_class(Method)
@@ -767,6 +779,8 @@ class ActivityTool (Folder, UniqueObject):
         activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
+      if logging:
+        LOG('Activity Tracking', DEBUG, 'invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
         base_chain = [aq_base(x) for x in self.aq_chain]
@@ -789,11 +803,15 @@ class ActivityTool (Folder, UniqueObject):
         my_self = self
         LOG('CMFActivity.ActivityTool.invoke', INFO, 'Strange: invoke is called outside of acquisition context.')
       message(my_self)
+      if logging:
+        LOG('Activity Tracking', DEBUG, 'invoked message')
       if my_self is not self: # We rewrapped self
         for held in my_self.REQUEST._held:
           self.REQUEST._hold(held)
 
     def invokeGroup(self, method_id, message_list):
+      if logging:
+        LOG('Activity Tracking', DEBUG, 'invoking group messages: method_id=%s, paths=%s' % (method_id, ['/'.join(m.object_path) for m in message_list]))
       # Invoke a group method.
       object_list = []
       expanded_object_list = []
@@ -893,6 +911,8 @@ class ActivityTool (Folder, UniqueObject):
               LOG('ActivityTool', WARNING,
                   'Could not call method %s on object %s' % (
                   m.method_id, m.object_path), error=sys.exc_info())
+      if logging:
+        LOG('Activity Tracking', DEBUG, 'invoked group messages')
 
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
