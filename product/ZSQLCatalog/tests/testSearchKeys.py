@@ -104,7 +104,7 @@ size/Child/34"""
                             ('LESSTHANEQUAL', 'KEYWORD', 'AND', 
                              'GREATERTHANEQUAL', 'WORDSET',))                             
     self.compare(KeyWordKey, '=John% and >="JOHN John"', 
-                            ('EXPLICITEQUALLITYWORD', 'KEYWORD', 'AND', 
+                            ('EXPLICITEQUALLITYWORD', 'AND', 
                              'GREATERTHANEQUAL', 'WORDSET',))
     self.compare(KeyWordKey, '.', ('WORD',))
                              
