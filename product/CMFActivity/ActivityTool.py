@@ -687,8 +687,8 @@ class ActivityTool (Folder, UniqueObject):
         obj = self
       for activity in activity_dict.itervalues():
         if activity.hasActivity(aq_inner(self), obj, **kw):
-          return 1
-      return 0
+          return True
+      return False
 
     def getActivityBuffer(self, create_if_not_found=True):
       """
