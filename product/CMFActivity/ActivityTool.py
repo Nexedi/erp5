@@ -706,8 +706,8 @@ class ActivityTool (Folder, UniqueObject):
            can be only one access at a time to a key
          - GIL protects us when accessing python instances
       """
-      global global_activity_buffer
-      global global_activity_buffer_lock
+      # Safeguard: make sure we are wrapped in  acquisition context before
+      # using our path as an activity tool instance-wide identifier.
       assert getattr(self, 'aq_self', None) is not None
       my_instance_key = self.getPhysicalPath()
       my_thread_key = get_ident()
