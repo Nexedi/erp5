@@ -1,3 +1,6 @@
+2007-02-12 kazuhiko
+* use related_simulation_movement_path_list to reduce activity dependencies.
+
 2007-12-13 yo
 * Since Requirement Document is not associated with any workflow to manage security, it didn't make sense not to acquire local roles.
 * Remove start_date and stop_date from task_report_causality_workflow.

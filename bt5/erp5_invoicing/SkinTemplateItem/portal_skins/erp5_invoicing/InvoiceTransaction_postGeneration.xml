@@ -72,11 +72,13 @@
 # it calls SaleInvoiceTransaction_postGenerationActivity when indexing is done \n
 #\n
 \n
+if related_simulation_movement_path_list is None:\n
+  raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
+\n
 sale_invoice = context\n
 \n
-sale_invoice.activate(\n
-      after_method_id=[\'immediateReindexObject\', \'recursiveImmediateReindexObject\']\n
-   ).InvoiceTransaction_postGenerationActivity(**kw)\n
+sale_invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).InvoiceTransaction_postGenerationActivity(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +101,7 @@ sale_invoice.activate(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>related_simulation_movement_path_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,13 +121,16 @@ sale_invoice.activate(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>related_simulation_movement_path_list</string>
                             <string>kw</string>
+                            <string>None</string>
+                            <string>RuntimeError</string>
                             <string>context</string>
                             <string>sale_invoice</string>
                             <string>_apply_</string>
@@ -141,7 +146,9 @@ sale_invoice.activate(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

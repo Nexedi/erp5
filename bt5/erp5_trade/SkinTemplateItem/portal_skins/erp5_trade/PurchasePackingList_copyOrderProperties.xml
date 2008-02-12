@@ -65,22 +65,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = context\n
+            <value> <string>if related_simulation_movement_path_list is None:\n
+  raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
+\n
+packing_list = context\n
 \n
 # First, copy Order properties\n
 packing_list.PackingList_copyOrderProperties()\n
 \n
 # Then, modify state\n
-activity = packing_list.activate(\n
-                   after_method_id=[\'immediateReindexObject\',\n
-                                    \'recursiveImmediateReindexObject\'])\n
-activity.Delivery_confirm()\n
+confirm_tag = \'%s_confirm\' % packing_list.getPath()\n
+packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
+  tag=confirm_tag).Delivery_confirm()\n
 \n
 # First set the packing_list in the building state\n
 packing_list.startBuilding()\n
 # Then an activity should put the causality state in diverged or solved\n
-# XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
-packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\',\'Delivery_confirm\')).updateCausalityState()\n
+packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
+  after_tag=confirm_tag).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -97,7 +101,7 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>related_simulation_movement_path_list=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,16 +121,19 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>related_simulation_movement_path_list</string>
+                            <string>None</string>
+                            <string>RuntimeError</string>
                             <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
-                            <string>activity</string>
+                            <string>confirm_tag</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +145,9 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

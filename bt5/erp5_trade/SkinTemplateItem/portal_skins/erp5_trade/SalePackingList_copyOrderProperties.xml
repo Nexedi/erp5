@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
+            <value> <string>if related_simulation_movement_path_list is None:\n
+  raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
+\n
+from Products.ERP5Type.Message import Message\n
 \n
 packing_list = context\n
  \n
@@ -76,15 +79,13 @@ packing_list.PackingList_copyOrderProperties()\n
 packing_list_state = packing_list.getSimulationState()\n
 \n
 if packing_list_state == "draft":\n
-  packing_list.portal_workflow.doActionFor(\n
-     packing_list, \'confirm_action\',\n
-     comment=Message(\'erp5_ui\', "Initialized by Delivery Builder"))\n
+  packing_list.confirm(comment=Message(\'erp5_ui\', \'Initialized by Delivery Builder\'))\n
 \n
 # First set the packing_list in the building state\n
 packing_list.startBuilding()\n
 # Then an activity should put the causality state in diverged or solved\n
-# XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
-packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\',\'Delivery_confirm\')).updateCausalityState(fast=1)\n
+packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState(fast=1)\n
 </string> </value>
         </item>
         <item>
@@ -101,7 +102,7 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>related_simulation_movement_path_list=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,12 +122,15 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>related_simulation_movement_path_list</string>
+                            <string>None</string>
+                            <string>RuntimeError</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>context</string>
@@ -144,7 +148,9 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

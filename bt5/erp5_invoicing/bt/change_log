@@ -1,2 +1,5 @@
+2007-02-12 kazuhiko
+* use related_simulation_movement_path_list to reduce activity dependencies.
+
 2007-12-6 jerome
 * initial creation, from splitting erp5_accounting
