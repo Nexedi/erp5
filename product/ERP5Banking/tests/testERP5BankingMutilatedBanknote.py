@@ -786,8 +786,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def moveToFuture(self, document):
     """
-      Move Exchanged and Outgoing line of given document to self.future_date.
-      Also set doesment's stop date to self.future_date.
+      Set document's stop date to self.future_date.
     """
     document.setStopDate(self.future_date)
 
