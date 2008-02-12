@@ -65,21 +65,56 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_type_list = None\n
+            <value> <string>def sourceSortMethod(a, b):\n
+  if a.getSource():\n
+    return -1 # a defines a source and wins\n
+  return 1 # a defines no source ans loses\n
 \n
-explanation = context.getExplanationValue()\n
-if explanation is not None:\n
-  explanation_type = explanation.getPortalType()\n
-# XXX FIXME: Hardcoded values\n
-  if "Purchase" in explanation_type:\n
-    portal_type_list = ("Purchase Supply Line", "Purchase Supply Cell", "Supply Line", "Supply Cell")\n
-  elif "Sale" in explanation_type:\n
-    portal_type_list = ("Sale Supply Line", "Sale Supply Cell", "Supply Line", "Supply Cell")\n
+def destinationSortMethod(a, b):\n
+  if a.getDestination():\n
+    return -1 # a defines a destination and wins\n
+  return 1 # a defines no destination ans loses\n
+\n
+def resourcePurchasePriceSortMethod(a, b):\n
+   if "Purchase" in a.getPortalType():\n
+     if "Purchase" in b.getPortalType():\n
+       return sourceSortMethod(a, b)\n
+     else:\n
+       return -1\n
+   else:\n
+     if "Purchase" in b.getPortalType():\n
+       return 1\n
+     else:\n
+       return destinationSortMethod(a, b)\n
+\n
+def resourceSalePriceSortMethod(a, b):\n
+   if "Sale" in a.getPortalType():\n
+     if "Sale" in b.getPortalType():\n
+       return destinationSortMethod(a, b)\n
+     else:\n
+       return -1\n
+   else:\n
+     if "Sale" in b.getPortalType():\n
+       return 1\n
+     else:\n
+       return sourceSortMethod(a, b)\n
+\n
+try:\n
+  explanation = context.getExplanationValue()\n
+except:\n
+  pass\n
+else:\n
+  if explanation is not None:\n
+    explanation_type = explanation.getPortalType()\n
+    # XXX FIXME: Hardcoded values\n
+    if "Purchase" in explanation_type:\n
+      kw[\'sort_method\'] = resourcePurchasePriceSortMethod\n
+    elif "Sale" in explanation_type:\n
+      kw[\'sort_method\'] = resourceSalePriceSortMethod\n
 \n
 resource = context.getResourceValue()\n
 if resource is not None:\n
-  return resource.getPriceCalculationOperandDict(default=default, context=context,\n
-      portal_type_list=portal_type_list, **kw)\n
+  return resource.getPriceCalculationOperandDict(default=default, context=context, **kw)\n
 else:\n
   return default\n
 </string> </value>
@@ -132,12 +167,16 @@ else:\n
                           <tuple>
                             <string>default</string>
                             <string>kw</string>
-                            <string>None</string>
-                            <string>portal_type_list</string>
+                            <string>sourceSortMethod</string>
+                            <string>destinationSortMethod</string>
+                            <string>resourcePurchasePriceSortMethod</string>
+                            <string>resourceSalePriceSortMethod</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>explanation</string>
+                            <string>None</string>
                             <string>explanation_type</string>
+                            <string>_write_</string>
                             <string>resource</string>
                             <string>_apply_</string>
                           </tuple>
