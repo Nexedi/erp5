@@ -2021,6 +2021,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
     self.assertSameSet(['super_owner'], [x.owner for x in result])
+    # Also, check that it is not cataloged in roles_and_users
+    result = sql_connection.manage_test('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers IN ("user:super_owner", "user:super_owner:Owner")')
+    self.assertEqual(len(result), 0, repr(result.dictionaries()))
 
     # Check that Owner is not catalogued when he can view the 
     # object because he has another role
