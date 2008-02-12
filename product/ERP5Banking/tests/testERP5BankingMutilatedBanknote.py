@@ -790,8 +790,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       Also set doesment's stop date to self.future_date.
     """
     document.setStopDate(self.future_date)
-    for line in document.objectValues(portal_type=['Exchanged Mutilated Banknote Line', 'Outgoing Mutilated Banknote Line']):
-      line.setStartDate(self.future_date)
 
   def stepMoveToFuture(self, sequence=None, sequence_list=None, **kwd):
     self.moveToFuture(self.mutilated_banknote)
@@ -857,15 +855,15 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote SetHQMaculatedState Tic ' \
                         + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
+                        + 'MoveHQToFuture Tic ' \
                         + 'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckHQMaculatedBanknoteInventory ' \
                         + 'TryDepositHQWithNoLineDefined CreateHQExchangedLine Tic TryDepositHQWithNoAmountDefined DepositHQDocument Tic ' \
-                        + 'MoveHQToFuture Tic ' \
                         + 'HQLogout ' \
                         + 'CheckHQFinalInventoryWithPayBack '\
+                        + 'MoveToFuture Tic ' \
                         + 'CreateExchangedLine Tic FinishDocument Tic ' \
                         + 'CreateOutgoingLine Tic DeliverDocument Tic ' \
-                        + 'MoveToFuture Tic ' \
                         + 'CheckFinalInventoryWithPayBackAfterHQRequest ClearMutilatedBanknoteModule ClearHQMutilatedBanknoteModule'
 
     # sequence 5 : HQ, no payback, mutilated banknotes
