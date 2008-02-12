@@ -79,7 +79,7 @@ ROLE_PROCESSING = 1
 # Activity Registration
 activity_dict = {}
 
-logging = True
+logging = False
 
 def enableLogging():
   global logging
