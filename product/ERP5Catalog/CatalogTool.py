@@ -146,8 +146,6 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             new_dict[key] = new_list
         localroles = new_dict
         user_role_list = []
-        if 'Owner' in localroles:
-          del localroles['Owner']
         for role_list in localroles.values():
           user_role_list.extend([role for role in role_list if role not in user_role_list])
         # Added for ERP5 project by JP Smets
@@ -161,6 +159,8 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         view_role_list = [role for role in user_role_list if allowed.has_key(role)]
         for user, roles in localroles.items():
           for role in roles:
+            if role == 'Owner':
+              continue
             if allowed.has_key(role):
               if withnuxgroups:
                 allowed[user] = 1
