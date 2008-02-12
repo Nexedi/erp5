@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Check that it is possible to open the accounting date.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# Check that it is possible to open the accounting date.\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
@@ -79,7 +81,14 @@ site_uid = accounting_date.getSiteUid()\n
 if site_uid is None:\n
   msg = Message(domain=\'ui\',message="Sorry, the site is not defined")\n
   raise ValidationFailed (msg,)\n
-</string> </value>
+\n
+opened_date_list = accounting_date.portal_catalog(portal_type="Accounting Date", simulation_state="opened", default_site_uid=accounting_date.getSiteUid())\n
+if len(opened_date_list) > 0:\n
+  msg = Message(domain=\'ui\',message="Sorry, another accounting date is already opened")\n
+  raise ValidationFailed (msg,)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -134,6 +143,8 @@ if site_uid is None:\n
                             <string>site_uid</string>
                             <string>None</string>
                             <string>msg</string>
+                            <string>opened_date_list</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
