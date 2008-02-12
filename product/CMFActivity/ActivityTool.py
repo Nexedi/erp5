@@ -863,10 +863,14 @@ class ActivityTool (Folder, UniqueObject):
           new_message_list.append(m)
         except:
           m.is_executed = 0
-          m.exc_type = sys.exc_info()[0]
+          exc_info = sys.exc_info()
+          m.exc_type = exc_info[0]
+          m.exc_value = str(exc_info[1])
+          m.traceback = ''.join(ExceptionFormatter.format_exception(
+                                *exc_info))
           LOG('WARNING ActivityTool', 0,
               'Could not call method %s on object %s' %
-              (m.method_id, m.object_path), error=sys.exc_info())
+              (m.method_id, m.object_path), error=exc_info)
 
       try:
         if len(expanded_object_list) > 0:
@@ -879,12 +883,19 @@ class ActivityTool (Folder, UniqueObject):
           result = None
       except:
         # In this case, the group method completely failed.
+        exc_info = sys.exc_info()
+        exc_type = exc_info[0]
+        exc_value = str(exc_info[1])
+        traceback = ''.join(ExceptionFormatter.format_exception(
+                            *exc_info))
         for m in new_message_list:
           m.is_executed = 0
-          m.exc_type = sys.exc_info()[0]
+          m.exc_type = exc_type
+          m.exc_value = exc_value
+          m.traceback = traceback
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
-            (method_id, expanded_object_list), error=sys.exc_info())
+            (method_id, expanded_object_list), error=exc_info)
       else:
         # Obtain all indices of failed messages. Note that this can be a partial failure.
         failed_message_dict = {}
