@@ -183,10 +183,6 @@ class NotificationTool(BaseTool):
       # we fallback to default values
       email_from_address = default_from_email
 
-    # To is a list - let us find all members
-    if not isinstance(recipient, (list, tuple)):
-      recipient = (recipient, )
-
     # If no recipient is defined, just send an email to the
     # default mail address defined at the CMF site root.
     if recipient is None:
@@ -197,6 +193,10 @@ class NotificationTool(BaseTool):
                                        msg=message, subject=subject,
                                        attachment_list=attachment_list)
       return mailhost.send(mail_message.as_string(), default_to_email, email_from_address)
+
+    elif not isinstance(recipient, (list, tuple)):
+      # To is a list - let us find all members
+      recipient = (recipient, )
 
     # Default implementation is to send an active message to everyone
     for person in recipient:
