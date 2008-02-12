@@ -546,17 +546,13 @@ class Resource(XMLMatrix, Variated):
 
     def _pricingSortMethod(self, a, b):
       # Simple method : the one that defines a destination wins
-      parent = a.getParentValue()
-      if parent.getPortalType().endswith(' Line'):
-        parent = parent.getParentValue()
-      if parent.getDestination():
-        return -1 # a has a destination and wins
-      return 1 # a has no destination ans loses
+      if a.getDestination():
+        return -1 # a defines a destination and wins
+      return 1 # a defines no destination ans loses
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getPriceParameterDict')
-    def getPriceParameterDict(self, context=None, REQUEST=None,
-        portal_type_list=None, **kw):
+    def getPriceParameterDict(self, context=None, REQUEST=None, **kw):
       """
       Get all pricing parameters from Predicate.
       """
@@ -575,8 +571,7 @@ class Resource(XMLMatrix, Variated):
       # Generate the predicate mapped value
       # to get some price values.
       domain_tool = getToolByName(self,'portal_domains')
-      if portal_type_list is None:
-        portal_type_list = self.getPortalSupplyPathTypeList()
+      portal_type_list = self.getPortalSupplyPathTypeList()
 
       # Generate the fake context
       tmp_context = self.asContext(context=context, 
