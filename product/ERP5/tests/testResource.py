@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
+from DateTime import DateTime
 
 
 class TestResource(ERP5TypeTestCase):
@@ -47,6 +48,7 @@ class TestResource(ERP5TypeTestCase):
   node_portal_type = 'Organisation'
   sale_supply_portal_type = 'Sale Supply'
   sale_supply_line_portal_type = 'Sale Supply Line'
+  purchase_supply_line_portal_type = 'Purchase Supply Line'
   sale_supply_cell_portal_type = 'Sale Supply Cell'
   variation_base_category_list = ['colour', 'size', 'morphology',
                                   'industrial_phase']
@@ -730,6 +732,89 @@ class TestResource(ERP5TypeTestCase):
                         tab=1)
         self.assertEquals(base_price, 
                           product.getPrice())
+  
+  def test_12_getPurchaseVsSalePrice(self, quiet=0, run=run_all_test):
+    """
+    Test the pricing model with purchase and sale supply lines, and with
+    source/destination.
+    """
+    if not run: return
+    # Initialize variables
+    product_module = self.portal.getDefaultModule(self.product_portal_type)
+    organisation_module = self.getOrganisationModule()
+    currency_module = self.getCurrencyModule()
+    sale_order_module = self.portal.getDefaultModule("Sale Order")
+    purchase_order_module = self.portal.getDefaultModule("Purchase Order")
+    # Create currency and product
+    currency = currency_module.newContent(
+                     portal_type="Currency",
+                     title='A great currency')
+    product = product_module.newContent(
+        portal_type=self.product_portal_type,
+        title="yet another product")
+    # Create organisations
+    orga1 = organisation_module.newContent(
+        portal_type="Organisation",
+        title="orga1")
+    orga2 = organisation_module.newContent(
+        portal_type="Organisation",
+        title="orga2")
+    # Create sale supply lines
+    product.newContent(
+        portal_type=self.sale_supply_line_portal_type,
+        base_price=100.0,
+        destination_value=orga1)
+    product.newContent(
+        portal_type=self.sale_supply_line_portal_type,
+        base_price=200.0,
+        destination_value=orga2)
+    product.newContent(
+        portal_type=self.sale_supply_line_portal_type,
+        base_price=400.0)
+    # Create purchase supply lines
+    product.newContent(
+        portal_type=self.purchase_supply_line_portal_type,
+        base_price=10.0,
+        source_value=orga1)
+    product.newContent(
+        portal_type=self.purchase_supply_line_portal_type,
+        base_price=20.0,
+        source_value=orga2)
+    product.newContent(
+        portal_type=self.purchase_supply_line_portal_type,
+        base_price=40.0)
+    # Create sale order and check price
+    sale_order = sale_order_module.newContent(
+        portal_type="Sale Order",
+        start_date=DateTime(),
+        stop_date=DateTime())
+    sale_order_line = sale_order.newContent(
+        portal_type="Sale Order Line",
+        resource_value=product)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(sale_order_line.getPrice(), 400.0)
+    sale_order.setDestinationValue(orga2)
+    get_transaction().commit()
+    self.tic()
+    sale_order_line.setPrice(None)
+    self.assertEquals(sale_order_line.getPrice(), 200.0)
+    # Create purchase order and check price
+    purchase_order = purchase_order_module.newContent(
+        portal_type="Purchase Order",
+        start_date=DateTime(),
+        stop_date=DateTime())
+    purchase_order_line = purchase_order.newContent(
+        portal_type="Purchase Order Line",
+        resource_value=product)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(purchase_order_line.getPrice(), 40.0)
+    purchase_order.setSourceValue(orga2)
+    get_transaction().commit()
+    self.tic()
+    purchase_order_line.setPrice(None)
+    self.assertEquals(purchase_order_line.getPrice(), 20.0)
   
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
