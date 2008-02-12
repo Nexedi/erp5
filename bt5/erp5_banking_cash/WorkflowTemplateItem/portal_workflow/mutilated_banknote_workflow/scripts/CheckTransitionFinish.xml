@@ -69,17 +69,15 @@
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
-from DateTime import DateTime\n
 \n
 ob = state_change[\'object\']\n
 \n
-today = DateTime().Date()\n
-ob.setStopDate(today)\n
-ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=ob.getStopDate())\n
+stop_date = ob.getStopDate()\n
+ob.Baobab_checkCounterDateOpen(site=ob.getSource(), date=stop_date)\n
 context.Baobab_checkCounterOpened(ob.getSource())\n
 \n
 for exchanged_line in ob.objectValues(portal_type=\'Exchanged Mutilated Banknote Line\'):\n
-  exchanged_line.setStartDate(today)\n
+  exchanged_line.setStartDate(stop_date)\n
 \n
 if ob.getDestinationTotalAssetPrice() == 0:\n
   msg = Message(domain = "ui", message="Exchanged amount must be defined on document.")\n
@@ -143,11 +141,10 @@ if exchanged_mutilated_banknote_total_price != ob.getDestinationTotalAssetPrice(
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
-                            <string>DateTime</string>
                             <string>_getitem_</string>
                             <string>ob</string>
                             <string>_getattr_</string>
-                            <string>today</string>
+                            <string>stop_date</string>
                             <string>context</string>
                             <string>_getiter_</string>
                             <string>exchanged_line</string>
