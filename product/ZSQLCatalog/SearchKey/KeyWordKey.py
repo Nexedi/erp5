@@ -66,25 +66,25 @@ class KeyWordKey(SearchKey):
                     
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
-    r'(\s+OR\s+|\s+or\s+)'
+    r'\s+(OR|or)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'OR'
     return t
 
   def t_AND(self, t):
-    r'(\s+AND\s+|\s+and\s+)'
+    r'\s+(AND|and)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'AND'
     return t  
 
   def t_NOT(self, t):
-    r'(\s+NOT\s+|\s+not\s+|!=)'
+    r'(\s+(NOT|not)\s+|!=)'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = t.value.upper().strip()
-    return t     
+    return t
 
   t_GREATERTHANEQUAL = r'>='
   t_LESSTHANEQUAL = r'<='
@@ -92,7 +92,7 @@ class KeyWordKey(SearchKey):
   t_LESSTHAN = r'<'
 
   def t_EXPLICITEQUALLITYWORD(self, t):
-    r'=[\x7F-\xFF\w\d\/\.~!@#$^&*()_+][\x7F-\xFF\w\d\/\.~!@#$^&*()_+]*'
+    r'=\S*'
     # EXPLICITEQUALLITYWORD may contain arbitrary letters and numbers without white space
     # EXPLICITEQUALLITYWORD must contain '=' at the beginning
     value = t.value.strip()
@@ -101,30 +101,30 @@ class KeyWordKey(SearchKey):
     return t
 
   def t_KEYWORD(self, t):
-    r'%?[\x7F-\xFF\w\d/\.~!@#$%^&*()_+][\x7F-\xFF\w\d/\.~!@#$%^&*()_+]*%?'
-    # KEYWORD may starts(1) and may ends (2) with '%' but always must either #1 or #2
-    # be true. It may contains arbitrary letters, numbers and white space
+    r'(%\S*|([^!<>=\s%]\S*|!([^=\s]\S*)?)%)'
+    # KEYWORD must start and/or end with '%'.
+    # It may contain arbitrary letters and numbers without white space
     value = t.value.strip()
-    if not value.startswith('%') and not value.endswith('%'):  
-      t.type = 'WORD'  
     t.value = value
     return t    
     
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/\.~!@#$^&*()_+][\x7F-\xFF\w\d\/\.~!@#$^&*()_+]*'
+    r'([^"\s<>!=%]([^ \t\r\f\v]*[^ \t\r\f\v%])?|!([^= \t\r\f\v%]|[^= \t\r\f\v][\S\n]*[^ \t\r\f\v%])?)'
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
     value = t.value.strip()
     t.value = value
-    return t     
+    return t
   
   def t_WORDSET(self, t):
-    r'=?"[\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+]*"'
+    r'=?"[^"]*"'
     # WORDSET is a combination of WORDs separated by white space
     # and starting/ending with " (optionally with '=')
     value = t.value.replace('"', '')
-    t.value = "%s" %value
-    return t 
+    if value[0] == '=':
+      value = value[1:]
+    t.value = value
+    return t
     
   def quoteSQLString(self, value, format):
     """ Return a quoted string of the value. """

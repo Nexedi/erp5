@@ -57,21 +57,21 @@ class DefaultKey(SearchKey):
 
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
-    r'(\s+OR\s+|\s+or\s+)'
+    r'\s+(OR|or)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'OR'
     return t
 
   def t_AND(self, t):
-    r'(\s+AND\s+|\s+and\s+)'
+    r'\s+(AND|and)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'AND'
     return t
 
   def t_NOT(self, t):
-    r'(\s+NOT\s+|\s+not\s+|!=)'
+    r'(\s+(NOT|not)\s+|!=)'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = '!='
@@ -83,21 +83,23 @@ class DefaultKey(SearchKey):
   t_LESSTHAN = r'<'
 
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/\.\-~!@#$%^&*()_+\n][\x7F-\xFF\w\d\/\.\-~!@#$%^&*()_+\n]*'
-    #r'[\x7F-\xFF\w\d\/%][\x7F-\xFF\w\d\/%]*'
+    r'([^"\s<>!][\S\n]*|!([^=\s][\S\n]*)?)'
+    # newlines are allowed, because variations are delimited by newlines.
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
     value = t.value.strip()
-    t.value = "%s" %value
+    if value[0] == '=':
+      value = value[1:]
+    t.value = value
     return t
 
   def t_WORDSET(self, t):
-    r'"[\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+][\x7F-\xFF\w\d\s\/\.~!@#$%^&*()_+]*"'
+    r'"[^"]*"'
     #r'"[\x7F-\xFF\w\d\s/%][\x7F-\xFF\w\d\s/%]*"'
     # WORDSET is a combination of WORDs separated by white space
     # and starting/ending with "
     value = t.value.replace('"', '').strip()
-    t.value = "%s" %value
+    t.value = value
     return t
 
   def quoteSQLString(self, value, format):

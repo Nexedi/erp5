@@ -58,11 +58,11 @@ class FullTextKey(SearchKey):
   t_DOUBLEQUOTE = r'(\")'
 
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/\.!@#$%^&_][\x7F-\xFF\w\d\/\.!@#$%^&_]*'
+    r'[^\+\-<>\(\)\~\*\"\s]\S*'
     #r'[\x7F-\xFF\w\d][\x7F-\xFF\w\d]*'
     # WORD may contain arbitrary letters and numbers without white space
     word_value = t.value
-    t.value = "'%s'" %word_value
+    t.value = "'%s'" % word_value
     return t
 
   def buildSQLExpression(self, key, value,

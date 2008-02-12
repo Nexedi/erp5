@@ -91,21 +91,21 @@ class ScriptableKey(SearchKey):
 
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
-    r'(\s+OR\s+|\s+or\s+)'
+    r'\s+(OR|or)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'OR'
     return t
 
   def t_AND(self, t):
-    r'(\s+AND\s+|\s+and\s+)'
+    r'\s+(AND|and)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'AND'
     return t  
 
   def t_KEYMAPPING(self, t):
-    r'[\x7F-\xFF\w\d\/~!@#$^&*()_+-][\x7F-\xFF\w\d\/~!@#$^&*()_+-]*\s*(>|<|<=|>=|:)\s*[\x7F-\xFF\w\d\/~!@#$^&*()_+-][\x7F-\xFF\w\d\/~!@#$^&*()_+-]*'
+    r'[^<>=:\s]+\s*(>|<|<=|>=|:)\s*\S+'
     # KEYMAPPING has following format: KEY OPERATOR VALUE 
     # where OPERATOR in ['<', '>', '<=', '>=', ':']
     # example: 'creation_date < 2007-12-12'
@@ -114,7 +114,7 @@ class ScriptableKey(SearchKey):
     return t 
 
   def t_WORD(self, t):
-    r'[\x7F-\xFF\w\d\/~!@#$^&*()_+][\x7F-\xFF\w\d\/~!@#$^&*()_+]*'
+    r'[^<>=\s:]+'
     # WORD may contain arbitrary letters and numbers without white space
     # WORD may contain '%' but not at the beginning or end (otherwise it's KEYWORD)
     value = t.value.strip()

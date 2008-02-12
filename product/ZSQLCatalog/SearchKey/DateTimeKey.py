@@ -69,19 +69,19 @@ class DateTimeKey(SearchKey):
                     'LESSTHAN', 'LESSTHANEQUAL', 'NOT', 'EQUAL',)
 
   def t_OR(self, t):
-    r'(\s+OR\s+|\s+or\s+)'
+    r'\s+(OR|or)\s+'
     # operator has leading and trailing ONLY one white space character
     t.value = 'OR'
     return t
 
   def t_AND(self, t):
-    r'(\s+AND\s+|\s+and\s+)'
+    r'\s+(AND|and)\s+'
     # operator has leading and trailing ONLY one white space character
     t.value = 'AND'
     return t
 
   def t_NOT(self, t):
-    r'(\s+NOT\s+|\s+not\s+|!=)'
+    r'(\s+(NOT|not)\s+|!=)'
     # operator has leading and trailing ONLY one white space character
     t.value = t.value.upper().strip()
     return t

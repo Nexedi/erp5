@@ -45,21 +45,21 @@ class FloatKey(SearchKey):
 
   # Note: Order of placing rules (t_WORD for example) is very important
   def t_OR(self, t):
-    r'(\s+OR\s+|\s+or\s+)'
+    r'\s+(OR|or)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'OR'
     return t
 
   def t_AND(self, t):
-    r'(\s+AND\s+|\s+and\s+)'
+    r'\s+(AND|and)\s+'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = 'AND'
     return t  
   
   def t_NOT(self, t):
-    r'(\s+NOT\s+|\s+not\s+|!=)'
+    r'(\s+(NOT|not)\s+|!=)'
     # operator must have leading and trailing ONLY one white space character
     # otherwise it's treated as a WORD
     t.value = '!=' 
@@ -74,7 +74,7 @@ class FloatKey(SearchKey):
     r'[\d.][\d.]*'
     # FLOAT is a float number
     value = t.value.replace('"', '').strip()
-    t.value = "%s" %value
+    t.value = value
     return t
 
   def quoteSQLString(self, value, format):
