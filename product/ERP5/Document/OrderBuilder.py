@@ -123,7 +123,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                        delivery_relative_url_list=delivery_relative_url_list,
                        movement_list=movement_list,**kw)
     # Call a script after building
-    self.callAfterBuildingScript(delivery_list,**kw)
+    self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     # XXX Returning the delivery list is probably not necessary
     return delivery_list
 
@@ -525,12 +525,29 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       #simulation_movement.setDeliveryRatio(1)
       simulation_movement.edit(delivery_ratio=1)
 
-  def callAfterBuildingScript(self, delivery_list,**kw):
+  def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
     """
       Call script on each delivery built
     """
     delivery_after_generation_script_id = \
                               self.getDeliveryAfterGenerationScriptId()
+    related_simulation_movement_path_list = \
+                              [x.getPath() for x in movement_list]
     if delivery_after_generation_script_id not in ["", None]:
       for delivery in delivery_list:
-        getattr(delivery, delivery_after_generation_script_id)()
+        script = getattr(delivery, delivery_after_generation_script_id)
+        meta_type = getattr(script, 'meta_type', None)
+        if meta_type == 'Script (Python)':
+          # check if the script accepts related_simulation_movement_path_list
+          accept_param = False
+          for param in script.params().split(','):
+            param = param.split('=', 1)[0].strip()
+            if param == 'related_simulation_movement_path_list' or param.startswith('**'):
+              accept_param = True
+              break
+          if accept_param:
+            script(related_simulation_movement_path_list=related_simulation_movement_path_list)
+          else:
+            script()
+        else:
+          script(related_simulation_movement_path_list=related_simulation_movement_path_list)
