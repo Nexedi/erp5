@@ -209,16 +209,17 @@ class Message:
       self.is_executed = 1
     except:
       self.is_executed = 0
-      self.exc_type = sys.exc_info()[0]
-      self.exc_value = str(sys.exc_info()[1])
+      exc_info = sys.exc_info()
+      self.exc_type = exc_info[0]
+      self.exc_value = str(exc_info[1])
       self.traceback = ''.join(ExceptionFormatter.format_exception(
-                               *sys.exc_info()))
+                               *exc_info))
       LOG('ActivityTool', WARNING,
           'Could not call method %s on object %s' % (
-          self.method_id, self.object_path), error=sys.exc_info())
+          self.method_id, self.object_path), error=exc_info)
       # push the error in ZODB error_log
       if getattr(activity_tool, 'error_log', None) is not None:
-        activity_tool.error_log.raising(sys.exc_info())
+        activity_tool.error_log.raising(exc_info)
 
   def validate(self, activity, activity_tool, check_order_validation=1):
     return activity.validate(activity_tool, self,
