@@ -536,18 +536,23 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     if delivery_after_generation_script_id not in ["", None]:
       for delivery in delivery_list:
         script = getattr(delivery, delivery_after_generation_script_id)
+        # BBB: Only Python Scripts were used in the past, and they might not
+        # accept an arbitrary argument. So to keep compatibility,
+        # check if it can take the new parameter safely, only when
+        # the callable object is a Python Script.
+        safe_to_pass_parameter = True
         meta_type = getattr(script, 'meta_type', None)
         if meta_type == 'Script (Python)':
           # check if the script accepts related_simulation_movement_path_list
-          accept_param = False
+          safe_to_pass_parameter = False
           for param in script.params().split(','):
             param = param.split('=', 1)[0].strip()
-            if param == 'related_simulation_movement_path_list' or param.startswith('**'):
-              accept_param = True
+            if param == 'related_simulation_movement_path_list' \
+                    or param.startswith('**'):
+              safe_to_pass_parameter = True
               break
-          if accept_param:
-            script(related_simulation_movement_path_list=related_simulation_movement_path_list)
-          else:
-            script()
-        else:
+
+        if safe_to_pass_parameter:
           script(related_simulation_movement_path_list=related_simulation_movement_path_list)
+        else:
+          script()
