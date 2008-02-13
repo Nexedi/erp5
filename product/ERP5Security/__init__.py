@@ -34,9 +34,9 @@ def mergedLocalRoles(object):
     object = getattr(object, 'aq_inner', object)
     while 1:
         if hasattr(object, '__ac_local_roles__'):
-            dict = object.__ac_local_roles__ or {}
-            if callable(dict): dict = dict()
-            for k, v in dict.items():
+            roles = object.__ac_local_roles__ or {}
+            if callable(roles): roles = roles()
+            for k, v in roles.items():
                 if merged.has_key(k):
                     merged[k] = merged[k] + v
                 else:
