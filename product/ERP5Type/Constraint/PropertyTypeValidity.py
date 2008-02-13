@@ -70,7 +70,7 @@ class PropertyTypeValidity(Constraint):
   message_unknown_type = "Attribute ${attribute_name} is defined with"\
                          " an unknown type ${type_name}"
   message_incorrect_type = "Attribute ${attribute_name}"\
-    " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
+    " should be of type ${expected_type} but is of type ${actual_type}"
   message_incorrect_type_fix_failed = "Attribute ${attribute_name}"\
     " should be of type ${expected_type} but is of type ${actual_type}"\
     " (Type cast failed with error ${type_cast_error})"
