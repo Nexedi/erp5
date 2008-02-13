@@ -70,7 +70,7 @@
 packing_list = context\n
 related_order = packing_list.getCausalityValue()\n
 \n
-if 1 or packing_list.getSimulationState() == \'draft\':\n
+if packing_list.getSimulationState() == \'draft\':\n
   packing_list.edit(\n
     comment = related_order.getComment(),\n
     delivery_mode = related_order.getDeliveryMode(),\n
