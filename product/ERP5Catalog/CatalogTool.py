@@ -145,33 +145,33 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
           if len(new_list)>0:
             new_dict[key] = new_list
         localroles = new_dict
-        user_role_list = []
-        for role_list in localroles.values():
-          user_role_list.extend([role for role in role_list if role not in user_role_list])
-        # Added for ERP5 project by JP Smets
-        # The reason why we do not want to keep Owner is because we are
-        # trying to reduce the number of security definitions
-        # However, this is a bad idea if we start to use Owner role
-        # as a kind of bamed Assignee and if we need it for worklists. Therefore
-        # we may sometimes catalog the owner user ID whenever the Owner
-        # has view permission (see getAllowedRolesAndUsers bellow
-        # as well as getViewPermissionOwner method in Base)
-        view_role_list = [role for role in user_role_list if allowed.has_key(role)]
-        for user, roles in localroles.items():
+        # For each local role of a user:
+        #   If the local role grants View permission, add it.
+        #   If any local role for this user grant him the View permission, add
+        #     them all.
+        # Every addition implies 2 lines:
+        #   user:<user_id>
+        #   user:<user_id>:<role_id>
+        # A line must not be present twice in final result.
+        for user, roles in localroles.iteritems():
+          user_can_view = False
+          # First pass: find if user has a local role granting him view
+          # permission.
           for role in roles:
-            if role == 'Owner':
-              continue
             if allowed.has_key(role):
-              if withnuxgroups:
-                allowed[user] = 1
-              else:
-                allowed['user:' + user] = 1
-            if len(view_role_list):
-              #One of Roles has view Permission.
-              if withnuxgroups:
-                allowed[user + ':' + role] = 1
-              else:
-                allowed['user:' + user + ':' + role] = 1
+              user_can_view = True
+              break
+          if user_can_view:
+            # Second pass: add all roles if user has view mpermission.
+            if withnuxgroups:
+              prefix = user
+            else:
+              prefix = 'user:' + user
+            allowed[prefix] = 1
+            for role in roles:
+              if role == 'Owner': # Skip this role explicitely
+                continue
+              allowed[prefix + ':' + role] = 1
         return list(allowed.keys())
 
 class RelatedBaseCategory(Method):
