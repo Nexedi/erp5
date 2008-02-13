@@ -108,6 +108,13 @@ class TestQuery(unittest.TestCase):
                             datetime_search_keys = [],
                             full_text_search_keys=[]))
 
+  def testQuotedString(self):
+    q = Query(title='Foo d\'Bar')
+    self.assertEquals(
+          dict(where_expression="title = 'Foo d''Bar'",
+               select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
+
   def testQueryMultipleKeys(self):
     # using multiple keys is invalid and raises
     # KeyError: 'Query must have only one key'
