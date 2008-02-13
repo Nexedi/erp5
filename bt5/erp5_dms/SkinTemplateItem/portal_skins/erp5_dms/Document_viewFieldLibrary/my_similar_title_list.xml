@@ -520,7 +520,12 @@
                 <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>validation_state</string>
+                          <string>!=embedded</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
