@@ -92,7 +92,8 @@ start_date = counter_date.getStartDate()\n
 from DateTime import DateTime\n
 now = DateTime()\n
 \n
-if now.Date() != start_date.Date():\n
+check_date_is_today = state_change.kwargs.get(\'check_date_is_today\', 1)\n
+if check_date_is_today and now.Date() != start_date.Date():\n
   msg = Message(domain=\'ui\',message="Sorry, the date is not today")\n
   raise ValidationFailed (msg,)\n
 \n
@@ -188,6 +189,7 @@ counter_date.setReference(reference)\n
                             <string>start_date</string>
                             <string>DateTime</string>
                             <string>now</string>
+                            <string>check_date_is_today</string>
                             <string>line</string>
                             <string>context</string>
                             <string>counter</string>
