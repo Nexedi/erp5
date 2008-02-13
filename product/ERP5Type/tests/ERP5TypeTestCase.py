@@ -304,9 +304,8 @@ class ERP5TypeTestCase(PortalTestCase):
 
       template_list = self.getBusinessTemplateList()
       new_template_list = []
-      #LOG('template_list',0,template_list)
       for template in template_list:
-        id = template
+        id = template.split('/')[-1]
         try :
           file, headers = urlretrieve(template)
         except IOError :
