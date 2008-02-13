@@ -162,7 +162,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
               user_can_view = True
               break
           if user_can_view:
-            # Second pass: add all roles if user has view mpermission.
+            # Second pass: add all roles if user has view permission.
             if withnuxgroups:
               prefix = user
             else:
