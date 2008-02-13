@@ -331,12 +331,18 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     printAndLog('\nTest Automatic Setting Unique Reference')
-    raise NotImplementedError
     # create three empty test documents
+    document1 = self.portal.document_module.newContent()
+    document2 = self.portal.document_module.newContent()
+    document3 = self.portal.document_module.newContent()
     # run setUniqueReference on the second
+    document2.setUniqueReference()
     # reference of the second doc should now be TEST-auto-2
+    self.assertEquals('TEST-auto-2', document2.getReference())
     # run setUniqueReference('uniq') on the third
+    document3.setUniqueReference('uniq')
     # reference of the third doc should now be TEST-uniq-1
+    self.assertEquals('TEST-uniq-1', document3.getReference())
 
   def test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
