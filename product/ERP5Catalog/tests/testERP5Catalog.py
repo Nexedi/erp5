@@ -2021,9 +2021,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
     self.assertSameSet(['super_owner'], [x.owner for x in result])
-    # Also, check that it is not cataloged in roles_and_users
-    result = sql_connection.manage_test('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers IN ("user:super_owner", "user:super_owner:Owner")')
-    self.assertEqual(len(result), 0, repr(result.dictionaries()))
 
     # Check that Owner is not catalogued when he can view the 
     # object because he has another role
@@ -2266,6 +2263,126 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                          operator='OR')
     self.assertEqual(len(catalog(query=query)), 3)
 
+  def test_check_security_table_content(self, quiet=quiet, run=run_all_test):
+    sql_connection = self.getSQLConnection()
+    portal = self.getPortalObject()
+    portal_types = portal.portal_types
+    
+    # Person stuff
+    person_module = portal.person_module
+    person = 'Person'
+    person_portal_type = portal_types._getOb(person)
+    person_portal_type.acquire_local_roles = False
+    # Organisation stuff
+    organisation_module = portal.organisation_module
+    organisation = 'Organisation'
+    organisation_portal_type = portal_types._getOb(organisation)
+    organisation_portal_type.acquire_local_roles = True
+    
+    self.portal.portal_caches.clearAllCache()
+    
+    def newContent(container, portal_type, acquire_view_permission, view_role_list, local_role_dict):
+      document = container.newContent(portal_type=portal_type)
+      document.manage_permission('View', roles=view_role_list, acquire=acquire_view_permission)
+      for user, role_list in local_role_dict.iteritems():
+        document.manage_setLocalRoles(userid=user, roles=role_list)
+      return document
+
+    # Create documents for all combinations
+    object_dict = {}
+
+    def getObjectDictKey():
+      """
+        Get values from enclosing environment.
+        Uggly, but makes calls less verbose.
+      """
+      return (portal_type, acquire_view_permission,
+              tuple(view_role_list),
+              tuple([(x, tuple(y))
+                     for x, y in local_role_dict.iteritems()])
+             )
+    
+    for container, portal_type in ((person_module, person),
+                                   (organisation_module, organisation)):
+      for acquire_view_permission in (True, False):
+        for view_role_list in ([],
+                               ['Owner'],
+                               ['Owner', 'Author'],
+                               ['Author']):
+          for local_role_dict in ({},
+                                  {'foo': ['Owner']},
+                                  {'foo': ['Author']},
+                                  {'foo': ['Owner'],
+                                   'bar': ['Author']},
+                                  {'foo': ['Owner', 'Author'],
+                                   'bar': ['Whatever']},
+                                  {'foo': ['Owner', 'Author'],
+                                   'bar': ['Whatever', 'Author']}):
+            object_dict[getObjectDictKey()] = \
+              newContent(container, portal_type, acquire_view_permission,
+                         view_role_list, local_role_dict)
+    get_transaction().commit()
+    self.tic()
+
+    def query(sql):
+      result = sql_connection.manage_test(sql)
+      return result.dictionaries()
+    
+    # Check that there is no Owner role in security table
+    # Note: this tests *all* lines from security table. Not just the ones
+    # inserted in this test.
+    result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "%:Owner"')
+    self.assertEqual(len(result), 0, repr(result))
+    
+    # Check that for each "user:<user>:<role>" line there is exactly one
+    # "user:<user>" line with the same uid.
+    # Also, check that for each "user:<user>" there is at least one
+    # "user:<user>:<role>" line with same uid.
+    # Also, check if "user:..." lines are well-formed.
+    # Note: this tests *all* lines from security table. Not just the ones
+    # inserted in this test.
+    line_list = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "user:%"')
+    for line in line_list:
+      role_list = line['allowedRolesAndUsers'].split(':')
+      uid = line['uid']
+      if len(role_list) == 3:
+        stripped_role = ':'.join(role_list[:-1])
+        result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers = "%s" AND uid = %i' % (stripped_role, uid) )
+        self.assertEqual(len(result), 1, repr(result))
+      elif len(role_list) == 2:
+        result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "%s:%%" AND uid = %i' % (line['allowedRolesAndUsers'], uid) )
+        self.assertNotEqual(len(result), 0, 'No line found for allowedRolesAndUsers=%r and uid=%i' % (line['allowedRolesAndUsers'], uid))
+      else:
+        raise Exception, 'Malformed allowedRolesAndUsers value: %r' % (line['allowedRolesAndUsers'], )
+
+    # Check that object that 'bar' can view because of 'Author' role can be
+    # found when searching for his other 'Whatever' role.
+    # This is used by worklists: a worklist on Whatever must be able to find
+    # all visible documents even if Whatever is not the cause of this
+    # visibility.
+    local_role_dict = {'foo': ['Owner', 'Author'],
+                       'bar': ['Whatever', 'Author']}
+    for container, portal_type in ((person_module, person),
+                                   (organisation_module, organisation)):
+      for acquire_view_permission in (True, False):
+        for view_role_list in (['Owner', 'Author'],
+                               ['Author']):
+          object = object_dict[getObjectDictKey()]
+          result = query('SELECT roles_and_users.uid FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND allowedRolesAndUsers = "user:bar:Whatever"' % (object.uid, ))
+          self.assertEqual(len(result), 1, '%r: len(%r) != 1' % (getObjectDictKey(), result))
+
+    # Check that no 'bar' role are in security table when 'foo' has local
+    # roles allowing him to view an object but 'bar' can't.
+    local_role_dict = {'foo': ['Owner', 'Author'],
+                       'bar': ['Whatever']}
+    for container, portal_type in ((person_module, person),
+                                   (organisation_module, organisation)):
+      for acquire_view_permission in (True, False):
+        for view_role_list in (['Owner', 'Author'],
+                               ['Author']):
+          object = object_dict[getObjectDictKey()]
+          result = query('SELECT roles_and_users.uid, roles_and_users.allowedRolesAndUsers FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND roles_and_users.allowedRolesAndUsers LIKE "user:bar%%"' % (object.uid, ))
+          self.assertEqual(len(result), 0, '%r: len(%r) != 0' % (getObjectDictKey(), result))
 
 def test_suite():
   suite = unittest.TestSuite()
