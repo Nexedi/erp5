@@ -4025,6 +4025,8 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     local_roles_dict = {}
     for role in local_roles_list:
       id = role.getAttribute('id')
+      if isinstance(id, unicode):
+        id = id.encode('utf-8')
       item_type_list = []
       item_list = role.getElementsByTagName('item')
       for item in item_list:
@@ -4036,6 +4038,8 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     group_local_roles_dict = {}
     for role in local_roles_list:
       id = role.getAttribute('id')
+      if isinstance(id, unicode):
+        id = id.encode('utf-8')
       item_type_list = []
       item_list = role.getElementsByTagName('item')
       for item in item_list:
