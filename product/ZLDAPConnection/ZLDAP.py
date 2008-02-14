@@ -372,6 +372,8 @@ class ZLDAPConnection(
             self._v_conn = None
         if self._v_conn is None or not self.shouldBeOpen():
             return 0
+        elif not self.__ping():
+            return 0
         else:
             return 1
 
