@@ -68,13 +68,13 @@
             <value> <string>if paysheet is None:\n
   paysheet = context\n
 \n
-portal_simulation = context.getPortalObject().portal_simulation\n
+portal_simulation = paysheet.getPortalObject().portal_simulation\n
 \n
 params = {\n
     \'section_uid\' : paysheet.getDestinationSectionUid(),\n
     \'node_uid\' : paysheet.getSourceSectionUid(),\n
     \'tax_category_uid\' :\\\n
-        context.portal_categories.tax_category.employee_share.getUid(),\n
+        paysheet.portal_categories.tax_category.employee_share.getUid(),\n
     \'to_date\' : paysheet.getStartDate(),\n
     \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
     \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
@@ -85,10 +85,12 @@ params = {\n
 \n
 \n
 deductible_tax = portal_simulation.getInventoryAssetPrice(**params)\n
-over_time = context.PaySheetTransaction_getYearToDateOvertimeAmount()\n
-gross_salary = context.PaySheetTransaction_getYearToDateGrossSalary()\n
+over_time = paysheet.PaySheetTransaction_getYearToDateOvertimeAmount()\n
+gross_salary = paysheet.PaySheetTransaction_getYearToDateGrossSalary()\n
 \n
-return gross_salary - over_time - deductible_tax\n
+taxable_net_pay = gross_salary - over_time - deductible_tax\n
+\n
+return taxable_net_pay\n
 </string> </value>
         </item>
         <item>
@@ -142,6 +144,7 @@ return gross_salary - over_time - deductible_tax\n
                             <string>deductible_tax</string>
                             <string>over_time</string>
                             <string>gross_salary</string>
+                            <string>taxable_net_pay</string>
                           </tuple>
                         </value>
                     </item>

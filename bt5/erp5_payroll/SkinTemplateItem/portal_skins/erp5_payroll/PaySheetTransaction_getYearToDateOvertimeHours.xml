@@ -83,10 +83,10 @@ paysheet_list = accounting_module.searchFolder( **search_params)\n
 \n
 yearly_work_time = 0\n
 for paysheet in paysheet_list:\n
-  annotation_line = context.getAnnotationLineFromReference(\\\n
+  annotation_line = paysheet.getAnnotationLineFromReference(\\\n
       reference=\'overtime_small_rate\')\n
   nb_heures_supp = annotation_line.getQuantity()\n
-  annotation_line = context.getAnnotationLineFromReference(\\\n
+  annotation_line = paysheet.getAnnotationLineFromReference(\\\n
       reference=\'overtime_big_rate\')\n
   nb_heures_supp += annotation_line.getQuantity()\n
   yearly_work_time += nb_heures_supp \n

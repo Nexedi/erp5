@@ -1,3 +1,6 @@
+2008-02-14 fabien
+* correct some script : context was used instead paysheet, so results were wrong
+
 2008-01-24 fabien
 * set version number to 2.1 : this bt is the second version of payroll.
 
