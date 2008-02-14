@@ -194,7 +194,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     default_result_limit = 1000
     
-    manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' },
+    manage_options = ({ 'label' : 'Overview', 'action' : 'manage_overview' },
                      ) + ZCatalog.manage_options
 
 
@@ -205,9 +205,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     __url = CMFCoreCatalogTool.__url
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
 
-    security.declareProtected( Permissions.ManagePortal
-                , 'manage_schema' )
-    manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
+    security.declareProtected(Permissions.ManagePortal
+                , 'manage_schema')
+    manage_schema = DTMLFile('dtml/manageSchema', globals())
 
     def getPreferredSQLCatalogId(self, id=None):
       """
@@ -232,7 +232,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       else:
         return id
       
-    security.declareProtected( 'Import/Export objects', 'addDefaultSQLMethods' )
+    security.declareProtected('Import/Export objects', 'addDefaultSQLMethods')
     def addDefaultSQLMethods(self, config_id='erp5'):
       """
         Add default SQL methods for a given configuration.
@@ -279,7 +279,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       # Make this the default.
       self.default_sql_catalog_id = config_id
      
-    security.declareProtected( 'Import/Export objects', 'exportSQLMethods' )
+    security.declareProtected('Import/Export objects', 'exportSQLMethods')
     def exportSQLMethods(self, sql_catalog_id=None, config_id='erp5'):
       """
         Export SQL methods for a given configuration.
@@ -341,11 +341,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if proxy_roles:
           # apply proxy roles
           user = eo.getOwner()
-          result = list( proxy_roles )
+          result = list(proxy_roles)
         else:
-          result = list( user.getRoles() )
-        result.append( 'Anonymous' )
-        result.append( 'user:%s' % user.getId() )
+          result = list(user.getRoles())
+        result.append('Anonymous')
+        result.append('user:%s' % user.getId())
         # deal with groups
         getGroups = getattr(user, 'getGroups', None)
         if getGroups is not None:
@@ -428,7 +428,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return None
 
 
-    security.declarePublic( 'getAllowedRolesAndUsers' )
+    security.declarePublic('getAllowedRolesAndUsers')
     def getAllowedRolesAndUsers(self, sql_catalog_id=None, **kw):
       """
         Return allowed roles and users.
@@ -536,7 +536,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         security_uid_list = []
       return security_uid_list, role_column_dict
 
-    security.declarePublic( 'getSecurityQuery' )
+    security.declarePublic('getSecurityQuery')
     def getSecurityQuery(self, query=None, sql_catalog_id=None, **kw):
       """
         Build a query based on allowed roles or on a list of security_uid
@@ -571,7 +571,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         limit the results to what the user is allowed to see.
         """
         if not _checkPermission(
-            Permissions.AccessInactivePortalContent, self ):
+            Permissions.AccessInactivePortalContent, self):
             now = DateTime()
             kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
@@ -647,8 +647,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         # XXX This needs to be set again
         #if not _checkPermission(
-        #    Permissions.AccessInactivePortalContent, self ):
-        #    base = aq_base( self )
+        #    Permissions.AccessInactivePortalContent, self):
+        #    base = aq_base(self)
         #    now = DateTime()
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
