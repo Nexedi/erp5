@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,30 +72,11 @@ we can return raw set, the class will get objects and make the records unique\n
 and make sure we get latest/most relevant version\n
 should be reimplemented in SQL some sunny day.\n
 """\n
+reference = context.getReference()\n
+if reference is None:\n
+  return ()\n
 \n
-search_term_list = []\n
-\n
-if context.getReference() is None: \n
-  return []\n
-\n
-search_term_list.append(context.getReference())\n
-\n
-if context.getLanguage() is not None:\n
-  search_term_list.append(context.getReference() + \'-\' + context.getLanguage())\n
-  if context.getVersion() is not None:\n
-    search_term_list.append(context.getReference() + \'-\' + context.getLanguage() + \'-\' + context.getVersion())\n
-\n
-# Find from only document types\n
-document_type_list = context.getPortalDocumentTypeList()\n
-\n
-kw = {}\n
-searchable_text_list = []\n
-for term in search_term_list:\n
-  searchable_text_list.append(\'%\'+term+\'%\')\n
-kw[\'full_text.SearchableText\'] = searchable_text_list\n
-result = context.portal_catalog(portal_type=document_type_list, **kw)\n
-\n
-return result\n
+return context.Base_zGetImplicitPredecessorValueList(reference=reference)\n
 </string> </value>
         </item>
         <item>
@@ -149,17 +127,10 @@ return result\n
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
-                            <string>search_term_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>reference</string>
                             <string>None</string>
-                            <string>document_type_list</string>
-                            <string>searchable_text_list</string>
-                            <string>_getiter_</string>
-                            <string>term</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

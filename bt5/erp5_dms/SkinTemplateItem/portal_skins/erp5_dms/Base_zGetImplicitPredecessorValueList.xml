@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>reference</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>reference</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>reference\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>ZSQLCatalog.zsqlbrain</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_zGetImplicitPredecessorValueList</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SET @current_path = \'\'; <dtml-var "\'\\0\'">\n
+SET @current_reference = \'\'; <dtml-var "\'\\0\'">\n
+\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), portal_type=getPortalDocumentTypeList())">\n
+<dtml-let user_language="Localizer.get_selected_language()">\n
+SELECT path, uid\n
+FROM\n
+(\n
+SELECT DISTINCT\n
+path,\n
+(select uid from catalog where catalog.path=sub.path) as uid\n
+FROM\n
+( SELECT\n
+    @current_path:=IF(@current_reference = reference, @current_path, path) AS path,\n
+    @current_reference:=reference AS reference\n
+  FROM (\n
+    SELECT\n
+      reference,\n
+      path,\n
+      catalog.uid,\n
+      CASE language WHEN <dtml-sqlvar user_language type=string> THEN 1 WHEN \'en\' THEN 0 ELSE -1 END as language_order\n
+    FROM\n
+      catalog, versioning, full_text\n
+    WHERE\n
+      catalog.uid = versioning.uid\n
+      AND\n
+      catalog.uid = full_text.uid\n
+      <dtml-if "query[\'where_expression\']">\n
+      AND <dtml-var "query[\'where_expression\']">\n
+      </dtml-if>\n
+      AND\n
+        <dtml-sqltest "\'%\'+str(reference)+\'%\'" column=SearchableText op=like type=string>\n
+      AND\n
+        <dtml-sqltest reference op=ne type=string>\n
+    ORDER BY reference, language_order DESC, version DESC\n
+  ) AS innersub\n
+)\n
+AS sub\n
+)\n
+AS main\n
+WHERE\n
+<dtml-sqltest "getUid()" column=uid op=ne type=int>\n
+LIMIT 1000\n
+\n
+</dtml-let>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SET @current_path = \'\'; <dtml-var "\'\\0\'">\n
+SET @current_reference = \'\'; <dtml-var "\'\\0\'">\n
+\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), portal_type=getPortalDocumentTypeList())">\n
+<dtml-let user_language="Localizer.get_selected_language()">\n
+SELECT path, uid\n
+FROM\n
+(\n
+SELECT DISTINCT\n
+path,\n
+(select uid from catalog where catalog.path=sub.path) as uid\n
+FROM\n
+( SELECT\n
+    @current_path:=IF(@current_reference = reference, @current_path, path) AS path,\n
+    @current_reference:=reference AS reference\n
+  FROM (\n
+    SELECT\n
+      reference,\n
+      path,\n
+      catalog.uid,\n
+      CASE language WHEN <dtml-sqlvar user_language type=string> THEN 1 WHEN \'en\' THEN 0 ELSE -1 END as language_order\n
+    FROM\n
+      catalog, versioning, full_text\n
+    WHERE\n
+      catalog.uid = versioning.uid\n
+      AND\n
+      catalog.uid = full_text.uid\n
+      <dtml-if "query[\'where_expression\']">\n
+      AND <dtml-var "query[\'where_expression\']">\n
+      </dtml-if>\n
+      AND\n
+        <dtml-sqltest "\'%\'+str(reference)+\'%\'" column=SearchableText op=like type=string>\n
+      AND\n
+        <dtml-sqltest reference op=ne type=string>\n
+    ORDER BY reference, language_order DESC, version DESC\n
+  ) AS innersub\n
+)\n
+AS sub\n
+)\n
+AS main\n
+WHERE\n
+<dtml-sqltest "getUid()" column=uid op=ne type=int>\n
+LIMIT 1000\n
+\n
+</dtml-let>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
