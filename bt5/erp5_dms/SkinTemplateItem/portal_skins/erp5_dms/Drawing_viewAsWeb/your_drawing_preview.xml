@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drawing_preview</string> </value>
+            <value> <string>your_drawing_preview</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

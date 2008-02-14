@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>download_link</string> </value>
+            <value> <string>your_download_link</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
