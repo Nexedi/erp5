@@ -68,14 +68,15 @@
             <value> <string>if paysheet is None:\n
     paysheet = context\n
 \n
-portal_simulation = paysheet.getPortalObject().portal_simulation\n
+portal = context.getPortalObject();\n
+portal_simulation = portal.portal_simulation\n
 \n
 params = {\n
     \'node_uid\' : paysheet.getSourceSectionUid(),\n
     \'mirror_section_uid\' : paysheet.getSourceSectionUid(),\n
     \'section_uid\' : paysheet.getDestinationSectionUid(),\n
     \'tax_category_uid\' :\\\n
-        paysheet.portal_categories.tax_category.employee_share.getUid(),\n
+        portal.portal_categories.tax_category.employee_share.getUid(),\n
     \'to_date\' : paysheet.getStartDate(),\n
     \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
     \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
@@ -131,6 +132,7 @@ return portal_simulation.getInventoryAssetPrice(**params)\n
                             <string>None</string>
                             <string>context</string>
                             <string>_getattr_</string>
+                            <string>portal</string>
                             <string>portal_simulation</string>
                             <string>DateTime</string>
                             <string>params</string>

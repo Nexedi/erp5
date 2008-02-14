@@ -78,7 +78,7 @@ import pprint\n
 from Products.ERP5Type.Message import Message\n
 N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
-\n
+portal = context.getPortalObject();\n
 paysheet_line_list = context.contentValues(portal_type=\'Pay Sheet Line\')\n
 if context.getPriceCurrencyValue():\n
   precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
@@ -131,7 +131,7 @@ for paysheet_line in paysheet_line_list:\n
     for item in tuple:\n
       # the dict key is the base category and value is the category path\n
       tuple_dict[item.split(\'/\')[0]] = \\\n
-          context.portal_categories.restrictedTraverse(item).getTitle()\n
+          portal.portal_categories.restrictedTraverse(item).getTitle()\n
       tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
 \n
     # we want to display as lines as a paysheet line as slices\n
@@ -250,6 +250,7 @@ return line_list\n
                             <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>paysheet_line_list</string>
                             <string>precision</string>
                             <string>line_list</string>
