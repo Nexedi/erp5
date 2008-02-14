@@ -135,9 +135,14 @@ Test Accounting Transaction Template\n
   <td>label=Make a Template</td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_module</td>\n
-  <td>label=Accounting</td>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <!-- Remove Accounting Transactions -->\n
@@ -149,6 +154,16 @@ Test Accounting Transaction Template\n
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Accounting Transactions Created.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -204,7 +219,24 @@ Test Accounting Transaction Template\n
   <td>label=41 - Receivable</td>\n
 </tr>\n
 \n
+<!-- Wait for activities -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <!-- delete template -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_favorite</td>\n
@@ -254,6 +286,17 @@ Test Accounting Transaction Template\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
   <td>0 record(s)</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n
