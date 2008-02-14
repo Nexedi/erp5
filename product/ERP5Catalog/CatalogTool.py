@@ -147,30 +147,18 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         localroles = new_dict
         # For each local role of a user:
         #   If the local role grants View permission, add it.
-        #   If any local role for this user grant him the View permission, add
-        #     them all.
         # Every addition implies 2 lines:
         #   user:<user_id>
         #   user:<user_id>:<role_id>
         # A line must not be present twice in final result.
         for user, roles in localroles.iteritems():
-          user_can_view = False
-          # First pass: find if user has a local role granting him view
-          # permission.
+          if withnuxgroups:
+            prefix = user
+          else:
+            prefix = 'user:' + user
           for role in roles:
             if allowed.has_key(role):
-              user_can_view = True
-              break
-          if user_can_view:
-            # Second pass: add all roles if user has view permission.
-            if withnuxgroups:
-              prefix = user
-            else:
-              prefix = 'user:' + user
-            allowed[prefix] = 1
-            for role in roles:
-              if role == 'Owner': # Skip this role explicitely
-                continue
+              allowed[prefix] = 1
               allowed[prefix + ':' + role] = 1
         return list(allowed.keys())
 

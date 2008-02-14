@@ -1686,95 +1686,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(1, folder.countFolder(title='Object Title',
                                              local_roles='Assignee')[0][0])
 
-    #Test if one of user Role with View permission return Object
-    ob1.manage_addLocalRoles('bob', ['Assignee', 'Auditor'])
-    ob1.manage_permission('View', ['Assignor', 'Auditor'], 0)
-    ob1.reindexObject()
-    get_transaction().commit()
-    self.tic()
-    user = getSecurityManager().getUser()
-    self.assertTrue(user.has_permission('View', ob1))
-    self.assertTrue(user.has_role('Assignee', ob1))
-    result_list = [r.getId() for r in ctool(title='Object Title', local_roles='Assignee')]
-    self.assertEquals(2, len(result_list))
-    self.assertEquals(2,
-                ctool.countResults(title='Object Title',
-                                   local_roles='Assignee')[0][0])
-
-    # this also work for searchFolder and countFolder
-    self.assertEquals(2, len(folder.searchFolder(title='Object Title',
-                                             local_roles='Assignee')))
-    self.assertEquals(2, folder.countFolder(title='Object Title',
-                                             local_roles='Assignee')[0][0])
-
-
-  def test_50_bis_LocalRolesArgumentWithERP5Security(self, quiet=quiet, run=run_all_test):
-    """test local_roles= argument with ERP5Security
-    """
-    if not run: return
-    if not quiet:
-      message = 'local_roles= argument with ERP5Security'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-    login = PortalTestCase.login
-    #Testing Security By ERP5Security Role Generation
-    #Create Categories and PortalType RoleInformation
-    self.login()
-    folder = self.getOrganisationModule()
-    ob1 = folder.newContent(title='Object Title')
-    ob2 = folder.newContent(title='Object Title')
-    ob2.manage_addLocalRoles('bob', ['Assignee'])
-    cat_tool = self.getPortal().portal_categories
-    cat_tool.group.newContent(id='company', portal_type='Category')
-    cat_tool.function.newContent(id='employee', portal_type='Category')
-
-    from Products.ERP5Type.RoleInformation import RoleInformation
-    role_auditor_inf = RoleInformation(id='Auditor',
-                                        title='Auditor',
-                                        category=('group/company',))
-    role_assignee_inf = RoleInformation(id='Assignee',
-                                        title='Assignee',
-                                        category=('group/company',
-                                                  'function/employee',))
-
-    pt = self.getPortal().portal_types.Organisation
-    pt._roles = (role_auditor_inf, role_assignee_inf)
-
-    uf = self.getPortal().acl_users
-    uf._doAddUser('bob', '', ['Member'], [])
-    get_transaction().commit()
-    self.tic()
-    #Now Update Security
-    ob1.updateLocalRolesOnSecurityGroups()
-    ob1.manage_permission('View', ['Auditor', 'Assignor'], 0)
-    ob1.reindexObject()
-    #Remove Roles On Organisation Portal Type
-    pt._roles = ()
-    get_transaction().commit()
-    self.tic()
-    login(self, 'bob')
-    ctool = self.getCatalogTool()
-    user = getSecurityManager().getUser()
-    user._groups.update({'company':1,
-                         'employee_company':1})
-    self.assertTrue(user.has_permission('View', ob1))
-    self.assertTrue(user.has_role('Auditor', ob1))
-    self.assertTrue(user.has_role('Assignee', ob1))
-    self.assertFalse(user.has_role('Assignor', ob1))
-    from AccessControl.PermissionRole import rolesForPermissionOn
-    self.assertTrue('Assignee' not in rolesForPermissionOn('View', ob1))
-    self.assertEquals(2, len(ctool(title='Object Title',
-                                   local_roles='Assignee')))
-    self.assertEquals(2,
-                ctool.countResults(title='Object Title',
-                                   local_roles='Assignee')[0][0])
-
-    # this also work for searchFolder and countFolder
-    self.assertEquals(2, len(folder.searchFolder(title='Object Title',
-                                             local_roles='Assignee')))
-    self.assertEquals(2, folder.countFolder(title='Object Title',
-                                             local_roles='Assignee')[0][0])
-
   def test_51_SearchWithKeyWords(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -2355,11 +2266,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       else:
         raise Exception, 'Malformed allowedRolesAndUsers value: %r' % (line['allowedRolesAndUsers'], )
 
-    # Check that object that 'bar' can view because of 'Author' role can be
-    # found when searching for his other 'Whatever' role.
-    # This is used by worklists: a worklist on Whatever must be able to find
-    # all visible documents even if Whatever is not the cause of this
-    # visibility.
+    # Check that object that 'bar' can view because of 'Author' role can *not*
+    # be found when searching for his other 'Whatever' role.
     local_role_dict = {'foo': ['Owner', 'Author'],
                        'bar': ['Whatever', 'Author']}
     for container, portal_type in ((person_module, person),
@@ -2369,7 +2277,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                ['Author']):
           object = object_dict[getObjectDictKey()]
           result = query('SELECT roles_and_users.uid FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND allowedRolesAndUsers = "user:bar:Whatever"' % (object.uid, ))
-          self.assertEqual(len(result), 1, '%r: len(%r) != 1' % (getObjectDictKey(), result))
+          self.assertEqual(len(result), 0, '%r: len(%r) != 0' % (getObjectDictKey(), result))
 
     # Check that no 'bar' role are in security table when 'foo' has local
     # roles allowing him to view an object but 'bar' can't.
