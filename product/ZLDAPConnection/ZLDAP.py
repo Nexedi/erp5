@@ -380,8 +380,7 @@ class ZLDAPConnection(
     def __ping(self):
         " more expensive check on the connection and validity of conn "
         try:
-            self._connection().search_s(self.dn,ldap.SCOPE_BASE,
-                                        'objectclass=*')
+            self._connection().whoami_s()
             return 1
         except:
             self._close()
