@@ -54,6 +54,7 @@ from Products.ERP5Security.ERP5UserManager import SUPER_USER
 import os, time, urllib, warnings
 import sys
 from zLOG import LOG, PROBLEM, WARNING, INFO
+import sets
 
 SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
 try:
@@ -115,11 +116,6 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         withnuxgroups = security_product == SECURITY_USING_NUX_USER_GROUPS
         withpas = security_product == SECURITY_USING_PAS
 
-        allowed = {}
-        for r in rolesForPermissionOn('View', ob):
-          allowed[r] = 1
-        if 'Owner' in allowed:
-          del allowed['Owner']
         if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
         elif withpas:
@@ -132,35 +128,41 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         # roles acquired on the parent of the parent....]
         # So if we have ['-Author','Author'] we should remove the role 'Author'
         # but if we have ['Author','-Author'] we have to keep the role 'Author'
-        new_dict = {}
-        for key in localroles.keys():
-          new_list = []
-          remove_list = []
-          for role in localroles[key]:
-            if role.startswith('-'):
-              if not role[1:] in new_list and not role[1:] in remove_list:
-                remove_list.append(role[1:])
-            elif not role in remove_list:
-              new_list.append(role)
-          if len(new_list)>0:
-            new_dict[key] = new_list
-        localroles = new_dict
+        flat_localroles = {}
+        skip_role_set = sets.Set()
+        skip_role = skip_role_set.add
+        clear_skip_role = skip_role_set.clear
+        for key, role_list in localroles.iteritems():
+          new_role_list = []
+          new_role = new_role_list.append
+          clear_skip_role()
+          for role in role_list:
+            if role[:1] == '-':
+              skip_role(role[1:])
+            elif role not in skip_role_set:
+              new_role(role)
+          if len(new_role_list)>0:
+            flat_localroles[key] = new_role_list
+        localroles = flat_localroles
         # For each local role of a user:
         #   If the local role grants View permission, add it.
         # Every addition implies 2 lines:
         #   user:<user_id>
         #   user:<user_id>:<role_id>
         # A line must not be present twice in final result.
+        allowed = sets.Set(rolesForPermissionOn('View', ob))
+        allowed.discard('Owner')
+        add = allowed.add
         for user, roles in localroles.iteritems():
           if withnuxgroups:
             prefix = user
           else:
             prefix = 'user:' + user
           for role in roles:
-            if allowed.has_key(role):
-              allowed[prefix] = 1
-              allowed[prefix + ':' + role] = 1
-        return list(allowed.keys())
+            if role in allowed:
+              add(prefix)
+              add(prefix + ':' + role)
+        return list(allowed)
 
 class RelatedBaseCategory(Method):
     """A Dynamic Method to act as a related key.
