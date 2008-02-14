@@ -567,11 +567,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       pass
 
     reference_list = [r[1] for r in self.getSearchableReferenceList()]
-    successor_list = self.Base_getImplicitSuccessorValueList(reference_list)
-    # get unique latest (most relevant) versions
-    temp_result = [r.getObject().getLatestVersionValue() for r in successor_list]
-    result_dict = dict.fromkeys(temp_result)
-    result = result_dict.keys()
+    result = self.Base_getImplicitSuccessorValueList(reference_list)
     tv[cache_key] = result
     return result
 
@@ -604,15 +600,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
 
     method = self._getTypeBasedMethod('getImplicitPredecessorValueList', 
         fallback_script_id = 'Base_getImplicitPredecessorValueList')
-    lst = method()
-    # make it unique first time (before getting lastversionvalue)
-    di = dict.fromkeys([r.getObject() for r in lst])
-    # then get latest version and make unique again
-    di = dict.fromkeys([o.getLatestVersionValue()
-                        for o in di.keys()
-                        if getattr(o, 'getLatestVersionValue', None)])
-    ref = self.getReference()
-    result = [o for o in di.keys() if o.getReference() != ref] # every object has its own reference in SearchableText
+    result = method()
     tv[cache_key] = result
     return result
 
