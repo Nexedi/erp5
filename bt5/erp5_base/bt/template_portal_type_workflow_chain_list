@@ -7,6 +7,7 @@ Bank Account | validation_workflow
 Career | career_workflow
 Chat Address | edit_workflow
 Credit Card | edit_workflow
+Credit Card | validation_workflow
 Currency Exchange Line | currency_exchange_line_interaction_workflow
 Currency Exchange Line | edit_workflow
 Currency Exchange Line | validation_workflow

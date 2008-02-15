@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Credit Card</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Currency</type>
