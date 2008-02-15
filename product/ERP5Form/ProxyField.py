@@ -150,6 +150,7 @@ class ProxyField(ZMIField):
   widget = ProxyWidgetInstance
   validator = ProxyValidatorInstance
   delegated_list = tuple()
+  delegated_message_list = tuple()
 
   # methods screen
   security.declareProtected('View management screens',
@@ -160,6 +161,10 @@ class ProxyField(ZMIField):
   security.declareProtected('View management screens',
                             'manage_talesForm')
   manage_talesForm = DTMLFile('dtml/proxyFieldTales', globals())
+
+  # messages screen
+  security.declareProtected('View management screens', 'manage_messagesForm')
+  manage_messagesForm = DTMLFile('dtml/proxyFieldMessages', globals())
 
   # proxy field list header
   security.declareProtected('View management screens', 'proxyFieldListHeader')
@@ -352,6 +357,50 @@ class ProxyField(ZMIField):
       if not self.values.has_key(key):
         self.values[key] = self.get_recursive_orig_value(key, include=0)
 
+  security.declareProtected('Change Formulator Fields', 'manage_messages')
+  def manage_messages(self, REQUEST):
+    """Change message texts.
+    """
+    surcharge_list = []
+    messages = self.message_values
+    unicode_mode = self.get_unicode_mode()
+    for message_key in self.get_error_names():
+      checkbox_key = "surcharge_%s" % message_key
+      if not REQUEST.has_key(checkbox_key):
+        surcharge_list.append(message_key)
+        message = REQUEST[message_key]
+        if unicode_mode:
+          message = unicode(message, 'UTF-8')
+        messages[message_key] = message
+      else:
+        if message_key in messages:
+          messages.pop(message_key)
+    self.message_values = messages
+    self.delegated_message_list = surcharge_list
+    if REQUEST:
+      message="Content changed."
+      return self.manage_messagesForm(self,REQUEST,
+                                      manage_tabs_message=message)
+
+  security.declareProtected('View management screens', 'get_error_message') 
+  def get_error_message(self, name): 
+    if not self.is_message_delegated(name):
+      try: 
+        return self.message_values[name] 
+      except KeyError: 
+        if name in self.validator.message_names: 
+          return getattr(self.validator, name) 
+        else: 
+          return "Unknown error: %s" % name 
+    else:
+      return self.getTemplateField().get_error_message(name)
+
+  security.declareProtected('View management screens', 'get_error_names') 
+  def get_error_names(self): 
+    """Get error messages. 
+    """ 
+    return self.getTemplateField().get_error_names()
+
   def getTemplateField(self):
     """
     Return template field of the proxy field.
@@ -409,6 +458,15 @@ class ProxyField(ZMIField):
     return id not in self.delegated_list
 
   security.declareProtected('Access contents information', 
+                            'is_message_delegated')
+  def is_message_delegated(self, id):
+    """
+    Return true if we get the message from the proxied field.
+    No, if we surcharged the message on the proxy field.
+    """
+    return id not in self.delegated_message_list
+
+  security.declareProtected('Access contents information', 
                             'get_recursive_orig_value')
   def get_recursive_orig_value(self, id, include=1):
     """
@@ -449,20 +507,6 @@ class ProxyField(ZMIField):
     Get override method for id (not wrapped).
     """
     return self.overrides.get(id, "")
-
-  security.declareProtected('View management screens', 'get_error_message')
-  def get_error_message(self, name):
-    """
-    """
-    try:
-      return self.message_values[name]
-    except KeyError:
-      proxied_field = self.getTemplateField()
-      if proxied_field is not None:
-        return proxied_field.get_error_message(name)
-      else:
-        return ZMIField.get_error_message(self, name)
-
 
   security.declareProtected('Edit target', 'manage_edit_target')
   def manage_edit_target(self, REQUEST):

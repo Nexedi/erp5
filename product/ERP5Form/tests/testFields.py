@@ -375,6 +375,35 @@ class TestProxyField(unittest.TestCase):
     surcharge_tales()
     delegate_tales()
 
+  def test_proxify_error_message(self):
+    """
+    Test that error messages can be delegated and surcharged.
+    """
+    # create a field
+    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
+                                   'my_title', 'OrigTitle', 'StringField')
+    field = self.addField(self.container.Base_view,
+                                   'my_dict_test', '', 'ProxyField')
+    field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
+                                         field_id='my_title',))
+    self.assertEquals(original_field.get_error_names(),
+        field.get_error_names())
+    test_error = 'too_long' # arbitrary chosen among StringField error names
+    test_message = 'Some Unprobable Error'
+    test_message2 = 'Some Even More Unprobable Error'
+    original_field.message_values[test_error] = test_message
+    field.message_values[test_error] = test_message2
+    # delegated (by default)
+    self.assertEquals(original_field.get_error_message(test_error),
+      test_message)
+    self.assertTrue(field.is_message_delegated(test_error))
+    self.assertEquals(field.get_error_message(test_error), test_message)
+    # surcharged
+    field.delegated_message_list = [test_error]
+    self.assertEquals(original_field.get_error_message(test_error),
+      test_message)
+    self.assertFalse(field.is_message_delegated(test_error))
+    self.assertEquals(field.get_error_message(test_error), test_message2)
 
 class TestFieldValueCache(unittest.TestCase):
   """Tests field value caching system
