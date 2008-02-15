@@ -112,6 +112,14 @@ return context.Base_zGetImplicitSuccessorValueList(reference_list=temporary_dict
             <value> <string>reference_list</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>

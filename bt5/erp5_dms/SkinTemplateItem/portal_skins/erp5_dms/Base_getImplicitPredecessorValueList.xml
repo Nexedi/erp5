@@ -102,6 +102,14 @@ return context.Base_zGetImplicitPredecessorValueList(reference=reference)\n
             <value> <string>*a,**kw</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
