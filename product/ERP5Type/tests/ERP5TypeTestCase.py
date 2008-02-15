@@ -676,11 +676,20 @@ def setupERP5Site( business_template_list=(),
 
           portal_activities = getattr(portal, 'portal_activities', None)
           if portal_activities is not None:
+            if not quiet:
+              ZopeTestCase._print('Executing pending activities ... ')
+            start = time.time()
             count = 1000
-            while len(portal_activities.getMessageList()) > 0:
+            message_count = len(portal_activities.getMessageList())
+            while message_count > 0:
               portal_activities.distribute()
               portal_activities.tic()
               get_transaction().commit()
+              new_message_count = len(portal_activities.getMessageList())
+              if new_message_count != message_count:
+                if not quiet:
+                  ZopeTestCase._print('%i ' % (message_count, ))
+                message_count = new_message_count
               count -= 1
               if count == 0:
                 raise RuntimeError, \
@@ -688,6 +697,8 @@ def setupERP5Site( business_template_list=(),
                     [('/'.join(m.object_path), m.method_id,
                      m.processing_node, m.priority)
                      for m in portal_activities.getMessageList()],)
+            if not quiet:
+              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
           # Reset aq dynamic, so all unit tests will start again
           _aq_reset()
