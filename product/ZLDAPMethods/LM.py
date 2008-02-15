@@ -521,7 +521,7 @@ class LDIFMethod(LDAPMethod):
               try:
                 delete(c, dn)
               except ldap.SERVER_DOWN:
-                c = self._connection().GetConnection()
+                c = self._connection().getForcedConnection()
                 delete(c, dn)
             else:
               for mod_tuple in tuple_list:
@@ -531,7 +531,7 @@ class LDIFMethod(LDAPMethod):
           try:
             add(c, dn, mod_list)
           except ldap.SERVER_DOWN:
-            c = self._connection().GetConnection()
+            c = self._connection().getForcedConnection()
             add(c, dn, mod_list)
       else:
         LOG('LDIFMethod Type unknow',0,'')
