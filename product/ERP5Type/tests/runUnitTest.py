@@ -133,8 +133,6 @@ elif os.path.isdir('/usr/lib/erp5/lib/python'):
 else:
   software_home = '/usr/lib/zope/lib/python'
   zope_home = '/usr/lib/zope'
-zope_home = '/home/vincent/bin/zope2.8'
-software_home = '%s/lib/python' % (zope_home, )
 # handle 'system global' instance and windows
 if WIN:
   real_instance_home = os.path.join(erp5_home, 'ERP5Instance')
