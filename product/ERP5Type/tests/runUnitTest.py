@@ -60,6 +60,10 @@ Options:
                              expressions.
   -D                         
                              Invoke debugger on errors / failures.
+  --update_business_templates
+                             Update all business templates prior to runing
+                             tests. This only has a meaning when doing
+                             upgratability checks, in conjunction with --load.
 """
 
 def getUnitTestFile():
@@ -129,6 +133,8 @@ elif os.path.isdir('/usr/lib/erp5/lib/python'):
 else:
   software_home = '/usr/lib/zope/lib/python'
   zope_home = '/usr/lib/zope'
+zope_home = '/home/vincent/bin/zope2.8'
+software_home = '%s/lib/python' % (zope_home, )
 # handle 'system global' instance and windows
 if WIN:
   real_instance_home = os.path.join(erp5_home, 'ERP5Instance')
@@ -337,7 +343,8 @@ def main():
         "save",
         "load",
         "email_from_address=",
-        "run_only="] )
+        "run_only=",
+        "update_business_templates"] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -348,6 +355,8 @@ def main():
   os.environ["erp5_tests_recreate_catalog"] = "0"
   verbosity = 1
   debug = 0
+  load = False
+  save = False
   
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
@@ -385,12 +394,19 @@ def main():
       os.environ["email_from_address"] = arg
     elif opt == "--save":
       os.environ["erp5_save_data_fs"] = "1"
+      save = True
     elif opt == "--load":
       os.environ["erp5_load_data_fs"] = "1"
+      load = True
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
     elif opt == "--run_only":
       os.environ["run_only"] = arg
+    elif opt == "--update_business_templates":
+      os.environ["update_business_templates"] = "1"
+
+  if load and save:
+    os.environ["erp5_force_data_fs"] = "1"
 
   test_list = args
   if not test_list:

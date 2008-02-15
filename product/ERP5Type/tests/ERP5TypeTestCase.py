@@ -301,8 +301,16 @@ class ERP5TypeTestCase(PortalTestCase):
       INSTANCE_HOME = os.environ['INSTANCE_HOME']
       bt5_path = os.environ.get('erp5_tests_bt5_path',
                             os.path.join(INSTANCE_HOME, 'bt5'))
+      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path',
+                                  os.path.join(INSTANCE_HOME, 'Products/ERP5/bootstrap'))
 
       template_list = self.getBusinessTemplateList()
+      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
+                                            'erp5_mysql_innodb_catalog')
+      update_business_templates = os.environ.get('update_business_templates') is not None
+      erp5_load_data_fs = os.environ.get('erp5_load_data_fs') is not None
+      if update_business_templates and erp5_load_data_fs:
+        template_list = ('erp5_core', 'erp5_xhtml_style', erp5_catalog_storage) + tuple(template_list)
       new_template_list = []
       for template in template_list:
         id = template.split('/')[-1]
@@ -311,8 +319,11 @@ class ERP5TypeTestCase(PortalTestCase):
         except IOError :
           # First, try the bt5 directory itself.
           path = os.path.join(bt5_path, template)
+          alternate_path = os.path.join(bootstrap_path, template)
           if os.path.exists(path):
             template = path
+          elif os.path.exists(alternate_path):
+            template = alternate_path
           else:
             path = '%s.bt5' % path
             if os.path.exists(path):
@@ -340,8 +351,6 @@ class ERP5TypeTestCase(PortalTestCase):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
-      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
-                                            'erp5_mysql_innodb_catalog')
       setupERP5Site(business_template_list=new_template_list,
                     light_install=light_install,
                     portal_name=self.getPortalName(),
@@ -635,16 +644,23 @@ def setupERP5Site( business_template_list=(),
             for id_ in getLocalConstraintList():
               removeLocalConstraint(id_)
 
+          update_business_templates = os.environ.get('update_business_templates') is not None
+
           # Disable reindexing before adding templates
           # VERY IMPORTANT: Add some business templates
-          for url, id_ in business_template_list:
+          for url, title in business_template_list:
             start = time.time()
-            if id_ in portal.portal_templates.objectIds():
-              continue
-            if not quiet:
-              ZopeTestCase._print('Adding %s business template ... ' % id_)
-            portal.portal_templates.download(url, id=id_)
-            portal.portal_templates[id_].install(light_install=light_install)
+            if title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
+              if update_business_templates:
+                if not quiet:
+                  ZopeTestCase._print('Updating %s business template ... ' % title)
+              else:
+                continue
+            else:
+              if not quiet:
+                ZopeTestCase._print('Adding %s business template ... ' % title)
+            bt = portal.portal_templates.download(url)
+            bt.install(light_install=light_install)
             # Release locks
             get_transaction().commit()
             if not quiet:
