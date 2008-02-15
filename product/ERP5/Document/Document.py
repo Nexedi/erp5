@@ -740,23 +740,6 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
     # If self is not indexed yet, then if count == 1, version is not unique
     return count <= self_count
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setUniqueReference')
-  def setUniqueReference(self, suffix='auto'):
-    """
-      Create a unique reference for the current document
-      based on a suffix
-    """
-    # Change the document reference
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
-    reference = self.getReference() + '-%s-' % suffix + '%s'
-    ref_count = 0
-    kw = dict(portal_type=self.getPortalDocumentTypeList())
-    if self.getVersion(): kw['version'] = self.getVersion()
-    if self.getLanguage(): kw['language'] = self.getLanguage()
-    while catalog.unrestrictedCountResults(reference=reference % ref_count, **kw)[0][0]:
-      ref_count += 1
-    self._setReference(reference % ref_count)
-  
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevision')
   def getRevision(self):
     """
