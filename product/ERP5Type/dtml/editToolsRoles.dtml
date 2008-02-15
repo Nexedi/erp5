@@ -82,14 +82,19 @@
 
 <tr>
 <td></td>
+<td colspan="2"><strong>Local role name generation rule</strong></td>
+</tr>
+
+<tr>
+<td></td>
 <td>
   <div class="form-label">
-  Base Category
+    Base Category
   </div>
 </td>
 <td>
   <div class="form-element">
-  <input type="text" size="40" name="base_category_&dtml-index;" value="<dtml-var "' '.join(base_category)">" />
+    <input type="text" size="40" name="base_category_&dtml-index;" value="<dtml-var "' '.join(base_category)">" />
   </div>
 </td>
 </tr>
@@ -106,6 +111,12 @@
   <input type="text" name="base_category_script_&dtml-index;" value="&dtml-base_category_script;" size="80" />
   </div>
 </td>
+</tr>
+
+<tr>
+<td></td>
+<td>[<strong>OR</strong>]</td>
+<td></td>
 </tr>
 
 <tr>
@@ -209,6 +220,11 @@ Add a role
 
 <tr>
 <td></td>
+<td colspan="2"><strong>Local role name generation rule</strong></td>
+</tr>
+
+<tr>
+<td></td>
 <td>
   <div class="form-label">
   Base Category
@@ -233,6 +249,12 @@ Add a role
   <input type="text" name="base_category_script" size="80" />
   </div>
 </td>
+</tr>
+
+<tr>
+<td></td>
+<td>[<strong>OR</strong>]</td>
+<td></td>
 </tr>
 
 <tr>

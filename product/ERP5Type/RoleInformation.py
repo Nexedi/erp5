@@ -25,8 +25,6 @@ from Products.CMFCore.Expression import Expression
 
 from Permissions import View
 
-ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT = \
-                'ERP5Type_getSecurityCategoryFromAssignment'
 
 class RoleInformation( SimpleItem ):
 
@@ -134,10 +132,10 @@ class RoleInformation( SimpleItem ):
 
         """ Return the base_category_script id
         """
-        base_category_script = getattr(self, 'base_category_script', '')
-        if base_category_script:
+        base_category_script = getattr(self, 'base_category_script', None)
+        if base_category_script is not None:
           return base_category_script
-        return ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT
+        return ''
 
     security.declarePrivate( 'clone' )
     def clone( self ):
