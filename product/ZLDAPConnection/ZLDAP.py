@@ -358,7 +358,7 @@ class ZLDAPConnection(
     ### connection checking stuff
 
     def _connection(self):
-        if self.openc:
+        if self.getOpenConnection():
             if not self.isOpen(): self._open()
             return self._v_conn
         else:
@@ -366,13 +366,18 @@ class ZLDAPConnection(
 
     GetConnection=_connection
 
+    def getForcedConnection(self):
+        if self.getOpenConnection():
+            self._open()
+            return self._v_conn
+        else:
+            raise ConnectionError, 'Connection Closed'
+
     def isOpen(self):
         " quickly checks to see if the connection's open "
         if getattr(aq_base(self), '_v_conn', None) is None:
             self._v_conn = None
         if self._v_conn is None or not self.shouldBeOpen():
-            return 0
-        elif not self.__ping():
             return 0
         else:
             return 1
