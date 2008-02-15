@@ -44,6 +44,7 @@
                 <string>delete_action</string>
                 <string>plan</string>
                 <string>plan_action</string>
+                <string>start</string>
                 <string>stop</string>
                 <string>stop_action</string>
               </tuple>
