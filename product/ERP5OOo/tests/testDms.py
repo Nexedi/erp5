@@ -351,6 +351,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       except for similarity cloud which we test.
     """
     if not run: return
+    
     printAndLog('\nTest Explicit Relations')
     # create test documents:
     # (1) TEST, 002, en
@@ -385,6 +386,10 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     # XXX this test should be extended to check more elaborate language selection
     if not run: return
+
+    def sqlresult_to_document_list(result):
+      return [i.getObject() for i in result]
+
     printAndLog('\nTest Implicit Relations')
     # create docs to be referenced:
     # (1) TEST, 002, en
@@ -431,30 +436,48 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     get_transaction().commit()
     self.tic()
     printAndLog('\nTesting Implicit Predecessors')
+    # the implicit predecessor will find documents by reference.
+    # version and language are not used.
     # the implicit predecessors should be:
-    # for (1): REF-002, REFVER, REFVERLANG
-    self.assertSameSet([document5, document7, document8],
-                       document1.getImplicitPredecessorValueList())
-    # for (2): REF-002, REFLANG, REFVER
-    self.assertSameSet([document5, document6, document7],
-                       document2.getImplicitPredecessorValueList())
-    # for (3): REF-002
-    self.assertSameSet([document5],
-                       document3.getImplicitPredecessorValueList())
+
+    # for (1): REF-002, REFLANG, REFVER, REFVERLANG
+    # document1's reference is TEST. getImplicitPredecessorValueList will
+    # return latest version of documents which contains string "TEST".
+    self.assertSameSet(
+      [document5, document6, document7, document8],
+      sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
+
+    # clear transactional variable cache
+    get_transaction().commit()
+
     printAndLog('\nTesting Implicit Successors')
-    # the implicit successors should be:
-    # for REF: (3)
-    self.assertSameSet([document3],
-                       document5.getImplicitSuccessorValueList())
-    # for REFLANG: (2)
-    self.assertSameSet([document2],
-                       document6.getImplicitSuccessorValueList())
-    # for REFVER: (3)
-    self.assertSameSet([document3],
-                       document7.getImplicitSuccessorValueList())
-    # for REFVERLANG: (3)
-    self.assertSameSet([document3],
-                       document8.getImplicitSuccessorValueList())
+    # the implicit successors should be return document with appropriate
+    # language.
+
+    # if user language is 'en'.
+    self.portal.Localizer.changeLanguage('en')
+
+    self.assertSameSet(
+      [document3],
+      sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
+
+    # clear transactional variable cache
+    get_transaction().commit()
+
+    # if user language is 'fr'.
+    self.portal.Localizer.changeLanguage('fr')
+    self.assertSameSet(
+      [document2],
+      sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
+
+    # clear transactional variable cache
+    get_transaction().commit()
+
+    # if user language is 'ja'.
+    self.portal.Localizer.changeLanguage('ja')
+    self.assertSameSet(
+      [document3],
+      sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
