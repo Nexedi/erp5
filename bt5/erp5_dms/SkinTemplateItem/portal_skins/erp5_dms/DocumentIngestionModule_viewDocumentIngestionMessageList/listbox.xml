@@ -169,10 +169,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>destination_title</string>
-                          <string>destination_title</string>
-                        </tuple>
-                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
