@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,6 +72,10 @@
 translateString = context.Base_translateString\n
 module = context.getDefaultModule(portal_type)\n
 \n
+if portal_type not in module.getVisibleAllowedContentTypeList():\n
+  return context.Base_redirect(form_id, keep_items=dict(\n
+       portal_status_message=translateString("You Don\'t Have Permission to Add New Event")))\n
+\n
 # Create a new event\n
 event = module.newContent(portal_type=portal_type, description=description, title=title, follow_up=context.getRelativeUrl())\n
 \n
@@ -87,7 +88,7 @@ else:\n
 # Redirect to even\n
 portal_status_message = translateString("Created and associated a new ${portal_type} to the ticket.", \n
                                     mapping = dict(portal_type = translateString(portal_type)))\n
-event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
+return event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -104,7 +105,7 @@ event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_sta
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, title, description, direction, **kw</string> </value>
+            <value> <string>portal_type, title, description, direction, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,7 +125,7 @@ event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_sta
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -134,13 +135,14 @@ event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_sta
                             <string>title</string>
                             <string>description</string>
                             <string>direction</string>
+                            <string>form_id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
                             <string>module</string>
-                            <string>event</string>
                             <string>dict</string>
+                            <string>event</string>
                             <string>portal_status_message</string>
                             <string>_apply_</string>
                           </tuple>
@@ -154,7 +156,9 @@ event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_sta
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
