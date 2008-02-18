@@ -43,7 +43,17 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -73,41 +83,32 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_destination_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                        <string>attachment_list</string>
-                        <string>my_title</string>
-                        <string>my_start_date</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>my_destination_title_list</string>
-                        <string>my_source_title</string>
-                        <string>my_resource</string>
-                        <string>my_aggregate_title_list</string>
-                        <string>my_default_follow_up_title</string>
-                        <string>my_text_content</string>
-                        <string>my_text_format</string>
-                        <string>my_causality_title</string>
-                        <string>my_translated_portal_type</string>
-                        <string>your_portal_type</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -121,7 +122,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_viewFieldLibrary</string> </value>
+            <value> <string>Event_viewRelatedEventList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -129,7 +130,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Event_viewFieldLibrary</string> </value>
+            <value> <string>Entity_viewDocuments</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -141,11 +146,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Event Field Library</string> </value>
+            <value> <string>Related Events</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

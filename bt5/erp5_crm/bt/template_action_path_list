@@ -4,23 +4,33 @@ Campaign | view
 Event Module | view
 Event Module | workflow_report
 Fax Message | assessment
+Fax Message | create_related_event
 Fax Message | preview
+Fax Message | related_events
 Fax Message | view
 Letter | assessment
+Letter | create_related_event
 Letter | preview
+Letter | related_events
 Letter | view
 Mail Message | assessment
+Mail Message | create_related_event
 Mail Message | preview
+Mail Message | related_events
 Mail Message | view
 Meeting Module | view
 Meeting | new_event
 Meeting | view
 Note | assessment
+Note | create_related_event
 Note | preview
+Note | related_events
 Note | view
 Person Module | create_event_list
 Phone Call | assessment
+Phone Call | create_related_event
 Phone Call | preview
+Phone Call | related_events
 Phone Call | view
 Preference | crm_preference
 Sale Opportunity Module | view
@@ -30,8 +40,12 @@ Support Request Module | view
 Support Request | new_event
 Support Request | view
 Visit | assessment
+Visit | create_related_event
 Visit | preview
+Visit | related_events
 Visit | view
 Web Message | assessment
+Web Message | create_related_event
 Web Message | preview
+Web Message | related_events
 Web Message | view

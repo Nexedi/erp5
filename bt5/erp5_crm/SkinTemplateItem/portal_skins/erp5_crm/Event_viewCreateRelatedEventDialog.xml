@@ -43,7 +43,17 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
+            <value> <string>Event_createRelatedEvent</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -60,9 +70,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -71,42 +78,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
-                        <string>attachment_list</string>
-                        <string>my_title</string>
-                        <string>my_start_date</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>my_destination_title_list</string>
-                        <string>my_source_title</string>
-                        <string>my_resource</string>
-                        <string>my_aggregate_title_list</string>
-                        <string>my_default_follow_up_title</string>
-                        <string>my_text_content</string>
-                        <string>my_text_format</string>
-                        <string>my_causality_title</string>
-                        <string>my_translated_portal_type</string>
                         <string>your_portal_type</string>
+                        <string>your_title</string>
+                        <string>your_description</string>
                       </list>
                     </value>
                 </item>
@@ -121,7 +98,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_viewFieldLibrary</string> </value>
+            <value> <string>Event_viewCreateRelatedEventDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -129,7 +106,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Event_viewFieldLibrary</string> </value>
+            <value> <string>Event_viewCreateRelatedEventDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -141,11 +122,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Event Field Library</string> </value>
+            <value> <string>Create Related Event</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

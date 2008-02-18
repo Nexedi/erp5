@@ -10,6 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list/>
@@ -17,7 +23,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_respond_event_portal_type</string> </value>
+            <value> <string>your_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_portal_type</string> </value>
+                    <value> <string>my_description</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
