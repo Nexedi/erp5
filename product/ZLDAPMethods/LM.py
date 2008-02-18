@@ -22,7 +22,7 @@ import DocumentTemplate
 import ExtensionClass
 import sys
 
-from zLOG import LOG
+from zLOG import LOG, INFO
 from ldif import LDIFRecordList, is_dn, valid_changetype_dict, CHANGE_TYPES
 import ldifvar
 from AccessControl.DTML import RestrictedDTML
@@ -459,7 +459,7 @@ class LDIFMethod(LDAPMethod):
     else: p = None
 
     argdata = self._argdata(REQUEST)  #use our BaseQuery's magic.  :)
-
+    argdata['basedn'] = self.basedn
     # Also need the authenticated user.
     auth_user = REQUEST.get('AUTHENTICATED_USER', None)
     if auth_user is None:
@@ -502,12 +502,18 @@ class LDIFMethod(LDAPMethod):
         c.delete_s(dn)
       except ldap.NO_SUCH_OBJECT:
         pass
+      except:
+        LOG('ldif', INFO, ldif)
+        raise
 
     def add(c, dn, mod_list):
       try:
         c.add_s(dn, mod_list)
       except ldap.ALREADY_EXISTS:
         pass
+      except:
+        LOG('ldif', INFO, ldif)
+        raise
 
     for record in res:
       dn = record[0]
@@ -534,7 +540,7 @@ class LDIFMethod(LDAPMethod):
             c = self._connection().getForcedConnection()
             add(c, dn, mod_list)
       else:
-        LOG('LDIFMethod Type unknow',0,'')
+        LOG('LDIFMethod Type unknow', INFO, '')
     return res
 
 
