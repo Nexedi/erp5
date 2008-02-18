@@ -44,8 +44,8 @@ class TestCRM(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_crm',)
 
-  def test_CreateRelatedEvent(self):
-    # test action to create a related event
+  def test_Event_CreateRelatedEvent(self):
+    # test action to create a related event from an event
     for ptype in self.portal.getPortalEventTypeList():
       event = self.portal.event_module.newContent(
                         portal_type=ptype)
@@ -59,7 +59,7 @@ class TestCRM(ERP5TypeTestCase):
       new_event = self.portal.event_module._getOb(new_id)
       self.assertEquals(event, new_event.getCausalityValue())
  
-  def test_CreateRelatedEventUnauthorized(self):
+  def test_Event_CreateRelatedEventUnauthorized(self):
     # test that we don't get Unauthorized error when invoking the "Create
     # Related Event" without add permission on the module
     event = self.portal.event_module.newContent(portal_type='Letter')
@@ -69,7 +69,44 @@ class TestCRM(ERP5TypeTestCase):
                                      title='New Title',
                                      description='New Desc')
     
+  def test_Ticket_CreateRelatedEvent(self):
+    # test action to create a related event from a ticket
+    ticket = self.portal.meeting_module.newContent(portal_type='Meeting')
+    for ptype in self.portal.getPortalEventTypeList():
+      # incoming
+      redirect = ticket.Ticket_newEvent(direction='incoming',
+                                        portal_type=ptype,
+                                        title='New Title',
+                                        description='New Desc')
+      self.assert_(redirect.startswith('http://nohost/erp5/event_module/'))
+      new_id = redirect[
+                  len('http://nohost/erp5/event_module/'):].split('/', 1)[0]
+      new_event = self.portal.event_module._getOb(new_id)
+      self.assertEquals(ticket, new_event.getFollowUpValue())
+      self.assertEquals('new', new_event.getSimulationState())
 
+      # outgoing
+      redirect = ticket.Ticket_newEvent(direction='outgoing',
+                                        portal_type=ptype,
+                                        title='New Title',
+                                        description='New Desc')
+      self.assert_(redirect.startswith('http://nohost/erp5/event_module/'))
+      new_id = redirect[
+                  len('http://nohost/erp5/event_module/'):].split('/', 1)[0]
+      new_event = self.portal.event_module._getOb(new_id)
+      self.assertEquals(ticket, new_event.getFollowUpValue())
+      self.assertEquals('planned', new_event.getSimulationState())
+
+  def test_Ticket_CreateRelatedEventUnauthorized(self):
+    # test that we don't get Unauthorized error when invoking the "Create
+    # New Event" without add permission on the module
+    ticket = self.portal.meeting_module.newContent(portal_type='Meeting')
+    self.portal.event_module.manage_permission('Add portal content', [], 0)
+    ticket.Ticket_newEvent(portal_type='Letter',
+                           title='New Title',
+                           description='New Desc',
+                           direction='incoming')
+   
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for CRM.
