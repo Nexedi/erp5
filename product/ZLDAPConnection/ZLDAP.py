@@ -499,7 +499,7 @@ def splitHostPort(hostport):
 
 
 def manage_addZLDAPConnection(self, id, title, hostport,
-                              basedn, bind_as, pw, openc,
+                              basedn, bind_as, pw, openc=None,
                               REQUEST=None):
     """create an LDAP connection and install it"""
     host, port = splitHostPort(hostport)
