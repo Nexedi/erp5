@@ -96,10 +96,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     <tal:block tal:condition="preferred_html_style_developper_mode"> \n
       <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
     </tal:block>\n
-    <tal:block tal:repeat="pagenum python:range(len(groups))"\n
-          tal:attributes="class string:my_span">\n
-\n
-\n
+    <tal:block tal:repeat="pagenum python:range(len(groups))">\n
       <div class="my_page_class"\n
         tal:attributes="class string:page_${pagenum}">\n
         <img src="test_object_page_0.png"\n
@@ -113,13 +110,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           considering class = \'page_\' + pagenum\n
         </div>\n
         <div tal:repeat="field python:form.get_fields_in_group(groups[pagenum])"\n
-            class="my_span"\n
             tal:omit-tag=""><!--get a field-->\n
           <div tal:condition="python:field.meta_type != \'HiddenStringField\'"\n
                 tal:define="name python:str(field.id);\n
                             value python:request.get(field.id,None);\n
                             class_base string:${name}"\n
-                class="my_span"\n
                 tal:omit-tag="">\n
             <div tal:omit-tag=""\n
               tal:define="struct python:field.render(value,request)">\n
