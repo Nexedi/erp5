@@ -193,7 +193,7 @@ class FolderMixIn(ExtensionClass.Base):
       Id exist, then save the Id.
     """
     try:
-      my_id = int(self.getLastId())
+      my_id = int(self.getLastId()) + 1
     except TypeError:
       my_id = 1
     while self.hasContent(str(my_id)):
