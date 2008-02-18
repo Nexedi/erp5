@@ -128,7 +128,7 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
                            portal_type=self.getPortalTransformationTypeList())
     return transformation
 
-class TransformationSourcingRule(Rule):
+class TransformationSourcingRule(TransformationSourcingRuleMixin, Rule):
     """
       Transformation Sourcing Rule object make sure
       items required in a Transformation are sourced
@@ -264,5 +264,3 @@ class TransformationSourcingRule(Rule):
     def isOrderable(self, m):
       return 0
 
-from Products.ERP5Type.Utils import monkeyPatch
-monkeyPatch(TransformationSourcingRuleMixin, TransformationSourcingRule)

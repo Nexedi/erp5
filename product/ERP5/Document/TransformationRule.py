@@ -40,7 +40,7 @@ from zLOG import LOG
 
 class TransformationRuleError(Exception): pass
 
-class TransformationRule(Rule):
+class TransformationRule(TransformationSourcingRuleMixin, Rule):
     """
       Order Rule object make sure an Order in the similation
       is consistent with the real order
@@ -323,5 +323,3 @@ class TransformationRule(Rule):
     def isOrderable(self, m):
       return 0
 
-from Products.ERP5Type.Utils import monkeyPatch
-monkeyPatch(TransformationSourcingRuleMixin, TransformationRule)
