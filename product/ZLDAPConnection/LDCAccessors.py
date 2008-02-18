@@ -71,7 +71,7 @@ class LDAPConnectionAccessors:
         return getattr(aq_base(self), 'openc', None)
 
     def setOpenConnection(self, openc):
-        self._v_openc = openc
+        self.openc = openc
 
     shouldBeOpen = getOpenConnection
 
