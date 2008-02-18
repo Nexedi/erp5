@@ -669,7 +669,12 @@ class TestERP5BankingMixin:
     date_object = container.newContent(id=id, portal_type=portal_type,
                                        site_value = site, start_date = date)
     if open:
-      date_object.open()
+      if date_object.getPortalType() == 'Counter Date':
+        self.workflow_tool.doActionFor(date_object, 'open_action', 
+                                     wf_id='counter_date_workflow',
+                                     your_check_date_is_today=0)
+      else:
+        date_object.open()
     setattr(self, id, date_object)
     date_object.assignRoleToSecurityGroup()
 

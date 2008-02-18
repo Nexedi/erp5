@@ -148,7 +148,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     Make sure we can not open the counter date twice
     """
     self.openCounterDate(site=self.paris,id='counter_date_7',open=0)
-    self.counter_date_7.setStartDate(DateTime()-1)
+    self.counter_date_7.setStartDate(DateTime())
     # open counter date and counter
     self.assertRaises(ValidationFailed,
                      self.workflow_tool.doActionFor,
@@ -256,6 +256,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     counter_date = self.counter_date_1
     counter_date.setStartDate(self.date-10)
     self.assertEquals(counter_date.getReference(),'1')
+    counter_date.close()
     get_transaction().commit()
     self.tic()
     self.openCounterDate(site=self.paris, id='counter_date_3')
@@ -357,6 +358,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'ResetInventoryInVaultForeignCurrency Tic ' \
                       'CheckRightStockBeforeClosingDate ' \
                       'CheckReferenceIsIncreasedEveryDay ' \
+                      'Tic ' \
                       'CheckOpenCounterDateTwiceWithOtherDateFail Tic ' 
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
