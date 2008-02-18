@@ -34,6 +34,42 @@ from Products.ERP5OOo.tests.testIngestion import conversion_server_host
 from Products.ERP5OOo.tests.testIngestion import FILE_NAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 
+TEST_HOME = os.path.dirname(__file__)
+
+def openTestFile(filename):
+  return file(os.path.join(TEST_HOME, 'test_data', 'crm_emails', filename))
+
+
+class TestCRM(ERP5TypeTestCase):
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_crm',)
+
+  def test_CreateRelatedEvent(self):
+    # test action to create a related event
+    for ptype in self.portal.getPortalEventTypeList():
+      event = self.portal.event_module.newContent(
+                        portal_type=ptype)
+      redirect = event.Event_createRelatedEvent(
+                                     portal_type=ptype,
+                                     title='New Title',
+                                     description='New Desc')
+      self.assert_(redirect.startswith('http://nohost/erp5/event_module/'))
+      new_id = redirect[
+                  len('http://nohost/erp5/event_module/'):].split('/', 1)[0]
+      new_event = self.portal.event_module._getOb(new_id)
+      self.assertEquals(event, new_event.getCausalityValue())
+ 
+  def test_CreateRelatedEventUnauthorized(self):
+    # test that we don't get Unauthorized error when invoking the "Create
+    # Related Event" without add permission on the module
+    event = self.portal.event_module.newContent(portal_type='Letter')
+    self.portal.event_module.manage_permission('Add portal content', [], 0)
+    redirect = event.Event_createRelatedEvent(
+                                     portal_type='Letter',
+                                     title='New Title',
+                                     description='New Desc')
+    
+
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for CRM.
@@ -167,11 +203,6 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 ##  def test_encoding(self):
 ##    event = self._ingestMail('utf8')
 ##
-
-TEST_HOME = os.path.dirname(__file__)
-
-def openTestFile(filename):
-  return file(os.path.join(TEST_HOME, 'test_data', 'crm_emails', filename))
 
 class TestCRMMailSend(ERP5TypeTestCase):
   """Test Mail Sending for CRM
@@ -664,8 +695,10 @@ class TestCRMMailSend(ERP5TypeTestCase):
         part = i
     self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
 
+
 def test_suite():
   suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestCRM))
   suite.addTest(unittest.makeSuite(TestCRMMailIngestion))
   suite.addTest(unittest.makeSuite(TestCRMMailSend))
   return suite
