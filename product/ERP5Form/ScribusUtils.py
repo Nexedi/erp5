@@ -833,7 +833,7 @@ class ManageCSS:
       #properties_css_background['margin-left']= \
       #   str((x_pos- 5))+   'px' 
     else:
-      properties_css_page['margin-top'] = "%spx" %(40)
+      properties_css_page['margin-top'] = "%spx" % (40)
 
     # set width and height on page block
     properties_css_page['width'] = str (page_width) + 'px'
@@ -927,6 +927,7 @@ class ManageCSS:
         str(12) + 'px'
     properties_css_object_err_d['margin-left'] = str(page_width +
         space_between_pages ) + 'px'
+    properties_css_object_err_d['white-space'] = 'nowrap'
     properties_css_object_stand['margin-top'] = \
       str((scaling_factor2 *float(properties_field['position_y']))) + 'px'
     properties_css_object_error['margin-top'] = \
