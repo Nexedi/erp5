@@ -128,11 +128,8 @@ if invoice.getSimulationState() == \'draft\':\n
 invoice.startBuilding()\n
 \n
 # Then an activity should put the causality state in diverged or solved\n
-# XXX after_method_id is not good, it should use tag / after tag correctly\n
-invoice.activate(\n
-        after_method_id = ( \'immediateReindexObject\',\n
-                            \'recursiveImmediateReindexObject\',\n
-                          )).updateCausalityState()\n
+invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -155,7 +152,7 @@ invoice.activate(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>related_simulation_movement_path_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -175,12 +172,13 @@ invoice.activate(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>related_simulation_movement_path_list</string>
                             <string>kw</string>
                             <string>Products.CMFCore.WorkflowCore</string>
                             <string>WorkflowException</string>
@@ -206,7 +204,9 @@ invoice.activate(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

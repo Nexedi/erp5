@@ -78,7 +78,7 @@ if related_simulation_movement_path_list is None:\n
 sale_invoice = context\n
 \n
 sale_invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).InvoiceTransaction_postGenerationActivity(**kw)\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).InvoiceTransaction_postGenerationActivity(related_simulation_movement_path_list=related_simulation_movement_path_list, **kw)\n
 </string> </value>
         </item>
         <item>
