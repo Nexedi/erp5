@@ -100,32 +100,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           tal:attributes="class string:my_span">\n
 \n
 \n
-        <div\n
-          class="my_page_class"\n
-          tal:attributes="class string:page_${pagenum}"\n
-        ><img src="test_object_page_0.png"\n
-              alt="background"\n
-              class="page_0_background"\n
-              tal:attributes="src string:${object_name}_background_${pagenum};\n
-              class python:\'page_%s_background %s\' % \n
-              (pagenum, test(pagenum == 0,\'first_page\', \'other_page\'))"/>\n
-                              <span tal:replace="nothing" >\n
-              page is not empty (there is at least one element) \n
-              considering class = \'page_\' + pagenum\n
+      <div class="my_page_class"\n
+        tal:attributes="class string:page_${pagenum}">\n
+        <img src="test_object_page_0.png"\n
+            alt="background"\n
+            class="page_0_background"\n
+            tal:attributes="src string:${object_name}_background_${pagenum};\n
+            class python:\'page_%s_background %s\' % \n
+            (pagenum, test(pagenum == 0,\'first_page\', \'other_page\'))"/>\n
+        <span tal:replace="nothing" >\n
+          page is not empty (there is at least one element) \n
+          considering class = \'page_\' + pagenum\n
         </span>\n
         <span tal:repeat="field python:form.get_fields_in_group(groups[pagenum])"\n
-              class="my_span"\n
-              tal:omit-tag=""\n
-        ><!--get a field-->\n
+            class="my_span"\n
+            tal:omit-tag=""><!--get a field-->\n
           <span tal:condition="python:field.meta_type != \'HiddenStringField\'"\n
                 tal:define="name python:str(field.id);\n
                             value python:request.get(field.id,None);\n
                             class_base string:${name}"\n
                 class="my_span"\n
-                tal:omit-tag=""\n
-            ><div tal:omit-tag=""\n
-                  tal:define="struct python:field.render(value,request)"\n
-              ><span tal:omit-tag=""\n
+                tal:omit-tag="">\n
+            <div tal:omit-tag=""\n
+              tal:define="struct python:field.render(value,request)">\n
+              <span tal:omit-tag=""\n
                     tal:define="struct python:struct.replace(\'&nbsp;;\',\'\');\n
                                 struct_input_div python:struct.split(\'<input\');\n
                                 struct_input_len python:len(struct_input_div);\n
@@ -135,87 +133,81 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                 struct_selec_len python:len(struct_selec_div);\n
                                 struct_selec_range python:range(struct_selec_len);\n
                                 struct_selec_test python:int(struct_selec_len) == 1;\n
-                                struct_test python:struct_selec_test and struct_input_test"\n
-                ><span tal:replace="nothing">\n
-                - rendering final output string through \'field.render\'.\n
-                - replacing all \'&nbsp\' with \'\' to prevent error in rendering\n
-                - making two tests : first one (struct_input_test) is used to test if\n
-                rendering is single field (StringField, ) or multi-field\n
-                (DateTimeField, RelationStringField, ).\n
-                PLEASE note : CheckboxField is rendered as a single field in html_style\n
-                but as a multi-field in xhtml_style\n
-                Second one takes care of the RelationStrinField item when it is filled\n
-                as it is composed of 1 input field + 1 select field\n
+                                struct_test python:struct_selec_test and struct_input_test">\n
+                <span tal:replace="nothing">\n
+                  - rendering final output string through \'field.render\'.\n
+                  - replacing all \'&nbsp\' with \'\' to prevent error in rendering\n
+                  - making two tests : first one (struct_input_test) is used to test if\n
+                  rendering is single field (StringField, ) or multi-field\n
+                  (DateTimeField, RelationStringField, ).\n
+                  PLEASE note : CheckboxField is rendered as a single field in html_style\n
+                  but as a multi-field in xhtml_style\n
+                  Second one takes care of the RelationStrinField item when it is filled\n
+                  as it is composed of 1 input field + 1 select field\n
                 </span>\n
-                <span tal:omit-tag=""\n
-                      tal:condition="struct_test"\n
-                      ><!-- begining single field processing --><span tal:replace="nothing">\n
-                  this bloc has been implemented to take care of the textarea\n
-                  and single inputfield renderings. this just process the\n
-                  output rendering as a single field.\n
-                  UPDATE : with xhtml_style, this \n
+                <span tal:omit-tag="" \n
+                  tal:condition="struct_test"><!-- begining single field processing -->\n
+                  <span tal:replace="nothing">\n
+                    this bloc has been implemented to take care of the textarea\n
+                    and single inputfield renderings. this just process the\n
+                    output rendering as a single field.\n
+                    UPDATE : with xhtml_style, this \n
                   </span>\n
-                  <div tal:condition="python:(not field_errors.has_key(field.id))"\n
-                        ><!-- field has no error -->\n
+                  <div tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error -->\n
                     <span tal:replace="structure struct"\n
                           tal:attributes="class string:${name}_class;\n
-                                          title field/title"\n
-                  /></div>\n
-                  <div tal:condition="python: field_errors.has_key(field.id)"\n
-                        ><!-- field has errors-->\n
+                          title field/title"/>\n
+                  </div>\n
+                  <div tal:condition="python: field_errors.has_key(field.id)"><!-- field has errors-->\n
                     <span tal:replace="structure struct"\n
                     i18n:attributes="title"\n
                     tal:attributes="class string:${name}_class_error;\n
-                                    title string:${field/title}"\n
-                  /></div>\n
-                <!-- end single field processing-->\n
+                    title string:${field/title}"/>\n
+                  </div>\n
+                  <!-- end single field processing-->\n
                 </span>\n
                 <span tal:omit-tag=""\n
-                      tal:condition="not:struct_input_test"\n
-                      ><!-- begining multi-input processing -->\n
+                      tal:condition="not:struct_input_test"><!-- begining multi-input processing -->\n
                   <span tal:replace="nothing">\n
-                  this bloc is designed to process standard multi-input fields such as\n
-                  DateTimeFields and RelationStringFields. (and checkbox field in\n
-                  xhtml_style).\n
-                  As the rendering is based on several inputs, need to take each of them,\n
-                  give them the good attributes (class) and then pasting the result string\n
-                  in the document before processing the next input\n
+                    this bloc is designed to process standard multi-input fields such as\n
+                    DateTimeFields and RelationStringFields. (and checkbox field in\n
+                    xhtml_style).\n
+                    As the rendering is based on several inputs, need to take each of them,\n
+                    give them the good attributes (class) and then pasting the result string\n
+                    in the document before processing the next input\n
                   </span>\n
                   <tal:block tal:condition="python: \'hidden\' not in struct_input_div[1]">\n
                     <span tal:define="struct_range python:range(struct_input_len)"\n
                           tal:repeat="struct_ind python:struct_range[1:]">\n
-                      <div tal:condition="python:(not field_errors.has_key(field.id))"\n
-                            ><!-- field has no error 1-->\n
-                            <span tal:define="struct_content python:struct_input_div[struct_ind];\n
-                                              struct_final python:\'%s %s\' %\n
-                                              (\'<input \', struct_content);\n
-                                              class_final python:\'%s%s%s\' %\n
-                                              (class_base,\'_class_\', struct_ind)"\n
-                                  tal:replace="structure struct_final"\n
-                                  tal:attributes="class class_final;\n
-                                                  title field/title"\n
-                            />\n
+                      <div tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error 1-->\n
+                        <span tal:define="struct_content python:struct_input_div[struct_ind];\n
+                                                        struct_final python:\'%s %s\' %\n
+                                                        (\'<input \', struct_content);\n
+                                                        class_final python:\'%s%s%s\' %\n
+                                                        (class_base,\'_class_\', struct_ind)"\n
+                              tal:replace="structure struct_final"\n
+                              tal:attributes="class class_final;\n
+                                              title field/title"/>\n
                       </div>\n
-                      <div tal:condition="python:field_errors.has_key(field.id)"\n
-                            ><!-- field has errors 1-->\n
-                            <span tal:define="struct_content python:struct_input_div[struct_ind];\n
-                                              struct_final python:\'%s %s\' %\n
-                                              (\'<input \', struct_content);\n
-                                              class_final python:\'%s%s%s%s\' %\n
-                                              (class_base,\'_class_\', struct_ind, \'_error\')"\n
-                                  tal:replace="structure struct_final"\n
-                                  i18n:attributes="title"\n
-                                  tal:attributes="class class_final;\n
-                                                  title field/title"\n
-                      /></div>\n
+                      <div tal:condition="python:field_errors.has_key(field.id)"><!-- field has errors 1-->\n
+                        <span tal:define="struct_content python:struct_input_div[struct_ind];\n
+                                          struct_final python:\'%s %s\' %\n
+                                          (\'<input \', struct_content);\n
+                                          class_final python:\'%s%s%s%s\' %\n
+                                          (class_base,\'_class_\', struct_ind, \'_error\')"\n
+                              tal:replace="structure struct_final"\n
+                              i18n:attributes="title"\n
+                              tal:attributes="class class_final;\n
+                              title field/title"/>\n
+                      </div>\n
                     </span>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: \'hidden\' in struct_input_div[1]">\n
                     <!-- processing CheckBoxField in xhtml_style -->\n
                     <span tal:define="struct_range python:range(struct_input_len)"\n
                           tal:repeat="struct_ind python:struct_range[1:]">\n
-                      <div tal:condition="python:(not field_errors.has_key(field.id))"\n
-                           ><!-- field has no error 2-->\n
+                      <div tal:condition="python:(not field_errors.has_key(field.id))">\n
+                        <!-- field has no error 2-->\n
                         <span tal:define="struct_content python:struct_input_div[struct_ind];\n
                                           struct_final python:\'%s %s\' %\n
                                           (\'<input \', struct_content);\n
@@ -223,77 +215,79 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                           (class_base,\'_class\')"\n
                                           tal:replace="structure struct_final"\n
                                           tal:attributes="class class_final;\n
-                                          title field/title"\n
-                                          />\n
+                                          title field/title"/>\n
                       </div>\n
-                      <div tal:condition="python:field_errors.has_key(field.id)"\n
-                          ><!-- field has errors 2-->\n
-                              <span tal:define="struct_content python:struct_input_div[struct_ind];\n
-                                    struct_final python:\'%s %s\' %\n
-                                    (\'<input \', struct_content);\n
-                                                class_final python:\'%s%s\' %\n
-                                                (class_base,\'_class_error\')"\n
-                                                tal:replace="structure struct_final"\n
-                                                tal:attributes="class class_final;\n
-                                                title field/title"\n
-                      /></div>\n
+                      <div tal:condition="python:field_errors.has_key(field.id)">\n
+                        <!-- field has errors 2-->\n
+                        <span tal:define="struct_content python:struct_input_div[struct_ind];\n
+                                          struct_final python:\'%s %s\' %\n
+                                          (\'<input \', struct_content);\n
+                                          class_final python:\'%s%s\' %\n
+                                          (class_base,\'_class_error\')"\n
+                              tal:replace="structure struct_final"\n
+                              tal:attributes="class class_final;\n
+                              title field/title"/>\n
+                      </div>\n
                     </span>\n
                   </tal:block>\n
-              </span>\n
-              <span tal:omit-tag=""\n
-                    tal:condition="not:struct_selec_test"\n
-              ><!-- start select-field rendering -->\n
+                </span>\n
+                <span tal:omit-tag=""\n
+                      tal:condition="not:struct_selec_test">\n
+                      <!-- start select-field rendering -->\n
                   <span tal:replace="nothing">\n
-                  this bloc is here to process special multi-fields rendering based on\n
-                  input + select (for RelationStringFields when user can select element\n
-                  from a list object)\n
+                    this bloc is here to process special multi-fields rendering based on\n
+                    input + select (for RelationStringFields when user can select element\n
+                    from a list object)\n
                   </span>\n
                   <span tal:omit-tag=""\n
-                        tal:define="struct_content0 python:struct_selec_div[0];\n
-                                    struct_content1 python:struct_selec_div[1];\n
-                                    struct_content1 python:\'%s %s\' %\n
-                                    (\'<select\',struct_content1);\n
-                                    struct_selec_div python:[\'\',struct_content0, struct_content1];\n
-                                    struct_range python:range(struct_selec_len +1)"\n
-                        tal:repeat="struct_ind python:struct_range[1:]"\n
-                      ><div\n
-                        ><!-- field has no errors-->\n
-                        <span tal:condition="python:(not field_errors.has_key(field.id))"\n
-                              tal:define="class_final python:\'%s%s%s\' %\n
-                                          (class_base,\'_class_\', struct_ind)"\n
-                              tal:replace="structure python:struct_selec_div[struct_ind]"\n
-                              tal:attributes="class class_final;\n
-                                              title field/title"\n
-                        /><!-- field has no errors -->\n
-                        <span tal:condition="python:field_errors.has_key(field.id)"\n
-                              tal:define="class_final python:\'%s%s%s%s\' %\n
-                                          (class_base,\'_class_\', struct_ind, \'_error\')"\n
-                              tal:replace="structure python:struct_selec_div[struct_ind]"\n
-                              tal:attributes="class class_final;\n
-                                              title field/title"\n
-                      /></div>\n
-                  </span>\n
-              </span>\n
-              <span tal:omit-tag=""\n
-                    tal:condition="python:field_errors.has_key(field.id)"\n
-              ><!-- rendering error text -->\n
-                      <span tal:replace="nothing">\n
-                      once all the field have been rendered, just need to add error text\n
-                      if necessary on the rigth side of the page.\n
-                      </span>\n
-                      <div tal:define="class_final python:\'%s%s\' %\n
-                                        (class_base, \'_error_display\')"\n
-                            tal:content="python:field_errors[field.id].error_text"\n
-                            i18n:translate=""\n
-                            i18n:domain="ui"\n
+                    tal:define="struct_content0 python:struct_selec_div[0];\n
+                                struct_content1 python:struct_selec_div[1];\n
+                                struct_content1 python:\'%s %s\' %\n
+                                (\'<select\',struct_content1);\n
+                                struct_selec_div python:[\'\',struct_content0, struct_content1];\n
+                                struct_range python:range(struct_selec_len +1)"\n
+                    tal:repeat="struct_ind python:struct_range[1:]">\n
+                    <div><!-- field has no errors-->\n
+                      <span tal:condition="python:(not field_errors.has_key(field.id))"\n
+                            tal:define="class_final python:\'%s%s%s\' %\n
+                                        (class_base,\'_class_\', struct_ind)"\n
+                            tal:replace="structure python:struct_selec_div[struct_ind]"\n
                             tal:attributes="class class_final;\n
-                                            title string:${field/title}"\n
-                      ></div>\n
+                            title field/title"/>\n
+                            <!-- field has no errors -->\n
+                      <span tal:condition="python:field_errors.has_key(field.id)"\n
+                            tal:define="class_final python:\'%s%s%s%s\' %\n
+                                        (class_base,\'_class_\', struct_ind, \'_error\')"\n
+                            tal:replace="structure python:struct_selec_div[struct_ind]"\n
+                            tal:attributes="class class_final;\n
+                            title field/title"/>\n
+                    </div>\n
                   </span>\n
+                </span>\n
+                <span tal:omit-tag=""\n
+                  tal:condition="python:field_errors.has_key(field.id)">\n
+                  <!-- rendering error text -->\n
+                  <span tal:replace="nothing">\n
+                    once all the field have been rendered, just need to add error text\n
+                    if necessary on the rigth side of the page.\n
+                  </span>\n
+                  <div tal:define="class_final python:\'%s%s\' %\n
+                                    (class_base, \'_error_display\')"\n
+                        tal:content="python:field_errors[field.id].error_text"\n
+                        i18n:translate=""\n
+                        i18n:domain="ui"\n
+                        tal:attributes="class class_final;\n
+                        title string:${field/title}">\n
+                  </div>\n
+                </span>\n
               </span>\n
+\n
+\n
+\n
             </div>\n
           </span>\n
         </span>\n
+\n
         <br/>\n
         <br/>\n
       </div>\n
