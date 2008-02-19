@@ -96,6 +96,7 @@ CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
   `owner` varchar(32) NOT NULL default \'\',\n
+  `viewable_owner` varchar(32) NOT NULL default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
   `relative_url` varchar(255) NOT NULL default \'\',\n
   `parent_uid` BIGINT UNSIGNED default \'0\',\n
@@ -128,6 +129,7 @@ CREATE TABLE `catalog` (\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
   KEY `owner` (`owner`),\n
+  KEY `viewable_owner` (`viewable_owner`),\n
   KEY `Parent` (`parent_uid`),\n
   KEY `Path` (`path`),\n
   KEY `Title` (`title`),\n
@@ -186,6 +188,7 @@ CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
   `owner` varchar(32) NOT NULL default \'\',\n
+  `viewable_owner` varchar(32) NOT NULL default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
   `relative_url` varchar(255) NOT NULL default \'\',\n
   `parent_uid` BIGINT UNSIGNED default \'0\',\n
@@ -218,6 +221,7 @@ CREATE TABLE `catalog` (\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
   KEY `owner` (`owner`),\n
+  KEY `viewable_owner` (`viewable_owner`),\n
   KEY `Parent` (`parent_uid`),\n
   KEY `Path` (`path`),\n
   KEY `Title` (`title`),\n
