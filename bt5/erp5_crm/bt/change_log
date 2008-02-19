@@ -1,3 +1,6 @@
+2008-02-19 Jérome
+* Add reports
+
 2008-1-30 Yusei
 * *_getResourceItemList script should
 return values only which user can access.

@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX uses movement table !\n
+from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
+portal = context.getPortalObject()\n
+\n
+request_start_date = request.get(\'from_date\', None)\n
+request_stop_date = request.get(\'at_date\', None)\n
+request_ticket_type = request.get(\'sale_opportunity_type\', None)\n
+request_validation_state = request.get(\'sale_opportunity_state\', None)\n
+\n
+outgoing_state_list = portal.Event_getOutgoingStateList()\n
+incoming_state_list = portal.Event_getIncomingStateList()\n
+outgoing_title=portal.Base_translateString("Outgoing")\n
+incoming_title=portal.Base_translateString("Incoming")\n
+\n
+line_list = []\n
+\n
+# Prepare the parameters to filter\n
+query_dict = dict()\n
+if request_start_date:\n
+  query_dict[\'movement.start_date\'] = dict(range=\'min\', query=request_start_date)\n
+if request_stop_date:\n
+  query_dict[\'movement.stop_date\'] = dict(range=\'ngt\', \n
+                                     query=request_stop_date.latestTime())\n
+if request_validation_state:\n
+  query_dict[\'simulation_state\'] = request_validation_state\n
+if request_ticket_type:\n
+  query_dict[\'movement.resource_uid\'] =  [portal.restrictedTraverse(x).getUid() \n
+                                 for x in request_ticket_type]\n
+section_uid = context.Base_getSectionUidListForSectionCategory(request.get(\'section_category\',None))\n
+\n
+# Make the searsh using parameters\n
+ticketlist=portal.portal_catalog.searchResults(portal_type="Sale Opportunity",\n
+                                                source_section_uid=section_uid,\n
+                                                sort_on=\'title\',\n
+                                                **query_dict) \n
+# Get every result object\n
+for r_ticket in ticketlist: \n
+  ticket=r_ticket.getObject()\n
+  #show outgoing follow-up events\n
+  eventlist=portal.portal_catalog.searchResults(portal_type=portal.getPortalEventTypeList(),\n
+                                                 follow_up_uid=ticket.getUid(),\n
+                                                 simulation_state=outgoing_state_list)\n
+  #sort the list by destination (recipient)\n
+  eventlist_sorted=[]\n
+  for event in eventlist:\n
+    eventlist_sorted.append(event.getObject())\n
+  eventlist_sorted.sort(lambda x,y: cmp(x.getDestinationTitle(), y.getDestinationTitle()))\n
+  for event in eventlist_sorted:\n
+    line_list.append( Object(uid=\'new_\',\n
+                           sale_opportunity = ticket.getTitle(),\n
+                           direction = outgoing_title,\n
+                           type = event.getTranslatedPortalType(),\n
+                           destination_title_list = event.getDestinationTitleList(),\n
+                           title = event.getTitle(),\n
+                           stop_date = event.getStopDate(),\n
+                           start_date = event.getStartDate(),\n
+                           source = event.getSourceTitle(),\n
+                           validation_state = event.getTranslatedSimulationStateTitle()))\n
+    #show incoming or outgoing causality events of every outgoing event\n
+    event_causality_list=portal.portal_catalog.searchResults(portal_type=\n
+                                                      portal.getPortalEventTypeList(),\n
+                                                      simulation_state=outgoing_state_list+incoming_state_list,\n
+                                                      causality_uid=event.getUid())\n
+    for r_event_causality in event_causality_list:\n
+      event_causality=r_event_causality.getObject()\n
+      #check that one event it isn\'t related by causality and follow-up with the same ticket\n
+      if ticket.getUid()<>event_causality.getFollowUpUid():\n
+        if event_causality.getSimulationState() in incoming_state_list:\n
+          direction_state = incoming_title\n
+        else:\n
+          direction_state = outgoing_title\n
+        line_list.append( Object(uid=\'new_\',\n
+                             sale_opportunity = "",\n
+                             direction = direction_state,\n
+                             type = event_causality.getTranslatedPortalType(),\n
+                             destination_title_list = event_causality.getDestinationTitleList(),\n
+                             title = event_causality.getTitle(),\n
+                             stop_date = event_causality.getStopDate(),\n
+                             start_date = event_causality.getStartDate(),\n
+                             source = event_causality.getSourceTitle(),\n
+                             validation_state = event_causality.getTranslatedSimulationStateTitle()))\n
+                            \n
+  #show incoming follow-up events\n
+  eventlist=portal.portal_catalog.searchResults(portal_type=portal.getPortalEventTypeList(),\n
+                                                 follow_up_uid=ticket.getUid(),\n
+                                                 simulation_state=incoming_state_list)\n
+  #sort the list by source\n
+  eventlist_sorted=[]\n
+  for event in eventlist:\n
+    eventlist_sorted.append(event.getObject())\n
+  eventlist_sorted.sort(lambda x,y: cmp(x.getSourceTitle(), y.getSourceTitle()))\n
+  for event in eventlist_sorted:\n
+    line_list.append( Object(uid=\'new_\',\n
+                           sale_opportunity = ticket.getTitle(),\n
+                           direction = incoming_title,\n
+                           type = event.getTranslatedPortalType(),\n
+                           destination_title_list = event.getDestinationTitleList(),\n
+                           title = event.getTitle(),\n
+                           stop_date = event.getStopDate(),\n
+                           start_date = event.getStartDate(),\n
+                           source = event.getSourceTitle(),\n
+                           validation_state = event.getTranslatedSimulationStateTitle()))\n
+    #show incoming or outgoing causality events of every incoming event\n
+    event_causality_list=portal.portal_catalog.searchResults(portal_type=\n
+                                                      portal.getPortalEventTypeList(),\n
+                                                      simulation_state=outgoing_state_list+incoming_state_list,\n
+                                                      causality_uid=event.getUid())\n
+    for r_event_causality in event_causality_list:\n
+      event_causality=r_event_causality.getObject()\n
+      #check that one event it isn\'t related by causality and follow-up with the same ticket\n
+      if ticket.getUid()<>event_causality.getFollowUpUid():\n
+        if event_causality.getSimulationState() in incoming_state_list:\n
+          direction_state = incoming_title\n
+        else:\n
+          direction_state = outgoing_title\n
+        line_list.append( Object(uid=\'new_\',\n
+                             sale_opportunity = "",\n
+                             direction = direction_state,\n
+                             type = event_causality.getTranslatedPortalType(),\n
+                             destination_title_list = event_causality.getDestinationTitleList(),\n
+                             title = event_causality.getTitle(),\n
+                             stop_date = event_causality.getStopDate(),\n
+                             start_date = event_causality.getStartDate(),\n
+                             source = event_causality.getSourceTitle(),\n
+                             validation_state = event_causality.getTranslatedSimulationStateTitle()))\n
+        \n
+if line_list==[]:\n
+  line_list.append(Object(uid=\'new_\'))\n
+return line_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
+                            <string>request_start_date</string>
+                            <string>request_stop_date</string>
+                            <string>request_ticket_type</string>
+                            <string>request_validation_state</string>
+                            <string>outgoing_state_list</string>
+                            <string>incoming_state_list</string>
+                            <string>outgoing_title</string>
+                            <string>incoming_title</string>
+                            <string>line_list</string>
+                            <string>dict</string>
+                            <string>query_dict</string>
+                            <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>section_uid</string>
+                            <string>_apply_</string>
+                            <string>ticketlist</string>
+                            <string>r_ticket</string>
+                            <string>ticket</string>
+                            <string>eventlist</string>
+                            <string>eventlist_sorted</string>
+                            <string>event</string>
+                            <string>event_causality_list</string>
+                            <string>r_event_causality</string>
+                            <string>event_causality</string>
+                            <string>direction_state</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOpportunityModule_getSaleOpportunityDetailedEventsLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
