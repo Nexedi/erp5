@@ -4470,7 +4470,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       return modified_object_list
 
-    def _install(self, force=1, object_to_update=None, **kw):
+    def _install(self, force=1, object_to_update=None, update_translation=0,
+                 update_catalog=0, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
@@ -4538,8 +4539,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # update catalog if necessary
       if force and self.isCatalogUpdatable():
         update_catalog = 1
-      else:
-        update_catalog = kw.get('update_catalog', 0)
       if update_catalog:
         catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):
@@ -4589,7 +4588,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Update translation table, in case we added new portal types or
       # workflow states.
-      update_translation = kw.get('update_translation', 0)
       if update_translation:
         site.ERP5Site_updateTranslationTable()
 
