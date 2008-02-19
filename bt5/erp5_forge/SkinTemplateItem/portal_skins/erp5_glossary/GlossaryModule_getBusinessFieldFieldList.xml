@@ -103,6 +103,8 @@ c = 0\n
 for business_field in business_field_list:\n
   for field, reference in get_field_and_reference_list(business_field):\n
     term_list = get_term_list(business_field, reference)\n
+    if not term_list:\n
+      continue\n
 \n
     field_path = \'%s/%s/%s\' % (field.aq_parent.aq_parent.getId(),\n
                                field.aq_parent.getId(),\n

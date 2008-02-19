@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -78,15 +75,19 @@ def iterate(obj):\n
 \n
 iterate(context.portal_skins)\n
 \n
-FUNC_NAME = \'N_\'\n
-CALL_FUNC_NAME = \'%s(\' % FUNC_NAME\n
+FUNC_NAME_LIST = (\'N_\',\n
+                  \'Base_translateString\',\n
+                  \'translateString\',\n
+                  )\n
 \n
 result = {}\n
 for i in items:\n
   source = i.body()\n
-  if CALL_FUNC_NAME in source:\n
-    for m in context.Base_getFunctionFirstArgumentValue(FUNC_NAME, source):\n
-      result[m] = None\n
+  for func_name in FUNC_NAME_LIST:\n
+    call_func_name = \'%s(\' % func_name\n
+    if call_func_name in source:\n
+      for m in context.Base_getFunctionFirstArgumentValue(func_name, source):\n
+        result[m] = None\n
 \n
 for i in result:\n
   print \'msgid "%s"\' % repr(i)[1:-1]\n
@@ -147,12 +148,13 @@ return printed\n
                             <string>iterate</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>FUNC_NAME</string>
-                            <string>CALL_FUNC_NAME</string>
+                            <string>FUNC_NAME_LIST</string>
                             <string>result</string>
                             <string>_getiter_</string>
                             <string>i</string>
                             <string>source</string>
+                            <string>func_name</string>
+                            <string>call_func_name</string>
                             <string>m</string>
                             <string>None</string>
                             <string>_write_</string>
