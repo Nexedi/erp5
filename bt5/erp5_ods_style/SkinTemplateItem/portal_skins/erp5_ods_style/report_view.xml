@@ -64,7 +64,7 @@
 \n
       <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
         <tal:block tal:condition="not: sheet_per_reportsection">\n
-          <table:table tal:attributes="table:name python:here.getProperty(\'title\')">\n
+          <table:table tal:attributes="table:name python:unicode(here.getProperty(\'title\'), \'utf8\')">\n
           <!-- at least one table-column element is required for ODF to validate -->\n
           <table:table-column\n
                 table:style-name=\'co2\'\n
