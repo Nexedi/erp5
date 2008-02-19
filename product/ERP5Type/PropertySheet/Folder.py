@@ -42,7 +42,7 @@ class Folder:
         {   'id'          : 'last_id',
             'description' : 'The default ID group for objects in this folder',
             'type'        : 'string',
-            'default'     : '1',
+            'default'     : '0',
             'mode'        : 'w'},
         {   'id'          : 'id_generator',
             'description' : 'The name of the function to use to generate the Id of a new contained object. Default behaviour (when this value is not set or the function cannot be found) is to increment last_id and update it.',
