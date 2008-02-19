@@ -4557,6 +4557,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # remove object from old business template
       if len(remove_object_dict):
+        # XXX: this code assumes that there is an installed_bt
         for item_name in installed_bt._item_name_list:
           item = getattr(installed_bt, item_name, None)
           if item is not None:
