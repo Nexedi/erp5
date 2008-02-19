@@ -66,9 +66,18 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>MESSAGE_TEMPLATE = \'\'\'\\\n
-msgid "%(english)s"\n
-msgstr "%(translation)s"\n
+msgid %(english)s\n
+msgstr %(translation)s\n
 \'\'\'\n
+\n
+def format(string):\n
+  line_list = string.split(\'\\n\')\n
+  length = len(line_list)\n
+  if length==1:\n
+    return \'"%s"\' % string\n
+  else:\n
+    return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
+\n
 \n
 catalog = context.portal_catalog\n
 \n
@@ -97,16 +106,16 @@ for i in catalog(portal_type=\'Glossary Term\',\n
     if not english_title:\n
       raise ValueError, \'Title of corresponding English term to "%s" is empty.\' % translated_title\n
     if translated_title!=english_title:\n
-      print MESSAGE_TEMPLATE % {\'english\':english_title,\n
-                                \'translation\':translated_title}\n
+      print MESSAGE_TEMPLATE % {\'english\':format(english_title),\n
+                                \'translation\':format(translated_title)}\n
 \n
   if translated_description:\n
     if not english_description:\n
       raise ValueError, \'Description of corresponding English term to "%s" is empty.\' % translated_description\n
 \n
     if translated_description!=english_description:\n
-      print MESSAGE_TEMPLATE % {\'english\':english_description,\n
-                                \'translation\':translated_description}\n
+      print MESSAGE_TEMPLATE % {\'english\':format(english_description),\n
+                                \'translation\':format(translated_description)}\n
 \n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/plain;charset=utf-8\')\n
 \n
@@ -159,6 +168,7 @@ return printed\n
                             <string>_print_</string>
                             <string>_print</string>
                             <string>MESSAGE_TEMPLATE</string>
+                            <string>format</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>catalog</string>
