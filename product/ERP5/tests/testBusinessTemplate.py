@@ -1353,6 +1353,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     multivalue_key = 'fake_multivalue'
     topic_key = 'fake_topic'
     scriptable_key = 'fake_search_text | fake_script_query'
+    role_key = 'Foo | catalog.owner'
+    local_role_key = 'Bar | catalog.owner'
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
     # result table
@@ -1418,11 +1420,28 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       sql_catalog_scriptable_keys.sort()
       catalog.sql_catalog_scriptable_keys = tuple(sql_catalog_scriptable_keys)
     self.failUnless(scriptable_key in catalog.sql_catalog_scriptable_keys)
+    # role keys
+    if role_key not in catalog.sql_catalog_role_keys:
+      sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
+      sql_catalog_role_keys.append(role_key)
+      sql_catalog_role_keys.sort()
+      catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
+    self.failUnless(role_key in catalog.sql_catalog_role_keys)
+    # local_role keys
+    if local_role_key not in catalog.sql_catalog_local_role_keys:
+      sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
+      sql_catalog_local_role_keys.append(local_role_key)
+      sql_catalog_local_role_keys.sort()
+      catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
+    self.failUnless(local_role_key in catalog.sql_catalog_local_role_keys)
 
-    sequence.edit(related_key=related_key, result_key=result_key, result_table=result_table, \
-                  keyword_key=keyword_key, full_text_key=full_text_key, request_key=request_key, \
+    sequence.edit(related_key=related_key, result_key=result_key, 
+                  result_table=result_table,
+                  keyword_key=keyword_key, full_text_key=full_text_key, 
+                  request_key=request_key,
                   multivalue_key=multivalue_key, topic_key=topic_key, \
-                  scriptable_key=scriptable_key)
+                  scriptable_key=scriptable_key,
+                  role_key=role_key, local_role_key=local_role_key)
 
   def stepModifyCatalogConfiguration(self, sequence, **kw):
     """Modify the current configuration of the catalog.
@@ -1505,6 +1524,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
     self.failUnless(scriptable_key is not None)
+    role_key = sequence.get('role_key', None)
+    self.failUnless(role_key is not None)
+    local_role_key = sequence.get('local_role_key', None)
+    self.failUnless(local_role_key is not None)
 
     bt.edit(template_catalog_related_key_list=[related_key],
             template_catalog_result_key_list=[result_key],
@@ -1515,6 +1538,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
             template_catalog_multivalue_key_list=[multivalue_key],
             template_catalog_topic_key_list=[topic_key],
             template_catalog_scriptable_key_list=[scriptable_key],
+            template_catalog_role_key_list=[role_key],
+            template_catalog_local_role_key_list=[local_role_key],
             )
 
   def stepRemoveKeysAndTable(self, sequence=list, sequence_list=None, **kw):
@@ -1539,6 +1564,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
     self.failUnless(scriptable_key is not None)
+    role_key = sequence.get('role_key', None)
+    self.failUnless(role_key is not None)
+    local_role_key = sequence.get('local_role_key', None)
+    self.failUnless(local_role_key is not None)
 
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -1596,6 +1625,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_catalog_scriptable_keys.sort()
     catalog.sql_catalog_scriptable_keys = tuple(sql_catalog_scriptable_keys)
     self.failUnless(scriptable_key not in catalog.sql_catalog_scriptable_keys)
+    # role keys
+    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
+    sql_catalog_role_keys.remove(role_key)
+    sql_catalog_role_keys.sort()
+    catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
+    self.failUnless(role_key not in catalog.sql_catalog_role_keys)
+    # local_role keys
+    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
+    sql_catalog_local_role_keys.remove(local_role_key)
+    sql_catalog_local_role_keys.sort()
+    catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
+    self.failUnless(local_role_key not in catalog.sql_catalog_local_role_keys)
 
 
   def stepCheckKeysAndTableExists(self, sequence=list, sequence_list=None, **kw):
@@ -1620,6 +1661,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
     self.failUnless(scriptable_key is not None)
+    role_key = sequence.get('role_key', None)
+    self.failUnless(role_key is not None)
+    local_role_key = sequence.get('local_role_key', None)
+    self.failUnless(local_role_key is not None)
 
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -1641,6 +1686,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(topic_key in catalog.sql_catalog_topic_search_keys)
     # scriptable key
     self.failUnless(scriptable_key in catalog.sql_catalog_scriptable_keys)
+    # role key
+    self.failUnless(role_key in catalog.sql_catalog_role_keys)
+    # local_role key
+    self.failUnless(local_role_key in catalog.sql_catalog_local_role_keys)
 
   def stepCheckKeysAndTableRemoved(self, sequence=list, sequence_list=None, **kw):
     """
@@ -1664,6 +1713,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
     self.failUnless(scriptable_key is not None)
+    role_key = sequence.get('role_key', None)
+    self.failUnless(role_key is not None)
+    local_role_key = sequence.get('local_role_key', None)
+    self.failUnless(local_role_key is not None)
 
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -1685,6 +1738,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(topic_key not in catalog.sql_catalog_topic_search_keys)
     # scriptable key
     self.failUnless(scriptable_key not in catalog.sql_catalog_scriptable_keys)
+    # role key
+    self.failUnless(role_key not in catalog.sql_catalog_role_keys)
+    # local_role key
+    self.failUnless(local_role_key not in catalog.sql_catalog_local_role_keys)
 
   # Roles
   def stepCreateRole(self, sequence=None, sequence_list=None, **kw):

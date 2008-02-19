@@ -3866,6 +3866,192 @@ class CatalogScriptableKeyTemplateItem(BaseTemplateItem):
       xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None)
 
+class CatalogRoleKeyTemplateItem(BaseTemplateItem):
+  # XXX Copy/paste from CatalogScriptableKeyTemplateItem
+
+  def build(self, context, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
+    key_list = []
+    for key in self._archive.keys():
+      if key in sql_catalog_role_keys:
+        key_list.append(key)
+      else:
+        raise NotFound, 'Role key "%r" not found in catalog' %(key,)
+    if len(key_list) > 0:
+      self._objects[self.__class__.__name__+'/'+'role_key_list'] = key_list
+
+  def _importFile(self, file_name, file):
+    list = []
+    xml = parse(file)
+    key_list = xml.getElementsByTagName('key')
+    for key in key_list:
+      node = key.childNodes[0]
+      value = node.data
+      list.append(str(value))
+    self._objects[file_name[:-4]] = list
+
+  def install(self, context, trashbin, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
+    if context.getTemplateFormatVersion() == 1:
+      if len(self._objects.keys()) == 0: # needed because of pop()
+        return
+      keys = []
+      for k in self._objects.values().pop(): # because of list of list
+        keys.append(k)
+    else:
+      keys = self._archive.keys()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    # XXX must a find a better way to manage scriptable key
+    if update_dict.has_key('role_key_list') or force:
+      if not force:
+        if update_dict.has_key('role_key_list'):
+          action = update_dict['role_key_list']
+        if action == 'nothing':
+          return
+      for key in keys:
+        if key not in sql_catalog_role_keys:
+          sql_catalog_role_keys.append(key)
+      catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
+
+  def uninstall(self, context, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for key in object_keys:
+      if key in sql_catalog_role_keys:
+        sql_catalog_role_keys.remove(key)
+    catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+  # Function to generate XML Code Manually
+  def generateXml(self, path=None):
+    obj = self._objects[path]
+    xml_data = '<key_list>'
+    obj.sort()
+    for key in obj:
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=path)
+    for path in self._objects.keys():
+      xml_data = self.generateXml(path=path)
+      bta.addObject(obj=xml_data, name=path, path=None)
+
+class CatalogLocalRoleKeyTemplateItem(BaseTemplateItem):
+  # XXX Copy/paste from CatalogScriptableKeyTemplateItem
+
+  def build(self, context, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
+    key_list = []
+    for key in self._archive.keys():
+      if key in sql_catalog_local_role_keys:
+        key_list.append(key)
+      else:
+        raise NotFound, 'LocalRole key "%r" not found in catalog' %(key,)
+    if len(key_list) > 0:
+      self._objects[self.__class__.__name__+'/'+'local_role_key_list'] = key_list
+
+  def _importFile(self, file_name, file):
+    list = []
+    xml = parse(file)
+    key_list = xml.getElementsByTagName('key')
+    for key in key_list:
+      node = key.childNodes[0]
+      value = node.data
+      list.append(str(value))
+    self._objects[file_name[:-4]] = list
+
+  def install(self, context, trashbin, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
+    if context.getTemplateFormatVersion() == 1:
+      if len(self._objects.keys()) == 0: # needed because of pop()
+        return
+      keys = []
+      for k in self._objects.values().pop(): # because of list of list
+        keys.append(k)
+    else:
+      keys = self._archive.keys()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    # XXX must a find a better way to manage scriptable key
+    if update_dict.has_key('local_role_key_list') or force:
+      if not force:
+        if update_dict.has_key('local_role_key_list'):
+          action = update_dict['local_role_key_list']
+        if action == 'nothing':
+          return
+      for key in keys:
+        if key not in sql_catalog_local_role_keys:
+          sql_catalog_local_role_keys.append(key)
+      catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
+
+  def uninstall(self, context, **kw):
+    catalog = _getCatalogValue(self)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for key in object_keys:
+      if key in sql_catalog_local_role_keys:
+        sql_catalog_local_role_keys.remove(key)
+    catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+  # Function to generate XML Code Manually
+  def generateXml(self, path=None):
+    obj = self._objects[path]
+    xml_data = '<key_list>'
+    obj.sort()
+    for key in obj:
+      xml_data += '\n <key>%s</key>' %(key)
+    xml_data += '\n</key_list>'
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=path)
+    for path in self._objects.keys():
+      xml_data = self.generateXml(path=path)
+      bta.addObject(obj=xml_data, name=path, path=None)
+
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
@@ -4209,6 +4395,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_catalog_multivalue_key_item',
       '_catalog_topic_key_item',
       '_catalog_scriptable_key_item',
+      '_catalog_role_key_item',
+      '_catalog_local_role_key_item',
     ]
 
     def __init__(self, *args, **kw):
@@ -4364,6 +4552,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_scriptable_key_item = \
           CatalogScriptableKeyTemplateItem(
                self.getTemplateCatalogScriptableKeyList())
+      self._catalog_role_key_item = \
+          CatalogRoleKeyTemplateItem(
+               self.getTemplateCatalogRoleKeyList())
+      self._catalog_local_role_key_item = \
+          CatalogLocalRoleKeyTemplateItem(
+               self.getTemplateCatalogLocalRoleKeyList())
 
       # Build each part
       for item_name in self._item_name_list:
@@ -4971,6 +5165,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_scriptable_key_item = \
           CatalogScriptableKeyTemplateItem(
                self.getTemplateCatalogScriptableKeyList())
+      self._catalog_role_key_item = \
+          CatalogRoleKeyTemplateItem(
+               self.getTemplateCatalogRoleKeyList())
+      self._catalog_local_role_key_item = \
+          CatalogLocalRoleKeyTemplateItem(
+               self.getTemplateCatalogLocalRoleKeyList())
 
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
@@ -5057,6 +5257,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogTopicKey' : '_catalog_topic_key_item',
         'Tool': '_tool_item',
         'CatalogScriptableKey' : '_catalog_scriptable_key_item',
+        'CatalogRoleKey' : '_catalog_role_key_item',
+        'CatalogLocalRoleKey' : '_catalog_local_role_key_item',
         }
 
       object_id = REQUEST.object_id
@@ -5113,6 +5315,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_multivalue_key_item',
                      '_catalog_topic_key_item',
                      '_catalog_scriptable_key_item',
+                     '_catalog_role_key_item',
+                     '_catalog_local_role_key_item',
                      '_portal_type_allowed_content_type_item',
                      '_portal_type_hidden_content_type_item',
                      '_portal_type_property_sheet_item',
