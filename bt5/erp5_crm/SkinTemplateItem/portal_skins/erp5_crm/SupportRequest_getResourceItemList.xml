@@ -67,14 +67,14 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
 This script returns the list of items based on the preferred\n
-resources for events. It is intended to be used\n
+resources for support requests. It is intended to be used\n
 by ListField instances.\n
 """\n
 from zExceptions import Unauthorized\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getResourceItemList():\n
-  result = []\n
+  result = [(\'\', \'\')]\n
   url_list = context.portal_preferences.getPreferredSupportRequestResourceList()\n
   for url in url_list:\n
     try:\n
