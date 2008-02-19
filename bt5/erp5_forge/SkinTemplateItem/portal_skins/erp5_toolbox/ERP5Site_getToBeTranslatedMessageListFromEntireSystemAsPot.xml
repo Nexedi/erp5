@@ -65,34 +65,136 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>items = []\n
+            <value> <string>message_dict = {}\n
+\n
+def add_message(message, comment):\n
+  if not message:\n
+    return\n
+  if message in message_dict:\n
+    comment_list = message_dict[message]\n
+  else:\n
+    comment_list = message_dict[message] = []\n
+  if comment not in comment_list:\n
+    comment_list.append(comment)\n
+\n
+portal_url = context.portal_url\n
+\n
+# Collect skin objects\n
+python_script_list = []\n
+form_list = []\n
+listbox_list = []\n
+zpt_list = []\n
 def iterate(obj):\n
   for i in obj.objectValues():\n
+    if i.meta_type==\'Script (Python)\':\n
+      python_script_list.append(i)\n
+    elif i.meta_type==\'ERP5 Form\':\n
+      form_list.append(i)\n
+    elif i.meta_type==\'ListBox\' or i.id==\'listbox\':\n
+      listbox_list.append(i)\n
+    elif i.meta_type==\'Page Template\':\n
+      zpt_list.append(i)\n
     if i.isPrincipiaFolderish:\n
       iterate(i)\n
-    elif i.meta_type==\'Script (Python)\':\n
-      items.append(i)\n
-\n
 iterate(context.portal_skins)\n
 \n
+\n
+#\n
+# Python Script\n
+#\n
 FUNC_NAME_LIST = (\'N_\',\n
                   \'Base_translateString\',\n
                   \'translateString\',\n
                   )\n
 \n
-result = {}\n
-for i in items:\n
+for i in python_script_list:\n
   source = i.body()\n
   for func_name in FUNC_NAME_LIST:\n
     call_func_name = \'%s(\' % func_name\n
     if call_func_name in source:\n
       for m in context.Base_getFunctionFirstArgumentValue(func_name, source):\n
-        result[m] = None\n
+        add_message(m, portal_url.getRelativeContentURL(i))\n
 \n
-for i in result:\n
-  print \'msgid "%s"\' % repr(i)[1:-1]\n
-  print \'msgstr ""\'\n
-  print\n
+\n
+#\n
+# ERP5 Form title\n
+#\n
+for i in form_list:\n
+  add_message(i.title, portal_url.getRelativeContentURL(i))\n
+\n
+\n
+#\n
+# ListBox title, columns\n
+#\n
+for i in listbox_list:\n
+  add_message(i.title(), portal_url.getRelativeContentURL(i))\n
+  for value, label in i.get_value(\'columns\'):\n
+    add_message(label, portal_url.getRelativeContentURL(i))\n
+  for value, label in i.get_value(\'all_columns\'):\n
+    add_message(label, portal_url.getRelativeContentURL(i))\n
+\n
+#\n
+# ZPT\n
+#\n
+# TODO : To parse html and get static translated text.\n
+\n
+#\n
+# Workflow\n
+#\n
+for i in context.portal_workflow.objectValues():\n
+  if not i.states:\n
+    continue\n
+  for s in i.states.values():\n
+    if s.title:\n
+      add_message(s.title, portal_url.getRelativeContentURL(s))\n
+\n
+  if not i.transitions:\n
+    continue\n
+  for t in i.transitions.values():\n
+    if t.actbox_name:\n
+      add_message(t.actbox_name, portal_url.getRelativeContentURL(t))\n
+\n
+\n
+#\n
+# Portal Type\n
+#\n
+for i in context.portal_types.objectValues():\n
+  add_message(i.id, \'portal type\')\n
+\n
+\n
+#\n
+# Action\n
+#\n
+for action_title in context.Base_getActionTitleListFromAllActionProvider(context.getPortalObject()):\n
+  add_message(action_title, \'action\')\n
+\n
+\n
+#\n
+# Output\n
+#\n
+def format(string):\n
+  line_list = string.split(\'\\n\')\n
+  length = len(line_list)\n
+  if length==1:\n
+    return \'"%s"\' % string\n
+  else:\n
+    return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
+\n
+\n
+MESSAGE_TEMPLATE = \'\'\'\\\n
+%s\n
+msgid %s\n
+msgstr ""\n
+\'\'\'\n
+message_list = message_dict.keys()\n
+message_list.sort()\n
+for message in message_list:\n
+  comment_list = message_dict[message]\n
+  comment = \'\\n\'.join([(\'#: %s\' % i) for i in comment_list])\n
+  print MESSAGE_TEMPLATE % (comment, format(message))\n
+\n
+context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/plain;charset=utf-8\')\n
+\n
 return printed\n
 </string> </value>
         </item>
@@ -144,22 +246,37 @@ return printed\n
                           <tuple>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>items</string>
-                            <string>iterate</string>
+                            <string>message_dict</string>
+                            <string>add_message</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_url</string>
+                            <string>python_script_list</string>
+                            <string>form_list</string>
+                            <string>listbox_list</string>
+                            <string>zpt_list</string>
+                            <string>iterate</string>
                             <string>FUNC_NAME_LIST</string>
-                            <string>result</string>
                             <string>_getiter_</string>
                             <string>i</string>
                             <string>source</string>
                             <string>func_name</string>
                             <string>call_func_name</string>
                             <string>m</string>
-                            <string>None</string>
-                            <string>_write_</string>
+                            <string>value</string>
+                            <string>label</string>
+                            <string>s</string>
+                            <string>t</string>
+                            <string>action_title</string>
+                            <string>format</string>
+                            <string>MESSAGE_TEMPLATE</string>
+                            <string>message_list</string>
+                            <string>message</string>
                             <string>_getitem_</string>
-                            <string>repr</string>
+                            <string>comment_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>comment</string>
                           </tuple>
                         </value>
                     </item>
@@ -176,7 +293,7 @@ return printed\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getToBeTranslatedMessageListFromPythonScriptListAsPot</string> </value>
+            <value> <string>ERP5Site_getToBeTranslatedMessageListFromEntireSystemAsPot</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

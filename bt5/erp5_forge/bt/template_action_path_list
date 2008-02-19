@@ -18,3 +18,4 @@ Preference | subversion
 Template Tool | bt_svn_history
 Template Tool | search_portal_type
 Upload Module | view
+portal_actions | generate_pot_file
