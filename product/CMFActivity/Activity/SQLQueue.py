@@ -542,4 +542,9 @@ class SQLQueue(RAMQueue, SQLBase):
     """
     activity_tool.SQLQueue_timeShift(delay=delay, processing_node=processing_node)
 
+  def getPriority(self, activity_tool):
+    method = activity_tool.SQLQueue_getPriority
+    default =  RAMQueue.getPriority(self, activity_tool)
+    return self._getPriority(activity_tool, method, default)
+
 registerActivity(SQLQueue)

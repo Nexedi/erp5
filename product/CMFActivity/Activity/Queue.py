@@ -348,3 +348,13 @@ class Queue:
       delay is provided in fractions of day
     """
     pass
+
+  def getPriority(self, activity_tool):
+    """
+      Get priority from this queue.
+      Lower number means higher priority value.
+      Legal value range is [1, 6].
+      Values out of this range might work, but are non-standard.
+    """
+    return 6
+

@@ -2625,6 +2625,58 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'checkActivityCount')
 
+  def test_103_interQueuePriorities(self, quiet=0, run=run_all_test):
+    """
+      Important note: there is no way to really reliably check that this
+      feature is correctly implemented, as activity execution order is
+      non-deterministic.
+      The best which can be done is to check that under certain circumstances
+      the activity exeicution order match expectations.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck inter-queue priorities'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    check_result_dict = {}
+    def runAndCheck():
+      check_result_dict.clear()
+      get_transaction().commit()
+      self.assertEqual(len(check_result_dict), 0)
+      self.tic()
+      self.assertEqual(len(check_result_dict), 2)
+      self.assertTrue(check_result_dict['before_ran'])
+      self.assertTrue(check_result_dict['after_ran'])
+    def mustRunBefore(self):
+      check_result_dict['before_ran'] = 'after_ran' not in check_result_dict
+    def mustRunAfter(self):
+      check_result_dict['after_ran'] = 'before_ran' in check_result_dict
+    Organisation.mustRunBefore = mustRunBefore
+    Organisation.mustRunAfter = mustRunAfter
+    try:
+      # Check that ordering looks good (SQLQueue first)
+      organisation.activate(activity='SQLQueue', priority=1).mustRunBefore()
+      organisation.activate(activity='SQLDict',  priority=2).mustRunAfter()
+      runAndCheck()
+      # Check that ordering looks good (SQLDict first)
+      organisation.activate(activity='SQLDict',  priority=1).mustRunBefore()
+      organisation.activate(activity='SQLQueue', priority=2).mustRunAfter()
+      runAndCheck()
+      # Check that tag takes precedence over priority (SQLQueue first by priority)
+      organisation.activate(activity='SQLQueue', priority=1, after_tag='a').mustRunAfter()
+      organisation.activate(activity='SQLDict',  priority=2, tag='a').mustRunBefore()
+      runAndCheck()
+      # Check that tag takes precedence over priority (SQLDict first by priority)
+      organisation.activate(activity='SQLDict',  priority=1, after_tag='a').mustRunAfter()
+      organisation.activate(activity='SQLQueue', priority=2, tag='a').mustRunBefore()
+      runAndCheck()
+    finally:
+      delattr(Organisation, 'mustRunBefore')
+      delattr(Organisation, 'mustRunAfter')
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

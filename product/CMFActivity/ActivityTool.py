@@ -661,15 +661,22 @@ class ActivityTool (Folder, UniqueObject):
         first_run = False
 
       try:
+        #Sort activity list by priority
+        activity_list = activity_dict.values()
+        # Sort method must be local to access "self"
+        def cmpActivities(activity_1, activity_2):
+          return cmp(activity_1.getPriority(self), activity_2.getPriority(self))
+        activity_list.sort(cmpActivities)
+        
         # Wakeup each queue
-        for activity in activity_dict.itervalues():
+        for activity in activity_list:
           activity.wakeup(inner_self, processing_node)
 
         # Process messages on each queue in round robin
         has_awake_activity = 1
         while has_awake_activity:
           has_awake_activity = 0
-          for activity in activity_dict.itervalues():
+          for activity in activity_list:
             activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
             has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
       finally:

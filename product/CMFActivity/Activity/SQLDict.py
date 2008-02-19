@@ -720,4 +720,9 @@ class SQLDict(RAMDict, SQLBase):
     """
     activity_tool.SQLDict_timeShift(delay=delay, processing_node=processing_node,retry=retry)
 
+  def getPriority(self, activity_tool):
+    method = activity_tool.SQLDict_getPriority
+    default =  RAMDict.getPriority(self, activity_tool)
+    return self._getPriority(activity_tool, method, default)
+
 registerActivity(SQLDict)
