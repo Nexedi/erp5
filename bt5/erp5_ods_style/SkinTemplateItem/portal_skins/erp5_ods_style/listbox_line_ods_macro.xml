@@ -100,8 +100,7 @@
           </tal:block>\n
         </tal:block>\n
 \n
-        <tal:block tal:condition="not:listboxline/isTitleLine"\n
-                    tal:define="listboxline_index python: listboxline_list.index(listboxline)">\n
+        <tal:block tal:condition="not:listboxline/isTitleLine">\n
 \n
           <table:table-row>\n
             <tal:block tal:condition="python: listboxline.isDataLine()">\n
