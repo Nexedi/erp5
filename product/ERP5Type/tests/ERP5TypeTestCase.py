@@ -310,7 +310,7 @@ class ERP5TypeTestCase(PortalTestCase):
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = os.environ.get('erp5_load_data_fs') is not None
       if update_business_templates and erp5_load_data_fs:
-        template_list = ('erp5_core', 'erp5_xhtml_style', erp5_catalog_storage) + tuple(template_list)
+        template_list = (erp5_catalog_storage, 'erp5_core', 'erp5_xhtml_style') + tuple(template_list)
       new_template_list = []
       for template in template_list:
         id = template.split('/')[-1]
