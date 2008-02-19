@@ -93,6 +93,12 @@ def add_and_edit(self, id, REQUEST):
     u = "%s/%s" % (u, quote(id))
   REQUEST.RESPONSE.redirect(u+'/manage_main')
 
+class OOoTemplateStringIO(FasterStringIO):
+  def write(self, s):
+    if type(s) == unicode:
+      s = s.encode('utf-8')
+    FasterStringIO.write(self, s)
+
 class OOoTemplate(ZopePageTemplate):
   """
   A page template which is able to embed and OpenOffice
@@ -156,12 +162,10 @@ class OOoTemplate(ZopePageTemplate):
     # we store the attachments of the uploaded document
     self.OLE_documents_zipstring = None
 
-  # Re-define StringIO with the original one, because iHotfix may
-  # monkey patch it.
-  # XXX it might be better to simply disable iHotfix overriding
-  # StringIO.
+  # Every OOoTemplate uses UTF-8 or Unicode, so a special StringIO class
+  # must be used, which does not care about response.
   def StringIO(self):
-    return FasterStringIO()
+    return OOoTemplateStringIO()
 
   def pt_upload(self, REQUEST, file=''):
     """Replace the document with the text in file."""
