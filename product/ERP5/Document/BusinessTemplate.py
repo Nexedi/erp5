@@ -4524,7 +4524,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
-      if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1):
+      if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates) > 1):
         trashbin = trash_tool.newTrashBin(self.getTitle(), self)
       else:
         trashbin = None
@@ -4579,7 +4579,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # remove trashbin if empty
       if trashbin is not None:
-        if len(trashbin.objectIds()) == 0:
+        if len(trashbin) == 0:
           trash_tool.manage_delObjects([trashbin.getId(),])
 
       if update_catalog:
