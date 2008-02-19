@@ -32,6 +32,7 @@ from Acquisition import aq_base
 from ZODB.POSException import ConflictError
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
 
 try:
   from Products.CMFCore import permissions
@@ -201,3 +202,5 @@ class ActiveObject(ExtensionClass.Base):
     key = ('default_activate_parameter', id(aq_base(self)))
     return tv.get(key)
 
+  def getActivityRuntimeEnvironment(self):
+    return getActivityRuntimeEnvironment()

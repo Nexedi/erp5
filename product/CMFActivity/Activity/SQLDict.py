@@ -37,6 +37,7 @@ import sys
 from types import ClassType
 #from time import time
 from SQLBase import SQLBase
+from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, updateActivityRuntimeValue, clearActivityRuntimeEnvironment
 
 try:
   from transaction import get as get_transaction
@@ -428,12 +429,19 @@ class SQLDict(RAMDict, SQLBase):
       if group_method_id is not None:
         group_method_id = group_method_id.split('\0')[0]
       message_list = [x[1] for x in message_uid_priority_list]
+      clearActivityRuntimeEnvironment()
       if group_method_id not in (None, ""):
+        setActivityRuntimeValue('group_method_id', group_method_id)
         method  = activity_tool.invokeGroup
         args = (group_method_id, message_list)
       else:
         method = activity_tool.invoke
-        args = (message_list[0], )
+        message = message_list[0]
+        args = (message, )
+        updateActivityRuntimeValue({'activity_kw': message.activity_kw,
+                                    'priority': message_uid_priority_list[0][2],
+                                    'uid': message_uid_priority_list[0][0]})
+      setActivityRuntimeValue('processing_node', processing_node)
       # Commit right before executing messages.
       # As MySQL transaction do no start exactly at the same time as ZODB
       # transactions but a bit later, messages available might be called

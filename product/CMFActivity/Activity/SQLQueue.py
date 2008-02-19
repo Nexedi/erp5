@@ -38,6 +38,7 @@ import sys
 from time import time
 from sets import ImmutableSet
 from SQLBase import SQLBase
+from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, updateActivityRuntimeValue, clearActivityRuntimeEnvironment
 
 try:
   from transaction import get as get_transaction
@@ -273,6 +274,11 @@ class SQLQueue(RAMQueue, SQLBase):
       # everything needed from MySQL to get a fresh view of ZODB objects.
       get_transaction().commit()
       for value in message_uid_priority_list:
+        clearActivityRuntimeEnvironment()
+        updateActivityRuntimeValue({'processing_node': processing_node,
+                                    'activity_kw': value[1].activity_kw,
+                                    'priority': value[2],
+                                    'uid': value[0]})
         processed_message_uid_list.append(value)
         # Try to invoke
         try:

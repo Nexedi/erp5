@@ -43,6 +43,7 @@ from DateTime import DateTime
 import cPickle as pickle
 from Products.CMFActivity.ActivityTool import Message
 import random
+from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, clearActivityRuntimeEnvironment
 
 try:
   from transaction import get as get_transaction
@@ -2677,6 +2678,63 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'mustRunBefore')
       delattr(Organisation, 'mustRunAfter')
+
+  def CheckActivityRuntimeEnvironment(self, activity):
+    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    check_result_dict = {}
+    initial_list_check_value = [1, 2]
+    def extractActivityRuntimeEnvironment(self):
+      setActivityRuntimeValue('list_check', initial_list_check_value)
+      environment = self.getActivityRuntimeEnvironment()
+      check_result_dict['environment'] = environment
+    def runAndCheck():
+      check_result_dict.clear()
+      self.assertFalse('environment' in check_result_dict)
+      get_transaction().commit()
+      self.tic()
+      self.assertTrue('environment' in check_result_dict)
+    Organisation.extractActivityRuntimeEnvironment = extractActivityRuntimeEnvironment
+    try:
+      # Check that organisation.getActivityRuntimeEnvironment raises outside
+      # of activities.
+      clearActivityRuntimeEnvironment()
+      #organisation.getActivityRuntimeEnvironment()
+      self.assertRaises(AttributeError, organisation.getActivityRuntimeEnvironment)
+      # Check Runtime isolation
+      setActivityRuntimeValue('blah', True)
+      organisation.activate(activity=activity).extractActivityRuntimeEnvironment()
+      runAndCheck()
+      self.assertEqual(check_result_dict['environment'].get('blah'), None)
+      # Check Runtime presence
+      self.assertTrue(len(check_result_dict['environment']) > 0)
+      self.assertTrue('processing_node' in check_result_dict['environment'])
+      # Check Runtime does a deepcopy
+      self.assertTrue('list_check' in check_result_dict['environment'])
+      check_result_dict['environment']['list_check'].append(3)
+      self.assertTrue(check_result_dict['environment']['list_check'] != \
+                      initial_list_check_value)
+    finally:
+      delattr(Organisation, 'extractActivityRuntimeEnvironment')
+
+  def test_104_activityRuntimeEnvironment(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck ActivityRuntimeEnvironment (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckActivityRuntimeEnvironment('SQLDict')
+
+  def test_105_TryChangeSkinInActivitySQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck ActivityRuntimeEnvironment (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckActivityRuntimeEnvironment('SQLQueue')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
