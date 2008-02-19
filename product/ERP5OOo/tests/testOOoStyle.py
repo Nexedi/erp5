@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf-8 -*-
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #          Jerome Perrin <jerome@nexedi.com>
 #
@@ -28,11 +28,14 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
 
 HTTP_OK = 200
 
+# setting this to a true value allow the use of a debugger
+debug = 0
 
 class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Tests ODF styles for ERP5."""
@@ -52,11 +55,17 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       person_module.newContent(id='pers', portal_type='Person')
       get_transaction().commit()
       self.tic()
+    person_module.pers.setFirstName('Bob')
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
     # make sure selections are empty
     self.portal.portal_selections.setSelectionFor(
-                        'person_module_selection', None)
+                        'person_module_selection', Selection())
+
+  if debug:
+    def publish(self, path, basic=None, **kw):
+      kw['handle_errors'] = False
+      return ZopeTestCase.Functional.publish(self, path, basic, **kw)
 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)
@@ -169,6 +178,40 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
        '/%s/person_module/pers/Base_viewHistory?sheet_per_report_section=1'
         % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_view_encoding(self):
+    self.portal.person_module.pers.setFirstName('Jérome')
+    response = self.publish('/%s/person_module/pers/Person_view'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_report_view_encoding(self):
+    self.portal.person_module.pers.setFirstName('Jérome')
+    response = self.publish('/%s/person_module/pers/Base_viewHistory'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_list_encoding(self):
+    self.portal.person_module.pers.setFirstName('Jérome')
+    response = self.publish(
+       '/%s/person_module/PersonModule_viewPersonList'
+        % self.portal.getId(), basic=self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
