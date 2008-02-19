@@ -449,6 +449,17 @@ class Catalog(Folder,
       'description' : 'Virtual columns to generate scriptable scriptable queries',
       'type'    : 'lines',
       'mode'    : 'w' },
+    { 'id': 'sql_catalog_role_keys',
+      'title': 'Role keys',
+      'description': 'Columns which should be used to map a monovalued role',
+      'type': 'lines',
+      'mode': 'w' },
+    { 'id': 'sql_catalog_local_role_keys',
+      'title': 'Local Role keys',
+      'description': 'Columns which should be used to map' \
+                      'a monovalued local role',
+      'type': 'lines',
+      'mode': 'w' },
   )
 
   sql_catalog_produce_reserved = ''
@@ -484,6 +495,8 @@ class Catalog(Folder,
   sql_catalog_index_on_order_keys = ()
   sql_catalog_related_keys = ()
   sql_catalog_scriptable_keys = ()
+  sql_catalog_role_keys = ()
+  sql_catalog_local_role_keys = ()
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -514,6 +527,20 @@ class Catalog(Folder,
     self.names = {}   # mapping from column to attribute name
     self.indexes = {}   # empty mapping
     self.filter_dict = PersistentMapping()
+
+  def getSQLCatalogRoleKeysList(self):
+    """
+    Return the list of role keys.
+    """
+    return [tuple([y.strip() for y in x.split('|')]) \
+              for x in self.sql_catalog_role_keys]
+
+  def getSQLCatalogLocalRoleKeysList(self):
+    """
+    Return the list of local role keys.
+    """
+    return [tuple([y.strip() for y in x.split('|')]) \
+              for x in self.sql_catalog_local_role_keys]
 
   def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
     """
