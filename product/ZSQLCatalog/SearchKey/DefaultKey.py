@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
+from DocumentTemplate.DT_Var import sql_quote
 from SearchKey import SearchKey
-from pprint import pprint
 
 class DefaultKey(SearchKey):
   """ DefaultKey key is an ERP5 portal_catalog search key which is used to render
@@ -106,7 +106,7 @@ class DefaultKey(SearchKey):
     """ Return a quoted string of the value. """
     if isinstance(value, (int, long,)):
       return str(value)
-    return "'%s'" %value
+    return "'%s'" % sql_quote(value)
 
 
 ##  def buildSQLExpressionFromSearchString(self, key, value, format, mode, range_value, stat__):

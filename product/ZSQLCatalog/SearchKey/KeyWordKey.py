@@ -125,10 +125,6 @@ class KeyWordKey(SearchKey):
       value = value[1:]
     t.value = value
     return t
-    
-  def quoteSQLString(self, value, format):
-    """ Return a quoted string of the value. """
-    return "'%s'" %value
   
   def getOperatorForTokenList(self, tokens):
     """ Generic implementation that will return respective 

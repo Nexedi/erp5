@@ -44,8 +44,8 @@ class FullTextKey(SearchKey):
 
   # SQL expressions patterns
   relevance = '%s_relevance'
-  where_match_against = "MATCH %s AGAINST ('%s' %s)"
-  select_match_against_as = "MATCH %s AGAINST ('%s' %s) AS %s"
+  where_match_against = "MATCH %s AGAINST (%s %s)"
+  select_match_against_as = "MATCH %s AGAINST (%s %s) AS %s"
 
   t_PLUS = r'(\+)'
   t_MINUS = r'(\-)'
@@ -87,11 +87,14 @@ class FullTextKey(SearchKey):
       relevance_key1 = self.relevance %key
       relevance_key2 = None
     select_expression_list = []
-    where_expression = self.where_match_against %(key, value, mode)
+    where_expression = self.where_match_against % (key,
+                            self.quoteSQLString(value, ''), mode)
     if not stat__:
       # stat__ is an internal implementation artifact to prevent adding
       # select_expression for countFolder
-      select_expression_list = [self.select_match_against_as %(key, value, mode, relevance_key1),]
-      if  relevance_key2 is not None:
-        select_expression_list.append(self.select_match_against_as %(key, value, mode, relevance_key2))
+      select_expression_list = [self.select_match_against_as % (key,
+                    self.quoteSQLString(value, ''), mode, relevance_key1),]
+      if relevance_key2 is not None:
+        select_expression_list.append(self.select_match_against_as % (
+          key, self.quoteSQLString(value, ''), mode, relevance_key2))
     return where_expression, select_expression_list

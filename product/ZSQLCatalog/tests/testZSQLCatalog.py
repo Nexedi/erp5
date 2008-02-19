@@ -108,13 +108,6 @@ class TestQuery(unittest.TestCase):
                             datetime_search_keys = [],
                             full_text_search_keys=[]))
 
-  def testQuotedString(self):
-    q = Query(title='Foo d\'Bar')
-    self.assertEquals(
-          dict(where_expression="title = 'Foo d''Bar'",
-               select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=[], full_text_search_keys=[]))
-
   def testQueryMultipleKeys(self):
     # using multiple keys is invalid and raises
     # KeyError: 'Query must have only one key'
@@ -314,6 +307,52 @@ class TestQuery(unittest.TestCase):
           q.asSQLExpression(keyword_search_keys=['title'],
                             datetime_search_keys = [],
                             full_text_search_keys=[])['where_expression'])
+
+  def testQuotedStringDefaultKey(self):
+    q = Query(title='Foo d\'Ba')
+    self.assertEquals(
+              dict(where_expression="((((title = 'Foo d''Ba'))))",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
+  def testQuotedStringKeywordKey(self):
+    q = Query(title='Foo d\'Ba', type='keyword')
+    self.assertEquals(
+              dict(where_expression="((((title LIKE '%Foo d''Ba%'))))",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
+  def testQuotedStringFullTextKey(self):
+    q = Query(title='Foo d\'Ba', type='fulltext')
+    self.assertEquals(
+        dict(where_expression="MATCH title AGAINST ('Foo d''Ba' )",
+             select_expression_list=["MATCH title AGAINST ('Foo d''Ba' )"
+                                     " AS title_relevance"]),
+          q.asSQLExpression())
+
+  def testQuotedStringDateKey(self):
+    q = Query(title='Foo d\'Ba', type='date')
+    self.assertEquals(
+        # I don't know exactly what we should expect here.
+              dict(where_expression="1",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
+  def testQuotedStringFloatKey(self):
+    q = Query(title='Foo d\'Ba', type='float')
+    self.assertEquals(
+        # I don't know exactly what we should expect here.
+        # At least it's safe.
+              dict(where_expression="1",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
+  def testQuotedStringIntKey(self):
+    q = Query(title='Foo d\'Ba', type='int')
+    self.assertEquals(
+              dict(where_expression="((((title = 'Foo d''Ba'))))",
+                   select_expression_list=[]),
+                q.asSQLExpression())
 
 
 def test_suite():

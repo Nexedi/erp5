@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from DocumentTemplate.DT_Var import sql_quote
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery as Query
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.SQLCatalog import getSearchKeyInstance
@@ -108,7 +109,7 @@ class SearchKey:
 
   def quoteSQLString(self, value, format):
     """ Return a quoted string of the value. """
-    return "'%s'" %value
+    return "'%s'" % sql_quote(str(value))
 
   # SQL generation
   def buildSQLExpression(self, key, value, 
