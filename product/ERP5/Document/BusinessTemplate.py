@@ -4530,7 +4530,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         trashbin = None
 
       # Install everything
-      if len(object_to_update) > 0 or force:
+      if len(object_to_update) or force:
         for item_name in self._item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
@@ -4551,14 +4551,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # get objects to remove
       # do remove after because we may need backup object from installation
       remove_object_dict = {}
-      for path in object_to_update.keys():
-        action = object_to_update[path]
-        if action == 'remove' or action == 'save_and_remove':
+      for path, action in object_to_update.iteritems():
+        if action in ('remove', 'save_and_remove'):
           remove_object_dict[path] = action
           object_to_update.pop(path)
 
       # remove object from old business template
-      if len(remove_object_dict) > 0:
+      if len(remove_object_dict):
         for item_name in installed_bt._item_name_list:
           item = getattr(installed_bt, item_name, None)
           if item is not None:
