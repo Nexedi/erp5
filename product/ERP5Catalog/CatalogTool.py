@@ -197,7 +197,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     manage_options = ({ 'label' : 'Overview', 'action' : 'manage_overview' },
                      ) + ZCatalog.manage_options
 
-
     def __init__(self):
         ZCatalog.__init__(self, self.getId())
 
@@ -447,12 +446,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       user_is_superuser = (user_str == SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
-      column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
+      local_role_column_dict = {}
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      column_map = catalog.getColumnMap()
 
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
       if kw.has_key('local_roles'):
         local_roles = kw['local_roles']
+        local_role_dict = dict(catalog.getSQLCatalogLocalRoleKeysList())
+        role_dict = dict(catalog.getSQLCatalogRoleKeysList())
         # XXX user is not enough - we should also include groups of the user
         # Only consider local_roles if it is not empty
         if local_roles not in (None, '', []): # XXX: Maybe "if local_roles:" is enough.
@@ -460,27 +463,42 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           # Turn it into a list if necessary according to ';' separator
           if isinstance(local_roles, str):
             local_roles = local_roles.split(';')
-          local_roles = [x.lower() for x in local_roles]
           # Local roles now has precedence (since it comes from a WorkList)
           for user_or_group in allowedRolesAndUsers:
             for role in local_roles:
               # Performance optimisation
-              if role in column_map:
+              if local_role_dict.has_key(role):
+                # XXX This should be a list
                 # If a given role exists as a column in the catalog,
                 # then it is considered as single valued and indexed
                 # through the catalog.
                 if not user_is_superuser:
-                  role_column_dict[role] = user_str  # XXX This should be a list
-                                                     # which also includes all user groups
+                  # XXX This should be a list
+                  # which also includes all user groups
+                  column_id = local_role_dict[role]
+                  local_role_column_dict[column_id] = user_str
+              if role_dict.has_key(role):
+                # XXX This should be a list
+                # If a given role exists as a column in the catalog,
+                # then it is considered as single valued and indexed
+                # through the catalog.
+                if not user_is_superuser:
+                  # XXX This should be a list
+                  # which also includes all user groups
+                  column_id = role_dict[role]
+                  role_column_dict[column_id] = user_str
               else:
                 # Else, we use the standard approach
                 new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
-          allowedRolesAndUsers = new_allowedRolesAndUsers
+          if local_role_column_dict == {}:
+            allowedRolesAndUsers = new_allowedRolesAndUsers
+
       else:
         # We only consider here the Owner role (since it was not indexed)
         # since some objects may only be visible by their owner
         # which was not indexed
-        if 'owner' in column_map:
+        for role, column_id in catalog.getSQLCatalogRoleKeysList():
+          # XXX This should be a list
           if not user_is_superuser:
             try:
               # if called by an executable with proxy roles, we don't use
@@ -488,11 +506,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               eo = getSecurityManager()._context.stack[-1]
               proxy_roles = getattr(eo, '_proxy_roles', None)
               if not proxy_roles:
-                role_column_dict['owner'] = user_str
+                role_column_dict[column_id] = user_str
             except IndexError:
-              role_column_dict['owner'] = user_str
+              role_column_dict[column_id] = user_str
 
-      return allowedRolesAndUsers, role_column_dict
+      return allowedRolesAndUsers, role_column_dict, local_role_column_dict
 
     def getSecurityUidListAndRoleColumnDict(self, sql_catalog_id=None, **kw):
       """
@@ -503,7 +521,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         site as long as security uids are considered consistent among all
         catalogs.
       """
-      allowedRolesAndUsers, role_column_dict = self.getAllowedRolesAndUsers(**kw)
+      allowedRolesAndUsers, role_column_dict, local_role_column_dict = \
+          self.getAllowedRolesAndUsers(**kw)
       catalog = self.getSQLCatalog(sql_catalog_id)
       method = getattr(catalog, catalog.sql_search_security, None)
       if allowedRolesAndUsers:
@@ -534,7 +553,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           security_uid_cache[cache_key] = security_uid_list
       else:
         security_uid_list = []
-      return security_uid_list, role_column_dict
+      return security_uid_list, role_column_dict, local_role_column_dict
 
     security.declarePublic('getSecurityQuery')
     def getSecurityQuery(self, query=None, sql_catalog_id=None, **kw):
@@ -544,7 +563,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         catalogued with columns.
       """
       original_query = query
-      security_uid_list, role_column_dict = self.getSecurityUidListAndRoleColumnDict(sql_catalog_id=sql_catalog_id, **kw)
+      security_uid_list, role_column_dict, local_role_column_dict = \
+          self.getSecurityUidListAndRoleColumnDict(
+              sql_catalog_id=sql_catalog_id, **kw)
       if role_column_dict:
         query_list = []
         for key, value in role_column_dict.items():
@@ -560,6 +581,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                                query, operator='OR')
       else:
         query = Query(security_uid=security_uid_list, operator='IN')
+
+      if local_role_column_dict:
+        query_list = []
+        for key, value in local_role_column_dict.items():
+          new_query = Query(**{key : value})
+          query_list.append(new_query)
+        operator_kw = {'operator': 'AND'}
+        local_role_query = ComplexQuery(*query_list, **operator_kw)
+        query = ComplexQuery(query, local_role_query, operator='AND')
+
       if original_query is not None:
         query = ComplexQuery(query, original_query, operator='AND')
       return query

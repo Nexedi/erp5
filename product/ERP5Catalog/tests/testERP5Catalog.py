@@ -1896,7 +1896,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 
-  def test_60_OwnerIndexing(self, quiet=quiet, run=run_all_test):
+  def test_60_ViewableOwnerIndexing(self, quiet=quiet, run=run_all_test):
     if not run: 
       return
 
@@ -1913,7 +1913,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type = self.getPortal().portal_types._getOb(sub_portal_type_id)
 
     sql_connection = self.getSQLConnection()
-    sql = 'select owner from catalog where uid=%s'
+    sql = 'select viewable_owner as owner from catalog where uid=%s'
 
     login(self, 'super_owner')
 
@@ -2291,6 +2291,198 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           object = object_dict[getObjectDictKey()]
           result = query('SELECT roles_and_users.uid, roles_and_users.allowedRolesAndUsers FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND roles_and_users.allowedRolesAndUsers LIKE "user:bar%%"' % (object.uid, ))
           self.assertEqual(len(result), 0, '%r: len(%r) != 0' % (getObjectDictKey(), result))
+
+  def test_RealOwnerIndexing(self, quiet=quiet, run=run_all_test):
+    if not run: 
+      return
+
+    login = PortalTestCase.login
+    logout = self.logout
+    user1 = 'local_foo'
+    user2 = 'local_bar'
+    uf = self.getPortal().acl_users
+    uf._doAddUser(user1, user1, ['Member', ], [])
+    uf._doAddUser(user2, user2, ['Member', ], [])
+
+    perm = 'View'
+    folder = self.getOrganisationModule()
+    folder.manage_setLocalRoles(user1, ['Author', 'Auditor'])
+    folder.manage_setLocalRoles(user2, ['Author', 'Auditor'])
+    portal_type = 'Organisation'
+
+    sql_connection = self.getSQLConnection()
+
+    login(self, user2)
+    obj2 = folder.newContent(portal_type=portal_type)
+    obj2.manage_setLocalRoles(user1, ['Auditor'])
+    obj2.manage_permission(perm, ['Owner', 'Auditor'], 0)
+
+    login(self, user1)
+
+    obj = folder.newContent(portal_type=portal_type)
+    obj.manage_setLocalRoles(user1, ['Owner', 'Auditor'])
+
+    # Check that nothing is returned when user can not view the object
+    obj.manage_permission(perm, [], 0)
+    obj.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    result = obj.portal_catalog(portal_type=portal_type)
+    self.assertSameSet([obj2, ], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
+    self.assertSameSet([], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
+    self.assertSameSet([obj2, ], [x.getObject() for x in result])
+
+    # Check that object is returned when he can view the object
+    obj.manage_permission(perm, ['Auditor'], 0)
+    obj.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    result = obj.portal_catalog(portal_type=portal_type)
+    self.assertSameSet([obj2, obj], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
+    self.assertSameSet([], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
+    self.assertSameSet([obj2, obj], [x.getObject() for x in result])
+
+    # Check that object is returned when he can view the object
+    obj.manage_permission(perm, ['Owner'], 0)
+    obj.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    result = obj.portal_catalog(portal_type=portal_type)
+    self.assertSameSet([obj2, obj], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
+    self.assertSameSet([obj], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
+    self.assertSameSet([obj2, ], [x.getObject() for x in result])
+
+    # Add a new table to the catalog
+    sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+
+    local_roles_table = "test_local_roles"
+
+    create_local_role_table_sql = """
+CREATE TABLE `%s` (
+  `uid` BIGINT UNSIGNED NOT NULL,
+  `owner_reference` varchar(32) NOT NULL default '',
+  PRIMARY KEY  (`uid`),
+  KEY `version` (`owner_reference`)
+) TYPE=InnoDB;
+    """ % local_roles_table
+    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+          id = 'z_create_%s' % local_roles_table,
+          title = '',
+          arguments = "",
+          connection_id = 'erp5_sql_connection',
+          template = create_local_role_table_sql)
+
+    drop_local_role_table_sql = """
+DROP TABLE IF EXISTS %s
+    """ % local_roles_table
+    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+          id = 'z0_drop_%s' % local_roles_table,
+          title = '',
+          arguments = "",
+          connection_id = 'erp5_sql_connection',
+          template = drop_local_role_table_sql)
+
+    catalog_local_role_sql = """
+REPLACE INTO
+  %s
+VALUES
+<dtml-in prefix="loop" expr="_.range(_.len(uid))">
+(
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,  
+  <dtml-sqlvar expr="Base_getOwnerId[loop_item]" type="string" optional>
+)
+<dtml-if sequence-end>
+<dtml-else>
+,
+</dtml-if>
+</dtml-in>
+    """ % local_roles_table
+    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+          id = 'z_catalog_%s_list' % local_roles_table,
+          title = '',
+          connection_id = 'erp5_sql_connection',
+          arguments = "\n".join(['uid',
+                                 'Base_getOwnerId']),
+          template = catalog_local_role_sql)
+
+    get_transaction().commit()
+    current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
+    sql_catalog.sql_catalog_object_list = \
+      current_sql_catalog_object_list + \
+         ('z_catalog_%s_list' % local_roles_table,)
+    current_sql_clear_catalog = sql_catalog.sql_clear_catalog
+    sql_catalog.sql_clear_catalog = \
+      current_sql_clear_catalog + \
+         ('z0_drop_%s' % local_roles_table, 'z_create_%s' % local_roles_table)
+    current_sql_catalog_local_role_keys = \
+          sql_catalog.sql_catalog_local_role_keys
+    sql_catalog.sql_catalog_local_role_keys = ('Owner | %s.owner_reference' % \
+       local_roles_table,)
+    current_sql_search_tables = sql_catalog.sql_search_tables
+    sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
+        [local_roles_table]
+    get_transaction().commit()
+
+    try:
+      # Clear catalog
+      portal_catalog = self.getCatalogTool()
+      portal_catalog.manage_catalogClear()
+      get_transaction().commit()
+      self.portal.portal_caches.clearAllCache()
+      get_transaction().commit()
+      obj2.reindexObject()
+
+      # Check that nothing is returned when user can not view the object
+      obj.manage_permission(perm, [], 0)
+      obj.reindexObject()
+      get_transaction().commit()
+      self.tic()
+      result = obj.portal_catalog(portal_type=portal_type)
+      self.assertSameSet([obj2, ], [x.getObject() for x in result])
+      method = obj.portal_catalog
+      result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
+      self.assertSameSet([], [x.getObject() for x in result])
+      result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
+      self.assertSameSet([obj2, ], [x.getObject() for x in result])
+
+      # Check that object is returned when he can view the object
+      obj.manage_permission(perm, ['Auditor'], 0)
+      obj.reindexObject()
+      get_transaction().commit()
+      self.tic()
+      result = obj.portal_catalog(portal_type=portal_type)
+      self.assertSameSet([obj2, obj], [x.getObject() for x in result])
+      result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
+      self.assertSameSet([obj], [x.getObject() for x in result])
+      result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
+      self.assertSameSet([obj2, obj], [x.getObject() for x in result])
+
+      # Check that object is returned when he can view the object
+      obj.manage_permission(perm, ['Owner'], 0)
+      obj.reindexObject()
+      get_transaction().commit()
+      self.tic()
+      result = obj.portal_catalog(portal_type=portal_type)
+      self.assertSameSet([obj2, obj], [x.getObject() for x in result])
+      result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
+      self.assertSameSet([obj], [x.getObject() for x in result])
+      result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
+      self.assertSameSet([obj2, ], [x.getObject() for x in result])
+    finally:
+      sql_catalog.sql_catalog_object_list = \
+        current_sql_catalog_object_list
+      sql_catalog.sql_clear_catalog = \
+        current_sql_clear_catalog
+      sql_catalog.sql_catalog_local_role_keys = \
+          current_sql_catalog_local_role_keys
+      sql_catalog.sql_search_tables = current_sql_search_tables
+      get_transaction().commit()
 
 def test_suite():
   suite = unittest.TestSuite()
