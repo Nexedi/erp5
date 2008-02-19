@@ -397,6 +397,152 @@ class TestWorklist(ERP5TypeTestCase):
 
     self.logout()
 
+    #
+    # Check monovalued security role
+    #
+    self.login('manager')
+    module = self.getPortal().getDefaultModule(self.checked_portal_type)
+    module.manage_setLocalRoles('bar', ['Author'])
+
+    self.login('bar')
+
+    bar_document = self.createDocument()
+    bar_document.manage_permission('View', ['Owner', 'Assignee'], 0)
+
+    bar_assignee_document = self.createDocument()
+    bar_assignee_document.manage_setLocalRoles('manager', ['Assignee'])
+    bar_assignee_document.manage_permission('View', ['Owner', 'Assignee'], 0)
+
+    self.logout()
+    self.login('manager')
+
+    module.manage_delLocalRoles('bar')
+
+    # User can not see worklist as user can not view the document
+    document.manage_setLocalRoles('manager', ['Owner', 'Assignee'])
+    document.manage_permission('View', [], 0)
+    document.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    self.clearCache()
+    self.logout()
+
+    for user_id in ('manager', ):
+      self.login(user_id)
+      result = workflow_tool.listActions(object=document)
+      self.logMessage("Check %s worklist as Owner" % user_id)
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
+      self.assertEquals(len(entry_list), 0)
+      self.logout()
+
+    # User can not see worklist as Owner can not view the document
+    document.manage_setLocalRoles('manager', ['Owner', 'Assignee'])
+    document.manage_permission('View', ['Assignee'], 0)
+    document.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    self.clearCache()
+    self.logout()
+
+    for user_id in ('manager', ):
+      self.login(user_id)
+      result = workflow_tool.listActions(object=document)
+      self.logMessage("Check %s worklist as Owner" % user_id)
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
+      self.assertEquals(len(entry_list), 0)
+      self.logout()
+
+    # User can see worklist as Owner can view the document
+    document.manage_permission('View', ['Owner', 'Assignee'], 0)
+    document.reindexObject()
+    get_transaction().commit()
+    self.tic()
+    self.clearCache()
+    self.logout()
+
+    for user_id in ('manager', ):
+      self.login(user_id)
+      result = workflow_tool.listActions(object=document)
+      self.logMessage("Check %s worklist as Owner" % user_id)
+      entry_list = [x for x in result \
+                    if x['name'].startswith(self.actbox_owner_name)]
+      self.assertEquals(len(entry_list), 1)
+      self.assertTrue(
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
+      self.logout()
+
+    # Define a local role key
+    sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    current_sql_catalog_local_role_keys = \
+          sql_catalog.sql_catalog_local_role_keys
+    sql_catalog.sql_catalog_local_role_keys = ('Owner | owner', )
+    get_transaction().commit()
+    self.portal.portal_caches.clearAllCache()
+
+    try:
+
+      # User can not see worklist as user can not view the document
+      document.manage_setLocalRoles('manager', ['Owner', 'Assignee'])
+      document.manage_permission('View', [], 0)
+      document.reindexObject()
+      get_transaction().commit()
+      self.tic()
+      self.clearCache()
+      self.logout()
+
+      for user_id in ('manager', ):
+        self.login(user_id)
+        result = workflow_tool.listActions(object=document)
+        self.logMessage("Check %s worklist as Owner" % user_id)
+        entry_list = [x for x in result \
+                      if x['name'].startswith(self.actbox_owner_name)]
+        self.assertEquals(len(entry_list), 0)
+        self.logout()
+
+      # User can see worklist as Assignee can view the document
+      document.manage_permission('View', ['Assignee'], 0)
+      document.reindexObject()
+      get_transaction().commit()
+      self.tic()
+      self.clearCache()
+      self.logout()
+
+      for user_id in ('manager', ):
+        self.login(user_id)
+        result = workflow_tool.listActions(object=document)
+        self.logMessage("Check %s worklist as Owner" % user_id)
+        entry_list = [x for x in result \
+                      if x['name'].startswith(self.actbox_owner_name)]
+        self.assertEquals(len(entry_list), 1)
+        self.assertTrue(
+          self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
+        self.logout()
+
+      # User can see worklist as Owner can view the document
+      document.manage_permission('View', ['Owner', 'Assignee'], 0)
+      document.reindexObject()
+      get_transaction().commit()
+      self.tic()
+      self.clearCache()
+      self.logout()
+
+      for user_id in ('manager', ):
+        self.login(user_id)
+        result = workflow_tool.listActions(object=document)
+        self.logMessage("Check %s worklist as Owner" % user_id)
+        entry_list = [x for x in result \
+                      if x['name'].startswith(self.actbox_owner_name)]
+        self.assertEquals(len(entry_list), 1)
+        self.assertTrue(
+          self.getWorklistDocumentCountFromActionName(entry_list[0]['name']), 1)
+        self.logout()
+    finally:
+      sql_catalog.sql_catalog_local_role_keys = \
+          current_sql_catalog_local_role_keys
+      get_transaction().commit()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestWorklist))
