@@ -74,16 +74,6 @@ class BusinessTemplateIsMeta(Exception):
   """
   pass
 
-class LocalConfiguration(Implicit):
-  """
-    Contains local configuration information
-  """
-  def __init__(self, **kw):
-    self.__dict__.update(kw)
-
-  def update(self, **kw):
-    self.__dict__.update(kw)
-
 class TemplateTool (BaseTool):
     """
       TemplateTool manages Business Templates.
@@ -160,32 +150,6 @@ class TemplateTool (BaseTool):
       """
       return "file://%s/" % pathname2url(
                   os.path.join(getConfiguration().instancehome, 'bt5'))
-
-    def updateLocalConfiguration(self, template, **kw):
-      """
-        Call the update method on the configuration, create if it doesn't
-        exists.
-      """
-      template_id = template.getId()
-      if getattr(self, '_local_configuration', None) is None:
-        self._local_configuration = PersistentMapping()
-      if not self._local_configuration.has_key(template_id):
-        self._local_configuration[template_id] = LocalConfiguration(**kw)
-      else:
-        self._local_configuration[template_id].update(**kw)
-
-    def getLocalConfiguration(self, template):
-      """
-        Return the configuration for the given business template, or None if
-        it's not defined.
-      """
-      template_id = template.getId()
-      if getattr(self, '_local_configuration', None) is None:
-        self._local_configuration = PersistentMapping()
-      local_configuration = self._local_configuration.get(template_id, None)
-      if local_configuration is not None:
-        return local_configuration.__of__(template)
-      return None
 
     security.declareProtected( 'Import/Export objects', 'save' )
     def save(self, business_template, REQUEST=None, RESPONSE=None):

@@ -4453,15 +4453,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
               modified_object_list.update({path : ['New', item.__class__.__name__[:-12]]})
         return modified_object_list
 
-      # get the list of modified and new object
-      self.portal_templates.updateLocalConfiguration(self, **kw)
-      local_configuration = self.portal_templates.getLocalConfiguration(self)
       for item_name in self._item_name_list:
         new_item = getattr(self, item_name, None)
         old_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
           if old_item is not None and hasattr(old_item, '_objects'):
-            modified_object = new_item.preinstall(context=local_configuration, installed_bt=old_item)
+            modified_object = new_item.preinstall(context=self, installed_bt=old_item)
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
           else:
@@ -4524,11 +4521,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
             gen.setupWorkflow(site)
           return
 
-      # Update local dictionary containing all setup parameters
-      # This may include mappings
-      self.portal_templates.updateLocalConfiguration(self, **kw)
-      local_configuration = self.portal_templates.getLocalConfiguration(self)
-
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
       if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1):
@@ -4541,7 +4533,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for item_name in self._item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
-            item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
+            item.install(self, force=force, object_to_update=object_to_update, trashbin=trashbin)
 
       # update catalog if necessary
       if force and self.isCatalogUpdatable():
@@ -4571,7 +4563,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for item_name in installed_bt._item_name_list:
           item = getattr(installed_bt, item_name, None)
           if item is not None:
-            item.remove(local_configuration, remove_object_dict=remove_object_dict, trashbin=trashbin)
+            item.remove(self, remove_object_dict=remove_object_dict, trashbin=trashbin)
 
 
       # update tools if necessary
@@ -4630,16 +4622,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
         This is similar to uninstall, but different in that this does
         not remove all items.
       """
-      # Update local dictionary containing all setup parameters
-      # This may include mappings
-      self.portal_templates.updateLocalConfiguration(self, **kw)
-      local_configuration = self.portal_templates.getLocalConfiguration(self)
       # Trash everything
       for item_name in self._item_name_list[::-1]:
         item = getattr(self, item_name, None)
         if item is not None:
           item.trash(
-                local_configuration,
+                self,
                 getattr(new_bt, item_name))
 
     security.declareProtected(Permissions.ManagePortal, 'uninstall')
@@ -4647,16 +4635,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         For uninstall based on paramaters provided in **kw
       """
-      # Update local dictionary containing all setup parameters
-      # This may include mappings
-      self.portal_templates.updateLocalConfiguration(self, **kw)
-      local_configuration = self.portal_templates.getLocalConfiguration(self)
       # Uninstall everything
       # Trash everything
       for item_name in self._item_name_list[::-1]:
         item = getattr(self, item_name, None)
         if item is not None:
-          item.uninstall(local_configuration)
+          item.uninstall(self)
       # It is better to clear cache because the uninstallation of a
       # template deletes many things from the portal.
       self.getPortalObject().portal_caches.clearAllCache()
