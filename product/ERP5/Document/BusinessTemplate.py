@@ -4554,7 +4554,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for path, action in object_to_update.iteritems():
         if action in ('remove', 'save_and_remove'):
           remove_object_dict[path] = action
-          object_to_update.pop(path)
 
       # remove object from old business template
       if len(remove_object_dict):
