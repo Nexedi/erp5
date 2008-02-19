@@ -192,8 +192,12 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
         security_kw = {}
         if len(security_parameter):
           security_kw[SECURITY_PARAMETER_ID] = security_parameter
-        uid_list, role_column_dict = getSecurityUidListAndRoleColumnDict(
-                                       **security_kw)
+        uid_list, role_column_dict, local_role_column_dict = \
+            getSecurityUidListAndRoleColumnDict(**security_kw)
+
+        for key, value in local_role_column_dict.items():
+          worklist_match_dict[key] = [value]
+
         if len(uid_list):
           uid_list.sort()
           role_column_dict[SECURITY_COLUMN_ID] = uid_list
