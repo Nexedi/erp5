@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -153,6 +150,10 @@
                           <string>Handled by</string>
                         </tuple>
                         <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Begin Date</string>
                         </tuple>
@@ -165,8 +166,40 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
+                          <string>source_trade_title</string>
+                          <string>Operator</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Unit Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -268,10 +301,6 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
@@ -292,6 +321,10 @@
                           <string>Handled by</string>
                         </tuple>
                         <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Begin Date</string>
                         </tuple>
@@ -300,8 +333,44 @@
                           <string>End Date</string>
                         </tuple>
                         <tuple>
+                          <string>resource_title</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_trade_title</string>
+                          <string>Operator</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Unit Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -319,10 +388,6 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
@@ -343,6 +408,10 @@
                           <string>Handled by</string>
                         </tuple>
                         <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Begin Date</string>
                         </tuple>
@@ -351,8 +420,44 @@
                           <string>End Date</string>
                         </tuple>
                         <tuple>
+                          <string>resource_title</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_trade_title</string>
+                          <string>Operator</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Unit Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
