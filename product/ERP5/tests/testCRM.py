@@ -46,16 +46,17 @@ class TestCRM(ERP5TypeTestCase):
 
   def test_Event_CreateRelatedEvent(self):
     # test action to create a related event from an event
+    event_module = self.portal.event_module
+    event_module_url = event_module.absolute_url()
     for ptype in self.portal.getPortalEventTypeList():
-      event = self.portal.event_module.newContent(
-                        portal_type=ptype)
+      event = event_module.newContent(portal_type=ptype)
       redirect = event.Event_createRelatedEvent(
                                      portal_type=ptype,
                                      title='New Title',
                                      description='New Desc')
-      self.assert_(redirect.startswith('http://nohost/erp5/event_module/'))
-      new_id = redirect[
-                  len('http://nohost/erp5/event_module/'):].split('/', 1)[0]
+      self.assert_(redirect.startswith(event_module_url), redirect)
+      # event_module_url does not contain trailing slash, so add +1 to its len
+      new_id = redirect[len(event_module_url)+1:].split('/', 1)[0]
       new_event = self.portal.event_module._getOb(new_id)
       self.assertEquals(event, new_event.getCausalityValue())
  
@@ -71,6 +72,7 @@ class TestCRM(ERP5TypeTestCase):
     
   def test_Ticket_CreateRelatedEvent(self):
     # test action to create a related event from a ticket
+    event_module_url = self.portal.event_module.absolute_url()
     ticket = self.portal.meeting_module.newContent(portal_type='Meeting')
     for ptype in self.portal.getPortalEventTypeList():
       # incoming
@@ -78,9 +80,8 @@ class TestCRM(ERP5TypeTestCase):
                                         portal_type=ptype,
                                         title='New Title',
                                         description='New Desc')
-      self.assert_(redirect.startswith('http://nohost/erp5/event_module/'))
-      new_id = redirect[
-                  len('http://nohost/erp5/event_module/'):].split('/', 1)[0]
+      self.assert_(redirect.startswith(event_module_url), redirect)
+      new_id = redirect[len(event_module_url)+1:].split('/', 1)[0]
       new_event = self.portal.event_module._getOb(new_id)
       self.assertEquals(ticket, new_event.getFollowUpValue())
       self.assertEquals('new', new_event.getSimulationState())
@@ -90,9 +91,8 @@ class TestCRM(ERP5TypeTestCase):
                                         portal_type=ptype,
                                         title='New Title',
                                         description='New Desc')
-      self.assert_(redirect.startswith('http://nohost/erp5/event_module/'))
-      new_id = redirect[
-                  len('http://nohost/erp5/event_module/'):].split('/', 1)[0]
+      self.assert_(redirect.startswith(event_module_url), redirect)
+      new_id = redirect[len(event_module_url)+1:].split('/', 1)[0]
       new_event = self.portal.event_module._getOb(new_id)
       self.assertEquals(ticket, new_event.getFollowUpValue())
       self.assertEquals('planned', new_event.getSimulationState())
