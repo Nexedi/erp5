@@ -121,9 +121,11 @@ else:\n
   count = 1\n
 \n
 # Redirect to the event module (but is this the best place to go since events are not yet indexed ?)\n
-portal_status_message = translateString("Created and associated ${count} new ${portal_type}(s) to the selected ticket.", \n
-                                    mapping = dict(portal_type = portal_type, count=count))\n
-context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name, selection_index=selection_index), **kw)\n
+portal_status_message = translateString("Created and associated ${count} new Events to the selected Ticket.", \n
+                                        mapping=dict(count=count))\n
+context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message,\n
+                                                 selection_name=selection_name,\n
+                                                 selection_index=selection_index), **kw)\n
 
 
 ]]></string> </value>
