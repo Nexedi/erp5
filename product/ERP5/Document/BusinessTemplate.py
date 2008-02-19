@@ -4593,9 +4593,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if update_translation:
         site.ERP5Site_updateTranslationTable()
 
-      # It is better to clear cache because the installation of a template
-      # adds many new things into the portal.
-      self.getPortalObject().portal_caches.clearAllCache()
+      # Clear cache to avoid reusing cached values with replaced objects.
+      site.portal_caches.clearAllCache()
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     def install(self, **kw):
