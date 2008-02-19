@@ -62,7 +62,7 @@
                  tal:define="listboxline python: listbox_line_structure[\'line\']">\n
 \n
         <tal:block metal:define-slot="for_form_list"\n
-                    tal:condition="listboxline/isTitleLine | is_report_tree_mode">\n
+                   tal:condition="listboxline/isTitleLine">\n
           <tal:block metal:define-slot="list_header">\n
             <table:table-row table:style-name=\'ro4\'>\n
               <tal:block tal:condition="python: is_report_tree_mode">\n
@@ -112,10 +112,10 @@
               </tal:block>\n
               <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                 <tal:block tal:define="column_property python: column_item[1];\n
-                                        value column_property;\n
-                                        column_id python: column_item[0];\n
-                                        style_prefix string:;\n
-                                        field python: editable_fields.get(column_id, None);">\n
+                                       value column_property;\n
+                                       column_id python: column_item[0];\n
+                                       style_prefix string:;\n
+                                       field python: editable_fields.get(column_id, None);">\n
                   <tal:block metal:use-macro="here/field_ods_macro/macros/cell_value"/>\n
                 </tal:block>\n
               </tal:block>\n
@@ -129,11 +129,10 @@
                 </table:table-cell>\n
               </tal:block>\n
               <table:table-cell table:style-name=\'report-column-title\'\n
+                                tal:condition="listboxline/getSectionName"\n
                                 table:number-columns-spanned=\'1\'\n
                                 office:value-type=\'string\'>\n
-                <tal:block tal:condition="listboxline/getSectionName">\n
                   <text:p tal:content="listboxline/getSectionName"/>\n
-                </tal:block>\n
               </table:table-cell>\n
               <tal:block tal:repeat="empty_index python: xrange(listboxline.getSectionDepth()+1, max_section_depth)">\n
                 <table:table-cell table:style-name=\'report-column-title\'\n
@@ -143,10 +142,10 @@
               </tal:block>\n
               <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                 <tal:block tal:define="column_property python: column_item[1];\n
-                                        value column_property;\n
-                                        column_id python: column_item[0];\n
-                                        style_prefix string:stat-;\n
-                                        field python: editable_fields.get(column_id, None);">\n
+                                       value column_property;\n
+                                       column_id python: column_item[0];\n
+                                       style_prefix string:stat-;\n
+                                       field python: editable_fields.get(column_id, None);">\n
                   <tal:block metal:use-macro="here/field_ods_macro/macros/cell_value"/>\n
                 </tal:block>\n
               </tal:block>\n
