@@ -645,22 +645,33 @@ def setupERP5Site( business_template_list=(),
               removeLocalConstraint(id_)
 
           update_business_templates = os.environ.get('update_business_templates') is not None
+          BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
 
           # Disable reindexing before adding templates
           # VERY IMPORTANT: Add some business templates
           for url, title in business_template_list:
             start = time.time()
+            get_install_kw = False
             if title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
               if update_business_templates:
                 if not quiet:
                   ZopeTestCase._print('Updating %s business template ... ' % title)
+                if BusinessTemplate_getModifiedObject is not None:
+                  get_install_kw = True
               else:
                 continue
             else:
               if not quiet:
                 ZopeTestCase._print('Adding %s business template ... ' % title)
             bt = portal.portal_templates.download(url)
-            bt.install(light_install=light_install)
+            if not quiet:
+              ZopeTestCase._print('(downloaded in %.3fs) ' % (time.time() - start))
+            install_kw = {}
+            if get_install_kw:
+              listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
+              for listbox_line in listbox_object_list:
+                install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
+            bt.install(light_install=light_install, object_to_update=install_kw)
             # Release locks
             get_transaction().commit()
             if not quiet:
