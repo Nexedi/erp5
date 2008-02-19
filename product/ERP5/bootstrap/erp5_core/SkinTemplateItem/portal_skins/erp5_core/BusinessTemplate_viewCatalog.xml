@@ -91,6 +91,7 @@
                         <string>my_template_catalog_result_key_list</string>
                         <string>my_template_catalog_keyword_key_list</string>
                         <string>my_template_catalog_datetime_key_list</string>
+                        <string>my_template_catalog_role_key_list</string>
                       </list>
                     </value>
                 </item>
@@ -103,6 +104,7 @@
                         <string>my_template_catalog_multivalue_key_list</string>
                         <string>my_template_catalog_topic_key_list</string>
                         <string>my_template_catalog_scriptable_key_list</string>
+                        <string>my_template_catalog_local_role_key_list</string>
                       </list>
                     </value>
                 </item>
