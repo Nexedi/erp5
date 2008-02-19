@@ -159,8 +159,13 @@ class PDFTk:
 
   def _escapeString(self, value) :
     if value is None :
-      return ""
-    string = str(value)
+      return ''
+    #Convert value to string
+    #See PDF Reference v1.7 - 3.8.1 String Types
+    if isinstance(value, unicode):
+      string = '\xfe\xff' + value.encode('utf-16BE')
+    else:
+      string = '\xfe\xff' + unicode(str(value), 'utf-8').encode('utf-16BE')
     escaped  = ''
     for c in string :
       if (ord(c) == 0x28 or # open paren
