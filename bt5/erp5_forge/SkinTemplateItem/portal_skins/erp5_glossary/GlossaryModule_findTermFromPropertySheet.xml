@@ -92,7 +92,9 @@ else:\n
                        business_field=i[\'business_field\'],\n
                        title=i[\'title\'], description=i[\'description\'])\n
 \n
-context.Base_redirect()\n
+\n
+portal_status_message = context.Base_translateString(\'Terms created.\')\n
+context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
 
 
 ]]></string> </value>
@@ -154,6 +156,7 @@ context.Base_redirect()\n
                             <string>item_list</string>
                             <string>len</string>
                             <string>new_id</string>
+                            <string>portal_status_message</string>
                           </tuple>
                         </value>
                     </item>

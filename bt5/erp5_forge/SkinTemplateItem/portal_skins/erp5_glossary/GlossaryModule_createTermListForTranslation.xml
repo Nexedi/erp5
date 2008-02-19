@@ -90,6 +90,9 @@ for i in catalog(portal_type=\'Glossary Term\',\n
                                         title=english_term.getTitle(),\n
                                         description=english_term.getDescription()\n
                                         )\n
+\n
+portal_status_message = context.Base_translateString(\'Terms created.\')\n
+context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
 </string> </value>
         </item>
         <item>
@@ -134,7 +137,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
                           <tuple>
                             <string>language</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>catalog</string>
                             <string>glossary_module</string>
                             <string>_getiter_</string>
@@ -144,6 +147,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
                             <string>business_field</string>
                             <string>None</string>
                             <string>new_term</string>
+                            <string>portal_status_message</string>
                           </tuple>
                         </value>
                     </item>
@@ -160,7 +164,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryModule_createEmptyTermListForTranslation</string> </value>
+            <value> <string>GlossaryModule_createTermListForTranslation</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

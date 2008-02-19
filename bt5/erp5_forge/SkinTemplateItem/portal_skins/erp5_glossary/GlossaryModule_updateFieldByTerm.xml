@@ -83,7 +83,9 @@ for i in kw.keys():\n
   field.manage_edit_xmlrpc(dict(title=term.getTitle(),\n
                                 description=term.getDescription()))\n
 \n
-context.Base_redirect()\n
+\n
+portal_status_message = context.Base_translateString(\'Fields updated.\')\n
+context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
 </string> </value>
         </item>
         <item>
@@ -143,6 +145,7 @@ context.Base_redirect()\n
                             <string>field_path</string>
                             <string>field</string>
                             <string>dict</string>
+                            <string>portal_status_message</string>
                           </tuple>
                         </value>
                     </item>
