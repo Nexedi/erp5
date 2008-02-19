@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -100,9 +97,14 @@ if relation_id == \'cloud\':\n
   return context.getSimilarCloudValueList()\n
 if relation_id == \'all\':\n
   dic = {}\n
-  for ob in context.getImplicitPredecessorValueList() + context.getImplicitSuccessorValueList() + \\\n
-    getRelatedLatest(\'predecessor\') + getRelatedLatest(\'successor\') + getRelatedLatest(\'similar\'):\n
-    dic[ob] = True\n
+  predecessor_value_list = [i.getObject()\n
+                            for i in context.getImplicitPredecessorValueList()]\n
+  successor_value_list = [i.getObject()\n
+                          for i in context.getImplicitSuccessorValueList()]\n
+  similar_value_list = getRelatedLatest(\'similar\')\n
+  for obj in (predecessor_value_list + successor_value_list +\n
+              similar_value_list):\n
+    dic[obj] = None\n
   return dic.keys()\n
 \n
 context.log(\'Relation %s is not provided for in this script\' % relation)\n
@@ -160,9 +162,15 @@ return [] # failover - undefined relation\n
                             <string>context</string>
                             <string>_getitem_</string>
                             <string>dic</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>ob</string>
-                            <string>True</string>
+                            <string>i</string>
+                            <string>predecessor_value_list</string>
+                            <string>successor_value_list</string>
+                            <string>similar_value_list</string>
+                            <string>obj</string>
+                            <string>None</string>
                             <string>_write_</string>
                             <string>relation</string>
                           </tuple>
