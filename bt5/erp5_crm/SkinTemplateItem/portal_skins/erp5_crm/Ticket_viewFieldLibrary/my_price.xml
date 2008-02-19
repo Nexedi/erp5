@@ -14,13 +14,13 @@
             <value>
               <list>
                 <string>title</string>
-                <string>editable</string>
+                <string>description</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_total_price</string> </value>
+            <value> <string>my_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,8 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>Price for one unit.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Total Price</string> </value>
+                    <value> <string>Unit Price</string> </value>
                 </item>
               </dictionary>
             </value>
