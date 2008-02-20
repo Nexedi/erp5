@@ -114,6 +114,50 @@ class TestCRM(ERP5TypeTestCase):
     # XXX this fail when no persons are selected in listbox
     raise NotImplementedError
 
+  def test_SaleOpportunitySold(self):
+    # test the workflow of sale opportunities, when the sale opportunity is
+    # finaly sold
+    so = self.portal.sale_opportunity_module.newContent(
+                              portal_type='Sale Opportunity')
+    self.assertEquals('draft', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'submit_action')
+    self.assertEquals('submitted', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'validate_action')
+    self.assertEquals('contacted', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'enquire_action')
+    self.assertEquals('enquired', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'offer_action')
+    self.assertEquals('offered', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'sell_action')
+    self.assertEquals('sold', so.getSimulationState())
+
+  def test_SaleOpportunityRejected(self):
+    # test the workflow of sale opportunities, when the sale opportunity is
+    # finaly rejected.
+    # Uses different transitions than test_SaleOpportunitySold
+    so = self.portal.sale_opportunity_module.newContent(
+                              portal_type='Sale Opportunity')
+    self.assertEquals('draft', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'validate_action')
+    self.assertEquals('contacted', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'enquire_action')
+    self.assertEquals('enquired', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'offer_action')
+    self.assertEquals('offered', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'reject_action')
+    self.assertEquals('rejected', so.getSimulationState())
+
+  def test_SaleOpportunityExpired(self):
+    # test the workflow of sale opportunities, when the sale opportunity
+    # expires
+    so = self.portal.sale_opportunity_module.newContent(
+                              portal_type='Sale Opportunity')
+    self.assertEquals('draft', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'validate_action')
+    self.assertEquals('contacted', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'expire_action')
+    self.assertEquals('expired', so.getSimulationState())
+
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for CRM.
