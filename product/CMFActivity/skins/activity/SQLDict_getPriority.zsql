@@ -8,11 +8,10 @@ class_name:
 class_file:
 </dtml-comment>
 <params>
-to_date
 </params>
 SELECT MIN(`priority`) AS `priority` FROM
   message
 WHERE
   processing_node = 0
-  AND date <= <dtml-sqlvar to_date type="datetime">
+  AND date <= UTC_TIMESTAMP()
 

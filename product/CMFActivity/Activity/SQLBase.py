@@ -43,8 +43,7 @@ class SQLBase:
     return result[0][0]
 
   def _getPriority(self, activity_tool, method, default):
-    now_date = self.getNow(activity_tool)
-    result = method(to_date=now_date)
+    result = method()
     assert len(result) == 1
     priority = result[0]['priority']
     if priority is None:
