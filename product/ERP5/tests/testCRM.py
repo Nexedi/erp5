@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf8 -*-
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
@@ -29,6 +29,7 @@ import unittest
 import os
 import email
 
+from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testIngestion import conversion_server_host
 from Products.ERP5OOo.tests.testIngestion import FILE_NAME_REGULAR_EXPRESSION
@@ -107,6 +108,12 @@ class TestCRM(ERP5TypeTestCase):
                            description='New Desc',
                            direction='incoming')
    
+  def test_PersonModule_CreateRelatedEvent(self):
+    # create related event from selected persons.
+
+    # XXX this fail when no persons are selected in listbox
+    raise NotImplementedError
+
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for CRM.
@@ -139,29 +146,33 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 
     # create customer organisation and person
     if 'customer' not in portal.organisation_module.objectIds():
-      customer_organisation = portal.organisation_module.newContent(
+      portal.organisation_module.newContent(
               id='customer',
               portal_type='Organisation',
               title='Customer')
+    customer_organisation = portal.organisation_module.customer
+    if 'sender' not in portal.person_module.contentIds():
       portal.person_module.newContent(
               id='sender',
               title='Sender',
               subordination_value=customer_organisation,
               default_email_text='sender@customer.com')
-      # also create the recipient
+    # also create the recipient
+    if 'me' not in portal.person_module.contentIds():
       portal.person_module.newContent(
               id='me',
               title='Me',
               default_email_text='me@erp5.org')
 
-      # make sure customers are available to catalog
-      get_transaction().commit()
-      self.tic()
+    # make sure customers are available to catalog
+    get_transaction().commit()
+    self.tic()
 
   def beforeTearDown(self):
     get_transaction().abort()
     # clear modules if necessary
-    for module in (self.portal.event_module,):
+    for module in (self.portal.event_module,
+                   self.portal.campaign_module):
       module.manage_delObjects(list(module.objectIds()))
     get_transaction().commit()
     self.tic()
@@ -241,6 +252,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 ##    event = self._ingestMail('utf8')
 ##
 
+
 class TestCRMMailSend(ERP5TypeTestCase):
   """Test Mail Sending for CRM
   """
@@ -256,16 +268,19 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     # create customer organisation and person
     if 'customer' not in portal.organisation_module.objectIds():
-      customer_organisation = portal.organisation_module.newContent(
+      portal.organisation_module.newContent(
               id='customer',
               portal_type='Organisation',
               title='Customer')
+    customer_organisation = portal.organisation_module.customer
+    if 'recipient' not in portal.person_module.contentIds():
       portal.person_module.newContent(
-              id='sender',
-              title='Sender',
+              id='recipient',
+              title='Recipient',
               subordination_value=customer_organisation,
-              default_email_text='sender@customer.com')
-      # also create the recipient
+              default_email_text='recipient@example.com')
+    if 'me' not in portal.person_module.contentIds():
+      # also create the sender
       portal.person_module.newContent(
               id='me',
               title='Me',
@@ -279,6 +294,11 @@ class TestCRMMailSend(ERP5TypeTestCase):
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     default_pref.enable()
 
+    # add a dummy mailhost not to send real messages
+    if 'MailHost' in self.portal.objectIds():
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
     # make sure customers are available to catalog
     get_transaction().commit()
     self.tic()
@@ -286,10 +306,121 @@ class TestCRMMailSend(ERP5TypeTestCase):
   def beforeTearDown(self):
     get_transaction().abort()
     # clear modules if necessary
-    for module in (self.portal.event_module,):
+    for module in (self.portal.event_module,
+                   self.portal.campaign_module,):
       module.manage_delObjects(list(module.objectIds()))
     get_transaction().commit()
     self.tic()
+
+  def test_MailFromMailMessageEvent(self):
+    # passing start_action transition on event workflow will send an email to the
+    # person as destination
+    event = self.portal.event_module.newContent(portal_type='Mail Message')
+    event.setSource('person_module/me')
+    event.setDestination('person_module/recipient')
+    event.setTitle('A Mail')
+    event.setTextContent('Mail Content')
+    self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                            send_mail=1)
+    get_transaction().commit()
+    self.tic()
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('"Me" <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    
+    message = email.message_from_string(messageText)
+
+    self.assertEquals('A Mail', message['Subject'])
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual('Mail Content', part.get_payload(decode=True))
+
+  def test_MailFromMailMessageEventNoSendMail(self):
+    # passing start_action transition on event workflow will send an email to the
+    # person as destination, unless you don't check "send_mail" box in the
+    # workflow dialog
+    event = self.portal.event_module.newContent(portal_type='Mail Message')
+    event.setSource('person_module/me')
+    event.setDestination('person_module/recipient')
+    event.setTitle('A Mail')
+    event.setTextContent('Mail Content')
+    self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                            send_mail=1)
+    get_transaction().commit()
+    self.tic()
+    # no mail sent
+    last_message = self.portal.MailHost._last_message
+
+  def test_MailFromOtherEvents(self):
+    # passing start_action transition on event workflow will not send an email
+    # when the portal type is not Mail Message
+    for ptype in [t for t in self.portal.getPortalEventTypeList()
+        if t not in ('Mail Message', 'Document Ingestion Message')]:
+      event = self.portal.event_module.newContent(portal_type=ptype)
+      event.setSource('person_module/me')
+      event.setDestination('person_module/recipient')
+      event.setTextContent('Hello !')
+      self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                              send_mail=1)
+
+      get_transaction().commit()
+      self.tic()
+      # this means no message have been set
+      self.assertEquals((), self.portal.MailHost._last_message)
+
+  def test_MailMessageHTML(self):
+    # test sending a mail message edited as HTML (the default with FCKEditor)
+    event = self.portal.event_module.newContent(portal_type='Mail Message')
+    event.setSource('person_module/me')
+    event.setDestination('person_module/recipient')
+    event.setTextFormat('text/html')
+    event.setTextContent('Hello<br/>World')
+    self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                            send_mail=1)
+    get_transaction().commit()
+    self.tic()
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('"Me" <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    
+    message = email.message_from_string(messageText)
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual('Hello\nWorld', part.get_payload(decode=True))
+
+  def test_MailMessageEncoding(self):
+    # test sending a mail message with non ascii characters
+    event = self.portal.event_module.newContent(portal_type='Mail Message')
+    event.setSource('person_module/me')
+    event.setDestination('person_module/recipient')
+    event.setTitle('Héhé')
+    event.setTextContent('Hàhà')
+    self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                            send_mail=1)
+    get_transaction().commit()
+    self.tic()
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('"Me" <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    
+    message = email.message_from_string(messageText)
+
+    self.assertEquals('Héhé', message['Subject'])
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual('Hàhà', part.get_payload(decode=True))
 
   def test_MailAttachmentPdf(self):
     """
@@ -309,7 +440,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -324,7 +454,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_pdf.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
@@ -366,7 +496,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
     
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -381,7 +510,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_odt.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
@@ -423,7 +552,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -438,7 +566,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_zip.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
@@ -480,7 +608,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -495,7 +622,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_gif.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
@@ -532,7 +659,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -547,7 +673,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_html.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
@@ -590,7 +716,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                text_content='This is an advertisement mail.')
     first_event_id = event.getId()
     self.getWorkflowTool().doActionFor(event, 'respond_action', 
@@ -612,7 +738,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assertEqual(answer_event.getSimulationState(), "planned")
     self.assertEqual(answer_event.getCausality(), event.getRelativeUrl())
     self.assertEqual(answer_event.getDestination(), 'person_module/me')
-    self.assertEqual(answer_event.getSource(), 'person_module/sender')
+    self.assertEqual(answer_event.getSource(), 'person_module/recipient')
     self.assertEqual(answer_event.getTextContent(), '> This is an advertisement mail.')
 
 
@@ -634,7 +760,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -649,7 +774,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_txt.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
@@ -693,7 +818,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
 
     get_transaction().commit()
     self.tic()
-    get_transaction().commit()
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(id='1',
@@ -708,7 +832,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # Set sender and attach a document to the event.
     event = self.portal.event_module.objectValues()[0]
     event.edit(source='person_module/me',
-               destination='person_module/sender',
+               destination='person_module/recipient',
                aggregate=document_gif.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
