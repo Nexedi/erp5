@@ -2719,7 +2719,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'extractActivityRuntimeEnvironment')
 
-  def test_104_activityRuntimeEnvironment(self, quiet=0, run=run_all_test):
+  def test_104_activityRuntimeEnvironmentSQLDict(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = '\nCheck ActivityRuntimeEnvironment (SQLDict)'
@@ -2727,7 +2727,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckActivityRuntimeEnvironment('SQLDict')
 
-  def test_105_TryChangeSkinInActivitySQLQueue(self, quiet=0, run=run_all_test):
+  def test_105_activityRuntimeEnvironmentSQLQueue(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = '\nCheck ActivityRuntimeEnvironment (SQLQueue)'
