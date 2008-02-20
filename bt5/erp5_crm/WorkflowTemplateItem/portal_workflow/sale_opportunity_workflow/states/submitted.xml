@@ -17,11 +17,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Won Sale Opportunity.</string> </value>
+            <value> <string>The Sale Opportunity is waiting for approval from the manager.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sold</string> </value>
+            <value> <string>submitted</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,24 +31,23 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sold</string> </value>
+            <value> <string>Sumitted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
+                <string>validate</string>
+                <string>validate_action</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>type_list</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
       </dictionary>
@@ -82,6 +81,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

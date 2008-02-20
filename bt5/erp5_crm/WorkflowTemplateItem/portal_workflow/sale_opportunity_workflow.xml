@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.DCWorkflow</string>
-          <string>DCWorkflowDefinition</string>
-        </tuple>
-        <none/>
+        <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -42,7 +39,17 @@
         </item>
         <item>
             <key> <string>initial_state</string> </key>
-            <value> <string>contacted</string> </value>
+            <value> <string>draft</string> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+                <string>Access contents information</string>
+                <string>Modify portal content</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>state_var</string> </key>

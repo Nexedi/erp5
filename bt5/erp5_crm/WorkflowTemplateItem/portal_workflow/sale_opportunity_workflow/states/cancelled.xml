@@ -17,11 +17,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Won Sale Opportunity.</string> </value>
+            <value> <string>The Sale Opportunity is Cancelled.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sold</string> </value>
+            <value> <string>cancelled</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sold</string> </value>
+            <value> <string>Cancelled</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -43,12 +43,6 @@
             <key> <string>type_list</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
       </dictionary>
@@ -81,9 +75,7 @@
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>

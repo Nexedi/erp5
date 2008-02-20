@@ -17,11 +17,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Won Sale Opportunity.</string> </value>
+            <value> <string>The sale opportunity has just been created.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sold</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,24 +31,27 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sold</string> </value>
+            <value> <string>Draft</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
+                <string>submit</string>
+                <string>submit_action</string>
+                <string>validate</string>
+                <string>validate_action</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>type_list</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
       </dictionary>
@@ -75,6 +78,7 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -82,7 +86,10 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -94,6 +101,7 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
