@@ -117,7 +117,9 @@ for i in catalog(portal_type=\'Glossary Term\',\n
       print MESSAGE_TEMPLATE % {\'english\':format(english_description),\n
                                 \'translation\':format(translated_description)}\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/plain;charset=utf-8\')\n
+RESPONSE = context.REQUEST.RESPONSE\n
+RESPONSE.setHeader(\'Content-disposition\', \'attachment;filename=translation.po\')\n
+RESPONSE.setHeader(\'Content-Type\', \'text/x-gettext-translation;charset=utf-8\')\n
 \n
 return printed\n
 </string> </value>
@@ -184,6 +186,7 @@ return printed\n
                             <string>translated_description</string>
                             <string>english_title</string>
                             <string>english_description</string>
+                            <string>RESPONSE</string>
                           </tuple>
                         </value>
                     </item>

@@ -197,7 +197,9 @@ for message in message_list:\n
   comment = \'\\n\'.join([(\'#: %s\' % i) for i in comment_list])\n
   print MESSAGE_TEMPLATE % (comment, format(message))\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/plain;charset=utf-8\')\n
+RESPONSE = context.REQUEST.RESPONSE\n
+RESPONSE.setHeader(\'Content-disposition\', \'attachment;filename=translation.pot\')\n
+RESPONSE.setHeader(\'Content-Type\', \'text/x-gettext-translation-template;charset=utf-8\')\n
 \n
 return printed\n
 </string> </value>
@@ -283,6 +285,7 @@ return printed\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>comment</string>
+                            <string>RESPONSE</string>
                           </tuple>
                         </value>
                     </item>
