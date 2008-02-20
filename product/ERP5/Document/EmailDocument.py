@@ -418,7 +418,12 @@ class EmailDocument(File, TextDocument):
     if subject is None:
       subject = self.getTitle()
     if from_url is None:
-      from_url = self.getSourceValue().getDefaultEmailText()
+      sender = self.getSourceValue()
+      if sender.getTitle():
+        from_url = '"%s" <%s>' % (sender.getTitle(),
+                                sender.getDefaultEmailText())
+      else:
+        from_url = sender.getDefaultEmailText()
     if reply_url is None:
       reply_url = self.portal_preferences.getPreferredEventSenderEmail()
     if to_url is None:
@@ -426,7 +431,10 @@ class EmailDocument(File, TextDocument):
       for recipient in self.getDestinationValueList():
         email = recipient.getDefaultEmailText()
         if email:
-          to_url.append(email)
+          if recipient.getTitle():
+            to_url.append('"%s" <%s>' % (recipient.getTitle(), email))
+          else:
+            to_url.append(email)
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
     elif type(to_url) in types.StringTypes:
