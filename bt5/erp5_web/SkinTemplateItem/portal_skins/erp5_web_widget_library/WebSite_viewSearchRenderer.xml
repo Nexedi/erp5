@@ -111,23 +111,23 @@ Description:\n
             <a i18n:translate="" i18n:domain="ui" \n
                tal:content="section/getTitle"\n
                tal:attributes="href section/absolute_url"/>\n
+            <ul>\n
+              <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
+                <a    tal:content="root_section/getTitle"\n
+                      tal:condition="python:not len(root_section.contentValues())"\n
+                      tal:attributes="href root_section/absolute_url"/>\n
+                <span tal:content="root_section/getTitle"\n
+                      tal:condition="python:len(root_section.contentValues())"\n
+                      onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
+                <div style="display:none;visibility:hidden">\n
+                  <ul>\n
+                    <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
+                        tal:attributes="href section/absolute_url">Theme</a></li>\n
+                  </ul>\n
+                </div>\n
+              </li>\n
+            </ul>\n
           </li>\n
-          <ul>\n
-            <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
-              <a    tal:content="root_section/getTitle"\n
-                    tal:condition="python:not len(root_section.contentValues())"\n
-                    tal:attributes="href root_section/absolute_url"/>\n
-              <span tal:content="root_section/getTitle"\n
-                    tal:condition="python:len(root_section.contentValues())"\n
-                    onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
-              <div style="display:none;visibility:hidden">\n
-                <ul>\n
-                  <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
-                      tal:attributes="href section/absolute_url">Theme</a></li>\n
-                </ul>\n
-              </div>\n
-            </li>\n
-          </ul>\n
         </ul>\n
       </tal:block>\n
     </div>\n
@@ -140,23 +140,23 @@ Description:\n
             <a i18n:translate="" i18n:domain="ui" \n
                tal:content="section/getTitle"\n
                tal:attributes="href section/absolute_url"/>\n
+            <ul>\n
+              <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
+                <a    tal:content="root_section/getTitle"\n
+                      tal:condition="python:not len(root_section.contentValues())"\n
+                      tal:attributes="href root_section/absolute_url"/>\n
+                <span tal:content="root_section/getTitle"\n
+                      tal:condition="python:len(root_section.contentValues())"\n
+                      onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
+                <div style="display:none;visibility:hidden">\n
+                  <ul>\n
+                    <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
+                        tal:attributes="href section/absolute_url">Theme</a></li>\n
+                  </ul>\n
+                </div>\n
+              </li>\n
+            </ul>\n
           </li>\n
-          <ul>\n
-            <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
-              <a    tal:content="root_section/getTitle"\n
-                    tal:condition="python:not len(root_section.contentValues())"\n
-                    tal:attributes="href root_section/absolute_url"/>\n
-              <span tal:content="root_section/getTitle"\n
-                    tal:condition="python:len(root_section.contentValues())"\n
-                    onclick="toggleSection(this)" toggle="yes" style="cursor:pointer;"/>\n
-              <div style="display:none;visibility:hidden">\n
-                <ul>\n
-                  <li tal:repeat="section root_section/contentValues"><a href="#" tal:content="section/getTitle"\n
-                      tal:attributes="href section/absolute_url">Theme</a></li>\n
-                </ul>\n
-              </div>\n
-            </li>\n
-          </ul>\n
         </ul>\n
       </tal:block>\n
     </div>\n
