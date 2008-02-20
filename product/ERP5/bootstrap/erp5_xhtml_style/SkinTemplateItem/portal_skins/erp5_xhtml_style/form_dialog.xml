@@ -62,17 +62,14 @@
       <tal:block metal:fill-slot="main">\n
         <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
                    dummy python: request.set(\'here\', here);\n
-                   left_group python: form.get_fields_in_group(\'left\');\n
-                   right_group python: form.get_fields_in_group(\'right\');\n
-                   center_group python: form.get_fields_in_group(\'center\');\n
                    dialog_actions python: here.Base_fixDialogActions(actions, dialog_category);\n
                    current_action python: here.ERP5Site_getCurrentDialogAction(current_url, dialog_actions);\n
                    field_render here/field_render/macros/field_render;">\n
           <tal:block tal:condition="preferred_html_style_developper_mode">\n
             <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
           </tal:block>\n
-          <div tal:condition="python: len(left_group) or len(right_group) or len(center_group) or len(dialog_actions)>1"\n
-            class="dialog_box">\n
+\n
+          <div class="dialog_box">\n
             <div tal:condition="python: len(dialog_actions) > 1"\n
               class="dialog_selector">\n
               <label for="dialog_selector"\n
@@ -80,6 +77,7 @@
                      , \'object_print\'   : \'Select Print\'\n
                      , \'object_search\'  : \'Select Search\'\n
                      , \'object_report\'  : \'Select Report\'\n
+                     , \'object_fast_input\'  : \'Select Fast Input\'\n
                      }.get(dialog_category, \'Select\')"\n
                      i18n:translate="" i18n:domain="ui"></label>\n
               <select name="select_dialog" id="dialog_selector"\n
@@ -98,6 +96,8 @@
                       i18n:translate="" i18n:domain="ui">Go</span>\n
               </button>\n
             </div>\n
+\n
+\n
             <div class="content"\n
                  tal:define="group_list python: form.Form_getGroupTitleAndId();\n
                  gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
@@ -115,9 +115,11 @@
               </tal:block>\n
               <p class="clear"></p>\n
             </div>\n
+\n
           </div>\n
         </tal:block>\n
       </tal:block>\n
+\n
       <tal:block metal:fill-slot="bottom">\n
         <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
                    dummy python: request.set(\'here\', here);\n
