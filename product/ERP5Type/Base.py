@@ -2713,6 +2713,7 @@ class Base( CopyContainer,
       self.activate(group_method_id='portal_catalog/catalogObjectList', 
                     alternate_method_id='alternateReindexObject',
                     group_id=group_id,
+                    serialization_tag=self.getPath() + '%',
                     **activate_kw).immediateReindexObject(**kw)
 
   security.declarePublic('recursiveReindexObject')
