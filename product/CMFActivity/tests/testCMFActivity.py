@@ -2776,6 +2776,26 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     result = activity_tool.getMessageList()
     self.assertEqual(len(result), 0)
+    # Third scenario with SQL wildcards: activate, distribute, activate, distribute
+    # Create first activity and distribute: it must be distributed
+    organisation.activate(activity=activity, serialization_tag='foo/bar/%').getTitle()
+    get_transaction().commit()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 1)
+    activity_tool.distribute()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len([x for x in result if x.processing_node == 0]), 1)
+    # Create second activity and distribute: it must *NOT* be distributed
+    organisation.activate(activity=activity, serialization_tag='foo/%').getTitle()
+    get_transaction().commit()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 2)
+    activity_tool.distribute()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len([x for x in result if x.processing_node == 0]), 1)
+    self.tic()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 0)
 
   def test_106_checkSerializationTagSQLDict(self, quiet=0, run=run_all_test):
     if not run: return
