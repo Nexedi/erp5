@@ -67,7 +67,11 @@
             <key> <string>_body</string> </key>
             <value> <string>order_movement = state_change[\'object\']\n
 \n
-order_movement.getExplanationValue().expandAppliedRuleRelatedToOrder()\n
+# Clean simulation\n
+simulation_movement_list = order_movement.getOrderRelatedValueList(\n
+    portal_type="Simulation Movement")\n
+for simulation_movement in simulation_movement_list:\n
+  simulation_movement.setOrder(None)\n
 </string> </value>
         </item>
         <item>
@@ -114,6 +118,10 @@ order_movement.getExplanationValue().expandAppliedRuleRelatedToOrder()\n
                             <string>_getitem_</string>
                             <string>order_movement</string>
                             <string>_getattr_</string>
+                            <string>simulation_movement_list</string>
+                            <string>_getiter_</string>
+                            <string>simulation_movement</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -130,7 +138,7 @@ order_movement.getExplanationValue().expandAppliedRuleRelatedToOrder()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OrderMovement_expandAppliedRule</string> </value>
+            <value> <string>OrderMovement_unlinkSimulation</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
