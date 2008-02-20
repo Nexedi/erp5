@@ -77,6 +77,7 @@ class SQLDict(RAMDict, SQLBase):
       group_method_id_list = ['\0'.join([message.activity_kw.get('group_method_id', ''), message.activity_kw.get('group_id', '')])
                               for message in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
+      serialization_tag_list = [message.activity_kw.get('serialization_tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', 
                    id_count=len(registered_message_list), store=0)
@@ -88,6 +89,7 @@ class SQLDict(RAMDict, SQLBase):
                                               date_list = date_list,
                                               group_method_id_list = group_method_id_list,
                                               tag_list = tag_list,
+                                              serialization_tag_list = serialization_tag_list,
                                               order_validation_text_list = order_validation_text_list)
 
   def prepareDeleteMessage(self, activity_tool, m):
@@ -645,7 +647,8 @@ class SQLDict(RAMDict, SQLBase):
       #LOG('SQLDict.distribute', INFO, '%0.4fs : %i messages => %i distributables' % (TIME_end - TIME_begin, offset - READ_MESSAGE_LIMIT + len(result), validated_count))
 
   # Validation private methods
-  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):
+  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
+                serialization_tag=None):
     if isinstance(method_id, str):
       method_id = [method_id]
     if isinstance(path, str):
@@ -653,12 +656,13 @@ class SQLDict(RAMDict, SQLBase):
     if isinstance(tag, str):
       tag = [tag]
 
-    if method_id or message_uid or path or tag:
+    if method_id or message_uid or path or tag or serialization_tag:
       validateMessageList = activity_tool.SQLDict_validateMessageList
       result = validateMessageList(method_id=method_id,
                                    message_uid=message_uid,
                                    path=path,
-                                   tag=tag)
+                                   tag=tag,
+                                   serialization_tag=serialization_tag)
       message_list = []
       for line in result:
         m = self.loadMessage(line.message,
@@ -697,6 +701,9 @@ class SQLDict(RAMDict, SQLBase):
           'unable to recognize value for after_tag_and_method_id: %r' % (value,))
       return []
     return self._validate(activity_tool, tag=value[0], method_id=value[1])
+
+  def _validate_serialization_tag(self, activity_tool, message, value):
+    return self._validate(activity_tool, serialization_tag=value)
 
   def countMessage(self, activity_tool, tag=None, path=None,
                    method_id=None, message_uid=None, **kw):

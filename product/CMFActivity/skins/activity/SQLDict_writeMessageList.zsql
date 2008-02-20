@@ -16,9 +16,10 @@ date_list
 processing_node_list
 group_method_id_list
 tag_list
+serialization_tag_list
 order_validation_text_list</params>
 INSERT INTO message
-(uid, path, date, method_id, processing_node, processing, priority, group_method_id, tag, order_validation_text, message)
+(uid, path, date, method_id, processing_node, processing, priority, group_method_id, tag, serialization_tag, order_validation_text, message)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(path_list))">
 <dtml-if sequence-start><dtml-else>,</dtml-if>
@@ -32,6 +33,7 @@ VALUES
   <dtml-sqlvar expr="priority_list[loop_item]" type="int">,
   <dtml-sqlvar expr="group_method_id_list[loop_item]" type="string">,
   <dtml-sqlvar expr="tag_list[loop_item]" type="string">,
+  <dtml-sqlvar expr="serialization_tag_list[loop_item]" type="string">,
   <dtml-sqlvar expr="order_validation_text_list[loop_item]" type="string">,
   <dtml-sqlvar expr="message_list[loop_item]" type="string">
 )

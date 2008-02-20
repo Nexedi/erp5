@@ -72,13 +72,15 @@ class SQLQueue(RAMQueue, SQLBase):
       if date is None:
         date = self.getNow(activity_tool)
       tag = m.activity_kw.get('tag', '')
+      serialization_tag = m.activity_kw.get('serialization_tag', '')
       activity_tool.SQLQueue_writeMessage(uid=uid,
                                           path=path,
                                           method_id=method_id,
                                           priority=priority,
                                           message=self.dumpMessage(m),
                                           date=date,
-                                          tag=tag)
+                                          tag=tag,
+                                          serialization_tag=serialization_tag)
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
@@ -488,7 +490,8 @@ class SQLQueue(RAMQueue, SQLBase):
       #LOG('SQLQueue.distribute', INFO, '%0.4fs : %i messages => %i distributables' % (TIME_end - TIME_begin, offset + len(result), validated_count))
 
   # Validation private methods
-  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None):
+  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
+                serialization_tag=None):
     if isinstance(method_id, str):
       method_id = [method_id]
     if isinstance(path, str):
@@ -496,12 +499,13 @@ class SQLQueue(RAMQueue, SQLBase):
     if isinstance(tag, str):
       tag = [tag]
 
-    if method_id or message_uid or path or tag:
+    if method_id or message_uid or path or tag or serialization_tag:
       validateMessageList = activity_tool.SQLQueue_validateMessageList
       result = validateMessageList(method_id=method_id,
                                    message_uid=message_uid,
                                    path=path,
-                                   tag=tag)
+                                   tag=tag,
+                                   serialization_tag=serialization_tag)
       message_list = []
       for line in result:
         m = self.loadMessage(line.message,
@@ -539,6 +543,9 @@ class SQLQueue(RAMQueue, SQLBase):
           'unable to recognize value for after_tag_and_method_id: %r' % (value,))
       return []
     return self._validate(activity_tool, tag=value[0], method_id=value[1])
+
+  def _validate_serialization_tag(self, activity_tool, message, value):
+    return self._validate(activity_tool, serialization_tag=value)
 
   # Required for tests (time shift)
   def timeShift(self, activity_tool, delay, processing_node = None):

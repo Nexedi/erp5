@@ -14,7 +14,9 @@ message
 priority
 processing_node
 date
-tag</params>
+tag
+serialization_tag
+</params>
 INSERT INTO message_queue
 SET
   uid = <dtml-sqlvar uid type="int">,
@@ -27,4 +29,5 @@ SET
   processing = 0,
   priority = <dtml-sqlvar priority type="int">,
   tag = <dtml-sqlvar tag type="string">,
+  serialization_tag = <dtml-sqlvar serialization_tag type="string">,
   message = <dtml-sqlvar message type="string">

@@ -19,6 +19,7 @@ CREATE TABLE `message` (
   `priority` TINYINT NOT NULL DEFAULT 0,
   `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
   `tag` VARCHAR(255) NOT NULL,
+  `serialization_tag` VARCHAR(255) NOT NULL,
   `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `order_validation_text` VARCHAR(255) NOT NULL,
   `message` LONGBLOB NOT NULL,

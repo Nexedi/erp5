@@ -2735,6 +2735,64 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckActivityRuntimeEnvironment('SQLQueue')
 
+  def CheckSerializationTag(self, activity):
+    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 0)
+    # First scenario: activate, distribute, activate, distribute
+    # Create first activity and distribute: it must be distributed
+    organisation.activate(activity=activity, serialization_tag='1').getTitle()
+    get_transaction().commit()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 1)
+    activity_tool.distribute()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len([x for x in result if x.processing_node == 0]), 1)
+    # Create second activity and distribute: it must *NOT* be distributed
+    organisation.activate(activity=activity, serialization_tag='1').getTitle()
+    get_transaction().commit()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 2)
+    activity_tool.distribute()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len([x for x in result if x.processing_node == 0]), 1) # Distributed message list len is still 1
+    self.tic()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 0)
+    # Second scenario: activate, activate, distribute
+    # Both messages must be distributed (this is different from regular tags)
+    organisation.activate(activity=activity, serialization_tag='1').getTitle()
+    # Use a different method just so that SQLDict doesn't merge both activities prior to insertion.
+    organisation.activate(activity=activity, serialization_tag='1').getId()
+    get_transaction().commit()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 2)
+    activity_tool.distribute()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len([x for x in result if x.processing_node == 0]), 2)
+    self.tic()
+    result = activity_tool.getMessageList()
+    self.assertEqual(len(result), 0)
+
+  def test_106_checkSerializationTagSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck serialization tag (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckSerializationTag('SQLDict')
+
+  def test_107_checkSerializationTagSQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck serialization tag (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckSerializationTag('SQLQueue')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
