@@ -29,11 +29,12 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Event_sendMailMessage</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The start logical transition sets the event state to started.</string> </value>
+            <value> <string>The start logical transition sets the event state to started.\r\n
+If this event is a mail message, and the user checked the option to send the message, the mail will be sent.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
