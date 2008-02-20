@@ -83,7 +83,7 @@ portal_url = context.portal_url\n
 python_script_list = []\n
 form_list = []\n
 listbox_list = []\n
-zpt_list = []\n
+page_template_list = []\n
 def iterate(obj):\n
   for i in obj.objectValues():\n
     if i.meta_type==\'Script (Python)\':\n
@@ -92,8 +92,8 @@ def iterate(obj):\n
       form_list.append(i)\n
     elif i.meta_type==\'ListBox\' or i.id==\'listbox\':\n
       listbox_list.append(i)\n
-    elif i.meta_type==\'Page Template\':\n
-      zpt_list.append(i)\n
+    elif i.meta_type==\'Page Template\' and i.content_type.startswith(\'text/html\'):\n
+      page_template_list.append(i)\n
     if i.isPrincipiaFolderish:\n
       iterate(i)\n
 iterate(context.portal_skins)\n
@@ -107,12 +107,13 @@ FUNC_NAME_LIST = (\'N_\',\n
                   \'translateString\',\n
                   )\n
 \n
+Base_getFunctionFirstArgumentValue = context.Base_getFunctionFirstArgumentValue\n
 for i in python_script_list:\n
   source = i.body()\n
   for func_name in FUNC_NAME_LIST:\n
     call_func_name = \'%s(\' % func_name\n
     if call_func_name in source:\n
-      for m in context.Base_getFunctionFirstArgumentValue(func_name, source):\n
+      for m in Base_getFunctionFirstArgumentValue(func_name, source):\n
         add_message(m, portal_url.getRelativeContentURL(i))\n
 \n
 \n
@@ -134,9 +135,12 @@ for i in listbox_list:\n
     add_message(label, portal_url.getRelativeContentURL(i))\n
 \n
 #\n
-# ZPT\n
+# Page Template\n
 #\n
-# TODO : To parse html and get static translated text.\n
+Base_findStaticTranslationText = context.Base_findStaticTranslationText\n
+for i in page_template_list:\n
+  for m in Base_findStaticTranslationText(i):\n
+    add_message(m, portal_url.getRelativeContentURL(i))\n
 \n
 #\n
 # Workflow\n
@@ -254,9 +258,10 @@ return printed\n
                             <string>python_script_list</string>
                             <string>form_list</string>
                             <string>listbox_list</string>
-                            <string>zpt_list</string>
+                            <string>page_template_list</string>
                             <string>iterate</string>
                             <string>FUNC_NAME_LIST</string>
+                            <string>Base_getFunctionFirstArgumentValue</string>
                             <string>_getiter_</string>
                             <string>i</string>
                             <string>source</string>
@@ -265,6 +270,7 @@ return printed\n
                             <string>m</string>
                             <string>value</string>
                             <string>label</string>
+                            <string>Base_findStaticTranslationText</string>
                             <string>s</string>
                             <string>t</string>
                             <string>action_title</string>
