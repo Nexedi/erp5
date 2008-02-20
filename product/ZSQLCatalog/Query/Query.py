@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from DocumentTemplate.DT_Var import sql_quote
+
 class QueryMixin:
   """
     Mixing class which implements methods which are
