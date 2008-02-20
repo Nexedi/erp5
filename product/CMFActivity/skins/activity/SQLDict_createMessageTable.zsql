@@ -28,6 +28,7 @@ CREATE TABLE `message` (
   KEY (`method_id`),
   KEY `processing_node_processing` (`processing_node`, `processing`),
   KEY `processing_node_date` (`processing_node`, `date`),
+  KEY `processing_node_serialization_tag` (`processing_node`, `serialization_tag`),
   KEY (`priority`),
   KEY (`tag`),
   KEY (`order_validation_text`)
