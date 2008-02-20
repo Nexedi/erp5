@@ -107,8 +107,11 @@ Description:\n
     <div style="width:50%;float:left;" class="tabbertabcont">\n
       <tal:block tal:repeat="section python:section_list[0:half_count]">\n
         <ul>\n
-          <li value="" i18n:translate=""\n
-              i18n:domain="ui" tal:content="section/getTitle">Departments and Divisions:</li>\n
+          <li>\n
+            <a i18n:translate="" i18n:domain="ui" \n
+               tal:content="section/getTitle"\n
+               tal:attributes="href section/absolute_url"/>\n
+          </li>\n
           <ul>\n
             <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
               <a    tal:content="root_section/getTitle"\n
@@ -133,8 +136,11 @@ Description:\n
     <div style="width:50%;float:right;" class="tabbertabcont">\n
       <tal:block tal:repeat="section python:section_list[half_count:]">\n
         <ul>\n
-          <li value="" i18n:translate=""\n
-              i18n:domain="ui" tal:content="section/getTitle">Departments and Divisions:</li>\n
+          <li>\n
+            <a i18n:translate="" i18n:domain="ui" \n
+               tal:content="section/getTitle"\n
+               tal:attributes="href section/absolute_url"/>\n
+          </li>\n
           <ul>\n
             <li tal:repeat="root_section python:section.contentValues(checked_permission=\'View\')">\n
               <a    tal:content="root_section/getTitle"\n
