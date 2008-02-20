@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -36,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The start logical transition sets the event start to started.</string> </value>
+            <value> <string>The start logical transition sets the event state to started.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
