@@ -1528,8 +1528,8 @@ def LinesTextAreaWidget_render(self, field, key, value, REQUEST):
 LinesTextAreaWidget.render = LinesTextAreaWidget_render
 
 original_LinesTextAreaWidget_render_view = LinesTextAreaWidget.render_view
-def LinesTextAreaWidget_render_view(self, field, key, value, REQUEST):
+def LinesTextAreaWidget_render_view(self, field, value):
   if isinstance(value, (str, unicode)):
     value = [value]
-  return original_LinesTextAreaWidget_render_view(self, field, key, value, REQUEST)
+  return original_LinesTextAreaWidget_render_view(self, field, value)
 LinesTextAreaWidget.render_view = LinesTextAreaWidget_render_view
