@@ -43,6 +43,10 @@
                 <string>confirm_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>deliver</string>
+                <string>deliver_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>
