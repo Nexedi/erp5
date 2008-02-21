@@ -263,8 +263,10 @@ class Category(Folder):
 
           recursive         - if set to 1, list recursively
 
-          include_if_child  - if set to 1, categories having child categories
-                              are not included
+          include_if_child  - if set to 0, categories having child categories
+                              are not included.
+                              DEPRECATED, use filter_node=1 if you don't want
+                              to display categories having childs.
           
           is_self_excluded  - if set to 1, exclude this category from the list
 
