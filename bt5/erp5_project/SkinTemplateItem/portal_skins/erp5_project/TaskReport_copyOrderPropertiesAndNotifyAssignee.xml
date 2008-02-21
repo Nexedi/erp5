@@ -116,7 +116,7 @@ Please wisit ERP5: %(url)s\n
 """ % {\n
        \'assignor\': destination_decision_person.getTitle(),\n
        \'title\'   : packing_list.getTitle(),\n
-       \'url\'     : \'%s/%s\' % (packing_list.ERP5Site_getAbsoluteUrl(),\n
+       \'url\'     : \'%s/%s/view\' % (packing_list.ERP5Site_getAbsoluteUrl(),\n
                               packing_list.getRelativeUrl()),\n
        \'comment\' : packing_list.getComment(),\n
        \'start_date\': packing_list.getStartDate().Date(),\n
@@ -146,6 +146,12 @@ packing_list.activate(after_path_and_method_id=(related_simulation_movement_path
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
