@@ -661,7 +661,8 @@ class TestERP5BankingMixin:
       if 'siege' not in site_list:
         self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
-  def _openDate(self, date=None, site=None, id=None, open=True, container=None, portal_type=None):
+  def _openDate(self, date=None, site=None, id=None, open=True, container=None, 
+                portal_type=None, force_check=0):
     if date is None:
       date = DateTime().Date()
     if site is None:
@@ -669,7 +670,7 @@ class TestERP5BankingMixin:
     date_object = container.newContent(id=id, portal_type=portal_type,
                                        site_value = site, start_date = date)
     if open:
-      if date_object.getPortalType() == 'Counter Date':
+      if force_check and date_object.getPortalType() == 'Counter Date':
         self.workflow_tool.doActionFor(date_object, 'open_action', 
                                      wf_id='counter_date_workflow',
                                      your_check_date_is_today=0)
@@ -685,12 +686,15 @@ class TestERP5BankingMixin:
     """
     self._openDate(date=date, site=site, id=id, open=open, container=self.getAccountingDateModule(), portal_type='Accounting Date')
 
-  def openCounterDate(self, date=None, site=None, id='counter_date_1', open=True):
+  def openCounterDate(self, date=None, site=None, id='counter_date_1', open=True, force_check=0):
     """
     open a couter date for the given date
     by default use the current date
     """
-    self._openDate(date=date, site=site, id=id, open=open, container=self.getCounterDateModule(), portal_type='Counter Date')
+    self._openDate(date=date, site=site, id=id, open=open, 
+                   container=self.getCounterDateModule(), 
+                   portal_type='Counter Date',
+                   force_check=force_check)
 
   def openCounter(self, site=None, id='counter_1'):
     """

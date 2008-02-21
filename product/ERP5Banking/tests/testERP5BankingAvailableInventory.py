@@ -103,7 +103,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                              currency=self.currency_1,
                              line_list=self.line_list)
 
-    self.openCounter(site=self.money_deposit_counter.guichet_1,id='counter_2')
+    self.openCounter(site=self.money_deposit_counter.guichet_1,id='counter_2',
+                     force_check=1)
 
     # Define foreign currency variables
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
@@ -259,21 +260,21 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     counter_date.close()
     get_transaction().commit()
     self.tic()
-    self.openCounterDate(site=self.paris, id='counter_date_3')
+    self.openCounterDate(site=self.paris, id='counter_date_3', force_check=1)
     counter_date = self.counter_date_3
     self.assertEquals(counter_date.getReference(),'2')
     counter_date.close()
     counter_date.setStartDate(self.date-9)
     get_transaction().commit()
     self.tic()
-    self.openCounterDate(site=self.paris, id='counter_date_4')
+    self.openCounterDate(site=self.paris, id='counter_date_4', force_check=1)
     counter_date = self.counter_date_4
     self.assertEquals(counter_date.getReference(),'3')
     counter_date.close()
     counter_date.setStartDate(self.date-8)
     get_transaction().commit()
     self.tic()
-    self.openCounterDate(site=self.paris, id='counter_date_5')
+    self.openCounterDate(site=self.paris, id='counter_date_5', force_check=1)
     counter_date = self.counter_date_5
     self.assertEquals(counter_date.getReference(),'4')
 
