@@ -649,20 +649,20 @@ def setupERP5Site( business_template_list=(),
 
           # Disable reindexing before adding templates
           # VERY IMPORTANT: Add some business templates
-          for url, title in business_template_list:
+          for url, bt_title in business_template_list:
             start = time.time()
             get_install_kw = False
-            if title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
+            if bt_title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
               if update_business_templates:
                 if not quiet:
-                  ZopeTestCase._print('Updating %s business template ... ' % title)
+                  ZopeTestCase._print('Updating %s business template ... ' % bt_title)
                 if BusinessTemplate_getModifiedObject is not None:
                   get_install_kw = True
               else:
                 continue
             else:
               if not quiet:
-                ZopeTestCase._print('Adding %s business template ... ' % title)
+                ZopeTestCase._print('Adding %s business template ... ' % bt_title)
             bt = portal.portal_templates.download(url)
             if not quiet:
               ZopeTestCase._print('(downloaded in %.3fs) ' % (time.time() - start))
