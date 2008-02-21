@@ -21,40 +21,34 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sales Enquiries (%(count)s)</string> </value>
+            <value> <string>Sale Opportunities to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_opportunity_module?simulation_state=enquired&local_roles=%(local_roles)s&reset=1
+sale_opportunity_module/view?simulation_state=draft&local_roles=Owner
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sales Enquiries</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1_enquiries</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>0_draft_opportunity_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -63,17 +57,34 @@ sale_opportunity_module?simulation_state=enquired&local_roles=%(local_roles)s&re
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -88,7 +99,7 @@ sale_opportunity_module?simulation_state=enquired&local_roles=%(local_roles)s&re
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>enquired</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>
