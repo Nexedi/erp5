@@ -1513,3 +1513,23 @@ def Field_PrincipiaSearchSource(self):
     map(getSearchSource,
         (self.values.values()+self.tales.values()+self.overrides.values())))
 Field.PrincipiaSearchSource = Field_PrincipiaSearchSource
+
+# If type definition is missing for LinesField, the input text will be
+# splitted into list like ['f', 'o', 'o'] with original Formulator's
+# implementation. So explicit conversion to list is required before
+# passing to LinesTextAreaWidget's render and render_view methods.
+from Products.Formulator.Widget import LinesTextAreaWidget
+
+original_LinesTextAreaWidget_render = LinesTextAreaWidget.render
+def LinesTextAreaWidget_render(self, field, key, value, REQUEST):
+  if isinstance(value, (str, unicode)):
+    value = [value]
+  return original_LinesTextAreaWidget_render(self, field, key, value, REQUEST)
+LinesTextAreaWidget.render = LinesTextAreaWidget_render
+
+original_LinesTextAreaWidget_render_view = LinesTextAreaWidget.render_view
+def LinesTextAreaWidget_render_view(self, field, key, value, REQUEST):
+  if isinstance(value, (str, unicode)):
+    value = [value]
+  return original_LinesTextAreaWidget_render_view(self, field, key, value, REQUEST)
+LinesTextAreaWidget.render_view = LinesTextAreaWidget_render_view
