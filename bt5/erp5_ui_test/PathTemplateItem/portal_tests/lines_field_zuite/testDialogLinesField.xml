@@ -71,7 +71,8 @@
 <tr>\n
   <td>type</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
-  <td>foo</td>\n
+  <td>foo\n
+bar</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -81,7 +82,54 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
-  <td>foo</td>\n
+  <td>foo\n
+bar</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Data Updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//textarea[@name=\'field_my_lines_list\']</td>\n
+  <td>foo\n
+bar</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//textarea[@name=\'field_my_lines_list\']</td>\n
+  <td>foo bar</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Title\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//textarea[@name=\'field_my_lines_list\']</td>\n
+  <td>foo bar</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Data Updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//textarea[@name=\'field_my_lines_list\']</td>\n
+  <td>foo bar</td>\n
 </tr>\n
 </body>\n
 </html>\n
