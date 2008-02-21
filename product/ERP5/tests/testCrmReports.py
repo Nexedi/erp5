@@ -76,10 +76,19 @@ class CrmTestCase(ERP5TypeTestCase):
     elif portal_type == ('Support Request'):
       tk = self.support_request_module.newContent(portal_type=portal_type,**kw)
 
-    if simulation_state == 'validated':
-      tk.validate()
-    elif simulation_state == 'offered': #for Sale Opportunity workflow
-      tk.offer()
+    # not all states are implemented here for now.
+    if portal_type == 'Sale Opportunity':
+      # Sale Opportunity have a different workflow.
+      if simulation_state in ('contacted', 'offered',):
+        tk.validate()
+      if simulation_state == 'offered':
+        tk.offer()
+    else:
+      if simulation_state == 'validated':
+        tk.validate()
+    
+    # sanity check
+    self.assertEquals(simulation_state, tk.getSimulationState())
     return tk
 
   def _makeOneEvent(self, portal_type='Fax Message', 
@@ -134,6 +143,8 @@ class CrmTestCase(ERP5TypeTestCase):
     elif simulation_state == 'ordered':
       ev.plan()
       ev.order()
+    # sanity check
+    self.assertEquals(simulation_state, ev.getSimulationState())
     return ev
 
   def login(self):
