@@ -88,6 +88,8 @@ catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_expression_instance_archive',
                               '_filter_type_archive',)
 
+INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
+
 def _getCatalog(acquisition_context):
   """
     Return the id of the SQLCatalog which correspond to the current BT.
@@ -2851,7 +2853,7 @@ class RoleTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_roles = self._objects.keys()
-      if installed_bt.id == 'installed_bt_for_diff':
+      if installed_bt.id == INSTALLED_BT_FOR_DIFF:
         #must rename keys in dict if reinstall
         new_dict = PersistentMapping()
         old_keys = ()
@@ -4627,7 +4629,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       reinstall = 0
       if installed_bt == self:
         reinstall = 1
-        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
+        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
         # update portal types properties to get last modifications
         bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
@@ -4660,7 +4662,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
 
       if reinstall:
-        self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
+        self.portal_templates.manage_delObjects(ids=[INSTALLED_BT_FOR_DIFF])
 
       return modified_object_list
 
@@ -5282,7 +5284,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if installed_bt == new_bt:
           compare_to_zodb = 1
       if compare_to_zodb:
-        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
+        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
         # Update portal types properties to get last modifications
         bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
@@ -5387,7 +5389,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         diff_msg += 'Unsupported file !'
 
       if compare_to_zodb:
-        self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
+        self.portal_templates.manage_delObjects(ids=[INSTALLED_BT_FOR_DIFF])
 
       return diff_msg
 
