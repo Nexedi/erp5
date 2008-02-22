@@ -62,6 +62,7 @@
                 <string>AccessContentsInformation</string>
                 <string>Modify portal content</string>
                 <string>View</string>
+                <string>Delete objects</string>
               </tuple>
             </value>
         </item>

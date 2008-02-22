@@ -42,6 +42,14 @@
             <value> <string>draft</string> </value>
         </item>
         <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Delete objects</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>state_var</string> </key>
             <value> <string>validation_state</string> </value>
         </item>

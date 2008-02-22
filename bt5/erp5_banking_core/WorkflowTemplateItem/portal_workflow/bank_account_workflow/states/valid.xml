@@ -24,6 +24,12 @@
             <value> <string>valid</string> </value>
         </item>
         <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Valid</string> </value>
         </item>
@@ -36,6 +42,31 @@
                 <string>start_modification</string>
                 <string>start_modification_action</string>
               </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
