@@ -797,6 +797,10 @@ class ObjectTemplateItem(BaseTemplateItem):
                     'could not restore %r in %r' % (subobject_id, obj))
           if obj.meta_type in ('Z SQL Method',):
             fixZSQLMethod(portal, obj)
+          # portal transforms specific initialization
+          elif obj.meta_type in ('Transform', 'TransformsChain'):
+            assert container.meta_type == 'Portal Transforms'
+            container._mapTransform(obj)
       # now put original order group
       # we remove object not added in forms
       # we put old objects we have kept
