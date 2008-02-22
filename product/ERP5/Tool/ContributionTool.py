@@ -32,6 +32,7 @@ import string
 import socket
 import md5
 import urllib2, urllib
+import inspect
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
@@ -356,7 +357,11 @@ class ContributionTool(BaseTool):
 
     try:
       # Then edit the document contents (so that upload can happen)
-      document._edit(set_filename__=0, **kw)
+      if 'set_filename__' in inspect.getargspec(document._edit)[0]:
+        # Only a few classes supports set_filename__.
+        document._edit(set_filename__=0, **kw)
+      else:
+        document._edit(**kw)
       if url:
         document.fromURL(url)
     finally:
