@@ -1,3 +1,6 @@
+2008-02-22 Jérome
+* Export new portal_transforms using ERP5Type's html_to_text. Requires recent products: ERP5Type r19462 and ERP5 r19470
+
 2008-02-20 Jérome
 * Allow sending email from Mail Message.
 * New sale opportunity workflow.
