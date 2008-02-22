@@ -1,2 +1,4 @@
+portal_tests/pdm_zuite
+portal_tests/pdm_zuite/**
 portal_tests/stock_browser_zuite
 portal_tests/stock_browser_zuite/**

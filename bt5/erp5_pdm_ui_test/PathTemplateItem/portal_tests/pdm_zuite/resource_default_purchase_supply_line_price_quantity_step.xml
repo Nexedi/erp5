@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test quantity steps for price on purchase supply line</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test quantity steps for price on purchase supply line\n
+</td></tr>\n
+</thead>\n
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />\n
+<!-- }}} -->\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Purchase Price</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_purchase_supply_line_quantity_step_list</td>\n
+  <td>10\n
+20</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>field_my_purchase_supply_line_quantity_step_list</td>\n
+  <td>10\n
+20</td>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../td[1]</td>\n
+  <td>Quantity &lt; 10.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]/../../td[1]</td>\n
+  <td>10.0 &lt;= Quantity &lt; 20.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]/../../td[1]</td>\n
+  <td>20.0 &lt;= Quantity</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]</td>\n
+  <td>3</td>\n
+</tr>\n
+<!-- save and check -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]</td>\n
+  <td>3</td>\n
+</tr>\n
+\n
+<!-- XXX: the field rounds to int the displayed value. This is strange\n
+-->\n
+\n
+<!-- The field has a validator to prevent from entering values that are non numerics\n
+-->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_purchase_supply_line_quantity_step_list</td>\n
+  <td>foo\n
+bar</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>field_my_purchase_supply_line_quantity_step_list</td>\n
+  <td>foo\n
+bar</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>field_my_purchase_supply_line_quantity_step_list</td>\n
+  <td>foo\n
+bar</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//textarea[@name="field_my_purchase_supply_line_quantity_step_list"]/parent::div/following-sibling::span</td>\n
+  <td>You did not enter a floating point number.</td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html> \n
+<!-- vim: syntax=html foldmethod=marker -->
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>resource_default_purchase_supply_line_price_quantity_step</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
