@@ -46,7 +46,7 @@ def register():
                        ('<head [^>]>.*</head>(?im)', ''),
                        
                        # added for ERP5, we want to transform <br/> in newlines
-                       ('<br[\s\/]*>(?im)', '\n'),
+                       ('<br\s*/?>(?im)', '\n'),
 
                        ('(?im)<(h[1-6r]|address|p|ul|ol|dl|pre|div|center|blockquote|form|isindex|table)(?=\W)[^>]*>', ' '),
                        ('<[^>]*>(?i)(?m)', ''),
