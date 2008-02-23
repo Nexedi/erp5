@@ -800,7 +800,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           # portal transforms specific initialization
           elif obj.meta_type in ('Transform', 'TransformsChain'):
             assert container.meta_type == 'Portal Transforms'
-            container._mapTransform(obj)
+            # skip transforms that couldn't have been initialized
+            if obj.title != 'BROKEN':
+              container._mapTransform(obj)
       # now put original order group
       # we remove object not added in forms
       # we put old objects we have kept
