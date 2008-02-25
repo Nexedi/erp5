@@ -180,6 +180,10 @@ class PreferenceTool(BaseTool):
           ['Member', 'Author', 'Manager'])
     item.manage_permission(Permissions.View,
           ['Member', 'Auditor', 'Manager'])
+    item.manage_permission(Permissions.CopyOrMove,
+          ['Member', 'Auditor', 'Manager'])
+    item.manage_permission(Permissions.ManageProperties,
+          ['Manager'], acquire=0)
     item.manage_permission(Permissions.SetOwnPassword,
           ['Member', 'Author', 'Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
