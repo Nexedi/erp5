@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.Category</string>
-          <string>Category</string>
-        </tuple>
-        <none/>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -40,14 +37,18 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>language/language</string>
-                <string>language/ja</string>
                 <string>language/ja</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>codification</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
