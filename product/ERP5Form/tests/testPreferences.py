@@ -397,7 +397,8 @@ class TestPreferences(ERP5TypeTestCase):
 
   def test_Permissions(self):
     # create a new site preference for later
-    site_pref = self.portal.portal_preferences.newContent(
+    preference_tool = self.portal.portal_preferences
+    site_pref = preference_tool.newContent(
                           portal_type='Preference',
                           priority=Priority.SITE)
     self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
@@ -408,12 +409,16 @@ class TestPreferences(ERP5TypeTestCase):
     uf._doAddUser('member', '', ['Member', ], [])
     member = uf.getUserById('member').__of__(uf)
     newSecurityManager(None, member)
-    user_pref = self.portal.portal_preferences.newContent(
-                              portal_type='Preference')
+    user_pref = preference_tool.newContent(portal_type='Preference')
 
     # Members can copy & paste existing preferences
     user_pref.Base_createCloneDocument()
-    
+    # note that copy & pasting a site preference reset the priority to USER
+    # preference.
+    cp_data = preference_tool.manage_copyObjects(ids=[site_pref.getId()])
+    copy_id = preference_tool.manage_pasteObjects(cp_data)[0]['new_id']
+    self.assertEquals(Priority.USER, preference_tool[copy_id].getPriority())
+
     # Globally enabled preferences can be viewed by Members
     self.assertTrue(member.has_permission('View', site_pref))
 
