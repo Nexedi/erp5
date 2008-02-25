@@ -91,7 +91,7 @@ if portal_type not in allowed_type_list:\n
            translateString("You are not allowed to clone this object.")})\n
 \n
 # prepare query params\n
-kw = {\'portal_type\' : portal_type}\n
+kw = {\'portal_type\' : translateString(portal_type)}\n
 \n
 # Standard cloning method\n
 if clone:\n
@@ -103,7 +103,7 @@ if clone:\n
   clipboard = directory.manage_copyObjects(ids=[original_id])\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
   new_object = directory[paste_result[0][\'new_id\']]\n
-  message_kind = \'clone\'\n
+  message_kind = \'Clone\'\n
 \n
 if not editable_mode: \n
   form_id = \'view\'\n
