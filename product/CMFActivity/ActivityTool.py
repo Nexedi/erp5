@@ -54,6 +54,7 @@ from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
 
 from zLOG import LOG, INFO, WARNING, ERROR
+from warnings import warn
 
 try:
   from Products.TimerService import getTimerService
@@ -799,7 +800,7 @@ class ActivityTool (Folder, UniqueObject):
         # runing unit tests. Recreate it if it does not exist.
         parents = getattr(request, 'PARENTS', None)
         if parents is None:
-          LOG('CMFActivity.ActivityTool.invoke', INFO, 'PARENTS is not defined in REQUEST. It should only happen in unit tests.')
+          warn('CMFActivity.ActivityTool.invoke: PARENTS is not defined in REQUEST. It should only happen in unit tests.')
           request['PARENTS'] = self.aq_chain[:]
         new_request_container = request_container.__class__(REQUEST=request.clone())
         # Recreate acquisition chain.
