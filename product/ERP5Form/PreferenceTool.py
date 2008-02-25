@@ -178,6 +178,8 @@ class PreferenceTool(BaseTool):
     """ init the permissions right after creation """
     item.manage_permission(Permissions.AddPortalContent,
           ['Member', 'Author', 'Manager'])
+    item.manage_permission(Permissions.AddPortalFolders,
+          ['Member', 'Author', 'Manager'])
     item.manage_permission(Permissions.View,
           ['Member', 'Auditor', 'Manager'])
     item.manage_permission(Permissions.CopyOrMove,
