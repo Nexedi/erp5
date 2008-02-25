@@ -187,15 +187,38 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache updated.')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'clearAllCache')
-  def clearAllCache(self, REQUEST=None):
-    """ Clear all cache factories. """
+  security.declarePublic('clearAllCache')
+  def clearAllCache(self):
+    # Clear all cache factories. This method is public to be called from
+    # scripts, but without docstring to prevent calling it from the URL
     ram_cache_root = self.getRamCacheRoot()
     for cf_key in ram_cache_root.keys():
       for cp in ram_cache_root[cf_key].getCachePluginList():
         cp.clearCache()
+  
+  security.declareProtected(Permissions.ManagePortal, 'manage_clearAllCache')
+  def manage_clearAllCache(self, REQUEST=None):
+    """Clear all cache factories."""
+    self.clearAllCache()
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=All cache factories cleared.')
+  
+  security.declarePublic('clearCacheFactory')
+  def clearCacheFactory(self, cache_factory_id):
+    # Clear cache factory of given ID.
+    # This method is public to be called from scripts, but without docstring to
+    # prevent calling it from the URL
+    ram_cache_root = self.getRamCacheRoot()
+    if ram_cache_root.has_key(cache_factory_id):
+      ram_cache_root[cache_factory_id].clearCache()
+
+  security.declareProtected(Permissions.ManagePortal, 'manage_clearCacheFactory')
+  def manage_clearCacheFactory(self, cache_factory_id, REQUEST=None):
+    """ Clear only cache factory. """
+    self.clearCacheFactory(cache_factory_id)
+    if REQUEST is not None:
+      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory %s cleared.' %cache_factory_id)
+    
       
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
   def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,), REQUEST=None):
@@ -208,15 +231,6 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache cleared.')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactory')
-  def clearCacheFactory(self, cache_factory_id, REQUEST=None):
-    """ Clear only cache factory. """
-    ram_cache_root = self.getRamCacheRoot()
-    if ram_cache_root.has_key(cache_factory_id):
-      ram_cache_root[cache_factory_id].clearCache()
-    if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory %s cleared.' %cache_factory_id)
-    
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactoryScope')
   def clearCacheFactoryScope(self, cache_factory_id, scope, REQUEST=None):
     """ Clear only cache factory. """
