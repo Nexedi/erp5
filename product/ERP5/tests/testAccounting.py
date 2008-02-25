@@ -40,6 +40,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Form.Document.Preference import Priority
 
 SOURCE = 'source'
 DESTINATION = 'destination'
@@ -3023,6 +3024,50 @@ class TestAccounting(ERP5TypeTestCase):
     self.assertTrue('A new Transaction' in searchable_text)
     self.assertTrue('A description' in searchable_text)
     self.assertTrue('Some comments' in searchable_text)
+
+
+class TestAccountingTransactionTemplate(AccountingTestCase):
+  """A test for Accounting Transaction Template
+  """
+
+  def getTitle(self):
+    return "Accounting Transaction Template"
+
+  def test_Template(self):
+    self.login('claudie')
+    preference = self.portal.portal_preferences.newContent('Preference')
+    preference.priority = Priority.USER
+    preference.enable()
+
+    get_transaction().commit()
+    self.tic()
+
+    document = self.accounting_module.newContent(portal_type='Accounting Transaction')
+    document.edit(title='My Accounting Transaction')
+    document.Base_makeTemplateFromDocument(form_id=None)
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(len(preference.objectIds()), 1)
+
+    self.accounting_module.manage_delObjects(ids=[document.getId()])
+
+    get_transaction().commit()
+    self.tic()
+
+    template = preference.objectValues()[0]
+
+    cp = preference.manage_copyObjects(ids=[template.getId()], REQUEST=None, RESPONSE=None)
+    new_document_list = self.accounting_module.manage_pasteObjects(cp)
+    new_document_id = new_document_list[0]['new_id']
+    new_document = self.accounting_module[new_document_id]
+    new_document.makeTemplateInstance()
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(new_document.getTitle(), 'My Accounting Transaction')
 
 
 def test_suite():
