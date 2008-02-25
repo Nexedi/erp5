@@ -3170,8 +3170,6 @@ class Base( CopyContainer,
     self.isIndexable = 0
     self.isTemplate = 1
     # XXX reset security here
-    # Clear cache to display new template in action box.
-    self.portal_caches.clearCacheFactory('erp5_ui_medium')
 
   security.declareProtected(Permissions.ModifyPortalContent,'makeTemplateInstance')
   def makeTemplateInstance(self):
