@@ -59,6 +59,7 @@ ManageProperties = permissions.ManageProperties
 FTPAccess = permissions.FTPAccess
 ImportExportObjects = ac_permissions.import_export_objects
 UseMailhostServices = ac_permissions.use_mailhost_services
+CopyOrMove = ac_permissions.copy_or_move
 
 # Default Catalog Permissions
 SearchCatalog = 'Search ZCatalog'
