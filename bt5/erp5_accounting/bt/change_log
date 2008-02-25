@@ -1,3 +1,6 @@
+2008-2-25 jerome
+* change accounting_period_workflow: Assignee can start / stop accounting periods, but only Assignor can close it definitely. Also make it possible to cancel openned period, and to delete a draft period.
+
 2008-2-14 jerome
 * change permissions on account_module and accounting_module. Auditor role now have Copy or Move (it was missing). Note that the difference with the current version of Base_setDefaultSecurity is that Author role does *not* have View permission. Author creates, Auditor views. For normal cases you should give both roles to thoses users.
 

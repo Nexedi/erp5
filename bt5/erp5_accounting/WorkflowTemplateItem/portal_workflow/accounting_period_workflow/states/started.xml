@@ -45,6 +45,8 @@ It is therefore possible to post accounting accounting transactions with dates d
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>cancel</string>
+                <string>cancel_action</string>
                 <string>stop</string>
                 <string>stop_action</string>
               </tuple>
