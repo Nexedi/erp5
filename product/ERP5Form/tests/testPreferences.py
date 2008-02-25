@@ -395,6 +395,34 @@ class TestPreferences(ERP5TypeTestCase):
     state_list = method(('default',))
     self.assertEquals(state_list, ('default',))
 
+  def test_Permissions(self):
+    # create a new site preference for later
+    site_pref = self.portal.portal_preferences.newContent(
+                          portal_type='Preference',
+                          priority=Priority.SITE)
+    self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
+    self.assertEquals(site_pref.getPreferenceState(), 'global')
+    
+    # Members can add new preferences
+    uf = self.getPortal().acl_users
+    uf._doAddUser('member', '', ['Member', ], [])
+    member = uf.getUserById('member').__of__(uf)
+    newSecurityManager(None, member)
+    user_pref = self.portal.portal_preferences.newContent(
+                              portal_type='Preference')
+
+    # Members can copy & paste existing preferences
+    user_pref.Base_createCloneDocument()
+    
+    # Globally enabled preferences can be viewed by Members
+    self.assertTrue(member.has_permission('View', site_pref))
+
+    # Member does not have Manage properties on their own preferences, 
+    # otherwise the "Metadata" tab is shown
+    self.assertFalse(member.has_permission(
+                         'Manage properties', user_pref))
+    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPreferences))
