@@ -665,7 +665,7 @@ def setupERP5Site( business_template_list=(),
                 ZopeTestCase._print('Adding %s business template ... ' % bt_title)
             bt = portal.portal_templates.download(url)
             if not quiet:
-              ZopeTestCase._print('(downloaded in %.3fs) ' % (time.time() - start))
+              ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
             install_kw = None
             if get_install_kw:
               listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
