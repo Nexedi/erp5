@@ -788,6 +788,7 @@ def dummy_setUp(self):
   enabled
   '''
   try:
+      self.beforeSetUp()
       self.app = self._app()
       self.portal = self._portal()
       self._setup()
@@ -797,9 +798,9 @@ def dummy_setUp(self):
 
 def dummy_tearDown(self):
   '''
-  This one is overloaded so that it dos not execute beforeTearDown and
-  afterTearDown from the original tests, which would write to the
-  FileStorage when --save is enabled
+  This one is overloaded so that it dos not execute beforeTearDown from
+  the original tests, which would write to the FileStorage when --save
+  is enabled
   '''
   self._close()
 
