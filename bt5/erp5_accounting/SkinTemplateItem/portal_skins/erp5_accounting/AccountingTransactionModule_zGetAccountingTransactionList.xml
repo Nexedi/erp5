@@ -672,7 +672,10 @@ destination_section_where_expression</string> </value>
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
+            <dtml-if delivery_mirror_section_title>\n
+              , mirror_section_catalog.title as delivery_mirror_section_title\n
+              , mirror_section_catalog.path as delivery_mirror_section_path\n
+            </dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -861,7 +864,10 @@ UNION\n
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
+            <dtml-if delivery_mirror_section_title>\n
+              , mirror_section_catalog.title as delivery_mirror_section_title\n
+              , mirror_section_catalog.path as delivery_mirror_section_path\n
+            </dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -1327,7 +1333,10 @@ UNION\n
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
+            <dtml-if delivery_mirror_section_title>\n
+              , mirror_section_catalog.title as delivery_mirror_section_title\n
+              , mirror_section_catalog.path as delivery_mirror_section_path\n
+            </dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
@@ -1516,7 +1525,10 @@ UNION\n
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if delivery_mirror_section_title>, mirror_section_catalog.title as delivery_mirror_section_title</dtml-if>\n
+            <dtml-if delivery_mirror_section_title>\n
+              , mirror_section_catalog.title as delivery_mirror_section_title\n
+              , mirror_section_catalog.path as delivery_mirror_section_path\n
+            </dtml-if>\n
             <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n

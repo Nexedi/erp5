@@ -65,22 +65,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX bad name: AccountingTransaction_getMirrorSection sounds more consistent\n
-section_category=context.portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
-if not section_category:\n
-  return\n
+            <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionUrl sounds more consistent\n
+url_template = \'%s/Entity_viewAccountingTransactionList?reset:int=1\'\n
 \n
-transaction = brain.getObject()\n
-source_section = transaction.getSourceSectionValue()\n
+try:\n
+  return url_template % context.getPortalObject().restrictedTraverse(context.delivery_mirror_section_path).absolute_url()\n
+except AttributeError:\n
+  pass\n
 \n
-if source_section is not None and source_section.isMemberOf(section_category):\n
-  mirror_section = transaction.getDestinationSectionValue()\n
+if brain is not None:\n
+  transaction = brain.getObject()\n
 else:\n
-  mirror_section = transaction.getSourceSectionValue()\n
+  transaction = context\n
+\n
+mirror_section_key = \'mirror_section_value_%s\' % transaction.getId()\n
+\n
+try:\n
+  mirror_section = context.REQUEST[mirror_section_key]\n
+except KeyError:\n
+  if transaction.AccountingTransaction_isSourceView():\n
+    mirror_section = transaction.getDestinationSectionValue()\n
+  else:\n
+    mirror_section = transaction.getSourceSectionValue()\n
+  context.REQUEST.set(mirror_section_key, mirror_section)\n
 \n
 if mirror_section is not None:\n
-  return "%s/Entity_viewAccountingTransactionList?reset:int=1" %\\\n
-                     mirror_section.absolute_url()\n
+  return url_template % mirror_section.absolute_url()\n
 </string> </value>
         </item>
         <item>
@@ -127,13 +137,16 @@ if mirror_section is not None:\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>kwd</string>
+                            <string>url_template</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>section_category</string>
-                            <string>transaction</string>
-                            <string>source_section</string>
+                            <string>AttributeError</string>
                             <string>None</string>
+                            <string>transaction</string>
+                            <string>mirror_section_key</string>
+                            <string>_getitem_</string>
                             <string>mirror_section</string>
+                            <string>KeyError</string>
                           </tuple>
                         </value>
                     </item>

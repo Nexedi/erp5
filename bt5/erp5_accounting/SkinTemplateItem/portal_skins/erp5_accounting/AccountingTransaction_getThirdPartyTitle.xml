@@ -66,14 +66,30 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionTitle sounds more consistent\n
+\n
+try:\n
+  return context.delivery_mirror_section_title\n
+except AttributeError:\n
+  pass\n
+\n
 if brain is not None:\n
   transaction = brain.getObject()\n
 else:\n
   transaction = context\n
 \n
-if transaction.AccountingTransaction_isSourceView():\n
-  return transaction.getDestinationSectionTitle()\n
-return transaction.getSourceSectionTitle()\n
+mirror_section_key = \'mirror_section_value_%s\' % transaction.getId()\n
+\n
+try:\n
+  mirror_section = context.REQUEST[mirror_section_key]\n
+except KeyError:\n
+  if transaction.AccountingTransaction_isSourceView():\n
+    mirror_section = transaction.getDestinationSectionValue()\n
+  else:\n
+    mirror_section = transaction.getSourceSectionValue()\n
+  context.REQUEST.set(mirror_section_key, mirror_section)\n
+\n
+if mirror_section is not None:\n
+  return mirror_section.getTitle()\n
 </string> </value>
         </item>
         <item>
@@ -120,10 +136,15 @@ return transaction.getSourceSectionTitle()\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>kw</string>
-                            <string>None</string>
                             <string>_getattr_</string>
-                            <string>transaction</string>
                             <string>context</string>
+                            <string>AttributeError</string>
+                            <string>None</string>
+                            <string>transaction</string>
+                            <string>mirror_section_key</string>
+                            <string>_getitem_</string>
+                            <string>mirror_section</string>
+                            <string>KeyError</string>
                           </tuple>
                         </value>
                     </item>
