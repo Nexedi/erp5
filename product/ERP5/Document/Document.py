@@ -32,8 +32,10 @@ from operator import add
 from xmlrpclib import Fault
 from zLOG import LOG, INFO
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
 from Acquisition import aq_base
 from Globals import PersistentMapping
+from Globals import get_request
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
@@ -41,6 +43,8 @@ from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_da
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 from AccessControl import Unauthorized
@@ -220,8 +224,73 @@ class ConversionCacheMixin:
     s += '</table>'
     return s
 
+class PermanentURLMixIn(ExtensibleTraversableMixIn):
+  """
+    Provides access to documents through their permanent URL.
+    This class must be inherited by all document classes so
+    that documents displayed outside a Web Site / Web Section
+    can also use the permanent URL principle.
+  """
 
-class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
+  ### Extensible content
+  def _getExtensibleContent(self, request, name):
+    # Permanent URL traversal
+    # First we must get the logged user by forcing identification
+    cache = getReadOnlyTransactionCache(self)
+    # LOG('getReadOnlyTransactionCache', 0, repr(cache)) # Currently, it is always None
+    if cache is not None:
+      key = ('__bobo_traverse__', self, 'user')
+      try:
+        user = cache[key]
+      except KeyError:
+        user = _MARKER
+    else:
+      user = _MARKER
+    old_user = getSecurityManager().getUser()
+    if user is _MARKER:
+      user = None # By default, do nothing
+      if old_user is None or old_user.getUserName() == 'Anonymous User':
+        user_folder = getToolByName(self, 'acl_users', None)
+        if user_folder is not None:
+          try:
+            if request.get('PUBLISHED', _MARKER) is _MARKER:
+              # request['PUBLISHED'] is required by validate
+              request.other['PUBLISHED'] = self
+              has_published = False
+            else:
+              has_published = True
+            user = user_folder.validate(request)
+            if not has_published:
+              del request.other['PUBLISHED']
+          except:
+            LOG("ERP5 WARNING",0,
+                "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
+                error=sys.exc_info())
+            user = None
+      if user is not None and user.getUserName() == 'Anonymous User':
+        user = None # If the user which is connected is anonymous,
+                    # do not try to change SecurityManager
+      if cache is not None:
+        cache[key] = user
+    if user is not None:
+      # We need to perform identification
+      old_manager = getSecurityManager()
+      newSecurityManager(get_request(), user)
+    # Next get the document per name
+    portal = self.getPortalObject()
+    document = self.getDocumentValue(name=name, portal=portal)
+    # Last, cleanup everything
+    if user is not None:
+      setSecurityManager(old_manager)
+    if document is not None:
+      document = aq_base(document.asContext(id=name, # Hide some properties to permit locating the original
+                                            original_container=document.getParentValue(),
+                                            original_id=document.getId(),
+                                            editable_absolute_url=document.absolute_url()))
+      return document.__of__(self)
+
+
+class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   """
       Document is an abstract class with all methods
       related to document management in ERP5. This includes
@@ -559,7 +628,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable(self) # XXX Performance improvement required
     cache_key = ('getImplicitSuccessorValueList', self.getPhysicalPath())
     try:
       return tv[cache_key]
@@ -591,7 +660,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable(self) # XXX Performance improvement required
     cache_key = ('getImplicitPredecessorValueList', self.getPhysicalPath())
     try:
       return tv[cache_key]
@@ -608,7 +677,7 @@ class Document(XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   def getImplicitSimilarValueList(self):
     """
       Analyses content of documents to find out by the content which documents
-      are similar. Not implemented yet. 
+      are similar. Not implemented yet.
 
       No cloud needed because transitive process
     """
