@@ -99,7 +99,7 @@
   `category_uid` BIGINT UNSIGNED default \'0\',\n
   `base_category_uid` BIGINT UNSIGNED default \'0\',\n
   `category_strict_membership` tinyint(1) default \'0\',\n
-  KEY `uid` (`uid`),\n
+  PRIMARY KEY (`uid`, `category_uid`, `base_category_uid`, `category_strict_membership`),\n
   KEY `Membership` (`category_uid`,`base_category_uid`)\n
 ) TYPE = InnoDB;</string> </value>
         </item>
@@ -142,7 +142,7 @@
   `category_uid` BIGINT UNSIGNED default \'0\',\n
   `base_category_uid` BIGINT UNSIGNED default \'0\',\n
   `category_strict_membership` tinyint(1) default \'0\',\n
-  KEY `uid` (`uid`),\n
+  PRIMARY KEY (`uid`, `category_uid`, `base_category_uid`, `category_strict_membership`),\n
   KEY `Membership` (`category_uid`,`base_category_uid`)\n
 ) TYPE = InnoDB;</string> </value>
                     </item>
