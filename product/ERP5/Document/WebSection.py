@@ -1,15 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
-# Copyright (c) 2006-2007 Nexedi SA and Contributors. All Rights Reserved.
-#
-# This software is subject to the provisions of the Zope Public License,
-# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
-# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
-# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
-# FOR A PARTICULAR PURPOSE.
+# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -18,18 +10,30 @@
 # garantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager, newSecurityManager, setSecurityManager
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet,\
                               Constraint, Interface, Cache
 from Products.ERP5.Document.Domain import Domain
-#from Products.ERP5.Document.WebSite import WebSite
+from Products.ERP5.Document.Document import PermanentURLMixIn
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
-from Globals import get_request
 
 from zLOG import LOG, WARNING
 import sys
@@ -40,7 +44,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 WEBSECTION_KEY = 'web_section_value'
 MARKER = []
 
-class WebSection(Domain):
+class WebSection(Domain, PermanentURLMixIn):
     """
       A Web Section is a Domain with an extended API intended to
       support the creation of Web front ends to
@@ -111,82 +115,7 @@ class WebSection(Domain):
             else:
               request.set(web_param, False)
 
-      # Normal traversal
-      try:
-        return getattr(self, name)
-      except AttributeError:
-        pass
-
-      try:
-        return self[name]
-      except KeyError:
-        pass
-
-      # Permanent URL traversal
-      # First we must get the logged user by forcing identification
-      cache = getReadOnlyTransactionCache(self)
-      # LOG('getReadOnlyTransactionCache', 0, repr(cache)) # Currently, it is always None
-      if cache is not None:
-        key = ('__bobo_traverse__', self, 'user')
-        try:
-          user = cache[key]
-        except KeyError:
-          user = MARKER
-      else:
-        user = MARKER
-      old_user = getSecurityManager().getUser()
-      if user is MARKER:
-        user = None # By default, do nothing
-        if old_user is None or old_user.getUserName() == 'Anonymous User':
-          user_folder = getToolByName(self, 'acl_users', None)
-          if user_folder is not None:
-            try:
-              if request.get('PUBLISHED', MARKER) is MARKER:
-                # request['PUBLISHED'] is required by validate
-                request.other['PUBLISHED'] = self
-                has_published = False
-              else:
-                has_published = True
-              user = user_folder.validate(request)
-              if not has_published:
-                del request.other['PUBLISHED']
-            except:
-              LOG("ERP5 WARNING",0,
-                  "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
-                  error=sys.exc_info())
-              user = None
-        if user is not None and user.getUserName() == 'Anonymous User':
-          user = None # If the user which is connected is anonymous,
-                      # do not try to change SecurityManager
-        if cache is not None:
-          cache[key] = user
-      if user is not None:
-        # We need to perform identification
-        old_manager = getSecurityManager()
-        newSecurityManager(get_request(), user)
-      # Next get the document per name
-      portal = self.getPortalObject()
-      document = self.getDocumentValue(name=name, portal=portal)
-      # Last, cleanup everything
-      if user is not None:
-        setSecurityManager(old_manager)
-      if document is not None:
-        document = aq_base(document.asContext(id=name, # Hide some properties to permit locating the original
-                                              original_container=document.getParentValue(),
-                                              original_id=document.getId(),
-                                              editable_absolute_url=document.absolute_url()))
-        return document.__of__(self)
-
-      # Not found section
-      method = request.get('REQUEST_METHOD', 'GET')
-      if not method in ('GET', 'POST'):
-        return NullResource(self, name, request).__of__(self)
-      # Waaa. unrestrictedTraverse calls us with a fake REQUEST.
-      # There is proabably a better fix for this.
-      try:
-        request.RESPONSE.notFoundError("%s\n%s" % (name, method))
-      except AttributeError:
-        raise KeyError, name
+      return PermanentURLMixIn.__bobo_traverse__(self, request, name)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
     def getWebSectionValue(self):
