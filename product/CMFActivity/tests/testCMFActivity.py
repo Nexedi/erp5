@@ -2796,6 +2796,11 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     result = activity_tool.getMessageList()
     self.assertEqual(len(result), 0)
+    # Check that giving a None value to serialization_tag does not confuse
+    # CMFActivity
+    organisation.activate(activity=activity, serialization_tag=None).getTitle()
+    self.tic()
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
   def test_106_checkSerializationTagSQLDict(self, quiet=0, run=run_all_test):
     if not run: return

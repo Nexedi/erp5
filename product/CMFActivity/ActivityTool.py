@@ -121,6 +121,9 @@ class Message:
     else:
       self.active_process = active_process.getPhysicalPath()
       self.active_process_uid = active_process.getUid()
+    if activity_kw.get('serialization_tag', False) is None:
+      # Remove serialization_tag if it's None.
+      del activity_kw['serialization_tag']
     self.activity_kw = activity_kw
     self.method_id = method_id
     self.args = args
