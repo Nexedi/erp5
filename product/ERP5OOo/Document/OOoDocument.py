@@ -34,11 +34,14 @@ from xmlrpclib import SafeTransport
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from OFS.Image import Pdata
+from OFS.Image import File as OFSFile
+from OFS.content_types import guess_content_type
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.File import File
+from Products.ERP5.Document.Document import PermanentURLMixIn
 from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.Document.Document import NotConvertedError
@@ -73,7 +76,7 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(File, ConversionCacheMixin):
+class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -472,30 +475,23 @@ class OOoDocument(File, ConversionCacheMixin):
       file_name = f.filename
       document = self.get(file_name, None)
       if document is not None:
-        self.manage_delObjects([file_name])
-      newContent = UnrestrictedMethod(self.portal_contributions.newContent)
+        self.manage_delObjects([file_name]) # For compatibility with old implementation
       if file_name.endswith('html'):
-        web_page = newContent(\
-                  id=file_name, container=self, portal_type='Web Page',
-                  file_name=file_name,
-                  data=zip_file.read(file_name))
-        if web_page.getValidationState() != 'embedded':
-          # Make sure embedded is set until cleaner solution if found
-          web_page.edit()
-        web_page.activate().discoverMetadata() # Maybe we should use contribution tool instead
-                                              # Should be embedded
+        mime = 'text/html'
+        data = zip_file.read(file_name)
       else:
-        image_or_file = newContent(\
-                  id=file_name, container=self,
-                  portal_type='Image', # Contribution Tool would be better here
-                  file_name=file_name,
-                  data=zip_file.read(file_name))
-        if image_or_file.getValidationState() != 'embedded':
-          # Make sure embedded is set until cleaner solution if found
-          image_or_file.edit()
+        mime = guess_content_type(file_name)[0]
+        data = Pdata(zip_file.read(file_name))
+      self.setConversion(data, mime, format='_embedded', file_name=file_name)
     if must_close:
       zip_file.close()
       archive_file.close()
+
+  def _getExtensibleContent(self, request, name):
+    if self.hasConversion(format='_embedded', file_name=name):
+      mime, data = self.getConversion(format='_embedded', file_name=name)
+      return OFSFile(name, name, data, content_type=mime)
+    return PermanentURLMixIn._getExtensibleContent(self, request, name)
 
   # Base format implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
