@@ -70,6 +70,7 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
@@ -112,6 +113,7 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
