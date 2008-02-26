@@ -1150,7 +1150,12 @@ class TestERP5BankingMixin:
     """
     portal = self.getPortalObject()
     portal.portal_caches.clearAllCache()
-    portal.portal_workflow.refreshWorklistCache()
+    try:
+      portal.portal_workflow.refreshWorklistCache()
+    except AttributeError:
+      import sys
+      LOG('TestEERP5Banking.checkWorklist', 0, 'unable to find everything to refresh',
+             error=sys.exc_info())
     portal_type = document.getPortalType()
     state = document.getSimulationState()
     workflow_id = '%s_workflow' % portal_type.lower().replace(' ', '_')
