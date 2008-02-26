@@ -137,7 +137,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.login('super_user')
 
     # open counter date and counter
-    self.openCounterDate(site=self.paris)
+    self.openCounterDate(site=self.paris, force_check=1)
     self.openCounter(site=self.bi_counter_vault)
 
     self.createCheckAndCheckbookModel()
