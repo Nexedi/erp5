@@ -651,9 +651,72 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     image = image_list[0]
     self.assertEquals('embedded', image.getValidationState())
 
+
+class TestDocumentWithSecurity(ERP5TypeTestCase):
+
+  username = 'yusei'
+
+  def getTitle(self):
+    return "DMS with security"
+
+  def afterSetUp(self):
+    self.setSystemPreference()
+    # set a dummy localizer (because normally it is cookie based)
+    self.portal.Localizer = DummyLocalizer()
+    # make sure every body can traverse document module
+    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
+    self.portal.document_module.manage_permission(
+                           'Access contents information', ['Anonymous'], 1)
+    self.login()
+
+  def setSystemPreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
+    default_pref.enable()
+    get_transaction().commit()
+    self.tic()
+
+  def login(self):
+    uf = self.getPortal().acl_users
+    uf._doAddUser(self.username, '', ['Auditor', 'Author'], [])
+    user = uf.getUserById(self.username).__of__(uf)
+    newSecurityManager(None, user)
+
+  def getDocumentModule(self):
+    return getattr(self.getPortal(),'document_module')
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_web', 'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+
+  def test_ShowPreviewAfterSubmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+    Make sure that uploader can preview document after submitted.
+    """
+    if not run: return
+    filename = 'REF-en-001.odt'
+    upload_file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+
+    get_transaction().commit()
+    self.tic()
+
+    document.submit()
+
+    preview_html = document.Document_getPreviewAsHTML().replace('\n', ' ')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assert_('I use reference to look up TEST' in preview_html)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
+  suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
   return suite
 
 
