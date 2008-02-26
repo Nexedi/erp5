@@ -939,6 +939,58 @@ class TestERP5Base(ERP5TypeTestCase):
       self.assertEquals([], image.checkConsistency())
       image.view() # viewing the image does not cause error
 
+  def test_Person_getCareerStartDate(self):
+    # Person_getCareerStartDate scripts returns the date when an employee
+    # started to work for an employer
+    first_organisation = self.getOrganisationModule().newContent(
+                                  portal_type='Organisation')
+    second_organisation = self.getOrganisationModule().newContent(
+                                  portal_type='Organisation')
+    person = self.getPersonModule().newContent(
+              portal_type='Person',
+              default_career_subordination_value=first_organisation)
+    current_career = person.getDefaultCareerValue()
+    current_career.setStartDate(DateTime(2002, 1, 1))
+    previous_career = person.newContent(
+                              portal_type='Career',
+                              subordination_value=first_organisation,
+                              start_date=DateTime(2001, 1, 1))
+    other_organisation_career= person.newContent(
+                              portal_type='Career',
+                              subordination_value=second_organisation,
+                              start_date=DateTime(1999, 9, 9))
+    self.assertEquals(DateTime(2001, 1, 1),
+         person.Person_getCareerStartDate(
+            subordination_relative_url=first_organisation.getRelativeUrl()))
+    self.assertEquals(DateTime(1999, 9, 9),
+         person.Person_getCareerStartDate(
+            subordination_relative_url=second_organisation.getRelativeUrl()))
+
+    # only validated careers are used (for conveniance, draft careers are
+    # accepted as well)
+    another_cancelled_career = person.newContent(
+                              portal_type='Career',
+                              subordination_value=first_organisation,
+                              start_date=DateTime(1996, 9, 9))
+    another_cancelled_career.cancel()
+    self.assertEquals(DateTime(2001, 01, 01),
+         person.Person_getCareerStartDate(
+            subordination_relative_url=first_organisation.getRelativeUrl()))
+
+  def test_Person_getAge(self):
+    person = self.getPersonModule().newContent(
+                                  portal_type='Person',
+                                  start_date=DateTime(2001, 2, 3))
+
+    self.assertEquals(1,
+          person.Person_getAge(year=1, at_date=DateTime(2002, 2, 4)))
+    self.assertTrue(person.Person_getAge(year=1) > 5)
+
+    # if year is not passed, the script returns the age in a translated string.
+    age_as_text = person.Person_getAge(at_date=DateTime(2002, 2, 4))
+    self.assertEquals(age_as_text, "1 Years Old")
+
+
 
 def test_suite():
   suite = unittest.TestSuite()
