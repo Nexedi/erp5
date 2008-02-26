@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Pay Sheet Transaction in planned state (%(count)s)</string> </value>
+            <value> <string>My Drafts of Accounting Transactions (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_module/view?reset:int=1&portal_type=Pay Sheet Transaction&simulation_state=planned
+accounting_module/view?reset:int=1&local_roles=Owner&simulation_state=draft
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Pay Sheet Transaction in planned state</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ accounting_module/view?reset:int=1&portal_type=Pay Sheet Transaction&simulation_
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Pay_Sheet_Transaction_planned</string> </value>
+            <value> <string>1_draft_transaction_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -57,11 +57,8 @@ accounting_module/view?reset:int=1&portal_type=Pay Sheet Transaction&simulation_
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,7 +67,7 @@ accounting_module/view?reset:int=1&portal_type=Pay Sheet Transaction&simulation_
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -80,32 +77,21 @@ accounting_module/view?reset:int=1&portal_type=Pay Sheet Transaction&simulation_
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Pay Sheet Transaction</string>
-                      </tuple>
-                    </value>
-                </item>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>planned</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>
