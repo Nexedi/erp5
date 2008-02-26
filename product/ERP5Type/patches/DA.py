@@ -26,6 +26,7 @@ from Acquisition import aq_base
 from zLOG import LOG, INFO, ERROR
 from string import find
 from cStringIO import StringIO
+import sys
 
 def DA_fromFile(self, filename):
   """
@@ -218,7 +219,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
 #           LOG("DA query", INFO, "query = %s" %(query,))
         result=DB__.query(query, self.max_rows_)
       except:
-        LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query))
+        LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=sys.exc_info())
         raise
 
     if hasattr(self, '_v_brain'): brain=self._v_brain
