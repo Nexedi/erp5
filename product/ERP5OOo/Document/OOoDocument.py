@@ -414,7 +414,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
             data = z.read(fn)
             break
         mime = 'text/html'
-        self.populateContent(zip_file=z) # Maybe some parts should be asynchronous for
+        self._populateConversionCacheWithHTML(zip_file=z) # Maybe some parts should be asynchronous for
                                          # better usability
         z.close()
         cs.close()
@@ -454,8 +454,8 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     return self._convert(format='text-content')
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                            'populateContent')
-  def populateContent(self, zip_file=None):
+                            '_populateConversionCacheWithHTML')
+  def _populateConversionCacheWithHTML(self, zip_file=None):
     """
     Extract content from the ODF zip file and populate the document.
     Optional parameter zip_file prevents from converting content twice.
