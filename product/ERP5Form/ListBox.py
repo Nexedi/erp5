@@ -59,17 +59,16 @@ try:
 except NameError:
   from sets import Set as set
 
-class ObjectValuesWrapper:
-  """This class wraps objectValues so that objectValues behaves like portal_catalog.
+class ListMethodWrapper:
+  """This class wraps list methods so that they behave like portal_catalog.
   """
-  method_name = __name__ = 'objectValues'
-
-  def __init__(self, context):
+  def __init__(self, context, method_name):
     self.context = context
+    self.method_name = self.__name__ = method_name
 
   def __call__(self, *args, **kw):
     brain_list = []
-    for obj in self.context.objectValues(*args, **kw):
+    for obj in getattr(self.context, self.method_name)(*args, **kw):
       brain = ZSQLBrain(None, None).__of__(obj)
       brain.uid = obj.getUid()
       brain.path = obj.getPath()
@@ -1025,8 +1024,8 @@ class ListBoxRenderer:
     """
     list_method_name = self.getListMethodName()
 
-    if list_method_name == 'objectValues':
-      list_method = ObjectValuesWrapper(self.getContext())
+    if list_method_name in ('objectValues', 'contentValues'):
+      list_method = ListMethodWrapper(self.getContext(), list_method_name)
     elif list_method_name is not None:
       try:
         list_method = getattr(self.getContext(), list_method_name)
