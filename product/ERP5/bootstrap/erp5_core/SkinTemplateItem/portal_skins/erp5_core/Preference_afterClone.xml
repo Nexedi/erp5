@@ -65,7 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setPriority(3) # User\n
+            <value> <string>if not container.REQUEST.other.get(\'is_business_template_installation\'):\n
+  context.setPriority(3) # User\n
 </string> </value>
         </item>
         <item>
@@ -89,6 +90,14 @@
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,7 +124,8 @@
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>container</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
