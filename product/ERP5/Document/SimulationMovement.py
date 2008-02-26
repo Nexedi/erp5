@@ -35,7 +35,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from Products.ERP5.Document.Movement import Movement
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 from Acquisition import aq_base
 
@@ -167,8 +167,9 @@ class SimulationMovement(Movement):
       parent_state = self.getParentValue().getSimulationState()
       return parent_to_movement_simulation_state[parent_state]
     except (KeyError, AttributeError):
-      LOG('ERP5 WARNING:',100, 'Could not acquire getSimulationState on %s'
-                                % self.getRelativeUrl())
+      LOG('SimulationMovement.getSimulationState', WARNING,
+          'Could not acquire simulation state from %s'
+          % self.getRelativeUrl())
       return None
 
   security.declareProtected( Permissions.AccessContentsInformation,
