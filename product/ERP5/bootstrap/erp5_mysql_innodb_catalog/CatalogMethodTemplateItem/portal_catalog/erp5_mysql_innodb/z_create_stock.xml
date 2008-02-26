@@ -97,6 +97,7 @@
 #\n
 CREATE TABLE `stock` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
+  `order_id` TINYINT UNSIGNED NOT NULL,\n
   `node_uid` BIGINT UNSIGNED,\n
   `section_uid` BIGINT UNSIGNED,\n
   `payment_uid` BIGINT UNSIGNED,\n
@@ -113,7 +114,7 @@ CREATE TABLE `stock` (\n
   `simulation_state` varchar(255) default \'\',\n
   `variation_text` VARCHAR(255),\n
   `sub_variation_text` VARCHAR(255),\n
-  KEY `uid` (`uid`),\n
+  PRIMARY KEY (`uid`, `order_id`),\n
   KEY `quantity` (`quantity`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `mirror_section_uid` (`mirror_section_uid`),\n
@@ -168,6 +169,7 @@ CREATE TABLE `stock` (\n
 #\n
 CREATE TABLE `stock` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
+  `order_id` TINYINT UNSIGNED NOT NULL,\n
   `node_uid` BIGINT UNSIGNED,\n
   `section_uid` BIGINT UNSIGNED,\n
   `payment_uid` BIGINT UNSIGNED,\n
@@ -184,7 +186,7 @@ CREATE TABLE `stock` (\n
   `simulation_state` varchar(255) default \'\',\n
   `variation_text` VARCHAR(255),\n
   `sub_variation_text` VARCHAR(255),\n
-  KEY `uid` (`uid`),\n
+  PRIMARY KEY (`uid`, `order_id`),\n
   KEY `quantity` (`quantity`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `mirror_section_uid` (`mirror_section_uid`),\n

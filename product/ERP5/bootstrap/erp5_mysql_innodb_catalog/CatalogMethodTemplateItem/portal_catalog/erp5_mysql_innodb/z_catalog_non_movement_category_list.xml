@@ -117,43 +117,22 @@ WHERE\n
   uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
 ;\n
-\n
 <dtml-var "\'\\0\'">\n
-\n
-INSERT INTO category VALUES\n
+<dtml-let category_list="[]">\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-<dtml-if sequence-start><dtml-else>,</dtml-if>\n
-    <dtml-if expr="getAcquiredCategoryList[loop_item]">\n
-      <dtml-let uid_list="portal_categories.getCategoryParentUidList(getAcquiredCategoryList[loop_item])">\n
-        <dtml-if uid_list>\n
-          <dtml-in prefix="uid" expr="uid_list">\n
-<dtml-if sequence-start><dtml-else>,</dtml-if>\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="uid_item[0]" type="int">,\n
-  <dtml-sqlvar expr="uid_item[1]" type="int">,\n
-  <dtml-sqlvar expr="uid_item[2]" type="int">\n
-)\n
-          </dtml-in> \n
-        <dtml-else>\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  NULL,\n
-  NULL,\n
-  1\n
-)\n
-        </dtml-if>\n
-      </dtml-let>\n
-    <dtml-else>\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  NULL,\n
-  NULL,\n
-  1\n
-)\n
-    </dtml-if>\n
-</dtml-in>  \n
-
+<dtml-if expr="getAcquiredCategoryList[loop_item]">\n
+<dtml-let uid_list="portal_categories.getCategoryParentUidList(getAcquiredCategoryList[loop_item])">\n
+<dtml-if uid_list>\n
+<dtml-in prefix="uid" expr="uid_list">\n
+<dtml-call expr="category_list.append((uid[loop_item], uid_item[0], uid_item[1], uid_item[2]))">\n
+</dtml-in></dtml-if></dtml-let></dtml-if></dtml-in>  \n
+<dtml-if expr="category_list">\n
+INSERT INTO category VALUES\n
+<dtml-in prefix="loop" expr="category_list">\n
+(<dtml-sqlvar expr="loop_item[0]" type="int">, <dtml-sqlvar expr="loop_item[1]" type="int">, <dtml-sqlvar expr="loop_item[2]" type="int">, <dtml-sqlvar expr="loop_item[3]" type="int">)<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+</dtml-in>\n
+</dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
         </item>
@@ -198,43 +177,22 @@ WHERE\n
   uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
 ;\n
-\n
 <dtml-var "\'\\0\'">\n
-\n
-INSERT INTO category VALUES\n
+<dtml-let category_list="[]">\n
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-<dtml-if sequence-start><dtml-else>,</dtml-if>\n
-    <dtml-if expr="getAcquiredCategoryList[loop_item]">\n
-      <dtml-let uid_list="portal_categories.getCategoryParentUidList(getAcquiredCategoryList[loop_item])">\n
-        <dtml-if uid_list>\n
-          <dtml-in prefix="uid" expr="uid_list">\n
-<dtml-if sequence-start><dtml-else>,</dtml-if>\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="uid_item[0]" type="int">,\n
-  <dtml-sqlvar expr="uid_item[1]" type="int">,\n
-  <dtml-sqlvar expr="uid_item[2]" type="int">\n
-)\n
-          </dtml-in> \n
-        <dtml-else>\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  NULL,\n
-  NULL,\n
-  1\n
-)\n
-        </dtml-if>\n
-      </dtml-let>\n
-    <dtml-else>\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  NULL,\n
-  NULL,\n
-  1\n
-)\n
-    </dtml-if>\n
-</dtml-in>  \n
-
+<dtml-if expr="getAcquiredCategoryList[loop_item]">\n
+<dtml-let uid_list="portal_categories.getCategoryParentUidList(getAcquiredCategoryList[loop_item])">\n
+<dtml-if uid_list>\n
+<dtml-in prefix="uid" expr="uid_list">\n
+<dtml-call expr="category_list.append((uid[loop_item], uid_item[0], uid_item[1], uid_item[2]))">\n
+</dtml-in></dtml-if></dtml-let></dtml-if></dtml-in>  \n
+<dtml-if expr="category_list">\n
+INSERT INTO category VALUES\n
+<dtml-in prefix="loop" expr="category_list">\n
+(<dtml-sqlvar expr="loop_item[0]" type="int">, <dtml-sqlvar expr="loop_item[1]" type="int">, <dtml-sqlvar expr="loop_item[2]" type="int">, <dtml-sqlvar expr="loop_item[3]" type="int">)<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+</dtml-in>\n
+</dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
                     </item>
