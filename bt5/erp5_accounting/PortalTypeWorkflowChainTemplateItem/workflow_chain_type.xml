@@ -20,10 +20,6 @@
   <workflow>edit_workflow, accounting_workflow</workflow>
  </chain>
  <chain>
-  <type>Balance Transaction Line</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Invoice Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
