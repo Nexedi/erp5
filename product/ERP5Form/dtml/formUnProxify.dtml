@@ -14,6 +14,8 @@ UnProxify proxy fields.
 <th>Id</th>
 <th>Type</th>
 <th>UnProxify</th>
+<th>Form ID</th>
+<th>Field ID</th>
 </tr>
 <log form_field_list>
 <dtml-in form_field_list>
@@ -23,6 +25,8 @@ UnProxify proxy fields.
 <td>
 <input type="checkbox" name="field_dict.<dtml-var id>:record:ignore_empty"/>
 </td>
+<td><dtml-var expr="get_value('form_id')"></td>
+<td><dtml-var expr="get_value('field_id')"></td>
 </tr>
 </dtml-in>
 </table>
