@@ -850,7 +850,7 @@ class TestERP5BankingMixin:
                                             reference_range_max = max,
                                             start_date = date)
 
-  def createCheckbookModel(self, id, check_model):
+  def createCheckbookModel(self, id, check_model, reference=None):
     """
     Create a checkbook for the given bank account
     with 3 variations
@@ -859,6 +859,7 @@ class TestERP5BankingMixin:
                                             portal_type = 'Checkbook Model',
                                             title='Generic',
                                             account_number_enabled=True,
+                                            reference=reference,
                                             composition=check_model.getRelativeUrl())
     model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
                      quantity=50,title='50')
