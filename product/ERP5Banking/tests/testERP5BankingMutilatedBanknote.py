@@ -275,11 +275,23 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
 
   def stepDraftDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+    Draft mutilated banknote operation
+    Also sets the received amount on the document.
+    """
+    self.mutilated_banknote.setSourceTotalAssetPrice(50000.0)
+    self.assertEqual(self.mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "draft")
 
   def stepDraftHQDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+    Draft mutilated banknote operation
+    Also set the original price of mutilated banknotes.
+    """
+    self.hq_mutilated_banknote.setSourceTotalAssetPrice(50000.0)
+    self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "draft")
@@ -287,10 +299,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
   def stepStopDocument(self, sequence=None, sequence_list=None, **kw):
     """
     Stop mutilated banknote operation
-    Also sets the received amount on the document.
     """
-    self.mutilated_banknote.setSourceTotalAssetPrice(50000.0)
-    self.assertEqual(self.mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "stopped")
@@ -637,10 +646,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
   def stepStopHQDocument(self, sequence=None, sequence_list=None, **kw):
     """
     Plan mutilated banknote operation
-    Also set the original price of mutilated banknotes.
     """
-    self.hq_mutilated_banknote.setSourceTotalAssetPrice(50000.0)
-    self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
     self.stepTic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "stopped")
