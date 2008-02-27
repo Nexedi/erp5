@@ -69,12 +69,7 @@
 view_name = \'Entity_viewAccountingTransactionList?reset:int=1\'\n
 \n
 try:\n
-  delivery_mirror_section_path = context.delivery_mirror_section_path\n
-  if delivery_mirror_section_path is not None:\n
-    relative_path = \'/\'.join(delivery_mirror_section_path.split(\'/\')[2:])\n
-    return \'%s/%s/%s\' % (context.portal_url(), relative_path, view_name)\n
-  else:\n
-    return None\n
+  return \'/%s/%s\' % (context.delivery_mirror_section_url, view_name)\n
 except AttributeError:\n
   pass\n
 \n
@@ -139,11 +134,8 @@ if mirror_section is not None:\n
                             <string>view_name</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>delivery_mirror_section_path</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
-                            <string>relative_path</string>
                             <string>AttributeError</string>
+                            <string>None</string>
                             <string>transaction</string>
                             <string>mirror_section</string>
                           </tuple>
