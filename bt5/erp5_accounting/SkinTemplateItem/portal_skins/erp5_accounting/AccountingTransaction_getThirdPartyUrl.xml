@@ -66,10 +66,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionUrl sounds more consistent\n
-url_template = \'%s/Entity_viewAccountingTransactionList?reset:int=1\'\n
+view_name = \'Entity_viewAccountingTransactionList?reset:int=1\'\n
 \n
 try:\n
-  return url_template % context.getPortalObject().restrictedTraverse(context.delivery_mirror_section_path).absolute_url()\n
+  delivery_mirror_section_path = context.delivery_mirror_section_path\n
+  if delivery_mirror_section_path is not None:\n
+    relative_path = \'/\'.join(delivery_mirror_section_path.split(\'/\')[2:])\n
+    return \'%s/%s/%s\' % (context.portal_url(), relative_path, view_name)\n
+  else:\n
+    return None\n
 except AttributeError:\n
   pass\n
 \n
@@ -78,19 +83,13 @@ if brain is not None:\n
 else:\n
   transaction = context\n
 \n
-mirror_section_key = \'mirror_section_value_%s\' % transaction.getId()\n
-\n
-try:\n
-  mirror_section = context.REQUEST[mirror_section_key]\n
-except KeyError:\n
-  if transaction.AccountingTransaction_isSourceView():\n
-    mirror_section = transaction.getDestinationSectionValue()\n
-  else:\n
-    mirror_section = transaction.getSourceSectionValue()\n
-  context.REQUEST.set(mirror_section_key, mirror_section)\n
+if transaction.AccountingTransaction_isSourceView():\n
+  mirror_section = transaction.getDestinationSectionValue()\n
+else:\n
+  mirror_section = transaction.getSourceSectionValue()\n
 \n
 if mirror_section is not None:\n
-  return url_template % mirror_section.absolute_url()\n
+  return \'%s/%s\' % (mirror_section.absolute_url(), view_name)\n
 </string> </value>
         </item>
         <item>
@@ -137,16 +136,16 @@ if mirror_section is not None:\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>kwd</string>
-                            <string>url_template</string>
+                            <string>view_name</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>AttributeError</string>
+                            <string>delivery_mirror_section_path</string>
                             <string>None</string>
-                            <string>transaction</string>
-                            <string>mirror_section_key</string>
                             <string>_getitem_</string>
+                            <string>relative_path</string>
+                            <string>AttributeError</string>
+                            <string>transaction</string>
                             <string>mirror_section</string>
-                            <string>KeyError</string>
                           </tuple>
                         </value>
                     </item>
