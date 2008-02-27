@@ -67,11 +67,6 @@
             <key> <string>_body</string> </key>
             <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionTitle sounds more consistent\n
 \n
-try:\n
-  return context.delivery_mirror_section_title\n
-except AttributeError:\n
-  pass\n
-\n
 if brain is not None:\n
   transaction = brain.getObject()\n
 else:\n
@@ -130,11 +125,10 @@ if mirror_section is not None:\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>AttributeError</string>
                             <string>None</string>
+                            <string>_getattr_</string>
                             <string>transaction</string>
+                            <string>context</string>
                             <string>mirror_section</string>
                           </tuple>
                         </value>
