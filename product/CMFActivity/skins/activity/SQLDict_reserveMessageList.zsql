@@ -12,6 +12,8 @@ to_date
 limit
 group_method_id
 order_validation_text</params>
+LOCK TABLE message WRITE
+<dtml-var sql_delimiter>
 UPDATE
   message
 SET

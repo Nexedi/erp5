@@ -11,6 +11,8 @@ class_file:
 to_date
 limit
 </params>
+LOCK TABLE message_queue WRITE
+<dtml-var sql_delimiter>
 UPDATE
   message_queue
 SET
