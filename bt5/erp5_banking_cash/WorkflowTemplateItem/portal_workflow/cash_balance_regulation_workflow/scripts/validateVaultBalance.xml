@@ -73,7 +73,8 @@ transaction = state_change[\'object\']\n
 vault = transaction.getSource()\n
 \n
 \n
-if not(vault.endswith(\'encaisse_des_billets_et_monnaies\') or vault.endswith(\'encaisse_des_externes\')):\n
+if not (vault.endswith(\'encaisse_des_billets_et_monnaies\') or vault.endswith(\'encaisse_des_externes\')or \\\n
+  \'encaisse_des_devises\' in vault) :\n
    msg = Message(domain="ui", message="Invalid source.")\n
    raise ValidationFailed, (msg,)\n
 \n
@@ -84,6 +85,14 @@ if vault.endswith(\'encaisse_des_externes\'):\n
     if line.getEmissionLetter() == site_emission_letter:\n
       msg = Message(domain="ui", message="You must not select the local emission letter.")\n
       raise ValidationFailed, (msg,)\n
+\n
+# check resource between line and document\n
+doc_resource = transaction.getResource()\n
+for line in transaction.contentValues(portal_type=[\'Outgoing Cash Balance Regulation Line\',\n
+                                                   \'Incoming Cash Balance Regulation Line\']):\n
+  if line.getResourceValue().getPriceCurrency() != doc_resource:\n
+    msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
+    raise ValidationFailed, (msg,)\n
 \n
 # check again that we are in the good accounting date\n
 transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
@@ -181,6 +190,7 @@ if incoming_total != outgoing_total:\n
                             <string>site_emission_letter</string>
                             <string>_getiter_</string>
                             <string>line</string>
+                            <string>doc_resource</string>
                             <string>resource_one</string>
                             <string>resource_two</string>
                             <string>amount</string>
