@@ -122,6 +122,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                                                  amount=50000,
                                                  bic_code='',
                                                  swift_registered=0,
+                                                 overdraft_facility=1,
                                                  internal_bank_account_number="878787878787")
     # create a bank account for the organisation
     self.bank_account_3 = self.createBankAccount(person=self.organisation,
@@ -319,6 +320,21 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.check_deposit.contentValues(filter = {'portal_type' : 'Outgoing Check Deposit Line'})), 2)
 
 
+  def stepSendCheckDepositOperationToManualValidation(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Send to manual validation
+    """
+    self.workflow_tool.doActionFor(self.check_deposit, 'wait_action', wf_id='check_deposit_workflow')
+    self.assertEqual(self.check_deposit.getSimulationState(), 'waiting')
+
+  def stepAcceptCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Accept manual validation
+    """
+    self.workflow_tool.doActionFor(self.check_deposit, 'accept_action', wf_id='check_deposit_workflow')
+    self.assertEqual(self.check_deposit.getSimulationState(), 'planned')
+
+
   def stepOrderCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
     Send the check deposit document to second validation level
@@ -363,6 +379,18 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), 38000)
 
 
+  def stepCheckThirdBankAccountInventoryAfterCheckDepositDelivered(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check inventory of the bank account changed after validation of operation
+    """
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 152000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 152000)
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl()), -2000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl()), -2000)
+
+
   def stepCheckBankAccountInventoryAfterCheckDepositRejected(self, sequence=None, sequence_list=None, **kw):
     """
     Check inventory of the bank account doesn't changed after reject of operation
@@ -384,6 +412,12 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                                     reference='CHKNB1',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
+    self.checkbook_1.manage_delObjects([self.check_2.getId(),])
+    self.check_2 = self.createCheck(id='check_2',
+                                    reference='CHKNB2',
+                                    resource_value=self.check_model,
+                                    checkbook=self.checkbook_1)
+
 
   def stepClearCheckDepositModule(self, sequence=None, sequence_list=None, **kw):
     """
@@ -446,10 +480,29 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckSecondBankAccountInventoryAfterCheckDepositDelivered'
 
+    # test manual validation
+    sequence_string5 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
+                       + 'Tic CheckObjects Tic CheckInitialInventory ' \
+                       + 'CreateCheckDepositOperation Tic ' \
+                       + 'CheckWorklist Tic ' \
+                       + 'AddCheckOperationLine Tic ' \
+                       + 'AddSecondCheckOperationLine Tic ' \
+                       + 'ModifyCheckOperationAmount Tic ' \
+                       + 'TrySecondPlanCheckDepositOperation Tic ' \
+                       + 'SendCheckDepositOperationToManualValidation Tic ' \
+                       + 'AcceptCheckDepositOperation Tic ' \
+                       + 'OrderCheckDepositOperation Tic ' \
+                       + 'CheckWorklist Tic ' \
+                       + 'Tic DeliverCheckDepositOperation Tic ' \
+                       + 'CheckThirdBankAccountInventoryAfterCheckDepositDelivered'
+
+
+
     sequence_list.addSequenceString(sequence_string1)
     sequence_list.addSequenceString(sequence_string2)
     sequence_list.addSequenceString(sequence_string3)
     sequence_list.addSequenceString(sequence_string4)
+    sequence_list.addSequenceString(sequence_string5)
     # play the sequence
     sequence_list.play(self)
 
