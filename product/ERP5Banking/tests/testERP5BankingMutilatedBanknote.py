@@ -214,19 +214,19 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence.edit(headquarter=0)
 
 
-  def stepTryStopWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryDraftWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to stop with no amount defined on the document
     """
     self.assertEqual(len(self.mutilated_banknote.objectValues()), 0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
 
-  def stepTryHQStopWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryHQDraftWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to stop with no amount defined on the document
     """
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
     
   def stepCreateIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -260,19 +260,29 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-  def stepTryStopWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryDraftWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to stop with no amount defined on the document
     """
     self.assertEqual(self.mutilated_banknote.getSourceTotalAssetPrice(), 0.0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
 
-  def stepTryHQStopWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryHQDraftWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to stop with no amount defined on the document
     """
     self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 0.0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
+
+  def stepDraftDocument(self, sequence=None, sequence_list=None, **kw):
+    self.workflow_tool.doActionFor(self.mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.mutilated_banknote.getSimulationState(), "draft")
+
+  def stepDraftHQDocument(self, sequence=None, sequence_list=None, **kw):
+    self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
+    self.stepTic()
+    self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "draft")
 
   def stepStopDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -578,12 +588,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertNotEqual(self.hq_mutilated_banknote.getSourceReference(), None)
 
 
-  def stepTryStopHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryDraftHQWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to plan with no amount defined on the document
     """
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 0.0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
 
   def stepCreateHQIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -617,12 +627,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-  def stepTryStopHQWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
+  def stepTryDraftHQWithNoAmountDefined(self, sequence=None, sequence_list=None, **kw):
     """
     Try to plan with no amount defined on the document
     """
     self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 0.0)
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
 
   def stepStopHQDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -808,9 +818,9 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     # sequence 1 : no payback, mutilated banknotes
     sequence_string_1 = 'Tic CheckObjects Tic CheckInitialInventory ' \
-                        + 'CreateMutilatedBanknote Tic TryStopWithNoLineDefined ' \
-                        + 'CreateIncomingLine Tic TryStopWithNoAmountDefined ' \
-                        + 'StopDocument Tic ' \
+                        + 'CreateMutilatedBanknote Tic TryDraftWithNoLineDefined ' \
+                        + 'CreateIncomingLine Tic TryDraftWithNoAmountDefined ' \
+                        + 'DraftDocument Tic StopDocument Tic ' \
                         + 'CheckInventoryWithIncommingMutilatedBanknotes ' \
                         + 'CancelDocument Tic ' \
                         + 'CheckFinalInventoryWithNoPayBack ClearMutilatedBanknoteModule'
@@ -819,7 +829,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string_2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
                         + 'CreateIncomingLine Tic ' \
-                        + 'StopDocument Tic ' \
+                        + 'DraftDocument Tic StopDocument Tic ' \
                         + 'CheckInventoryWithIncommingMaculatedBanknotes ' \
                         + 'TryFinishWithNoLineDefined CreateExchangedLine Tic TryFinishWithNoAmountDefined FinishDocument Tic ' \
                         + 'TryDeliverWithNoLineDefined CreateOutgoingLine Tic TryDeliverWithWrongAmountDefined DeliverDocument Tic ' \
@@ -829,13 +839,13 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string_3 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote Tic ' \
                         + 'CreateIncomingLine Tic ' \
-                        + 'StopDocument Tic ' \
+                        + 'DraftDocument Tic StopDocument Tic ' \
                         + 'CheckInventoryWithIncommingMutilatedBanknotes ' \
                         + 'CreateExchangedLine Tic TryPlanWithExchangedLine DelExchangedLine Tic PlanDocument Tic ' \
                         + 'HQLogin ' \
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote Tic '\
-                        + 'TryStopHQWithNoLineDefined Tic CreateHQIncomingLine Tic TryStopHQWithNoAmountDefined StopHQDocument Tic ' \
+                        + 'TryDraftHQWithNoLineDefined Tic CreateHQIncomingLine Tic TryDraftHQWithNoAmountDefined DraftHQDocument Tic StopHQDocument Tic ' \
                         + 'CheckHQInventoryWithIncommingMutilatedBanknotes ' \
                         + 'TryPlanHQDocument ' \
                         + 'CancelHQDocument Tic ' \
@@ -848,12 +858,12 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string_4 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
                         + 'CreateIncomingLine Tic ' \
-                        + 'StopDocument Tic ' \
+                        + 'DraftDocument Tic StopDocument Tic ' \
                         + 'PlanDocument Tic ' \
                         + 'HQLogin ' \
                         + 'CheckHQInitialInventory ' \
                         + 'CreateHQMutilatedBanknote SetHQMaculatedState Tic ' \
-                        + 'CreateHQIncomingLine Tic StopHQDocument Tic ' \
+                        + 'CreateHQIncomingLine Tic DraftHQDocument Tic StopHQDocument Tic ' \
                         + 'MoveHQToFuture Tic ' \
                         + 'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         + 'CheckHQMaculatedBanknoteInventory ' \
@@ -868,9 +878,9 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
     # sequence 5 : HQ, no payback, mutilated banknotes
     sequence_string_5 = 'Tic CheckObjects Tic CheckHQInitialInventory ' \
                         'HQLogin ' \
-                        'CreateHQMutilatedBanknote Tic TryHQStopWithNoLineDefined ' \
-                        'CreateHQIncomingLine Tic TryHQStopWithNoAmountDefined ' \
-                        'StopHQDocument Tic ' \
+                        'CreateHQMutilatedBanknote Tic TryHQDraftWithNoLineDefined ' \
+                        'CreateHQIncomingLine Tic TryHQDraftWithNoAmountDefined ' \
+                        'DraftHQDocument Tic StopHQDocument Tic ' \
                         'CheckHQInventoryWithIncommingMutilatedBanknotes ' \
                         'CancelHQDocument Tic ' \
                         'CheckHQFinalInventoryWithNoPayBack ClearHQMutilatedBanknoteModule'
@@ -880,7 +890,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin, ERP5TypeTestCase):
                         'HQLogin ' \
                         'CreateHQMutilatedBanknote SetHQMaculatedState Tic ' \
                         'CreateHQIncomingLine Tic ' \
-                        'StopHQDocument Tic ' \
+                        'DraftHQDocument Tic StopHQDocument Tic ' \
                         'CheckHQInventoryWithIncommingMaculatedBanknotes ' \
                         'TryFinishHQWithNoLineDefined CreateHQExchangedLine Tic TryFinishHQWithNoAmountDefined FinishHQDocument Tic ' \
                         'TryDeliverHQWithNoLineDefined CreateHQOutgoingLine Tic TryDeliverHQWithWrongAmountDefined DeliverHQDocument Tic ' \
