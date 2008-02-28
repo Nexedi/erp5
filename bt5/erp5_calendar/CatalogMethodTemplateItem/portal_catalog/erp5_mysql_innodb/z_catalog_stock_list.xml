@@ -30,6 +30,12 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>asMovementList</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getDestinationFunctionUid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -204,6 +210,7 @@
 <string>getPortalType</string>
 <string>getVariationText</string>
 <string>getSubVariationText</string>
+<string>asMovementList</string>
                           </list>
                         </value>
                     </item>
@@ -220,30 +227,31 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\n
-getResourceUid\n
-getInventoriatedQuantity\n
-getSourceUid\n
-getDestinationUid\n
-getSourceSectionUid\n
-getDestinationSectionUid\n
-isMovement\n
-isInventoryMovement\n
-getSourcePaymentUid\n
-getDestinationPaymentUid\n
-getSourceFunctionUid\n
-getDestinationFunctionUid\n
-getSourceProjectUid\n
-getDestinationProjectUid\n
-getSimulationState\n
-getSourceInventoriatedTotalAssetPrice\n
-getDestinationInventoriatedTotalAssetPrice\n
-getStartDate\n
-getStopDate\n
-isAccountable\n
-getPortalType\n
-getVariationText\n
-getSubVariationText</string> </value>
+            <value> <string>uid\r\n
+getResourceUid\r\n
+getInventoriatedQuantity\r\n
+getSourceUid\r\n
+getDestinationUid\r\n
+getSourceSectionUid\r\n
+getDestinationSectionUid\r\n
+isMovement\r\n
+isInventoryMovement\r\n
+getSourcePaymentUid\r\n
+getDestinationPaymentUid\r\n
+getSourceFunctionUid\r\n
+getDestinationFunctionUid\r\n
+getSourceProjectUid\r\n
+getDestinationProjectUid\r\n
+getSimulationState\r\n
+getSourceInventoriatedTotalAssetPrice\r\n
+getDestinationInventoriatedTotalAssetPrice\r\n
+getStartDate\r\n
+getStopDate\r\n
+isAccountable\r\n
+getPortalType\r\n
+getVariationText\r\n
+getSubVariationText\r\n
+asMovementList</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
