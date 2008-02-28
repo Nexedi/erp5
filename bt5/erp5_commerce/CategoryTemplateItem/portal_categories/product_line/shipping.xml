@@ -19,21 +19,61 @@
             </value>
         </item>
         <item>
-            <key> <string>_count</string> </key>
+            <key> <string>activity_code</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
+            <key> <string>aggregated_portal_type</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <tuple/>
             </value>
         </item>
         <item>
-            <key> <string>_tree</string> </key>
+            <key> <string>base_height</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_length</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_price</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_surface</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_unit_quantity</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>base_volume</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_weight</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_width</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -45,7 +85,151 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>consumer_unit_quantity</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>corporate_name</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>corporate_registration_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_destination_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_destination_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_source_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>destination_base_price</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>destination_base_price_validity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>destination_total_asset_price</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>document_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>ean13_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>efficiency</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>expiration_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>financial_year_stop_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>float_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>geographic_incorporate_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>grouping_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>height_quantity</string> </key>
             <value>
               <none/>
             </value>
@@ -55,12 +239,222 @@
             <value> <string>shipping</string> </value>
         </item>
         <item>
+            <key> <string>id_generator</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id_group</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>instructions</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>length_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>max_delay</string> </key>
+            <value> <float>0.0</float> </value>
+        </item>
+        <item>
+            <key> <string>max_flow</string> </key>
+            <value> <float>0.0</float> </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>min_delay</string> </key>
+            <value> <float>0.0</float> </value>
+        </item>
+        <item>
+            <key> <string>min_flow</string> </key>
+            <value> <float>0.0</float> </value>
+        </item>
+        <item>
+            <key> <string>multimembership_criterion_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>p_variation_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>price</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>priced_quantity</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>required_aggregated_portal_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>rid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>rights</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>social_capital</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>social_capital_currency_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>social_capital_currency_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>social_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>source_base_price</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>source_base_price_validity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>source_total_asset_price</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>start_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>stop_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>subject</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>surface_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>time_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Shipping</string> </value>
+        </item>
+        <item>
+            <key> <string>trade_description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -68,47 +462,67 @@
               <none/>
             </value>
         </item>
+        <item>
+            <key> <string>unit_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_column</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_line</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_tab</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>variation_property_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>vat_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>volume_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>weight_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>width_quantity</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>

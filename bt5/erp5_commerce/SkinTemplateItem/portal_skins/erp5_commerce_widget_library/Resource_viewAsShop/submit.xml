@@ -126,7 +126,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string>hidden</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -151,6 +151,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>image</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>name</string> </key>

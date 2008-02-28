@@ -50,6 +50,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -117,7 +121,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>web_form_view</string> </value>
+            <value> <string>form_view_editable</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

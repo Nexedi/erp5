@@ -73,34 +73,34 @@
 """\n
   Add resource to shopping cart.\n
 """\n
-from Products.Formulator.Errors import FormValidationError\n
 request = container.REQUEST\n
-form = getattr(context, form_id)\n
-\n
-# FIXME:\n
-# this handling of validation errors should be automatically handled by the \n
-# button itself\n
-try:\n
-  params = form.validate_all_to_request(request)\n
-except FormValidationError, validation_errors:\n
-  # Pack errors into the request\n
-  field_errors = form.ErrorFields(validation_errors)\n
-  request.set(\'field_errors\', field_errors)\n
-  # Make sure editors are pushed back as values into the REQUEST object\n
-  for f in form.get_fields():\n
-    field_id = f.id\n
-    if request.has_key(field_id):\n
-      value = request.get(field_id)\n
-      if callable(value):\n
-        value(request)\n
-  return form(request)\n
-\n
-quantity = int(request.get(\'your_buy_quantity\'))\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
-\n
 if resource is None:\n
   resource = context\n
+\n
+if form_id is not None:\n
+  from Products.Formulator.Errors import FormValidationError\n
+  form = getattr(context, form_id, None)\n
+  quantity = int(request.get(\'field_your_buy_quantity\'))\n
+  # FIXME:\n
+  # this handling of validation errors should be automatically handled by the \n
+  # button itself\n
+  try:\n
+    params = form.validate_all_to_request(request)\n
+  except FormValidationError, validation_errors:\n
+    # Pack errors into the request\n
+    field_errors = form.ErrorFields(validation_errors)\n
+    request.set(\'field_errors\', field_errors)\n
+    # Make sure editors are pushed back as values into the REQUEST object\n
+    for f in form.get_fields():\n
+      field_id = f.id\n
+      if request.has_key(field_id):\n
+        value = request.get(field_id)\n
+        if callable(value):\n
+          value(request)\n
+    return form(request)\n
+\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
 \n
 ## check if we don\'t have already such a resource in cart\n
 line_found=False\n
@@ -142,7 +142,7 @@ context.Base_redirect(\'view\', \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, resource=None</string> </value>
+            <value> <string>resource=None, quantity=1, form_id=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -162,22 +162,25 @@ context.Base_redirect(\'view\', \\\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form_id</string>
                             <string>resource</string>
-                            <string>Products.Formulator.Errors</string>
-                            <string>FormValidationError</string>
+                            <string>quantity</string>
+                            <string>form_id</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
-                            <string>getattr</string>
+                            <string>None</string>
                             <string>context</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>FormValidationError</string>
+                            <string>getattr</string>
                             <string>form</string>
+                            <string>int</string>
                             <string>params</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
@@ -186,11 +189,8 @@ context.Base_redirect(\'view\', \\\n
                             <string>field_id</string>
                             <string>value</string>
                             <string>callable</string>
-                            <string>int</string>
-                            <string>quantity</string>
                             <string>shopping_cart</string>
                             <string>shopping_cart_items</string>
-                            <string>None</string>
                             <string>False</string>
                             <string>line_found</string>
                             <string>order_line</string>
@@ -209,6 +209,8 @@ context.Base_redirect(\'view\', \\\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <int>1</int>
                 <none/>
               </tuple>
             </value>
