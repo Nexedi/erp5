@@ -419,6 +419,7 @@ class Image(File, OFSImage):
           width = self.getWidth()
           height = self.getHeight()
       (width, height) = self._getAspectRatioSize(width, height)
+      if (width, height) == (0, 0):return self.getData()
       return self._resize(display, width, height, quality, format=format,
                           resolution=resolution, frame=frame)
 
@@ -447,6 +448,8 @@ class Image(File, OFSImage):
   def _getAspectRatioSize(self, width, height):
       """Return proportional dimensions within desired size."""
       img_width, img_height = (self.getWidth(), self.getHeight())
+      if img_width == 0:
+        return (0, 0)
       if height > img_height * width / img_width:
           height = img_height * width / img_width
       else:
