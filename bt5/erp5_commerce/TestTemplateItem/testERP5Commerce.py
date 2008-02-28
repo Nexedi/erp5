@@ -132,8 +132,9 @@ class TestCommerce(ERP5TypeTestCase):
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
     
-    # add second (same) product and check that we do not create
+    # add in two speps same product and check that we do not create
     # new Sale Order Line but just increase quantity on existing one
+    portal.Resource_addToShoppingCart(default_product, 1)
     portal.Resource_addToShoppingCart(default_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_items))
@@ -153,16 +154,21 @@ class TestCommerce(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     portal = self.getPortal()
     request = self.app.REQUEST
-    default_product = self.getDefaultProduct(id = '2')
+    default_product = self.getDefaultProduct()
+    another_product = self.getDefaultProduct(id = '2')
     request.set('session_id', SESSION_ID)
     
     # add second diff product and check that we create new Sale Order Line 
-    portal.Resource_addToShoppingCart(default_product, 1)
+    portal.Resource_addToShoppingCart(default_product, 2)
+    portal.Resource_addToShoppingCart(another_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(2, len(shoppping_cart_items))
+    self.assertEquals(2, shoppping_cart_items[0].getQuantity())
     self.assertEquals(1, shoppping_cart_items[1].getQuantity())
-    self.assertEquals(shoppping_cart_items[1].getResource(), \
+    self.assertEquals(shoppping_cart_items[0].getResource(), \
                       default_product.getRelativeUrl())
+    self.assertEquals(shoppping_cart_items[1].getResource(), \
+                      another_product.getRelativeUrl())
                       
                       
   def test_04_CalculateTotaShoppingCartPrice(self, quiet=0, run=run_all_test):
@@ -178,7 +184,11 @@ class TestCommerce(ERP5TypeTestCase):
     portal = self.getPortal()
     request = self.app.REQUEST
     default_product = self.getDefaultProduct()
+    another_product = self.getDefaultProduct(id = '2')
     request.set('session_id', SESSION_ID)
+    
+    portal.Resource_addToShoppingCart(default_product, 2)
+    portal.Resource_addToShoppingCart(another_product, 1)
     shopping_cart = portal.SaleOrder_getShoppingCart()
     self.assertEquals(40.0, \
          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice()))
@@ -212,10 +222,17 @@ class TestCommerce(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     portal = self.getPortal()
     request = self.app.REQUEST
+    
     default_product = self.getDefaultProduct()
+    another_product = self.getDefaultProduct(id = '2')
+    shipping = self.getDefaultProduct('3')
     request.set('session_id', SESSION_ID)
-    shopping_cart = portal.SaleOrder_getShoppingCart()
+    portal.Resource_addToShoppingCart(default_product, quantity=1)
+    portal.Resource_addToShoppingCart(another_product, quantity=1)
 
+    shopping_cart = portal.SaleOrder_getShoppingCart()
+    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+    
     # increase shopping item number
     portal.SaleOrder_editShoppingCart((2, 1,))
     
