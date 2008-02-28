@@ -125,6 +125,14 @@ class TestSessionTool(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     portal = self.getPortal()
     portal_sessions = portal.portal_sessions
+    session = portal_sessions.newContent(
+                      self.session_id, \
+                      attr_1 = newTempOrder(portal_sessions, '1'), \
+                      attr_2 = newTempOrder(portal_sessions, '2'), \
+                      attr_3 = 1,
+                      attr_4 = 0.1,
+                      attr_5 = {},
+                      attr_6 = 'string',)
     session = portal_sessions[self.session_id]
     session.pop('attr_1')
     session.pop('attr_2')
@@ -141,6 +149,14 @@ class TestSessionTool(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     portal = self.getPortal()
     portal_sessions = portal.portal_sessions
+    session = portal_sessions.newContent(
+                      self.session_id, \
+                      attr_1 = newTempOrder(portal_sessions, '1'), \
+                      attr_2 = newTempOrder(portal_sessions, '2'), \
+                      attr_3 = 1,
+                      attr_4 = 0.1,
+                      attr_5 = {},
+                      attr_6 = 'string',)
     ## delete it 
     portal_sessions.manage_delObjects(self.session_id)
     session = portal_sessions[self.session_id]
