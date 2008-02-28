@@ -119,6 +119,13 @@ class OOoChartWidget(Widget.Widget):
                               required=0)
   property_names.append('chart_three_dimensional')
 
+  chart_mean_value = fields.CheckBoxField('chart_mean_value',
+                              title='Chart Mean Value',
+                              description=('XXX Unknown'),
+                              default=0,
+                              required=0)
+  property_names.append('chart_mean_value')
+
 
 #"""
 #chart:japanese-candle-stick="false" chart:stock-with-volume="false" chart:three-dimensional="false" chart:deep="false" chart:lines="false" chart:interpolation="none" chart:symbol-type="none" chart:vertical="true" chart:lines-used="0" chart:connect-bars="false" chart:series-source="columns" chart:mean-value="false" chart:error-margin="0" chart:error-lower-limit="0" chart:error-upper-limit="0" chart:error-category="none" chart:error-percentage="0" chart:regression-type="none" chart:data-label-number="none" chart:data-label-text="false" chart:data-label-symbol="false"/>
