@@ -49,6 +49,8 @@ class Session(UserDict):
   ## we have our own security policy and do not want Zope's
   _guarded_writes = 1 
   __allow_access_to_unprotected_subobjects__ = 1
+  # XXX (dirty hack): we shouldn't need to explicitly set uid here
+  uid = 'NULL'
   
   ## a handle to current aquisition context
   _aq_context = None
