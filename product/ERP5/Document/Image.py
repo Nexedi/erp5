@@ -51,7 +51,9 @@ from OFS.content_types import guess_content_type
 from zLOG import LOG
 
 # XXX This should be move to preferences
-defaultdisplays = {'thumbnail' : (128,128),
+defaultdisplays = {'nano'      : (25,25),
+                   'micro'     : (64,64),
+                   'thumbnail' : (128,128),
                    'xsmall'    : (200,200),
                    'small'     : (320,320),
                    'medium'    : (480,480),
