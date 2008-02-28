@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -32,12 +29,6 @@
                         <key> <string>_data</string> </key>
                         <value>
                           <dictionary>
-                            <item>
-                                <key> <string>asMovementList</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
                             <item>
                                 <key> <string>getDestinationFunctionUid</string> </key>
                                 <value>
@@ -213,7 +204,6 @@
 <string>getPortalType</string>
 <string>getVariationText</string>
 <string>getSubVariationText</string>
-<string>asMovementList</string>
                           </list>
                         </value>
                     </item>
@@ -230,31 +220,30 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getResourceUid\r\n
-getInventoriatedQuantity\r\n
-getSourceUid\r\n
-getDestinationUid\r\n
-getSourceSectionUid\r\n
-getDestinationSectionUid\r\n
-isMovement\r\n
-isInventoryMovement\r\n
-getSourcePaymentUid\r\n
-getDestinationPaymentUid\r\n
-getSourceFunctionUid\r\n
-getDestinationFunctionUid\r\n
-getSourceProjectUid\r\n
-getDestinationProjectUid\r\n
-getSimulationState\r\n
-getSourceInventoriatedTotalAssetPrice\r\n
-getDestinationInventoriatedTotalAssetPrice\r\n
-getStartDate\r\n
-getStopDate\r\n
-isAccountable\r\n
-getPortalType\r\n
-getVariationText\r\n
-getSubVariationText\r\n
-asMovementList</string> </value>
+            <value> <string>uid\n
+getResourceUid\n
+getInventoriatedQuantity\n
+getSourceUid\n
+getDestinationUid\n
+getSourceSectionUid\n
+getDestinationSectionUid\n
+isMovement\n
+isInventoryMovement\n
+getSourcePaymentUid\n
+getDestinationPaymentUid\n
+getSourceFunctionUid\n
+getDestinationFunctionUid\n
+getSourceProjectUid\n
+getDestinationProjectUid\n
+getSimulationState\n
+getSourceInventoriatedTotalAssetPrice\n
+getDestinationInventoriatedTotalAssetPrice\n
+getStartDate\n
+getStopDate\n
+isAccountable\n
+getPortalType\n
+getVariationText\n
+getSubVariationText</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -304,61 +293,58 @@ WHERE\n
 \n
 <dtml-var "\'\\0\'">\n
 \n
-<dtml-let row_list="[]">\n
+<dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item]">\n
-    <dtml-if "not isInventoryMovement[loop_item]">\n
-      <dtml-if "isAccountable[loop_item]">\n
-        <dtml-if "getResourceUid[loop_item]">\n
-          <dtml-in prefix="mov" expr="asMovementList[loop_item]" no_push_item>\n
-            <dtml-if "getDestinationUid[loop_item]">\n
-                <dtml-call expr="row_list.append([\n
-                    uid[loop_item], \n
-                    getDestinationUid[loop_item],\n
-                    getDestinationSectionUid[loop_item],\n
-                    getDestinationPaymentUid[loop_item],\n
-                    getDestinationFunctionUid[loop_item],\n
-                    getDestinationProjectUid[loop_item], \n
-                    getSourceSectionUid[loop_item], \n
-                    getSourceUid[loop_item], \n
-                    getResourceUid[loop_item],\n
-                    getInventoriatedQuantity[loop_item],\n
-                    mov_item.getStopDate(), \n
-                    mov_item.getStartDate(), \n
-                    getDestinationInventoriatedTotalAssetPrice[loop_item], \n
-                    getPortalType[loop_item], \n
-                    getSimulationState[loop_item], \n
-                    getVariationText[loop_item],\n
-                    getSubVariationText[loop_item]])">\n
-            </dtml-if>\n
-            <dtml-if "getSourceUid[loop_item]">\n
-                <dtml-call expr="row_list.append([\n
-                    uid[loop_item], \n
-                    getSourceUid[loop_item],\n
-                    getSourceSectionUid[loop_item],\n
-                    getSourcePaymentUid[loop_item],\n
-                    getSourceFunctionUid[loop_item],\n
-                    getSourceProjectUid[loop_item], \n
-                    getDestinationSectionUid[loop_item], \n
-                    getDestinationUid[loop_item], \n
-                    getResourceUid[loop_item],\n
-                    -(getInventoriatedQuantity[loop_item] or 0), \n
-                    mov_item.getStartDate(), \n
-                    mov_item.getStopDate(), \n
-                    getSourceInventoriatedTotalAssetPrice[loop_item], \n
-                    getPortalType[loop_item], \n
-                    getSimulationState[loop_item], \n
-                    getVariationText[loop_item],\n
-                    getSubVariationText[loop_item]])">\n
-            </dtml-if>\n
-          </dtml-in>\n
-\n
+    <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
+      <dtml-in prefix="mov" expr="asMovementList[loop_item]" no_push_item>\n
+        <dtml-if "getDestinationUid[loop_item]">\n
+          <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
+          <dtml-call expr="row_list.append([\n
+                      uid[loop_item],\n
+                      uid_dict[uid[loop_item]],\n
+                      getDestinationUid[loop_item],\n
+                      getDestinationSectionUid[loop_item],\n
+                      getDestinationPaymentUid[loop_item],\n
+                      getDestinationFunctionUid[loop_item],\n
+                      getDestinationProjectUid[loop_item],\n
+                      getSourceSectionUid[loop_item],\n
+                      getSourceUid[loop_item],\n
+                      getResourceUid[loop_item],\n
+                      getInventoriatedQuantity[loop_item],\n
+                      mov_item.getStopDate(),\n
+                      mov_item.getStartDate(),\n
+                      getDestinationInventoriatedTotalAssetPrice[loop_item],\n
+                      getPortalType[loop_item],\n
+                      getSimulationState[loop_item],\n
+                      getVariationText[loop_item],\n
+                      getSubVariationText[loop_item]])">\n
         </dtml-if>\n
-      </dtml-if>\n
-      </dtml-if>\n
+        <dtml-if "getSourceUid[loop_item]">\n
+          <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
+          <dtml-call expr="row_list.append([\n
+                      uid[loop_item],\n
+                      uid_dict[uid[loop_item]],\n
+                      getSourceUid[loop_item],\n
+                      getSourceSectionUid[loop_item],\n
+                      getSourcePaymentUid[loop_item],\n
+                      getSourceFunctionUid[loop_item],\n
+                      getSourceProjectUid[loop_item],\n
+                      getDestinationSectionUid[loop_item],\n
+                      getDestinationUid[loop_item],\n
+                      getResourceUid[loop_item],\n
+                      -(getInventoriatedQuantity[loop_item] or 0),\n
+                      mov_item.getStopDate(),\n
+                      mov_item.getStartDate(),\n
+                      getSourceInventoriatedTotalAssetPrice[loop_item],\n
+                      getPortalType[loop_item],\n
+                      getSimulationState[loop_item],\n
+                      getVariationText[loop_item],\n
+                      getSubVariationText[loop_item]])">\n
+        </dtml-if>\n
+      </dtml-in>\n
     </dtml-if>\n
-  </dtml-in>  \n
-  \n
+  </dtml-in>\n
+\n
   <dtml-if "row_list">\n
 INSERT INTO\n
   stock\n
@@ -366,22 +352,23 @@ VALUES\n
     <dtml-in prefix="row" expr="row_list">\n
 (\n
   <dtml-sqlvar expr="row_item[0]" type="int">,\n
-  <dtml-sqlvar expr="row_item[1]" type="int">,  \n
-  <dtml-sqlvar expr="row_item[2]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[1]" type="int">,\n
+  <dtml-sqlvar expr="row_item[2]" type="int">,  \n
   <dtml-sqlvar expr="row_item[3]" type="int" optional>, \n
-  <dtml-sqlvar expr="row_item[4]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>, \n
   <dtml-sqlvar expr="row_item[5]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
-  <dtml-sqlvar expr="row_item[8]" type="int">, \n
-  <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[9]" type="int">, \n
+  <dtml-sqlvar expr="row_item[10]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[13]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[17]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
@@ -396,9 +383,11 @@ VALUES\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -435,61 +424,58 @@ WHERE\n
 \n
 <dtml-var "\'\\0\'">\n
 \n
-<dtml-let row_list="[]">\n
+<dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item]">\n
-    <dtml-if "not isInventoryMovement[loop_item]">\n
-      <dtml-if "isAccountable[loop_item]">\n
-        <dtml-if "getResourceUid[loop_item]">\n
-          <dtml-in prefix="mov" expr="asMovementList[loop_item]" no_push_item>\n
-            <dtml-if "getDestinationUid[loop_item]">\n
-                <dtml-call expr="row_list.append([\n
-                    uid[loop_item], \n
-                    getDestinationUid[loop_item],\n
-                    getDestinationSectionUid[loop_item],\n
-                    getDestinationPaymentUid[loop_item],\n
-                    getDestinationFunctionUid[loop_item],\n
-                    getDestinationProjectUid[loop_item], \n
-                    getSourceSectionUid[loop_item], \n
-                    getSourceUid[loop_item], \n
-                    getResourceUid[loop_item],\n
-                    getInventoriatedQuantity[loop_item],\n
-                    mov_item.getStopDate(), \n
-                    mov_item.getStartDate(), \n
-                    getDestinationInventoriatedTotalAssetPrice[loop_item], \n
-                    getPortalType[loop_item], \n
-                    getSimulationState[loop_item], \n
-                    getVariationText[loop_item],\n
-                    getSubVariationText[loop_item]])">\n
-            </dtml-if>\n
-            <dtml-if "getSourceUid[loop_item]">\n
-                <dtml-call expr="row_list.append([\n
-                    uid[loop_item], \n
-                    getSourceUid[loop_item],\n
-                    getSourceSectionUid[loop_item],\n
-                    getSourcePaymentUid[loop_item],\n
-                    getSourceFunctionUid[loop_item],\n
-                    getSourceProjectUid[loop_item], \n
-                    getDestinationSectionUid[loop_item], \n
-                    getDestinationUid[loop_item], \n
-                    getResourceUid[loop_item],\n
-                    -(getInventoriatedQuantity[loop_item] or 0), \n
-                    mov_item.getStartDate(), \n
-                    mov_item.getStopDate(), \n
-                    getSourceInventoriatedTotalAssetPrice[loop_item], \n
-                    getPortalType[loop_item], \n
-                    getSimulationState[loop_item], \n
-                    getVariationText[loop_item],\n
-                    getSubVariationText[loop_item]])">\n
-            </dtml-if>\n
-          </dtml-in>\n
-\n
+    <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
+      <dtml-in prefix="mov" expr="asMovementList[loop_item]" no_push_item>\n
+        <dtml-if "getDestinationUid[loop_item]">\n
+          <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
+          <dtml-call expr="row_list.append([\n
+                      uid[loop_item],\n
+                      uid_dict[uid[loop_item]],\n
+                      getDestinationUid[loop_item],\n
+                      getDestinationSectionUid[loop_item],\n
+                      getDestinationPaymentUid[loop_item],\n
+                      getDestinationFunctionUid[loop_item],\n
+                      getDestinationProjectUid[loop_item],\n
+                      getSourceSectionUid[loop_item],\n
+                      getSourceUid[loop_item],\n
+                      getResourceUid[loop_item],\n
+                      getInventoriatedQuantity[loop_item],\n
+                      mov_item.getStopDate(),\n
+                      mov_item.getStartDate(),\n
+                      getDestinationInventoriatedTotalAssetPrice[loop_item],\n
+                      getPortalType[loop_item],\n
+                      getSimulationState[loop_item],\n
+                      getVariationText[loop_item],\n
+                      getSubVariationText[loop_item]])">\n
         </dtml-if>\n
-      </dtml-if>\n
-      </dtml-if>\n
+        <dtml-if "getSourceUid[loop_item]">\n
+          <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
+          <dtml-call expr="row_list.append([\n
+                      uid[loop_item],\n
+                      uid_dict[uid[loop_item]],\n
+                      getSourceUid[loop_item],\n
+                      getSourceSectionUid[loop_item],\n
+                      getSourcePaymentUid[loop_item],\n
+                      getSourceFunctionUid[loop_item],\n
+                      getSourceProjectUid[loop_item],\n
+                      getDestinationSectionUid[loop_item],\n
+                      getDestinationUid[loop_item],\n
+                      getResourceUid[loop_item],\n
+                      -(getInventoriatedQuantity[loop_item] or 0),\n
+                      mov_item.getStopDate(),\n
+                      mov_item.getStartDate(),\n
+                      getSourceInventoriatedTotalAssetPrice[loop_item],\n
+                      getPortalType[loop_item],\n
+                      getSimulationState[loop_item],\n
+                      getVariationText[loop_item],\n
+                      getSubVariationText[loop_item]])">\n
+        </dtml-if>\n
+      </dtml-in>\n
     </dtml-if>\n
-  </dtml-in>  \n
-  \n
+  </dtml-in>\n
+\n
   <dtml-if "row_list">\n
 INSERT INTO\n
   stock\n
@@ -497,22 +483,23 @@ VALUES\n
     <dtml-in prefix="row" expr="row_list">\n
 (\n
   <dtml-sqlvar expr="row_item[0]" type="int">,\n
-  <dtml-sqlvar expr="row_item[1]" type="int">,  \n
-  <dtml-sqlvar expr="row_item[2]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[1]" type="int">,\n
+  <dtml-sqlvar expr="row_item[2]" type="int">,  \n
   <dtml-sqlvar expr="row_item[3]" type="int" optional>, \n
-  <dtml-sqlvar expr="row_item[4]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>, \n
   <dtml-sqlvar expr="row_item[5]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
-  <dtml-sqlvar expr="row_item[8]" type="int">, \n
-  <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[9]" type="int">, \n
+  <dtml-sqlvar expr="row_item[10]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[13]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[17]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
