@@ -262,7 +262,7 @@ class Image(File, OFSImage):
               if id in ids:
                   ids.remove(id)
       # Sort by desired photo surface area
-      ids.sort(lambda x,y,d=self._displays: cmp(d[x][0]*d[x][1], d[y][0]*d[y][1]))
+      ids.sort(lambda x,y,d=defaultdisplays: cmp(d[x][0]*d[x][1], d[y][0]*d[y][1]))
       return ids
 
   security.declareProtected('Access contents information', 'displayLinks')
