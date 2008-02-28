@@ -2776,6 +2776,16 @@ class ListBoxLine:
 
     return config_column + [self.column_dict[column_id] for column_id in column_id_list]
 
+  security.declarePublic('getColumnPropertyTypeName')
+  def getColumnPropertyTypeName(self, column_id):
+    """
+      Returns the type of a property of a column in
+      the form of a string
+
+      NOTE: experimental method - may change in the future
+    """
+    return type(self.column_dict[column_id]).__name__
+
   security.declarePublic('getColumnItemList')
   def getColumnItemList(self, column_id_list = None ):
     """
