@@ -451,9 +451,12 @@ def create_settings_form():
                                         title='Form properties are unicode',
                                         default=0,
                                         required=1)
+    edit_order = fields.LinesField('edit_order',
+                                   title='Setters for these properties should be'
+                                   '<br /> called by edit() in the defined order')
 
     form.add_fields([title, description, row_length, name, pt, action, update_action, method,
-                     enctype, encoding, stored_encoding, unicode_mode])
+                     enctype, encoding, stored_encoding, unicode_mode, edit_order])
     return form
 
 class ERP5Form(ZMIForm, ZopePageTemplate):
@@ -496,6 +499,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Default Attributes
     pt = 'form_view'
     update_action = ''
+    edit_order = []
 
     # Special Settings
     settings_form = create_settings_form()
