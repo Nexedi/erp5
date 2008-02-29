@@ -72,9 +72,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>select_expression</string>
-<string>where_expression</string>
-<string>group_by_expression</string>
+                            <string>select_expression</string>
+                            <string>where_expression</string>
+                            <string>group_by_expression</string>
                           </list>
                         </value>
                     </item>
