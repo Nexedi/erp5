@@ -77,10 +77,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add CMF Groups Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add CMF Report Tools</name>
    <role>Manager</role>
   </permission>
@@ -173,10 +169,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add ERP5Configurator Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add ERP5Form Tools</name>
    <role>Manager</role>
   </permission>
@@ -190,10 +182,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add ERP5Type Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ERP5Wizard Tools</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -218,18 +206,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add Formulator Forms</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add GroupUserFolder</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add GroupUserFolders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Groups</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -262,14 +238,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -314,10 +282,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Versions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -385,10 +349,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add secure MailHost objects</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
   </permission>
@@ -438,10 +398,6 @@
   </permission>
   <permission type='tuple'>
    <name>Change Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change Photo</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -523,10 +479,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Delete Groups</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Delete local files</name>
    <role>Manager</role>
   </permission>
@@ -598,6 +550,10 @@
   </permission>
   <permission type='tuple'>
    <name>Manage Groups</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Manage Selenium test cases</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -702,10 +658,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Set Group Ownership</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Set own password</name>
    <role>Manager</role>
   </permission>
@@ -755,15 +707,10 @@
    <role>Assignor</role>
    <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>View Directory Index</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>View Groups</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
