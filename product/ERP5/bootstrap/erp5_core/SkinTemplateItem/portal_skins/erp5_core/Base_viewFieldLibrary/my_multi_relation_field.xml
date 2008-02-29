@@ -604,7 +604,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_text_area_height\', 4)</string> </value>
+            <value> <string>python: preferences.getPreference(\'preferred_textarea_height\', 4)</string> </value>
         </item>
       </dictionary>
     </pickle>
