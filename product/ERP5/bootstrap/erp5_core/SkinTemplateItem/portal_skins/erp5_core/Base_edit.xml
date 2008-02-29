@@ -100,6 +100,7 @@ if not silent_mode and not request.AUTHENTICATED_USER.has_permission(\'Modify po
 \n
 # Get the form\n
 form = getattr(context,form_id)\n
+edit_order = form.edit_order\n
 \n
 try:\n
   # Validate\n
@@ -129,7 +130,7 @@ def editListBox(listbox_field, listbox):\n
         gv[k] = getattr(request, k, None)\n
     for url, v in listbox.items():\n
       v.update(gv)\n
-      context.restrictedTraverse(url).edit(**v)\n
+      context.restrictedTraverse(url).edit(edit_order=edit_order, **v)\n
 \n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n
@@ -186,7 +187,7 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
         if matrix_context.hasInRange(*k, **kd):\n
           c = matrix_context.newCell(*k, **kd)\n
           if c is not None:\n
-            c.edit(**gv)  # First update globals which include the def. of property_list\n
+            c.edit(edit_order=edit_order, **gv)  # First update globals which include the def. of property_list\n
             if v.has_key(\'variated_property\'):\n
               # For Variated Properties\n
               value = v[\'variated_property\']\n
@@ -197,7 +198,7 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
                 # XXX May require some changes with Sets\n
                 key = gv[\'mapped_value_property_list\'][0]\n
                 v[key] = value\n
-            c.edit(**v) # and update the cell specific values\n
+            c.edit(edit_order=edit_order, **v) # and update the cell specific values\n
           else:\n
             return "Could not create cell %s" % str(k)\n
         else:\n
@@ -254,7 +255,7 @@ try:\n
 \n
   # Maybe we should build a list of objects we need\n
   # Update basic attributes\n
-  context.edit(REQUEST=request, **kw)\n
+  context.edit(REQUEST=request, edit_order=edit_order, **kw)\n
   for encapsulated_editor in encapsulated_editor_list:\n
     encapsulated_editor.edit(context)\n
 except ActivityPendingError,e:\n
@@ -295,6 +296,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -349,6 +356,7 @@ return result\n
                             <string>_getitem_</string>
                             <string>getattr</string>
                             <string>form</string>
+                            <string>edit_order</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
                             <string>_getiter_</string>
