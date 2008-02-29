@@ -161,7 +161,6 @@ class Setter(Method):
       if o is None:
         o = instance.newContent(id=self._storage_id,
             portal_type=self._portal_type[0])
-        instance._v_accessor_created_object = 1
       if self._reindex:
         warnings.warn("The reindexing accessors are deprecated.\n"
                       "Please use Alias.Reindex instead.",

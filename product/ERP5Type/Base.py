@@ -1465,7 +1465,7 @@ class Base( CopyContainer,
   # Object attributes update method
   security.declarePrivate( '_edit' )
   def _edit(self, REQUEST=None, force_update=0, reindex_object=0, 
-            keep_existing=0, activate_kw=None, **kw):
+            keep_existing=0, activate_kw=None, edit_order=[], **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -1483,46 +1483,34 @@ class Base( CopyContainer,
     """
     modified_property_dict = self._v_modified_property_dict = {}
 
-    def getModifiedPropertyList(self):
-      my_modified_property_list = []
-      for key in kw.keys():
-        # We only change if the value is different
-        # This may be very long...
-        old_value = None
-        if not force_update:
-          try:
-            old_value = self.getProperty(key, evaluate=0)
-          except TypeError:
-            old_value = self.getProperty(key)
+    key_list = kw.keys()
+    ordered_key_list = [k for k in key_list if k not in edit_order]
+    for k in edit_order:
+      if k in key_list:
+        ordered_key_list.append(k)
 
-        if old_value != kw[key] or force_update:
-          # We keep in a thread var the previous values
-          # this can be useful for interaction workflow to implement lookups
-          # XXX If iteraction workflow script is triggered by edit and calls
-          # edit itself, this is useless as the dict will be overwritten
-          # If the keep_existing flag is set to 1, we do not update properties which are defined
-          if not keep_existing or not self.hasProperty(key):
-            modified_property_dict[key] = old_value
-            my_modified_property_list.append(key)
-      return my_modified_property_list
+    for key in ordered_key_list:
+      # We only change if the value is different
+      # This may be very long...
+      old_value = None
+      if not force_update:
+        try:
+          old_value = self.getProperty(key, evaluate=0)
+        except TypeError:
+          old_value = self.getProperty(key)
 
-    my_modified_property_list = getModifiedPropertyList(self)
-
-    # When we get notified by an accessor that it created an object, recheck
-    # all properties
-    while 1:
-      self._v_accessor_created_object = 0
-      for key in my_modified_property_list:
-        if key != 'id':
-          self._setProperty(key, kw[key])
-        else:
-          self.setId(kw['id'], reindex=reindex_object)
-        if self._v_accessor_created_object == 1:
-          # refresh list of modified properties, and restart the process
-          my_modified_property_list = getModifiedPropertyList(self)
-          break
-      else:
-        break
+      if old_value != kw[key] or force_update:
+        # We keep in a thread var the previous values
+        # this can be useful for interaction workflow to implement lookups
+        # XXX If iteraction workflow script is triggered by edit and calls
+        # edit itself, this is useless as the dict will be overwritten
+        # If the keep_existing flag is set to 1, we do not update properties which are defined
+        if not keep_existing or not self.hasProperty(key):
+          modified_property_dict[key] = old_value
+          if key != 'id':
+            self._setProperty(key, kw[key])
+          else:
+            self.setId(kw['id'], reindex=reindex_object)
 
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
