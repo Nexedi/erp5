@@ -65,13 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>item_list = [(\'\', \'\')]\n
+            <value> <string>translate = context.Base_translateString\n
+item_list = [(\'\', \'\')]\n
 for action in context.portal_actions.listFilteredActionsFor(brain).get(\'workflow\', []):\n
   transition = action.get(\'transition\', None)\n
   if transition is not None:\n
     workflow_id = action[\'transition\'].aq_parent.aq_parent.getId()\n
     if workflow_id == brain.workflow_id:\n
-      item_list.append((action[\'title\'], \'%s/%s\' % (workflow_id, action[\'id\'])))\n
+      item_list.append((translate(action[\'title\']), \'%s/%s\' % (workflow_id, action[\'id\'])))\n
 \n
 return item_list\n
 </string> </value>
@@ -132,10 +133,11 @@ return item_list\n
                           <tuple>
                             <string>brain</string>
                             <string>kw</string>
-                            <string>item_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translate</string>
+                            <string>item_list</string>
+                            <string>_getiter_</string>
                             <string>action</string>
                             <string>None</string>
                             <string>transition</string>
