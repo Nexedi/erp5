@@ -42,7 +42,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>account_uid_list</string>
+                            <string>account_uid_list</string>
                           </list>
                         </value>
                     </item>

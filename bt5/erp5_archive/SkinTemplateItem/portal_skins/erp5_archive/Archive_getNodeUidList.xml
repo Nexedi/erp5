@@ -48,8 +48,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>account_uid_list</string>
-<string>account_node_uid</string>
+                            <string>account_uid_list</string>
+                            <string>account_node_uid</string>
                           </list>
                         </value>
                     </item>
