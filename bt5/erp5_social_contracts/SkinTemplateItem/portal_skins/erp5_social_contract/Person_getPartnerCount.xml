@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+""" Get the partner count for a person.\n
+ * valid_social_contract_type_list an optional list of type of social contract list to \n
+take into account, if not specified, all type of social contract are valid.\n
+"""\n
+if at_date is None :\n
+  import DateTime\n
+  at_date = DateTime.DateTime()\n
+\n
+social_contract_list = []\n
+\n
+# find all social contracts.\n
+for social_contract in context.getDestinationRelatedValueList(portal_type=\'Social Contract\'):\n
+  if social_contract.getValidationState() != \'validated\':\n
+    continue\n
+  if valid_social_contract_type_list is not None :\n
+    for valid_social_contract_type in valid_social_contract_type_list :\n
+      if social_contract.getSocialContractType() == valid_social_contract_type:\n
+        # XXX access stop_date directly because of wrong acquisition start_date -> stop_date\n
+        if getattr(social_contract, \'stop_date\', None) is None or social_contract.stop_date >= at_date:\n
+          social_contract_list.append(social_contract)\n
+        break\n
+  else:\n
+    # XXX access stop_date directly because of wrong acquisition start_date -> stop_date\n
+    if getattr(social_contract, \'stop_date\', None) is None or social_contract.stop_date >= at_date:\n
+      social_contract_list.append(social_contract)\n
+\n
+partner_uid_dict = {}\n
+# find all partners from those social contracts\n
+for social_contract in social_contract_list:\n
+  for partner_uid in social_contract.getDestinationUidList( portal_type = \'Person\' ):\n
+    if partner_uid != context.getUid():\n
+      partner_uid_dict[partner_uid] = 1\n
+\n
+return len( partner_uid_dict.keys() )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>valid_social_contract_type_list=None, at_date=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>valid_social_contract_type_list</string>
+                            <string>at_date</string>
+                            <string>None</string>
+                            <string>DateTime</string>
+                            <string>_getattr_</string>
+                            <string>social_contract_list</string>
+                            <string>_getiter_</string>
+                            <string>context</string>
+                            <string>social_contract</string>
+                            <string>valid_social_contract_type</string>
+                            <string>getattr</string>
+                            <string>partner_uid_dict</string>
+                            <string>partner_uid</string>
+                            <string>_write_</string>
+                            <string>len</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_getPartnerCount</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

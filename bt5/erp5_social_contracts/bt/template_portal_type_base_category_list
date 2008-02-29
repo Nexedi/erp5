@@ -1,0 +1,6 @@
+Person | insurance_coverage
+Person | legal_parent
+Person | natural_parent
+Social Contract | destination
+Social Contract | social_contract_type
+Social Contract | source

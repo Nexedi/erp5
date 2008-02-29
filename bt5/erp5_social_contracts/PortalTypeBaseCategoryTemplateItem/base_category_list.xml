@@ -1,0 +1,12 @@
+<base_category_list>
+ <portal_type id="Person">
+  <item>legal_parent</item>
+  <item>natural_parent</item>
+  <item>insurance_coverage</item>
+ </portal_type>
+ <portal_type id="Social Contract">
+  <item>destination</item>
+  <item>source</item>
+  <item>social_contract_type</item>
+ </portal_type>
+</base_category_list>
