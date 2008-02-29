@@ -40,6 +40,9 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>AccessContentsInformation</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
@@ -169,10 +172,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add ERP5Configurator Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add ERP5Form Tools</name>
    <role>Manager</role>
   </permission>
@@ -186,10 +185,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add ERP5Type Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ERP5Wizard Tools</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -214,10 +209,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add Formulator Forms</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Local File Systems</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -397,10 +388,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change Local File System properties</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change Lock Information</name>
    <role>Manager</role>
   </permission>
@@ -465,6 +452,9 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Change user folder</name>
+  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignee</role>
@@ -484,10 +474,6 @@
   </permission>
   <permission type='tuple'>
    <name>Define permissions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Delete local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -588,12 +574,11 @@
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Manage languages</name>
-   <role>Manager</role>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='tuple'>
-   <name>Manage local files</name>
+   <name>Manage languages</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -627,10 +612,6 @@
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Overwrite local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -690,19 +671,11 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Upload local files</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Use Database Methods</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Use Factories</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Use external editor</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -716,10 +689,6 @@
    <role>Associate</role>
    <role>Auditor</role>
    <role>Author</role>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>View Directory Index</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
