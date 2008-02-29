@@ -115,7 +115,7 @@
                       <option selected="selected"\n
                               value="None"\n
                               i18n:translate="" i18n:domain="ui">\n
-                        None\n
+                        \n
                       </option>\n
                       <option tal:repeat="option all_columns"\n
                               tal:content="python:option[1]"\n
