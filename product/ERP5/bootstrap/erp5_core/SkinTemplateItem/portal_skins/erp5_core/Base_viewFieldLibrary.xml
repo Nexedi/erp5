@@ -118,6 +118,7 @@
                         <string>my_percent</string>
                         <string>planning_box</string>
                         <string>my_comment</string>
+                        <string>my_multi_list_field</string>
                       </list>
                     </value>
                 </item>
