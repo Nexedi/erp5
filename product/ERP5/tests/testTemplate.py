@@ -1,0 +1,113 @@
+#############################################################################
+#
+# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+#                    TAHARA Yusei <yusei@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+##############################################################################
+"""Tests Template functionality"""
+
+import unittest
+from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type import Permissions
+from Products.ERP5Form.Document.Preference import Priority
+
+
+class TestTemplate(ERP5TypeTestCase):
+  """A test for Template.
+  """
+
+  def getTitle(self):
+    return "Template"
+
+  def getBusinessTemplateList(self):
+    """Returns list of BT to be installed."""
+    return ('erp5_base', 'erp5_ui_test')
+
+  def login(self, name=None):
+    """login with Assignee, Assignor & Author roles."""
+    if name is None:
+      return
+    uf = self.getPortal().acl_users
+    uf._doAddUser(name, '', ['Auditor', 'Author'], [])
+    user = uf.getUserById(name).__of__(uf)
+    newSecurityManager(None, user)
+
+  def afterSetUp(self):
+    self.portal.portal_types['Preference'].allowed_content_types = ('Foo',)
+    self.portal.foo_module.manage_role(role_to_manage='Author',
+                                permissions=[Permissions.AddPortalContent,
+                                             Permissions.CopyOrMove,
+                                             ])
+
+  def test_Template(self):
+    self.login('yusei')
+    preference = self.portal.portal_preferences.newContent(portal_type='Preference')
+    preference.priority = Priority.USER
+    preference.enable()
+
+    get_transaction().commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    document.edit(title='My Foo 1')
+    document.newContent(portal_type='Foo Line')
+
+    get_transaction().commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(len(preference.objectIds()), 1)
+
+    # make sure that subobjects are not unindexed after making template.
+    subobject_uid = document.objectValues()[0].getUid()
+    self.assertEqual(len(self.portal.portal_catalog(uid=subobject_uid)), 1)
+
+    self.portal.foo_module.manage_delObjects(ids=[document.getId()])
+
+    get_transaction().commit()
+    self.tic()
+
+    template = preference.objectValues()[0]
+
+    cp = preference.manage_copyObjects(ids=[template.getId()], REQUEST=None, RESPONSE=None)
+    new_document_list = self.portal.foo_module.manage_pasteObjects(cp)
+    new_document_id = new_document_list[0]['new_id']
+    new_document = self.portal.foo_module[new_document_id]
+    new_document.makeTemplateInstance()
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(new_document.getTitle(), 'My Foo 1')
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestTemplate))
+  return suite
