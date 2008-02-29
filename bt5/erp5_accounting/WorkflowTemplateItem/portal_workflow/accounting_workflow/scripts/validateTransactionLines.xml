@@ -91,11 +91,12 @@ for line in transaction.contentValues(filter=dict(\n
 \n
   for account, third_party, bank_account in (\n
     ( line.getSourceValue(portal_type=\'Account\'),\n
-      line.getSourcePaymentValue(portal_type=bank_account_portal_type),\n
-      line.getDestinationSectionValue(portal_type=section_portal_type_list),),\n
+      line.getDestinationSectionValue(portal_type=section_portal_type_list),\n
+      line.getSourcePaymentValue(portal_type=bank_account_portal_type),),\n
     ( line.getDestinationValue(portal_type=\'Account\'),\n
-      line.getDestinationPaymentValue(portal_type=bank_account_portal_type),\n
-      line.getSourceSectionValue(portal_type=section_portal_type_list),), ):\n
+      line.getSourceSectionValue(portal_type=section_portal_type_list),\n
+      line.getDestinationPaymentValue(portal_type=bank_account_portal_type),),\n
+    ):\n
 \n
     if account is not None and account.getValidationState() != \'validated\':\n
       raise ValidationFailed, N_(\n
