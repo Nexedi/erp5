@@ -44,9 +44,9 @@ def escapeString(string):
 
 def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
   unit = 'mm'
-  code = self.getCodingType() or 0
+  code = self.getCodingType() or 'code128'
   row_number = self.getRowNumber() or 0
-  column_number = self.getColumnNumber()
+  column_number = self.getColumnNumber() or 0
   page_left_margin = self.getPageLeftMargin() or 10
   page_bottom_margin = self.getPageBottomMargin() or 10
   page_right_margin = self.getPageRightMargin() or 10
