@@ -2584,6 +2584,30 @@ VALUES
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
     self.tic()
 
+  def test_PercentCharacter(self, quiet=quiet, run=run_all_test):
+    """
+    Check expected behaviour of % character for simple query
+    """
+    if not run: 
+      return
+
+    portal_type = 'Organisation'
+    folder = self.getOrganisationModule()
+    folder.newContent(portal_type=portal_type, title='foo_organisation_1')
+    folder.newContent(portal_type=portal_type, title='foo_organisation_2')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+                                                   title='foo_organisation_1')))
+    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+                                                   title='foo_organisation_2')))
+    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+                                                   title='%organisation_1')))
+    self.assertEquals(2, len(folder.portal_catalog(portal_type=portal_type,
+                                                   title='foo_organisation%')))
+    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+                                                   title='foo_org%ion_1')))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
