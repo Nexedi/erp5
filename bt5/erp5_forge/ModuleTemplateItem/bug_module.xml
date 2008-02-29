@@ -40,6 +40,9 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>AccessContentsInformation</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
@@ -220,6 +223,9 @@
    <name>Add MessageCatalogs</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
    <role>Manager</role>
@@ -230,6 +236,9 @@
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -261,10 +270,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Versions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -431,6 +436,9 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Change user folder</name>
+  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Manager</role>
@@ -515,6 +523,9 @@
   <permission type='list'>
    <name>Manage Groups</name>
   </permission>
+  <permission type='list'>
+   <name>Manage Selenium test cases</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
@@ -538,6 +549,9 @@
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>

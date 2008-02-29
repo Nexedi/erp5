@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -141,6 +138,7 @@ return context.asContext(diff=diff).BusinessTemplate_viewSvnMultiDiff()\n
                             <string>revisions_list</string>
                             <string>len</string>
                             <string>diff</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

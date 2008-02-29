@@ -271,7 +271,7 @@ return printed\n
                             <string>_print_</string>
                             <string>_print</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>stool</string>
                             <string>skins_by_name</string>
                             <string>_getiter_</string>

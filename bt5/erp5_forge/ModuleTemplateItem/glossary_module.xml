@@ -40,9 +40,8 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>AccessContentsInformation</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
@@ -232,6 +231,9 @@
    <name>Add MessageCatalogs</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Page Templates</name>
    <role>Manager</role>
@@ -243,6 +245,9 @@
   <permission type='tuple'>
    <name>Add Plugin Registrys</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='tuple'>
    <name>Add Python Scripts</name>
@@ -274,10 +279,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Versions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -448,6 +449,9 @@
   <permission type='tuple'>
    <name>Change proxy roles</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Change user folder</name>
   </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>

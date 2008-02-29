@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -188,6 +185,7 @@ if bug_count:\n
                             <string>not_assigned_bug_list</string>
                             <string>_getiter_</string>
                             <string>bug</string>
+                            <string>_inplacevar_</string>
                             <string>assignee</string>
                             <string>bug_list</string>
                             <string>_getitem_</string>

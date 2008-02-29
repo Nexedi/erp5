@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.Alarm</string>
-          <string>Alarm</string>
-        </tuple>
-        <none/>
+        <global name="Alarm" module="Products.ERP5Type.Document.Alarm"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -39,92 +36,10 @@
                   <none/>
                 </tuple>
                 <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Mon</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Sep</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>38611.4590278</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>18</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Monday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>September</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>13</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>1158577260000</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Mon.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>pm</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Sep.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>1158577260.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+2</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>2006</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.459027777775</float> </value>
-                    </item>
-                  </dictionary>
+                  <tuple>
+                    <float>1158577260.0</float>
+                    <string>GMT+2</string>
+                  </tuple>
                 </state>
               </object>
             </value>
@@ -202,92 +117,10 @@
                   <none/>
                 </tuple>
                 <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Fri</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Sep</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>38593.9166667</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Friday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>September</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>1157061600000</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>9</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Fri.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>am</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Sep.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>1157061600.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+2</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>2006</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.916666666664</float> </value>
-                    </item>
-                  </dictionary>
+                  <tuple>
+                    <float>1157061600.0</float>
+                    <string>GMT+2</string>
+                  </tuple>
                 </state>
               </object>
             </value>
@@ -301,92 +134,10 @@
                   <none/>
                 </tuple>
                 <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_aday</string> </key>
-                        <value> <string>Wed</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_amon</string> </key>
-                        <value> <string>Jan</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_d</string> </key>
-                        <value> <float>401401.958333</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_day</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_dayoffset</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fday</string> </key>
-                        <value> <string>Wednesday</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_fmon</string> </key>
-                        <value> <string>January</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hour</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_millis</string> </key>
-                        <value> <long>32503676400000</long> </value>
-                    </item>
-                    <item>
-                        <key> <string>_minute</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_month</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_nearsec</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pday</string> </key>
-                        <value> <string>Wed.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pm</string> </key>
-                        <value> <string>am</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmhour</string> </key>
-                        <value> <int>12</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_pmon</string> </key>
-                        <value> <string>Jan.</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_second</string> </key>
-                        <value> <float>0.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_t</string> </key>
-                        <value> <float>32503676400.0</float> </value>
-                    </item>
-                    <item>
-                        <key> <string>_tz</string> </key>
-                        <value> <string>GMT+1</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_year</string> </key>
-                        <value> <int>3000</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>time</string> </key>
-                        <value> <float>0.958333333314</float> </value>
-                    </item>
-                  </dictionary>
+                  <tuple>
+                    <float>32503676400.0</float>
+                    <string>GMT+1</string>
+                  </tuple>
                 </state>
               </object>
             </value>

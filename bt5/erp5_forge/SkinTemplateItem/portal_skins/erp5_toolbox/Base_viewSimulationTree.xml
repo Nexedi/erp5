@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -138,7 +135,7 @@ return printed\n
                             <string>_print_</string>
                             <string>_print</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>simulations_found</string>
                             <string>len</string>
                             <string>_getiter_</string>
