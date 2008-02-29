@@ -41,6 +41,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>AccessContentsInformation</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
   </permission>
@@ -169,10 +173,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add ERP5Configurator Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add ERP5Form Tools</name>
    <role>Manager</role>
   </permission>
@@ -186,10 +186,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add ERP5Type Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add ERP5Wizard Tools</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -245,14 +241,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Photos</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
@@ -302,14 +290,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add Vocabularies</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add XML Method Cache Managers</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add XSLT Methods</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -417,10 +397,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change Photo</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -478,6 +454,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Change user folder</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignee</role>
    <role>Assignor</role>
@@ -505,10 +485,6 @@
   </permission>
   <permission type='tuple'>
    <name>Download ExtFile/ExtImage</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Edit</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -573,6 +549,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Manage Selenium test cases</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
   </permission>
@@ -585,14 +565,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Manage XML Method Cache</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Manage XML Methods</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Manage Z Classes</name>
    <role>Manager</role>
   </permission>
@@ -602,6 +574,10 @@
   </permission>
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Manage extensions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -715,7 +691,6 @@
    <role>Assignor</role>
    <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>

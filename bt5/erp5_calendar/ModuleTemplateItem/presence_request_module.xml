@@ -40,8 +40,9 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>AccessContentsInformation</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
@@ -452,8 +453,9 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Change user folder</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
@@ -574,8 +576,9 @@
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Manage extensions</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
@@ -688,7 +691,6 @@
    <role>Assignor</role>
    <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
