@@ -3051,6 +3051,10 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
 
     self.assertEqual(len(preference.objectIds()), 1)
 
+    # make sure that subobjects are not unindexed after making template.
+    subobject_uid = document.objectValues()[0].getUid()
+    self.assertEqual(len(self.portal.portal_catalog(uid=subobject_uid)), 1)
+
     self.accounting_module.manage_delObjects(ids=[document.getId()])
 
     get_transaction().commit()
