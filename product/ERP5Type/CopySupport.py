@@ -296,10 +296,6 @@ class CopyContainer:
         except WorkflowException:
           pass
 
-    ### Don't call makeTemplate here!!
-    ### At this point, uid of sub object is still old and
-    ### if calling makeTemplate, original document will be unindexed.
-
     # Call a type based method to reset so properties if necessary
     script = self._getTypeBasedMethod('afterClone')
     if script is not None and callable(script):
