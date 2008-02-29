@@ -41,6 +41,9 @@
    <role>Reviewer</role>
   </permission>
   <permission type='list'>
+   <name>AccessContentsInformation</name>
+  </permission>
+  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
    <role>Reviewer</role>
@@ -223,15 +226,10 @@
    <role>Manager</role>
   </permission>
   <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
+  </permission>
+  <permission type='list'>
    <name>Add Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add Photo Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add Photos</name>
    <role>Manager</role>
   </permission>
   <permission type='list'>
@@ -240,6 +238,9 @@
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Python Scripts</name>
@@ -271,10 +272,6 @@
   </permission>
   <permission type='list'>
    <name>Add User Folders</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Add Versions</name>
    <role>Manager</role>
   </permission>
   <permission type='list'>
@@ -384,10 +381,6 @@
   </permission>
   <permission type='list'>
    <name>Change Page Templates</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Change Photo</name>
    <role>Manager</role>
   </permission>
   <permission type='list'>
@@ -559,6 +552,9 @@
   <permission type='list'>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Manage extensions</name>
   </permission>
   <permission type='list'>
    <name>Manage languages</name>
