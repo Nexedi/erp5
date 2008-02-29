@@ -107,6 +107,11 @@
                         <string>my_resource</string>
                         <string>my_product_module_listbox</string>
                         <string>my_service_module_listbox</string>
+                        <string>my_ean13_code</string>
+                        <string>my_aggregated_portal_type_list</string>
+                        <string>my_required_aggregated_portal_type_list</string>
+                        <string>my_component_module_listbox</string>
+                        <string>my_base_volume</string>
                       </list>
                     </value>
                 </item>

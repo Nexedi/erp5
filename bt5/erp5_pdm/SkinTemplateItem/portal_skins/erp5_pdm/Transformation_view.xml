@@ -113,6 +113,7 @@
                     <value>
                       <list>
                         <string>my_variation_base_category_list</string>
+                        <string>my_comment</string>
                         <string>state</string>
                       </list>
                     </value>
