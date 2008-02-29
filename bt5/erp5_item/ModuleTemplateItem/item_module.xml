@@ -20,6 +20,9 @@
    <name>Access session data</name>
   </permission>
   <permission type='list'>
+   <name>AccessContentsInformation</name>
+  </permission>
+  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
   <permission type='list'>
@@ -161,19 +164,19 @@
    <name>Add MessageCatalogs</name>
   </permission>
   <permission type='list'>
+   <name>Add MimetypesRegistry Tools</name>
+  </permission>
+  <permission type='list'>
    <name>Add Page Templates</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Photo Folders</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Photos</name>
   </permission>
   <permission type='list'>
    <name>Add Pluggable Index</name>
   </permission>
   <permission type='list'>
    <name>Add Plugin Registrys</name>
+  </permission>
+  <permission type='list'>
+   <name>Add PortalTransforms Tools</name>
   </permission>
   <permission type='list'>
    <name>Add Python Scripts</name>
@@ -198,9 +201,6 @@
   </permission>
   <permission type='list'>
    <name>Add User Folders</name>
-  </permission>
-  <permission type='list'>
-   <name>Add Versions</name>
   </permission>
   <permission type='list'>
    <name>Add Virtual Host Monsters</name>
@@ -284,9 +284,6 @@
    <name>Change Page Templates</name>
   </permission>
   <permission type='list'>
-   <name>Change Photo</name>
-  </permission>
-  <permission type='list'>
    <name>Change Python Scripts</name>
   </permission>
   <permission type='list'>
@@ -327,6 +324,9 @@
   </permission>
   <permission type='list'>
    <name>Change proxy roles</name>
+  </permission>
+  <permission type='list'>
+   <name>Change user folder</name>
   </permission>
   <permission type='list'>
    <name>Copy or Move</name>

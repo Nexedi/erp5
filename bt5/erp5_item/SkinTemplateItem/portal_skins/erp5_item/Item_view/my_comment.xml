@@ -72,7 +72,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>height</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -80,7 +80,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -105,11 +105,11 @@
                     <value> <string>Item_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>height</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <int>5</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>40</int> </value>
                 </item>
               </dictionary>
