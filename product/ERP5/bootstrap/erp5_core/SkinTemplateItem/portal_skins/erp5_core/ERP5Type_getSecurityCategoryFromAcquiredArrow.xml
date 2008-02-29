@@ -65,15 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX For now, this script requires proxy manager\n
-\n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
-\n
-# must always return a list of dicts\n
+            <value> <string>"""This is the same as ERP5Type_getSecurityCategoryFromArrow, but with acquisition on categories.\n
+"""\n
 \n
 category_list = []\n
 \n
@@ -81,7 +74,7 @@ if object is None:\n
   return []\n
 \n
 for base_category in base_category_list:\n
-  category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
+  category_list.append({base_category: object.getAcquiredCategoryMembershipList(base_category)})\n
 \n
 return category_list\n
 </string> </value>
@@ -165,7 +158,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromArrow</string> </value>
+            <value> <string>ERP5Type_getSecurityCategoryFromAcquiredArrow</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
