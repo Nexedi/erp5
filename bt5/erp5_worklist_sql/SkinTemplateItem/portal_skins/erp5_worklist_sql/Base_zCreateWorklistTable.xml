@@ -68,7 +68,8 @@ DROP TABLE IF EXISTS worklist_cache\n
 <dtml-var sql_delimiter>\n
 CREATE TABLE `worklist_cache` (\n
   `count` INT UNSIGNED NOT NULL,\n
-  `owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
+  `owner` VARCHAR(32) DEFAULT \'\',\n
+  `viewable_owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
   `security_uid` INT UNSIGNED NOT NULL,\n
   `portal_type` VARCHAR(255) NOT NULL,\n
   `validation_state` VARCHAR(255) NULL,\n
@@ -92,9 +93,9 @@ CREATE TABLE `worklist_cache` (\n
   `creation_date` datetime,\n
   `modification_date` datetime,\n
   KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
-  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `owner`),\n
+  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `viewable_owner`),\n
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
-  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `owner`)\n
+  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `viewable_owner`)\n
 ) TYPE=InnoDB;
 
 ]]></string> </value>
@@ -139,7 +140,8 @@ DROP TABLE IF EXISTS worklist_cache\n
 <dtml-var sql_delimiter>\n
 CREATE TABLE `worklist_cache` (\n
   `count` INT UNSIGNED NOT NULL,\n
-  `owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
+  `owner` VARCHAR(32) DEFAULT \'\',\n
+  `viewable_owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
   `security_uid` INT UNSIGNED NOT NULL,\n
   `portal_type` VARCHAR(255) NOT NULL,\n
   `validation_state` VARCHAR(255) NULL,\n
@@ -163,9 +165,9 @@ CREATE TABLE `worklist_cache` (\n
   `creation_date` datetime,\n
   `modification_date` datetime,\n
   KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
-  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `owner`),\n
+  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `viewable_owner`),\n
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
-  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `owner`)\n
+  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `viewable_owner`)\n
 ) TYPE=InnoDB;
 
 ]]></string> </value>

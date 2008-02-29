@@ -173,6 +173,12 @@
                                   <dictionary/>
                                 </value>
                             </item>
+                            <item>
+                                <key> <string>viewable_owner</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -180,30 +186,31 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>count</string>
-                            <string>security_uid</string>
-                            <string>portal_type</string>
-                            <string>simulation_state</string>
-                            <string>validation_state</string>
-                            <string>owner</string>
-                            <string>parent_uid</string>
-                            <string>title</string>
-                            <string>opportunity_state</string>
-                            <string>causality_state</string>
-                            <string>invoice_state</string>
-                            <string>payment_state</string>
-                            <string>event_state</string>
-                            <string>immobilisation_state</string>
-                            <string>reference</string>
-                            <string>grouping_reference</string>
-                            <string>source_reference</string>
-                            <string>destination_reference</string>
-                            <string>string_index</string>
-                            <string>int_index</string>
-                            <string>float_index</string>
-                            <string>has_cell_content</string>
-                            <string>creation_date</string>
-                            <string>modification_date</string>
+<string>count</string>
+<string>security_uid</string>
+<string>portal_type</string>
+<string>simulation_state</string>
+<string>validation_state</string>
+<string>owner</string>
+<string>viewable_owner</string>
+<string>parent_uid</string>
+<string>title</string>
+<string>opportunity_state</string>
+<string>causality_state</string>
+<string>invoice_state</string>
+<string>payment_state</string>
+<string>event_state</string>
+<string>immobilisation_state</string>
+<string>reference</string>
+<string>grouping_reference</string>
+<string>source_reference</string>
+<string>destination_reference</string>
+<string>string_index</string>
+<string>int_index</string>
+<string>float_index</string>
+<string>has_cell_content</string>
+<string>creation_date</string>
+<string>modification_date</string>
                           </list>
                         </value>
                     </item>
@@ -220,6 +227,7 @@ portal_type\r\n
 simulation_state\r\n
 validation_state\r\n
 owner\r\n
+viewable_owner\r\n
 parent_uid\r\n
 title\r\n
 opportunity_state\r\n
@@ -253,7 +261,7 @@ modification_date</string> </value>
 
 INSERT INTO\n
   worklist_cache\n
-  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`, `parent_uid`, `title`,`opportunity_state`, `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
+  (`count`, `owner`, `viewable_owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`, `parent_uid`, `title`,`opportunity_state`, `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
    `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
    `modification_date`)\n
 VALUES\n
@@ -261,6 +269,7 @@ VALUES\n
   (\n
   <dtml-sqlvar expr="count[loop_item]" type="int">,\n
   <dtml-sqlvar expr="owner[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="viewable_owner[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
@@ -327,7 +336,7 @@ VALUES\n
 
 INSERT INTO\n
   worklist_cache\n
-  (`count`, `owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`, `parent_uid`, `title`,`opportunity_state`, `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
+  (`count`, `owner`, `viewable_owner`, `security_uid`, `portal_type`, `validation_state`, `simulation_state`, `parent_uid`, `title`,`opportunity_state`, `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`,\n
    `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
    `modification_date`)\n
 VALUES\n
@@ -335,6 +344,7 @@ VALUES\n
   (\n
   <dtml-sqlvar expr="count[loop_item]" type="int">,\n
   <dtml-sqlvar expr="owner[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="viewable_owner[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,\n
