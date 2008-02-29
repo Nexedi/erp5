@@ -209,6 +209,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Add Local File Systems</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Add LocalContents</name>
    <role>Manager</role>
   </permission>
@@ -385,6 +389,10 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Change Local File System properties</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Change Lock Information</name>
    <role>Manager</role>
   </permission>
@@ -468,6 +476,10 @@
   </permission>
   <permission type='tuple'>
    <name>Define permissions</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Delete local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -569,11 +581,11 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Manage extensions</name>
+   <name>Manage languages</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Manage languages</name>
+   <name>Manage local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -607,6 +619,10 @@
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Overwrite local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -666,11 +682,19 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
+   <name>Upload local files</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
    <name>Use Database Methods</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Use Factories</name>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Use external editor</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -683,7 +707,10 @@
    <role>Assignor</role>
    <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>View Directory Index</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
