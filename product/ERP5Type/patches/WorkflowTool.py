@@ -531,14 +531,14 @@ def WorkflowTool_refreshWorklistCache(self):
       # (and cached).
       table_column_id_set = ImmutableSet([
         COUNT_COLUMN_TITLE, 'security_uid', 'simulation_state',
-        'validation_state', 'portal_type', 'owner','parent_uid',
+        'validation_state', 'portal_type', 'owner', 'viewable_owner', 'parent_uid',
         'title','opportunity_state', 'causality_state', 'invoice_state',
         'payment_state', 'event_state', 'immobilisation_state', 'reference',
         'grouping_reference', 'source_reference', 'destination_reference',
         'string_index', 'int_index', 'float_index', 'has_cell_content',
         'creation_date', 'modification_date'
         ])
-      security_column_id_list = ['security_uid', 'owner']
+      security_column_id_list = ['security_uid', 'viewable_owner', 'owner']
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
