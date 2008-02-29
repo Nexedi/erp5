@@ -422,9 +422,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertEquals(organisation.getTitle(), 'foo')
     self.assertEquals(organisation.getVatCode(), 'bar')
 
-    organisation.edit(title='baz', vat_code='bar')
+    organisation.edit(title='baz', vat_code='bar', edit_order=['vat_code',
+      'title'])
     self.assertEquals(organisation.getTitle(),'baz')
-    # here, the wrong behaviour was:
+    # here, the wrong behaviour is:
     # - edit:setTitle(baz)
     # - interaction:setVatCode(bara)
     # - edit:setVatCode(bar)
@@ -433,6 +434,16 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     # - edit:setVatCode(bar)
     # - interaction:setVatCode(bara)
     self.assertEquals(organisation.getVatCode(),'bara')
+    # now, test the other way around
+    organisation.edit(title='baz', vat_code='bara', edit_order=['title',
+      'vat_code'])
+    self.assertEquals(organisation.getTitle(),'baz')
+    # here, we assert the failure:
+    # - edit:setTitle(baz)
+    # - interaction:setVatCode(baraa)
+    # - edit:setVatCode(bara)
+    self.assertEquals(organisation.getVatCode(),'bara')
+
     
   def test_14_BeforeScriptParameters(self, quiet=0, run=run_all_test):
     if not run: return
