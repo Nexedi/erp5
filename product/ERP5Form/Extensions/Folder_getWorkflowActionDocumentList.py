@@ -160,6 +160,7 @@ def getWorkflowActionDocumentList(self, **kw):
   if selection_uid_list:
     original_selection_params['uid'] = selection_uid_list
 
+  translate = self.Base_translateString
   for listbox_selection in listbox:
     if listbox_selection.get('workflow_action'):
       selection_params = original_selection_params.copy()
@@ -176,7 +177,7 @@ def getWorkflowActionDocumentList(self, **kw):
                         if ai['id'] == action]
         if action_list:
           document_list.append(doc.asContext(
-                             workflow_action_title=action_list[0]['name'],
+                             workflow_action_title=translate(action_list[0]['name']),
                              workflow_action=action,
                              workflow_id=workflow_id))
 
