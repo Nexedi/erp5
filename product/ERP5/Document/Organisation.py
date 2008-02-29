@@ -69,6 +69,7 @@ class Organisation(XMLObject):
                       , PropertySheet.Organisation
                       , PropertySheet.Mapping
                       , PropertySheet.Task
+                      , PropertySheet.Reference
                       )
 
 
