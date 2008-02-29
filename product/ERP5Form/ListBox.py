@@ -257,14 +257,14 @@ class ListBoxWidget(Widget.Widget):
     search = fields.CheckBoxField('search',
                                  title='Search Row',
                                  description=('Search Row'),
-                                 default='',
+                                 default=0,
                                  required=0)
     property_names.append('search')
 
     select = fields.CheckBoxField('select',
                                  title='Select Column',
                                  description=('Select Column'),
-                                 default='',
+                                 default=0,
                                  required=0)
     property_names.append('select')
 
@@ -272,7 +272,7 @@ class ListBoxWidget(Widget.Widget):
                                   title='Anchor Column',
                                   description=(
       'An optional anchor column which can always clickable.'),
-                                  default='',
+                                  default=0,
                                   required=0)
     property_names.append('anchor')
 
@@ -312,7 +312,7 @@ class ListBoxWidget(Widget.Widget):
     domain_tree = fields.CheckBoxField('domain_tree',
                                  title='Domain Tree',
                                  description=('Selection Tree'),
-                                 default='',
+                                 default=0,
                                  required=0)
     property_names.append('domain_tree')
 
@@ -327,7 +327,7 @@ class ListBoxWidget(Widget.Widget):
     report_tree = fields.CheckBoxField('report_tree',
                                  title='Report Tree',
                                  description=('Report Tree'),
-                                 default='',
+                                 default=0,
                                  required=0)
     property_names.append('report_tree')
 
