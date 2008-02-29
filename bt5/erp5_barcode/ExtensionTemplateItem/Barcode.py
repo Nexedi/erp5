@@ -91,7 +91,6 @@ def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
   else:
     input_list = os.linesep.join(['%s' % zfill(self.portal_ids.generateNewId(id_group='barcode'), 12) for b in range( row_number * column_number * sheet_number )])
   text_command = 'echo "%s" > %s' % (input_list, new_txt_file_path)
-  self.log(text_command)
   ret = os.system(text_command)
   if ret != 0:
     raise RuntimeError, 'File Creation Failed'
@@ -138,7 +137,6 @@ def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
   tempfile.tempdir = tempdir
 
   barcode_command += ' -o %s ' %(new_ps_file_path)
-  self.log(barcode_command)
   ret = os.system(barcode_command)
   if ret != 0:
     raise RuntimeError, 'Barcode PS File Creation Failed'
