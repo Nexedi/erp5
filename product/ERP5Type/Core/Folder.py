@@ -1101,7 +1101,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
                     expand_method_id='getIndexableChildValueList',
                     alternate_method_id='alternateReindexObject',
                     group_id=group_id,
-                    serialization_tag=self.getRootDocument(),
+                    serialization_tag=self.getRootDocumentPath(),
                     **activate_kw).recursiveImmediateReindexObject(**kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
