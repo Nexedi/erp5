@@ -2713,30 +2713,22 @@ class Base( CopyContainer,
       self.activate(group_method_id='portal_catalog/catalogObjectList', 
                     alternate_method_id='alternateReindexObject',
                     group_id=group_id,
-                    serialization_tag=self.getRootDocument(),
+                    serialization_tag=self.getRootDocumentPath(),
                     **activate_kw).immediateReindexObject(**kw)
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
 
-  def getRootDocument(self):
-    result = self.getRootDocumentValue()
-    if result is not None:
-      result = result.getPath()
-    return result
-    
-  def getRootDocumentValue(self):
-    result = None
-    parent_value = self.getParentValue()
-    if parent_value is not None:
-      parent_id = parent_value.getId()
-      if parent_id.endswith('_module') or parent_id.startswith('portal_'):
-        result = self
-      else:
-        getRootDocumentValue = getattr(parent_value, 'getRootDocumentValue', None)
-        if getRootDocumentValue is not None:
-          result = getRootDocumentValue()
-    return result
+  def getRootDocumentPath(self):
+    # if document, return the path of its root document
+    # otherwire, return None
+    self_path_list = self.getPhysicalPath()
+    self_depth = len(self_path_list)
+    portal_depth = len(self.getPortalObject().getPhysicalPath())
+    if self_depth > portal_depth + 1:
+      return '/'.join(self_path_list[:portal_depth + 2])
+    else:
+      return None
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
   def getIndexableChildValueList(self):
