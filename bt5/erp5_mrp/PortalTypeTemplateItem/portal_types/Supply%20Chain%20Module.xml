@@ -98,14 +98,6 @@ be a problem).</string> </value>
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>module</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>group_list</string> </key>
-            <value>
               <tuple/>
             </value>
         </item>
