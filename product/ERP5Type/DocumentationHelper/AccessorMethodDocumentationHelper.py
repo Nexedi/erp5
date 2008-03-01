@@ -30,6 +30,7 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
+from Products.ERP5Type import Permissions
 
 #return the definition string of an object representing a workflow method or a class method or an accessor
 def getDefinitionString(obj=None):
@@ -93,6 +94,13 @@ class AccessorMethodDocumentationHelper(DocumentationHelper):
     Returns the title of the documentation helper
     """
     return self.getDocumentedObject().__name__
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
+  def getSectionList(self):
+    """
+    Returns a list of documentation sections for accessors
+    """
+    return []
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getArgCount' )
   def getArgCount(self):

@@ -30,7 +30,8 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
-
+from DocumentationSection import DocumentationSection
+from Products.ERP5Type import Permissions
 
 class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
   """
@@ -68,12 +69,6 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     Returns a list of documentation sections
     """
     return [
-      #DocumentationSection(
-        #id='instance_property',
-        #title='Instance Properties',
-        #class_name='InstancePropertyDocumentationHelper',
-        #uri_list=self.getClassPropertyURIList(),
-      #),
       DocumentationSection(
         id='workflow_method',
         title='Workflow Method',
@@ -112,7 +107,7 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     return self._getPropertyHolder().getAccessorMethodItemList()
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodIdList' )
-  def getAccessorMethodIdList(self):
+  def getAccessorMethodIdList(self, inherited=1):
     """
     """
     return self._getPropertyHolder().getAccessorMethodIdList()
@@ -122,7 +117,7 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     Returns a list of URIs to accessor methods
     """
-    method_id_list = self.getAccessorMethodIdList(inherited=inherited, local=local)
+    method_id_list = self.getAccessorMethodIdList(inherited=inherited)
     klass = self.getInstance().__class__
     class_name = klass.__name__
     module = klass.__module__
@@ -142,20 +137,21 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     return self._getPropertyHolder()
   
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodIdList' )
-  def getWorkflowMethodIdList(self):
+  def getWorkflowMethodIdList(self, inherited=1):
     """
     """
     return self._getPropertyHolder().getWorkflowMethodIdList()    
-
+  
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodURIList' )
   def getWorkflowMethodURIList(self, inherited=1, local=1):
     """
     Returns a list of URIs to workflow  methods
     """
-    method_id_list = self.getWorkflowMethodIdList(inherited=inherited, local=local)
+    method_id_list = self.getWorkflowMethodIdList()
     klass = self.getInstance().__class__
     class_name = klass.__name__
     module = klass.__module__
-    uri_prefix = '%s.%s.' % (module, class_name)
+    uri_prefix = '' #'%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
 
 

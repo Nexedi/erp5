@@ -31,11 +31,10 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
 
-class WorkflowMethodDocumentationHelper(DocumentationHelper):
+class SkinFolderDocumentationHelper(DocumentationHelper):
   """
-    Provides documentation about a workflow method
+    Provides documentation about a property sheet of a skin folder
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -43,68 +42,56 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
   def __init__(self, uri):
     self.uri = uri
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    return self.getDocumentedObject().__doc__
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
     Returns the type of the documentation helper
     """
-    return "Workflow Method"
-    #return self.getDocumentedObject().__module__
+    return "Skin Folder"
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  def getId(self):
+    """
+    Returns the id of the documentation helper
+    """
+    return self.getDocumentedObject().id
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return self.getDocumentedObject().title
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMetaTypeList' )
+  def getMetaTypeList(self):
+    meta_type_dict = {}
+    for file in self.getDocumentedObject().objectValues():	  
+      meta_type_dict[file.meta_type] = None
+    type_list = meta_type_dict.keys()
+    type_list.sort()
+    return type_list
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFileIdList' )
+  def getFileIdList(self, meta_type=None):
     """
-    Returns a list of documentation sections
+    Returns the list of sub-objects ids of the documentation helper
     """
-    return []
+    file_list = []
+    for file in self.getDocumentedObject().objectValues():
+      if not meta_type or file.meta_type == meta_type:
+        file_list.append(file.id)
+    return file_list
 
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationState' )
-  #def getDestinationState(self):
-  #  """
-  #  Returns the destination_state of the transition workflow method
-  #  """
-  #  return self.getDocumentedObject().__dict__['new_state_id']
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType' )
-  #def getTriggerType(self):
-  #  """
-  #  Returns the trigger type of the workflow method
-  #  """
-  #  TT = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-  #  TT_id = self.getDocumentedObject().__dict__['trigger_type']
-  #  return TT[TT_id]
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getLocalRoles' )
-  #def getLocalRoles(self):
-  #  """
-  #  Returns the local roles of the workflow method
-  #  """
-  #  return self.getDocumentedObject().__ac_local_roles__
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds' )
-  #def getAvailableStateIds(self):
-  #  """
-  #  Returns available states in the workflow
-  #  """
-  #  return self.getDocumentedObject().getAvailableStateIds()
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
-  def getDefinition(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFileItemList' )
+  def getFileItemList(self, meta_type=None):
     """
-    Returns the definition of the workflow_method with the name and arguments
+    Returns the list of sub-objects items of the documentation helper
     """
-    return getDefinitionString(self.getDocumentedObject())
+    file_list = []
+    for file in self.getDocumentedObject().objectValues():
+      if not meta_type or file.meta_type == meta_type:	    
+        file_list.append((file.id, file.title, file.meta_type))
+    return file_list
 
-InitializeClass(WorkflowMethodDocumentationHelper)
+InitializeClass(SkinFolderDocumentationHelper)

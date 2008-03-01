@@ -55,10 +55,10 @@ def getStatePermissionsOfRole(state=None, role=''):
   return permissions
 
 
-class DCWorkflowDocumentationHelper(DocumentationHelper):
+class InteractionWorkflowDocumentationHelper(DocumentationHelper):
   """
     Provides access to all documentation information
-    of a workflow.
+    of an interaction workflow.
   """
 
   security = ClassSecurityInfo()
@@ -83,7 +83,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns the type of the documentation helper
     """
-    return "DC Workflow"
+    return "Interaction Workflow"
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
@@ -404,4 +404,4 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     return getGraph(self, wf_id=self.getInstance().__name__, format=format)
 
-InitializeClass(DCWorkflowDocumentationHelper)
+InitializeClass(InteractionWorkflowDocumentationHelper)

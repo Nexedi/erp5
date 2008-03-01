@@ -31,11 +31,11 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
+from zLOG import LOG, INFO
 
-class WorkflowMethodDocumentationHelper(DocumentationHelper):
+class DCWorkflowVariableDocumentationHelper(DocumentationHelper):
   """
-    Provides documentation about a workflow method
+    Provides documentation about a workflow variable
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -45,20 +45,19 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return self.getDocumentedObject().__doc__
+    return self.getDocumentedObject().__dict__["description"]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
     Returns the type of the documentation helper
     """
-    return "Workflow Method"
-    #return self.getDocumentedObject().__module__
+    return "Workflow Variable"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  def getId(self):
     """
-    Returns the title of the documentation helper
+    Returns the id of the documentation helper
     """
     return self.getDocumentedObject().__name__
 
@@ -69,42 +68,50 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
     """
     return []
 
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationState' )
-  #def getDestinationState(self):
-  #  """
-  #  Returns the destination_state of the transition workflow method
-  #  """
-  #  return self.getDocumentedObject().__dict__['new_state_id']
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType' )
-  #def getTriggerType(self):
-  #  """
-  #  Returns the trigger type of the workflow method
-  #  """
-  #  TT = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-  #  TT_id = self.getDocumentedObject().__dict__['trigger_type']
-  #  return TT[TT_id]
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getLocalRoles' )
-  #def getLocalRoles(self):
-  #  """
-  #  Returns the local roles of the workflow method
-  #  """
-  #  return self.getDocumentedObject().__ac_local_roles__
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds' )
-  #def getAvailableStateIds(self):
-  #  """
-  #  Returns available states in the workflow
-  #  """
-  #  return self.getDocumentedObject().getAvailableStateIds()
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
-  def getDefinition(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
     """
-    Returns the definition of the workflow_method with the name and arguments
+    Returns the title of the documentation helper
     """
-    return getDefinitionString(self.getDocumentedObject())
+    return self.getDocumentedObject().title
 
-InitializeClass(WorkflowMethodDocumentationHelper)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultExpression' )
+  def getDefaultExpression(self):
+    """
+    Returns the Default Expression of the documentation helper
+    """
+    default_expr = ""
+    if self.getDocumentedObject().default_expr != None:
+      default_expr = self.getDocumentedObject().default_expr.text
+    return default_expr
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getForCatalog' )
+  def getForCatalog(self):
+    """
+    Returns 1 if variable is available in the catalog
+    """
+    for_catalog = 0
+    variable = self.getDocumentedObject()
+    if hasattr(variable, 'for_catalog'):
+      for_catalog = variable.for_catalog
+    if for_catalog:
+      return 'Yes'
+    else:
+      return 'No'
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getUpdateAlways' )
+  def getUpdateAlways(self):
+    """
+    Returns 1 if variable is available in the history
+    """
+    update_always = 0
+    variable = self.getDocumentedObject()
+    if hasattr(variable, 'update_always'):
+      update_always = variable.update_always
+    if update_always:
+      return 'Yes'
+    else:
+      return 'No'
+
+
+InitializeClass(DCWorkflowVariableDocumentationHelper)

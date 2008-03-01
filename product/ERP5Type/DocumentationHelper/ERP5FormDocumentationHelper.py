@@ -32,7 +32,42 @@ from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 
-class PropertyDocumentationHelper(DocumentationHelper):
+class ERP5FormDocumentationHelper(DocumentationHelper):
   """
+    Provides documentation about an ERP5 Form
   """
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def __init__(self, uri):
+    self.uri = uri
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  def getType(self):
+    """
+    Returns the type of the documentation helper
+    """
+    return "ERP5 Form"
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  def getId(self):
+    """
+    Returns the id of the documentation helper
+    """
+    return self.getDocumentedObject().id
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return self.getDocumentedObject().title
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getEncoding' )
+  def getEncoding(self):
+    """
+    Returns the encoding of the ERP5 Form
+    """
+    return self.getDocumentedObject().encoding
+
+InitializeClass(ERP5FormDocumentationHelper)

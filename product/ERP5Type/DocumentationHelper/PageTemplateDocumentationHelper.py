@@ -31,46 +31,53 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
 
-class ClassMethodDocumentationHelper(DocumentationHelper):
+class PageTemplateDocumentationHelper(DocumentationHelper):
   """
-    Provides documentation about a class method
+    Provides documentation about a page template
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    return self.getDocumentedObject().__doc__
+  def __init__(self, uri):
+    self.uri = uri
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
     Returns the type of the documentation helper
     """
-    return "Class Method"
+    return "Page Template"
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  def getId(self):
+    """
+    Returns the id of the documentation helper
+    """
+    return self.getDocumentedObject().id
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
-    Returns the type of the documentation helper
+    Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return self.getDocumentedObject().title
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
-  def getSectionList(self):
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
+  def getSourceCode(self):
     """
-    Returns a list of documentation sections for class method
+    Returns the source code the script python
     """
-    return []
+    source_code = self.getDocumentedObject()._text
+    if hasattr(self.erp5, 'portal_transforms'):	
+      portal_transforms = self.erp5.portal_transforms
+    else:
+      LOG('DCWorkflowScriptDocumentationHelper', INFO, 
+	  'Transformation Tool is not installed. No convertion of python script to html')	    
+      return source_code
+    src_mimetype='text/plain'
+    mime_type = 'text/html'
+    source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
+    return source_html.getData()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
-  def getDefinition(self):
-    """
-    Returns the definition of the class_method with the name and arguments
-    """
-    return getDefinitionString(self.getDocumentedObject())
-
-
-InitializeClass(ClassMethodDocumentationHelper)
+InitializeClass(PageTemplateDocumentationHelper)

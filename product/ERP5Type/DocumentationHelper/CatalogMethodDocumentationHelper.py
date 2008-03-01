@@ -31,11 +31,10 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
 
-class WorkflowMethodDocumentationHelper(DocumentationHelper):
+class CatalogMethodDocumentationHelper(DocumentationHelper):
   """
-    Provides documentation about a workflow method
+    Provides documentation about a catalog method
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -43,68 +42,63 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
   def __init__(self, uri):
     self.uri = uri
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    return self.getDocumentedObject().__doc__
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
     Returns the type of the documentation helper
     """
-    return "Workflow Method"
-    #return self.getDocumentedObject().__module__
+    return "Catalog Method"
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  def getId(self):
+    """
+    Returns the id of the documentation helper
+    """
+    return self.getDocumentedObject().id
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return self.getDocumentedObject().title
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSource' )
+  def getSource(self):
     """
-    Returns a list of documentation sections
+    Returns the source code of the documentation helper
     """
-    return []
+    source_code = self.getDocumentedObject().src
+    if hasattr(self.erp5, 'portal_transforms'):
+      portal_transforms = self.erp5.portal_transforms
+    else:
+      LOG('DCWorkflowScriptDocumentationHelper', INFO,
+          'Transformation Tool is not installed. No convertion of text to html')
+      return source_code
+    src_mimetype='text/plain'
+    mime_type = 'text/html'
+    source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
+    return source_html.getData()
 
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationState' )
-  #def getDestinationState(self):
-  #  """
-  #  Returns the destination_state of the transition workflow method
-  #  """
-  #  return self.getDocumentedObject().__dict__['new_state_id']
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType' )
-  #def getTriggerType(self):
-  #  """
-  #  Returns the trigger type of the workflow method
-  #  """
-  #  TT = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-  #  TT_id = self.getDocumentedObject().__dict__['trigger_type']
-  #  return TT[TT_id]
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getLocalRoles' )
-  #def getLocalRoles(self):
-  #  """
-  #  Returns the local roles of the workflow method
-  #  """
-  #  return self.getDocumentedObject().__ac_local_roles__
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds' )
-  #def getAvailableStateIds(self):
-  #  """
-  #  Returns available states in the workflow
-  #  """
-  #  return self.getDocumentedObject().getAvailableStateIds()
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
-  def getDefinition(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getConnectionId' )
+  def getConnectionId(self):
     """
-    Returns the definition of the workflow_method with the name and arguments
+    Returns the title of the documentation helper
     """
-    return getDefinitionString(self.getDocumentedObject())
+    return self.getDocumentedObject().connection_id
 
-InitializeClass(WorkflowMethodDocumentationHelper)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArgumentList' )
+  def getArgumentList(self):
+    """
+    Returns the arguments of the documentation helper
+    """
+    return self.getDocumentedObject()._arg._keys
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCatalog' )
+  def getCatalog(self):
+    """
+    Returns the catalog name of the documentation helper
+    """
+    return self.getDocumentedObject().aq_parent.__name__
+
+InitializeClass(CatalogMethodDocumentationHelper)

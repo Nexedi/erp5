@@ -30,12 +30,12 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.ERP5Type import Permissions
-
+from Products.PythonScripts.Utility import allow_class
 
 class DocumentationSection(Implicit):
 
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
+#  security = ClassSecurityInfo()
+#  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def __init__(self, id, title, class_name, uri_list):
     self.id = id
@@ -43,14 +43,15 @@ class DocumentationSection(Implicit):
     self.class_name = class_name
     self.uri_list = uri_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getClassName')
+#  security.declareProtected(Permissions.AccessContentsInformation, 'getClassName')
   def getClassName(self):
     return self.class_name
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getURIList')
+#  security.declareProtected(Permissions.AccessContentsInformation, 'getURIList')
   def getURIList(self):
     return self.uri_list
 
   # more API needed XXX
 
-InitializeClass(DocumentationSection)
+#InitializeClass(DocumentationSection)
+allow_class(DocumentationSection)

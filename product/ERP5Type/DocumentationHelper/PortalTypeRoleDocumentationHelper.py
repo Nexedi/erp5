@@ -31,46 +31,62 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
+from zLOG import LOG, INFO
 
-class ClassMethodDocumentationHelper(DocumentationHelper):
+class PortalTypeRoleDocumentationHelper(DocumentationHelper):
   """
-    Provides documentation about a class method
+    Provides documentation about a portal type role definition
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def __init__(self, uri):
+    self.uri = uri
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return self.getDocumentedObject().__doc__
+    return self.getDocumentedObject().Description()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
     Returns the type of the documentation helper
     """
-    return "Class Method"
+    return "Portal Type Role"
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  def getId(self):
     """
-    Returns the type of the documentation helper
+    Returns the id of the documentation helper
     """
     return self.getDocumentedObject().__name__
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
   def getSectionList(self):
     """
-    Returns a list of documentation sections for class method
+    Returns a list of documentation sections
     """
     return []
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
-  def getDefinition(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  def getTitle(self):
     """
-    Returns the definition of the class_method with the name and arguments
+    Returns the title of the documentation helper
     """
-    return getDefinitionString(self.getDocumentedObject())
+    return self.getDocumentedObject().title
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryList' )
+  def getCategoryList(self):
+    """
+    Returns the list of categories for the role
+    """
+    return self.getDocumentedObject().category
 
-InitializeClass(ClassMethodDocumentationHelper)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryScript' )
+  def getBaseCategoryScript(self):
+    """
+    Returns the base category script of the role
+    """
+    return self.getDocumentedObject().base_category_script
+
+InitializeClass(PortalTypeRoleDocumentationHelper)

@@ -30,6 +30,7 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
+from Products.ERP5Type import Permissions
 
 class ClassDocumentationHelper(DocumentationHelper):
   """
