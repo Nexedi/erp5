@@ -1759,20 +1759,7 @@ class Base( CopyContainer,
     """
       Returns the portal object
     """
-    cache = getReadOnlyTransactionCache(self)
-    if cache is not None:
-      key = 'getPortalObject'
-      try:
-        return cache[key]
-      except KeyError:
-        pass
-
-    result = self.portal_url.getPortalObject()
-
-    if cache is not None:
-      cache[key] = result
-
-    return result
+    return self.aq_inner.aq_parent.getPortalObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
   def getWorkflowIds(self):
@@ -2708,15 +2695,10 @@ class Base( CopyContainer,
   recursiveReindexObject = reindexObject
 
   def getRootDocumentPath(self):
-    # if document, return the path of its root document
-    # otherwire, return None
+    # Return the path of its root document, or itself if no root document.
     self_path_list = self.getPhysicalPath()
-    self_depth = len(self_path_list)
     portal_depth = len(self.getPortalObject().getPhysicalPath())
-    if self_depth > portal_depth + 1:
-      return '/'.join(self_path_list[:portal_depth + 2])
-    else:
-      return None
+    return '/'.join(self_path_list[:portal_depth+2])
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
   def getIndexableChildValueList(self):
