@@ -288,7 +288,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>project_task_selection</string> </value>
+                    <value> <string>project_task_report_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>separate_tree_data</string> </key>
@@ -336,7 +336,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Project_getSourceProjectRelatedTaskList</string> </value>
+            <value> <string>Project_getSourceProjectRelatedTaskReportList</string> </value>
         </item>
       </dictionary>
     </pickle>

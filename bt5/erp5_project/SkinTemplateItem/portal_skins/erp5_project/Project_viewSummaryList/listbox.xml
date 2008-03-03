@@ -119,16 +119,28 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>initial_start_date</string>
+                          <string>Initial Begin</string>
+                        </tuple>
+                        <tuple>
+                          <string>initial_stop_date</string>
+                          <string>Initial End</string>
+                        </tuple>
+                        <tuple>
+                          <string>initial_quantity</string>
+                          <string>Estimated Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>real_start_date</string>
                           <string>Begin</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>real_stop_date</string>
                           <string>End</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
+                          <string>real_quantity</string>
+                          <string>Real Time</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit</string>
@@ -193,16 +205,28 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
+                          <string>initial_start_date</string>
+                          <string>Estimated Begin</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
+                          <string>initial_stop_date</string>
+                          <string>Estimated End</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
+                          <string>initial_quantity</string>
                           <string>Estimated Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>real_start_date</string>
+                          <string>Real Begin</string>
+                        </tuple>
+                        <tuple>
+                          <string>real_stop_date</string>
+                          <string>Real End</string>
+                        </tuple>
+                        <tuple>
+                          <string>real_quantity</string>
+                          <string>Real Time</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit</string>
@@ -288,7 +312,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>project_task_selection</string> </value>
+                    <value> <string>project_task_report_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>separate_tree_data</string> </key>
@@ -336,7 +360,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Project_getSourceProjectRelatedTaskList</string> </value>
+            <value> <string>Project_getSummaryList</string> </value>
         </item>
       </dictionary>
     </pickle>
