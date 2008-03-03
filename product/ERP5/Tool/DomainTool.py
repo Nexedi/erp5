@@ -148,6 +148,8 @@ class DomainTool(BaseTool):
                context.getCategoryMembershipList(tested_base_category, base=1))
 
       if tested_base_category_list != []:
+        # Add predicate_category.uid for automatic join
+        sql_kw['predicate_category.uid'] = '!=0'
         if len(category_list)==0:
           category_list = ['NULL']
         category_expression = portal_categories.buildSQLSelector(
@@ -160,8 +162,6 @@ class DomainTool(BaseTool):
           where_expression = category_expression
 
       sql_kw['where_expression'] = where_expression
-      # Add predicate_category.uid for automatic join
-      sql_kw['predicate_category.uid'] = '!=0'
       kw.update(sql_kw)
 #       LOG('searchPredicateList, kw',0,kw)
 
