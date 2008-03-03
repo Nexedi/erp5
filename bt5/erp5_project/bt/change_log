@@ -1,3 +1,14 @@
+2008-03-03 Seb
+* added tab in order to see task reports
+on project
+* added 3 reports :
+- one to see tasks
+- one for task or tasks reports if the
+task is validated
+- one to see the difference between
+what was planned at the beginning
+and what was done in reality
+
 2007-02-12 kazuhiko
 * use related_simulation_movement_path_list to reduce activity dependencies.
 
