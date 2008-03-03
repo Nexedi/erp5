@@ -122,7 +122,7 @@ class RuleTool (UniqueObject, Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'searchRuleList')
-    def searchRuleList(self, movement, tested_base_category_list=[], **kw):
+    def searchRuleList(self, movement, tested_base_category_list=None, **kw):
       """
       this method searches for rules, as predicates against movement
 
@@ -131,6 +131,9 @@ class RuleTool (UniqueObject, Folder):
       - Predicate criterions can be used (like start_date_range_min)
       """
       domain_tool = getToolByName(self, "portal_domains")
+
+      if tested_base_category_list is None:
+        tested_base_category_list = []
 
       rule_list = domain_tool.searchPredicateList(context=movement,
           tested_base_category_list=tested_base_category_list,
