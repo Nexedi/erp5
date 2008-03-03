@@ -58,9 +58,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Standard Payroll Tax</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -68,7 +66,7 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>5</int> </value>
+            <value> <int>201</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

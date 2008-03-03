@@ -19,7 +19,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>base_amount/non_deductible_tax</string>
+                <string>base_amount/net_salary</string>
               </tuple>
             </value>
         </item>
@@ -31,15 +31,16 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This contains taxes that are not part of the net fiscal income. This is probably french specific and might be changed.</string> </value>
+            <value> <string>The salary that will be paid to the employee.\n
+All contributions and incomes are in this category.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>non_deductible_tax</string> </value>
+            <value> <string>net_salary</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>202</int> </value>
+            <value> <int>301</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -47,7 +48,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Non Deductible Tax</string> </value>
+            <value> <string>Net Salary</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
