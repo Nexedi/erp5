@@ -100,7 +100,7 @@ if listbox is None:\n
     if disable_node:\n
       node=None\n
     current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
-                               at_date=at_date, node=node,\n
+                               to_date=at_date, node=node,\n
                                where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
     for item in current_tracking_list:\n
       exclude=0\n
@@ -168,6 +168,14 @@ return listbox\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
