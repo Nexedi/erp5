@@ -142,6 +142,7 @@ return cell_range\n
             <value>
               <tuple>
                 <string>Author</string>
+                <string>Manager</string>
                 <string>Owner</string>
               </tuple>
             </value>
