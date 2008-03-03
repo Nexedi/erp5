@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import re, socket
+import re, socket, sys
 from DateTime import DateTime
 from operator import add
 from xmlrpclib import Fault
