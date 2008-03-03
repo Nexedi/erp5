@@ -112,6 +112,7 @@ if state_change[\'transition\'].getId() == "wait_action":\n
     \n
 \n
 bank_account_dict = {}\n
+seen_check_dict = {}\n
 \n
 # Check each check operation line.\n
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
@@ -139,6 +140,14 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     msg = Message(domain=\'ui\', message=\'Bank account not defined on line $line.\'\n
                   , mapping={"line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
+\n
+  seen_check_dict_key = (source_bank_account, check_type, check_number)\n
+  seen_check = seen_check_dict.get(seen_check_dict_key)\n
+  if seen_check is not None:\n
+    msg = Message(domain=\'ui\', message=\'Check on line $line is already used on line $oldline.\'\n
+                  , mapping={"line" : check_operation_line.getId(), "oldline": seen_check})\n
+    raise ValidationFailed, (msg,)\n
+  seen_check_dict[seen_check_dict_key] = check_operation_line.getId()\n
 \n
   # Test check is valid based on date\n
   transaction.Check_checkIntervalBetweenDate(resource=check_operation_line.getAggregateResourceValue(),\n
@@ -245,14 +254,17 @@ if transaction.getSimulationState() == "draft" and state_change[\'transition\'].
                             <string>destination_bank_account</string>
                             <string>context</string>
                             <string>bank_account_dict</string>
+                            <string>seen_check_dict</string>
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
                             <string>check_number</string>
                             <string>check_type</string>
                             <string>source_bank_account</string>
+                            <string>seen_check_dict_key</string>
+                            <string>seen_check</string>
+                            <string>_write_</string>
                             <string>account_path</string>
                             <string>check_price</string>
-                            <string>_write_</string>
                             <string>error</string>
                             <string>check</string>
                           </tuple>
