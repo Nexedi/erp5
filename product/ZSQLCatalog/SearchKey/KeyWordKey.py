@@ -101,7 +101,7 @@ class KeyWordKey(SearchKey):
     return t
 
   def t_KEYWORD(self, t):
-    r'(%\S*|([^!<>=\s%]\S*|!([^=\s]\S*)?)%)'
+    r'(%\S*|([^!<>=\s%]\S+|!([^=\s]\S+)?)%)'
     # KEYWORD must start and/or end with '%'.
     # It may contain arbitrary letters and numbers without white space
     value = t.value.strip()
