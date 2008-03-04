@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -107,6 +104,7 @@ for form in context.getPortalObject().portal_skins\\\n
 # also reset common selections\n
 stool.setSelectionFor(\'person_selection\', None)\n
 stool.setSelectionFor(\'organisation_selection\', None)\n
+stool.setSelectionFor(\'grouping_reference_fast_input_selection\', None)\n
 \n
 # delete the "dummy account" we create in test_account_gap_parallel_list_field\n
 dummy_account_list = portal.account_module.searchFolder(\n

@@ -77,8 +77,9 @@ default_date = DateTime(year, 01, 01)\n
 immediate_reindex = 0\n
 \n
 # if the previous test didn\'t change input data, no need to recreate content\n
-current_script_data_id = \'%s_month_count_%s_draft_%s_state_%s\' % (\n
-     month_count, add_draft_transactions, transaction_state, script.getId())\n
+current_script_data_id = \'%s_month_count_%s_draft_%s_state_%s_payment_%s\' % (\n
+     month_count, add_draft_transactions, transaction_state,\n
+     add_related_payments, script.getId())\n
 \n
 if accounting_module.getProperty(\'current_content_script\',\n
                                 \'\') == current_script_data_id:\n
@@ -233,6 +234,34 @@ for month in range(1, month_count + 1):\n
     else:\n
       # other cases not supported for now\n
       assert transaction_state == \'draft\'\n
+    if add_related_payments:\n
+      payment = accounting_module.newContent(\n
+            causality_value=tr,\n
+            immediate_reindex=immediate_reindex,\n
+            portal_type=\'Payment Transaction\',\n
+            title=\'%s Payment\' % client_title,\n
+            source_section=section,\n
+            destination_section=getOrganisationByTitle(client_title),\n
+            created_by_builder=1,\n
+            start_date=default_date,\n
+            stop_date=default_date,\n
+            resource=euro_resource,\n
+        )\n
+      payment.newContent(portal_type=\'Accounting Transaction Line\',\n
+                    immediate_reindex=immediate_reindex,\n
+                    source=getAccountByTitle(\'Bank\'),\n
+                    quantity=-(amount * (1 + vat_rate)))\n
+      payment.newContent(portal_type=\'Accounting Transaction Line\',\n
+                    immediate_reindex=immediate_reindex,\n
+                    source=getAccountByTitle(\'Receivable\'),\n
+                    quantity=(amount * (1 + vat_rate)))\n
+      if transaction_state == \'validated\':\n
+        payment.stop()\n
+        assert payment.getSimulationState() == \'stopped\'\n
+      else:\n
+        # other cases not supported for now\n
+        assert transaction_state == \'draft\'\n
+\n
   amount=7000\n
   default_date += 1\n
   tr = accounting_module.newContent(\n
@@ -315,7 +344,7 @@ return "Accounting Transactions Created."\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\'</string> </value>
+            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -335,7 +364,7 @@ return "Accounting Transactions Created."\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -344,6 +373,7 @@ return "Accounting Transactions Created."\n
                             <string>month_count</string>
                             <string>add_draft_transactions</string>
                             <string>transaction_state</string>
+                            <string>add_related_payments</string>
                             <string>DateTime</string>
                             <string>section_title</string>
                             <string>_getattr_</string>
@@ -383,6 +413,7 @@ return "Accounting Transactions Created."\n
                             <string>client_title</string>
                             <string>amount</string>
                             <string>_inplacevar_</string>
+                            <string>payment</string>
                           </tuple>
                         </value>
                     </item>
@@ -398,6 +429,7 @@ return "Accounting Transactions Created."\n
                 <int>1</int>
                 <int>1</int>
                 <string>validated</string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
