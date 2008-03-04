@@ -1581,8 +1581,18 @@ class SimulationTool(BaseTool):
       # order to do a "select item left join item on date"
       new_kw['at_date'] = at_date
 
+      to_date = kw.get('to_date',None)
+      if to_date is not None:
+        query_mixin = QueryMixin()
+        to_date = query_mixin._quoteSQLString(to_date)
+        to_date = to_date.strip("'")
+      # Do not remove to_date in new_kw, it is required in 
+      # order to do a "select item left join item on date"
+      new_kw['to_date'] = to_date
+
       # Extra parameters for the SQL Method
       new_kw['join_on_item'] = new_kw.get('at_date') or \
+                               new_kw.get('to_date') or \
                                new_kw.get('input') or \
                                new_kw.get('output')
       new_kw['date_condition_in_join'] = not (new_kw.get('input') or new_kw.get('output'))
