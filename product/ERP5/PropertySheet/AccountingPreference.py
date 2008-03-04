@@ -70,4 +70,11 @@ class AccountingPreference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+
+    # Those preferences are used to configure behaviour for the site
+    { 'id'          : 'preferred_grouping_with_different_quantities',
+      'description' : 'Allow grouping lines with different quantities',
+      'type'        : 'boolean',
+      'preference'  : 1,
+      'mode'        : 'w'},
   )
