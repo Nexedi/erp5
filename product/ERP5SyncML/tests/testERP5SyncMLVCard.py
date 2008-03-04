@@ -193,8 +193,8 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
       self.last_name3, person1_s, person1_c)
     self.synchronize(self.sub_id1)
     #after synchronization, a new person is create on the server
-    person1_s = person_server._getOb('1') #The new person is added on the 
-                                      #serverwith a generate id (the first is 1)
+    person1_s = person_server._getOb('2') #The new person is added on the
+                                      #serverwith a generated id (the following is 2)
 
     #after the synchro, the client and server should be synchronized
     self.checkSynchronizationStateIsSynchronized()
