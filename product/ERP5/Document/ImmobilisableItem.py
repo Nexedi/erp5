@@ -44,17 +44,10 @@ from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX
 from Products.ERP5.Document.ImmobilisationMovement import IMMOBILISATION_NEEDED_PROPERTY_LIST, IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST, IMMOBILISATION_FACULTATIVE_PROPERTY_LIST
-
-
 from zLOG import LOG
-
 
 NEGLIGEABLE_PRICE = 10e-8
 
-#class ImmobilisationValidityError(Exception): pass
-#class ImmobilisationCalculationError(Exception): pass
-#allow_class(ImmobilisationValidityError)
-#allow_class(ImmobilisationCalculationError)
 from Products.ERP5Type.Errors import ImmobilisationValidityError, ImmobilisationCalculationError
 
 class ImmobilisableItem(XMLObject, Amount):
@@ -84,6 +77,7 @@ class ImmobilisableItem(XMLObject, Amount):
                       , PropertySheet.Reference
                       , PropertySheet.Amortisation
                       )
+
     security.declareProtected(Permissions.View, 'getImmobilisationRelatedMovementList')
     def getImmobilisationRelatedMovementList(self,
                                              from_date = None,
@@ -157,7 +151,6 @@ class ImmobilisableItem(XMLObject, Amount):
           immo_list.append(movement)
       return immo_list
 
-      
     def _ownerChange(self, first_section, second_section):
       """
       Tests if section 1 and section 2 are the same owner or not
@@ -167,7 +160,7 @@ class ImmobilisableItem(XMLObject, Amount):
       """
       if first_section == second_section:
         return 0
-      
+
       first_section = self._getFirstIndependantOrganisation(first_section)
       second_section = self._getFirstIndependantOrganisation(second_section)
       if first_section is None:
@@ -181,8 +174,7 @@ class ImmobilisableItem(XMLObject, Amount):
         if first_section == second_section:
           return 0
       return 1
-      
-      
+
     def _getFirstIndependantOrganisation(self, section):
       """
       Returns the first found independant organisation, looking at
@@ -215,7 +207,6 @@ class ImmobilisableItem(XMLObject, Amount):
         else:
           return None
       return organisation
-      
 
     security.declareProtected(Permissions.View, 'getImmobilisationMovementValueList')
     def getImmobilisationMovementValueList(self,
@@ -232,8 +223,7 @@ class ImmobilisableItem(XMLObject, Amount):
                                                        filter_valid=filter_valid,
                                                        immobilisation_and_owner_change=1,
                                                        **kw)
-      
-  
+
     security.declareProtected(Permissions.View, 'getUnfilteredImmobilisationMovementValueList')
     def getUnfilteredImmobilisationMovementValueList(self, from_date=None, to_date=None, **kw):
       """
@@ -243,7 +233,6 @@ class ImmobilisableItem(XMLObject, Amount):
       return self.getImmobilisationMovementValueList(from_date=from_date,
                                                      to_date=to_date,
                                                      filter_valid=0, **kw)
-
 
     security.declareProtected(Permissions.View, 'getPastImmobilisationMovementValueList')
     def getPastImmobilisationMovementValueList(self, from_date=None, at_date=None, **kw):
@@ -255,7 +244,6 @@ class ImmobilisableItem(XMLObject, Amount):
                                                         to_date = at_date,
                                                         **kw )
        return result
-
 
     security.declareProtected(Permissions.View, 'getFutureImmobilisationMovementValueList')
     def getFutureImmobilisationMovementValueList(self, to_date=None, at_date=None, from_movement=None, **kw):
@@ -283,7 +271,6 @@ class ImmobilisableItem(XMLObject, Amount):
         return past_list[-1]
       return None
 
-    
     security.declareProtected(Permissions.View, 'getNextImmobilisationMovementValue')
     def getNextImmobilisationMovementValue(self, at_date=None, from_movement=None, **kw):
       """
@@ -297,8 +284,7 @@ class ImmobilisableItem(XMLObject, Amount):
       if len(future_list) > 0:
         return future_list[0]
       return None
-    
-    
+
     security.declareProtected(Permissions.View, 'getImmobilisationPeriodList')
     def getImmobilisationPeriodList(self, from_date=None, to_date=None, **kw):
       """
@@ -311,8 +297,8 @@ class ImmobilisableItem(XMLObject, Amount):
         kw_key_list.remove('immo_cache_dict')
       immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
       kw['immo_cache_dict'] = immo_cache_dict
-      if immo_cache_dict['period'].has_key( (self.getRelativeUrl(), from_date, to_date) + 
-            tuple([(key,kw[key]) for key in kw_key_list]) ) :
+      if immo_cache_dict['period'].has_key((self.getRelativeUrl(), from_date, to_date) + 
+            tuple([(key,kw[key]) for key in kw_key_list])) :
         return immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) + 
             tuple( [(key,kw[key]) for key in kw_key_list]) ]
       def setPreviousPeriodParameters(period_list,
@@ -330,7 +316,7 @@ class ImmobilisableItem(XMLObject, Amount):
               for key in keys:
                 current_period[key] = previous_period[key]
       #####
-                
+
       # We need to separate immobilisation treatment from section_change movements treatment
       # An immobilisation is a movement which contains immobilisation data and MAY change the section
       # A section change movement DOES NOT contain immobilisation data
@@ -381,7 +367,7 @@ class ImmobilisableItem(XMLObject, Amount):
           immobilisation = immobilisation_list[immo_cursor]
         if section_cursor < len(section_movement_list):
           section_movement = section_movement_list[section_cursor]
-          
+
         if (immobilisation is not None) and (section_movement is None or \
             section_movement.getStopDate() > immobilisation.getStopDate()):
           # immobilisation treatment
@@ -421,7 +407,7 @@ class ImmobilisableItem(XMLObject, Amount):
           immo_period_list.append(current_immo_period)
           current_immo_period = {}
         current_immo_period = {}
-         
+
         # Then open the new one
         if open_new_period and method != UNIMMOBILISING_METHOD:
           # First check if there is a valid owner in this period
@@ -459,11 +445,11 @@ class ImmobilisableItem(XMLObject, Amount):
               current_immo_period['start_vat'] = 0
               current_immo_period['start_extra_cost_price'] = 0
               current_immo_period['start_main_price'] = self.getAmortisationPrice(at_date=movement.getStopDate(),
-                                                                   immo_cache_dict=immo_cache_dict)
+                                        immo_cache_dict=immo_cache_dict)
               current_immo_period['start_duration'] = self.getRemainingAmortisationDuration(at_date=movement.getStopDate(),
-                                                                   immo_cache_dict=immo_cache_dict)
+                                                    immo_cache_dict=immo_cache_dict)
               current_immo_period['start_durability'] = self.getRemainingDurability(at_date=movement.getStopDate(),
-                                                                   immo_cache_dict=immo_cache_dict)
+                                          immo_cache_dict=immo_cache_dict)
               method = current_immo_period.get('start_method', "")
             # For both types of movement, set some properties
             extra_cost_price = current_immo_period.get('start_extra_cost_price')
@@ -500,7 +486,7 @@ class ImmobilisableItem(XMLObject, Amount):
                  )
             current_immo_period['continuous'] = continuous
             current_immo_period['adjacent'] = adjacent
-            
+
             if continuous:
               # A continuous period gets 'initial' data from previous period.
               setPreviousPeriodParameters(immo_period_list, current_immo_period)
@@ -546,7 +532,7 @@ class ImmobilisableItem(XMLObject, Amount):
             for key, value, tag in needed_property_list:
               if current_immo_period.get('initial_%s' % key) in (None,"",NO_CHANGE_METHOD):
                 current_immo_period = {}
-            
+
       if current_immo_period not in (None,{}):
         immo_period_list.append(current_immo_period)
       # Round dates since immobilisation calculation is made on days
@@ -599,14 +585,12 @@ class ImmobilisableItem(XMLObject, Amount):
         # It means the latest period is terminated before the current date
         return 0
       return 1
-      
 
     security.declareProtected(Permissions.View, 'getCurrentRemainingAmortisationDuration')
     def getCurrentRemainingAmortisationDuration(self, **kw):
       """ Returns the calculated remaining amortisation duration for this item at the current time. """
       return self.getRemainingAmortisationDuration(at_date = DateTime(), **kw)
 
-      
     security.declareProtected(Permissions.View, 'getRemainingAmortisationDuration')
     def getRemainingAmortisationDuration(self, at_date=None, **kw):
       """
@@ -635,8 +619,7 @@ class ImmobilisableItem(XMLObject, Amount):
           returned_value = 0
         return int(remaining_duration)
       return None
-      
-      
+
     security.declareProtected(Permissions.View, 'getRemainingDurability')
     def getRemainingDurability(self, at_date=None, **kw):
       """
@@ -647,14 +630,14 @@ class ImmobilisableItem(XMLObject, Amount):
       Each Immobilisation Movement stores the durability at a given time, so it is possible
       to approximate the durability between two Immobilisation Movements by using a simple
       linear calculation.
-      
+
       Note that durability has no sense for items which are immobilisated but not
       amortised (like grounds, etc...). Calculation is based on duration, so an item
       immobilised without amortisation duration will not decrease its durability.
       """
       if at_date is None:
         at_date = DateTime()
-     
+
       immo_period_list = kw.get('immo_period_list', None)
       new_kw = dict(kw)
       if new_kw.has_key('to_date'):
@@ -666,18 +649,18 @@ class ImmobilisableItem(XMLObject, Amount):
       # First case : no data about immobilisation
       if len(immo_period_list) == 0:
         return None
-      
+
       immo_period = immo_period_list[-1]
       # Second case : the item is not currently immobilised
       if immo_period.has_key('stop_date'):
         return immo_period['stop_durability']
-      
+
       # Third case : the item is currently immobilised
       start_date = immo_period['start_date']
       start_durability = immo_period['start_durability']
       if start_durability is None:
-        start_durability = self.getRemainingDurability(at_date=start_date, 
-                                                       immo_cache_dict=kw.get('immo_cache_dict', {}))
+        start_durability = self.getRemainingDurability(at_date=start_date,
+                                                       immo_cache_dict=kw.get('immo_cache_dict', {'period':{},'price':{}}))
         if start_durability is None:
           return None
       stop_date = None
@@ -704,7 +687,7 @@ class ImmobilisableItem(XMLObject, Amount):
         return start_durability
       else:
         return start_durability - consumpted_durability * current_consumpted_time / consumpted_time
-     
+
 
     security.declareProtected(Permissions.View, 'getCurrentRemainingDurability')
     def getCurrentRemainingDurability(self, **kw):
@@ -712,7 +695,7 @@ class ImmobilisableItem(XMLObject, Amount):
       Returns the remaining durability at the current date
       """
       return self.getRemainingDurability(at_date = DateTime(), **kw)
-    
+
 
     security.declareProtected(Permissions.View, 'getAmortisationPrice')
     def getAmortisationPrice(self, at_date=None, with_currency=0, **kw):
@@ -720,17 +703,17 @@ class ImmobilisableItem(XMLObject, Amount):
       Returns the deprecated value of item at given date, or now.
       If with_currency is set, returns a string containing the value and the corresponding currency.
       """
-      
+
       if at_date is None:
         at_date = DateTime()
       kw_key_list = kw.keys()
       kw_key_list.sort()
-      
+
       if kw_key_list.count('immo_cache_dict'):
         kw_key_list.remove('immo_cache_dict')
       immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
       kw['immo_cache_dict'] = immo_cache_dict
-      
+
       if immo_cache_dict['price'].has_key( (self.getRelativeUrl(), at_date) + 
             tuple([(key,kw[key]) for key in kw_key_list]) ) :
         returned_price = immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) + 
@@ -738,14 +721,14 @@ class ImmobilisableItem(XMLObject, Amount):
         if with_currency:
           return '%0.2f %s' % (returned_price, currency)
         return returned_price
-      
+
       immo_period_list = self.getImmobilisationPeriodList(to_date=at_date, **kw)
       if len(immo_period_list) == 0:
         # Item has never been immobilised. We cannot get its price
         if with_currency:
           return "N/A"
         return None
-      
+
       # Get data from the last immo period
       immo_period = immo_period_list[-1]
       initial_movement =      immo_period['initial_movement']
@@ -787,13 +770,13 @@ class ImmobilisableItem(XMLObject, Amount):
       stop_durability = self.getRemainingDurability(at_date = period_stop_date,
                                                     immo_period_list=immo_period_list,
                                                     immo_cache_dict=immo_cache_dict)
-        
+
       section = owner
       currency = owner.getPriceCurrency()
       depreciable_price = period_start_price - disposal_price
       financial_date = section.getFinancialYearStopDate()
       amortisation_method = AMORTISATION_METHOD_PREFIX + immo_period['initial_method']
-       
+
       # Get the amortisation method parameters
       amortisation_parameters = initial_movement.getAmortisationMethodParameterForItem(
                 item=self, parameter_list = [
@@ -952,7 +935,6 @@ class ImmobilisableItem(XMLObject, Amount):
       if with_currency:
         return '%0.2f %s' % (returned_price, currency)
       return returned_price 
-    
 
     security.declareProtected(Permissions.View, 'getCurrentAmortisationPrice')
     def getCurrentAmortisationPrice(self, with_currency=0, **kw):
@@ -972,7 +954,7 @@ class ImmobilisableItem(XMLObject, Amount):
         specialise_value = applied_rule.getSpecialiseValue()
         if specialise_value is not None and specialise_value.getPortalType() == "Amortisation Rule":
           my_applied_rule_list.append(applied_rule)
-          
+
       if len(my_applied_rule_list) == 0:
         # Create a new applied order rule (portal_rules.order_rule)
         portal_rules = getToolByName(self, 'portal_rules')
@@ -1067,8 +1049,7 @@ class ImmobilisableItem(XMLObject, Amount):
             if len(movement_list)==0 or movement_list[-1] != movement:
               movement_list.append(movement)
       return movement_list
-          
-          
+
     security.declareProtected(Permissions.View, 'getSectionChangeList')
     def getSectionChangeList(self, at_date=None, **kw):
       """
@@ -1099,7 +1080,6 @@ class ImmobilisableItem(XMLObject, Amount):
         owner_list.append( {'owner' : owner, 'date' : movement.getStopDate(), 'movement':movement } )
       return owner_list
 
-        
     security.declareProtected(Permissions.View, 'getSectionValue')
     def getSectionValue(self, at_date=None, **kw):
       """
@@ -1118,7 +1098,7 @@ class ImmobilisableItem(XMLObject, Amount):
       Return the current owner of the item
       """
       return self.getSectionValue(at_date = DateTime(), **kw)
-    
+
     security.declareProtected(Permissions.View, 'getCleanSqlDict')
     def getCleanSqlDict(self, kw):
       no_sql_list = ['immo_cache_dict']
