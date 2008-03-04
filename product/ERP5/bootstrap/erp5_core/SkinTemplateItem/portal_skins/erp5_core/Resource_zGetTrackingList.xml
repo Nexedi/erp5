@@ -417,7 +417,11 @@ FROM\n
     item AS next_item\n
   ON (\n
     <dtml-if date_condition_in_join>\n
+    <dtml-if expr="at_date is not None">\n
        next_item.date <= <dtml-sqlvar at_date type="string">\n
+    <dtml-else>\n
+       next_item.date < <dtml-sqlvar to_date type="string">\n
+    </dtml-if>\n
     AND\n
     </dtml-if>\n
     next_item.aggregate_uid = item.aggregate_uid\n
@@ -535,7 +539,11 @@ FROM\n
     item AS next_item\n
   ON (\n
     <dtml-if date_condition_in_join>\n
+    <dtml-if expr="at_date is not None">\n
        next_item.date <= <dtml-sqlvar at_date type="string">\n
+    <dtml-else>\n
+       next_item.date < <dtml-sqlvar to_date type="string">\n
+    </dtml-if>\n
     AND\n
     </dtml-if>\n
     next_item.aggregate_uid = item.aggregate_uid\n
