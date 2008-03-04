@@ -138,7 +138,8 @@ form.manage_settings(\n
          field_unicode_mode=form.unicode_mode,\n
          field_method=form.method,\n
          field_row_length=str(form.row_length),\n
-         field_pt=\'form_list\'))\n
+         field_pt=\'form_list\',\n
+         field_edit_order=[]))\n
 \n
 form.manage_addField(\n
          id=\'listbox\',\n
@@ -165,7 +166,7 @@ default_groups = [\'right\', \'center\', \'bottom\', \'hidden\']\n
 for group in default_groups:\n
   form.add_group(group)\n
 \n
-form.manage_settings(dict(\n
+form.manage_settings(\n
     dict(field_title=form.title,\n
          field_name=form.name,\n
          field_description=form.description,\n
@@ -177,7 +178,8 @@ form.manage_settings(dict(\n
          field_unicode_mode=form.unicode_mode,\n
          field_method=form.method,\n
          field_row_length=str(form.row_length),\n
-         field_pt=\'form_view\')))\n
+         field_pt=\'form_view\',\n
+         field_edit_order=[]))\n
 \n
 form.manage_addField(\n
          id=\'my_title\',\n
@@ -247,6 +249,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
