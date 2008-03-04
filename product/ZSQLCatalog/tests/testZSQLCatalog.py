@@ -243,6 +243,30 @@ class TestQuery(unittest.TestCase):
                             datetime_search_keys = [],
                             full_text_search_keys=[]))
 
+  def testQueryKeywordSearchKeyWithPercent(self):
+    q = Query(title='F%o')
+    self.assertEquals(dict(where_expression="((((title LIKE '%F%o%'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
+
+  def testQueryKeywordSearchKeyWithMinus(self):
+    q = Query(title='F-o')
+    self.assertEquals(dict(where_expression="((((title LIKE '%F-o%'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
+
+  def testQueryKeywordSearchKeyWithSpace(self):
+    q = Query(title='F o')
+    self.assertEquals(dict(where_expression="((((title LIKE '%F o%'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],
+                            datetime_search_keys = [],
+                            full_text_search_keys=[]))
+
   def testNegatedQuery(self):
     q1 = Query(title='Foo')
     q = NegatedQuery(q1)
