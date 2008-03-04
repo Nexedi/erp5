@@ -1525,6 +1525,57 @@ class TestTrackingList(InventoryAPITestCase):
     self.assertEquals(len(result),2)
     self.failIfDifferentSet([x.uid for x in result], [item_uid, other_item_uid])
 
+  def testDates(self):
+    """
+      Test different dates parameters of getTrackingList.
+    """
+    getTrackingList = self.getSimulationTool().getTrackingList
+    now = DateTime()
+    node_1 = self._makeOrganisation(title='Node 1')
+    node_2 = self._makeOrganisation(title='Node 2')
+    node_3 = self._makeOrganisation(title='Node 3')
+    date_0 = now - 4 # Before first movement
+    date_1 = now - 3 # First movement
+    date_2 = now - 2 # Between both movements
+    date_3 = now - 1 # Second movement
+    date_4 = now     # After last movement
+    self._makeMovement(quantity=1, price=1,
+                       aggregate_value=self.item,
+                       resource_value=self.resource,
+                       start_date=date_1,
+                       source_value=node_2,
+                       destination_value=node_1)
+    self._makeMovement(quantity=1, price=1,
+                       aggregate_value=self.item,
+                       resource_value=self.resource,
+                       start_date=date_3,
+                       source_value=node_3,
+                       destination_value=node_2)
+    node_1_uid = node_1.getUid()
+    node_2_uid = node_2.getUid()
+    date_location_dict = {
+      date_0: {'at_date': None,       'to_date': None},
+      date_1: {'at_date': node_1_uid, 'to_date': None},
+      date_2: {'at_date': node_1_uid, 'to_date': node_1_uid},
+      date_3: {'at_date': node_2_uid, 'to_date': node_1_uid},
+      date_4: {'at_date': node_2_uid, 'to_date': node_2_uid}
+    }
+    node_uid_to_node_number = {
+      node_1_uid: 1,
+      node_2_uid: 2
+    }
+    for date, location_dict in date_location_dict.iteritems():
+      for param_id, location_uid in location_dict.iteritems():
+        param_dict = {param_id: date}
+        uid_list = [x.node_uid for x in getTrackingList(aggregate_value=self.item, **param_dict)]
+        if location_uid is None:
+          self.assertEqual(len(uid_list), 0)
+        else:
+          self.assertEqual(len(uid_list), 1)
+          self.assertEqual(uid_list[0], location_uid,
+                           '%s=now - %i, aggregate should be at node %i but is at node %i' % \
+                           (param_id, now - date, node_uid_to_node_number[location_uid], node_uid_to_node_number[uid_list[0]]))
+
 class TestInventoryDocument(InventoryAPITestCase):
   """ Test impact of creating full inventories of stock points on inventory
   lookup. This is an optimisation to regular inventory system to avoid
