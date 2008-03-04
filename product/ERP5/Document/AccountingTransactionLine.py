@@ -123,3 +123,15 @@ class AccountingTransactionLine(DeliveryLine):
       defining the equivalent in EUR.
     """
     return 1.0
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'setGroupingReference')
+  def setGroupingReference(self, value):
+    # Sets the grouping reference.
+    # This method is redefined here to override security definition.
+    # In the case of an accounting transaction line, we want to be able to 
+    # set a grouping reference on a line after the point where we remove the
+    # Modify portal content permission, as long as this method cannot be called
+    # directly from the URL, that's why this method is without docstring.
+    self._baseSetGroupingReference(value)
+    self.reindexObject()
