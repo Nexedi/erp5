@@ -1533,7 +1533,6 @@ class TestTrackingList(InventoryAPITestCase):
     now = DateTime()
     node_1 = self._makeOrganisation(title='Node 1')
     node_2 = self._makeOrganisation(title='Node 2')
-    node_3 = self._makeOrganisation(title='Node 3')
     date_0 = now - 4 # Before first movement
     date_1 = now - 3 # First movement
     date_2 = now - 2 # Between both movements
@@ -1543,13 +1542,13 @@ class TestTrackingList(InventoryAPITestCase):
                        aggregate_value=self.item,
                        resource_value=self.resource,
                        start_date=date_1,
-                       source_value=node_2,
+                       source_value=None,
                        destination_value=node_1)
     self._makeMovement(quantity=1, price=1,
                        aggregate_value=self.item,
                        resource_value=self.resource,
                        start_date=date_3,
-                       source_value=node_3,
+                       source_value=node_1,
                        destination_value=node_2)
     node_1_uid = node_1.getUid()
     node_2_uid = node_2.getUid()
