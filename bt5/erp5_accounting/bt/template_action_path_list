@@ -1,5 +1,6 @@
 Account Module | jump_active_accounting_pref
 Account Module | view
+Account | grouping_reference_fast_input
 Account | jump_active_accounting_pref
 Account | jump_to_accounting
 Account | transaction_list
@@ -17,6 +18,7 @@ Accounting Transaction Module | bank_accounts_report
 Accounting Transaction Module | create_related_payments
 Accounting Transaction Module | general_ledger_export
 Accounting Transaction Module | general_ledger_report
+Accounting Transaction Module | grouping_reference_fast_input
 Accounting Transaction Module | journal_export
 Accounting Transaction Module | journal_from_selection
 Accounting Transaction Module | journal_report
@@ -46,6 +48,7 @@ Cash Register | transactions
 Cash Register | view
 Credit Card | transactions
 Invoice Rule | view
+Organisation | grouping_reference_fast_input
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions
@@ -58,6 +61,7 @@ Payment Transaction | details
 Payment Transaction | related_invoice
 Payment Transaction | source_asset
 Payment Transaction | view
+Person | grouping_reference_fast_input
 Person | jump_to_accounting
 Person | transactions
 Preference | view_accounting

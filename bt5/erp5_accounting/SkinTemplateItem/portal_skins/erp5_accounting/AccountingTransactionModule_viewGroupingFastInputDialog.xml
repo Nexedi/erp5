@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>AccountingTransactionModule_setGroupingReference</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -88,7 +88,8 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>preferred_warning</string>
+                        <string>your_node</string>
+                        <string>your_mirror_section</string>
                       </list>
                     </value>
                 </item>
@@ -96,11 +97,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_credit</string>
-                        <string>listbox_date</string>
+                        <string>listbox_delivery_reference</string>
                         <string>listbox_debit</string>
-                        <string>listbox_running_total_price</string>
-                        <string>listbox_total_price</string>
+                        <string>listbox_credit</string>
+                        <string>listbox_delivery_portal_type</string>
+                        <string>listbox_node_title</string>
                       </list>
                     </value>
                 </item>
@@ -108,9 +109,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>preferred_from_date</string>
-                        <string>preferred_at_date</string>
+                        <string>your_grouping</string>
                       </list>
                     </value>
                 </item>
@@ -118,8 +117,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>preferred_section</string>
-                        <string>preferred_simulation_state</string>
+                        <string>total_selected_amount</string>
                       </list>
                     </value>
                 </item>
@@ -128,7 +126,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_viewAccountingTransactionList</string> </value>
+            <value> <string>AccountingTransactionModule_viewGroupingFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -136,11 +134,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Entity_viewAccountingTransactionList</string> </value>
+            <value> <string>AccountingTranscationModule_viewGroupingFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -152,7 +150,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Transactions</string> </value>
+            <value> <string>Grouping Reference Fast Input</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -160,7 +158,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>AccountingTransactionModule_updateGroupingReference</string> </value>
         </item>
       </dictionary>
     </pickle>

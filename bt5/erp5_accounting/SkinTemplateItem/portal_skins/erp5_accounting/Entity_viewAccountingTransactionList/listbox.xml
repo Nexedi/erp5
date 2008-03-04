@@ -200,10 +200,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>grouping_reference</string>
-                          <string>Grouping</string>
-                        </tuple>
-                        <tuple>
                           <string>debit</string>
                           <string>debit</string>
                         </tuple>
