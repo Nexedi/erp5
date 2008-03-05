@@ -65,49 +65,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Set automatic references on the document.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Returns the accounting period for the destination section that should be applied for this\n
+accounting transaction.\n
 """\n
 \n
-transaction = state_change[\'object\']\n
+operation_date = context.getStopDate()\n
+if not operation_date:\n
+  return None\n
 \n
-# Get sections.\n
-source_section = transaction.getSourceSection()\n
-destination_section = transaction.getDestinationSection()\n
-\n
-# Invoice Reference is automatically filled only for Sale Invoice Transaction.\n
-if transaction.getPortalType() == \'Sale Invoice Transaction\':\n
-  if not transaction.getReference():\n
-    invoice_id_group = (\'accounting\', \'invoice\', source_section)\n
-    invoice_reference = transaction.generateNewId(id_group=invoice_id_group,\n
-                                                  default=1)\n
-    transaction.setReference(invoice_reference)\n
-\n
-\n
-# Generate new values for Source Reference and Destination Reference.\n
-if not transaction.getSourceReference():\n
-  period = transaction.AccountingTransaction_getAccountingPeriodForSourceSection()\n
-  period_code = \'\'\n
-  if period is not None:\n
-    period_code = period.getShortTitle() or period.getTitle() or \'\'\n
-  if not period_code:\n
-    period_code = transaction.getStartDate().year()\n
-  source_id_group = (\'accounting\', \'section\', source_section, period_code)\n
-  source_reference = transaction.generateNewId(id_group=source_id_group,\n
-                                               default=1)\n
-  transaction.setSourceReference(\'%s-%s\' % (period_code, source_reference))\n
-\n
-if not transaction.getDestinationReference():\n
-  period = transaction.AccountingTransaction_getAccountingPeriodForDestinationSection()\n
-  period_code = \'\'\n
-  if period is not None:\n
-    period_code = period.getShortTitle() or period.getTitle() or \'\'\n
-  if not period_code:\n
-    period_code = transaction.getStopDate().year()\n
-  destination_id_group = (\'accounting\', \'section\', destination_section, period_code)\n
-  destination_reference = transaction.generateNewId(\n
-                              id_group=destination_id_group, default=1)\n
-  transaction.setDestinationReference(\'%s-%s\' % (period_code, destination_reference))\n
-</string> </value>
+section = context.getDestinationSectionValue(portal_type=\'Organisation\')\n
+if section is not None:\n
+  for accounting_period in section.contentValues(\n
+                          portal_type=\'Accounting Period\',\n
+                          checked_permission=\'View\'):\n
+    if accounting_period.getValidationState() in (\n
+              \'draft\', \'cancelled\', \'deleted\'):\n
+      continue\n
+    if accounting_period.getStartDate().earliestTime()\\\n
+              <=  operation_date <= \\\n
+       accounting_period.getStopDate().latestTime():\n
+      return accounting_period\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -123,13 +105,7 @@ if not transaction.getDestinationReference():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,27 +125,19 @@ if not transaction.getDestinationReference():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>source_section</string>
-                            <string>destination_section</string>
-                            <string>invoice_id_group</string>
-                            <string>invoice_reference</string>
-                            <string>period</string>
-                            <string>period_code</string>
+<string>context</string>
+                            <string>operation_date</string>
                             <string>None</string>
-                            <string>source_id_group</string>
-                            <string>source_reference</string>
-                            <string>destination_id_group</string>
-                            <string>destination_reference</string>
+                            <string>section</string>
+                            <string>_getiter_</string>
+                            <string>accounting_period</string>
                           </tuple>
                         </value>
                     </item>
@@ -186,7 +154,7 @@ if not transaction.getDestinationReference():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>setReferences</string> </value>
+            <value> <string>AccountingTransaction_getAccountingPeriodForDestinationSection</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
