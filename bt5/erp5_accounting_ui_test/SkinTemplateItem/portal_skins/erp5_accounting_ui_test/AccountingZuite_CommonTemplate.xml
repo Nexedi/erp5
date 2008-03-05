@@ -62,7 +62,7 @@
       <td>base_url</td>\n
     </tr>\n
     <tr tal:condition="is_selenium_0_8">\n
-      <td>setTimeOut</td>\n
+      <td>setTimeout</td>\n
       <td>600000</td>\n
       <td></td>\n
     </tr>\n
