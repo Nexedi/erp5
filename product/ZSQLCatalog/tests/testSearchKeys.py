@@ -28,7 +28,6 @@
 
 import unittest
 from DateTime import DateTime
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ZSQLCatalog.SearchKey.DefaultKey import DefaultKey
 from Products.ZSQLCatalog.SearchKey.RawKey import RawKey
 from Products.ZSQLCatalog.SearchKey.KeyWordKey import KeyWordKey
@@ -38,7 +37,7 @@ from Products.ZSQLCatalog.SearchKey.FloatKey import FloatKey
 from Products.ZSQLCatalog.SQLCatalog import getSearchKeyInstance
 from Products.ZSQLCatalog.SearchKey.ScriptableKey import ScriptableKey, KeyMappingKey
 
-class TestSearchKeyLexer(ERP5TypeTestCase):
+class TestSearchKeyLexer(unittest.TestCase):
   """Test search keys
   """
   run_all_test = 1
@@ -49,7 +48,7 @@ class TestSearchKeyLexer(ERP5TypeTestCase):
     key = getSearchKeyInstance(search_key_class)
     tokens = key.tokenize(search_value)  
     token_types = [x.type for x in tokens]
-    self.assertSameSet(token_types, expected_token_types)  
+    self.assertEquals(set(token_types), set(expected_token_types))
 
   
   def test_01ProperPoolInitialization(self, quiet=quiet, run=run_all_test):
@@ -139,7 +138,7 @@ size/Child/34"""
                 'John Doe OR creation_date>=2005/12/12',
                 ('WORD', 'WORD', 'OR', 'KEYMAPPING',))                
                    
-class TestSearchKeyQuery(ERP5TypeTestCase):
+class TestSearchKeyQuery(unittest.TestCase):
   """Test search keys query generation
   """
   run_all_test = 1
