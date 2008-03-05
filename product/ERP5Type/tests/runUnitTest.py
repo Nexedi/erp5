@@ -299,24 +299,32 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   suite = ERP5TypeTestLoader(save=save).loadTestsFromNames(test_list)
 
   # Hack the profiler to run only specified test methods, and wrap results when
-  # running in debug mode.
+  # running in debug mode. We also monkeypatch unittest.TestCase for tests that
+  # does not use ERP5TypeTestCase
   run_only = os.environ.get('run_only', '')
   if not save:
     test_method_list = run_only.split(',')
-    from Testing.ZopeTestCase import profiler
-    run_orig = profiler.Profiled.__call__
     
-    def run(self, result=None):
-      if debug and result:
-        result = DebugTestResult(result)
-      if not test_method_list:
-        return run_orig(self, result)
-      test_method_name = self.id().rsplit('.', 1)[-1]
-      for valid_test_method_name_re in test_method_list:
-        if re.search(valid_test_method_name_re, test_method_name):
+    def wrapped_run(run_orig):
+      # wrap the method that run the test to run test method only if its name
+      # matches the run_only spec and to provide post mortem debugging facility
+      def run(self, result=None):
+        if debug and result:
+          result = DebugTestResult(result)
+        if not test_method_list:
           return run_orig(self, result)
+        test_method_name = self.id().rsplit('.', 1)[-1]
+        for valid_test_method_name_re in test_method_list:
+          if re.search(valid_test_method_name_re, test_method_name):
+            return run_orig(self, result)
+      return run
 
-    profiler.Profiled.__call__ = run
+    from Testing.ZopeTestCase import profiler
+    profiler.Profiled.__call__ = wrapped_run(profiler.Profiled.__call__)
+    from unittest import TestCase
+    TestCase.__call__ = wrapped_run(TestCase.__call__)
+
+
 
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
