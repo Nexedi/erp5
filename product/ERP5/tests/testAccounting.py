@@ -1743,7 +1743,7 @@ class TestAccounting(ERP5TypeTestCase):
         portal_type = self.organisation_portal_type,
         group = "client",
         price_currency = "currency_module/USD")
-    self.vendor = self.getOrganisationModule().newContent(
+    self.section = self.vendor = self.getOrganisationModule().newContent(
         title = 'Vendor',
         portal_type = self.organisation_portal_type,
         group = "vendor/sub1",
@@ -2992,12 +2992,33 @@ class TestAccounting(ERP5TypeTestCase):
     # clear all existing ids in portal ids
     if hasattr(self.portal.portal_ids, 'dict_ids'):
       self.portal.portal_ids.dict_ids.clear()
+    section_period_2001 = self.section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2001',
+                        start_date=DateTime(2001, 01, 01),
+                        stop_date=DateTime(2001, 12, 31))
+    section_period_2001.start()
+    section_period_2002 = self.section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2002',
+                        start_date=DateTime(2002, 01, 01),
+                        stop_date=DateTime(2002, 12, 31))
+    section_period_2002.start()
+
     accounting_transaction = self.createAccountingTransaction(
                                   start_date=DateTime(2001, 01, 01),
                                   stop_date=DateTime(2001, 01, 01))
     self.portal.portal_workflow.doActionFor(
           accounting_transaction, 'stop_action')
-    self.assertEquals('2001-1', accounting_transaction.getSourceReference())
+    # The reference generated for the source section uses the short title from
+    # the accounting period
+    self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
+    # This works, because we use
+    # 'AccountingTransaction_getAccountingPeriodForSourceSection' script
+    self.assertEquals(section_period_2001, accounting_transaction\
+              .AccountingTransaction_getAccountingPeriodForSourceSection())
+    # If no accounting period exists on this side, the transaction date is
+    # used.
     self.assertEquals('2001-1', accounting_transaction.getDestinationReference())
 
     other_transaction = self.createAccountingTransaction(
@@ -3005,14 +3026,14 @@ class TestAccounting(ERP5TypeTestCase):
                                   stop_date=DateTime(2001, 01, 01))
     other_transaction.setDestinationSectionValue(self.other_vendor)
     self.portal.portal_workflow.doActionFor(other_transaction, 'stop_action')
-    self.assertEquals('2001-2', other_transaction.getSourceReference())
+    self.assertEquals('code-2001-2', other_transaction.getSourceReference())
     self.assertEquals('2001-1', other_transaction.getDestinationReference())
 
     next_year_transaction = self.createAccountingTransaction(
                                   start_date=DateTime(2002, 01, 01),
                                   stop_date=DateTime(2002, 01, 01))
     self.portal.portal_workflow.doActionFor(next_year_transaction, 'stop_action')
-    self.assertEquals('2002-1', next_year_transaction.getSourceReference())
+    self.assertEquals('code-2002-1', next_year_transaction.getSourceReference())
     self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
 
   def test_SearchableText(self):
@@ -3024,6 +3045,25 @@ class TestAccounting(ERP5TypeTestCase):
     self.assertTrue('A new Transaction' in searchable_text)
     self.assertTrue('A description' in searchable_text)
     self.assertTrue('Some comments' in searchable_text)
+
+  def test_GroupingReferenceResetedOnCopyPaste(self):
+    accounting_module = self.portal.accounting_module
+    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
+      if portal_type == 'Balance Transaction':
+        # Balance Transaction cannot be copy and pasted, because they are not
+        # in visible allowed types.
+        continue
+      transaction = accounting_module.newContent(
+                            portal_type=portal_type)
+      line = transaction.newContent(
+                  id = 'line_with_grouping_reference',
+                  grouping_reference='A',
+                  portal_type=transaction_to_line_mapping[portal_type])
+
+      cp = accounting_module.manage_copyObjects(ids=[transaction.getId()])
+      copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
+      self.failIf(accounting_module[copy_id]\
+          .line_with_grouping_reference.getGroupingReference())
 
 
 class TestAccountingTransactionTemplate(AccountingTestCase):
