@@ -53,11 +53,18 @@
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <tal:block metal:define-macro="init" tal:define="base_url python: \'/\' + here.getPortalObject().getId()">\n
+  <tal:block metal:define-macro="init"\n
+            tal:define="base_url python: \'/\' + here.getPortalObject().getId();\n
+                        global is_selenium_0_8 python: here.getPortalObject().portal_tests.getZeleniumVersion() &gt; \'Zelenium-0.8\'">\n
     <tr>\n
       <td>store</td>\n
       <td tal:content="base_url">erp5</td>\n
       <td>base_url</td>\n
+    </tr>\n
+    <tr tal:condition="is_selenium_0_8">\n
+      <td>setTimeOut</td>\n
+      <td>600000</td>\n
+      <td></td>\n
     </tr>\n
     <tr>\n
       <td>open</td>\n

@@ -113,7 +113,7 @@ Grouping from account transaction view\n
   <td>//fieldset[2]/div/div/span</td>\n
   <td>0.00</td>\n
 </tr>\n
-<tr>\n
+<tr tal:condition="is_selenium_0_8">\n
   <td>verifySelectedLabel</td>\n
   <td>field_your_node</td>\n
   <td>41 - Receivable</td>\n
@@ -267,7 +267,7 @@ them -->\n
   <td>off</td>\n
 </tr>\n
 \n
-<tr>\n
+<tr tal:condition="is_selenium_0_8">\n
   <td>verifySelectedLabel</td>\n
   <td>field_your_node</td>\n
   <td>41 - Receivable</td>\n

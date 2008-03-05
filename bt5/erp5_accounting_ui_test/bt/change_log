@@ -1,3 +1,6 @@
+2008-03-04 jerome
+* Define an "is_selenium_0_8" boolean variable in the common template and start using it for commands that requires selenium 0.8 or more.
+
 2008-03-03 jerome
 * Add tests for grouping reference fast input
 
