@@ -382,6 +382,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   edit = Base.edit
   security.declareProtected( Permissions.ModifyPortalContent, '_edit' )
   _edit = Base._edit
+  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
+  setTitle = Base.setTitle
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
   PUT_factory = WebDAVFolder.PUT_factory
@@ -1363,7 +1365,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
-  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
 
   # XXX Why this one doesn't work in CopySupport ?
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -1463,5 +1464,3 @@ for source_klass, destination_klass in \
       # Zope 2.7 required to have methodId__roles__ defined
       # to know the security ot the method
       setattr(destination_klass, method_id+'__roles__', None)
-# Overwrite Zope setTitle()
-Folder.setTitle = Base.setTitle
