@@ -149,12 +149,13 @@ class DomainTool(BaseTool):
 
       if tested_base_category_list != []:
         # Add predicate_category.uid for automatic join
-        sql_kw['predicate_category.uid'] = '!=0'
+        sql_kw['predicate_category.uid'] = '!=NULL'
         if len(category_list)==0:
           category_list = ['NULL']
         category_expression = portal_categories.buildSQLSelector(
                                            category_list,
-                                           query_table='predicate_category')
+                                           query_table='predicate_category',
+                                           none_sql_value=0)
         if len(where_expression) > 0:
           where_expression = '(%s) AND \n(%s)' % \
                                           (where_expression,category_expression)
