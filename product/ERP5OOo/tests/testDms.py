@@ -651,6 +651,18 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     image = image_list[0]
     self.assertEquals('embedded', image.getValidationState())
 
+  def test_09_ScriptableKeys(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+    Check the default DMS scriptale keys
+    """
+    if not run: return
+    printAndLog('\nScriptable Keys')
+    # Check that SQL generated is valid
+    self.portal.portal_catalog(advanced_search_text='')
+    self.portal.portal_catalog(advanced_search_text='a search text')
+    self.portal.portal_catalog(portal_search_text='')
+    self.portal.portal_catalog(portal_search_text='a search text')
+
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
