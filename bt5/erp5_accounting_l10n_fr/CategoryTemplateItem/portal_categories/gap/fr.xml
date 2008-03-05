@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.Category</string>
-          <string>Category</string>
-        </tuple>
-        <none/>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -25,15 +22,13 @@
             </value>
         </item>
         <item>
+            <key> <string>_folder_handler</string> </key>
+            <value> <string>CMFBTreeFolderHandler</string> </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -46,6 +41,12 @@
             <key> <string>activity_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>aggregated_portal_type</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -90,12 +91,6 @@
         </item>
         <item>
             <key> <string>base_width</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>bic_code</string> </key>
             <value>
               <none/>
             </value>
@@ -355,6 +350,12 @@
             <value> <float>1.0</float> </value>
         </item>
         <item>
+            <key> <string>required_aggregated_portal_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>rid</string> </key>
             <value>
               <none/>
@@ -543,25 +544,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -569,13 +558,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
