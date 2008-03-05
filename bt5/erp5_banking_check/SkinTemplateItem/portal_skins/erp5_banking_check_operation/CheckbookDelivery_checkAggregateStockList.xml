@@ -69,7 +69,7 @@
 from Products.ERP5Type.Message import Message\n
 \n
 current_tracking_list = [x.getObject() for x in context.portal_simulation.getCurrentTrackingList(\n
-                         at_date=at_date, node=node_url,\n
+                         to_date=at_date, node=node_url,\n
                          where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
 aggregate_uid_list = [x.uid for x in current_tracking_list]\n
 for line in context.getMovementList():\n
