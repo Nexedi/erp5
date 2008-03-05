@@ -101,7 +101,7 @@ class KeyWordKey(SearchKey):
     return t
 
   def t_KEYWORD(self, t):
-    r'(%\S*|([^!<>=\s%]\S+|!([^=\s]\S+)?)%)'
+    r'(%\S*|[^!<>=\s%]*%)(?!\S)'
     # KEYWORD must start and/or end with '%'.
     # It may contain arbitrary letters and numbers without white space
     value = t.value.strip()
@@ -155,8 +155,10 @@ class KeyWordKey(SearchKey):
         range = '='
         right_side_expression = first_token.value[1:]
       elif first_token.type in ('WORDSET', 'WORD',) and range == 'like':
-        # add trailing and leading '%' to get more results
-        right_side_expression = '%%%s%%' %right_side_expression
+        if '%' not in right_side_expression:
+          # If the search string doesn't already contain '%', add trailing and
+          # leading '%' to get more results
+          right_side_expression = '%%%s%%' % right_side_expression
       query_kw = {key: right_side_expression,
                   'range': range}
       query_list.append(Query(**query_kw))

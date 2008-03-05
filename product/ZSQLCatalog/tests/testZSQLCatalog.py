@@ -244,12 +244,22 @@ class TestQuery(unittest.TestCase):
                             full_text_search_keys=[]))
 
   def testQueryKeywordSearchKeyWithPercent(self):
-    q = Query(title='F%o')
-    self.assertEquals(dict(where_expression="((((title LIKE '%F%o%'))))",
+    q = Query(title='Fo%oo')
+    self.assertEquals(dict(where_expression="((((title LIKE 'Fo%oo'))))",
                            select_expression_list=[]),
-          q.asSQLExpression(keyword_search_keys=['title'],
-                            datetime_search_keys = [],
-                            full_text_search_keys=[]))
+          q.asSQLExpression(keyword_search_keys=['title'],))
+
+  def testQueryKeywordSearchKeyWithPercentAndOnlyOneLetter(self):
+    q = Query(title='F%o')
+    self.assertEquals(dict(where_expression="((((title LIKE 'F%o'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title']))
+
+  def testQueryKeywordSearchKeyWithPercentOnly(self):
+    q = Query(title='%')
+    self.assertEquals(dict(where_expression="((((title LIKE '%'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],))
 
   def testQueryKeywordSearchKeyWithMinus(self):
     q = Query(title='F-o')
@@ -266,6 +276,26 @@ class TestQuery(unittest.TestCase):
           q.asSQLExpression(keyword_search_keys=['title'],
                             datetime_search_keys = [],
                             full_text_search_keys=[]))
+
+  def testQueryKeywordSearchKeyWithPercentAtTheEnd(self):
+    q = Query(title='F%')
+    self.assertEquals(dict(where_expression="((((title LIKE 'F%'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],))
+    q = Query(title='Fo%')
+    self.assertEquals(dict(where_expression="((((title LIKE 'Fo%'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],))
+
+  def testQueryKeywordSearchKeyWithPercentAtTheBeginning(self):
+    q = Query(title='%o')
+    self.assertEquals(dict(where_expression="((((title LIKE '%o'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],))
+    q = Query(title='%oo')
+    self.assertEquals(dict(where_expression="((((title LIKE '%oo'))))",
+                           select_expression_list=[]),
+          q.asSQLExpression(keyword_search_keys=['title'],))
 
   def testNegatedQuery(self):
     q1 = Query(title='Foo')
