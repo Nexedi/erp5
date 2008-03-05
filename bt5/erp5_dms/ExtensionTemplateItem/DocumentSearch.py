@@ -73,11 +73,9 @@ def dateRangeProc(s):
         return ()
 
 # parsing defined here
-simulation_states=()
 r=re.compile('(\w+:"[^"]+"|\w+:\([^)]+\)|\w+:[\(\),\w/\-.]+)')
 filetyper=lambda s:('source_reference','%%.%s' % s)
 filestripper=lambda s: ('source_reference',s.replace('"',''))
-#addarchived=lambda s: ('simulation_state',simulation_states+('archived',))
 state=lambda s:('simulation_state',parsestates(s))
 type=lambda s:('portal_type',parsestates(s))
 paramsmap=dict(file=filestripper,type=type,reference='reference',filetype=filetyper,state=state,\
@@ -93,7 +91,6 @@ def parsestates(s):
 
 def analyze(params):
     params['searchabletext']=''
-    params['simulation_state']=simulation_states
     def cutter(s):
         ss=s.split(':')
         if len(ss)==1:
