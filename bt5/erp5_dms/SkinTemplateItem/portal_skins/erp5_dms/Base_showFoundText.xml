@@ -75,7 +75,7 @@
 """\n
 # convert object to text (if possible)\n
 document_text = \'\'\n
-if hasattr(context, \'asText\'):\n
+if getattr(context, \'asText\', None) is not None:\n
   document_text = context.asText()\n
 \n
 # get search words from listbox selection\n
@@ -181,17 +181,18 @@ return result\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>document_text</string>
-                            <string>hasattr</string>
+                            <string>getattr</string>
                             <string>context</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>argument_names</string>
-                            <string>None</string>
                             <string>params</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>name</string>
                             <string>par</string>
+                            <string>hasattr</string>
                             <string>search_string</string>
                             <string>_getitem_</string>
                             <string>search_argument_list</string>

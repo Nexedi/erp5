@@ -42,13 +42,19 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>reference</string>
+                            <string>reference</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>

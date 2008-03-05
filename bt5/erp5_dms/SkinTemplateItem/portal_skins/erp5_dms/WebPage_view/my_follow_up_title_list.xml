@@ -87,7 +87,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>view_separator</string> </key>
+                    <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
 <br />\n

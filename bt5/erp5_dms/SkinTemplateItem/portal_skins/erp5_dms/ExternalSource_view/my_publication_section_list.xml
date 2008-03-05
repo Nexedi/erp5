@@ -71,7 +71,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -88,7 +88,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>Publication Sections describe the place from which the given page will be available.</string> </value>
                 </item>
                 <item>
@@ -100,7 +100,7 @@
                     <value> <string>Document_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>hash_script_id</string> </key>
+                    <key> <string>hash_script_id</string> </key>
                     <value> <string>WebPage_hashPublicationSectionItemList</string> </value>
                 </item>
                 <item>
@@ -108,11 +108,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Publication Sections</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>view_separator</string> </key>
+                    <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
 <br/>
