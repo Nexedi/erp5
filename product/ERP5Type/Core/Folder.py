@@ -1386,9 +1386,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     """
       Make document behave as a template.
       A template is no longer indexable
-
-      TODO:
-         - prevent from changing templates or invoking workflows
     """
     Base.makeTemplate(self)
     for o in self.objectValues():
