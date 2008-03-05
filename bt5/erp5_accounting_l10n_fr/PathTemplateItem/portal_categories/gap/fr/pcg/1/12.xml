@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Resultat de l\'exercice (b\xc3\xa9n\xc3\xa9fice ou perte)</string> </value>
+            <value> <string encoding="base64">UsOpc3VsdGF0IGRlIGwnZXhlcmNpY2UgKGLDqW7DqWZpY2Ugb3UgcGVydGUp</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

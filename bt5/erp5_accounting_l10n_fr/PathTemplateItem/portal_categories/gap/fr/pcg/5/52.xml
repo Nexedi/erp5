@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Instruments de tresorerie</string> </value>
+            <value> <string>Instruments de tr\xc3\xa9sorerie</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
