@@ -1426,7 +1426,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     # SQL Expression Building
     security.declareProtected(Permissions.AccessContentsInformation, 'buildSQLSelector')
-    def buildSQLSelector(self, category_list, query_table='category'):
+    def buildSQLSelector(self, category_list, query_table='category', none_sql_value=None):
       """
         Returns an SQL selector expression from a list of categories
         We make here a simple method wich simply checks membership
@@ -1434,6 +1434,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         to generate a much more complex where_expression with table aliases
 
         List of lists
+
+        - none_sql_value is used in order to specify what is the None value into
+          sql tables
       """
       if isinstance(category_list, str):
         category_list = [category_list]
@@ -1446,10 +1449,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
             category_uid = self.getCategoryUid(category)
             base_category_uid = self.getBaseCategoryUid(category)
             expression = ''
+            if none_sql_value is not None and category_uid is None:
+              category_uid = none_sql_value
             if category_uid is None:
               expression += '%s.category_uid is NULL' % query_table
             else:
               expression += '%s.category_uid = %s' % (query_table,category_uid)
+            if none_sql_value is not None and base_category_uid is None:
+              base_category_uid = none_sql_value
             if base_category_uid is None:
               expression += ' AND %s.base_category_uid is NULL' % query_table
             else:
@@ -1461,10 +1468,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if single_sql_expr != '':
               category_uid = self.getCategoryUid(single_category)
               base_category_uid = self.getBaseCategoryUid(single_category)
+              if none_sql_value is not None and category_uid is None:
+                category_uid = none_sql_value
               if category_uid is None:
                 expression += '%s.category_uid is NULL' % query_table
               else:
                 expression += '%s.category_uid = %s' % (query_table,category_uid)
+              if none_sql_value is not None and base_category_uid is None:
+                base_category_uid = none_sql_value
               if base_category_uid is None:
                 expression += ' AND %s.base_category_uid is NULL' % query_table
               else:
