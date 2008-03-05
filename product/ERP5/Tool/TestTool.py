@@ -58,6 +58,11 @@ try:
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
 
+    def getZeleniumVersion(self):
+      """Returns the version of the zelenium product
+      """
+      return self.Control_Panel.Products.Zelenium.version
+
     # Override this method to force Zuite objects are recursed.
     def _recurseListTestCases( self, result, prefix, ob ):
         for tcid, test_case in ob.objectItems():
