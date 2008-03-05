@@ -111,7 +111,7 @@ class ImmobilisableItem(XMLObject, Amount):
       immo_and_owner_list = []
       if immobilisation_movement_list is None:
         # First build the SQL query
-        sql_dict = self.getCleanSqlDict(kw)
+        sql_dict = self._getCleanSqlDict(**kw)
         sql_dict['aggregate_uid'] = self.getUid()
         if filter_valid:
           sql_dict['immobilisation_state'] = ['calculating','valid']
@@ -749,7 +749,6 @@ class ImmobilisableItem(XMLObject, Amount):
       If with_currency is set, returns a string containing the value and the
       corresponding currency.
       """
-
       if at_date is None:
         at_date = DateTime()
       kw_key_list = kw.keys()
@@ -789,21 +788,21 @@ class ImmobilisableItem(XMLObject, Amount):
       owner =                 immo_period['owner']
       # Calculate data if not found
       if start_price is None:
-        start_price = self.getAmortisationPrice(at_date = start_date,
+        start_price = self.getAmortisationPrice(at_date=start_date,
                                                 immo_cache_dict=immo_cache_dict)
       if start_duration is None:
-        start_duration = self.getRemainingAmortisationDuration(at_date = start_date,
+        start_duration = self.getRemainingAmortisationDuration(at_date=start_date,
                                                         immo_cache_dict=immo_cache_dict)
       if start_durability is None:
-        start_durability = self.getRemainingDurability(at_date = start_date,
-                                                        immo_cache_dict=immo_cache_dict)
+        start_durability = self.getRemainingDurability(at_date=start_date,
+                                                       immo_cache_dict=immo_cache_dict)
       # Get the current period stop date, duration and durability
       if immo_period.has_key('stop_date'):
         stop_date = immo_period['stop_date']
         period_stop_date = stop_date
       else:
         stop_date = at_date
-        next_movement = self.getNextImmobilisationMovementValue(at_date = at_date, **kw)
+        next_movement = self.getNextImmobilisationMovementValue(at_date=at_date, **kw)
         if next_movement is not None:
           period_stop_date = next_movement.getStopDate()
         else:
@@ -903,7 +902,7 @@ class ImmobilisableItem(XMLObject, Amount):
         current_ratio = 0
       else:
         ratio_params = dict(immo_period)
-        ratio_params.update( 
+        ratio_params.update(
             {'initial_remaining_annuities': initial_remaining_annuities,
              'start_remaining_annuities':   start_remaining_annuities,
              'stop_remaining_annuities':    stop_remaining_annuities,
@@ -927,7 +926,6 @@ class ImmobilisableItem(XMLObject, Amount):
           LOG("ERP5 Warning :",0,
               "Unable to calculate the ratio during the amortisation calculation on item %s at date %s : script %s returned None" % (
                   self.getRelativeUrl(), repr(at_date), '%s/ratioCalculation' % amortisation_method))
-          LOG('params were ', 0, ratio_params) 
           raise ImmobilisationCalculationError, \
               "Unable to calculate the ratio during the amortisation calculation on item %s at date %s" % (
                   repr(self), repr(at_date))
@@ -1070,16 +1068,14 @@ class ImmobilisableItem(XMLObject, Amount):
         self.activate().expandAmortisation(activate_kw=activate_kw)
 
     security.declareProtected(Permissions.View, 'getSectionMovementValueList')
-    def getSectionMovementValueList(self,
-                                    include_to_date=0,
-                                    **kw):
+    def getSectionMovementValueList(self, include_to_date=0, **kw):
       """
       Return the list of successive movements affecting
       owners of the item. If at_date is None, return the result all the time
       Only the movements in current_inventory_state are taken into account
       """
       # Get tracking list
-      sql_kw = self.getCleanSqlDict(kw)
+      sql_kw = self._getCleanSqlDict(**kw)
       sql_kw['item'] = self.getRelativeUrl()
       sql_kw['sort-on'] = 'item.date'
       sql_kw['sort-order'] = 'ascending'
@@ -1102,7 +1098,7 @@ class ImmobilisableItem(XMLObject, Amount):
           movement_uid = last_movement[-1]['delivery_uid']
           if movement_uid is not None:
             movement = self.portal_catalog.getObject(movement_uid)
-            if len(movement_list)==0 or movement_list[-1] != movement:
+            if len(movement_list) == 0 or movement_list[-1] != movement:
               movement_list.append(movement)
       return movement_list
 
@@ -1113,7 +1109,7 @@ class ImmobilisableItem(XMLObject, Amount):
       the corresponding ownership change dates
       If at_date is None, return the result all the time
       """
-      new_kw = self.getCleanSqlDict(kw)
+      new_kw = self._getCleanSqlDict(**kw)
       new_kw['to_date'] = at_date
       movement_list = self.getSectionMovementValueList(**new_kw)
       # Find ownership changes
@@ -1121,7 +1117,7 @@ class ImmobilisableItem(XMLObject, Amount):
       if from_date is None:
         previous_section = None
       else:
-        previous_section = self.getSectionValue(at_date = from_date)
+        previous_section = self.getSectionValue(at_date=from_date)
       owner_change_list = []
       for movement in movement_list:
         new_section = movement.getDestinationSectionValue()
@@ -1144,7 +1140,7 @@ class ImmobilisableItem(XMLObject, Amount):
       Return the owner of the item at the given date
       If at_date is None, return the last owner without time limit
       """
-      owner_list = self.getSectionChangeList(at_date = at_date, **kw)
+      owner_list = self.getSectionChangeList(at_date=at_date, **kw)
       if len(owner_list) > 0:
         return owner_list[-1]['owner']
       return None
@@ -1154,16 +1150,14 @@ class ImmobilisableItem(XMLObject, Amount):
       """
       Return the current owner of the item
       """
-      return self.getSectionValue(at_date = DateTime(), **kw)
+      return self.getSectionValue(at_date=DateTime(), **kw)
 
-    security.declareProtected(Permissions.View, 'getCleanSqlDict')
-    def getCleanSqlDict(self, kw):
-      no_sql_list = ['immo_cache_dict']
-      sql_dict = {}
-      for k,v in kw.items():
-        if k not in no_sql_list:
-          sql_dict[k] = v
-      return sql_dict
+    def _getCleanSqlDict(self, **kw):
+      no_key_list = ('immo_cache_dict',)
+      for key in no_key_list:
+        if key in kw:
+          del kw[key]
+      return kw
 
 
 
