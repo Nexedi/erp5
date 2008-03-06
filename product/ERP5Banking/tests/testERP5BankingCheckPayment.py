@@ -119,6 +119,7 @@ class TestERP5BankingCheckPaymentMixin:
                                                  account_id='bank_account_1',
                                                  currency=self.currency_1,
                                                  amount=30000,
+                                                 overdraft_facility=1,
                                                  internal_bank_account_number="343434343434")
 
     # now we need to create a user as Manager to do the test
@@ -450,7 +451,6 @@ class TestERP5BankingCheckPaymentMixin:
                      self.check_payment.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
     self.workflow_tool.doActionFor(self.check_payment, 'deliver_action', wf_id='check_payment_workflow')
     self.assertEqual(self.check_payment.getSimulationState(), 'delivered')
-
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
