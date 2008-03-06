@@ -1,3 +1,6 @@
+2008-03-06 jerome
+* API change: PaySheetTransaction_getMovementList was returning the total price as "xxx_quantity" on brains. It now returns quantity, price and total_price respectivly.
+
 2008-02-14 fabien
 * correct some script : context was used instead paysheet, so results were wrong
 

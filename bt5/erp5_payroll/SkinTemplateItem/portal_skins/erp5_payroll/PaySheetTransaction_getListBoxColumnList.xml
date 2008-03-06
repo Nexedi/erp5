@@ -92,7 +92,7 @@ else:\n
 for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
   for tax_category in model_line.getTaxCategoryValueList():\n
     price = (tax_category.getId()+\'_price\', tax_category.getTitle()+\' Rate\')\n
-    quantity = (tax_category.getId()+\'_quantity\', \n
+    quantity = (tax_category.getId()+\'_total_price\', \n
                 tax_category.getTitle()+\' Amount\')\n
     if price not in column_list:\n
       column_list.append(price)\n

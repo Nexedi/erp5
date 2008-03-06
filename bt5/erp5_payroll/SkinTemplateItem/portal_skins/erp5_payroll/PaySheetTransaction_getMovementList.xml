@@ -93,8 +93,11 @@ for paysheet_line in paysheet_line_list:\n
   base_application_list = paysheet_line.getBaseAmountTitleList()\n
   translated_base_application_list = [str(N_(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
-  payroll_service = paysheet_line.getResourceValue()\n
-  base_participation_list = payroll_service.getBaseAmountList()\n
+  payroll_service = paysheet_line.getResourceValue(portal_type=\'Payroll Service\')\n
+  if payroll_service is not None:\n
+    base_participation_list = payroll_service.getBaseAmountList()\n
+  else:\n
+    base_participation_list = []\n
   causality = paysheet_line.getCausality()\n
 \n
   base_list = [str(N_(base_application)) for base_application in \\\n
@@ -112,6 +115,10 @@ for paysheet_line in paysheet_line_list:\n
   indice = 0\n
 \n
   object_dict = {}\n
+  if cartesian_product == [[]] or cartesian_product == []:\n
+    line_list.append(paysheet_line)\n
+    continue\n
+\n
   for tuple in cartesian_product:\n
     indice += 1\n
     share_dict = {}\n
@@ -122,10 +129,10 @@ for paysheet_line in paysheet_line_list:\n
     quantity = cell.getQuantity()\n
     base = quantity\n
 \n
-    price = cell.getPrice()\n
-    share_dict[cell.getTaxCategory()+\'_price\'] = price\n
-    share_dict[cell.getTaxCategory()+\'_quantity\'] = round(quantity*price,\n
-        precision)\n
+    share_dict[cell.getTaxCategory()+\'_price\'] = cell.getPrice()\n
+    share_dict[cell.getTaxCategory()+\'_quantity\'] = cell.getQuantity()\n
+    share_dict[cell.getTaxCategory()+\'_total_price\'] = \\\n
+                    round(cell.getTotalPrice(), precision)\n
 \n
     tuple_dict = {}\n
     for item in tuple:\n
@@ -163,10 +170,8 @@ for paysheet_line in paysheet_line_list:\n
     line_list.append(paysheet_line.asContext(**object_dict[\'no_slice\']))\n
 \n
 \n
-#return printed\n
 \n
 # sort results\n
-\n
 def sortByTitleAscending(x, y):\n
   return cmp(x.getTitle(), y.getTitle())\n
 \n
@@ -264,6 +269,7 @@ return line_list\n
                             <string>str</string>
                             <string>translated_base_application_list</string>
                             <string>payroll_service</string>
+                            <string>None</string>
                             <string>base_participation_list</string>
                             <string>causality</string>
                             <string>base_application</string>
@@ -273,7 +279,6 @@ return line_list\n
                             <string>base_category</string>
                             <string>list</string>
                             <string>cartesian_product</string>
-                            <string>None</string>
                             <string>previous_share</string>
                             <string>indice</string>
                             <string>object_dict</string>
@@ -284,7 +289,6 @@ return line_list\n
                             <string>cell</string>
                             <string>quantity</string>
                             <string>base</string>
-                            <string>price</string>
                             <string>_write_</string>
                             <string>round</string>
                             <string>tuple_dict</string>
