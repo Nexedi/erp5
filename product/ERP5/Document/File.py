@@ -130,22 +130,6 @@ class File(Document, CMFFile, ConversionCacheMixin):
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   edit = WorkflowMethod( _edit )
 
-  # Copy support needs to be implemented by ExtFile
-  ################################
-  # Special management methods   #
-  ################################
-
-  def manage_afterClone(self, item):
-    Base.manage_afterClone(self, item)
-    CMFFile.manage_afterClone(self, item)
-
-  def manage_afterAdd(self, item, container):
-    Base.manage_afterAdd(self, item, container)
-    CMFFile.manage_afterAdd(self, item, container)
-
-  def manage_beforeDelete(self, item, container):
-    CMFFile.manage_beforeDelete(self, item, container)
-
   def get_size(self):
     """
     has to be overwritten here, otherwise WebDAV fails
