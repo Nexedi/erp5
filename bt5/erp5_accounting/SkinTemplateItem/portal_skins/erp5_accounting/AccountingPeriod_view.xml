@@ -83,7 +83,6 @@
                         <string>my_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_short_title</string>
                       </list>
                     </value>
                 </item>
@@ -91,6 +90,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_short_title</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
