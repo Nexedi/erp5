@@ -237,7 +237,7 @@ class MatrixBoxWidget(Widget.Widget):
           header = """\
   <!-- Matrix Content -->
   %s<br>
-  <div class="ListContent">
+  <div class="MatrixContent">
    <table cellpadding="0" cellspacing="0" border="0">
   """ % first_tab
 
@@ -258,7 +258,7 @@ class MatrixBoxWidget(Widget.Widget):
   """ % len(columns)
 
           list_header = """\
-  <tr><td class=\"Data\"></td>
+  <tr class="matrixbox_label_line"><td class=\"Data\"></td>
   """
 
           for cname in columns:
@@ -280,7 +280,7 @@ class MatrixBoxWidget(Widget.Widget):
               td_css = 'DataA'
             else:
               td_css = 'DataB'
-            list_body = list_body + '\n<tr class=\"%s\"><td class=\"%s\">%s</td>' % (td_css, td_css, str(l[1]))
+            list_body = list_body + '\n<tr class=\"%s\"><td class=\"matrixbox_label_column\">%s</td>' % (td_css, str(l[1]))
             j = 0
             
             if render_format == 'list':
