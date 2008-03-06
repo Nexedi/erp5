@@ -140,7 +140,7 @@ transaction.edit(aggregate=check.getRelativeUrl())\n
 \n
 context.updateBankingOperation(state_change)\n
 \n
-if no_balance_check == 1:\n
+if no_balance_check == 1 or state_change[\'transition\'].getId() == "plan_action":\n
   return\n
 \n
 # Test if the account balance is sufficient.\n
