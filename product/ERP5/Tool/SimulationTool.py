@@ -1496,7 +1496,7 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
     def getTrackingList(self, src__=0,
         selection_domain=None, selection_report=None,
-        strict_simulation_state=1, **kw) :
+        strict_simulation_state=1, history=0, **kw) :
       """
       Returns a list of items in the form
 
@@ -1534,6 +1534,8 @@ class SimulationTool(BaseTool):
       to_date   (<)  -
 
       at_date   (<=) - only take rows which date is <= at_date
+
+      history (boolean) - keep history variations
 
       resource (only in generic API in simulation)
 
@@ -1591,10 +1593,10 @@ class SimulationTool(BaseTool):
       new_kw['to_date'] = to_date
 
       # Extra parameters for the SQL Method
-      new_kw['join_on_item'] = new_kw.get('at_date') or \
+      new_kw['join_on_item'] = not history and (new_kw.get('at_date') or \
                                new_kw.get('to_date') or \
                                new_kw.get('input') or \
-                               new_kw.get('output')
+                               new_kw.get('output'))
       new_kw['date_condition_in_join'] = not (new_kw.get('input') or new_kw.get('output'))
 
       # Pass simulation state to request
@@ -1614,6 +1616,22 @@ class SimulationTool(BaseTool):
       Returns list of current inventory grouped by section or site
       """
       kw['item.simulation_state'] = self.getPortalCurrentInventoryStateList()
+      return self.getTrackingList(**kw)
+    
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingHistoryList')
+    def getCurrentTrackingHistoryList(self, **kw):
+      """
+      Returns list of current inventory grouped by section or site
+      """
+      kw['item.simulation_state'] = self.getPortalCurrentInventoryStateList()
+      return self.getTrackingHistoryList(**kw)
+    
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingHistoryList')
+    def getTrackingHistoryList(self, **kw):
+      """
+      Returns history list of inventory grouped by section or site
+      """
+      kw['history'] = 1
       return self.getTrackingList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureTrackingList')
