@@ -73,49 +73,35 @@
 """\n
 paysheet      = context.getObject()\n
 paysheet_type = paysheet.getPortalType()\n
-#employee      = paysheet.getDestinationSection()\n
-#employer      = paysheet.getSourceSection()\n
-\n
-#now source and section are resversed\n
 employer      = paysheet.getDestinationSection()\n
 employee      = paysheet.getSourceSection()\n
 \n
+N_ = context.Base_translateString\n
 \n
-#if paysheet.getGrossSalary() == None:\n
-#  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Gross+salary+is+required\')\n
+def redirect(msg):\n
+  return context.Base_redirect(form_id,\n
+      keep_items=dict(portal_status_message=N_(msg)))\n
 \n
-if paysheet.getPriceCurrency() == None:\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Currency+is+required\')\n
+if not paysheet.getPriceCurrency():\n
+  return redirect(\'Currency is required\')\n
 \n
-if paysheet.getStartDate() == None:\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Start+date+is+required\')\n
+if not paysheet.getStartDate():\n
+  return redirect(\'Date is required\')\n
 \n
-if employee in (\'\', None):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employee+is+required\')\n
+if not employee:\n
+  return redirect(\'The employee is required\')\n
 \n
-if employer in (\'\', None):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+is+required\')\n
+if not employer:\n
+  return redirect(\'The employer is required\')\n
 \n
-#employee_obj = paysheet.getDestinationSectionValue()\n
-#employer_obj = paysheet.getSourceSectionValue()\n
-\n
-#now source and section are resversed\n
 employer_obj = paysheet.getDestinationSectionValue()\n
 employee_obj = paysheet.getSourceSectionValue()\n
 \n
+if not employee_obj.getCareerGrade():\n
+  return redirect(\'The employee must have a career grade\')\n
 \n
-if employee_obj.getCareerGrade() in (\'\', None):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employee+must+have+a+career+grade\')\n
-\n
-if employee_obj.getMaritalStatusId() in (\'\', None):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employee+must+have+a+marital+status\')\n
-\n
-if employer_obj.getCreationDate() in (\'\', None):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+must+have+an+organisation+creation+date\')\n
-\n
-default_address = employer_obj.getDefaultAddress()\n
-if default_address in (\'\', None) or default_address.getZipCode() in (\'\', None):\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+must+have+a+zip+code\')\n
+if not employee_obj.getMaritalStatusId():\n
+  return redirect(\'The employee must have a marital status\')\n
 \n
 # parameters are OK, go to the pre-calculation form\n
 return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTransaction_viewPreview?selection_name=default&amp;dialog_category=object_action&amp;form_id=PaySheetTransaction_view")\n
@@ -143,7 +129,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -163,22 +149,24 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>paysheet</string>
                             <string>paysheet_type</string>
                             <string>employer</string>
                             <string>employee</string>
-                            <string>None</string>
+                            <string>N_</string>
+                            <string>redirect</string>
                             <string>employer_obj</string>
                             <string>employee_obj</string>
-                            <string>default_address</string>
                           </tuple>
                         </value>
                     </item>
@@ -190,7 +178,9 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
