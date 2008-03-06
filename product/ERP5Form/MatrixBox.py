@@ -440,6 +440,7 @@ class MatrixBoxValidator(Validator.Validator):
                     key = 'field_' + my_field.id + '_cell_%s_%s_%s' % (i,j,k)
                     attribute_value = my_field.get_value('default',
                         cell=cell, cell_index=kw, cell_position = (i,j,k))
+                    value = None
                     try :
                       value = my_field.validator.validate(
                                       my_field, key, REQUEST)
