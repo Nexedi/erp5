@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>A Payroll Service is used to represent a tax.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
