@@ -1168,6 +1168,46 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(cell_c.getQuantityRangeMax(), 5)
 
 
+  def test_PaySheetTransaction_getMovementList(self):
+    # Tests PaySheetTransaction_getMovementList script
+    pay_sheet = self.createPaySheet(self.model)
+    # when pay sheet has no line, the script returns an empty list
+    self.assertEquals(pay_sheet.PaySheetTransaction_getMovementList(), [])
+    # we add a line, then it is returned in the list
+    line = pay_sheet.newContent(portal_type='Pay Sheet Line')
+    #self.assertEquals(1, len(pay_sheet.PaySheetTransaction_getMovementList()))
+
+    # if the line has cells with different tax categories, new properties are
+    # added to this line.
+    line.setResourceValue(self.urssaf)
+    line.setVariationCategoryList(['tax_category/employee_share',
+                                   'tax_category/employer_share'])
+    line.updateCellRange(base_id='movement')
+    cell0 = line.newCell('tax_category/employee_share',
+                         portal_type='Pay Sheet Cell', base_id='movement')
+    cell0.setMappedValuePropertyList(['quantity', 'price'])
+    cell0.setPrice(2)
+    cell0.setQuantity(3)
+    cell0.setTaxCategory('employee_share')
+    cell1 = line.newCell('tax_category/employer_share',
+                         portal_type='Pay Sheet Cell', base_id='movement')
+    cell1.setMappedValuePropertyList(['quantity', 'price'])
+    cell1.setPrice(4)
+    cell1.setQuantity(5)
+    cell1.setTaxCategory('employer_share')
+    
+    movement_list = pay_sheet.PaySheetTransaction_getMovementList()
+    self.assertEquals(1, len(movement_list))
+    movement = movement_list[0]
+    self.assertEquals(2, movement.employee_share_price)
+    self.assertEquals(3, movement.employee_share_quantity)
+    self.assertEquals(2*3, movement.employee_share_total_price)
+    self.assertEquals(4, movement.employer_share_price)
+    self.assertEquals(5, movement.employer_share_quantity)
+    self.assertEquals(4*5, movement.employer_share_total_price)
+
+
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
