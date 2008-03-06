@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CkeckbookReceptionModule_viewCheckbookReceptionList</string> </value>
+            <value> <string>string:${object_url}/CheckbookReceptionModule_viewCheckbookReceptionList</string> </value>
         </item>
       </dictionary>
     </pickle>
