@@ -68,7 +68,10 @@
             <value> <string>mutilated_banknote = context.getParentValue()\n
 if not(mutilated_banknote.isSentToHeadquaters(False)) and \\\n
    mutilated_banknote.getSimulationState() in (\'finished\', \'delivered\', \'deposited\'):\n
-  return "%s/encaisse_des_billets_et_monnaies/entrante" % (mutilated_banknote.getSource(), )\n
+  if mutilated_banknote.getCausality() is None:\n
+    return "%s/encaisse_des_billets_et_monnaies/entrante" % (mutilated_banknote.getSource(), )\n
+  else:\n
+    return "site/%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" % (mutilated_banknote.getSite(), )\n
 return None\n
 </string> </value>
         </item>
