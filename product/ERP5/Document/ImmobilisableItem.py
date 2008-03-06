@@ -1079,7 +1079,7 @@ class ImmobilisableItem(XMLObject, Amount):
       sql_kw['item'] = self.getRelativeUrl()
       sql_kw['sort-on'] = 'item.date'
       sql_kw['sort-order'] = 'ascending'
-      change_list = self.portal_simulation.getCurrentTrackingList(**sql_kw)
+      change_list = self.portal_simulation.getCurrentTrackingHistoryList(**sql_kw)
       to_date = kw.get('to_date')
       # Collect data
       movement_list = []
