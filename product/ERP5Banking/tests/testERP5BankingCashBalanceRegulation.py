@@ -144,6 +144,8 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
         
     self.guichet_surface = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_surface, destination=self.guichet_surface, currency=self.currency_1, line_list=line_list)
+    self.externes = self.paris.caveau.auxiliaire.encaisse_des_externes
+    self.createCashInventory(source=self.externes, destination=self.externes, currency=self.currency_1, line_list=line_list)
 
     # now we need to create a user as Manager to do the test
     # in order to have an assigment defined which is used to do transition
@@ -235,6 +237,23 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
+  def stepCheckInitialInventoryExternes(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in encaisse_paris
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we have 12 coin of 200 in encaisse_paris
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    # check we have 24 banknotes of 5000 in encaisse_paris
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    # check we have 24 banknotes of 5000 in encaisse_paris
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
   def stepCheckInitialInventorySurface(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -258,51 +277,38 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
 
 
   def stepCreateCashBalanceRegulation(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(
-                                          id='cash_balance_regulation_1', 
-                                          portal_type='Cash Balance Regulation', 
-                                          source_value=self.guichet_1, 
-                                          destination_value=None, 
-                                          description='test',
-                                          source_total_asset_price=52400.0)
-    self.stepTic()
-    self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
-    self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
-    self.assertEqual(self.cash_balance_regulation.getPortalType(), 'Cash Balance Regulation')
-    self.assertEqual(self.cash_balance_regulation.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
-    self.assertEqual(self.cash_balance_regulation.getDestination(), None)
+    self.createCashBalanceRegulation(source_value=self.guichet_1,
+               source='site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
 
   def stepCreateCashBalanceRegulationCaveau(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(id='cash_balance_regulation_1', portal_type='Cash Balance Regulation', source_value=self.guichet_caveau, destination_value=None, source_total_asset_price=52400.0)
-    self.stepTic()
-    self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
-    self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
-    self.assertEqual(self.cash_balance_regulation.getPortalType(), 'Cash Balance Regulation')
-    self.assertEqual(self.cash_balance_regulation.getSource(), 'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
-    self.assertEqual(self.cash_balance_regulation.getDestination(), None)
+    self.createCashBalanceRegulation(source_value=self.guichet_caveau,
+               source='site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
   
   def stepCreateCashBalanceRegulationSalleTri(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(id='cash_balance_regulation_1', portal_type='Cash Balance Regulation', source_value=self.guichet_salletri, destination_value=None, source_total_asset_price=52400.0)
-    self.stepTic()
-    self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
-    self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
-    self.assertEqual(self.cash_balance_regulation.getPortalType(), 'Cash Balance Regulation')
-    self.assertEqual(self.cash_balance_regulation.getSource(), 'site/testsite/paris/surface/salle_tri/encaisse_des_billets_et_monnaies')
-    self.assertEqual(self.cash_balance_regulation.getDestination(), None)
+    self.createCashBalanceRegulation(source_value=self.guichet_salletri,
+               source='site/testsite/paris/surface/salle_tri/encaisse_des_billets_et_monnaies')
 
   def stepCreateCashBalanceRegulationSurface(self, sequence=None, sequence_list=None, **kwd):
-    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(id='cash_balance_regulation_1', portal_type='Cash Balance Regulation', source_value=self.guichet_surface, destination_value=None, source_total_asset_price=52400.0)
+    self.createCashBalanceRegulation(source_value=self.guichet_surface,
+               source='site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
+
+  def createCashBalanceRegulation(self, source_value=None, source=None):
+    self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(
+        id='cash_balance_regulation_1', 
+        portal_type='Cash Balance Regulation', 
+        source_value=source_value, 
+        resource_value=self.currency_1,
+        destination_value=None, source_total_asset_price=52400.0)
     self.stepTic()
     self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
     self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
     self.assertEqual(self.cash_balance_regulation.getPortalType(), 'Cash Balance Regulation')
-    self.assertEqual(self.cash_balance_regulation.getSource(), 'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.cash_balance_regulation.getSource(), source)
     self.assertEqual(self.cash_balance_regulation.getDestination(), None)
 
-
-
-
-
+  def stepCreateCashBalanceRegulationExternes(self, sequence=None, sequence_list=None, **kwd):
+    self.createCashBalanceRegulation(source_value=self.externes,
+               source='site/testsite/paris/caveau/auxiliaire/encaisse_des_externes')
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
   def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, check_source=1,**kwd):
@@ -392,8 +398,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-
-
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the amount after the creation of cash balance regulation line 1
@@ -405,14 +409,20 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     # Check the total price
     self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, portal_type="Incoming Cash Balance Regulation Line"), 10000 * 5.0 + 200 * 12.0)
 
+  def stepCreateValidOutgoingLineExternes(self, sequence=None, sequence_list=None, **kwd):
+    self.stepCreateValidOutgoingLine(emission_letter='s')
 
-  def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None, emission_letter=None, **kwd):
     """
     Create the cash sorting outgoing line wiht banknotes of 200 and check it has been well created
     """
+    current_emission_letter = 'p'
+    if emission_letter is not None:
+      current_emission_letter = emission_letter
     # create the line
     self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_outgoing_line_1', 'Outgoing Cash Balance Regulation Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter, 
+              'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_5000)
     # execute tic
     self.stepTic()
@@ -432,7 +442,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_outgoing_line.getCell('emission_letter/p', variation, 'cash_status/valid')
+      cell = self.valid_outgoing_line.getCell('emission_letter/%s' % current_emission_letter, variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       if cell.getId() == 'movement_0_0_0':
@@ -445,8 +455,12 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
         self.fail('Wrong cell created : %s' % cell.getId())
 
     # create the line for coins
+    current_emission_letter = 'p'
+    if emission_letter is not None:
+      current_emission_letter = emission_letter
     self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_outgoing_line_2', 'Outgoing Cash Balance Regulation Line', self.piece_100,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter, 
+              'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_100)
     # execute tic
     self.stepTic()
@@ -466,7 +480,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_outgoing_line.getCell('emission_letter/s', variation, 'cash_status/valid')
+      cell = self.valid_outgoing_line.getCell('emission_letter/%s' %  current_emission_letter, variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       if cell.getId() == 'movement_0_0_0':
@@ -478,10 +492,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-
-
-
-
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash balance regulation lines
@@ -492,9 +502,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, portal_type="Outgoing Cash Balance Regulation Line"), 34.0)
     # check the total price
     self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, portal_type="Outgoing Cash Balance Regulation Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
-
-
-
 
   def stepConfirmCashBalanceRegulation(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -607,8 +614,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     Deliver the cash sorting with a good user
     and check that the deliver of a cash tranfer have achieved
     """
-    #     self.security_manager = AccessControl.getSecurityManager()
-    #     self.user = self.security_manager.getUser()
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.cash_balance_regulation, 'deliver_action', wf_id='cash_balance_regulation_workflow')
     # execute tic
@@ -617,11 +622,16 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     state = self.cash_balance_regulation.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_balance_regulation, name='history', wf_id='cash_balance_regulation_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 3)
-    
+
+  def stepDeliverCashBalanceRegulationWithBadEmissionLetter(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Deliver the cash sorting with a good user
+    and check that the deliver of a cash tranfer have achieved
+    """
+    # do the workflow transition "deliver_action"
+    message = self.assertWorkflowTransitionFails(self.cash_balance_regulation,
+                         'cash_balance_regulation_workflow','deliver_action')
+    self.failUnless(message.find('local emission letter')>=0)
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, check_source=1,**kwd):
     """
@@ -694,6 +704,23 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
 
+  def stepCheckFinalInventoryExternes(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+    """
+    Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
+    """
+    if check_source:
+      # check we have 0 banknote of 10000
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+      # check we have 0 coin of 200
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
+      # check we have 12 coins of 100
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+
 
 
   def stepCheckWorklist(self, **kw):
@@ -705,7 +732,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     """
     self.cash_balance_regulation_module.deleteContent('cash_balance_regulation_1')
 
-
+  def stepDelCashBalanceRegulationLineList(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Delete the invalid vault_transfer line previously create
+    """
+    line_id_list = [x for x in self.cash_balance_regulation.objectIds()]
+    for line_id in line_id_list:
+      self.cash_balance_regulation.deleteContent(line_id)
 
   ##################################
   ##  Tests
@@ -761,6 +794,20 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CheckFinalInventorySurface'
     sequence_list.addSequenceString(sequence_surface)
 
+    # Check that we can use the external vault
+    sequence_surface = 'Tic DelCashBalanceRegulation Tic CheckObjects Tic CheckInitialInventoryExternes ' \
+                    + 'CreateCashBalanceRegulationExternes ' \
+                    + 'CreateValidIncomingLine CheckSubTotal ' \
+                    + 'CreateValidOutgoingLine ' \
+                    + 'Tic CheckTotal ' \
+                    + 'CheckInitialInventorySurface ' \
+                    + 'DeliverCashBalanceRegulationWithBadEmissionLetter Tic ' \
+                    + 'DelCashBalanceRegulationLineList Tic ' \
+                    + 'CreateValidIncomingLine ' \
+                    + 'CreateValidOutgoingLineExternes Tic ' \
+                    + 'DeliverCashBalanceRegulation Tic ' \
+                    + 'CheckFinalInventoryExternes'
+    sequence_list.addSequenceString(sequence_surface)
 
     # play the sequence
     sequence_list.play(self)
