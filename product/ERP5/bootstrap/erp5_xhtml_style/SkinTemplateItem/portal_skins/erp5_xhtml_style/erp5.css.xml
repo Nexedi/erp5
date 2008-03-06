@@ -1160,6 +1160,70 @@ td.AnchorColumn {\n
   border-width:0;\n
 }\n
 \n
+/* MatrixBox */\n
+.MatrixContent {\n
+  color: #000;\n
+  background-color: <dtml-var document_background_color>;\n
+  padding-left: 1px;\n
+}\n
+\n
+.MatrixContent table {\n
+  width: 100%;\n
+  border-collapse: collapse;\n
+  border-color: <dtml-var document_border_color>;\n
+  border-style: solid;\n
+  border-top-width: 1px;\n
+  border-bottom-width: 1px;\n
+  border-left-width: 1px;\n
+  border-right-width: 1px;\n
+}\n
+\n
+.MatrixContent tr.matrixbox_label_line {\n
+  vertical-align: middle;\n
+  border-color: <dtml-var document_border_color>;\n
+  border-style: solid;\n
+  border-bottom-width: 1px;\n
+  border-top-width: 0;\n
+  border-left-width: 0;\n
+  border-right-width: 0;\n
+}\n
+\n
+.MatrixContent td.matrixbox_label_column {\n
+  white-space: nowrap;\n
+}\n
+\n
+.MatrixContent tr.DataA {\n
+  color: inherit;\n
+  background-color: <dtml-var listbox_odd_background_color>;\n
+}\n
+\n
+.MatrixContent tr.DataB {\n
+  color: inherit;\n
+  background-color: <dtml-var listbox_even_background_color>;\n
+}\n
+\n
+.MatrixContent tr.DataA:hover,\n
+.MatrixContent tr.DataB:hover {\n
+  color: inherit;\n
+  background-color: <dtml-var listbox_hover_background_color>;\n
+}\n
+\n
+.MatrixContent td {\n
+  border-color: <dtml-var document_border_color>;\n
+  border-style: solid;\n
+  border-top-width: 0;\n
+  border-bottom-width: 0;\n
+  border-left-width: 1px;\n
+  border-right-width: 1px;\n
+  padding-left: 1px;\n
+  padding-right: 1px;\n
+}\n
+\n
+.MatrixContent .error {\n
+  color: #F00;\n
+}\n
+\n
+\n
 /* Web Page White Background */\n
 \n
 .document div.page {\n

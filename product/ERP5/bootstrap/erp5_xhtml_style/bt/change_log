@@ -1,3 +1,6 @@
+2008-03-06 jerome
+* Add new CSS classes in erp5.css for new MatrixBox classes introduced in r19721.
+
 2008-01-28 yusei
 * Update ListBox_asHTML and erp5.css for new listbox option(anchor mode).
 
