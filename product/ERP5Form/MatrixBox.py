@@ -322,16 +322,17 @@ class MatrixBoxWidget(Widget.Widget):
                         display_value = REQUEST.get('field_%s' % key,
                                                   attribute_value)
                         has_error = 1
-                        cell_body += "%s<br/>%s" % (
+                        cell_body += '<span class="input">%s</span>%s' % (
                             my_field.render(value=display_value,
                                             REQUEST=REQUEST,
                                             key=key),
                             N_(field_errors[key].error_text))
                       else:
-                        cell_body += str(my_field.render(
+                        cell_body += '<span class="input">%s</span>' %\
+                                         my_field.render(
                                             value=attribute_value,
                                             REQUEST=REQUEST,
-                                            key=key))
+                                            key=key)
 
                     elif render_format == 'list':
                       if not my_field.get_value('hidden'):
@@ -349,7 +350,7 @@ class MatrixBoxWidget(Widget.Widget):
 
               css = td_css
               if has_error :
-                css = td_css + 'Error'
+                css = 'error'
               list_body = list_body + \
                     ('<td class=\"%s\">%s</td>' % (css, cell_body))
               j += 1
