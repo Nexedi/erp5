@@ -16,12 +16,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>planned</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,17 +37,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sent To Headquarters</string> </value>
+            <value> <string>Archived (Mutilated Banknote)</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>archive</string>
-                <string>archive_action</string>
-                <string>finish</string>
-                <string>finish_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -82,10 +83,7 @@
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -97,10 +95,7 @@
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
