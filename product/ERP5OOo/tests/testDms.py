@@ -647,9 +647,9 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(0, len(document.contentValues(portal_type='Image')))
     document.convert(format='html')
     image_list = document.contentValues(portal_type='Image')
-    self.assertEquals(1, len(image_list))
-    image = image_list[0]
-    self.assertEquals('embedded', image.getValidationState())
+    self.assertEquals(0, len(image_list))
+#     image = image_list[0]
+#     self.assertEquals('embedded', image.getValidationState())
 
   def test_09_ScriptableKeys(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
