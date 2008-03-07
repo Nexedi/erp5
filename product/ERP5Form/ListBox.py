@@ -1017,6 +1017,14 @@ class ListBoxRenderer:
     editable_field_id = '%s_%s' % (self.getId(), alias)
     if form.has_field(editable_field_id, include_disabled=1):
       return form.get_field(editable_field_id, include_disabled=1)
+    
+    # if we are rendering a proxy field, also look for editable fields from the
+    # template field's form.
+    if self.field.has_value('form_id'):
+      form = getattr(self.field, self.field.get_value('form_id'), None)
+      if form and form.has_field(editable_field_id, include_disabled=1):
+        return form.get_field(editable_field_id, include_disabled=1)
+
     return None
 
   def getListMethod(self):
