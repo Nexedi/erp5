@@ -492,7 +492,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(cell.section_mark==\'source\' and cell.getStartDate()) or cell.getStopDate()</string> </value>
+            <value> <string>python:(getattr(cell, \'section_mark\', \'\') ==\'source\' and cell.getStartDate()) or cell.getStopDate()</string> </value>
         </item>
       </dictionary>
     </pickle>
