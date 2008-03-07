@@ -753,13 +753,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml.nodeName.find('xupdate')>= 0:
       xml = self.getElementNodeList(xml)[0]
     for subnode in self.getElementNodeList(xml):
-      if not(subnode.nodeName in self.NOT_EDITABLE_PROPERTY):
+      if subnode.nodeName not in self.NOT_EDITABLE_PROPERTY:
         keyword_type = self.getPropertyType(subnode)
         # This is the case where the property is a list
         keyword=str(subnode.nodeName)
         if len(subnode.childNodes) > 0: # We check that this tag is not empty
           data = subnode.childNodes[0].data
-          args[keyword]=data
+        else:
+          data=None
+        args[keyword]=data
         #if args.has_key(keyword):
         #  LOG('newObject',0,'data: %s' % str(args[keyword]))
         if args.has_key(keyword):
