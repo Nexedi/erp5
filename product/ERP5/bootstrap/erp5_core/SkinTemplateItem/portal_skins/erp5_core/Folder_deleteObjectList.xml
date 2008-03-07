@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+request=context.REQUEST\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
@@ -80,12 +79,21 @@ if uids == []:\n
   qs = \'?portal_status_message=%s\' % message\n
   return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
 \n
-kw = {\'uid\': uids}\n
+# XXX If we come from the view mode -> list mode proxy, make sure we don\'t make\n
+# another proxy to this proxy.\n
+if form_id == \'Base_viewListModeRenderer\':\n
+  form_id = context.Base_viewListModeRenderer.listbox.get_value(\'form_id\')\n
+\n
+kw = {\'uid\': uids, \'form_id\': form_id}\n
 request.set(\'object_uid\', context.getUid())\n
 request.set(\'uids\', uids)\n
+request.set(\'proxy_form_id\', form_id)\n
+\n
 context.portal_selections.setSelectionParamsFor(\'folder_delete_selection\', kw)\n
 return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -95,6 +103,12 @@ return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
