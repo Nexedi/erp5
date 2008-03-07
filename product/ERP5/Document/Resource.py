@@ -172,7 +172,7 @@ class Resource(XMLMatrix, Variated):
       result = Variated.getVariationCategoryItemList(self, 
                             base_category_list=base_category_list, 
                             display_base_category=display_base_category, 
-                            base=base, **kw)
+                            display_id=display_id, base=base, **kw)
       if not omit_individual_variation:
         other_variations = self.searchFolder(
                               portal_type=self.getPortalVariationTypeList())
