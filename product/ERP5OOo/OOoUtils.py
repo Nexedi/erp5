@@ -151,16 +151,19 @@ class OOoBuilder(Implicit):
       stylesheet = libxslt.parseStylesheetDoc(stylesheet_doc)
       content_doc = libxml2.parseDoc(content_xml)
       result_doc = stylesheet.applyStylesheet(content_doc, None)
+      #Declare zope namespaces
+      root = result_doc.getRootElement()
+      tal = root.newNs('http://xml.zope.org/namespaces/tal', 'tal')
+      i18n = root.newNs('http://xml.zope.org/namespaces/i18n', 'i18n')
+      metal = root.newNs('http://xml.zope.org/namespaces/metal', 'metal')
+      root.setNs(tal)
+      root.setNs(i18n)
+      root.setNs(metal)
+      root.setNsProp(tal, 'attributes', 'dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')')
       buff = libxml2.createOutputBuffer(output, 'utf-8')
       result_doc.saveFormatFileTo(buff, 'utf-8', 1)
       stylesheet_doc.freeDoc(); content_doc.freeDoc(); result_doc.freeDoc()
-      return output.getvalue().replace(
-        'office:version="1.0">',
-        """ xmlns:tal="http://xml.zope.org/namespaces/tal"
-            xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-            xmlns:metal="http://xml.zope.org/namespaces/metal"
-            tal:attributes="dummy python:request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8')"
-          office:version="1.0">""")
+      return output.getvalue()
     except ImportError:
       reader = PyExpat.Reader()
       document = reader.fromString(content_xml)
