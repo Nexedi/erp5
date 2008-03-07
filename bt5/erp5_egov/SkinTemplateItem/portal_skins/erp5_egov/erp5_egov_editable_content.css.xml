@@ -275,7 +275,7 @@ div#main_content fieldset > div {\n
 }\n
 \n
 div#main_content fieldset div.input {\n
-  margin-left: 11.5em;  /* = div#main_content label width + 0.5 of margin */\n
+  /*margin-left: 11.5em;  /* = div#main_content label width + 0.5 of margin */\n
 }\n
 \n
 div#main_content fieldset legend {\n
@@ -352,11 +352,10 @@ div.document div.actions ul a:hover {\n
 }\n
 \n
 \n
-\n
 /* Editable mode forms styling\n
 ------------------------------------------------------------------ */\n
 \n
-div.document > div.editable {border-top: 1px solid #999}\n
+/*div.document > div.editable {border-top: 1px solid #999}*/\n
 \n
 /* Save button styling */\n
 div.actions button {\n
@@ -368,123 +367,6 @@ div.actions button {\n
 \n
 /* Bottom Save buttons styling - XXX NOT YET CENTERED */\n
 \n
-\n
-div.bottom_actions,\n
-div.step_actions{\n
-  position: relative;\n
-  width: 100%;\n
-  margin-left: auto;\n
-  margin-right: auto;\n
-}\n
-\n
-.other_page {\n
-  border: 1px solid #999;\n
-}\n
-\n
-.first_page {\n
-  border: 1px solid #999;\n
-  border-top:None;\n
-}\n
-\n
-div.bottom_actions{\n
-  height: 8em;\n
-  margin-bottom: 10px;\n
-}\n
-\n
-div.step_actions div#step_buttons{\n
-  margin-top: 5px;\n
-  margin-bottom: 5px;\n
-}\n
-\n
-div.step_actions{\n
-  background: #ccc url(erp5-website-micro-gray-shadow.png) top repeat-x;\n
-}\n
-\n
-\n
-div.bottom_actions button,\n
-div.step_action button{\n
-}\n
-\n
-div.bottom_actions button.nextStep{\n
-}\n
-\n
-div.bottom_actions button.saveEdit {\n
-  visibility:hidden;\n
-}\n
-\n
-div.bottom_actions button.saveView {\n
-  float:right;\n
-  height: 2.5em;\n
-  width: 13em;\n
-  background: #FF6633;\n
-  text-decoration: none;\n
-  color: #637dc1;\n
-  font-size: 200%;\n
-}\n
-\n
-div.bottom_actions button.saveEdit .description {\n
- position: relative;\n
- top: 3px;\n
- left: 2px;\n
-}\n
-\n
-div.bottom_actions button.saveView .description,\n
-div.bottom_actions button.nextStep .description{\n
- position: relative;\n
- top: 3px;\n
- left: 3px;\n
-}\n
-\n
-div.bottom_actions button.saveView .image,\n
-div.bottom_actions button.saveEdit .image,\n
-div.bottom_actions button.nextStep .image{\n
-  float: left;\n
-  display: block;\n
-  width: 22px;\n
-  height: 22px;\n
-}\n
-\n
-div.bottom_actions button.saveEdit span.image {\n
-  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save.png\');\n
-}\n
-\n
-div.bottom_actions button.saveView span.image,\n
-div.bottom_actions button.nextStep span.image{\n
-  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save-preview.png\');\n
-}\n
-\n
-\n
-div.step_actions button.current_step,\n
-div.step_actions button.disable_step,\n
-div.step_actions button.normal_step{\n
-  display: inline;\n
-  height: 2em;\n
-}\n
-\n
-div.step_actions #step_explaination {\n
-}\n
-\n
-div.step_actions #step_title {\n
-  padding-top: 5px;\n
-  padding-bottom: 5px;\n
-  font-size: 200%;\n
-}\n
-\n
-div.step_actions button.current_step{\n
-  border: 2pt solid red;\n
-  background: #00FF00;\n
-  color: #000\n
-}\n
-\n
-div.step_actions button.normal_step{\n
-  text-decoration: underline;\n
-  color: #637dc1;  \n
-  background: #00FF00;\n
-}\n
-\n
-div.step_actions button.disable_step{\n
-  color:black;\n
-}\n
 \n
 /* Reset common fieldset styling for bottom group in editable mode:\n
      - no need to let some free space in the left side\n
@@ -551,6 +433,18 @@ div#main_content fieldset.webcontent span.headline {\n
   text-shadow: .1em .1em .1em #eee;\n
   line-height: 140%;\n
   text-align: left;\n
+}\n
+\n
+\n
+/*------------ widget style -------------*/\n
+\n
+/* hide WebSite_viewWorkspaceWidget */\n
+div#wrapper_footer{\n
+  display: none;\n
+}\n
+\n
+div.next_step_action{  \n
+  display:none;\n
 }\n
 
 

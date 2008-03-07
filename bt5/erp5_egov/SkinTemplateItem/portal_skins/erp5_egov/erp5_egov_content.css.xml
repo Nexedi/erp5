@@ -73,6 +73,23 @@
 ========================================================================================*/\n
 \n
 <tal:block tal:replace="structure python:here.getPortalObject()[\'erp5_web_editable_content.css\']()"/>\n
+div.bottom_actions {\n
+  display: none;\n
+}\n
+\n
+/* hide action_select widget */\n
+.header .widget .adminSection {\n
+  display: none;\n
+}\n
+\n
+/* remove margin on input fieldsets */\n
+div#main_content fieldset div.input {\n
+  margin:0;\n
+}\n
+\n
+div#main_content fieldset{\n
+  padding: 0;\n
+}\n
 
 
 ]]></string> </value>

@@ -70,6 +70,7 @@
                 <string>right column (Demo)</string>
                 <string>right column (Toolbox)</string>
                 <string>footer</string>
+                <string>header</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -82,7 +83,17 @@
                     <key> <string>footer</string> </key>
                     <value>
                       <list>
+                        <string>next_step</string>
                         <string>form_submission_wizard</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>header</string> </key>
+                    <value>
+                      <list>
+                        <string>header_section</string>
+                        <string>action_select</string>
                       </list>
                     </value>
                 </item>
@@ -162,7 +173,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>template_erp5_egov</string> </value>
+            <value> <string>workspace_template_erp5_egov</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

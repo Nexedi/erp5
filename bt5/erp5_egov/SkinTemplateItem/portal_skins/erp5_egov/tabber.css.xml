@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+.document .status{\n
+  width:100%;\n
+}\n
+\n
+.document .tools{\n
+  position:relative;\n
+}\n
+\n
+.content .tools .field{\n
+  padding-top: 50px;\n
+}\n
+\n
+.document .tools .tabberlive,\n
+.become_vip_member{\n
+  min-width: 400px;\n
+}\n
+\n
+/*--------------------------------------------------\n
+  REQUIRED to hide the non-active tab content.\n
+  But do not hide them in the print stylesheet!\n
+  --------------------------------------------------*/\n
+.tabberlive .tabbertabhide {\n
+ display:none;\n
+}\n
+\n
+/*--------------------------------------------------\n
+  .tabber = before the tabber interface is set up\n
+  .tabberlive = after the tabber interface is set up\n
+  --------------------------------------------------*/\n
+.tabber {\n
+}\n
+.tabberlive {\n
+ margin-top:1em;\n
+}\n
+\n
+/*--------------------------------------------------\n
+  ul.tabbernav = the tab navigation list\n
+  li.tabberactive = the active tab\n
+  --------------------------------------------------*/\n
+ul.tabbernav\n
+{\n
+ margin:0;\n
+ padding: 3px 0;\n
+ border-bottom: 1px solid #aaa;\n
+ font: bold 12px Verdana, sans-serif;\n
+}\n
+\n
+ul.tabbernav li\n
+{\n
+ list-style: none;\n
+ margin: 0;\n
+ display: inline;\n
+}\n
+\n
+ul.tabbernav li a\n
+{\n
+ padding: 3px 0.5em;\n
+ margin-left: 3px;\n
+ border: 1px solid #aaa;\n
+ border-bottom: none;\n
+ background: #88B;\n
+ text-decoration: none;\n
+}\n
+\n
+ul.tabbernav li a:link { color: #000; }\n
+ul.tabbernav li a:visited { color: #667; }\n
+\n
+ul.tabbernav li a:hover\n
+{\n
+ color: #00248F;\n
+ text-decoration: underline;\n
+ background: #AAE;\n
+ border-color: #227;\n
+}\n
+\n
+ul.tabbernav li.tabberactive a\n
+{\n
+ text-decoration:none;\n
+ background-color: #DDE;\n
+ border-bottom: 1px solid #DDE;\n
+}\n
+\n
+ul.tabbernav li.tabberactive a:hover\n
+{\n
+ color: #000;\n
+ background: #DDE;\n
+ border-bottom: 1px solid #DDE;\n
+}\n
+\n
+/*--------------------------------------------------\n
+  .tabbertab = the tab content\n
+  Add style only after the tabber interface is set up (.tabberlive)\n
+  --------------------------------------------------*/\n
+.tabberlive .tabbertab {\n
+ padding:15px;\n
+ border:1px solid #aaa;\n
+ border-top:0;\n
+\n
+ /* If you don\'t want the tab size changing whenever a tab is changed\n
+    you can set a fixed height */\n
+\n
+ /* height:200px; */\n
+\n
+ /* If you set a fix height set overflow to auto and you will get a\n
+    scrollbar when necessary */\n
+\n
+ /* overflow:auto; */\n
+ background: #fff;\n
+}\n
+\n
+/* If desired, hide the heading since a heading is provided by the tab */\n
+.tabberlive .tabbertab h2 {\n
+ display:none;\n
+}\n
+.tabberlive .tabbertab h3 {\n
+ display:none;\n
+}\n
+\n
+/* Example of using an ID to set different styles for the tabs on the page */\n
+.tabberlive#tab1 {\n
+}\n
+.tabberlive#tab2 {\n
+}\n
+.tabberlive#tab2 .tabbertab {\n
+ height:200px;\n
+ overflow:auto;\n
+}\n
+\n
+\n
+\n
+/*-------------------------------------------------\n
+  The folowing, is the css style of the tab contents\n
+  ------------------------------------------------*/\n
+div#logo_track_request,\n
+div.fields,\n
+div.fields div{\n
+  float: left;\n
+}\n
+\n
+div#logo_track_request,\n
+div.fields{\n
+  margin-left: 10px;\n
+}\n
+\n
+div.fields div{\n
+  margin-left: 20px;\n
+}\n
+\n
+.fields input{\n
+}\n
+\n
+\n
+.tabberlive .tabbertab #track_button,\n
+.tabberlive .tabbertab #new_request_button{\n
+  float: right;\n
+  margin-top: 10px;\n
+}\n
+\n
+\n
+.tabberlive .tabbertab #track_button input,\n
+.tabberlive .tabbertab #new_request_button input{\n
+  font-size: 120%;\n
+}\n
+\n
+\n
+\n
+/*-------------------------------------------------\n
+ VIP CSS !\n
+ -------------------------------------------------*/\n
+ \n
+.become_vip_member{\n
+  border: 1px solid #aaa;\n
+  padding: 1em 2em 3.5em 2em;\n
+  background: #fff;\n
+}\n
+\n
+.become_vip_member{\n
+  margin-bottom: 40px;\n
+}\n
+\n
+\n
+.become_vip_member .title{\n
+ font: bold 12px Verdana, sans-serif;\n
+}\n
+\n
+.become_vip_member #register_button input{\n
+  margin-top:0.2em;\n
+  float: right;\n
+  font-weight: bold;\n
+  font-size: 1.3em;\n
+  background: #FF6633;\n
+  text-decoration:underline;\n
+  /*color: #637dc1;*/\n
+  color: white;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>tabber.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

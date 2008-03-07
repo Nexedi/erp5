@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div class="submission_wizard">\n
+  <div class="clear">\n
+  </div>\n
+  <div class="wizard_title" i18n:domain="ui" i18n:translate="">\n
+    Request Steps\n
+  </div>\n
+    <tal:bloc tal:define="current_action request/current_action;\n
+                          actions request/actions;\n
+                          http_parameters request/http_parameters;\n
+                          actions actions/object_view | python: [];\n
+                          action_dict python: {\'View\' : \'Fill Form\',\n
+                                               \'Attachments\' : \'Attach Files\',\n
+                                               \'History\' : \'Track\',\n
+                                               \'Payment\' : \'Pay\'};\n
+                          state_dict python: {\'View\' : (\'draft\',),\n
+                                              \'Attachments\' : (\'draft\',),\n
+                                              \'History\' : (\'submitted\', \'open\', \'archive\'),\n
+                                              \'Payment\' : (\'submitted\',) };\n
+                          global action_not_in_dict_count python:0        \n
+                               ">\n
+      <div class="actions">\n
+        <ul>\n
+          <tal:block tal:repeat="action actions">\n
+            <tal:block tal:condition="python: action_dict.get(action[\'name\']) == None">\n
+              <tal:block tal:define="global action_not_in_dict_count python: action_not_in_dict_count+1" />                    \n
+            </tal:block>\n
+          </tal:block>\n
+          <tal:block tal:repeat="action actions"\n
+                 tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
+            <tal:block tal:condition="python: action_dict.get(action[\'name\'])">\n
+              <li>\n
+                <tal:block tal:condition="python: here.getValidationState() in state_dict[action[\'name\']]">\n
+                  <tal:block tal:condition="python: current_action[\'name\'] != action[\'name\']">\n
+                    <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)"\n
+                      ><span class="enable" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span></a>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: current_action[\'name\'] == action[\'name\']">\n
+                    <span class="current" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
+                  </tal:block>\n
+                </tal:block>\n
+                <tal:block tal:condition="python: here.getValidationState() not in state_dict[action[\'name\']]">\n
+                  <span class="disable" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
+                </tal:block>\n
+                <span class="fleche" tal:condition="python: actions.index(action) < len(actions)-(action_not_in_dict_count+1)">\n
+                  <img alt="Arrow image" src="img/fleche.png"/>\n
+                </span>\n
+              </li>\n
+            </tal:block>\n
+          </tal:block>\n
+        </ul>\n
+      </div>\n
+   </tal:bloc>\n
+  <div class="wizard_explanations" i18n:domain="ui" i18n:translate="">\n
+  The current step is displayed with a red border. Step displayed in green can be repeated by clicking on them.\n
+  </div>\n
+  <div class="clear">\n
+  </div>\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewSubmissionWizardRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

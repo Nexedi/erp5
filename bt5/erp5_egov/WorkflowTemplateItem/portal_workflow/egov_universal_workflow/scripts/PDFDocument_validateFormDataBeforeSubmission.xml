@@ -65,20 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Example code:\n
-\n
-# Import a standard function, and get the HTML request and response objects.\n
-from Products.PythonScripts.standard import html_quote\n
-request = container.REQUEST\n
-RESPONSE =  request.RESPONSE\n
-\n
-# Return a string identifying this script.\n
-print "This is the", script.meta_type, \'"%s"\' % script.getId(),\n
-if script.title:\n
-    print "(%s)" % html_quote(script.title),\n
-print "in", container.absolute_url()\n
-return printed\n
-</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -91,6 +78,10 @@ return printed\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,15 +107,8 @@ return printed\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>Products.PythonScripts.standard</string>
-                            <string>html_quote</string>
-                            <string>_getattr_</string>
-<string>container</string>
-                            <string>request</string>
-                            <string>RESPONSE</string>
-<string>script</string>
+                            <string>args</string>
+                            <string>kw</string>
                           </tuple>
                         </value>
                     </item>

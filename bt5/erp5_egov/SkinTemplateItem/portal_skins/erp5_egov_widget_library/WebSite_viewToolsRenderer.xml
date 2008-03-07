@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!-- ============================================================== -->\n
+<!--\n
+Description:\n
+  This macro render a tabbed search panel.\n
+-->\n
+\n
+<tal:block metal:define-macro="main">\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+  \n
+  <div class="tabber" id="mytabber1">\n
+  \n
+    <div class="tabbertab">\n
+      <h2 i18n:translate="" i18n:domain="ui">Track Request</h2>\n
+      <div tal:condition="here/portal_membership/isAnonymousUser">\n
+        <div id="track_header">\n
+          <div id="logo_track_request">\n
+            <img alt="Track Request Logo" src="img/track_request.png"/>\n
+          </div>\n
+          <div class="fields">\n
+            <div>\n
+              <p><tal:block i18n:translate="" i18n:domain="ui">Email</tal:block></p>\n
+              <p\n
+              tal:condition="here/portal_membership/isAnonymousUser"><tal:block\n
+              i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
+            </div>\n
+            <div>\n
+              <p><input type="text" size="20" id="__ac_name" name="__ac_name"\n
+              class="autofocus"/></p>\n
+              <p tal:condition="here/portal_membership/isAnonymousUser"><input\n
+              type="password" size="20" id="password" name="__ac_password"\n
+              class="autofocus"/></p>\n
+            </div>\n
+          </div>\n
+        </div>\n
+        <div class="clear"></div>\n
+        <div id="track_button">\n
+          <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+          name="WebSite_login:method"\n
+          value="Login"/>\n
+        </div>\n
+      </div>\n
+      <div class="fields" tal:condition="not:here/portal_membership/isAnonymousUser">\n
+        Here will be tracking form, work in progress...\n
+      </div>\n
+      <div class="clear"></div>\n
+    </div>\n
+  \n
+    <div class="tabbertab">\n
+      <h2 i18n:translate="" i18n:domain="ui">New Request</h2>\n
+      <div class="fields">\n
+        <div>\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Procedure</tal:block> : </p>\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Recipient</tal:block> : </p>\n
+        </div>\n
+\n
+        <div>\n
+          <p>\n
+            <select size="1" class="input" name="new_request_procedure">\n
+              <tal:block metal:define-macro="procedure_type_option_list">\n
+                <option value="" selected="selected" i18n:translate="" i18n:domain="ui">VAT Request</option>\n
+                <option value="" i18n:translate="" i18n:domain="ui">B2345 - Quaterly Revenu Declaration</option>\n
+                <option value="" i18n:translate="" i18n:domain="ui">Other Request</option>\n
+                <tal:block  tal:condition="exists:here/getProcedureList" \n
+                            tal:repeat="ptype here/getProcedureList">\n
+                  <option tal:attributes="value ptype"  tal:content="python:ptype"\n
+                          i18n:translate="" i18n:domain="ui">Standard Type</option>\n
+                </tal:block>\n
+              </tal:block>\n
+            </select>\n
+          </p>\n
+          <p>\n
+            <select size="1" class="input" name="new_request_recipient">\n
+              <tal:block metal:define-macro="recipient_type_option_list">\n
+                <option value="" selected="selected" i18n:translate="" i18n:domain="ui">DGID</option>\n
+                <option value="" i18n:translate="" i18n:domain="ui">DTAMP - Uitegem</option>\n
+                <option value="" i18n:translate="" i18n:domain="ui">DGID</option>\n
+                <tal:block  tal:condition="exists:here/getRecipientList" \n
+                            tal:repeat="ptype here/getRecipientList">\n
+                  <option tal:attributes="value ptype"  tal:content="python:ptype"\n
+                          i18n:translate="" i18n:domain="ui">Standard Type</option>\n
+                </tal:block>\n
+              </tal:block>\n
+            </select>\n
+          </p>\n
+        </div>\n
+      </div>\n
+      <div class="clear"></div>\n
+      <div id="new_request_button">\n
+        <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+        name="DeclarationTVA_createNewDeclaration:method"\n
+        value="New Request"/>\n
+      </div>\n
+      <div class="clear"></div>\n
+    </div>\n
+  \n
+    <div class="tabbertab">\n
+      <h2 i18n:translate="" i18n:domain="ui">Authenticate</h2>\n
+      <div>\n
+        <tal:block i18n:translate="" i18n:domain="ui">Work in progress</tal:block>....\n
+      </div>\n
+    </div>\n
+  \n
+  </div>\n
+<div class="clear">\n
+</div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewToolsRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

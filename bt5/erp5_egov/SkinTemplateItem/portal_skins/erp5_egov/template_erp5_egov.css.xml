@@ -84,7 +84,10 @@ html {\n
   /*border: .1em solid #ccc;*/\n
   /*margin-right: 20px;*/\n
   /*margin-left: 20px;*/\n
-  width: <tal:block  replace="python: (\'%s%s\') % (min_width+2, unit)"/>;\n
+  /*width: <tal:block  replace="python: (\'%s%s\') % (min_width+2, unit)"/>;*/\n
+  /*margin-left:11.5em;*/\n
+  /*margin-right:11.5em;*/\n
+  margin-bottom: 2em;\n
 }\n
 \n
 \n
@@ -93,17 +96,24 @@ body {\n
 }\n
 \n
 form#main_form .document{\n
+  min-width: <tal:block  replace="python: (\'%s%s\') % (min_width, unit)"/>;\n
   padding-left: <tal:block  replace="python: (\'%s%s\') % (LC_fullwidth, unit)"/>;\n
   padding-right: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
-  min-width: <tal:block  replace="python: (\'%s%s\') % (min_width, unit)"/>;\n
+}\n
+\n
+#wrapper_footer{\n
+  float:left;\n
 }\n
 \n
 form#main_form div#wrapper_footer,\n
 form#main_form div#wrapper_header   /* Customisation of template_erp5_web is required to make header work */\n
 {\n
+  width: 100%;\n
 /*  margin-left: <tal:block  replace="python: (\'-%s%s\') % (LC_fullwidth, unit)"/>;\n
   margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;*/\n
+  min-width:860px;\n
 }\n
+\n
 \n
 form#main_form div#main_content,\n
 form#main_form div#wrapper_left,\n
@@ -112,15 +122,20 @@ form#main_form div#wrapper_right {\n
   float: left;\n
 }\n
 \n
-form#main_form div#main_content {\n
-  padding: 0 <tal:block replace="python: (\'%s%s\') % (CC_padding, unit)"/>;\n
-  width: 100%;\n
-  margin: 1em 0 0;\n
-}\n
-\n
 form#main_form div#wrapper_header,\n
 form#main_form div#wrapper_footer {\n
   clear: both;\n
+}\n
+\n
+form#main_form div#wrapper_header{\n
+  position:absolute;\n
+  top:0;\n
+}\n
+\n
+form#main_form div#main_content{\n
+  width:100%;\n
+  float: left;\n
+  padding-top: 70px;\n
 }\n
 \n
 /*** IE Fix ***/\n
@@ -133,6 +148,9 @@ form#main_form div#wrapper_footer {\n
 \n
 </tal:block>\n
 \n
+input[type="submit"]{\n
+  cursor:pointer;\n
+}\n
 \n
 /*========================================================================================\n
 ** WIDGETS\n
@@ -201,11 +219,9 @@ form#main_form div.wrapper div.field.logo label {\n
 /* Special layout for footer group */\n
 form#main_form div#wrapper_footer div.field {\n
   margin: 0;\n
-  line-height:0.8em ;\n
-  padding-top: 3px;\n
+  /*padding-top: 3px;*/\n
   padding-bottom: 0px;\n
-  /*background: #ccc url(erp5-website-micro-gray-shadow.png) top repeat-x;*/\n
-  background: #999;\n
+  /*background: #999;*/\n
   border-color: #999;\n
   border-width: 0 0 1px;\n
   border-style: solid;\n
@@ -233,6 +249,67 @@ form#main_form div#wrapper_footer ul.onleft{\n
 form#main_form div#wrapper_footer ul.onleft li{\n
   margin-right: 3em;\n
   display: inline;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget{\n
+  border: 0;\n
+  padding: 0;\n
+  margin: 0;\n
+  margin-top: 10px;\n
+  width: 100%;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget div.field label{\n
+  display: none;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget hr{\n
+  visibility:hidden;\n
+  clear:both;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget ul.onleft {\n
+  list-style: none;\n
+  padding: 0;\n
+  margin: 0;\n
+  margin-left: 15px;\n
+  /*background: white;*/\n
+  /*background: #fff url(erp5-website-field.png) top repeat-x;*/\n
+  background: white url(img/title_gradient_bar.gif) right repeat-y; \n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget ul.onleft li{\n
+  margin-right: 3em;\n
+  display: inline;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget .onright a{\n
+  background-repeat:no-repeat;\n
+  height: 40px;\n
+  padding-top: 20px; \n
+  padding-left: 40px;\n
+  padding-right: 20px;\n
+  padding-bottom: 20px;\n
+}\n
+\n
+.draft_state{\n
+  color: #AAA; \n
+}\n
+ \n
+.open_state{\n
+  color: green; \n
+}\n
+\n
+.paid_state{\n
+  color: blue; \n
+}\n
+\n
+.submitted_state{\n
+  color: #00CCCC; \n
+}\n
+\n
+.archived_state{\n
+  color: #black; \n
 }\n
 \n
 /* Special layout for search widget */\n
@@ -263,33 +340,40 @@ form#main_form div.languageSelector {\n
 \n
 \n
 \n
-div#footer {\n
-  margin-left: 20px;\n
+#logged_in_as {\n
+  float: right;\n
+  text-align: right;\n
   margin-right: 20px;\n
-  text-align: center;\n
+  font-size: 110%;\n
 }\n
 \n
-div#header hr,\n
-div#footer hr{\n
-  visibility:hidden;\n
-  clear:both;\n
+#logged_in_as .login,\n
+#logged_in_as #fiscal_center{\n
+  font-weight: bold;\n
 }\n
 \n
-.onleft,\n
+#logged_in_as .logged_txt{\n
+  color: <dtml-var link_color>;\n
+/*   font-size: 90%; */\n
+}\n
+\n
+.anonymous{\n
+  color: red;\n
+  font-weight: bold;\n
+}\n
+\n
+span#language{\n
+  float: right;\n
+  margin-right: 20px;\n
+  margin-top: 10px;\n
+}\n
+\n
+\n
+\n
 .onleft{\n
   float:left;\n
 }\n
 \n
-div#header ul.onleft {\n
-  list-style: none;\n
-  padding: 0;\n
-  margin: 0;\n
-}\n
-\n
-div#header ul.onleft li{\n
-  margin-right: 3em;\n
-  display: inline;\n
-}\n
 \n
 ul.onleft li span {\n
   font-weight: bold;\n
@@ -300,14 +384,6 @@ ul.onleft li span {\n
   text-align:right;\n
 } \n
 \n
-div#header .onright a{\n
-  background-repeat:no-repeat;\n
-  height: 40px;\n
-  padding-top: 20px; \n
-  padding-left: 40px;\n
-  padding-right: 20px;\n
-  padding-bottom: 20px;\n
-}\n
 \n
 form#main_form div .onright a.home{\n
   background-image: url(img/home.png); \n
@@ -317,9 +393,226 @@ form#main_form div .onright a.help{\n
   background-image: url(img/help.png); \n
 }  \n
 \n
+form#main_form div .onright a.preferences{\n
+  background-image: url(img/preferences.png); \n
+}  \n
+\n
+form#main_form div .onright a.logout{\n
+  background-image: url(img/logout.png); \n
+}  \n
+\n
+form#main_form div .onright a.login{\n
+  background-image: url(img/login.png); \n
+}  \n
+\n
+form#main_form div .onright a.print{\n
+  background-image: url(img/print.png); \n
+}  \n
 \n
 form#main_form #hidden_fieldset{\n
   visibility:hidden;\n
+}\n
+\n
+\n
+/* add a border around the pdf pages */\n
+.other_page {\n
+  /*border: 1px solid #999;*/\n
+}\n
+\n
+.first_page {\n
+  /*border: 1px solid #999;*/\n
+  /*border-top:None;*/\n
+}\n
+\n
+\n
+/* Bottom Save buttons styling */\n
+\n
+div.bottom_actions{\n
+  position: relative;\n
+  width: 100%;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
+\n
+div.bottom_actions{\n
+  height: 8em;\n
+  margin-bottom: 10px;\n
+  z-index: 300;\n
+}\n
+\n
+div.bottom_actions button.saveEdit {\n
+  display:inline;\n
+  position:absolute;\n
+  right: 10em;\n
+}\n
+\n
+div.bottom_actions button.saveView {\n
+  display:inline;\n
+  position:absolute;\n
+  right:0em;\n
+}\n
+\n
+div.bottom_actions button.saveEdit .description {\n
+ position: relative;\n
+ top: 3px;\n
+ left: 2px;\n
+}\n
+\n
+div.bottom_actions button.saveView .description{\n
+ position: relative;\n
+ top: 3px;\n
+ left: 3px;\n
+}\n
+\n
+div.bottom_actions button.saveView .image,\n
+div.bottom_actions button.saveEdit .image{\n
+  float: left;\n
+  display: block;\n
+  width: 22px;\n
+  height: 22px;\n
+}\n
+\n
+div.bottom_actions button.saveEdit span.image {\n
+  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save.png\');\n
+}\n
+\n
+div.bottom_actions button.saveView span.image {\n
+  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save-preview.png\');\n
+}\n
+\n
+\n
+.input .attachment_missing{\n
+  color:red;\n
+  font-weight: bold;\n
+  font-size: 1.3em;\n
+}\n
+\n
+div.section_explanation{\n
+  padding-top:1em;\n
+  padding-bottom:2em;\n
+  font-size: 1.3em;\n
+}\n
+\n
+.section_description{\n
+  padding-top: 0.5em;\n
+  font-size: 1.1em;\n
+  font-style: italic;\n
+}\n
+\n
+div.section_title{\n
+  font-size:2em;\n
+  font-weight: bold;\n
+}\n
+\n
+div.work_in_progress{\n
+  margin-top:1em;\n
+  margin-left:2em;\n
+  font-style: italic;\n
+  font-weight: bold;\n
+  color:orange;\n
+  background-repeat:no-repeat;\n
+  height: 40px;\n
+  padding-top: 10px;\n
+  padding-left: 60px;\n
+  padding-right: 20px;\n
+  background-image: url(img/work_in_progress.png); \n
+}\n
+\n
+.bottom_border{\n
+  width:100%;\n
+}\n
+\n
+div#main_content fieldset {\n
+  margin: 0;\n
+  border:none;\n
+}\n
+\n
+.content #fieldset_center,\n
+.content #fieldset_left,\n
+.content #fieldset_bottom{\n
+  margin-left: 3em;\n
+  margin-right: 3em;\n
+}\n
+\n
+.content #fieldset_left{\n
+  margin-top: 3em;\n
+}\n
+\n
+div#main_content fieldset.bottom{\n
+  padding:0;\n
+}\n
+\n
+.inline,\n
+div.inline_label label,\n
+div.inline .input{\n
+  display: inline;\n
+  vertical-align:middle;\n
+}\n
+\n
+div.inline_label label{\n
+  display: inline !important;\n
+  float:none !important;\n
+}\n
+\n
+.adminSection,\n
+.document .actions{\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+  width: 802px !important;\n
+  text-align: left;\n
+}\n
+\n
+\n
+\n
+/* ----------------------------------------------------- \n
+          PDFDocument_viewLoginInformation \n
+   ----------------------------------------------------*/\n
+\n
+   \n
+fieldset.white_background{\n
+  background: white !important;\n
+  margin-right: auto !important;\n
+  margin-left: auto !important;\n
+  padding: 2em !important;\n
+  border: 1px solid #999 !important;\n
+  width:800px !important;\n
+}\n
+\n
+.field .input .title{\n
+  margin-top: 1em;\n
+  margin-bottom:0.5em;\n
+  font-size: 2em;\n
+}\n
+\n
+.field .input .explanation{\n
+  font-size: 1.2em;\n
+}\n
+  \n
+.field .input .site_address{\n
+  font-size: 3em;\n
+  text-align: center;\n
+  font-weight: bold;\n
+  color:#FF6633;\n
+  margin:1em;\n
+}\n
+\n
+.field .input .big_button{\n
+  float:left;\n
+  height: 2em;\n
+  width: 20%;\n
+  background:#FF6633;\n
+  text-decoration: underline;\n
+  color:white;\n
+  font-size:2em;\n
+  margin-left: 20%;\n
+  margin-top: 2em;\n
+  border: 1px solid black;\n
+  font-weight:bold;\n
+  cursor:pointer;\n
+}\n
+\n
+.white_background .big_button .input{\n
+  margin:0 !important;\n
 }\n
 
 

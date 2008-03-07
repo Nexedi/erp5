@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div id="status">\n
+  \n
+\n
+\n
+  <div id="logged_in_as">\n
+    <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
+      <span class="logged_txt"><tal:block i18n:translate=""\n
+        i18n:domain="ui">User</tal:block> :</span><span class="login">\n
+        <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
+      </span>\n
+    </tal:block>\n
+    <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+      <span class="anonymous" i18n:translate=""\n
+        i18n:domain="ui">Anonymous user</span>\n
+    </tal:block>\n
+    <div id="fiscal_center">\n
+    Centre des grandes entreprises\n
+    </div>\n
+  </div>\n
+  <div class="clear">\n
+  </div>\n
+   <div class="onright">\n
+      <span id="language">\n
+        <select name="select_language"\n
+                tal:attributes="onChange string:submitAction(this.form,\'Base_doLanguage\')">\n
+          <option value=""\n
+                  i18n:translate="" i18n:domain="ui">My language</option>\n
+          <option tal:repeat="language python: here.Localizer.get_languages_map()"\n
+                  tal:omit-tag="nothing"\n
+                  tal:attributes="value language/id;\n
+                  selected python: language[\'selected\'] and \'selected\' or nothing;"\n
+                  tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])" />\n
+        </select>\n
+        <!--<button type="submit" name="Base_doLanguage:method" title="Select Language"\n
+                i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description"\n
+                i18n:translate="" i18n:domain="ui">Select Language</span>\n
+        </button>-->\n
+      </span>\n
+  </div>\n
+  <div class="clear">\n
+  </div>\n
+</div>\n
+  <div class="clear">\n
+  </div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewStatusBarRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

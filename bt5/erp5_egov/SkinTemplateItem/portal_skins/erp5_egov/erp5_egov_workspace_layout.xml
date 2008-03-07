@@ -70,6 +70,8 @@
                 <string>right column (Demo)</string>
                 <string>right column (Toolbox)</string>
                 <string>footer</string>
+                <string>header</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -84,46 +86,59 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left column (Contents)</string> </key>
+                    <key>                 <string>header</string> </key>
                     <value>
                       <list>
+                        <string>header_section</string>
+                        <string>status_section</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>website_logo</string>
+                        <string>language_selector</string>
+                        <string>breadcrumb</string>
                         <string>subsection_list</string>
                         <string>section_content_list</string>
+                        <string>your_search_text</string>
+                        <string>search_action</string>
+                        <string>applicable_layout</string>
+                        <string>admin_toolbox</string>
+                        <string>form_submission_wizard</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left column (Contents)</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left column (Debug)</string> </key>
                     <value>
-                      <list>
-                        <string>applicable_layout</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left column (Navigation)</string> </key>
                     <value>
-                      <list>
-                        <string>language_selector</string>
-                        <string>breadcrumb</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left column (Search)</string> </key>
                     <value>
-                      <list>
-                        <string>your_search_text</string>
-                        <string>search_action</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left column transparent (Logo)</string> </key>
                     <value>
-                      <list>
-                        <string>website_logo</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -135,9 +150,7 @@
                 <item>
                     <key> <string>right column (Toolbox)</string> </key>
                     <value>
-                      <list>
-                        <string>admin_toolbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

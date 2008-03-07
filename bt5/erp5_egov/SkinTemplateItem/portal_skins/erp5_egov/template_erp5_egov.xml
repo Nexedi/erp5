@@ -83,27 +83,31 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                        global css_list_template python:[\'%s/erp5_egov.css\' % portal_path,\n
                               \'%s/erp5_egov_%scontent.css\' % (portal_path, editable and \'editable_\' or \'\'),\n
                               \'%s/erp5_egov_admin_toolbox.css\' % portal_path,\n
-                              \'%s/template_erp5_egov.css\' % portal_path,];\n
-                        global js_list python:[]">\n
+                              \'%s/template_erp5_egov.css\' % portal_path,\n
+                              \'%s/tabber.css\' % portal_path,\n
+                              \'%s/WebSite_viewActionSelectRenderer.css\' % portal_path,\n
+                              \'%s/WebSite_viewFooterRenderer.css\' % portal_path,\n
+                              \'%s/WebSite_viewNextStepRenderer.css\' % portal_path,\n
+                              \'%s/WebSite_viewSubmissionWizardRenderer.css\' % portal_path,\n
+                              \'%s/WebSite_viewToolsRenderer.css\' % portal_path,\n
+                              \'%s/WebSite_viewWorkspaceWidgets.css\' % portal_path,\n
+                              \'%s/DeclarationDeTVA_ListBox_asPendingRequests.css\' % portal_path,\n
+                              \'%s/DeclarationDeTVA_ListBox_asAttachedFile.css\' % portal_path];\n
+                        global js_list python:[\'%s/tabber.js\' % portal_path,]">\n
+<!-- \'%s/tabber-cookie.js\' % portal_path,  must be added to js_list to use cookies to rembeber las tab used-->\n
+\n
   <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
     <tal:block metal:fill-slot="layout"\n
                tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
       <div id="main_content">\n
+\n
         <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
           <!-- XXX Why no portal message displayed there ?\n
                 Normally a message should be displayed when saving an object through web interface... -->\n
           <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
         </tal:block>\n
 \n
-        <a name="top"></a>\n
-\n
-        <div id=header>\n
-        <span tal:replace="structure here/WebSite_viewHeaderRenderer"/>\n
-        </div>\n
-\n
         <tal:block metal:define-slot="main"/>\n
-        <span tal:replace="structure here/WebSite_viewFooterRenderer"/>\n
-        \n
 \n
       </div>\n
     \n
@@ -135,16 +139,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                dummy python: request.set(\'list_mode\', list_mode);\n
                                dummy python: request.set(\'http_parameters\', http_parameters);\n
                                dummy python: request.set(\'actions\', actions);\n
+                               dummy python: request.set(\'current_action\', current_action);\n
+                               dummy python: request.set(\'form_id\', form_id);\n
                                dummy python: request.set(\'current_web_section\',\n
                                                          request.get(\'current_web_section\', here.getWebSectionValue()));\n
                                dummy python: request.set(\'current_web_document\',\n
                                                          request.get(\'current_web_document\', here));\n
+                               dummy python: request.set(\'form_action\',form_action);\n
                                dummy python: request.set(\'is_web_section_default_document\',\n
                                                          request.get(\'is_web_section_default_document\', 0));">\n
           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
         </tal:block>\n
+        <!--<tal:block tal:replace="structure request"/> -->\n
       </tal:block>\n
     </tal:block>\t\n
+    <tal:block metal:fill-slot="footer">\n
+      <tal:block metal:use-macro="here/WebSite_viewFooterRenderer/macros/master"/>\n
+    </tal:block>\n
   </tal:block>\n
 </tal:block>\n
 </tal:block>\n

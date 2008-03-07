@@ -62,10 +62,12 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>new_request (New Request)</string>
-                <string>track_request (Track Request)</string>
+                <string>tools</string>
+                <string>vip_space</string>
+                <string>widget_space</string>
                 <string>authenticate</string>
                 <string>upload</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,22 +82,26 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>new_request (New Request)</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>new_request_group</string>
                         <string>new_request_portal_type</string>
                         <string>new_request_submit</string>
+                        <string>track_request_user</string>
+                        <string>track_request_login</string>
+                        <string>track_request_submit</string>
+                        <string>home_page</string>
+                        <string>pending_requests</string>
+                        <string>listbox_creation_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>track_request (Track Request)</string> </key>
+                    <key>                 <string>tools</string> </key>
                     <value>
                       <list>
-                        <string>track_request_user</string>
-                        <string>track_request_login</string>
-                        <string>track_request_submit</string>
+                        <string>tools_tab</string>
                       </list>
                     </value>
                 </item>
@@ -103,6 +109,23 @@
                     <key>                 <string>upload</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>vip_space</string> </key>
+                    <value>
+                      <list>
+                        <string>become_vip</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>widget_space</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox</string>
+                        <string>my_documents</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
