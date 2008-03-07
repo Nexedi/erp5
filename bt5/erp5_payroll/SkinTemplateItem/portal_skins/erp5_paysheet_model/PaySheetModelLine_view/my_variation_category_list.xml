@@ -10,6 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_variation_category_list</string> </value>
         </item>
@@ -212,7 +218,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The variations that are applied to this pay sheet movement.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -293,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, display_id=\'translated_logical_path\')</string> </value>
         </item>
       </dictionary>
     </pickle>
