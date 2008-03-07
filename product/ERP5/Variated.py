@@ -28,6 +28,8 @@
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
+from Products.CMFCore.utils import getToolByName
+
 from Products.ERP5Type import Context, Interface, Permissions
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
@@ -293,7 +295,8 @@ class Variated(Base):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeCategoryItemList')
   def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
-                                        root=1, display_id='title', 
+                                        root=1,
+                                        display_method_id='getCategoryChildLogicalPathItemList',
                                         display_base_category=1,
                                         current_category=None, **kw):
     """
@@ -305,10 +308,11 @@ class Variated(Base):
       base_category_list = self.getVariationBaseCategoryList()
     elif type(base_category_list) is type('a'):
       base_category_list = (base_category_list, )
+
+    traverse = getToolByName(self, 'portal_categories').unrestrictedTraverse
     # Render categories
     for base_category in base_category_list:
-      result += self.portal_categories.unrestrictedTraverse(base_category).\
-             getCategoryChildLogicalPathItemList(
+      result += getattr(traverse(base_category), display_method_id)(
                              base=base,
                              display_base_category=display_base_category,
                              display_none_category=0, **kw)
