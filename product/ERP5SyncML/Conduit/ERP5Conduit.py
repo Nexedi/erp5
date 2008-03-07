@@ -746,33 +746,33 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       return
     # Retrieve the list of users with a role and delete default roles
     if reset_local_roles:
-      user_role_list = map(lambda x:x[0],object.get_local_roles())
+      user_role_list = map(lambda x:x[0], object.get_local_roles())
       object.manage_delLocalRoles(user_role_list)
     if getattr(object, 'workflow_history', None) is not None and reset_workflow:
       object.workflow_history = PersistentMapping()
-    if xml.nodeName.find('xupdate')>= 0:
+    if xml.nodeName.find('xupdate') >= 0:
       xml = self.getElementNodeList(xml)[0]
     for subnode in self.getElementNodeList(xml):
       if subnode.nodeName not in self.NOT_EDITABLE_PROPERTY:
         keyword_type = self.getPropertyType(subnode)
         # This is the case where the property is a list
-        keyword=str(subnode.nodeName)
+        keyword = str(subnode.nodeName)
         if len(subnode.childNodes) > 0: # We check that this tag is not empty
           data = subnode.childNodes[0].data
         else:
-          data=None
-        args[keyword]=data
+          data = None
+        args[keyword] = data
         #if args.has_key(keyword):
         #  LOG('newObject',0,'data: %s' % str(args[keyword]))
         if args.has_key(keyword):
-          args[keyword] = self.convertXmlValue(args[keyword],keyword_type)
+          args[keyword] = self.convertXmlValue(args[keyword], keyword_type)
       elif subnode.nodeName in self.ADDABLE_PROPERTY:
-        self.addNode(object=object,xml=subnode, force=1)
+        self.addNode(object=object, xml=subnode, force=1)
     # We should first edit the object
     args = self.getFormatedArgs(args=args)
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
-    self.editDocument(object=object,**args)
+    self.editDocument(object=object, **args)
     if getattr(object, 'manage_afterEdit', None) is not None:
       object.manage_afterEdit()
     self.afterNewObject(object)
@@ -794,7 +794,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     status = {}
     for subnode in self.getElementNodeList(xml):
       keyword = self.convertXmlValue(subnode.nodeName)
-      value = self.getObjectProperty(keyword,xml)
+      value = self.getObjectProperty(keyword, xml)
       status[keyword] = value
     return status
 
@@ -816,7 +816,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     from a xupdate:element returns the element as xml
     """
     if xml.nodeName in self.XUPDATE_EL:
-      result = unicode('<',encoding='utf-8')
+      result = unicode('<', encoding='utf-8')
       result += xml.attributes.values()[0].nodeValue
       for subnode in self.getElementNodeList(xml):  #getElementNodeList
         if subnode.nodeName == 'xupdate:attribute':
