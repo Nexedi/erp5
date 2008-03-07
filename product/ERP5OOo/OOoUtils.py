@@ -168,15 +168,19 @@ class OOoBuilder(Implicit):
       reader = PyExpat.Reader()
       document = reader.fromString(content_xml)
       document_element = document.documentElement
+      tal = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:tal')
+      tal.value = u'http://xml.zope.org/namespaces/tal'
+      i18n = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:i18n')
+      i18n.value = u'http://xml.zope.org/namespaces/i18n'
+      metal = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:metal')
+      metal.value = u'http://xml.zope.org/namespaces/metal'
+      document_element.setAttributeNodeNS(tal)
+      document_element.setAttributeNodeNS(i18n)
+      document_element.setAttributeNodeNS(metal)
+      document_element.setAttribute('tal:attributes', 'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")')
       from xml.dom.ext import PrettyPrint
       PrettyPrint(document_element, output)
-      return output.getvalue().replace(
-        "office:version='1.0'",
-        """ xmlns:tal='http://xml.zope.org/namespaces/tal'
-            xmlns:i18n='http://xml.zope.org/namespaces/i18n'
-            xmlns:metal='http://xml.zope.org/namespaces/metal'
-            tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
-          office:version='1.0'""")
+      return output.getvalue()
 
   def addFileEntry(self, full_path, media_type, content=None):
       """ Add a file entry to the manifest and possibly is content """
