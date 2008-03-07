@@ -98,9 +98,9 @@
                       <list>
                         <string>listbox_base</string>
                         <string>listbox_employee_share_price</string>
-                        <string>listbox_employee_share_quantity</string>
-                        <string>listbox_employer_share_quantity</string>
                         <string>listbox_employer_share_price</string>
+                        <string>listbox_employee_share_total_price</string>
+                        <string>listbox_employer_share_total_price</string>
                       </list>
                     </value>
                 </item>
@@ -114,7 +114,6 @@
                         <string>my_specialise_title</string>
                         <string>my_social_insurance_annotation_line_source_title</string>
                         <string>my_price_currency</string>
-                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
@@ -125,8 +124,8 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_payment_condition_payment_date</string>
-                        <string>my_work_time_annotation_line_quantity_unit</string>
                         <string>my_work_time_annotation_line_quantity</string>
+                        <string>my_work_time_annotation_line_quantity_unit</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>

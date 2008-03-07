@@ -74,19 +74,17 @@
 \'\'\'\n
 \n
 column_list = []\n
+editable_column_list = [(\'base\', \'Base\'),]\n
 \n
-not_editable_columns = [(\'int_index\', \'Sort Index\'),\n
-                        (\'title\', \'Title\'),\n
-                        (\'source_section_title\', \'Source\'),\n
-                        (\'slice\', \'Slice\'),\n
-                        (\'base\', \'Base\'),]\n
+not_editable_column_list = [(\'int_index\', \'Sort Index\'),\n
+                            (\'title\', \'Title\'),\n
+                            (\'source_section_title\', \'Source\'),\n
+                            (\'slice\', \'Slice\'),]\n
 \n
 if not editable:\n
-  column_list.extend(not_editable_columns)\n
+  column_list.extend(not_editable_column_list)\n
 \n
-else:\n
-  pass\n
-  # add here the editable column you want to use\n
+column_list.extend(editable_column_list)\n
 \n
 # this following columns are add for both edibales and not\n
 for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
@@ -143,7 +141,8 @@ return column_list\n
                           <tuple>
                             <string>editable</string>
                             <string>column_list</string>
-                            <string>not_editable_columns</string>
+                            <string>editable_column_list</string>
+                            <string>not_editable_column_list</string>
                             <string>_getattr_</string>
                             <string>_getiter_</string>
                             <string>context</string>

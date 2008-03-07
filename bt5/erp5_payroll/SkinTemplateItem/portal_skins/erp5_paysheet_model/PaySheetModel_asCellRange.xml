@@ -76,12 +76,10 @@ category_list = []\n
 for category in context.getVariationSettingsCategoryList():\n
   category_name = category.replace(\'salary_range/\',\'\',1)\n
   if context.portal_categories.getCategoryValue(category) is None:\n
-    context.log(\'Category %s not found.\' % category)\n
     raise ValueError, \'no category %s\' % category\n
   else:\n
     if matrixbox:\n
       category_list.extend(context.portal_categories.getCategoryValue(category).getCategoryChildLogicalPathItemList(checked_permission=\'View\', is_right_display=1, base=1)[1:])\n
-      #category_list.extend(context.portal_categories.getCategoryValue(category).getCategoryChildItemList(base=1, is_right_display=1)[1:])\n
     else:\n
       cat_list = [cat[0] for cat in\n
           context.portal_categories.salary_range[category_name].getCategoryChildItemList(checked_permission=\'View\', base=1)[1:]]\n

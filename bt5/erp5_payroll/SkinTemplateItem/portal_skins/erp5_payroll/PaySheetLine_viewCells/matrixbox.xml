@@ -256,11 +256,11 @@
                       <list>
                         <tuple>
                           <string>quantity</string>
-                          <string>Base Value</string>
+                          <string>Base</string>
                         </tuple>
                         <tuple>
                           <string>price</string>
-                          <string>Share</string>
+                          <string>Tax Ratio</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>

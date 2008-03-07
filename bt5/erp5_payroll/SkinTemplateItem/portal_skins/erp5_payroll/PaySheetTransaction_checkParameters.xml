@@ -65,9 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Check that all datas necessary to auto-calculate the pay sheet are set.\n
   TODO: Translate portal status message.\n
 """\n
@@ -104,10 +102,8 @@ if not employee_obj.getMaritalStatusId():\n
   return redirect(\'The employee must have a marital status\')\n
 \n
 # parameters are OK, go to the pre-calculation form\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTransaction_viewPreview?selection_name=default&amp;dialog_category=object_action&amp;form_id=PaySheetTransaction_view")\n
-
-
-]]></string> </value>
+return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -129,7 +125,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', **kw</string> </value>
+            <value> <string>form_id=\'view\', cancel_url=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,13 +145,14 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
+                            <string>cancel_url</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -167,6 +164,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
                             <string>redirect</string>
                             <string>employer_obj</string>
                             <string>employee_obj</string>
+                            <string>container</string>
                           </tuple>
                         </value>
                     </item>
@@ -180,6 +178,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTran
             <value>
               <tuple>
                 <string>view</string>
+                <string></string>
               </tuple>
             </value>
         </item>

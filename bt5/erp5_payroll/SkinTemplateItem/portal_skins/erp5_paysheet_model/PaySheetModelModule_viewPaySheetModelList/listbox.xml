@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
+                <string>all_columns</string>
                 <string>search_columns</string>
                 <string>sort_columns</string>
                 <string>sort</string>
@@ -82,6 +83,53 @@
                 <item>
                     <key> <string>Base_viewSearchResultList</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title_list</string>
+                          <string>Model Inheritance</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Employer</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Employee</string>
+                        </tuple>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>Effective Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>expiration_date</string>
+                          <string>Expiration Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>all_editable_columns</string> </key>
@@ -181,6 +229,14 @@
                           <string>Expiration Date</string>
                         </tuple>
                         <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -238,6 +294,14 @@
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -247,7 +311,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Contents</string> </value>
+                    <value> <string>Pay Sheet Models</string> </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
