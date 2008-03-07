@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -104,6 +101,35 @@
 \t<td>clickAndWait</td>\n
 \t<td>Folder_deleteObjectList:method</td>\n
 \t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>listbox_record_number</td>\n
+\t<td>1 record(s)</td>\n
+</tr>\n
+<!-- The listbox used to confirm deletion is a proxy to the previous listbox.\n
+It contains the same columns\n
+-->\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@id=\'listbox_label_line\']/td[1]</td>\n
+\t<td>ID</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+\t<td>Title</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+\t<td>Quantity</td>\n
+</tr>\n
+<!-- And an extra column to display the number of related objects. -->\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+\t<td>No. Related Objects</td>\n
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
