@@ -309,7 +309,12 @@ form#main_form div#wrapper_header fieldset.widget .onright a{\n
 }\n
 \n
 .archived_state{\n
-  color: #black; \n
+  color: black; \n
+}\n
+\n
+.cancelled_state,\n
+.deleted_state{\n
+  color: red;\n
 }\n
 \n
 /* Special layout for search widget */\n
@@ -554,8 +559,8 @@ div.inline_label label{\n
   float:none !important;\n
 }\n
 \n
-.adminSection,\n
-.document .actions{\n
+.document .actions,\n
+.adminSection{\n
   margin-left: auto;\n
   margin-right: auto;\n
   width: 802px !important;\n
@@ -573,9 +578,13 @@ fieldset.white_background{\n
   background: white !important;\n
   margin-right: auto !important;\n
   margin-left: auto !important;\n
-  padding: 2em !important;\n
+  padding: 2em 0 2em 0 !important;\n
   border: 1px solid #999 !important;\n
   width:800px !important;\n
+}\n
+\n
+fieldset.white_background .input{\n
+  padding: 0 2em 0 2em;\n
 }\n
 \n
 .field .input .title{\n
@@ -613,6 +622,7 @@ fieldset.white_background{\n
 \n
 .white_background .big_button .input{\n
   margin:0 !important;\n
+  padding: 0 !important;\n
 }\n
 
 

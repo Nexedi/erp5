@@ -57,54 +57,66 @@
 \n
 ========================================================================================*/\n
 \n
-\n
-.attachment_list_ListContent li a,\n
-.attachment_list_ListContent li .attachment_list_getSourceReference,\n
-.attachment_list_ListContent li .attachment_list_content_type,\n
-.attachment_list_ListContent li .attachment_list_getOwner,\n
-.attachment_list_ListContent li .attachment_list_creation_date{\n
-  padding:2px;\n
+.workspace_widget_ListContent,\n
+.no_prending_request_explanation{\n
+  margin-top:1.7em;\n
 }\n
 \n
-.attachment_list_ListContent li a{\n
+.workspace_widget_ListContent li a{\n
   text-decoration:underline;\n
 }\n
 \n
-.attachment_list_ListContent li .attachment_list_content_type{\n
- display:none;\n
-}\n
-\n
-.attachment_list_ListContent li .attachment_list_getSourceReference{\n
-  color:#0B850B;\n
-}\n
-\n
-/*.attachment_list_ListContent li .attachment_list_getOwner,\n
-.attachment_list_ListContent li .attachment_list_creation_date{\n
-  position:absolute;\n
-  margin-top:1.2em;\n
-}*/\n
-\n
-.attachment_list_ListContent li .attachment_list_creation_date{\n
-  left:80px;\n
-}\n
-\n
-.attachment_list_ListContent li .attachment_list_getOwner{\n
-  left:30px;\n
+.workspace_widget_ListContent li{\n
+  line-height: 1em;\n
+  float:left;\n
 }\n
  \n
-.attachment_list_ListContent li{\n
+.workspace_widget_ListContent li .workspace_widget_portal_type{\n
+  float: left;\n
+}\n
+\n
+.workspace_widget_ListContent li .workspace_widget_translated_validation_state_title{\n
+  float: right;\n
+}\n
+\n
+.workspace_widget_ListContent li .modification_date{\n
+  float: left;\n
+}\n
+\n
+.workspace_widget_ListContent .workspace_widget_modification_date{\n
+  float: right;\n
+}\n
+ \n
+.workspace_widget_ListContent li{\n
   margin-bottom: 1em;\n
+  width:90%;\n
 }\n
 \n
-.attachment_list_ListContent .attachment_list_getOwner{\n
-  font-weight:bold;\n
+.workspace_widget_ListContent ul{\n
+  list-style-type:disk;\n
+  list-style-position:outside;\n
 }\n
 \n
-.attachment_list_ListContent .added_by,\n
-.attachment_list_ListContent .attachment_list_getOwner,\n
-.attachment_list_ListContent .at,\n
-.attachment_list_ListContent .attachment_list_creation_date{\n
+.workspace_widget_ListContent .modification_date,\n
+.workspace_widget_ListContent .workspace_widget_modification_date{\n
   font-style: italic;\n
+  font-size:0.8em;\n
+}\n
+\n
+.workspace_widget_listbox_title{\n
+  background:#DDDDEE;\n
+  border-bottom:1px solid #AAAAAA;\n
+  position:absolute;\n
+  top:0;\n
+  left:0;\n
+  width:100%;\n
+  text-align:center;\n
+  font-weight:bold;\n
+  font-size:1.2em;\n
+  height:1em;\n
+  padding-top:0.2em;\n
+  padding-bottom:0.4em;\n
+  margin-bottom:20px;\n
 }\n
 
 
@@ -120,7 +132,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_ListBox_asPendingRequests.css</string> </value>
+            <value> <string>WebSite_ListBox_asWorkspaceWidgets.css</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

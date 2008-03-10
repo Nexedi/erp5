@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Open</string> </value>
+            <value> <string>Start Processing</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

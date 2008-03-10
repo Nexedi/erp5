@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Cancel</string> </value>
+            <value> <string>Cancel Request</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

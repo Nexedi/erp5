@@ -85,15 +85,9 @@
                     <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>new_request_group</string>
-                        <string>new_request_portal_type</string>
-                        <string>new_request_submit</string>
-                        <string>track_request_user</string>
-                        <string>track_request_login</string>
-                        <string>track_request_submit</string>
-                        <string>home_page</string>
-                        <string>pending_requests</string>
-                        <string>listbox_creation_date</string>
+                        <string>listboxPendingRequest_modification_date</string>
+                        <string>my_documents</string>
+                        <string>listboxMyDocuments_modification_date</string>
                       </list>
                     </value>
                 </item>
@@ -123,8 +117,8 @@
                     <key>                 <string>widget_space</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
-                        <string>my_documents</string>
+                        <string>listboxPendingRequest</string>
+                        <string>listboxMyDocuments</string>
                       </list>
                     </value>
                 </item>

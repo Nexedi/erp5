@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listboxMyDocuments</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -335,16 +335,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>getOwner</string>
-                          <string>Actor</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -355,7 +351,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label</string> </value>
+                    <value> <string>hidden_label my_documents</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -386,8 +382,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -412,7 +408,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>50</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -432,7 +428,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>DeclarationDeTVA_ListBox_asPendingRequests</string> </value>
+                    <value> <string>WebSite_ListBox_asMyDocuments</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -459,8 +455,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -471,18 +467,28 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>pending_requests_selection</string> </value>
+                    <value> <string>my_documents_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -497,7 +503,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Attachments</string> </value>
+                    <value> <string>My Documents</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -522,7 +528,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: len(context.DeclarationTVA_getAttachmentListFromReportSelection())</string> </value>
+            <value> <string>not:here/portal_membership/isAnonymousUser</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -538,7 +544,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <value> <string>MyDocuments_listMethod</string> </value>
         </item>
       </dictionary>
     </pickle>

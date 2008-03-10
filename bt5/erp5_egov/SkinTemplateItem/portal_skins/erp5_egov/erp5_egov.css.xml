@@ -129,6 +129,7 @@ p {\n
 ------------------------------------------------------------------ */\n
 \n
 span.draft       {color: #be854d}\n
+span.submitted   {color: #be854d}\n
 span.published,\n
 span.validated   {color: #078307}\n
 span.invalidated {color: #ab0303}\n

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listboxPendingRequest</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -343,12 +343,8 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>getOwner</string>
-                          <string>Actor</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -390,8 +386,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -463,8 +459,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>

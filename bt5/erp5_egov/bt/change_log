@@ -1,3 +1,6 @@
+2008-03-10 fabien
+* add some controls on validation state, add two widgets to see pending requests and users documents, align the form on the right, but all other pages are centered, enhance listbox page template to handle custom listbox fields.
+
 2008-03-07 fabien
 * set up security and bring lot of change on all the bt
 

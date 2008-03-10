@@ -116,16 +116,11 @@
                                       original_value python: value[1];\n
                                       error python: value[2];\n
                                       editable_field python: value[3];"\n
-                                      tal:attributes="class python: \'workspace_widget_%s %s_state\' % (line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0], line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'translated_validation_state_title\' and object.getValidationState() or \'no\')">\n
-                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'portal_type\'">\n
-                          <tal:block tal:condition="python: object.getValidationState() == \'draft\'">\n
-                            <a href="lien" tal:attributes="href python:\'declaration_tva_module/%s/view\' % object.getId()" i18n:translate="" i18n:domain="ui" tal:content="python:value[1]">value</a>\n
-                          </tal:block>\n
-                          <tal:block tal:condition="python: object.getValidationState() != \'draft\'">\n
-                            <a href="lien" tal:attributes="href python:\'declaration_tva_module/%s/PDFDocument_viewHistory\' % object.getId()" i18n:translate="" i18n:domain="ui" tal:content="python:value[1]">value</a>\n
-                          </tal:block>\n
+                                      tal:attributes="class python: \'workspace_widget_%s\' % (line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0])">\n
+                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'title\'">\n
+                          <tal:block tal:content="structure python:value[0]" />\n
                         </tal:block>\n
-                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] != \'portal_type\'">\n
+                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] != \'title\'">\n
                           <input tal:condition="not: repeat/value/index"\n
                             type="hidden" value="1" name="listbox_uid:list"\n
                             tal:attributes="value python: line.getUid() or \'\';\n
@@ -147,7 +142,7 @@
   </tal:block>\n
   <tal:block tal:condition="python:not len(line_list)">\n
     <div class="no_prending_request_explanation" i18n:translate="" i18n:domain="ui">\n
-      No pending request.\n
+      You have no documents.\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
@@ -166,7 +161,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_ListBox_asPendingRequests</string> </value>
+            <value> <string>WebSite_ListBox_asMyDocuments</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

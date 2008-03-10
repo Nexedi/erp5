@@ -96,7 +96,7 @@ ul.tabbernav\n
  margin:0;\n
  padding: 3px 0;\n
  border-bottom: 1px solid #aaa;\n
- font: bold 12px Verdana, sans-serif;\n
+ font: bold 1.2em Verdana, sans-serif;\n
 }\n
 \n
 ul.tabbernav li\n
@@ -116,7 +116,7 @@ ul.tabbernav li a\n
  text-decoration: none;\n
 }\n
 \n
-ul.tabbernav li a:link { color: #000; }\n
+ul.tabbernav li a:link { color: #333333; }\n
 ul.tabbernav li a:visited { color: #667; }\n
 \n
 ul.tabbernav li a:hover\n

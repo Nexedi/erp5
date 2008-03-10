@@ -71,6 +71,9 @@
   The view_document_url is used to define the URL to return to\n
   after editing the document.\n
 """\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+request=context.REQUEST\n
+\n
 \n
 next_url_dict = {\n
     \'DeclarationDeTVA_view\' : \'DeclarationTVA_viewAttachmentList\',\n
@@ -82,8 +85,15 @@ successful_edit_redirect_url = \'%s/%s\' % (context.absolute_url(), next_url_dic
 # if the current step is DeclarationTVA_viewAttachmentList, the document must\n
 # be submitted\n
 if form_id == \'DeclarationTVA_viewAttachmentList\':\n
-  context.submit()\n
-  request=context.REQUEST\n
+  try : \n
+    context.portal_workflow.doActionFor(context,\n
+                                      \'submit_action\')\n
+  except ValidationFailed, message: \n
+    return request[\'RESPONSE\'].redirect(\n
+               "%s/%s?portal_status_message=%s" %\n
+               (context.absolute_url(), form_id, message))\n
+\n
+\n
   result = request[\'RESPONSE\'].redirect(successful_edit_redirect_url) \n
   return result\n
 \n
@@ -146,12 +156,15 @@ return context.Base_edit(form_id=form_id, \n
                             <string>editable_mode</string>
                             <string>silent_mode</string>
                             <string>field_prefix</string>
-                            <string>next_url_dict</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>request</string>
+                            <string>next_url_dict</string>
                             <string>_getitem_</string>
                             <string>successful_edit_redirect_url</string>
-                            <string>request</string>
+                            <string>message</string>
                             <string>result</string>
                           </tuple>
                         </value>

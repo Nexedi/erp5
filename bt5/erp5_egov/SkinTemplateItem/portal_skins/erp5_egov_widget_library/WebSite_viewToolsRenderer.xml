@@ -62,24 +62,22 @@ Description:\n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Track Request</h2>\n
       <div tal:condition="here/portal_membership/isAnonymousUser">\n
-        <div id="track_header">\n
-          <div id="logo_track_request">\n
-            <img alt="Track Request Logo" src="img/track_request.png"/>\n
+        <div id="logo_track_request">\n
+          <img alt="Track Request Logo" src="img/track_request.png"/>\n
+        </div>\n
+        <div class="fields">\n
+          <div>\n
+            <p><tal:block i18n:translate="" i18n:domain="ui">Email</tal:block></p>\n
+            <p\n
+            tal:condition="here/portal_membership/isAnonymousUser"><tal:block\n
+            i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
           </div>\n
-          <div class="fields">\n
-            <div>\n
-              <p><tal:block i18n:translate="" i18n:domain="ui">Email</tal:block></p>\n
-              <p\n
-              tal:condition="here/portal_membership/isAnonymousUser"><tal:block\n
-              i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
-            </div>\n
-            <div>\n
-              <p><input type="text" size="20" id="__ac_name" name="__ac_name"\n
-              class="autofocus"/></p>\n
-              <p tal:condition="here/portal_membership/isAnonymousUser"><input\n
-              type="password" size="20" id="password" name="__ac_password"\n
-              class="autofocus"/></p>\n
-            </div>\n
+          <div>\n
+            <p><input type="text" size="20" id="__ac_name" name="__ac_name"\n
+            class="autofocus"/></p>\n
+            <p tal:condition="here/portal_membership/isAnonymousUser"><input\n
+            type="password" size="20" id="password" name="__ac_password"\n
+            class="autofocus"/></p>\n
           </div>\n
         </div>\n
         <div class="clear"></div>\n
@@ -90,7 +88,19 @@ Description:\n
         </div>\n
       </div>\n
       <div class="fields" tal:condition="not:here/portal_membership/isAnonymousUser">\n
-        Here will be tracking form, work in progress...\n
+        <div>\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Request Number</tal:block></p>\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">PIN</tal:block></p>\n
+        </div>\n
+        <div>\n
+          <p><input type="text" size="20" name="request_number" class="autofocus"/></p>\n
+          <p><input type="password" size="20" id="pin" name="password" class="autofocus"/></p>\n
+        </div>\n
+        <div class="clear"></div>\n
+        <div id="track_button">\n
+          <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+          value="Track" name="EGov_goToDocument:method"/>\n
+        </div>\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n

@@ -47,7 +47,10 @@
 
   <div class="adminSection" tal:define="actions request/actions">\n
     <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
-  </div>
+    <div class="clear">\n
+    </div>\n
+  </div>\n
+
 
 ]]></string> </value>
         </item>

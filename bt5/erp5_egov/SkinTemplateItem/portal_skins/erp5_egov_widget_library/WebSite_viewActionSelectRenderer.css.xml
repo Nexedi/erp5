@@ -64,8 +64,18 @@
 ========================================================================================*/\n
 .header .widget .adminSection select{\n
   width: 122px;\n
-  margin-left:680px;\n
-  margin-top: 10px;\n
+/*  margin-left:680px;\n
+  margin-top: 10px;*/\n
+  margin-top: -10px;\n
+  float: right;\n
+}\n
+\n
+.header .widget .adminSection{\n
+}\n
+\n
+.document .actions {\n
+  overflow:visible;\n
+\n
 }\n
 \n
 .header .widget .adminSection button{\n
