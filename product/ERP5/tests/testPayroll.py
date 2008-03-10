@@ -355,15 +355,11 @@ class TestPayrollMixin(ERP5TypeTestCase):
     '''
     slice = model.newCell(slice, portal_type='Pay Sheet Model Slice', 
         base_id=base_id)
-    if slice is not None:
-      slice.setQuantityRangeMax(max_value)
-      slice.setQuantityRangeMin(min_value)
-
-      get_transaction().commit()
-      slice.reindexObject()
-      self.tic()
-      return slice
-    return None
+    slice.setQuantityRangeMax(max_value)
+    slice.setQuantityRangeMin(min_value)
+    get_transaction().commit()
+    self.tic()
+    return slice
 
   def addAllSlices(self, model):
     '''
@@ -1071,6 +1067,12 @@ class TestPayroll(TestPayrollMixin):
     model_company.edit(variation_settings_category_list=
         self.variation_settings_category_list)
 
+    model_company_alt = self.paysheet_model_module.newContent(
+        id='model_company_alt',
+        portal_type='Pay Sheet Model')
+    model_company_alt.edit(variation_settings_category_list=
+        self.variation_settings_category_list)
+
     model_country = self.paysheet_model_module.newContent(id='model_country',
         portal_type='Pay Sheet Model')
     model_country.edit(variation_settings_category_list=
@@ -1084,7 +1086,9 @@ class TestPayroll(TestPayrollMixin):
     model_company.updateCellRange(base_id='cell')
     self.addSlice(model_company, 'salary_range/%s' % \
         self.france_settings_slice_b, 2, 3)
-    self.addSlice(model_company, 'salary_range/%s' % \
+
+    model_company_alt.updateCellRange(base_id='cell')
+    self.addSlice(model_company_alt, 'salary_range/%s' % \
         self.france_settings_forfait, 20, 30)
 
     model_country.updateCellRange(base_id='cell')
@@ -1092,7 +1096,7 @@ class TestPayroll(TestPayrollMixin):
         self.france_settings_slice_c, 4, 5)
     
     # inherite from each other
-    model_employee.setSpecialiseValue(model_company)
+    model_employee.setSpecialiseValueList((model_company, model_company_alt))
     model_company.setSpecialiseValue(model_country)
 
 
@@ -1123,8 +1127,8 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(cell_c.getQuantityRangeMin(), 4)
     self.assertEqual(cell_c.getQuantityRangeMax(), 5)
 
-    # check model_company could access just it's own cell and this of the country
-    # model
+    # check model_company and model_company_alt could access just it's own cell
+    # and this of the country model
     cell_a = model_company.getCell('salary_range/%s' % \
                         self.france_settings_slice_a)
     self.assertEqual(cell_a, None)
@@ -1135,7 +1139,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(cell_b.getQuantityRangeMin(), 2)
     self.assertEqual(cell_b.getQuantityRangeMax(), 3)
 
-    cell_forfait = model_company.getCell('salary_range/%s' % \
+    cell_forfait = model_company_alt.getCell('salary_range/%s' % \
                         self.france_settings_forfait)
     self.assertNotEqual(cell_forfait, None)
     self.assertEqual(cell_forfait.getQuantityRangeMin(), 20)

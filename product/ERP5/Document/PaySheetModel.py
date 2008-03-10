@@ -77,8 +77,11 @@ class PaySheetModel(TradeCondition, XMLMatrix):
     cell = XMLMatrix.getCell(self, *kw, **kwd)
 
     # if cell not found, look on the inherited models
-    if cell is None and self.getSpecialiseValue() is not None:
-      cell = self.getSpecialiseValue().getCell(*kw, **kwd)
+    if cell is None:
+      for specialised_model in self.getSpecialiseValueList():
+        cell = specialised_model.getCell(*kw, **kwd)
+        if cell is not None:
+          return cell
     return cell
 
 
