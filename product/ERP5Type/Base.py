@@ -1063,7 +1063,7 @@ class Base( CopyContainer,
                        accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type,
                        checked_permission)
     if acquisition_key in tv:
-      return null_value
+      return null_value[0]
 
     tv[acquisition_key] = 1
 
@@ -2388,19 +2388,24 @@ class Base( CopyContainer,
                             'getCompactTitle')
   def getCompactTitle(self):
     """
-    Returns the translated short title or the reference or
-    the translated title or the ID by order of priority
-
-    NOTE: It could be useful to make this method overridable
-    with a type methode.
+    Returns the first non-null value from the following:
+    - "getCompactTitle" type based method
+    - short title
+    - reference
+    - title
+    - id
     """
+    method = self._getTypeBasedMethod('getCompactTitle')
+    if method is not None:
+      r = method()
+      if r: return r
     if self.hasShortTitle():
       r = self.getShortTitle()
       if r: return r
     if self.hasReference():
       r = self.getReference()
       if r: return r
-    r = self.getTitle() # No need to test existence since all Base instances have this method
+    r = self._baseGetTitle() # No need to test existence since all Base instances have this method
     if r: return r      # Also useful whenever title is calculated
     return self.getId()
 
@@ -2408,12 +2413,24 @@ class Base( CopyContainer,
                             'getCompactTranslatedTitle')
   def getCompactTranslatedTitle(self):
     """
-    Returns the translated short title or the reference or
-    the translated title or the ID by order of priority
-
-    NOTE: It could be useful to make this method overridable
-    with a type methode.
+    Returns the first non-null value from the following:
+    - "getTranslatedCompactTitle" type based method
+    - "getCompactTitle" type based method
+    - translated short title
+    - short title
+    - reference
+    - translated title
+    - title
+    - id
     """
+    method = self._getTypeBasedMethod('getTranslatedCompactTitle')
+    if method is not None:
+      r = method()
+      if r: return r
+    method = self._getTypeBasedMethod('getCompactTitle')
+    if method is not None:
+      r = method()
+      if r: return r
     if self.hasShortTitle():
       r = self.getTranslatedShortTitle()
       if r: return r
@@ -2422,7 +2439,7 @@ class Base( CopyContainer,
     if self.hasReference():
       r = self.getReference()
       if r: return r
-    r = self.getTranslatedTitle() # No need to test existence since all Base instances have this method
+    r = self._baseGetTranslatedTitle() # No need to test existence since all Base instances have this method
     if r: return r                # Also useful whenever title is calculated
     return self.getId()
   
@@ -2430,9 +2447,13 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.AccessContentsInformation, 'getIntId')
   def getIntId(self):
     try:
-      return int(self.getId())
+      id_string = self.getId()
+      return int(id_string)
     except (ValueError, TypeError):
-      return None
+      try:
+        return int(id_string, 16)
+      except (ValueError, TypeError):
+        return None
 
   # Default views - the default security in CMFCore
   # is View - however, security was not defined on
