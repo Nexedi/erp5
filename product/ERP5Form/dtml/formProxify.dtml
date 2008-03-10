@@ -4,10 +4,16 @@
 <dtml-let form_field_list=getFormFieldList>
 
 <p class="form-help">
-Proxify non-proxy fields.
+Proxify non-proxy fields.<br/>
+This tool will keep values on fields if they are different from the target
+field.<br/>
+If you don't want this behaviour, check the <em>Delegate values</em> checkbox
+below and all values will be delegated to the proxy target.
 </p>
 
 <form action="proxifyField" method="POST">
+
+Delegate values <input type="checkbox" name="force_delegate"> <br/>
 
 <table border="2">
 <tr>

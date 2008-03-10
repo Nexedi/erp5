@@ -801,8 +801,12 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
       return [f for f in self.objectValues() if f.meta_type == 'ProxyField']
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
-    def proxifyField(self, field_dict=None, REQUEST=None):
-        """Convert fields to proxy fields"""
+    def proxifyField(self, field_dict=None, force_delegate=False, REQUEST=None):
+        """Convert fields to proxy fields
+        If the field value is different from the proxyfield value, the value is
+        kept on the proxyfield, otherwise it is delegated. If you specify
+        force_delegate, values will be delegated even if they are different
+        """
         from Products.ERP5Form.ProxyField import ProxyWidget
 
         def copy(_dict):
@@ -833,7 +837,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         def remove_same_value(new_dict, target_dict):
             for key, value in new_dict.items():
                 target_value = target_dict.get(key)
-                if is_equal(value, target_value):
+                if force_delegate or is_equal(value, target_value):
                     del new_dict[key]
             return new_dict
 

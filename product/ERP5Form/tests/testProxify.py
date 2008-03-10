@@ -141,6 +141,19 @@ class TestProxify(unittest.TestCase):
     template_field.values['title'] = 'Region'
     self.assertEqual(field.get_value('title'), 'Region')
 
+  def test_force_delegate(self):
+    self.person_view.proxifyField({'my_name':'Base_view.my_string_field'},
+                                  force_delegate=1)
+
+    field = self.person_view.my_name
+    self.assertEqual(field.meta_type, 'ProxyField')
+    self.assertEqual(field.get_value('form_id'), 'Base_view')
+    self.assertEqual(field.get_value('field_id'), 'my_string_field')
+    self.assertEqual(field.is_delegated('title'), True)
+    self.assertEqual(field.is_delegated('size'), True)
+    self.assertEqual(field.is_delegated('enabled'), True)
+    self.assertEqual(field.is_delegated('description'), True)
+
   def test_unproxify(self):
     #Proxify First
     self.address_view.proxifyField({'my_region':'Base_view.my_list_field'})
