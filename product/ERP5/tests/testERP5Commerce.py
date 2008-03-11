@@ -78,7 +78,6 @@ class TestCommerce(ERP5TypeTestCase):
     user = uf.getUserById('ivan').__of__(uf)
     newSecurityManager(None, user)
 
- 
   def getBusinessTemplateList(self):
     """
       Return the list of required business templates.
@@ -105,6 +104,11 @@ class TestCommerce(ERP5TypeTestCase):
     portal = self.getPortal()
     request = self.app.REQUEST
     default_product = self.getDefaultProduct()
+    
+    # XXX: update cache manually only once in first test
+    # in normal Zope it will be updated at startup
+    # This is needed as Commerce uses its own Cache Factory
+    portal.portal_caches.updateCache()
     
     # set 'session_id' to simulate browser (cookie) environment 
     request.set('session_id', SESSION_ID)
@@ -135,7 +139,6 @@ class TestCommerce(ERP5TypeTestCase):
     # add in two speps same product and check that we do not create
     # new Sale Order Line but just increase quantity on existing one
     portal.Resource_addToShoppingCart(default_product, 1)
-    portal.Resource_addToShoppingCart(default_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_items))
     self.assertEquals(2, shoppping_cart_items[0].getQuantity())
@@ -159,7 +162,6 @@ class TestCommerce(ERP5TypeTestCase):
     request.set('session_id', SESSION_ID)
     
     # add second diff product and check that we create new Sale Order Line 
-    portal.Resource_addToShoppingCart(default_product, 2)
     portal.Resource_addToShoppingCart(another_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(2, len(shoppping_cart_items))
@@ -187,8 +189,6 @@ class TestCommerce(ERP5TypeTestCase):
     another_product = self.getDefaultProduct(id = '2')
     request.set('session_id', SESSION_ID)
     
-    portal.Resource_addToShoppingCart(default_product, 2)
-    portal.Resource_addToShoppingCart(another_product, 1)
     shopping_cart = portal.SaleOrder_getShoppingCart()
     self.assertEquals(40.0, \
          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice()))
