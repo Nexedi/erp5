@@ -150,7 +150,9 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     getInventoryList = self.getPortalObject()\
                             .portal_simulation.getInventoryList
     section_uid = self.getDestinationSectionUid()
-    precision =  self.getDestinationSectionValue()\
+    precision = 2
+    if section_uid is not None:
+      precision =  self.getDestinationSectionValue()\
                         .getPriceCurrencyValue().getQuantityPrecision()
     default_inventory_params = dict(
                         to_date=self.getStartDate().earliestTime(),
