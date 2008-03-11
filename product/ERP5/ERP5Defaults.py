@@ -165,6 +165,10 @@ portal_item_type_list = ()
 
 portal_discount_type_list = ()
 
+portal_product_type_list = ('Product', 'Component')
+
+portal_service_type_list = ('Service',)
+
 portal_alarm_type_list = ('Supply Alarm Line','Alarm')
 
 portal_payment_condition_type_list = ('Condition Paiement',)

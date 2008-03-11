@@ -784,6 +784,24 @@ class ERP5Site(FolderMixIn, CMFSite):
            self._getPortalConfiguration('portal_discount_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalProductTypeList')
+  def getPortalProductTypeList(self):
+    """
+      Return physical goods types.
+    """
+    return self._getPortalGroupedTypeList('product') or \
+           self._getPortalConfiguration('portal_product_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalServiceTypeList')
+  def getPortalServiceTypeList(self):
+    """
+      Return immaterial services types.
+    """
+    return self._getPortalGroupedTypeList('service') or \
+           self._getPortalConfiguration('portal_service_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalAlarmTypeList')
   def getPortalAlarmTypeList(self):
     """
