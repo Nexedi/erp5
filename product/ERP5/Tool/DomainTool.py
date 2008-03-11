@@ -289,7 +289,7 @@ class DomainTool(BaseTool):
       """
       # get static domain
       object_list = list(parent.objectValues())
-      # get dynamic object genretade from script
+      # get dynamic object generated from script
       object_list.extend(parent.getDomainGeneratorList(**kw))
       return object_list
 
