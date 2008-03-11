@@ -175,45 +175,6 @@ class WebSection(Domain, PermanentURLMixIn):
       return self.getContainerLayout()
 
     # WebSection API
-    security.declareProtected(Permissions.View, 'getDocumentValue')
-    def getDocumentValue(self, name=None, portal=None, **kw):
-      """
-        Return the default document with the given
-        name. The name parameter may represent anything
-        such as a document reference, an identifier,
-        etc.
-
-        If name is not provided, the method defaults
-        to returning the default document by calling
-        getDefaultDocumentValue.
-
-        kw parameters can be useful to filter content
-        (ex. force a given validation state)
-
-        This method must be implemented through a
-        portal type dependent script:
-          WebSection_getDocumentValue
-      """
-      if name is None:
-        return self.getDefaultDocumentValue()
-
-      cache = getReadOnlyTransactionCache(self)
-      method = None
-      if cache is not None:
-        key = ('getDocumentValue', self)
-        try:
-          method = cache[key]
-        except KeyError:
-          pass
-
-      if method is None: method = self._getTypeBasedMethod('getDocumentValue',
-                                        fallback_script_id='WebSection_getDocumentValue')
-
-      if cache is not None:
-        if cache.get(key, MARKER) is MARKER: cache[key] = method
-
-      return method(name, portal=portal, **kw)
-
     security.declareProtected(Permissions.View, 'getDefaultDocumentValue')
     def getDefaultDocumentValue(self):
       """
