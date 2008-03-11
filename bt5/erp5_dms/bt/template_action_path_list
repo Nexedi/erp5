@@ -130,7 +130,6 @@ Text | jump_to_successor
 Text | jump_to_wiki_predecessor
 Text | jump_to_wiki_successor
 Text | local_permission
-Text | metadata
 Text | print
 Text | related_document
 Text | suggest_reference
