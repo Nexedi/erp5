@@ -67,149 +67,49 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# This script search a trade condition matching to the order\n
-# and try to complete some fields\n
+# This script searches for a trade condition matching the order\n
+# and tries to complete some fields\n
+\n
 order = context\n
-trade_condition_list = []\n
 N_ = context.Base_translateString\n
-\n
 trade_condition_portal_type = \'Purchase Trade Condition\'\n
-trade_condition_list = order.getSpecialiseValueList(portal_type=(\n
-                                             trade_condition_portal_type,))\n
 \n
-if len(trade_condition_list)==0:\n
-  # Search a matching Trade Condition\n
-  trade_condition_list = context.portal_domains.searchPredicateList(order,\n
-        portal_type=(\'Purchase Trade Condition\',), test=0)\n
-  \n
-# Results\n
+trade_condition_list = order.getSpecialiseValueList(\n
+    portal_type=trade_condition_portal_type)\n
+\n
+tested_base_category_list = [\n
+  \'source_section\', \'destination_section\',\n
+  \'source\', \'destination\',\n
+]\n
+count = len(tested_base_category_list)\n
+\n
+# if no date is defined, use today\'s date to retrieve predicate that define start_date_range_min/max\n
+if order.getStartDate() is None:\n
+  predicate_context = order.asContext(start_date=DateTime())\n
+else:\n
+  predicate_context = order\n
+\n
+while count > 0 and len(trade_condition_list) == 0:\n
+  trade_condition_list = context.portal_domains.searchPredicateList(\n
+      predicate_context, portal_type=trade_condition_portal_type,\n
+      tested_base_category_list=tested_base_category_list[:count])\n
+  count -= 1\n
+\n
 if len(trade_condition_list ) == 0 :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
-               , \'portal_status_message=\'+ N_(\'No Trade Condition.\'))\n
-elif len(trade_condition_list ) > 1 :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
-               , \'portal_status_message=\' + N_(\'Too many Trade Conditions.\'))\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id,\n
+      \'portal_status_message=\' + N_(\'No Trade Condition.\'))\n
 else :\n
+  # if more than one trade condition is found, simply apply the first one\n
   trade_condition=trade_condition_list[0].getObject()\n
 \n
-  # Update Order Profile\n
-  categories = order.getCategoryList()\n
-  # Destination\n
-  if order.getDestinationValue() == None and \\\n
-          trade_condition.getDestinationValue() is not None :\n
-    categories += (\'destination/\'+trade_condition.getDestination(),)\n
-  # destination_decision\n
-  if (order.getDestinationDecisionValue() is None) and \\\n
-     (trade_condition.getDestinationDecisionValue() is not None) :\n
-    categories += (\'destination_decision/\'+\n
-                              trade_condition.getDestinationDecision(),)\n
-  # destination_administration\n
-  if (order.getDestinationAdministrationValue() is None) and \\\n
-     (trade_condition.getDestinationAdministrationValue() is not None) :\n
-    categories += (\'destination_administration/\'+\n
-                              trade_condition.getDestinationAdministration(),)\n
-  # destination_payment\n
-  if (order.getDestinationPaymentValue() is None) and \\\n
-     (trade_condition.getDestinationPaymentValue() is not None) :\n
-    categories += (\'destination_payment/\'+trade_condition.getDestinationPayment(),)\n
-\n
-  # source\n
-  if order.getSourceValue() is None :\n
-    if trade_condition.getSourceValue() is not None :\n
-      categories += (\'source/\'+trade_condition.getSource(),)  \n
-  # source_section\n
-  if order.getSourceSectionValue() is None :\n
-    # if source_section is not defined on TradeCondition, use Order source\n
-    if trade_condition.getSourceSectionValue() is not None :\n
-      categories += (\'source_section/\'+trade_condition.getSourceSection(),)\n
-    elif trade_condition.getSourceValue() is not None:\n
-      categories += (\'source_section/\' + trade_condition.getSource(),)\n
-  # source_decision\n
-  if order.getSourceDecisionValue(portal_type=\'Organisation\') is None :\n
-    # if source_decision is not defined on TradeCondition, use Order source\n
-    if trade_condition.getSourceDecisionValue(portal_type=\'Organisation\')\\\n
-       is not None :\n
-      categories += (\'source_decision/\'+trade_condition.getSourceDecision(\n
-                                  portal_type=\'Organisation\'),)\n
-    elif order.getSourceValue() is not None:\n
-      categories += (\'source_decision/\'+order.getSource(),)\n
-  # source_administration\n
-  if order.getSourceAdministrationValue() is None :\n
-    # if source_administration is not defined on TradeCondition,\n
-    # use Order source\n
-    if trade_condition.getSourceAdministrationValue() is not None :\n
-      categories += (\'source_administration/\' +\n
-                    trade_condition.getSourceAdministration(),)\n
-    elif order.getSourceValue() is not None:\n
-      categories += (\'source_administration/\'+order.getSource(),)\n
-  # source_payment\n
-  if order.getSourcePaymentValue() is None :\n
-    # if source_payment is not defined on TradeCondition, use Order source\n
-    if trade_condition.getSourcePaymentValue() is not None :\n
-      categories += (\'source_payment/\'+trade_condition.getSourcePayment(),)\n
-    elif order.getSourceValue() is not None:\n
-      categories += (\'source_payment/\'+order.getSource(),)\n
-\n
-  # Copy Price Currency\n
-  if (order.getPriceCurrencyValue() is None) and \\\n
-     (trade_condition.getPriceCurrencyValue() is not None) :\n
-    categories += (\'price_currency/\'+trade_condition.getPriceCurrency(),)\n
-\n
-  # Copy Incoterm\n
-  if (order.getIncotermValue() is None) and \\\n
-     (trade_condition.getIncotermValue() is not None) :\n
-    categories += (trade_condition.getIncoterm(),)\n
-\n
-  # Copy Delivery Mode\n
-  if (order.getDeliveryModeValue() is None) and \\\n
-     (trade_condition.getDeliveryModeValue() is not None) :\n
-    categories += (trade_condition.getDeliveryMode(),)\n
-\n
-  destination_decision_source_reference = \'\'\n
-  if order.hasDestinationDecisionSourceReference() :\n
-    destination_decision_source_reference = \\\n
-          order.getDestinationDecisionSourceReference()\n
-  elif trade_condition.hasDestinationDecisionSourceReference() :\n
-    destination_decision_source_reference = \\\n
-          trade_condition.getDestinationDecisionSourceReference()\n
-\n
-  # copy PaymentCondition if no one is defined on Order\n
-  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
-  if len(order.contentIds(filter = filter_dict)) == 0 :\n
-    to_copy = trade_condition.contentIds(filter = filter_dict)\n
-    if len(to_copy)>0 :\n
-     copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
-     new_id_list = order.manage_pasteObjects(copy_data)\n
-\n
-  # copy Discount if no one is defined on Order\n
-  filter_dict = {\'portal_type\': \'Discount\'}\n
-  if len(order.contentIds(filter = filter_dict)) == 0 :\n
-    to_copy=[]\n
-    to_copy=trade_condition.contentIds(filter = filter_dict)\n
-    if len(to_copy)>0 :\n
-     copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
-     new_id_list = order.manage_pasteObjects(copy_data)\n
-\n
-  # Update specialise value of Order\n
-  final_categories = ()\n
-  for category_item in categories :\n
-    if category_item.find(\'specialise/\') == (-1):\n
-      final_categories += (category_item,)\n
-\n
-  final_categories += (\'specialise/\'+trade_condition.getRelativeUrl(),)\n
-\n
-  order.edit(\n
-      categories = final_categories,\n
-      destination_decision_source_reference =\n
-              destination_decision_source_reference )\n
+  order.Order_applyTradeCondition(trade_condition, force=force)\n
 \n
   redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
-               \'portal_status_message=\'+N_(\'Order updated.\'))\n
+      \'portal_status_message=\' + N_(\'Order updated.\'))\n
 \n
 if batch_mode:\n
-  return None\n
-else:\n
-  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
+  return\n
+context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
 
 
 ]]></string> </value>
@@ -228,7 +128,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, batch_mode=0</string> </value>
+            <value> <string>form_id, batch_mode=0, force=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -248,7 +148,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -256,27 +156,23 @@ else:\n
                           <tuple>
                             <string>form_id</string>
                             <string>batch_mode</string>
+                            <string>force</string>
                             <string>context</string>
                             <string>order</string>
-                            <string>trade_condition_list</string>
                             <string>_getattr_</string>
                             <string>N_</string>
                             <string>trade_condition_portal_type</string>
+                            <string>trade_condition_list</string>
+                            <string>tested_base_category_list</string>
                             <string>len</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
-                            <string>trade_condition</string>
-                            <string>categories</string>
+                            <string>count</string>
                             <string>None</string>
+                            <string>DateTime</string>
+                            <string>predicate_context</string>
+                            <string>_getitem_</string>
                             <string>_inplacevar_</string>
-                            <string>destination_decision_source_reference</string>
-                            <string>filter_dict</string>
-                            <string>to_copy</string>
-                            <string>copy_data</string>
-                            <string>new_id_list</string>
-                            <string>final_categories</string>
-                            <string>_getiter_</string>
-                            <string>category_item</string>
+                            <string>redirect_url</string>
+                            <string>trade_condition</string>
                           </tuple>
                         </value>
                     </item>
@@ -290,6 +186,7 @@ else:\n
             <value>
               <tuple>
                 <int>0</int>
+                <int>1</int>
               </tuple>
             </value>
         </item>

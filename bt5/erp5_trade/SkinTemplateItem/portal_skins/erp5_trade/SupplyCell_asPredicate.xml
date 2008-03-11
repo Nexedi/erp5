@@ -72,6 +72,12 @@ if context.getSource():\n
 if context.getDestination():\n
   base_category_tuple += (\'destination\',)\n
 \n
+#backwards compatibility\n
+mapped_value_property_list = context.getMappedValuePropertyList()\n
+if not \'priced_quantity\' in mapped_value_property_list:\n
+  mapped_value_property_list.append(\'priced_quantity\')\n
+  context.setMappedValuePropertyList(mapped_value_property_list)\n
+\n
 return context.generatePredicate(membership_criterion_base_category_list = base_category_tuple,\n
                                                  criterion_property_list = (\'start_date\',))\n
 </string> </value>
@@ -128,6 +134,7 @@ return context.generatePredicate(membership_criterion_base_category_list = base_
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>_inplacevar_</string>
+                            <string>mapped_value_property_list</string>
                           </tuple>
                         </value>
                     </item>

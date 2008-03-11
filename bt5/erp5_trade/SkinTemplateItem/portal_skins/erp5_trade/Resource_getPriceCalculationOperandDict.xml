@@ -117,7 +117,7 @@ if base_price not in (None, \'\'):\n
   unit_base_price *= sum_surcharge_ratio\n
 \n
   # Divide by the priced quantity\n
-  priced_quantity = context.getPricedQuantity()\n
+  priced_quantity = price_parameter_dict[\'priced_quantity\']\n
   unit_base_price /= priced_quantity\n
 \n
 # Return result\n

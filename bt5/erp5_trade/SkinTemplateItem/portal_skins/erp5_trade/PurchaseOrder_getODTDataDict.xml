@@ -205,7 +205,7 @@ data_dict = {\n
       context.getDestinationDecision() and context.getDestinationDecisionValue().getFaxText() or \'\'),\n
   \'destination_decision_email\': getEmail(context.getDestinationDecision() and context.getDestinationDecisionValue().getEmailText() or \'\'),\n
 \n
-  \'reference\': context.getDestinationReference() or \'\',\n
+  \'reference\': context.getReference() or \'\',\n
   \'start_date\': context.getStartDate() or \'\',\n
   \'currency\': context.getPriceCurrencyReference() or \'\',\n
   \'payment_condition\': getPaymentConditionText(context),\n
@@ -215,7 +215,7 @@ data_dict = {\n
   \'total_price_novat\': total_price,\n
   \'total_vat\': total_vat,\n
   \'total_price_vat\': total_price + total_vat,\n
-  \'comment\': getFieldAsString(context.getComment()),\n
+  \'description\': getFieldAsString(context.getDescription()),\n
 \n
   \'line_list\': line_list,\n
 }\n

@@ -114,6 +114,11 @@
                         <string>my_destination_title</string>
                         <string>my_source_section_title</string>
                         <string>my_destination_reference</string>
+                        <string>listbox</string>
+                        <string>my_reference</string>
+                        <string>my_source_reference</string>
+                        <string>my_destination_section</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>

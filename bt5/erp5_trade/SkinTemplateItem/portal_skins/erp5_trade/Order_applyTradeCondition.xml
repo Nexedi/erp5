@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+order = context\n
+\n
+# copy categories\n
+category_list = [\n
+  \'source\', \'source_section\', \'source_decision\',\n
+  \'source_administration\', \'source_payment\', \'source_project\',\n
+  \'destination\', \'destination_section\', \'destination_decision\',\n
+  \'destination_administration\', \'destination_payment\', \'destination_project\',\n
+  \'price_currency\', \'incoterm\', \'delivery_mode\',\n
+]\n
+new_category_dict = {}\n
+\n
+for category in category_list:\n
+  if force or not order.getPropertyList(category):\n
+    value_list = trade_condition.getPropertyList(category)\n
+    if value_list:\n
+     if len(value_list) == 1:\n
+       new_category_dict[category] = value_list[0]\n
+     else:\n
+       new_category_dict[\'%s_list\' % category] = value_list\n
+\n
+def copyObjects(portal_type):\n
+  filter_dict = {\'portal_type\': portal_type}\n
+  if len(order.contentIds(filter=filter_dict)) == 0:\n
+    to_copy = trade_condition.contentIds(filter=filter_dict)\n
+    if len(to_copy) > 0 :\n
+      copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+      order.manage_pasteObjects(copy_data)\n
+\n
+# copy payments if none exist\n
+copyObjects(\'Payment Condition\')\n
+\n
+# copy discounts if none exist\n
+copyObjects(\'Discount\')\n
+\n
+# set specialise\n
+new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
+\n
+order.edit(**new_category_dict)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>trade_condition, force=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>trade_condition</string>
+                            <string>force</string>
+                            <string>context</string>
+                            <string>order</string>
+                            <string>category_list</string>
+                            <string>new_category_dict</string>
+                            <string>_getiter_</string>
+                            <string>category</string>
+                            <string>_getattr_</string>
+                            <string>value_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>copyObjects</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Order_applyTradeCondition</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

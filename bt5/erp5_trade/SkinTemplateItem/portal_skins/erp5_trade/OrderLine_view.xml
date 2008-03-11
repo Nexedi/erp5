@@ -132,6 +132,7 @@
                         <string>my_quantity_unit</string>
                         <string>my_price</string>
                         <string>my_start_date</string>
+                        <string>my_source_title</string>
                         <string>my_stop_date</string>
                         <string>my_destination_title</string>
                         <string>my_total_quantity</string>
@@ -161,6 +162,16 @@
         <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>store_order</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>reference</string>
+                <string>int_index</string>
+              </list>
+            </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>

@@ -96,6 +96,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_int_index</string>
+                        <string>my_discount</string>
+                        <string>my_discount_ratio</string>
                       </list>
                     </value>
                 </item>
@@ -105,8 +107,6 @@
                       <list>
                         <string>my_discount_type</string>
                         <string>my_immediate_discount</string>
-                        <string>my_discount_ratio</string>
-                        <string>my_discount</string>
                       </list>
                     </value>
                 </item>

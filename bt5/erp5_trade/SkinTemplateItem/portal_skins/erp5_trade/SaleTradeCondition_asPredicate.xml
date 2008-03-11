@@ -65,8 +65,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.generatePredicate(multimembership_criterion_base_category_list = (\'destination\',\'destination_section\',\'group\'),\n
-                                                      criterion_property_list = (\'start_date\',))\n
+            <value> <string>category_list = [\n
+  \'source\', \'source_section\',\n
+  \'destination\', \'destination_section\',\n
+]\n
+criterion_list = []\n
+\n
+for category in category_list:\n
+  if context.getPropertyList(category):\n
+    criterion_list.append(category)\n
+\n
+date_context=context.asContext(\n
+  start_date_range_min=context.getEffectiveDate(),\n
+  start_date_range_max=context.getExpirationDate(),\n
+)\n
+\n
+return date_context.generatePredicate(multimembership_criterion_base_category_list=criterion_list,\n
+                                                      criterion_property_list=(\'start_date\',))\n
 </string> </value>
         </item>
         <item>
@@ -117,8 +132,13 @@
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>category_list</string>
+                            <string>criterion_list</string>
+                            <string>_getiter_</string>
+                            <string>category</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>date_context</string>
                           </tuple>
                         </value>
                     </item>

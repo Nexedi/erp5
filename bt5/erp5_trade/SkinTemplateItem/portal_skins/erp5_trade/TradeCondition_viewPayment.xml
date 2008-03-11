@@ -88,10 +88,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_efficiency</string>
-                        <string>listbox_payment_date</string>
-                        <string>listbox_payment_end_of_month</string>
-                        <string>listbox_payment_term</string>
+                        <string>my_payment_condition_source_payment</string>
+                        <string>my_payment_condition_destination_payment</string>
+                        <string>listbox_int_index</string>
+                        <string>my_payment_condition_quantity</string>
+                        <string>my_payment_condition_efficiency</string>
                       </list>
                     </value>
                 </item>
@@ -100,11 +101,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_payment_condition_quantity</string>
-                        <string>my_payment_condition_efficiency</string>
-                        <string>my_payment_condition_payment_date</string>
-                        <string>my_payment_condition_source_payment</string>
-                        <string>my_payment_condition_destination_payment</string>
                       </list>
                     </value>
                 </item>
@@ -113,10 +109,11 @@
                     <value>
                       <list>
                         <string>my_payment_condition_payment_mode</string>
+                        <string>my_payment_condition_trade_date</string>
+                        <string>my_payment_condition_payment_date</string>
                         <string>my_payment_condition_payment_term</string>
                         <string>my_payment_condition_payment_end_of_month</string>
                         <string>my_payment_condition_payment_additional_term</string>
-                        <string>my_payment_condition_trade_date</string>
                       </list>
                     </value>
                 </item>

@@ -100,6 +100,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_int_index</string>
+                        <string>my_discount_view_listbox</string>
                       </list>
                     </value>
                 </item>

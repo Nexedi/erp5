@@ -47,6 +47,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -87,7 +91,13 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_discount</string>
+                        <string>listbox_discount_ratio</string>
+                        <string>listbox_discount_type</string>
+                        <string>listbox_immediate_discount</string>
+                        <string>listbox_int_index</string>
+                      </list>
                     </value>
                 </item>
                 <item>

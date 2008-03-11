@@ -47,6 +47,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -81,7 +85,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -101,17 +107,17 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_section_title</string>
-                        <string>my_order</string>
-                        <string>my_received_date</string>
-                        <string>my_origin</string>
-                        <string>my_source_administration_title</string>
+                        <string>my_source_section</string>
+                        <string>my_source_title</string>
                         <string>my_source_decision_title</string>
-                        <string>my_errand_ratio</string>
+                        <string>my_segmentation</string>
+                        <string>my_received_date</string>
+                        <string>my_order</string>
+                        <string>my_origin</string>
                         <string>my_price_currency</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
-                        <string>my_segmentation</string>
+                        <string>my_specialise_title</string>
                       </list>
                     </value>
                 </item>
@@ -119,15 +125,15 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_reference</string>
+                        <string>my_reference</string>
+                        <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_decision_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_trade_condition_title</string>
+                        <string>my_total_price</string>
                         <string>my_comment</string>
-                        <string>total_price</string>
-                        <string>simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -153,6 +159,15 @@
         <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>store_order</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>reference</string>
+              </list>
+            </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>

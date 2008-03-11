@@ -75,38 +75,38 @@ activity_error = \'my_activity_error\'\n
 simulation_error = \'my_simulation_error\'\n
 try:\n
   for line in context.getMovementList():\n
-    if line.hasActivity(): raise activity_error\n
+    if line.hasActivity(): raise activity_error, line.getRelativeUrl()\n
     s_m_list = line.getOrderRelatedValueList()\n
-    if not s_m_list: raise simulation_error\n
+    if not s_m_list: raise simulation_error, line.getRelativeUrl()\n
     for s_m in s_m_list:\n
-      if s_m.hasActivity(): raise activity_error\n
+      if s_m.hasActivity(): raise activity_error, s_m.getRelativeUrl()\n
       a_r_list = [x for x in s_m.objectValues() if x.getSpecialiseValue().getPortalType() == \'Invoicing Rule\']\n
       if a_r_list:\n
         a_r = a_r_list[0]\n
-        if a_r.hasActivity(): raise activity_error\n
+        if a_r.hasActivity(): raise activity_error, a_r.getRelativeUrl()\n
         inv_s_m_list = a_r.objectValues()\n
         if inv_s_m_list:\n
           inv_s_m = inv_s_m_list[0]\n
-          if inv_s_m.hasActivity(): raise activity_error\n
+          if inv_s_m.hasActivity(): raise activity_error, inv_s_m.getRelativeUrl()\n
           acc_a_r_list = [x for x in inv_s_m.objectValues() if x.getSpecialiseValue().getPortalType() == \'Invoice Transaction Rule\']\n
           if acc_a_r_list:\n
             acc_a_r = acc_a_r_list[0]\n
-            if acc_a_r.hasActivity(): raise activity_error\n
+            if acc_a_r.hasActivity(): raise activity_error, acc_a_r.getRelativeUrl()\n
             acc_s_m_list = [x for x in acc_a_r.objectValues() if \'vat\' in x.getDestinationValue().getAccountType()]\n
             if acc_s_m_list:\n
               acc_s_m = acc_s_m_list[0]\n
-              if acc_s_m.hasActivity(): raise activity_error\n
-            else: raise simulation_error\n
-          else: raise simulation_error\n
-        else: raise simulation_error\n
-      else: raise simulation_error\n
-except activity_error:\n
+              if acc_s_m.hasActivity(): raise activity_error, acc_s_m.getRelativeUrl()\n
+            else: raise simulation_error, acc_a_r.getRelativeUrl()\n
+          else: raise simulation_error, inv_s_m.getRelativeUrl()\n
+        else: raise simulation_error, a_r.getRelativeUrl()\n
+      else: raise simulation_error, s_m.getRelativeUrl()\n
+except activity_error, url:\n
   context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(),\n
-      T_(\'Some activities are pending, please retry in a few moments.\')))\n
-except simulation_error:\n
+      T_(\'Some activities are pending (on %s), please retry in a few moments.\') % url ))\n
+except simulation_error, url:\n
   context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(),\n
-      T_(\'Simulation is missing, please retry in a few moments, and make sure you have left the %s state.\')\n
-      % T_(\'Draft\') ))\n
+      T_(\'Simulation is missing (on %s), please retry in a few moments, and make sure you have left the %s state.\')\n
+      % (url, T_(\'Draft\')) ))\n
 else:\n
   return context.PurchaseOrder_viewAsODT()\n
 </string> </value>
@@ -180,6 +180,7 @@ else:\n
                             <string>acc_a_r</string>
                             <string>acc_s_m_list</string>
                             <string>acc_s_m</string>
+                            <string>url</string>
                           </tuple>
                         </value>
                     </item>

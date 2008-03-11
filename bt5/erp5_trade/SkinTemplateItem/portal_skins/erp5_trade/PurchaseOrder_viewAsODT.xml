@@ -588,7 +588,7 @@ AAA=</string> </value>
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.6\'>\n
-                <table:table-cell table:style-name=\'Tableau3.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Comments; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
+                <table:table-cell table:style-name=\'Tableau3.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Notes; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
                   <text:p text:style-name=\'P2\'><span tal:replace=\'en_string\'/><span tal:omit-tag=\'\' tal:condition=\'python:my_string!=en_string\'> / <span tal:replace=\'my_string\'/></span>:</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
@@ -606,7 +606,7 @@ AAA=</string> </value>
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.7\'>\n
                 <table:table-cell table:style-name=\'Tableau3.A7\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'P3\' tal:content=\'python:data_dict["comment"]\'>my_description</text:p>\n
+                  <text:p text:style-name=\'P3\' tal:content=\'python:data_dict["description"]\'>my_description</text:p>\n
                 </table:table-cell>\n
                 <table:covered-table-cell/>\n
                 <table:covered-table-cell/>\n

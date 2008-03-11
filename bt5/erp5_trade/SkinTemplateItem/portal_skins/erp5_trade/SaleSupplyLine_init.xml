@@ -74,7 +74,8 @@ context.setMappedValuePropertyList([\n
                     \'base_price\', \'additional_price\',\n
                     \'discount_ratio\', \'exclusive_discount_ratio\',\n
                     \'surcharge_ratio\', \'variable_additional_price\',\n
-                    \'non_discountable_additional_price\'\n
+                    \'non_discountable_additional_price\',\n
+                    \'priced_quantity\',\n
 ])\n
 </string> </value>
         </item>
