@@ -75,7 +75,8 @@ class ImageFieldWidget(Widget.TextWidget):
         """
         # Url is already defined in value
         image = value
-        description = field.getDescription() or 'field_description'
+        description = field.get_value('description') or \
+                      field.get_value('title')
         display = field.get_value('image_display')
         format = field.get_value('image_format')
         resolution = field.get_value('image_resolution')
