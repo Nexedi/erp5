@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -71,14 +68,17 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 check_result = context.checkConsistency()\n
+message_list = []\n
 \n
-if check_result:\n
-  err = check_result[0]\n
-  if hasattr(err, \'getTranslatedMessage\'):\n
-    raise ValidationFailed, err.getTranslatedMessage()\n
+for err in check_result:\n
+  if getattr(err, \'getTranslatedMessage\', None) is not None:\n
+    message_list.append(err.getTranslatedMessage())\n
   else:\n
     # backward compatibility:\n
-    raise ValidationFailed, "%s: %s" % (err[4], err[3])\n
+    message.append(err[3])\n
+\n
+if message_list:\n
+  raise ValidationFailed, message_list\n
 </string> </value>
         </item>
         <item>
@@ -89,6 +89,12 @@ if check_result:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -124,11 +130,15 @@ if check_result:\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>check_result</string>
-                            <string>_getitem_</string>
+                            <string>message_list</string>
+                            <string>_getiter_</string>
                             <string>err</string>
-                            <string>hasattr</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>message</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

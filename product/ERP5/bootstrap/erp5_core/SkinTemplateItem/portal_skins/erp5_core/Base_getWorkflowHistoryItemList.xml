@@ -111,10 +111,12 @@ for workflow_item in workflow_item_list:\n
         else:\n
           value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value\n
     if display:\n
-      if key == \'error_message\' and not same_type(value, \'\'):\n
-        value = \'%s\' %value\n
-      elif key == \'error_message\' and same_type(value, \'\'):\n
+      if key == \'error_message\' and same_type(value, \'\'):\n
         value = context.Localizer.erp5_ui.gettext(value)\n
+      elif key == \'error_message\' and same_type(value, []):\n
+        value = \'. \'.join([\'%s\' % x for x in value])\n
+      elif key == \'error_message\':\n
+        value = \'%s\' % value\n
       elif same_type(value, \'\') and key in ( \'action\', \'state\' ): \n
         value = context.Localizer.erp5_ui.gettext(value)\n
     if value is marker:\n
@@ -226,6 +228,9 @@ return result\n
                             <string>compatibility_name</string>
                             <string>len</string>
                             <string>same_type</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>getattr</string>
                           </tuple>
                         </value>
