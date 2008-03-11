@@ -247,6 +247,17 @@ class TestAccounts(AccountingTestCase):
     doActionFor(account, 'validate_action')
     self.assertEquals('validated', account.getValidationState())
 
+  def test_isCreditAccount(self):
+    """Tests the 'credit_account' property on account, which was named
+    is_credit_account, which generated isIsCreditAccount accessor"""
+    account = self.portal.account_module.newContent(portal_type='Account')
+    # simulate an old object
+    account.is_credit_account = True
+    self.failUnless(account.isCreditAccount())
+    self.failUnless(account.getProperty('credit_account'))
+    
+    account.setCreditAccount(False)
+    self.failIf(account.isCreditAccount())
 
 
 class TestTransactionValidation(AccountingTestCase):
@@ -2820,18 +2831,6 @@ class TestAccounting(ERP5TypeTestCase):
                                     check_consistency=0)
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transaction, 'stop_action')
-
-  def test_Account_isCreditAccount(self):
-    """Tests the 'credit_account' property on account, which was named
-    is_credit_account, which generated isIsCreditAccount accessor"""
-    account = self.getAccountModule().newContent(portal_type='Account')
-    # simulate an old object
-    account.is_credit_account = True
-    self.failUnless(account.isCreditAccount())
-    self.failUnless(account.getProperty('credit_account'))
-    
-    account.setCreditAccount(False)
-    self.failIf(account.isCreditAccount())
 
   # tests for Invoice_createRelatedPaymentTransaction
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
