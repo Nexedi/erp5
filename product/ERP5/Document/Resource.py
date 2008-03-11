@@ -593,6 +593,7 @@ class Resource(XMLMatrix, Variated):
         'exclusive_discount_ratio': None,
         'variable_additional_price': [],
         'non_discountable_additional_price': [],
+        'priced_quantity': None,
       }
       if mapped_value is None:
         return price_parameter_dict
@@ -722,7 +723,7 @@ class Resource(XMLMatrix, Variated):
         unit_base_price = unit_base_price * sum_surcharge_ratio
       # Divide by the priced quantity
       if unit_base_price is not None:
-        priced_quantity = self.getPricedQuantity()
+        priced_quantity = price_parameter_dict['priced_quantity']
         unit_base_price = unit_base_price / priced_quantity
       # Return result
       if unit_base_price is not None:
