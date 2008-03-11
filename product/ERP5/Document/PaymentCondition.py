@@ -54,5 +54,6 @@ class PaymentCondition(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Amount
                       , PropertySheet.PaymentCondition
+                      , PropertySheet.SortIndex
                       )
 
