@@ -75,10 +75,12 @@ class ImageFieldWidget(Widget.TextWidget):
         """
         # Url is already defined in value
         image = value
+        description = field.getDescription() or 'field_description'
         display = field.get_value('image_display')
         format = field.get_value('image_format')
         resolution = field.get_value('image_resolution')
-        html_string = """<img src="%s?display=%s&format=%s&resolution=%s" />""" % (image, display, format,resolution)
+        html_string = """<img src="%s?display=%s&nbsp;format=%s&nbsp;resolution=%s" alt="%s"/>""" % \
+            (image, display, format,resolution, description)
         return html_string
 
 ImageFieldWidgetInstance = ImageFieldWidget()
