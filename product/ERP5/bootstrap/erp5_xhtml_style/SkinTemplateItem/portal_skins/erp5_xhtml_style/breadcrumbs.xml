@@ -207,7 +207,7 @@ obj = portal\n
 now = []\n
 module = True\n
 for name in relative:\n
-    obj = obj[name]\n
+    obj = obj.restrictedTraverse(name)\n
     now.append(name)\n
     if module:\n
       try:\n
@@ -297,7 +297,6 @@ return result\n
                             <string>module</string>
                             <string>_getiter_</string>
                             <string>name</string>
-                            <string>_getitem_</string>
                             <string>title</string>
                             <string>AttributeError</string>
                             <string>False</string>
