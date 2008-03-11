@@ -1378,10 +1378,18 @@ class ListBoxRenderer:
     new_param_dict['select_expression'] = self.getStatSelectExpression()
     selection = self.getSelection()
     selection.edit(params = new_param_dict)
-    result = selection(method = self.getStatMethod(), context = self.getContext(), REQUEST = self.request)
+
+    _result = {'value':None, 'called':False}
+    def getStatMethodResult():
+      """Stat method must be called only when necessary"""
+      if _result['called']:
+        return _result['value']
+      _result['value'] = selection(method = self.getStatMethod(), context = self.getContext(), REQUEST = self.request)
+      _result['called'] = True
+      return _result['value']
 
     # For each column, check the presense of a specific stat method. If not present,
-    # use the result obtained above.
+    # use getStatMethodResult defined above.
     value_list = []
     stat_column_dict = dict(self.getStatColumnList())
     for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
@@ -1400,7 +1408,7 @@ class ListBoxRenderer:
         processed_value = u''
       elif stat_method is None:
         try:
-          original_value = getattr(result[0], alias)
+          original_value = getattr(getStatMethodResult()[0], alias)
           processed_value = original_value
         except (IndexError, AttributeError, KeyError, ValueError):
           original_value = None
