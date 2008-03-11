@@ -1,3 +1,7 @@
+2008-03-11 fabien
+* hide Preference button on the workspace for annonymous users
+* add a login_form sript to override the existing one and permit to redirect on the appropriate page
+
 2008-03-10 fabien
 * add some controls on validation state, add two widgets to see pending requests and users documents, align the form on the right, but all other pages are centered, enhance listbox page template to handle custom listbox fields.
 
