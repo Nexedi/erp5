@@ -47,10 +47,16 @@ class Price:
             'acquisition_accessor_id'       : 'getPrice',
             'acquisition_depends'           : None,
             'mode'        : 'w' },
+        # priced_quantity should be acquired from cells to lines
         {   'id'          : 'priced_quantity',
             'description' : 'Number of units involved in base prices',
             'type'        : 'float',
             'default'     : 1.0,
+            'acquisition_base_category'     : ('parent',),
+            'acquisition_portal_type'       : Expression('portal/getPortalSupplyPathTypeList'),
+            'acquisition_copy_value'        : 0,
+            'acquisition_mask_value'        : 1,
+            'acquisition_accessor_id'       : 'getPricedQuantity',
             'mode'        : 'w' },
         # Asset Value Pricing
         {   'id'          : 'source_total_asset_price',
