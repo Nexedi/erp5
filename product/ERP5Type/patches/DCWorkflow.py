@@ -270,6 +270,7 @@ DCWorkflowDefinition.getWorklistVariableMatchDict = DCWorkflowDefinition_getWork
 
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""
+    __allow_access_to_unprotected_subobjects__ = {'msg': 1}
     def __init__(self, message_instance=None):
         """
         Redefine init in order to register the message class instance
