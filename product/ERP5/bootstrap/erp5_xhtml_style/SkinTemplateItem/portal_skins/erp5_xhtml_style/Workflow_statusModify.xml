@@ -123,9 +123,13 @@ try:\n
     doaction_param_list[\'workflow_action\'],\n
     **doaction_param_list)\n
 except ValidationFailed, error_message:\n
-  if hasattr(error_message, \'msg\'):\n
+  if getattr(error_message, \'msg\', None):\n
     # use of Message class to store message+mapping+domain\n
     message = error_message.msg\n
+    if same_type(message, []):\n
+      message = \'. \'.join(\'%s\' % x for x in message)\n
+    else:\n
+      message = str(message)\n
   else:\n
     message = str(error_message)\n
   return context.ERP5Site_redirect(\n
@@ -221,8 +225,8 @@ return context.ERP5Site_redirect(\n
                             <string>tuple</string>
                             <string>_apply_</string>
                             <string>error_message</string>
-                            <string>hasattr</string>
                             <string>message</string>
+                            <string>same_type</string>
                             <string>str</string>
                             <string>portal_status_message</string>
                           </tuple>
