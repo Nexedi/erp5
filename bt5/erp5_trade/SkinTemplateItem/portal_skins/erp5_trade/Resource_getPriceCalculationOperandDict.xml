@@ -118,7 +118,8 @@ if base_price not in (None, \'\'):\n
 \n
   # Divide by the priced quantity\n
   priced_quantity = price_parameter_dict[\'priced_quantity\']\n
-  unit_base_price /= priced_quantity\n
+  if priced_quantity not in (None, 0):\n
+    unit_base_price /= priced_quantity\n
 \n
 # Return result\n
 if unit_base_price is not None:\n
