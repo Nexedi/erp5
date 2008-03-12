@@ -43,39 +43,24 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!-- ============================================================== -->\n
 <!--\n
 Description:\n
-  This macro render a invitation to becom vip member panel.\n
+  This macro render an explanation of why it\'s important to become a member.\n
 -->\n
 \n
 <tal:block metal:define-macro="main">\n
-  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
-  <tal:block tal:condition="not:web_site_url">\n
-    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
-  </tal:block>\n
-  \n
-  <div class="become_vip_member">\n
-    <div class="title" i18n:domain="ui" i18n:translate="">\n
-      Become a VIP Member\n
-    </div>\n
-    <div class="become_vip_explanations">\n
-      <tal:block i18n:domain="ui" i18n:translate="">\n
-      Safi is a major Internet portal for performing administrative formalities\n
-      online. It is a quick and easy way to make a statement, or a request for\n
-      jutificatif,... without having to move or to queue. For more\n
-      information, please click\n
-      </tal:block>\n
-      <a href="eGov_RegisterInformations"  i18n:domain="ui" i18n:translate="">here</a>.\n
-    </div>\n
-    <tal:block metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
+  <div class="become_member_head section_explanation" i18n:translate="" i18n:domain="ui">\n
+    Le portail SAFI permet d\'effectuer des formalit\xc3\xa9s administratives en ligne.\n
+    Il est possible d\'effectuer des demandes sans \xc3\xaatre inscrit (demande\n
+    anonymes), toutefois, l\'inscription est vivement conseill\xc3\xa9e.\n
   </div>\n
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -87,7 +72,7 @@ Description:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_viewBecomeVipRenderer</string> </value>
+            <value> <string>WebSite_viewRegisterInformationHead</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

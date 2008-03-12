@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if request_number is not None:\n
+            <value> <string>portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+if request_number is not None:\n
   document = context.portal_catalog.getResultValue(uid=request_number)\n
   if document is not None:\n
     if document.getValidationState() == \'draft\':\n
@@ -80,7 +83,7 @@ else:\n
 \n
 \n
 # Prepare message\n
-msg = "Sorry, this document is not available"\n
+msg = N_(\'Sorry, this document is not available\')\n
 return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg})\n
 </string> </value>
         </item>
@@ -127,9 +130,11 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                             <string>request_number</string>
                             <string>id</string>
                             <string>kw</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>None</string>
                             <string>document</string>
                             <string>msg</string>
                           </tuple>

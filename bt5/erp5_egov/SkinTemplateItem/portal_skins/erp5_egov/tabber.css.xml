@@ -237,7 +237,7 @@ div.fields div{\n
  font: bold 12px Verdana, sans-serif;\n
 }\n
 \n
-.become_vip_member #register_button input{\n
+#register_button input{\n
   margin-top:0.2em;\n
   float: right;\n
   font-weight: bold;\n

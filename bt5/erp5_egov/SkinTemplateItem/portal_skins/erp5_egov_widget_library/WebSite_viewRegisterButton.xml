@@ -52,25 +52,10 @@ Description:\n
 -->\n
 \n
 <tal:block metal:define-macro="main">\n
-  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
-  <tal:block tal:condition="not:web_site_url">\n
-    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
-  </tal:block>\n
-  \n
-  <div class="become_vip_member">\n
-    <div class="title" i18n:domain="ui" i18n:translate="">\n
-      Become a VIP Member\n
-    </div>\n
-    <div class="become_vip_explanations">\n
-      <tal:block i18n:domain="ui" i18n:translate="">\n
-      Safi is a major Internet portal for performing administrative formalities\n
-      online. It is a quick and easy way to make a statement, or a request for\n
-      jutificatif,... without having to move or to queue. For more\n
-      information, please click\n
-      </tal:block>\n
-      <a href="eGov_RegisterInformations"  i18n:domain="ui" i18n:translate="">here</a>.\n
-    </div>\n
-    <tal:block metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
+  <div id="register_button">\n
+    <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+    name="search_area/WebSite_viewQuickSearchResultList:method"\n
+    value="Register >>"/>\n
   </div>\n
 </tal:block>\n
 
@@ -87,7 +72,7 @@ Description:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_viewBecomeVipRenderer</string> </value>
+            <value> <string>WebSite_viewRegisterButton</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

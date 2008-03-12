@@ -43,39 +43,43 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!-- ============================================================== -->\n
 <!--\n
 Description:\n
-  This macro render a invitation to becom vip member panel.\n
+  This macro render an explanation of why it\'s important to become a member.\n
 -->\n
 \n
 <tal:block metal:define-macro="main">\n
-  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
-  <tal:block tal:condition="not:web_site_url">\n
-    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
-  </tal:block>\n
-  \n
-  <div class="become_vip_member">\n
-    <div class="title" i18n:domain="ui" i18n:translate="">\n
-      Become a VIP Member\n
-    </div>\n
-    <div class="become_vip_explanations">\n
-      <tal:block i18n:domain="ui" i18n:translate="">\n
-      Safi is a major Internet portal for performing administrative formalities\n
-      online. It is a quick and easy way to make a statement, or a request for\n
-      jutificatif,... without having to move or to queue. For more\n
-      information, please click\n
-      </tal:block>\n
-      <a href="eGov_RegisterInformations"  i18n:domain="ui" i18n:translate="">here</a>.\n
-    </div>\n
-    <tal:block metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
+  <div class="become_member_body section_explanation">\n
+    <tal:block  i18n:translate="" i18n:domain="ui">\n
+      Une fois inscrit, vous pouvez b\xc3\xa9n\xc3\xa9ficier des avantages suivants :\n
+    </tal:block>\n
+    <ul>\n
+      <li  i18n:translate="" i18n:domain="ui">r\xc3\xa9glage des pr\xc3\xa9f\xc3\xa9rences et\n
+        s\xc3\xa9l\xc3\xa9ction d\'un moyen de suivi des proc\xc3\xa9dures (mail, sms)</li>\n
+      <li  i18n:translate="" i18n:domain="ui">vue d\'ensemble sur toutes\n
+        les proc\xc3\xa9dures en cours</li>\n
+      <li  i18n:translate="" i18n:domain="ui">r\xc3\xa9utilisation facile de\n
+        documents d\xc3\xa9j\xc3\xa0 utilis\xc3\xa9s dans une proc\xc3\xa9dure</li>\n
+      <li  i18n:translate="" i18n:domain="ui">v\xc3\xa9rification de l\'authenticit\xc3\xa9\n
+        de documents</li>\n
+      <li  i18n:translate="" i18n:domain="ui">r\xc3\xa9alisation de toutes les\n
+        proc\xc3\xa9dures administratives sur une seule et m\xc3\xaame plateforme</li>\n
+      <li  i18n:translate="" i18n:domain="ui">gain de temps : plus besoin\n
+        de se d\xc3\xa9placer pour faire la queue au guichet</li>\n
+    </ul>\n
   </div>\n
-</tal:block>\n
+  <tal:block metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
+  <br />\n
+  <br />\n
+  <br />\n
+  <a href="lien" tal:attributes="href python:\'%s/%s\' % (context.absolute_url(), \'view\')"\n
+    i18n:translate="" i18n:domain="ui">Retour \xc3\xa0 l\'accueil</a>\n
+</tal:block>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -87,7 +91,7 @@ Description:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_viewBecomeVipRenderer</string> </value>
+            <value> <string>WebSite_viewRegisterInformationBody</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

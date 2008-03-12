@@ -70,11 +70,15 @@ and redirect to the customize login page\'\'\'\n
 \n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 \n
 module_url = portal.web_site_module.egov_portal.absolute_url()\n
 form_id = \'view\'\n
 \n
-return request[\'RESPONSE\'].redirect(\'%s/%s\' % (module_url, form_id))\n
+msg = ""\n
+if request.get(\'came_from\', None) is not None:\n
+   msg = "%s. %s" % (N_("You don\'t have enough permissions to access this page"), N_("You can log in with another user name"))\n
+return context.Base_redirect(\'%s/%s\' % (module_url, form_id), keep_items = {\'portal_status_message\' : msg})\n
 </string> </value>
         </item>
         <item>
@@ -121,9 +125,11 @@ return request[\'RESPONSE\'].redirect(\'%s/%s\' % (module_url, form_id))\n
                             <string>context</string>
                             <string>request</string>
                             <string>portal</string>
+                            <string>N_</string>
                             <string>module_url</string>
                             <string>form_id</string>
-                            <string>_getitem_</string>
+                            <string>msg</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

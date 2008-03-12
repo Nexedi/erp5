@@ -496,6 +496,22 @@ div.section_explanation{\n
   padding-top:1em;\n
   padding-bottom:2em;\n
   font-size: 1.3em;\n
+  text-align: justify ;\n
+}\n
+\n
+.member_explanation_picture,\n
+.member_explanation_body{\n
+float:left;\n
+clear:none !important;\n
+width:50%;\n
+}\n
+\n
+.become_member_body{\n
+  margin-bottom:1.5em;\n
+}\n
+\n
+fieldset.fieldset_register_informations{\n
+width:100%\n
 }\n
 \n
 .section_description{\n
@@ -574,7 +590,8 @@ div.inline_label label{\n
    ----------------------------------------------------*/\n
 \n
    \n
-fieldset.white_background{\n
+fieldset.white_background,\n
+fieldset.register_informations{\n
   background: white !important;\n
   margin-right: auto !important;\n
   margin-left: auto !important;\n
@@ -583,8 +600,13 @@ fieldset.white_background{\n
   width:800px !important;\n
 }\n
 \n
-fieldset.white_background .input{\n
+fieldset.white_background .input,\n
+fieldset.register_informations .input{\n
   padding: 0 2em 0 2em;\n
+}\n
+\n
+fieldset.register_informations{\n
+  margin-top:60px !important;\n
 }\n
 \n
 .field .input .title{\n
