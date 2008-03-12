@@ -721,8 +721,9 @@ class Resource(XMLMatrix, Variated):
         for surcharge_ratio in price_parameter_dict['surcharge_ratio']:
           sum_surcharge_ratio += surcharge_ratio
         unit_base_price = unit_base_price * sum_surcharge_ratio
-      # Divide by the priced quantity
-      if unit_base_price is not None:
+      # Divide by the priced quantity if not (None, 0)
+      if unit_base_price is not None\
+          and price_parameter_dict['priced_quantity']:
         priced_quantity = price_parameter_dict['priced_quantity']
         unit_base_price = unit_base_price / priced_quantity
       # Return result
