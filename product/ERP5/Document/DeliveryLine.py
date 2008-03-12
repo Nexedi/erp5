@@ -182,6 +182,15 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       # cell, which define the same variated resource.
 #       return XMLMatrix.hasCellContent(self, base_id=base_id)
 
+    security.declareProtected( Permissions.AccessContentsInformation,
+        'isMovement' )
+    def isMovement(self):
+      """
+      returns true is the object contains no submovement (line or cell)
+      """
+      portal_type = self.getPortalMovementTypeList()
+      return len(self.contentValues(filter={'portal_type': portal_type})) == 0
+
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
     def getCellValueList(self, base_id='movement'):
       """
