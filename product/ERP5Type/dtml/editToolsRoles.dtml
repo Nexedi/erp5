@@ -115,12 +115,6 @@
 
 <tr>
 <td></td>
-<td>[<strong>OR</strong>]</td>
-<td></td>
-</tr>
-
-<tr>
-<td></td>
 <td>
   <div class="form-label">
   Category
@@ -249,12 +243,6 @@ Add a role
   <input type="text" name="base_category_script" size="80" />
   </div>
 </td>
-</tr>
-
-<tr>
-<td></td>
-<td>[<strong>OR</strong>]</td>
-<td></td>
 </tr>
 
 <tr>
