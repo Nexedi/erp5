@@ -29,6 +29,8 @@
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
+from DocumentTemplate.DT_Util import html_quote
+
 
 class ImageFieldWidget(Widget.TextWidget):
     """ImageField widget.
@@ -74,13 +76,17 @@ class ImageFieldWidget(Widget.TextWidget):
         """
         # Url is already defined in value
         image = value
-        description = field.get_value('description') or \
-                      field.get_value('title')
+        alt = field.get_value('description') or \
+              field.get_value('title')
         display = field.get_value('image_display')
         format = field.get_value('image_format')
         resolution = field.get_value('image_resolution')
-        html_string = """<img src="%s?display=%s&nbsp;format=%s&nbsp;resolution=%s" alt="%s"/>""" % \
-            (image, display, format,resolution, description)
+        html_string = """<img src="%s?display=%s&amp;format=%s&amp;resolution=%s" alt="%s"/>""" % \
+            (html_quote(image), 
+             html_quote(display), 
+             html_quote(format), 
+             html_quote(resolution), 
+             html_quote(alt))
         return html_string
 
 ImageFieldWidgetInstance = ImageFieldWidget()
