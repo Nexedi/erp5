@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Requirement Document</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Task</type>
@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Task Report</type>
-  <workflow>delivery_simulation_interaction_workflow, task_report_causality_workflow, edit_workflow, delivery_causality_interaction_workflow, task_report_workflow</workflow>
+  <workflow>delivery_simulation_interaction_workflow, delivery_causality_interaction_workflow, edit_workflow, task_report_causality_workflow, task_report_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report Line</type>
