@@ -1,6 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002 - 2008 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Barek Gorny <bartek@erp5.pl>
+#                    Lukasz Nowak <lukasz.nowak@ventis.com.pl>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,36 +29,35 @@
 
 class PolishAddressDetails:
     """
-        Szczegolowe informacje o adresie, potrzebne do prawidlowego
-        wypelnienia formularzy podatkowych
+        Detailed address information needed to proper fill of tax reports
     """
 
+    # XXX: Shufla - it might be good to provide better ids (english) with transition script
     _properties = (
-        {'id'         :   'ulica',
+        {'id'         : 'ulica',
         'description' : '',
         'type'        : 'string',
         'mode'        : 'w'},
-	{ 'id'          : 'powiat',
-	'description' : '',
-	'type'        : 'string',
-	'mode'        : 'w' },
-	{ 'id'          : 'gmina',
-	'description' : '',
-	'type'        : 'string',
-	'mode'        : 'w' },
-	{ 'id'          : 'nr_domu',
-	'description' : '',
-	'type'        : 'string',
-	'mode'        : 'w' },
-	{ 'id'          : 'nr_lokalu',
-	'description' : '',
-	'type'        : 'string',
-	'mode'        : 'w' },
-	{ 'id'          : 'poczta',
-	'description' : '',
-	'type'        : 'string',
-	'mode'        : 'w' },
-
+	      { 'id'          : 'powiat',
+	      'description' : '',
+	      'type'        : 'string',
+	      'mode'        : 'w' },
+	      { 'id'          : 'gmina',
+	      'description' : '',
+	      'type'        : 'string',
+	      'mode'        : 'w' },
+	      { 'id'          : 'nr_domu',
+	      'description' : '',
+	      'type'        : 'string',
+	      'mode'        : 'w' },
+	      { 'id'          : 'nr_lokalu',
+	      'description' : '',
+	      'type'        : 'string',
+	      'mode'        : 'w' },
+	      { 'id'          : 'poczta',
+	      'description' : '',
+	      'type'        : 'string',
+	      'mode'        : 'w' },
     )
   
 
