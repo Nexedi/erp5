@@ -42,7 +42,6 @@ class Order(Delivery):
     meta_type = 'ERP5 Order'
     portal_type = 'Order'
     isDelivery = 1
-    isAccountable = 0
 
     # Declarative security
     security = ClassSecurityInfo()
