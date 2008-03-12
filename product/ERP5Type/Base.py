@@ -1079,7 +1079,7 @@ class Base( CopyContainer,
       else:
         value = None
       # If we hold an attribute and mask_value is set, return the attribute
-      if mask_value and value is not None:
+      if mask_value and value not in null_value:
         # Pop context
         if is_tales_type:
           expression = Expression(value)
@@ -1113,7 +1113,7 @@ class Base( CopyContainer,
             setattr(self, storage_id, value)
         if is_list_type:
           # We must provide the first element of the acquired list
-          if value is None:
+          if value in null_value:
             result = None
           else:
             if isinstance(value, (list, tuple)):
@@ -1128,7 +1128,7 @@ class Base( CopyContainer,
           result = value
       else:
         result = None
-      if result is not None:
+      if result not in null_value:
         return result
       else:
         #LOG("alt_accessor_id",0,str(alt_accessor_id))
@@ -1138,7 +1138,7 @@ class Base( CopyContainer,
             method = getattr(self, id, None)
             if callable(method):
               result = method()
-              if result is not None:
+              if result not in null_value:
                 if is_list_type:
                   if isinstance(result, (list, tuple)):
                     # We must provide the first element of the alternate result
@@ -2402,7 +2402,7 @@ class Base( CopyContainer,
     if self.hasShortTitle():
       r = self.getShortTitle()
       if r: return r
-    if self.hasReference():
+    if self.getProperty('reference'):
       r = self.getReference()
       if r: return r
     r = self._baseGetTitle() # No need to test existence since all Base instances have this method
@@ -2436,7 +2436,7 @@ class Base( CopyContainer,
       if r: return r
       r = self.getShortTitle()
       if r: return r
-    if self.hasReference():
+    if self.getProperty('reference'):
       r = self.getReference()
       if r: return r
     r = self._baseGetTranslatedTitle() # No need to test existence since all Base instances have this method
