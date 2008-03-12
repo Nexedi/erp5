@@ -31,15 +31,11 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 
 class ImageFieldWidget(Widget.TextWidget):
-    """
-        RelationStringField widget
-
-        Works like a string field but includes one buttons
-
-        - one search button which updates the field and sets a relation
-
-        - creates object if not there
-
+    """ImageField widget.
+    
+    Renders an HTML <img> element where the src is the 'default' field value.
+    The 'description' field value is used as 'alt' attribute.
+    The image size is calculated using 'image_display'.
     """
     property_names = Widget.TextWidget.property_names + \
       ['image_display', 'image_format','image_resolution']
@@ -47,21 +43,24 @@ class ImageFieldWidget(Widget.TextWidget):
     image_display = fields.StringField('image_display',
                                title='Image Display',
                                description=(
-        "The method to call to set the relation. Required."),
+        "The display size. See ERP5.Document.Image.defaultdisplays for "
+        "possible values. This is only used with ERP5 Images."),
                                default='thumbnail',
                                required=1)
 
     image_format = fields.StringField('image_format',
                                title='Image Format',
                                description=(
-        "The format in which the image should be converted to."),
+        "The format in which the image should be converted to. "
+        "This is only used with ERP5 Images."),
                                default='',
                                required=0)
 
     image_resolution = fields.IntegerField('image_resolution',
                                title='Image Resolution',
                                description=(
-        "The format in which the image should be converted to."),
+        "The resolution used when converting the image. "
+        "This is only used with ERP5 Images."),
                                default=75,
                                required=0)
 
