@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -129,21 +126,21 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>isMovement</string>
-                            <string>uid</string>
-                            <string>getExplanationUid</string>
-                            <string>getSourceUid</string>
-                            <string>getDestinationUid</string>
-                            <string>getResourceUid</string>
-                            <string>getInventoriatedQuantity</string>
-                            <string>getStartDate</string>
-                            <string>getStopDate</string>
-                            <string>getPrice</string>
-                            <string>isAccountable</string>
-                            <string>isOrderable</string>
-                            <string>isDeliverable</string>
-                            <string>isDivergent</string>
-                            <string>getVariationText</string>
+<string>isMovement</string>
+<string>uid</string>
+<string>getExplanationUid</string>
+<string>getSourceUid</string>
+<string>getDestinationUid</string>
+<string>getResourceUid</string>
+<string>getInventoriatedQuantity</string>
+<string>getStartDate</string>
+<string>getStopDate</string>
+<string>getPrice</string>
+<string>isAccountable</string>
+<string>isOrderable</string>
+<string>isDeliverable</string>
+<string>isDivergent</string>
+<string>getVariationText</string>
                           </list>
                         </value>
                     </item>
@@ -214,14 +211,22 @@ getVariationText</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let movement_list="[]">\n
+DELETE FROM\n
+  movement\n
+WHERE\n
+<dtml-in uid>\n
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+</dtml-in>\n
+;\n
+\n
+<dtml-var "\'\\0\'"><dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isMovement[loop_item]">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(movement_list) > 0">\n
-REPLACE INTO\n
+INSERT INTO\n
   movement\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
@@ -254,9 +259,11 @@ VALUES\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -283,14 +290,22 @@ VALUES\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let movement_list="[]">\n
+DELETE FROM\n
+  movement\n
+WHERE\n
+<dtml-in uid>\n
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+</dtml-in>\n
+;\n
+\n
+<dtml-var "\'\\0\'"><dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isMovement[loop_item]">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(movement_list) > 0">\n
-REPLACE INTO\n
+INSERT INTO\n
   movement\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
