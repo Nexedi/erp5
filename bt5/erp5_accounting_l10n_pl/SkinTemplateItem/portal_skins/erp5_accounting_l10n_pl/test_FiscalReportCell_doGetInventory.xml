@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -178,6 +175,7 @@ return float ("%.2f"%(sum))\n
                             <string>None</string>
                             <string>_apply_</string>
                             <string>val</string>
+                            <string>_inplacevar_</string>
                             <string>float</string>
                           </tuple>
                         </value>

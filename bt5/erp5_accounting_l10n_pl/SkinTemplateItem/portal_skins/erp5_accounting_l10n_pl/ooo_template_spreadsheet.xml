@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>File</string>
-        </tuple>
-        <none/>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

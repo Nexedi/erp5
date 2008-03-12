@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.PDFForm</string>
-          <string>PDFForm</string>
-        </tuple>
-        <none/>
+        <global name="PDFForm" module="Products.ERP5Form.PDFForm"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -2038,8 +2035,7 @@ cds9yazb4m03Tms=</string> </value>
         </item>
       </dictionary>
     </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  </record>À  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>
