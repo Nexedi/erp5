@@ -178,7 +178,7 @@ def SelectionValidator_validate(self, field, key, REQUEST):
     for item in list(field.get_value('items', cell=getattr(REQUEST,'cell',None))) + [field.get_value('default', cell=getattr(REQUEST,'cell',None))]:
         try:
             item_text, item_value = item
-        except ValueError:
+        except (ValueError, TypeError):
             item_text = item
             item_value = item
 
