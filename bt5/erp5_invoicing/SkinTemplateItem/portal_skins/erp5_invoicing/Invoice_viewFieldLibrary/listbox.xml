@@ -10,25 +10,21 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>base_category</string>
-                <string>portal_type</string>
-                <string>catalog_index</string>
+                <string>title</string>
+                <string>lines</string>
                 <string>columns</string>
+                <string>sort</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_section_title</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,55 +80,92 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
-                    <value> <string>destination_section</string> </value>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Usual Name</string>
+                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>resource_title</string>
+                          <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
+                          <string>getTotalQuantity</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
+                          <string>quantity_unit_title</string>
+                          <string>Unit</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_destination_section_title</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key>                 <string>lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>not_viewable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
+                          <string>Invoice Line</string>
+                          <string>Invoice Line</string>
                         </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>read_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>invoice_line_selection</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort</string> </key>
+                    <value>
+                      <list>
                         <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
+                          <string>id</string>
+                          <string>id</string>
                         </tuple>
                       </list>
                     </value>
@@ -140,6 +173,22 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Invoice Lines</string> </value>
+                </item>
+                <item>
+                    <key> <string>viewable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>viewable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>

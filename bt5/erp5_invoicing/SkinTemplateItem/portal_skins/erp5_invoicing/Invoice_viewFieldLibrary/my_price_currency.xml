@@ -10,22 +10,17 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable</string>
+                <string>title</string>
+                <string>description</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_reference</string> </value>
+            <value> <string>my_price_currency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,6 +68,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -81,20 +80,24 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>Currency</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_currency_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Invoice_viewFieldLibrary</string> </value>
+                    <value> <string>Currency_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Price Currency</string> </value>
                 </item>
               </dictionary>
             </value>

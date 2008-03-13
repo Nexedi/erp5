@@ -19,13 +19,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable</string>
+                <string>portal_type</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_reference</string> </value>
+            <value> <string>my_causality_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -81,16 +81,23 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_causality_title_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Invoice_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Sale Packing List</string>
+                          <string>Sale Packing List</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
