@@ -29,6 +29,7 @@
 from types import StringType
 from zLOG import LOG
 from zLOG import PROBLEM
+from OFS.Image import File
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
@@ -38,6 +39,7 @@ from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Globals import InitializeClass, DTMLFile, get_request
 from Globals import DevelopmentMode
+from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -56,6 +58,7 @@ except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
 from Products.ERP5.Document.Document import ConversionError
+import Products.ERP5Type.Document
 
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
@@ -344,8 +347,15 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       # manipulations are different
       is_standard_filetype = True
 
-      if getattr(picture, 'data', None) is None \
-                    or callable(picture.content_type):
+      # If this is not a File, build a new file with this content
+      if not isinstance(picture, File):
+        tmp_picture = Products.ERP5Type.Document.newTempImage(
+                                    self, 'tmp')
+        tmp_picture.setData(picture())
+        picture = tmp_picture
+
+      if getattr(aq_base(picture), 'data', None) is None \
+                  or callable(aq_base(picture).content_type):
         is_standard_filetype = False
 
       if is_standard_filetype:
