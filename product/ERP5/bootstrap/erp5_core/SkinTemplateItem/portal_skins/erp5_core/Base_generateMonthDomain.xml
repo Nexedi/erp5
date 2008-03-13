@@ -107,7 +107,6 @@ default_link_url =\'setLanePath?form_id=%s&list_selection_name=%s\' %(\n
 # Definning date order using user Preference Options\n
 try:\n
   date_order = context.portal_preferences.getActivePreference().getPreferredDateOrder()\n
-  context.log("%s on %s" % (script.getId(), context.getPath()), "%s" %  date_order)\n
   if (date_order is None) or date_order not in [ \'dmy\', \'ymd\' , \'mdy\' ]:\n
     date_order = \'ymd\'\n
 except AttributeError:\n
@@ -243,7 +242,6 @@ return domain_list\n
                             <string>axis_stop</string>
                             <string>default_link_url</string>
                             <string>date_order</string>
-                            <string>script</string>
                             <string>None</string>
                             <string>AttributeError</string>
                             <string>category_list</string>
@@ -258,6 +256,7 @@ return domain_list\n
                             <string>link</string>
                             <string>category</string>
                             <string>domain</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
