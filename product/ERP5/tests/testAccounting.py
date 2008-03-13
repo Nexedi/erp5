@@ -192,12 +192,14 @@ class AccountingTestCase(ERP5TypeTestCase):
     get_transaction().abort()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
+    organisation_list = ('my_organisation', 'client_1', 'client_2', 'supplier')
     self.organisation_module.manage_delObjects([x for x in 
-          self.accounting_module.objectIds() if x not in ('my_organisation',
-            'client_1', 'client_2', 'supplier')])
-    self.organisation_module.my_organisation.manage_delObjects([x.getId()
-        for x in self.organisation_module.my_organisation.objectValues(
-                   portal_type=('Accounting Period', 'Bank Account'))])
+          self.accounting_module.objectIds() if x not in organisation_list])
+    for organisation_id in organisation_list:
+      organisation = self.organisation_module._getOb(organisation_id)
+      organisation.manage_delObjects([x.getId() for x in
+                organisation.objectValues(
+                  portal_type=('Accounting Period', 'Bank Account'))])
     self.person_module.manage_delObjects([x for x in 
           self.person_module.objectIds() if x not in ('john_smith',)])
     self.account_module.manage_delObjects([x for x in 
@@ -475,7 +477,34 @@ class TestTransactionValidation(AccountingTestCase):
         line.setDestinationAssetDebit(38.99)
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
 
+  def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self):
+    # Validating a transaction with categories as sections is refused.
+    # See http://wiki.erp5.org/Discussion/AccountingProblems
+    category = self.section.getGroupValue()
+    self.assertNotEquals(category, None)
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               source_section_value=category,
+               destination_section_value=self.organisation_module.client_1,
+               resource='currency_module/yen',
+               lines=(dict(source_value=self.account_module.payable,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
 
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    transaction.setSourceSectionValue(self.section)
+    transaction.setDestinationSectionValue(category)
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+
+    transaction.setDestinationSectionValue(self.organisation_module.client_1)
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    
   def test_AccountingWorkflow(self):
     transaction = self._makeOne(
                portal_type='Accounting Transaction',
@@ -1637,7 +1666,278 @@ class TestAccountingExport(AccountingTestCase):
     self.assertFalse('???' in content_xml)
 
 
-class TestAccounting(ERP5TypeTestCase):
+class TestTransactions(AccountingTestCase):
+  """Test behaviours and utility scripts for Accounting Transactions.
+  """
+
+  def test_SourceDestinationReference(self):
+    # Check that source reference and destination reference are filled
+    # automatically.
+
+    # clear all existing ids in portal ids
+    if hasattr(self.portal.portal_ids, 'dict_ids'):
+      self.portal.portal_ids.dict_ids.clear()
+    section_period_2001 = self.section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2001',
+                        start_date=DateTime(2001, 01, 01),
+                        stop_date=DateTime(2001, 12, 31))
+    section_period_2001.start()
+    section_period_2002 = self.section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2002',
+                        start_date=DateTime(2002, 01, 01),
+                        stop_date=DateTime(2002, 12, 31))
+    section_period_2002.start()
+
+    accounting_transaction = self._makeOne(
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2001, 01, 01),
+              stop_date=DateTime(2001, 01, 01))
+    self.portal.portal_workflow.doActionFor(
+          accounting_transaction, 'stop_action')
+    # The reference generated for the source section uses the short title from
+    # the accounting period
+    self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
+    # This works, because we use
+    # 'AccountingTransaction_getAccountingPeriodForSourceSection' script
+    self.assertEquals(section_period_2001, accounting_transaction\
+              .AccountingTransaction_getAccountingPeriodForSourceSection())
+    # If no accounting period exists on this side, the transaction date is
+    # used.
+    self.assertEquals('2001-1', accounting_transaction.getDestinationReference())
+
+    other_transaction = self._makeOne(
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2001, 01, 01),
+              stop_date=DateTime(2001, 01, 01))
+    self.portal.portal_workflow.doActionFor(other_transaction, 'stop_action')
+    self.assertEquals('code-2001-2', other_transaction.getSourceReference())
+    self.assertEquals('2001-1', other_transaction.getDestinationReference())
+
+    next_year_transaction = self._makeOne(
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2002, 01, 01),
+              stop_date=DateTime(2002, 01, 01))
+    self.portal.portal_workflow.doActionFor(next_year_transaction, 'stop_action')
+    self.assertEquals('code-2002-1', next_year_transaction.getSourceReference())
+    self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
+
+  def test_SearchableText(self):
+    transaction = self._makeOne(title='A new Transaction',
+                                description="A description",
+                                comment="Some comments")
+    searchable_text = transaction.SearchableText()
+    self.assertTrue('A new Transaction' in searchable_text)
+    self.assertTrue('A description' in searchable_text)
+    self.assertTrue('Some comments' in searchable_text)
+
+  def test_GroupingReferenceResetedOnCopyPaste(self):
+    accounting_module = self.portal.accounting_module
+    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
+      if portal_type == 'Balance Transaction':
+        # Balance Transaction cannot be copy and pasted, because they are not
+        # in visible allowed types.
+        continue
+      transaction = accounting_module.newContent(
+                            portal_type=portal_type)
+      line = transaction.newContent(
+                  id = 'line_with_grouping_reference',
+                  grouping_reference='A',
+                  portal_type=transaction_to_line_mapping[portal_type])
+
+      cp = accounting_module.manage_copyObjects(ids=[transaction.getId()])
+      copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
+      self.failIf(accounting_module[copy_id]\
+          .line_with_grouping_reference.getGroupingReference())
+
+
+  # tests for Invoice_createRelatedPaymentTransaction
+  def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
+    """Check payment of a Sale Invoice.
+    """
+    eq = self.assertEquals
+    eq('Payment Transaction', payment.getPortalTypeName())
+    eq([invoice], payment.getCausalityValueList())
+    eq(invoice.getSourceSection(), payment.getSourceSection())
+    eq(invoice.getDestinationSection(), payment.getDestinationSection())
+    eq(payment_node, payment.getSourcePaymentValue())
+    eq(self.getCategoryTool().payment_mode.check,
+       payment.getPaymentModeValue())
+    # test lines
+    eq(2, len(payment.getMovementList()))
+    for line in payment.getMovementList():
+      if line.getId() == 'bank':
+        eq(quantity, line.getSourceCredit())
+        eq(self.account_module.bank, line.getSourceValue())
+      else:
+        eq(quantity, line.getSourceDebit())
+        eq(self.account_module.receivable, line.getSourceValue())
+    # this transaction can be validated
+    eq([], payment.checkConsistency())
+    self.portal.portal_workflow.doActionFor(payment, 'stop_action')
+    eq('stopped', payment.getSimulationState())
+
+  def test_Invoice_createRelatedPaymentTransactionSimple(self):
+    # Simple case of creating a related payment transaction.
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100)))
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
+
+  def test_Invoice_createRelatedPaymentTransactionGroupedLines(self):
+    # Simple creating a related payment transaction when grouping reference of
+    # some lines is already set.
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=60),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=40,
+                           grouping_reference='A'),))
+    
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
+  
+  def test_Invoice_createRelatedPaymentTransactionDifferentSection(self):
+    # Simple creating a related payment transaction when we have two line for
+    # 2 different destination sections.
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=60),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=40,
+                           destination_section_value=self.organisation_module.client_2),))
+    
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
+ 
+  def test_Invoice_createRelatedPaymentTransactionRelatedInvoice(self):
+    # Simple creating a related payment transaction when we have related
+    # transactions.
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100),))
+    accounting_transaction = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               causality_value=invoice,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_credit=20),
+                      dict(source_value=self.account_module.receivable,
+                           source_debit=20),))
+
+    accounting_transaction.setCausalityValue(invoice)
+    self.portal.portal_workflow.doActionFor(accounting_transaction,
+                                           'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+    
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
+    
+  def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDifferentSide(self):
+    # Simple creating a related payment transaction when we have related
+    # transactions with different side
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100),))
+    accounting_transaction = self._makeOne(
+               source_section_value=self.organisation_module.client_1,
+               destination_section_value=self.section,
+               causality_value=invoice,
+               lines=(dict(destination_value=self.account_module.goods_purchase,
+                           destination_credit=20),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_debit=20),))
+    self.portal.portal_workflow.doActionFor(accounting_transaction,
+                                            'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
+ 
+  def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDraft(self):
+    # Simple creating a related payment transaction when we have related
+    # transactions in draft/cancelled state (they are ignored)
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100),))
+    accounting_transaction = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               causality_value=invoice,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_credit=20),
+                      dict(source_value=self.account_module.receivable,
+                           source_debit=20),))
+
+    other_accounting_transaction = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               causality_value=invoice,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_credit=20),
+                      dict(source_value=self.account_module.receivable,
+                           source_debit=20),))
+
+    other_accounting_transaction.cancel()
+    get_transaction().commit()
+    self.tic()
+
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
+
+
+class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
   """
   def getAccountingModule(self):
@@ -2815,255 +3115,6 @@ class TestAccounting(ERP5TypeTestCase):
       stepValidateRemoveEmptyLines
     """, quiet=quiet)
 
-  def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self,
-                                        quiet=QUIET, run=RUN_ALL_TESTS):
-    """Validating a transaction with categories as sections is refused.
-    See http://wiki.erp5.org/Discussion/AccountingProblems """
-    category = self.vendor.getGroupValue()
-    self.assertNotEquals(category, None)
-    transaction = self.createAccountingTransaction(
-                                    source_section_value=category,
-                                    check_consistency=0)
-    self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
-                      transaction, 'stop_action')
-    transaction = self.createAccountingTransaction(
-                                    destination_section_value=category,
-                                    check_consistency=0)
-    self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
-                      transaction, 'stop_action')
-
-  # tests for Invoice_createRelatedPaymentTransaction
-  def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
-    """Check payment of a Sale Invoice.
-    """
-    eq = self.assertEquals
-    eq('Payment Transaction', payment.getPortalTypeName())
-    eq([invoice], payment.getCausalityValueList())
-    eq(invoice.getSourceSection(), payment.getSourceSection())
-    eq(invoice.getDestinationSection(), payment.getDestinationSection())
-    eq(payment_node, payment.getSourcePaymentValue())
-    eq(self.getCategoryTool().payment_mode.check,
-       payment.getPaymentModeValue())
-    # test lines
-    eq(2, len(payment.getMovementList()))
-    for line in payment.getMovementList():
-      if line.getId() == 'bank':
-        eq(quantity, line.getSourceCredit())
-        eq(self.bank_account, line.getSourceValue())
-      else:
-        eq(quantity, line.getSourceDebit())
-        eq(self.receivable_account, line.getSourceValue())
-    # this transaction can be validated
-    eq([], payment.checkConsistency())
-    self.workflow_tool.doActionFor(payment, 'stop_action')
-    eq('stopped', payment.getSimulationState())
-
-  def test_Invoice_createRelatedPaymentTransactionSimple(self):
-    """Simple case of creating a related payment transaction.
-    """
-    payment_node = self.vendor.newContent(portal_type='Bank Account')
-    invoice = self.createAccountingTransaction()
-    payment = invoice.Invoice_createRelatedPaymentTransaction(
-                                  node=self.bank_account.getRelativeUrl(),
-                                  payment=payment_node.getRelativeUrl(),
-                                  payment_mode='check',
-                                  batch_mode=1)
-    self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
-
-  def test_Invoice_createRelatedPaymentTransactionGroupedLines(self):
-    """Simple creating a related payment transaction when grouping reference of
-    some lines is already set.
-    """
-    payment_node = self.vendor.newContent(portal_type='Bank Account')
-    invoice = self.createAccountingTransaction()
-    invoice.receivable.setSourceCredit(60)
-    invoice.newContent(id='receivable_groupped',
-                       source_credit=40,
-                       source_value=self.receivable_account)
-    invoice.receivable_groupped.setGroupingReference('A')
-    
-    payment = invoice.Invoice_createRelatedPaymentTransaction(
-                                  node=self.bank_account.getRelativeUrl(),
-                                  payment=payment_node.getRelativeUrl(),
-                                  payment_mode='check',
-                                  batch_mode=1)
-    self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
-  
-  def test_Invoice_createRelatedPaymentTransactionDifferentSection(self):
-    """Simple creating a related payment transaction when we have two line for
-    2 different destination sections.
-    """
-    payment_node = self.vendor.newContent(portal_type='Bank Account')
-    invoice = self.createAccountingTransaction()
-    invoice.receivable.setSourceCredit(60)
-    invoice.newContent(id='receivable_other_third_party',
-                       destination_section_value=self.other_vendor,
-                       source_credit=40,
-                       source_value=self.receivable_account)
-    
-    payment = invoice.Invoice_createRelatedPaymentTransaction(
-                                  node=self.bank_account.getRelativeUrl(),
-                                  payment=payment_node.getRelativeUrl(),
-                                  payment_mode='check',
-                                  batch_mode=1)
-    self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
- 
-  def test_Invoice_createRelatedPaymentTransactionRelatedInvoice(self):
-    """Simple creating a related payment transaction when we have related
-    transactions.
-    """
-    payment_node = self.vendor.newContent(portal_type='Bank Account')
-    invoice = self.createAccountingTransaction()
-    accounting_transaction = self.createAccountingTransaction()
-    accounting_transaction.receivable.setSourceDebit(20)
-    accounting_transaction.income.setSourceCredit(20)
-    accounting_transaction.setCausalityValue(invoice)
-    self.portal.portal_workflow.doActionFor(accounting_transaction,
-                                           'stop_action')
-    self.assertEquals('stopped', accounting_transaction.getSimulationState())
-    get_transaction().commit()
-    self.tic()
-    
-    payment = invoice.Invoice_createRelatedPaymentTransaction(
-                                  node=self.bank_account.getRelativeUrl(),
-                                  payment=payment_node.getRelativeUrl(),
-                                  payment_mode='check',
-                                  batch_mode=1)
-    self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
-    
-  def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDifferentSide(self):
-    """Simple creating a related payment transaction when we have related
-    transactions with different side
-    """
-    payment_node = self.vendor.newContent(portal_type='Bank Account')
-    invoice = self.createAccountingTransaction()
-    accounting_transaction = self.createAccountingTransaction()
-    accounting_transaction.edit(
-            source_section=accounting_transaction.getDestinationSection(),
-            destination_section=accounting_transaction.getSourceSection())
-    accounting_transaction.receivable.edit(
-          source=accounting_transaction.receivable.getDestination(),
-          destination=accounting_transaction.receivable.getSource(),
-          destination_debit=20)
-    accounting_transaction.income.edit(
-          source=accounting_transaction.income.getDestination(),
-          destination=accounting_transaction.income.getSource(),
-          destination_credit=20)
-    accounting_transaction.setCausalityValue(invoice)
-    self.portal.portal_workflow.doActionFor(accounting_transaction,
-                                            'stop_action')
-    self.assertEquals('stopped', accounting_transaction.getSimulationState())
-    get_transaction().commit()
-    self.tic()
-
-    payment = invoice.Invoice_createRelatedPaymentTransaction(
-                                  node=self.bank_account.getRelativeUrl(),
-                                  payment=payment_node.getRelativeUrl(),
-                                  payment_mode='check',
-                                  batch_mode=1)
-    self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
- 
-  def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDraft(self):
-    """Simple creating a related payment transaction when we have related
-    transactions in draft/cancelled state (they are ignored)
-    """
-    payment_node = self.vendor.newContent(portal_type='Bank Account')
-    invoice = self.createAccountingTransaction()
-    accounting_transaction = self.createAccountingTransaction()
-    accounting_transaction.setCausalityValue(invoice)
-    other_accounting_transaction = self.createAccountingTransaction()
-    other_accounting_transaction.setCausalityValue(invoice)
-    other_accounting_transaction.cancel()
-    get_transaction().commit()
-    self.tic()
-
-    payment = invoice.Invoice_createRelatedPaymentTransaction(
-                                  node=self.bank_account.getRelativeUrl(),
-                                  payment=payment_node.getRelativeUrl(),
-                                  payment_mode='check',
-                                  batch_mode=1)
-    self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
-
-  def test_SourceDestinationReference(self):
-    """Check that source reference and destination reference are filled
-    automatically.
-    """
-    # clear all existing ids in portal ids
-    if hasattr(self.portal.portal_ids, 'dict_ids'):
-      self.portal.portal_ids.dict_ids.clear()
-    section_period_2001 = self.section.newContent(
-                        portal_type='Accounting Period',
-                        short_title='code-2001',
-                        start_date=DateTime(2001, 01, 01),
-                        stop_date=DateTime(2001, 12, 31))
-    section_period_2001.start()
-    section_period_2002 = self.section.newContent(
-                        portal_type='Accounting Period',
-                        short_title='code-2002',
-                        start_date=DateTime(2002, 01, 01),
-                        stop_date=DateTime(2002, 12, 31))
-    section_period_2002.start()
-
-    accounting_transaction = self.createAccountingTransaction(
-                                  start_date=DateTime(2001, 01, 01),
-                                  stop_date=DateTime(2001, 01, 01))
-    self.portal.portal_workflow.doActionFor(
-          accounting_transaction, 'stop_action')
-    # The reference generated for the source section uses the short title from
-    # the accounting period
-    self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
-    # This works, because we use
-    # 'AccountingTransaction_getAccountingPeriodForSourceSection' script
-    self.assertEquals(section_period_2001, accounting_transaction\
-              .AccountingTransaction_getAccountingPeriodForSourceSection())
-    # If no accounting period exists on this side, the transaction date is
-    # used.
-    self.assertEquals('2001-1', accounting_transaction.getDestinationReference())
-
-    other_transaction = self.createAccountingTransaction(
-                                  start_date=DateTime(2001, 01, 01),
-                                  stop_date=DateTime(2001, 01, 01))
-    other_transaction.setDestinationSectionValue(self.other_vendor)
-    self.portal.portal_workflow.doActionFor(other_transaction, 'stop_action')
-    self.assertEquals('code-2001-2', other_transaction.getSourceReference())
-    self.assertEquals('2001-1', other_transaction.getDestinationReference())
-
-    next_year_transaction = self.createAccountingTransaction(
-                                  start_date=DateTime(2002, 01, 01),
-                                  stop_date=DateTime(2002, 01, 01))
-    self.portal.portal_workflow.doActionFor(next_year_transaction, 'stop_action')
-    self.assertEquals('code-2002-1', next_year_transaction.getSourceReference())
-    self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
-
-  def test_SearchableText(self):
-    transaction = self.createAccountingTransaction()
-    transaction.edit(title='A new Transaction',
-                     description="A description",
-                     comment="Some comments")
-    searchable_text = transaction.SearchableText()
-    self.assertTrue('A new Transaction' in searchable_text)
-    self.assertTrue('A description' in searchable_text)
-    self.assertTrue('Some comments' in searchable_text)
-
-  def test_GroupingReferenceResetedOnCopyPaste(self):
-    accounting_module = self.portal.accounting_module
-    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
-      if portal_type == 'Balance Transaction':
-        # Balance Transaction cannot be copy and pasted, because they are not
-        # in visible allowed types.
-        continue
-      transaction = accounting_module.newContent(
-                            portal_type=portal_type)
-      line = transaction.newContent(
-                  id = 'line_with_grouping_reference',
-                  grouping_reference='A',
-                  portal_type=transaction_to_line_mapping[portal_type])
-
-      cp = accounting_module.manage_copyObjects(ids=[transaction.getId()])
-      copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
-      self.failIf(accounting_module[copy_id]\
-          .line_with_grouping_reference.getGroupingReference())
-
 
 class TestAccountingTransactionTemplate(AccountingTestCase):
   """A test for Accounting Transaction Template
@@ -3115,7 +3166,8 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccounting))
+  suite.addTest(unittest.makeSuite(TestAccountingWithSequences))
+  suite.addTest(unittest.makeSuite(TestTransactions))
   suite.addTest(unittest.makeSuite(TestAccounts))
   suite.addTest(unittest.makeSuite(TestClosingPeriod))
   suite.addTest(unittest.makeSuite(TestTransactionValidation))
