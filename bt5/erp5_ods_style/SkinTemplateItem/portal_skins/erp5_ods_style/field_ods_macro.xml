@@ -57,16 +57,23 @@
     <!-- Render the field in the bottom group. `field` must be defined.\n
     The field in the bottom group, can be ListBoxField, MatrixBoxField or a ProxyField to one of thoses.\n
     -->\n
-    <tal:block metal:define-macro="bottom_group_field">\n
-      <tal:block tal:condition="python: field.meta_type == \'MatrixBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'MatrixBox\')">\n
+    <tal:block metal:define-macro="bottom_group_field"\n
+               tal:define="field_meta_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
+      <tal:block tal:condition="python: field_meta_type == \'MatrixBox\'">\n
         <tal:block  tal:define="matrixbox python:field;">\n
           <tal:block metal:use-macro="here/matrixbox_ods_macro/macros/matrixbox" />\n
         </tal:block>\n
       </tal:block>\n
-      <tal:block tal:condition="python: field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+      <tal:block tal:condition="python: field_meta_type == \'ListBox\'">\n
         <tal:block  tal:define="listbox python:field;" >\n
           <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox" />\n
         </tal:block>\n
+      </tal:block>\n
+      <tal:block tal:condition="python: field_meta_type not in (\'ListBox\', \'MatrixBox\')"\n
+                 tal:define="warning_log python: context.log(\'field_ods_macro ignored field:%s\' % field)">\n
+        <table:table-row table:style-name="ro2">\n
+          <table:table-cell/>\n
+        </table:table-row>\n
       </tal:block>\n
     </tal:block>\n
 \n
