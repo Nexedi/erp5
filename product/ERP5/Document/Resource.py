@@ -599,8 +599,9 @@ class Resource(XMLMatrix, Variated):
         return price_parameter_dict
       for price_parameter_name in price_parameter_dict.keys():
         price_parameter_value = \
-          mapped_value.getProperty(price_parameter_name)
-        if price_parameter_value not in [None, '']:
+          mapped_value.getProperty(price_parameter_name,
+              d=price_parameter_dict[price_parameter_name])
+        if price_parameter_value not in [None, [], '']:
           try:
             price_parameter_dict[price_parameter_name].extend(
                                             price_parameter_value)
