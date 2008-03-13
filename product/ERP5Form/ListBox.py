@@ -2085,7 +2085,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # use the 'cell' value (refer to get_value method in Form.py)
           cell_request = brain.asContext( REQUEST = self.renderer.request
                                         , form    = self.renderer.request.form
-                                        , cell    = self.getObject()
+                                        , cell    = brain
                                         )
           if editable_field.get_value('enabled', REQUEST=cell_request):
             cell_html = editable_field.render( \
