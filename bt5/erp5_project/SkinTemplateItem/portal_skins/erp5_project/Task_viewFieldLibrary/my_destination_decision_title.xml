@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -124,10 +121,6 @@
                         <tuple>
                           <string>Person</string>
                           <string>Person</string>
-                        </tuple>
-                        <tuple>
-                          <string>Category</string>
-                          <string>Category</string>
                         </tuple>
                       </list>
                     </value>
