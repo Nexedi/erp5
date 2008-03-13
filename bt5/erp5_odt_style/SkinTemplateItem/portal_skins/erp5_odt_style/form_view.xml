@@ -136,7 +136,6 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
           tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-          tal:define="global frame_width python:25.8"\n
          office:version=\'1.0\'>\n
   <office:scripts/>\n
   <office:font-face-decls>\n
@@ -226,39 +225,56 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
              <table:table-column table:style-name=\'field-table.A\'/>\n
              <table:table-column table:style-name=\'field-table.A\'/>\n
             <tal:block tal:repeat="field field_list">\n
-              <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
+              <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
+              <tal:block tal:condition="python:field_type not in (\'HiddenStringField\', \'FileField\')">\n
                 <table:table-row>\n
                   <table:table-cell table:style-name=\'field-table.A1\' office:value-type=\'string\'>\n
-                    <text:p text:style-name=\'field-label\' tal:content="python: here.Localizer.erp5_ui.gettext(field.get_value(\'title\')).encode(\'utf-8\')"/>\n
+                    <text:p text:style-name=\'field-label\' \n
+                            i18n:domain=\'ui\'\n
+                            i18n:translate=\'\'\n
+                            tal:content="python: field.get_value(\'title\')"/>\n
                   </table:table-cell>\n
                   <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None">\n
-                    <table:table-cell table:style-name=\'field-table.B1\' office:value-type=\'string\' tal:define="value python: field.get_value(\'default\')">\n
-                      <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
-                        <tal:block tal:repeat="item value">\n
-                            <text:p text:style-name=\'field-content\'\n
-                                   tal:content="python: str(item)"\n
-                                   tal:condition="not:item_list"/>\n
-                            <text:p text:style-name=\'field-content\'\n
-                                   tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
-                                   tal:condition="item_list" />\n
+                    <table:table-cell table:style-name=\'field-table.B1\' \n
+                                      office:value-type=\'string\'\n
+                                      tal:define="value python: field.get_value(\'default\')">\n
+\n
+                      <tal:block tal:condition="python: field_type not in (\'ImageField\', )">\n
+                        <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
+                          <tal:block tal:repeat="item value">\n
+                              <text:p text:style-name=\'field-content\'\n
+                                     tal:content="python: str(item)"\n
+                                     tal:condition="not:item_list"/>\n
+                              <text:p text:style-name=\'field-content\'\n
+                                     tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
+                                     tal:condition="item_list" />\n
+                          </tal:block>\n
                         </tal:block>\n
+                        <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
+                              <text:p text:style-name=\'field-content\'\n
+                                 tal:content="python:str(value)"\n
+                                 tal:condition="not:item_list" />\n
+                              <text:p text:style-name=\'field-content\'\n
+                                     tal:content="python: field.render_pdf(value)"\n
+                                     tal:condition="item_list" />\n
+                        </tal:block>\n
+                        <tal:block tal:condition="python: value is None">\n
+                          <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
+                        </tal:block>                      \n
                       </tal:block>\n
-                      <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
-                            <text:p text:style-name=\'field-content\'\n
-                               tal:content="python:str(value)"\n
-                               tal:condition="not:item_list" />\n
-                            <text:p text:style-name=\'field-content\'\n
-                                   tal:content="python: field.render_pdf(value)"\n
-                                   tal:condition="item_list" />\n
-                      </tal:block>                      \n
-                      <tal:block tal:condition="python: value == None">\n
-                        <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
-                      </tal:block>                      \n
+                      <tal:block tal:condition="python: field_type == \'ImageField\'">\n
+                       <text:p text:style-name=\'field-content\'\n
+                               tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
+                          <office:include_img tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+                                                              path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
+                       </text:p>\n
+                      </tal:block>\n
                     </table:table-cell>\n
                   </tal:block>\n
                 </table:table-row>\n
               </tal:block>\n
             </tal:block>\n
+           </tal:block>\n
           </table:table>          \n
           <text:p></text:p>\n
           <text:p></text:p>\n
@@ -268,16 +284,25 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
     </tal:block>\n
      <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
      <tal:block tal:repeat="field field_list">\n
-      <tal:block tal:condition="python: field.meta_type == \'MatrixBox\'">\n
+     <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
+      <tal:block tal:condition="python: field_type == \'MatrixBox\'">\n
        <tal:block  tal:define="matrixbox python:field;">\n
         <div metal:use-macro="here/matrixbox_odt_macro/macros/matrixbox" />\n
        </tal:block>\n
       </tal:block>\n
-      <tal:block tal:condition="python: field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+      <tal:block tal:condition="python: field_type == \'ListBox\'">\n
        <tal:block  tal:define="listbox python:field;" >\n
         <div metal:use-macro="here/listbox_odt_macro/macros/listbox" />\n
        </tal:block>\n
      </tal:block>\n
+    <tal:block tal:condition="python: field_type == \'ImageField\'">\n
+     <text:p text:style-name=\'field-content\'\n
+             tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
+        <office:include_img tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+                                            path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
+     </text:p>\n
+    </tal:block>\n
+    </tal:block>\n
     </tal:block>\n
    </tal:block>    \n
   </tal:block>\n
