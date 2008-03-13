@@ -42,5 +42,5 @@ WHERE
 </dtml-if>
 <dtml-if serialization_tag>
     AND processing_node > -1
-    AND serialization_tag LIKE <dtml-sqlvar serialization_tag type="string">
+    AND serialization_tag = <dtml-sqlvar serialization_tag type="string">
 </dtml-if>
