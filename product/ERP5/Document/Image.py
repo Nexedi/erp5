@@ -61,6 +61,13 @@ defaultdisplays = {'nano'      : (25,25),
                    'xlarge'    : (1024,1024)
                   }
 
+def getSizeFromImageDisplay(image_display):
+  """Retuns the size for this image display, or None if this image display name
+  is not known.
+  """
+  return defaultdisplays.get(image_display)
+
+
 default_formats = ['jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm']
 
 class Image(File, OFSImage):

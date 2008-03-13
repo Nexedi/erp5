@@ -91,6 +91,8 @@ def initialize( context ):
                                                   'Redirect', 'Unauthorized')
   ModuleSecurityInfo('Products.CMFCore.WorkflowCore').declarePublic(
                                                    'WorkflowException')
+  ModuleSecurityInfo('Products.ERP5.Document.Image').declarePublic(
+                                                'getSizeFromImageDisplay')
 
 # backward compatibility names
 XML = None
