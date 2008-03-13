@@ -2414,7 +2414,7 @@ class Base( CopyContainer,
   def getCompactTranslatedTitle(self):
     """
     Returns the first non-null value from the following:
-    - "getTranslatedCompactTitle" type based method
+    - "getCompactTranslatedTitle" type based method
     - "getCompactTitle" type based method
     - translated short title
     - short title
@@ -2423,7 +2423,7 @@ class Base( CopyContainer,
     - title
     - id
     """
-    method = self._getTypeBasedMethod('getTranslatedCompactTitle')
+    method = self._getTypeBasedMethod('getCompactTranslatedTitle')
     if method is not None:
       r = method()
       if r: return r
