@@ -55,13 +55,13 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="edit_link">\n
-    <a disabled="disabled" tal:condition="python: (getattr(object, \'meta_type\', None) is not None) and (getattr(object, \'getPortalObject\', None) is not None)"\n
+    <a tabindex="1000" tal:condition="python: (getattr(object, \'meta_type\', None) is not None) and (getattr(object, \'getPortalObject\', None) is not None)"\n
        tal:attributes="href python: \'%s/manage_main\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):])) # XXX: quick hack to get path;\n
        title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                          alt info;" /></a>\n
   </tal:block>\n
   <tal:block metal:define-macro="translate_link">\n
-    <a disabled="disabled" tal:define="image image | python: \'translate.png\'"\n
+    <a tabindex="1000" tal:define="image image | python: \'translate.png\'"\n
        tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message.replace(\'(\', \'\\(\').replace(\')\', \'\\)\'), selected_language);\n
        title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
                          alt info;" /></a>\n
