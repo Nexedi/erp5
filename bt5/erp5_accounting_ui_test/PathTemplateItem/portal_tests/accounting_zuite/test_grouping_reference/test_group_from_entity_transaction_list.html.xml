@@ -81,31 +81,10 @@ Grouping from entity transaction view\n
   <td></td>\n
 </tr>\n
 \n
-<!-- switch on the \'your_grouping\' flag -->\n
+<!-- The mode should be \'grouping\' by default -->\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_grouping</td>\n
-  <td>off</td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>field_your_grouping</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertPortalStatusMessage</td>\n
-  <td>Updated</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'grouping\']</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
@@ -210,16 +189,15 @@ Grouping from entity transaction view\n
 </tr>\n
 \n
 \n
-<!-- switch off the \'your_grouping\' flag, to see grouped lines, and ungroup\n
-them -->\n
+<!-- Swith to \'ungrouping\' mode to see grouped lines, and ungroup them -->\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'grouping\']</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'ungrouping\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -234,8 +212,13 @@ them -->\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'grouping\']</td>\n
   <td>off</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'ungrouping\']</td>\n
+  <td>on</td>\n
 </tr>\n
 \n
 <tr tal:condition="is_selenium_0_8">\n
@@ -327,12 +310,12 @@ them -->\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'grouping\']</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'grouping\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -347,7 +330,7 @@ them -->\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_grouping</td>\n
+  <td>//input[@name=\'field_your_grouping\' and @value=\'grouping\']</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
