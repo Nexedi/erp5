@@ -65,9 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>task_list = [x.getObject() for x in \\\n
+            <value> <string>source_project_uid_list = [x.uid for x in context.portal_catalog(\n
+     relative_url=\'%s%%\' % context.getRelativeUrl())]\n
+\n
+task_list = [x.getObject() for x in \\\n
   context.portal_catalog(selection=selection, selection_report=selection_report, \n
-                         portal_type=\'Task\')]\n
+          portal_type=\'Task\',\n
+          source_project_uid = source_project_uid_list)]\n
 task_line_list = []\n
 for task in task_list:\n
   task_line_list.extend(task.objectValues(portal_type=\'Task Line\'))\n
@@ -124,6 +128,7 @@ return task_line_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>x</string>
+                            <string>source_project_uid_list</string>
                             <string>task_list</string>
                             <string>task_line_list</string>
                             <string>task</string>
