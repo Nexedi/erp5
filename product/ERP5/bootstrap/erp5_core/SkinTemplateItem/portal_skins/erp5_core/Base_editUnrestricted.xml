@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -100,112 +97,6 @@ except FormValidationError, validation_errors:\n
         value(request)\n
   return form(request)\n
 \n
-def editListBox(listbox_field, listbox):\n
-  """ Function called to edit a listbox\n
-  """\n
-  if listbox is not None:\n
-    gv = {}\n
-    if listbox_field.has_value(\'global_attributes\'):\n
-      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
-      for k in hidden_attributes:\n
-        gv[k] = getattr(request, k, None)\n
-    for url, v in listbox.items():\n
-      v.update(gv)\n
-      context.restrictedTraverse(url).edit(**v)\n
-\n
-def editMatrixBox(matrixbox_field, matrixbox):\n
-  """ Function called to edit a Matrix box\n
-  """\n
-  if matrixbox is not None:\n
-    cell_base_id = matrixbox_field.get_value(\'cell_base_id\')\n
-    portal_type = matrixbox_field.get_value(\'cell_portal_type\')\n
-    getter_method = matrixbox_field.get_value(\'getter_method\')\n
-    if getter_method not in (None, \'\'):\n
-      matrix_context = getattr(context,getter_method)()\n
-    else:\n
-      matrix_context = context\n
-    if matrix_context is not None:\n
-      kd = {}\n
-      kd[\'portal_type\'] = portal_type\n
-      kd[\'base_id\'] = cell_base_id\n
-      gv = {}\n
-      if matrixbox_field.has_value(\'global_attributes\'):\n
-        hidden_attributes = [x[0] for x in matrixbox_field.get_value(\'global_attributes\')]\n
-        for k in hidden_attributes:\n
-          gv[k] = getattr(request, k, None)\n
-      if matrixbox_field.get_value(\'update_cell_range\'):\n
-        # Update cell range each time it is modified\n
-        lines = matrixbox_field.get_value(\'lines\')\n
-        columns = matrixbox_field.get_value(\'columns\')\n
-        tabs = matrixbox_field.get_value(\'tabs\')\n
-\n
-        column_ids = map(lambda x: x[0], columns)\n
-        line_ids = map(lambda x: x[0], lines)\n
-        tab_ids = map(lambda x: x[0], tabs)\n
-\n
-        # There are 3 cases\n
-        # Case 1: we do 1 dimensional matrix\n
-        # Case 2: we do 2 dimensional matrix\n
-        # Case 3: we do 2 dimensional matrix + tabs\n
-        cell_range = matrix_context.getCellRange(base_id = cell_base_id)\n
-        if (len(column_ids) == 0) or (column_ids[0] is None):\n
-          matrixbox_cell_range = [line_ids]\n
-          if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, base_id=cell_base_id)\n
-\n
-        elif (len(tab_ids) == 0) or (tab_ids[0] is None):\n
-          matrixbox_cell_range = [line_ids, column_ids]\n
-          if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, column_ids, base_id=cell_base_id)\n
-\n
-        else:\n
-          matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
-          if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, column_ids, tab_ids, base_id=cell_base_id)\n
-\n
-      for k,v in matrixbox.items():\n
-        # Only update cells which still exist\n
-        if matrix_context.hasInRange(*k, **kd):\n
-          c = matrix_context.newCell(*k, **kd)\n
-          if c is not None:\n
-            c.edit(**gv)  # First update globals which include the def. of property_list\n
-            if v.has_key(\'variated_property\'):\n
-              # For Variated Properties\n
-              value = v[\'variated_property\']\n
-              del v[\'variated_property\']\n
-              if gv.has_key(\'mapped_value_property_list\'):\n
-                # Change the property which is defined by the\n
-                # first element of mapped_value_property_list\n
-                # XXX May require some changes with Sets\n
-                key = gv[\'mapped_value_property_list\'][0]\n
-                v[key] = value\n
-            c.edit(**v) # and update the cell specific values\n
-          else:\n
-            return "Could not create cell %s" % str(k)\n
-        else:\n
-          return "Cell %s does not exist" % str(k)\n
-\n
-def parseField(f):\n
-  """\n
-   Parse given form field, to put them in\n
-   kw or in encapsulated_editor_list\n
-  """\n
-  k = f.id\n
-  v = getattr(request, k, MARKER)\n
-  if hasattr(v, \'edit\'):\n
-    # This is an encapsulated editor\n
-    # call it\n
-    encapsulated_editor_list.append(v)\n
-  elif v is not MARKER:\n
-    if k.startswith(\'my_\'):\n
-      # We only take into account\n
-      # the object attributes\n
-      k = k[3:]\n
-      # Form: \'\' -> ERP5: None\n
-      if v == \'\':\n
-        v = None\n
-      kw[k] = v\n
-\n
 # Some initilizations\n
 kw = {}\n
 encapsulated_editor_list = []\n
@@ -213,19 +104,6 @@ MARKER = []\n
 message = N_("Data+Updated.")\n
 \n
 try:\n
-  # We process all the field in form and\n
-  # we check if they are in the request,\n
-  # then we edit them\n
-  for field in form.get_fields():\n
-    parseField(field)\n
-    if(field.meta_type == \'ListBox\'):\n
-      editListBox(field, request.get(field.id))\n
-    elif(field.meta_type == \'MatrixBox\'):\n
-      editMatrixBox(field, request.get(field.id))\n
-\n
-  # Maybe we should build a list of objects we need\n
-  # Update basic attributes\n
-  context.edit(REQUEST=request,**kw)\n
   for encapsulated_editor in encapsulated_editor_list:\n
     encapsulated_editor.edit(context)\n
 except ActivityPendingError,e:\n
@@ -327,15 +205,10 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>field_id</string>
                             <string>value</string>
                             <string>callable</string>
-                            <string>editListBox</string>
-                            <string>editMatrixBox</string>
-                            <string>MARKER</string>
                             <string>kw</string>
                             <string>encapsulated_editor_list</string>
-                            <string>parseField</string>
+                            <string>MARKER</string>
                             <string>message</string>
-                            <string>field</string>
-                            <string>_apply_</string>
                             <string>encapsulated_editor</string>
                             <string>e</string>
                             <string>int</string>
