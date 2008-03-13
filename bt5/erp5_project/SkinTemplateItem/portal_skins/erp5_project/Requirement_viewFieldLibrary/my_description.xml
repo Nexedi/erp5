@@ -88,7 +88,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>height</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <int>10</int> </value>
                 </item>
                 <item>
@@ -96,11 +96,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>whitespace_preserve</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>100</int> </value>
                 </item>
               </dictionary>

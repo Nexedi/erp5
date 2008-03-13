@@ -101,7 +101,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -113,7 +113,7 @@
                     <value> <string>Project_view</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>project_selection</string> </value>
                 </item>
                 <item>

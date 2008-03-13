@@ -79,7 +79,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_width</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
                 </item>
                 <item>
@@ -91,7 +91,7 @@
                     <value> <string>Requirement_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>required</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
