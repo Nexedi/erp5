@@ -22,11 +22,15 @@ Project | documents
 Project | files
 Project | jump_to_related_sale_order_lines
 Project | milestone
+Project | ods_summary_file
+Project | ods_task_file
+Project | ods_task_report_file
 Project | planning
 Project | project_lines
 Project | report
 Project | task_fast_input_dialog
 Project | task_list
+Project | task_report_list
 Project | view
 Requirement Document | detailed_report
 Requirement Document | fast_input
