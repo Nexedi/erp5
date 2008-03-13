@@ -3,12 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
+        <global name="RadioField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>your_grouping</string> </value>
@@ -20,6 +26,14 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -57,7 +71,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -65,7 +83,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -106,7 +144,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -114,7 +156,29 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -134,7 +198,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -153,16 +217,42 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>vertical</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Grouping (or ungroupping)</string> </value>
+                    <value> <string>Mode</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -181,7 +271,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/grouping | python:here.portal_selections.getSelectionParamsFor(\'grouping_reference_fast_input_selection\').get(\'grouping\', 0)</string> </value>
+            <value> <string>request/grouping | python:here.portal_selections.getSelectionParamsFor(\'grouping_reference_fast_input_selection\').get(\'grouping\', \'grouping\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(context.Base_translateString(\'Grouping\'), \'grouping\'), (context.Base_translateString(\'Ungrouping\'), \'ungrouping\'),]</string> </value>
         </item>
       </dictionary>
     </pickle>

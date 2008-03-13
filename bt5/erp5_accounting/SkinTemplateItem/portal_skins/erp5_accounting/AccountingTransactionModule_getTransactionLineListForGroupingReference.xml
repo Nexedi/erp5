@@ -72,11 +72,8 @@ stool = portal.portal_simulation\n
 \n
 # we use a different selection for dialog params, because we never want this\n
 # selection to be reseteted\n
-dialog_params_selection = portal.portal_selections.getSelectionFor(\n
+dialog_selection_params = portal.portal_selections.getSelectionParamsFor(\n
                                \'grouping_reference_fast_input_selection\')\n
-selection_params = {}\n
-if dialog_params_selection is not None:\n
-  selection_params = dialog_params_selection.getParams()\n
 \n
 # support pseudo sorting; sorting is done by uid.\n
 orig_sort_on = portal.portal_selections.getSelectionSortOrder(\n
@@ -92,11 +89,10 @@ extra_query_keys = {}\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
      portal.portal_preferences.getPreferredAccountingTransactionSectionCategory())\n
 \n
-# unconditionnaly get from dialog selection\n
-grouping = selection_params.get(\'grouping\')\n
+grouping = dialog_selection_params.get(\'grouping\', \'grouping\')\n
 \n
 search_kw = dict()\n
-node = node or request.get(\'node\') or selection_params.get(\'node\')\n
+node = node or request.get(\'node\') or dialog_selection_params.get(\'node\')\n
 if node:\n
   search_kw[\'node_uid\'] = portal.restrictedTraverse(node).getUid()\n
 mirror_section = mirror_section or request.get(\'mirror_section\')\n
@@ -104,9 +100,10 @@ if mirror_section:\n
   search_kw[\'mirror_section_uid\'] = portal.restrictedTraverse(\n
                                           mirror_section).getUid()\n
 \n
-if grouping:\n
+if grouping == \'grouping\':\n
   where_expression = \'catalog.grouping_reference is NULL\'\n
 else:\n
+  assert grouping == \'ungrouping\', grouping\n
   where_expression = \'catalog.grouping_reference is not NULL\'\n
     \n
 return stool.getMovementHistoryList(\n
@@ -137,7 +134,7 @@ return stool.getMovementHistoryList(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, grouping=0, node=\'\', mirror_section=\'\', **kw</string> </value>
+            <value> <string>selection=None, grouping=\'grouping\', node=\'\', mirror_section=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -175,9 +172,7 @@ return stool.getMovementHistoryList(\n
                             <string>portal</string>
                             <string>ctool</string>
                             <string>stool</string>
-                            <string>dialog_params_selection</string>
-                            <string>selection_params</string>
-                            <string>None</string>
+                            <string>dialog_selection_params</string>
                             <string>orig_sort_on</string>
                             <string>sort_on</string>
                             <string>_getiter_</string>
@@ -190,6 +185,7 @@ return stool.getMovementHistoryList(\n
                             <string>search_kw</string>
                             <string>_write_</string>
                             <string>where_expression</string>
+                            <string>AssertionError</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -204,7 +200,7 @@ return stool.getMovementHistoryList(\n
             <value>
               <tuple>
                 <none/>
-                <int>0</int>
+                            <string>grouping</string>
                 <string></string>
                 <string></string>
               </tuple>

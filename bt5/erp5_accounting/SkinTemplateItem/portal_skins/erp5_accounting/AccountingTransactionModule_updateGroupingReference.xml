@@ -76,8 +76,7 @@ return context.AccountingTransactionModule_setGroupingReference(\n
                         selection_name=list_selection_name,\n
                         node=node,\n
                         mirror_section=mirror_section,\n
-                        update=1,\n
-                        cancel_url=cancel_url)\n
+                        update=1)\n
 </string> </value>
         </item>
         <item>

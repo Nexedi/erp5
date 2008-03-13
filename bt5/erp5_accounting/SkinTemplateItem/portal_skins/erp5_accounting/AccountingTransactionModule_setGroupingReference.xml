@@ -75,16 +75,19 @@ getobject = portal.portal_catalog.getobject\n
 N_ = portal.Base_translateString\n
 psm = N_(\'Nothing matches\')\n
 reset = 0\n
-precision = context.REQUEST.get(\'precision\', 2)\n
+request = container.REQUEST\n
+precision = request.get(\'precision\', 2)\n
 \n
 # XXX when should it be validated ?\n
 if node == \'\':\n
   node = context.REQUEST.get(\'field_your_node\', node)\n
 if mirror_section == \'\':\n
   mirror_section = context.REQUEST.get(\'field_your_mirror_section\',\n
-                                          mirror_section)\n
+                                        mirror_section)\n
 if grouping == \'\':\n
-  grouping = context.REQUEST.get(\'field_your_grouping\', grouping)\n
+  grouping = request.get(\'your_grouping\',\n
+                         request.get(\'field_your_grouping\',\n
+                                     grouping))\n
 \n
 # edit selection for dialog parameters\n
 portal.portal_selections.setSelectionParamsFor(\n
@@ -102,6 +105,7 @@ if uids:\n
       total_selected_amount += (line.getSourceInventoriatedTotalAssetPrice() or 0)\n
     else:\n
       total_selected_amount += (line.getDestinationInventoriatedTotalAssetPrice() or 0)\n
+request.set(\'total_selected_amount\', total_selected_amount)\n
 \n
 if update:\n
   # update selected uids \n
@@ -109,19 +113,12 @@ if update:\n
             selection_name, uids=uids, listbox_uid=listbox_uid,\n
             REQUEST=context.REQUEST)\n
     \n
-  psm = N_(\'Updated\')\n
-  return context.REQUEST.RESPONSE.redirect(\n
-      \'%s/AccountingTransactionModule_viewGroupingFastInputDialog?%s\' % (\n
-          context.absolute_url(),\n
-          make_query(dict(node=node,\n
-                          grouping=grouping,\n
-                          mirror_section=mirror_section,\n
-                          cancel_url=cancel_url,\n
-                          total_selected_amount=total_selected_amount,\n
-                          portal_status_message=psm))))\n
+  request.set(\'portal_status_message\', N_(\'Updated\'))\n
+  return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\n
+  \n
 \n
 # otherwise, try to group...\n
-if grouping:\n
+if grouping == \'grouping\':\n
   grouped_line_list = context.AccountingTransaction_guessGroupedLines(\n
                         accounting_transaction_line_uid_list=uids)\n
   if grouped_line_list:\n
@@ -166,6 +163,7 @@ if grouping:\n
             # Workflow action not supported\n
             pass\n
 else:\n
+  assert grouping == \'ungrouping\'\n
   # or to ungroup based on how we are called.\n
   amount_per_node_mirror_section = dict()\n
   # XXX is uids multi page safe here ?\n
@@ -202,16 +200,8 @@ else:\n
   else:\n
     psm = N_(\'Ungrouping refused. Check your selection\')\n
 \n
-context.REQUEST.RESPONSE.redirect(\n
-      \'%s/AccountingTransactionModule_viewGroupingFastInputDialog?%s\' % (\n
-          context.absolute_url(),\n
-          make_query(dict(node=node,\n
-                          grouping=grouping,\n
-                          mirror_section=mirror_section,\n
-                          cancel_url=cancel_url,\n
-                          total_selected_amount=total_selected_amount,\n
-                          reset=reset,\n
-                          portal_status_message=psm))))\n
+request.set(\'portal_status_message\', psm)\n
+return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\n
 </string> </value>
         </item>
         <item>
@@ -234,7 +224,7 @@ context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids=[], listbox=None, listbox_uid=[], selection_name=\'\', grouping=\'\', node=\'\', mirror_section=\'\', cancel_url=\'\', update=0, **kw</string> </value>
+            <value> <string>uids=[], listbox=None, listbox_uid=[], selection_name=\'\', grouping=\'\', node=\'\', mirror_section=\'\', update=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -254,7 +244,7 @@ context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -267,7 +257,6 @@ context.REQUEST.RESPONSE.redirect(\n
                             <string>grouping</string>
                             <string>node</string>
                             <string>mirror_section</string>
-                            <string>cancel_url</string>
                             <string>update</string>
                             <string>kw</string>
                             <string>ZTUtils</string>
@@ -281,6 +270,8 @@ context.REQUEST.RESPONSE.redirect(\n
                             <string>N_</string>
                             <string>psm</string>
                             <string>reset</string>
+                            <string>container</string>
+                            <string>request</string>
                             <string>precision</string>
                             <string>dict</string>
                             <string>total_selected_amount</string>
@@ -298,6 +289,7 @@ context.REQUEST.RESPONSE.redirect(\n
                             <string>cleared</string>
                             <string>account</string>
                             <string>date</string>
+                            <string>AssertionError</string>
                             <string>amount_per_node_mirror_section</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -325,7 +317,6 @@ context.REQUEST.RESPONSE.redirect(\n
                 <list/>
                 <none/>
                 <list/>
-                <string></string>
                 <string></string>
                 <string></string>
                 <string></string>
