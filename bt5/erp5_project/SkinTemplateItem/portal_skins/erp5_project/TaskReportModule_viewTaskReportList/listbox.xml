@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -18,6 +15,8 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
+                <string>all_columns</string>
+                <string>search_columns</string>
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
@@ -91,6 +90,53 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key>                 <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Assigned to</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Requested By</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
@@ -110,19 +156,23 @@
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
-                          <string>Starting</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>delivery.stop_date</string>
-                          <string>Due</string>
+                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>Deliverable to</string>
+                          <string>Location</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
                           <string>Assigned to</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Requested By</string>
                         </tuple>
                         <tuple>
                           <string>total_quantity</string>
@@ -202,6 +252,53 @@
                 <item>
                     <key>                 <string>report_tree</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Assigned to</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Requested By</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Total</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
