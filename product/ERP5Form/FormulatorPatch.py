@@ -566,11 +566,13 @@ from Products.Formulator.Widget import SingleItemsWidget
 
 def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
   # get items
-  items = field.get_value('items', REQUEST=REQUEST, 
-                          cell=getattr(REQUEST,'cell',None))
+  cell = getattr(REQUEST, 'cell', None)
+  items = field.get_value('items', REQUEST=REQUEST, cell=cell)
 
   # check if we want to select first item
-  if not value and field.get_value('first_item') and len(items) > 0:
+  if not value and field.get_value('first_item',
+                                   REQUEST=REQUEST,
+                                   cell=cell) and len(items) > 0:
       try:
           text, value = items[0]
       except ValueError:
