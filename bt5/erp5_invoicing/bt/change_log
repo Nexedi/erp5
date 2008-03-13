@@ -1,4 +1,7 @@
-2007-02-12 kazuhiko
+2003-03-12 jerome
+* Cleanup forms and add proxy fields
+
+2007-12-06 kazuhiko
 * use related_simulation_movement_path_list to reduce activity dependencies.
 
 2007-12-6 jerome
