@@ -365,13 +365,18 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
       w, h, maxwidth, maxheight = getLengthInfos(options_dict, ('width', 'height', 'maxwidth', 'maxheight'))
 
+      aspect_ratio = 1
       try: # try image properties
         aspect_ratio = float(picture.width) / float(picture.height)
       except (TypeError, ZeroDivisionError):
         try: # try ERP5.Document.Image API
-          aspect_ratio = float(picture.getWidth()) / float(picture.getHeight())
+          height = float(picture.getHeight())
+          if height:
+            aspect_ratio = float(picture.getWidth()) / height
         except AttributeError: # fallback to Photo API
-          aspect_ratio = float(picture.width()) / float(picture.height())
+          height = float(picture.height())
+          if height:
+            aspect_ratio = float(picture.width()) / height
       # fix a default value and correct the aspect
       if h is None:
         if w is None:
