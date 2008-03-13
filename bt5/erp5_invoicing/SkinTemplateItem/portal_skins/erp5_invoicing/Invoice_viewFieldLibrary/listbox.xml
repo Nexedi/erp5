@@ -98,8 +98,8 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>InvoiceLine_getResourceTitle</string>
+                          <string>Product or Service</string>
                         </tuple>
                         <tuple>
                           <string>total_quantity</string>
