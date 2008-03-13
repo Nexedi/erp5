@@ -51,11 +51,13 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     
     self.auth = 'ERP5TypeTestCase:'
     person_module = self.portal.person_module
-    if not hasattr(person_module, 'pers'):
+    if person_module._getOb('pers', None) is None:
       person_module.newContent(id='pers', portal_type='Person')
       get_transaction().commit()
       self.tic()
     person_module.pers.setFirstName('Bob')
+    if person_module.pers._getOb('img', None) is None:
+      person_module.pers.newContent(portal_type='Image', id='img')
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
     # make sure selections are empty
@@ -218,6 +220,29 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
+
+  def test_image_field_form_view(self):
+    response = self.publish(
+       '/%s/person_module/pers/img/Image_view'
+        % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_image_field_form_view_bottom_group(self):
+    response = self.publish(
+       '/%s/person_module/pers/img/Image_viewFullSizedImage'
+        % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
 
 
 class TestODTStyle(TestOOoStyle):
