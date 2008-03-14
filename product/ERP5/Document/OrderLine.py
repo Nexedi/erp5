@@ -80,6 +80,48 @@ class OrderLine(DeliveryLine):
         transactional_variable[call_method_key] = result
       return result
 
+    def _getTotalPrice(self, context, fast=1):
+      """
+      if hasLineContent: return sum of lines total price
+      if hasCellContent: return sum of cells total price
+      else: return quantity * price
+      """
+      base_id = 'movement'
+      if self.hasLineContent():
+        return sum(l.getTotalPrice() for l in
+            self.contentValues(meta_type=self.meta_type))
+      elif self.hasCellContent(base_id=base_id):
+        if fast : # Use MySQL
+          aggregate = self.DeliveryLine_zGetTotal()[0]
+          return aggregate.total_price or 0.0
+        return sum([ ( (cell.getQuantity() or 0) *
+                       (cell.getPrice(context=context) or 0))
+                        for cell in self.getCellValueList()])
+      else:
+        quantity = self.getQuantity() or 0.0
+        price = self.getPrice(context=context) or 0.0
+        return quantity * price
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTotalQuantity')
+    def getTotalQuantity(self, fast=1):
+      """
+      if hasLineContent: return sum of lines total quantity
+      if hasCellContent: return sum of cells total quantity
+      else: return quantity
+      """
+      base_id = 'movement'
+      if self.hasLineContent():
+        return sum(l.getTotalQuantity() for l in
+            self.contentValues(meta_type=self.meta_type))
+      elif self.hasCellContent(base_id=base_id):
+        if fast : # Use MySQL
+          aggregate = self.DeliveryLine_zGetTotal()[0]
+          return aggregate.total_quantity or 0.0
+        return sum([cell.getQuantity() for cell in self.getCellValueList()])
+      else:
+        return self.getQuantity()
+
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 
                                         method_id = 'expand'):
       """

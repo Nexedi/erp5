@@ -1850,12 +1850,11 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   def test_19_getMovementList(self, quiet=0, run=run_all_test):
     """
     Check getMovementList.
-    Verify that it manage hierarchical order lines.
+    Verify that it supports hierarchical order lines.
     Check that order cells are returned when defined on a leaf line, and not
     returned when defined on a non leaf line.
     """
     if not run: return
-    sequence_list = SequenceList()
 
     portal = self.getPortal()
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
@@ -1932,6 +1931,199 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                                 portal_type=self.order_cell_portal_type, 
                                 *cell_key)
     self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+
+  def test_19b_getTotalQuantityAndPrice(self, quiet=0, run=run_all_test):
+    """
+    Check getTotalQuantity and getTotalPrice.
+    Check isMovement.
+    Verify that it supports hierarchical order lines.
+    Note that this depends on isMovement and Order Line reindexation
+    """
+    if not run: return
+
+    portal = self.getPortal()
+    base_id = 'movement'
+    order_line_vcl=['size/Baby']
+    order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
+    order = order_module.newContent(portal_type=self.order_portal_type)
+
+    # No line, no movement
+    self.assertEquals(order.getTotalQuantity(fast=0), 0)
+    self.assertEquals(order.getTotalQuantity(fast=1), 0)
+    self.assertEquals(order.getTotalPrice(fast=0), 0)
+    self.assertEquals(order.getTotalPrice(fast=1), 0)
+
+    # Create a variated resource
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(
+        portal_type=self.resource_portal_type,
+        variation_base_category_list=['size'],
+        size_list=self.size_list)
+
+    # One line is considered as a movement
+    order_line = order.newContent(
+        portal_type=self.order_line_portal_type,
+        resource_value=resource,
+        price=2,
+        quantity=3)
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 3)
+    self.assertEquals(order.getTotalQuantity(fast=1), 3)
+    self.assertEquals(order.getTotalPrice(fast=0), 6)
+    self.assertEquals(order.getTotalPrice(fast=1), 6)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 3)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 3)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 6)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 6)
+
+    # add cell to line, line is not a movement anymore
+    order_line.setVariationCategoryList(order_line_vcl)
+    cell_key = order_line.getCellKeyList(base_id=base_id)[0]
+    cell = order_line.newCell(
+        base_id=base_id,
+        portal_type=self.order_cell_portal_type, 
+        *cell_key)
+    cell.edit(mapped_value_property_list=['price', 'quantity'],
+        price=3, quantity=4,
+        predicate_category_list=cell_key,
+        variation_category_list=cell_key)
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), False)
+    self.assertEquals(cell.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 4)
+    self.assertEquals(order.getTotalQuantity(fast=1), 4)
+    self.assertEquals(order.getTotalPrice(fast=0), 12)
+    self.assertEquals(order.getTotalPrice(fast=1), 12)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 4)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 4)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 12)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 12)
+
+    self.assertEquals(cell.getTotalQuantity(), 4)
+    self.assertEquals(cell.getTotalPrice(fast=0), 12)
+    self.assertEquals(cell.getTotalPrice(fast=1), 12)
+
+    # add sub_line to line, cell and line are not movements
+    sub_order_line = order_line.newContent(
+        portal_type=self.order_line_portal_type,
+        price=4,
+        quantity=5)
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), False)
+    self.assertEquals(cell.isMovement(), False)
+    self.assertEquals(sub_order_line.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 5)
+    self.assertEquals(order.getTotalQuantity(fast=1), 5)
+    self.assertEquals(order.getTotalPrice(fast=0), 20)
+    self.assertEquals(order.getTotalPrice(fast=1), 20)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 5)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 5)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 20)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 20)
+
+    self.assertEquals(cell.getTotalQuantity(), 0)
+    self.assertEquals(cell.getTotalPrice(fast=0), 0)
+    self.assertEquals(cell.getTotalPrice(fast=1), 0)
+
+    self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 5)
+    self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 5)
+    self.assertEquals(sub_order_line.getTotalPrice(fast=0), 20)
+    self.assertEquals(sub_order_line.getTotalPrice(fast=1), 20)
+
+    # add sub_cell to sub_line, only sub_cell is movement
+    sub_order_line.setVariationCategoryList(order_line_vcl)
+    sub_cell_key = sub_order_line.getCellKeyList(base_id=base_id)[0]
+    sub_cell = sub_order_line.newCell(
+        base_id=base_id,
+        portal_type=self.order_cell_portal_type, 
+        *cell_key)
+    sub_cell.edit(mapped_value_property_list=['price', 'quantity'],
+        price=5, quantity=6,
+        predicate_category_list=cell_key,
+        variation_category_list=cell_key)
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), False)
+    self.assertEquals(cell.isMovement(), False)
+    self.assertEquals(sub_order_line.isMovement(), False)
+    self.assertEquals(sub_cell.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 6)
+    self.assertEquals(order.getTotalQuantity(fast=1), 6)
+    self.assertEquals(order.getTotalPrice(fast=0), 30)
+    self.assertEquals(order.getTotalPrice(fast=1), 30)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 6)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 6)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 30)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 30)
+
+    self.assertEquals(cell.getTotalQuantity(), 0)
+    self.assertEquals(cell.getTotalPrice(fast=0), 0)
+    self.assertEquals(cell.getTotalPrice(fast=1), 0)
+
+    self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 6)
+    self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 6)
+    self.assertEquals(sub_order_line.getTotalPrice(fast=0), 30)
+    self.assertEquals(sub_order_line.getTotalPrice(fast=1), 30)
+
+    self.assertEquals(sub_cell.getTotalQuantity(), 6)
+    self.assertEquals(sub_cell.getTotalPrice(fast=0), 30)
+    self.assertEquals(sub_cell.getTotalPrice(fast=1), 30)
+
+    # delete sub_line, cell is movement again
+    order_line.manage_delObjects([sub_order_line.getId()])
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), False)
+    self.assertEquals(cell.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 4)
+    self.assertEquals(order.getTotalQuantity(fast=1), 4)
+    self.assertEquals(order.getTotalPrice(fast=0), 12)
+    self.assertEquals(order.getTotalPrice(fast=1), 12)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 4)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 4)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 12)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 12)
+
+    self.assertEquals(cell.getTotalQuantity(), 4)
+    self.assertEquals(cell.getTotalPrice(fast=0), 12)
+    self.assertEquals(cell.getTotalPrice(fast=1), 12)
+
+    # delete cell, line is movement again
+    order_line.manage_delObjects([cell.getId()])
+    order_line.setVariationCategoryList([])
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 3)
+    self.assertEquals(order.getTotalQuantity(fast=1), 3)
+    self.assertEquals(order.getTotalPrice(fast=0), 6)
+    self.assertEquals(order.getTotalPrice(fast=1), 6)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 3)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 3)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 6)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 6)
 
   def stepCreateSubOrderLine(self,sequence=None, sequence_list=None, **kw):
     """

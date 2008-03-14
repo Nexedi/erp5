@@ -373,3 +373,18 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       parent = self.getParentValue()
       if parent is not None:
         parent.updateSimulationDeliveryProperties(movement_list, self)
+
+    security.declarePrivate('manage_afterAdd')
+    def manage_afterAdd(self, item, container):
+      "if the container is a line too, reindex it"
+      if self.meta_type == container.meta_type:
+        container.reindexObject()
+      return Movement.manage_afterAdd(self, item, container)
+
+    security.declarePrivate('manage_beforeDelete')
+    def manage_beforeDelete(self, item, container):
+      "if the container is a line too, reindex it"
+      if self.meta_type == container.meta_type:
+        container.reindexObject()
+      return Movement.manage_beforeDelete(self, item, container)
+

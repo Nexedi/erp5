@@ -47,7 +47,6 @@ class OrderCell(DeliveryCell):
     meta_type = 'ERP5 Order Cell'
     portal_type = 'Order Cell'
     isCell = 1
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -74,3 +73,26 @@ class OrderCell(DeliveryCell):
       Reindex children and simulation
       """
       self.recursiveReindexObject(*k,**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'isMovement')
+    def isMovement(self):
+      """
+      should be considered as a movement if the parent does not have sub lines
+      """
+      return not self.getParentValue().hasLineContent()
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getTotalPrice')
+    def getTotalPrice(self, *args, **kw):
+      "only return a value if self is a movement"
+      if not self.isMovement(): return 0.0
+      return DeliveryCell.getTotalPrice(self, *args, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getTotalQuantity')
+    def getTotalQuantity(self, *args, **kw):
+      "only return a value if self is a movement"
+      if not self.isMovement(): return 0.0
+      return DeliveryCell.getTotalQuantity(self, *args, **kw)
+
