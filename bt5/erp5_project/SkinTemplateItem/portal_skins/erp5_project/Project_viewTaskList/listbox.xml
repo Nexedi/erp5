@@ -14,10 +14,8 @@
             <value>
               <list>
                 <string>title</string>
-                <string>lines</string>
                 <string>columns</string>
                 <string>all_columns</string>
-                <string>sort</string>
                 <string>list_method</string>
                 <string>stat_method</string>
                 <string>selection_name</string>
@@ -91,7 +89,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -131,11 +129,11 @@
                           <string>Estimated Time</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>simulation_state</string>
+                          <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -165,7 +163,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -205,18 +203,18 @@
                           <string>Estimated Time</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>simulation_state</string>
+                          <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -247,21 +245,17 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
+                    <key>                 <string>list_action</string> </key>
                     <value> <string>Project_viewLineList</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -272,7 +266,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>report_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -283,11 +277,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
+                    <key>                 <string>report_tree</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>project_task_selection</string> </value>
                 </item>
                 <item>
@@ -295,18 +289,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
+                    <key>                 <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -316,8 +299,8 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Listbox</string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Tasks</string> </value>
                 </item>
               </dictionary>
             </value>

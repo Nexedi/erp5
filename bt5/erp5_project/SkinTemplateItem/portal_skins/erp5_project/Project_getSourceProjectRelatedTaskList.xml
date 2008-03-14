@@ -74,7 +74,7 @@ task_list = [x.getObject() for x in \\\n
           source_project_uid = source_project_uid_list)]\n
 task_line_list = []\n
 for task in task_list:\n
-  task_line_list.extend(task.objectValues(portal_type=\'Task Line\'))\n
+  task_line_list.extend(task.contentValues(portal_type=\'Task Line\'))\n
 \n
 return task_line_list\n
 </string> </value>
