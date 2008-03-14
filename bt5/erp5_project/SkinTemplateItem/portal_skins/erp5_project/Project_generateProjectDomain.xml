@@ -66,6 +66,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
+\n
+project_line_portal_type = \'Project Line\'\n
+\n
 domain_list = []\n
 \n
 #context.log(\'depth\', depth)\n
@@ -75,14 +78,16 @@ here = context.REQUEST[\'here\']\n
 \n
 #context.log(\'parent.getMembershipCriterionCategoryList\', parent.getMembershipCriterionCategoryList())\n
 \n
+\n
+\n
 if depth == 0:\n
-  category_list = here.objectValues(portal_type=\'Project Line\')\n
+  category_list = here.contentValues(portal_type=project_line_portal_type)\n
   #for i in context.portal_selections.getSelectionValueList(context=context,\n
   #                                                                 selection_name= \'task_selection\'):\n
   #  category_list.extend([j for j in i.getSourceProjectValueList(portal_type="Project") if j not in category_list])\n
   \n
 else:\n
-  category_list = [ ]\n
+  category_list = []\n
   #category_list = parent.objectValues()\n
   #for i in context.portal_selections.getSelectionValueList(context=context,\n
   #                                                                 selection_name=\'project_task_selection\'):\n
@@ -92,7 +97,7 @@ else:\n
   parent_category_list = parent.getMembershipCriterionCategoryList()\n
   for parent_category in parent_category_list:\n
     parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
-    category_list.extend(context.restrictedTraverse(parent_category).objectValues())\n
+    category_list.extend(context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type))\n
 \n
 i = 0\n
 for category in category_list:\n
@@ -156,6 +161,7 @@ return domain_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>project_line_portal_type</string>
                             <string>domain_list</string>
                             <string>_getitem_</string>
                             <string>here</string>

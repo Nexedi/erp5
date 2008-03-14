@@ -23,7 +23,6 @@
                 <string>editable_columns</string>
                 <string>report_tree</string>
                 <string>report_root_list</string>
-                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -243,10 +242,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>list_action</string> </key>
-                    <value> <string>Project_viewLineList</string> </value>
                 </item>
                 <item>
                     <key>                 <string>list_method</string> </key>
