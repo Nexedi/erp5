@@ -1,6 +1,7 @@
 2008-3-14 Yusei
 * Add dependency to erp5_ingestion.
 * Version up to 0.9.3.
+* Remove ingestion scripts from DMS.
 
 2008-2-14 Yusei
 * Improve wiki successor/predecessor.
