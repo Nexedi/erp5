@@ -1645,8 +1645,8 @@ class BasicStructure:
         position +=1
         # recovering usefull informations, basic_structure
         if self.title_line not in (None,''):
-	        title_line_method = getattr(report_group_object.getObject(),
-			                                self.title_line, None)
+          title_line_method = getattr(report_group_object.getObject(),
+                                      self.title_line, None)
         else:
           title_line_method = getattr(report_group_object.getObject(),
                                       'getTitle', None)
@@ -1684,7 +1684,7 @@ class BasicStructure:
                                          lane_axis_bounds)
 
         self.basic_group_list.append(child_group)
-	
+  
       return 1
 
 
@@ -2098,8 +2098,8 @@ class PlanningStructure:
     for domain in basic_structure.lane_domain_list:
       axis_group = AxisGroup(name='group_lane_' + str(axis_group_number),
                              title=domain.getProperty('title'), 
-			     delimiter_type=domain.getProperty('delimiter_type'),
-			     link=domain.getProperty('link',None))
+           delimiter_type=domain.getProperty('delimiter_type'),
+           link=domain.getProperty('link',None))
       axis_group.tooltip = domain.getProperty('tooltip')
       relative_pos = int(domain.getProperty('relative_position'))
       axis_group.position_lane.relative_begin = relative_pos - axis_start
