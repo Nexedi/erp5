@@ -160,24 +160,18 @@ class TestCRM(ERP5TypeTestCase):
 
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
-  """Test Mail Ingestion for CRM.
+  """Test Mail Ingestion  for standalone CRM.
   """
 
   def getBusinessTemplateList(self):
-    # In this test, We will attach some document portal types in event.
-    # So we add DMS and Web.
-    return ('erp5_base', 'erp5_crm', 'erp5_web',
-            'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+    # Mail Ingestion must work with CRM alone.
+    return ('erp5_base',
+            'erp5_ingestion',
+            'erp5_ingestion_mysql_innodb_catalog', 'erp5_crm',
+            )
 
   def afterSetUp(self):
     portal = self.portal
-
-    # XXX this should not be necessary either 
-    # set prefered file name regular expression
-    pref = portal.portal_preferences.default_site_preference
-    pref.setPreferredDocumentFileNameRegularExpression('.*')
-    pref.setPreferredDocumentReferenceRegularExpression('.*')
-    pref.enable()
 
     # XXX do this in ERP5Site.py ?
     # sets up content type registry
