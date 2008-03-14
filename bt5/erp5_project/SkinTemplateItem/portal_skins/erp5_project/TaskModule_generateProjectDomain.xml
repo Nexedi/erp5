@@ -70,18 +70,25 @@ domain_list = []\n
 \n
 \n
 if depth == 0:\n
-  category_list = [ ]\n
-  for i in context.portal_selections.getSelectionValueList(context=context,\n
-                                                                   selection_name= \'task_module_selection\'):\n
-    category_list.extend([j for j in i.getSourceProjectValueList(portal_type="Project") if j not in category_list])\n
+  category_list = []\n
+  for task in context.portal_selections.getSelectionValueList(context=context,\n
+                                                           selection_name=\'task_module_selection\'):\n
+    source_project_value_list = \\\n
+      task.getSourceProjectValueList(portal_type=["Project", "Project Line"])\n
+    for source_project_value in source_project_value_list:\n
+      if source_project_value.getPortalType() == \'Project\':\n
+        category = source_project_value\n
+      else:\n
+        category = source_project_value.getExplanationValue()\n
+      if category not in category_list:\n
+        category_list.append(category)\n
   \n
 else:\n
-  category_list = [ ]\n
+  category_list = []\n
   for i in context.portal_selections.getSelectionValueList(context=context,\n
-                                                                   selection_name=\'task_module_selection\'):\n
+                                                           selection_name=\'task_module_selection\'):\n
     category_list.extend([j for j in i.getSourceProjectValueList(portal_type=["Project Line", "Project Milestones"]) \\\n
-                                                            if (j not in category_list) and ( j.getParentRelativeUrl() in parent.getMembershipCriterionCategoryList()) ])\n
-\n
+                                                            if (j not in category_list) and (j.getParentRelativeUrl() in parent.getMembershipCriterionCategoryList())])\n
 \n
 \n
 for category in category_list:\n
@@ -146,11 +153,14 @@ return domain_list\n
                             <string>domain_list</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
+                            <string>task</string>
+                            <string>source_project_value_list</string>
+                            <string>source_project_value</string>
+                            <string>category</string>
                             <string>i</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>j</string>
-                            <string>category</string>
                             <string>domain</string>
                             <string>script</string>
                           </tuple>
