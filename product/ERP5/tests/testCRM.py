@@ -43,7 +43,10 @@ def openTestFile(filename):
 
 class TestCRM(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_crm',)
+    return ('erp5_base',
+            'erp5_ingestion',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_crm',)
 
   def test_Event_CreateRelatedEvent(self):
     # test action to create a related event from an event
@@ -299,8 +302,14 @@ class TestCRMMailSend(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     # In this test, We will attach some document portal types in event.
     # So we add DMS and Web.
-    return ('erp5_base', 'erp5_crm', 'erp5_web',
-            'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+    return ('erp5_base',
+            'erp5_ingestion',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_crm',
+            'erp5_web',
+            'erp5_dms_mysql_innodb_catalog',
+            'erp5_dms',
+            )
 
   def afterSetUp(self):
     portal = self.portal
