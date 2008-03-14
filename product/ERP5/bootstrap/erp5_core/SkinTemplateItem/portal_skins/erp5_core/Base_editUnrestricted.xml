@@ -103,7 +103,35 @@ encapsulated_editor_list = []\n
 MARKER = []\n
 message = N_("Data+Updated.")\n
 \n
+\n
+def parseField(f):\n
+  """\n
+   Parse given form field, to put them in\n
+   kw or in encapsulated_editor_list\n
+  """\n
+  k = f.id\n
+  v = getattr(request, k, MARKER)\n
+  if hasattr(v, \'edit\'):\n
+    # This is an encapsulated editor\n
+    # call it\n
+    encapsulated_editor_list.append(v)\n
+  elif v is not MARKER:\n
+    if k.startswith(field_prefix):\n
+      # We only take into account\n
+      # the object attributes\n
+      k = k[field_prefix_len:]\n
+      # Form: \'\' -> ERP5: None\n
+      if v == \'\':\n
+        v = None\n
+      kw[k] = v\n
+\n
 try:\n
+  # We process all the field in form and\n
+  # we check if they are in the request,\n
+  # then we edit them\n
+  for field in form.get_fields():\n
+    parseField(field)\n
+\n
   for encapsulated_editor in encapsulated_editor_list:\n
     encapsulated_editor.edit(context)\n
 except ActivityPendingError,e:\n
@@ -209,6 +237,8 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>encapsulated_editor_list</string>
                             <string>MARKER</string>
                             <string>message</string>
+                            <string>parseField</string>
+                            <string>field</string>
                             <string>encapsulated_editor</string>
                             <string>e</string>
                             <string>int</string>
