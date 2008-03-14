@@ -160,14 +160,15 @@ class TestCRM(ERP5TypeTestCase):
 
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
-  """Test Mail Ingestion  for standalone CRM.
+  """Test Mail Ingestion for standalone CRM.
   """
 
   def getBusinessTemplateList(self):
     # Mail Ingestion must work with CRM alone.
     return ('erp5_base',
             'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog', 'erp5_crm',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_crm',
             )
 
   def afterSetUp(self):
