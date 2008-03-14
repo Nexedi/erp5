@@ -1638,8 +1638,6 @@ class BasicStructure:
         stat_context = report_group_object.getObject().asContext(**stat_result)
         stat_context.domain_url = \
                      report_group_object.getObject().getRelativeUrl()
-        stat_context.absolute_url = \
-                     lambda x: report_group_object.getObject().absolute_url()
         url=getattr(stat_context,'domain_url','')
         # updating position_informations
         position +=1
@@ -1853,7 +1851,6 @@ class BasicGroup:
             stat_result = {}
             stat_context = obj.asContext(**stat_result)
             stat_context.domain_url = obj.getRelativeUrl()
-            stat_context.absolute_url = lambda x: obj.absolute_url()
             object = stat_context.getObject()
             
             # check if the activity_content has some special method for URL
@@ -2418,7 +2415,7 @@ class Activity:
       if zone == 1:
         # active
         block_color = self.color
-        block_link = self.link
+        block_link = '%s/view' % self.object.absolute_url()
       else:
         # passive
         block_color = '#D1E8FF'
