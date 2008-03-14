@@ -84,6 +84,7 @@
                 <string>TitleMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
                 <string>RequirementMovementGroup</string>
+                <string>QuantityUnitMovementGroup</string>
                 <string>SplitMovementGroup</string>
               </tuple>
             </value>
