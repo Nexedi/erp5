@@ -1026,8 +1026,12 @@ class ActivityTool (Folder, UniqueObject):
               (m.object_path, m.method_id), error=sys.exc_info())
 
       if REQUEST is not None:
-        return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(),
-          'manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared'))
+        message = 'Activities%20Cleared'
+        if keep:
+          message = 'Tables%20Recreated'
+        return REQUEST.RESPONSE.redirect(
+            '%s/manageActivitiesAdvanced?manage_tabs_message=%s' % (
+              self.absolute_url(), message))
 
     security.declarePublic('getMessageList')
     def getMessageList(self,**kw):
