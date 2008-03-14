@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -16,20 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
-                <string>all_editable_columns</string>
                 <string>title</string>
-                <string>report_tree</string>
-                <string>report_root_list</string>
-                <string>all_columns</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>Base_viewSearchResultList</string>
-                <string>sort</string>
-                <string>default_params</string>
+                <string>all_columns</string>
                 <string>list_method</string>
-                <string>list_action</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>default_params</string>
               </list>
             </value>
         </item>
@@ -101,73 +91,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>short_title</string>
-                          <string>Short Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>version</string>
-                          <string>Version</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -199,14 +123,76 @@
                           <string>Index</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Estimated Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Short Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>default_params</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -225,55 +211,27 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>parent</string>
-                          <string>Object Tree</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>project_document_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Documents</string> </value>
                 </item>
               </dictionary>
@@ -304,11 +262,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
