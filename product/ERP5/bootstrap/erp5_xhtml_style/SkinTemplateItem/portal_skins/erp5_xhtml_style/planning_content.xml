@@ -63,7 +63,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
   </tal:block>\n
   <tal:block tal:define=" basic options/basic;\n
              planning options/planning;\n
-             address python:basic.context.getUrl()">\n
+             address python: basic.context.absolute_url()">\n
     <!-- hidden fields holding some usefull data-->\n
     <input type="hidden" name="list_selection_name" value="PlanningView" tal:attributes="value python:basic.field.get_value(\'selection_name\')" />\n
     <!-- setPage needs \'listbox_uid:list\'-->\n
@@ -239,7 +239,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
             <!-- next page exists -->\n
             <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
                    tal:attributes="src next_src;\n
-                   name string:${address}/nextPage:method;\n
+                   name string:{address}/nextPage:method;\n
                    id python:axis.name + \'_next\'" />\n
           </tal:block>\n
           <!-- inserting depth widget -->\n
@@ -269,12 +269,12 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
           <!-- previous page exists -->\n
           <input type="image" src="/images/1leftarrowv.png" title="Previous Lane Page" name="" border="0"\n
                  tal:attributes="src previous_src;\n
-                 name string:${address}/previousLanePage:method;\n
+                 name string:previousLanePage:method;\n
                  id python:axis.name + \'_previous\'" />\n
           <!-- next page exists -->\n
           <input type="image" src="/images/1rightarrowv.png" title="Next Lane Page" name="" border="0"\n
                  tal:attributes="src next_src;\n
-                 name string:${address}/nextLanePage:method;\n
+                 name string:nextLanePage:method;\n
                  id python:axis.name + \'_next\'" />\n
         </tal:block>\n
       </div>\n
