@@ -1,3 +1,7 @@
+2008-03-14 yusei
+* Move email and subject table to erp5_ingestion.
+* Version up to 0.91.
+
 2007-12-18 yusei
 *Fixed wrong field names in erp5_dms.
 
