@@ -74,6 +74,10 @@ request=context.REQUEST\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
+# Extra security\n
+if request.get(\'field_prefix\', None):\n
+  field_prefix = \'my_\' # Prevent changing the prefix through publisher\n
+\n
 # Use dialog_id if present, otherwise fall back on form_id.\n
 if dialog_id not in (\'\', None):\n
   form_id = dialog_id\n
@@ -182,7 +186,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, field_prefix=\'my_\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -202,7 +206,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -214,6 +218,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>dialog_id</string>
                             <string>ignore_layout</string>
                             <string>editable_mode</string>
+                            <string>field_prefix</string>
                             <string>Products.Formulator.Errors</string>
                             <string>FormValidationError</string>
                             <string>Products.CMFActivity.Errors</string>
@@ -261,6 +266,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                 <string></string>
                 <int>0</int>
                 <int>1</int>
+                <string>my_</string>
               </tuple>
             </value>
         </item>
