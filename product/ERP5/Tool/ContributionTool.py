@@ -404,8 +404,8 @@ class ContributionTool(BaseTool):
 
     regex_text = self.portal_preferences.getPreferredDocumentFileNameRegularExpression()
     if regex_text in ('', None):
-      # we must have file name regular expression defined in preferences
-      raise ValueError, '[DMS] No file name regular expression defined in preferences.'
+      return property_dict
+
     if regex_text:
       pattern = re.compile(regex_text)
       if pattern is not None:
