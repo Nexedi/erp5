@@ -1867,9 +1867,6 @@ class BasicGroup:
             #else:
             #  url = object.getUrl()
             url = object.getUrl()
-            if url is not None:
-              # View is considered the default action from one object
-              url += "/view"
 
             # XXX should define height of block here
             #height = None
@@ -1961,9 +1958,6 @@ class BasicGroup:
 
           # get object url, not group url
           url = self.object.getObject().getUrl()
-          if url is not None:
-            # View is considered the default action from one object
-            url += "/view"
 
           # creating new activity instance
           activity=BasicActivity(title=info['info_center'], name=name,
