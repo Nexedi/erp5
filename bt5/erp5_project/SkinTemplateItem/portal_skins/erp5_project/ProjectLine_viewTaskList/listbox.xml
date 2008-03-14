@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -19,12 +16,10 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>all_columns</string>
-                <string>sort</string>
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
-                <string>report_tree</string>
-                <string>report_root_list</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -90,7 +85,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -116,6 +111,10 @@
                         <tuple>
                           <string>quantity</string>
                           <string>Estimated Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Unit</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
@@ -148,7 +147,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -176,12 +175,27 @@
                           <string>Estimated Time</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
                           <string>Location</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End</string>
                         </tuple>
                       </list>
                     </value>
@@ -195,13 +209,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -212,41 +226,15 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>parent</string>
-                          <string>Object Tree</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>project_task_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Tasks</string> </value>
                 </item>
               </dictionary>
@@ -258,11 +246,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
