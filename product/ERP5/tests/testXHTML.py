@@ -69,6 +69,8 @@ target_business_templates = (
 
   'erp5_consulting',
 
+  'erp5_ingestion',
+  'erp5_ingestion_mysql_innodb_catalog',
   'erp5_crm',
 
   'erp5_web',
