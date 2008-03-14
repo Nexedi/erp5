@@ -277,8 +277,6 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
            </tal:block>\n
           </table:table>          \n
           <text:p></text:p>\n
-          <text:p></text:p>\n
-          <text:p></text:p>\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
