@@ -1,7 +1,8 @@
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
-#
+#               Fabien Morin <fabien@nexedi.com
+#               Jacek Medrzycki <jacek@erp5.pl>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,10 +28,15 @@
 
 import unittest
 import os
+import popen2
+import urllib
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
+from zLOG import LOG
+from xml.dom import minidom
+
 from glob import glob
 
 try:
@@ -44,6 +50,7 @@ except ImportError:
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
 bt5_base_path = os.environ.get('erp5_tests_bt5_path',
                                os.path.join(INSTANCE_HOME, 'bt5'))
+bootstrap_base_path = os.path.join(INSTANCE_HOME, 'Products', 'ERP5', 'bootstrap')
 
 # dependency order
 target_business_templates = (
@@ -132,50 +139,249 @@ class TestXHTML(ERP5TypeTestCase):
                                              field.get_value('form_id'),
                                              field.get_value('field_id')))
 
+class W3Validator(object):
+
+  def __init__(self, validator_path, show_warnings):
+    self.validator_path = validator_path
+    self.show_warnings = show_warnings
+    self.name = 'w3c'
+
+  def _parse_validation_results(self, result):
+    """
+    parses the validation results, returns a list of tuples:
+    line_number, col_number, error description
+    """
+    error_list=[]
+    warning_list=[]
+    xml_doc = minidom.parseString(result)
+    for error in xml_doc.getElementsByTagName('m:error'):
+      error_line = error.getElementsByTagName('m:line')[0].firstChild.nodeValue
+      error_col = error.getElementsByTagName('m:col')[0].firstChild.nodeValue
+      error_message = error.getElementsByTagName('m:message')[0].firstChild.nodeValue
+      error_list.append((error_line,error_col,error_message))
+    for warning in xml_doc.getElementsByTagName('m:warning'):
+      warning_line = warning.getElementsByTagName('m:line')[0].firstChild.nodeValue
+      warning_col = warning.getElementsByTagName('m:col')[0].firstChild.nodeValue
+      warning_message = warning.getElementsByTagName('m:message')[0].firstChild.nodeValue
+      warning_list.append((warning_line, warning_col, warning_message))
+    return error_list, warning_list
+
+  def getErrorAndWarningList(self, page_source):
+    '''
+      retrun two list : a list of errors and an other for warnings
+    '''
+    source = 'fragment=%s&output=soap12' % urllib.quote_plus(page_source)
+    os.environ['CONTENT_LENGTH'] = str(len(source))
+    os.environ['REQUEST_METHOD'] = 'POST'
+    stdout, stdin, stderr = popen2.popen3(self.validator_path)
+    stdin.write(source)
+    stdin.close()
+    while stdout.readline() != '\n':
+      pass
+    result = stdout.read()
+    return self._parse_validation_results(result)
 
 
-def validate_xhtml(source):
-  import popen2
-  if not os.path.exists('/usr/bin/tidy'):
-    raise IOError, 'tidy is not installed at /usr/bin/tidy'
-  stdout, stdin, stderr = popen2.popen3('/usr/bin/tidy -e -q -utf8')
-  stdin.write(source)
-  stdin.close()
-  for i in stderr:
-    data = i.split(' - ')
-    if len(data) >= 2:
-      if data[1].startswith('Error: '):
-        return False
-#       elif data[1].startswith('Warning: '):
-#         return False
-  return True
+class TidyValidator(object):
+
+  def __init__(self, validator_path):
+    self.validator_path = validator_path
+    self.show_warnings = show_warnings
+    self.name = 'tidy'
+
+  def _parse_validation_results(self, result):
+    """
+    parses the validation results, returns a list of tuples:
+    line_number, col_number, error description
+    """
+    error_list=[]
+    warning_list=[]
+
+    for i in result:
+      data = i.split(' - ')
+      if len(data) >= 2:
+        data[1] = data[1].replace('\n','')
+        if data[1].startswith('Error: '):
+          location_list = data[0].split(' ')
+          line = location_list[1]
+          column = location_list[3]
+          error = True
+          message = data[1].split(': ')[1]
+          error_list.append((line, column, message))
+        elif data[1].startswith('Warning: '):
+          location_list = data[0].split(' ')
+          line = location_list[1]
+          column = location_list[3]
+          warning = True
+          message = data[1].split(': ')[1]
+          warning_list.append((line, column, message))
+    return (error_list, warning_list)
+
+  def getErrorAndWarningList(self, page_source):
+    '''
+      retrun two list : a list of errors and an other for warnings
+    '''
+    stdout, stdin, stderr = popen2.popen3('%s -e -q -utf8' % self.validator_path)
+    stdin.write(page_source)
+    stdin.close()
+    return self._parse_validation_results(stderr)
 
 
-def makeTestMethod(module_id, portal_type, view_name):
+def validate_xhtml(validator, source, view_name, bt_name):
+  '''
+    validate_xhtml return True if there is no error on the page, False else.
+    Now it's possible to show warnings, so, if the option is set to True on the
+    validator object, and there is some warning on the page, the function 
+    return False, even if there is no error.
+  '''
+
+  # display some information when test faild to facilitate debugging
+  message = []
+  message.append('Using %s validator to parse the view "%s" (from %s bt) with warning %s displayed :' %\
+      (validator.name, view_name, bt_name, validator.show_warnings and '' or 'NOT'))
+
+  error_list, warning_list = validator.getErrorAndWarningList(source)
+
+  if error_list:
+    # build error message
+    for error in error_list:
+      message.append('Error: line %s column %s : %s' % error)
+
+  if warning_list and validator.show_warnings:
+    # build error message
+    for warning in warning_list:
+      message.append('Warning: line %s column %s : %s' % warning)
+
+  message = '\n'.join(message)
+  if validator.show_warnings:
+    return ((not (len(error_list) or len(warning_list))), message)
+  return ((not len(error_list)), message)
+
+
+def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
+
+  def createSubContent(content, portal_type_list):
+    if len(portal_type_list):
+      new_portal_type = portal_type_list[0]
+      new_portal_type_list = portal_type_list[1:]
+      new_content = content.newContent(portal_type=new_portal_type)
+      return createSubContent(new_content, new_portal_type_list)
+    else:
+      return content
+
   def testMethod(self):
     module = getattr(self.portal, module_id)
-    content = module.newContent(portal_type=portal_type)
-    view = getattr(content, view_name)
-    self.assert_(validate_xhtml(view()))
+    portal_type_list = portal_type.split('/')
+
+    object = createSubContent(module, portal_type_list)
+    view = getattr(object, view_name)
+    self.assert_(*validate_xhtml( validator=validator, 
+                                  source=view(), 
+                                  view_name=view_name, 
+                                  bt_name=bt_name))
   return testMethod
 
+def testPortalTypeViewRecursivly(validator, module_id, business_template_info, 
+    business_template_info_list, portal_type_list, portal_type_path_dict, 
+    base_path, tested_portal_type_list):
+  '''
+  This function go on all portal_type recursivly if the portal_type could 
+  contain other portal_types and make a test for all view that have action
+  '''
 
-def addTestMethodDynamically():
+  # iteration over all allowed portal_types inside the module/portal_type
+  for portal_type in portal_type_list:
+    portal_path = portal_type_path_dict[portal_type]
+    if portal_type not in tested_portal_type_list:
+      # this portal type haven't been tested yet
+
+      backuped_module_id = module_id 
+      backuped_business_template_info = business_template_info
+
+      if not business_template_info.actions.has_key(portal_type):
+        # search in other bt :
+        business_template_info = None
+        for bt_info in business_template_info_list:
+          if bt_info.actions.has_key(portal_type):
+            business_template_info = bt_info
+            break
+        if not business_template_info:
+          LOG("Can't find the action :", 0, portal_type)
+          break
+        # create the object in portal_trash module
+        module_id = 'portal_trash'
+
+      for action_information in business_template_info.actions[portal_type]:
+        if (action_information['category']=='object_view' and
+            action_information['visible']==1 and
+            action_information['text'].startswith('string:${object_url}/') and
+            len(action_information['text'].split('/'))==2):
+          view_name = action_information['text'].split('/')[-1]
+          method = makeTestMethod(validator,
+                                  module_id, 
+                                  portal_path,
+                                  view_name, 
+                                  business_template_info.title)
+          method_name = 'test.%s.%s.%s' % (business_template_info.title, portal_type, view_name)
+          setattr(TestXHTML, method_name, method)
+          module_id = backuped_module_id
+          business_template_info = backuped_business_template_info
+
+      # add the portal_type to the tested portal_types. This avoid to test many
+      # times a Portal Type wich is many bt.
+      tested_portal_type_list.append(portal_type)
+
+      new_portal_type_list = business_template_info.allowed_content_types.get(portal_type, ())
+      new_portal_type_path_dict = {}
+
+      if base_path != '':
+        next_base_path = '%s/%s' % (base_path, portal_type)
+      # Module portal_type not to have been added to the path because
+      # this portal type object already existing
+      elif 'Module' not in portal_type:
+        next_base_path = portal_type
+      else:
+        next_base_path = ''
+
+      for pt in new_portal_type_list:
+        if next_base_path != '' and 'Module' not in pt:
+          new_portal_type_path_dict[pt] = '%s/%s' % (next_base_path, pt)
+        else:
+          new_portal_type_path_dict[pt] = pt 
+      testPortalTypeViewRecursivly(validator=validator,
+                       module_id=module_id, 
+                       business_template_info=backuped_business_template_info, 
+                       business_template_info_list=business_template_info_list,
+                       portal_type_list=new_portal_type_list, 
+                       portal_type_path_dict=new_portal_type_path_dict,
+                       base_path=next_base_path,
+                       tested_portal_type_list=tested_portal_type_list)
+
+
+def addTestMethodDynamically(validator):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
-  for i in target_business_templates:
+  business_template_info_list = []
+
+  # add erp5_core to the list here but not in the target_business_templates 
+  # list to not return it on getBusinessTemplateList call 
+  for i in ('erp5_core',) + target_business_templates:
     business_template = os.path.join(bt5_base_path, i)
 
-    # Look for business templates, like in ERP5TypeTestCase, they can be:
+    # Look for business templates, they can be:
     #  .bt5 files in $INSTANCE_HOME/bt5/
     #  directories in $INSTANCE_HOME/
     #  directories in $INSTANCE_HOME/bt5/*/
+    #  directories in $INSTANCE_HOME/Products/ERP5/bootstrap/
     if not ( os.path.exists(business_template) or
         os.path.exists('%s.bt5' % business_template)):
       # try in $INSTANCE_HOME/bt5/*/
       business_template_glob_list = glob('%s/*/%s' % (bt5_base_path, i))
       if business_template_glob_list:
         business_template = business_template_glob_list[0]
+      else:
+        # try in $INSTANCE_HOME/Products/ERP5/bootstrap
+        business_template = os.path.join(bootstrap_base_path,i) 
 
     if os.path.isdir(business_template):
       business_template_info = BusinessTemplateInfoDir(business_template)
@@ -183,25 +389,53 @@ def addTestMethodDynamically():
       business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
     else:
       raise KeyError, "Can't find the business template: %s" % i
+    business_template_info_list.append(business_template_info)
 
+  tested_portal_type_list = []
+  for business_template_info in business_template_info_list:
     for module_id, module_portal_type in business_template_info.modules.items():
-      for portal_type in business_template_info.allowed_content_types.get(
-        module_portal_type, ()):
-        for action_information in business_template_info.actions[portal_type]:
-          if (action_information['category']=='object_view' and
-              action_information['visible']==1 and
-              action_information['text'].startswith('string:${object_url}/') and
-              len(action_information['text'].split('/'))==2):
-            view_name = action_information['text'].split('/')[-1]
-            method = makeTestMethod(module_id, portal_type, view_name)
-            method_name = 'test%s%s' % (portal_type, view_name)
-            setattr(TestXHTML, method_name, method)
+      portal_type_list = business_template_info.allowed_content_types.get(module_portal_type, ())
+      portal_type_path_dict = {}
+      portal_type_path_dict=dict(map(None,portal_type_list,portal_type_list))
+      testPortalTypeViewRecursivly(validator=validator,
+                       module_id=module_id, 
+                       business_template_info=business_template_info, 
+                       business_template_info_list=business_template_info_list,
+                       portal_type_list=portal_type_list, 
+                       portal_type_path_dict=portal_type_path_dict,
+                       base_path = '',
+                       tested_portal_type_list=tested_portal_type_list)
 
-# tidy may not be installed in livecd. Then we will skip xhtml validation tests.
-if not os.path.exists('/usr/bin/tidy'):
-  print '*** tidy is not installed at /usr/bin/tidy ***'
-else:
-  addTestMethodDynamically()
+
+# Two validators are available : tidy and the w3c validator
+# It's hightly recommanded to use the w3c validator because tidy dont show
+# all errors and show more warnings that there is.
+validator_to_use = 'w3c'
+show_warnings = True
+
+validator = None
+
+# tidy or w3c may not be installed in livecd. Then we will skip xhtml validation tests.
+# create the validator object
+if validator_to_use == 'w3c':
+  validator_path = '/usr/share/w3c-markup-validator/cgi-bin/check'
+  if not os.path.exists(validator_path):
+    print 'w3c validator is not installed at %s' % validator_path
+  else:
+    validator = W3Validator(validator_path, show_warnings)
+
+elif validator_to_use == 'tidy': 
+  error = False
+  warning = False
+  validator_path = '/usr/bin/tidy'
+  if not os.path.exists(validator_path):
+    print 'tidy is not installed at %s' % validator_path
+  else:
+    validator = TidyValidator(validator_path, show_warnings)
+
+# add the tests
+if validator is not None:
+  addTestMethodDynamically(validator)
 
 def test_suite():
   suite = unittest.TestSuite()
