@@ -12,6 +12,7 @@ Web Page | view_editor
 Web Page | web_view
 Web Section | generate_section
 Web Section | history
+Web Section | layout_configuration
 Web Section | list
 Web Section | metadata
 Web Section | new_default_page
@@ -25,6 +26,7 @@ Web Site Module | sort_on
 Web Site Module | view
 Web Site | generate_section
 Web Site | history
+Web Site | layout_configuration
 Web Site | metadata
 Web Site | new_default_page
 Web Site | predicate
