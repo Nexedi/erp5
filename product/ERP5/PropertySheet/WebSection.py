@@ -63,6 +63,17 @@ class WebSection:
             'type'        : 'string',
             'default'     : None,
             'mode'        : 'rw' },
+        {   'id'          : 'layout_configuration_form_id',
+            'description' : 'The ID of a form which can be used to configure layout preferences.',
+            'type'        : 'string',
+            'default'     : None,
+            'acquisition_base_category'     : ('parent',),
+            'acquisition_portal_type'       : ('Web Section', 'Web Site'),
+            'acquisition_copy_value'        : 0,
+            'acquisition_mask_value'        : 1,
+            'acquisition_accessor_id'       : 'getLayoutConfigurationFormId',
+            'acquisition_depends'           : None,
+            'mode'        : '' },
     )
 
     _categories = ('aggregate', )
