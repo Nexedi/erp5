@@ -1,5 +1,6 @@
 2008-03-17 Yusei
 * erp5_core provides general good set of content type registry by default, until we have to handle content type registry seriously.
+* Fixed wrong url on virtual host environment.
 
 2008-03-14 Yusei
 * Remove portal_contributions. erp5_ingestion will provides the tool.

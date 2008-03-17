@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \'/\'.join(brain.getPhysicalPath()[4:])+\'/manage_workspace\'\n
+            <value> <string>return brain.absolute_url()+\'/manage_workspace\'\n
 </string> </value>
         </item>
         <item>
@@ -91,7 +88,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection</string> </value>
+            <value> <string>brain, selection, selection_name</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -111,7 +108,7 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -119,8 +116,8 @@
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>selection_name</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

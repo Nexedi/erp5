@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -71,10 +68,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 if brain.object_state == \'Modified\':\n
+  target_object = brain.getObject()\n
+  parent_absolute_path = target_object.aq_parent.absolute_url()\n
   if hasattr(brain, \'bt1\'):\n
-    return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class+\'&bt1=\'+brain.bt1+\'&bt2=\'+brain.bt2\n
+    return parent_absolute_path+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class+\'&bt1=\'+brain.bt1+\'&bt2=\'+brain.bt2\n
   else:\n
-    return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class\n
+    return parent_absolute_path+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class\n
 else:\n
   return None\n
 
@@ -131,8 +130,9 @@ else:\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>_getattr_</string>
+                            <string>target_object</string>
+                            <string>parent_absolute_path</string>
                             <string>hasattr</string>
-                            <string>_getitem_</string>
                             <string>None</string>
                           </tuple>
                         </value>
