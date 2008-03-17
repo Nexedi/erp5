@@ -138,7 +138,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_instance = module.newContent(portal_type=self.object_portal_type)
     sequence.edit(
         object_instance=object_instance,
-        current_title='',
+        current_title=object_instance.getId(), # title defaults to id
         current_group_value=None
     )
 
@@ -824,8 +824,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
   
-  def test_08_emptyObjectHasNoTitle(self, quiet=quiet, run=run_all_test):
-    """Test that an empty object has no title.
+  def test_08_emptyObjectAcquiresTitle(self, quiet=quiet, run=run_all_test):
+    """
+    Test that an empty object has no title, and that getTitle on it acquires a
+    value form the object's id.
     """
     if not run: return
     portal = self.getPortal()
@@ -834,8 +836,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     obj = module.newContent(portal_type=portal_type)
     # XXX title is an empty string by default, but it's still unsure wether it
     # should be None or ''
-    self.assertEquals('', obj.getProperty("title"))
-    self.assertEquals('', obj.getTitle())
+    self.assertEquals(obj.title, '')
+    self.assertEquals(obj.getProperty("title"), obj.getId())
+    self.assertEquals(obj._baseGetTitle(), obj.getId())
+    self.assertEquals(obj.getTitle(), obj.getId())
 
   def test_09_setPropertyDefinedProperty(self, quiet=quiet, run=run_all_test):
     """Test for setProperty on Base, when the property is defined.
