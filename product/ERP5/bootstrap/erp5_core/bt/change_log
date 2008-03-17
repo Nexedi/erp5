@@ -1,3 +1,9 @@
+2008-03-17 Yusei
+* erp5_core provides general good set of content type registry by default, until we have to handle content type registry seriously.
+
+2008-03-14 Yusei
+* Remove portal_contributions. erp5_ingestion will provides the tool.
+
 2008-03-07 Kazuhiko
 * display Enabled flag on alarm list view.
 
