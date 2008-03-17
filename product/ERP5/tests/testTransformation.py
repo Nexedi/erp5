@@ -114,7 +114,6 @@ class TestTransformation(TestOrderMixin, ERP5TypeTestCase):
       get_transaction().commit()
       self.tic()
       
-      component.setPricedQuantity(component_info['quantity'])
       component.setVariationBaseCategoryList(['variation'])
       component.setPVariationBaseCategoryList(['variation'])
       # Variation are automatically acquired if they are individual variation.
@@ -122,7 +121,8 @@ class TestTransformation(TestOrderMixin, ERP5TypeTestCase):
 #                     ['variation/' + x.getRelativeUrl() for x in variations] )
       # Set the price
       supply_line = component.newContent(portal_type='Supply Line')
-      supply_line.edit( mapped_value_property_list = ['base_price'] )
+      supply_line.edit(mapped_value_property_list=['base_price'],
+          priced_quantity=component_info['quantity'])
       component_prices = component_info['prices']
       if len(component_prices) == 1:
         supply_line.edit(
