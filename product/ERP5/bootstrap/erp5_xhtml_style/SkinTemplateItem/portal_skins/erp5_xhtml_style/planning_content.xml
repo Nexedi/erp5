@@ -123,7 +123,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
               <b tal:replace="nothing"> previous page exists </b>\n
               <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
                      tal:attributes="src string:${address}/images/1leftarrowv.png;\n
-                     name string:${address}/previousPage:method" />\n
+                     name string:previousPage:method" />\n
             </tal:block>\n
             <select name="list_start" title="Change Page" size="1"\n
                     onChange=""\n
@@ -149,7 +149,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
               <b tal:replace="nothing"> next page exists </b>\n
               <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
                      tal:attributes="src string:${address}/images/1rightarrowv.png;\n
-                     name string:${address}/nextPage:method" />\n
+                     name string:nextPage:method" />\n
             </tal:block>\n
 \n
             <tal:block tal:repeat="nb python:range(8)"> &nbsp; </tal:block>\n
