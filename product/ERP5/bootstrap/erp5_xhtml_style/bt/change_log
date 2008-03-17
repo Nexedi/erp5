@@ -1,3 +1,6 @@
+2008-03-06 fabien
+* Add new selector for matrixbox style attribute wich were hardcoded (and not valid) before r19976.
+
 2008-03-06 jerome
 * Add new CSS classes in erp5.css for new MatrixBox classes introduced in r19721.
 

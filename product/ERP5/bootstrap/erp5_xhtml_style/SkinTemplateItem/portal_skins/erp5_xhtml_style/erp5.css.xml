@@ -1223,6 +1223,10 @@ td.AnchorColumn {\n
   color: #F00;\n
 }\n
 \n
+.MatrixContent td.footer {\n
+  width: 100pt;\n
+}\n
+\n
 \n
 /* Web Page White Background */\n
 \n
