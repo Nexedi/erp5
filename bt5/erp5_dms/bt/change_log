@@ -2,6 +2,7 @@
 * Remove content_type_registry
 (erp5_core will provides generic good set).
 Please use the revision 747 or newer of erpt_core.
+* Move Contribution Tool portal type to erp5_ingestion.
 
 2008-3-17 Yusei
 * Remove portal_contributions (erp5_ingestion will provides it).
