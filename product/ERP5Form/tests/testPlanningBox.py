@@ -115,12 +115,14 @@ class TestPlanningBox(ERP5TypeTestCase):
     self.assertEquals(bloc.title , 'Title 0')
     for info in bloc.info.values():
       self.assertEquals(info.info,'Title 0')
-      self.assertEquals(info.link , '/%s/foo_module/0/0/view' % self.getPortal().getId())
+      self.assertEquals(info.link , 
+                        '%s/foo_module/0/0/view' % self.getPortal().absolute_url())
     # Check Parent Activities
     parent = bloc.parent_activity
     for info in parent.info.values():
       self.assertEquals(info,'Title 0')
-    self.assertEquals(parent.link , '/%s/foo_module/0/0/view' % self.getPortal().getId())
+    self.assertEquals(parent.link , 
+                      '/%s/foo_module/0/0' % self.getPortal().getId())
     # XXX This test for Quantity is not complete, It should be improved. 
     self.assertEquals(parent.height , None)
     self.assertEquals(parent.title,'Title 0')
