@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempDomain\n
+domain_list=[]\n
+request = context.REQUEST\n
+filter = {}\n
+\n
+try:\n
+  # first, try to get form_id from the request\n
+  listbox = getattr(getattr(request[\'here\'], request[\'form_id\']), \'listbox\', None)\n
+except KeyError:\n
+  # then, try current_form_id\n
+  listbox = getattr(getattr(request[\'here\'], request[\'current_form_id\']), \'listbox\', None)\n
+\n
+if listbox is not None:\n
+  portal_type_list = [x[0] for x in listbox.get_value(\'portal_types\')]\n
+  filter[\'portal_type\'] = portal_type_list\n
+\n
+if depth == 0:\n
+  parent_obj = request[\'here\']\n
+  parent_url = parent_obj.getRelativeUrl()\n
+  \n
+else:\n
+  parent_url = parent.getProperty(\'parent_url\')\n
+  parent_obj = context.restrictedTraverse(parent_url)\n
+\n
+for obj in parent_obj.contentValues(filter=filter):\n
+  domain = parent.generateTempDomain(id=\'%s_%s\' % (depth, obj.getId()))\n
+  domain.edit(title=obj.getTitle(),\n
+              parent_url=obj.getRelativeUrl(),\n
+              domain_generator_method_id=script.id,\n
+              list_method=\'searchFolder\',\n
+              context_url=parent_url,\n
+              uid=obj.getUid())\n
+  domain.setCriterion(property=\'uid\', identity=obj.getUid())\n
+  domain.setCriterionPropertyList([\'uid\'])\n
+\n
+  domain_list.append(domain)\n
+\n
+return domain_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>depth, parent, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>depth</string>
+                            <string>parent</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempDomain</string>
+                            <string>domain_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>filter</string>
+                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>listbox</string>
+                            <string>KeyError</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>portal_type_list</string>
+                            <string>_write_</string>
+                            <string>parent_obj</string>
+                            <string>parent_url</string>
+                            <string>obj</string>
+                            <string>domain</string>
+                            <string>script</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_generateParentDomain</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
