@@ -1,3 +1,6 @@
+2008-03-17 yusei
+* Add source_project and destination_project fields for Ticket_view.
+
 2008-03-14 yusei
 * Add dependency to erp5_ingestion.
 

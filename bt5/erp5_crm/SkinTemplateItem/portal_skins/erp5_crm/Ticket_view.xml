@@ -113,9 +113,11 @@
                         <string>my_resource</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_decision_title</string>
+                        <string>my_destination_project_title</string>
                         <string>my_source_section_title</string>
                         <string>my_source_decision_title</string>
                         <string>my_source_title</string>
+                        <string>my_source_project_title</string>
                         <string>my_destination_title</string>
                         <string>my_assessment_form_id</string>
                       </list>
