@@ -1,3 +1,8 @@
+2008-03-17 fabien
+* Translate and reindent UseCaseModule_viewUseCaseReportAsSxw.
+make it working on Use Case Object and Module instead of just module.
+* add use_case_report action on Use Case Portal Type.
+
 2007-09-25 yo
 * Set module group on portal types.
 
