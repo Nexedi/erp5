@@ -27,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-service_module?validation_state=draft&local_roles=%(local_roles)s&reset=1
+service_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
