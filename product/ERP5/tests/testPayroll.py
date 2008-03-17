@@ -128,14 +128,18 @@ class TestPayrollMixin(ERP5TypeTestCase):
     payroll_service_organisation = self.createOrganisation(id='urssaf', 
         title='URSSAF')
     self.urssaf=self.createPayrollService(id=self.urssaf_id, 
+        title='State Insurance',
         organisation=payroll_service_organisation, 
         base_amount_list=['deductible_tax',],
+        product_line='state_insurance',
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.urssaf_slice_list + \
                                 self.urssaf_share_list)
 
     self.labour=self.createPayrollService(id=self.labour_id, 
+        title='Labour',
         organisation=None, 
+        product_line='labour',
         base_amount_list=['base_salary', 'gross_salary'],
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.salary_slice_list +\
@@ -270,7 +274,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
         career_grade=career_grade,
                )
     get_transaction().commit()
-    person.reindexObject()
     self.tic()
     return person
 
@@ -282,13 +285,12 @@ class TestPayrollMixin(ERP5TypeTestCase):
                                    id=id,
                                    title=title)
     get_transaction().commit()
-    organisation.reindexObject()
     self.tic()
     return organisation
 
-  def createPayrollService(self, id='', organisation='', 
+  def createPayrollService(self, id='', title='', organisation='',
       base_amount_list=None, variation_base_category_list=None, 
-      variation_category_list=None, **kw):
+      variation_category_list=None, product_line=None, **kw):
     payroll_service_portal_type = 'Payroll Service'
     payroll_service_module = self.portal.getDefaultModule(\
                                     portal_type=payroll_service_portal_type)
@@ -303,16 +305,16 @@ class TestPayrollMixin(ERP5TypeTestCase):
       payroll_service_module.manage_delObjects([id])
 
     payroll_service = payroll_service_module.newContent(\
+        title=title,
         portal_type                  = self.payroll_service_portal_type,
         id                           = id,
         source_value                 = organisation,
         quantity_unit                = 'time/month',
-        product_line                 = 'social_service/state_insurance',
+        product_line                 = product_line,
         base_amount_list             = base_amount_list)
     payroll_service.setVariationBaseCategoryList(variation_base_category_list)
     payroll_service.setVariationCategoryList(variation_category_list)
     get_transaction().commit()
-    payroll_service.reindexObject()
     self.tic()
     return payroll_service
 
@@ -344,7 +346,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
         source_section_value=person,)
     paysheet_model.setPriceCurrency(price_currency)
     get_transaction().commit()
-    paysheet_model.reindexObject()
     self.tic()
 
     return paysheet_model
@@ -436,7 +437,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
         if percent != None:
           cell.setPrice(percent)
         get_transaction().commit()
-        cell.reindexObject()
         self.tic()
 
     return model_line
@@ -499,26 +499,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
           correct_value = max_slice - min_slice
         self.assertEqual(correct_value, value)
       i += 1
-
-  def planPaySheet(self, paysheet, **kw) :
-    """ put the paysheet in the `confirmed` state, which will 
-      start the validateTransactionLines and confirm scripts """
-    self.getPortal().portal_workflow.doActionFor(
-      paysheet, 'plan_action',
-      wf_id = 'accounting_workflow',
-      skip_period_validation = 1
-    )
-    self.assertEquals(paysheet.getSimulationState(), 'planned')
-
-  def confirmPaySheet(self, paysheet, **kw) :
-    """ put the paysheet in the `confirmed` state, which will 
-      start the validateTransactionLines and confirm scripts """
-    self.getPortal().portal_workflow.doActionFor(
-      paysheet, 'confirm_action',
-      wf_id = 'accounting_workflow',
-      skip_period_validation = 1
-    )
-    self.assertEquals(paysheet.getSimulationState(), 'confirmed')
 
 
 class TestPayroll(TestPayrollMixin):
@@ -1210,6 +1190,83 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(5, movement.employer_share_quantity)
     self.assertEquals(4*5, movement.employer_share_total_price)
 
+  def test_createEditablePaySheetLine(self):
+    # test the creation of lines with editable lines in the model
+    line = self.model.newContent(
+          id='line',
+          portal_type='Pay Sheet Model Line',
+          resource_value=self.labour,
+          variation_category_list=['tax_category/employee_share'],
+          base_amount_list=['base_salary'],
+          editable=1)
+    # Note that for now it is required that the editable line contains at least
+    # one cell
+    line.updateCellRange(base_id='movement')
+    cell = line.newCell('tax_category/employee_share',
+                        portal_type='Pay Sheet Cell',
+                        base_id='movement')
+    cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setPrice(1)
+
+    pay_sheet = self.createPaySheet(self.model)
+    
+    # PaySheetTransaction_getEditableObjectLineList is the script used as list
+    # method to display editable lines in the dialog listbox
+    editable_line_list = pay_sheet\
+          .PaySheetTransaction_getEditableObjectLineList()
+    self.assertEquals(1, len(editable_line_list))
+    editable_line = editable_line_list[0]
+    self.assertEquals(1, editable_line.employee_share_price)
+    self.assertEquals(0, editable_line.employee_share_quantity)
+    self.assertEquals('paysheet_model_module/model_one/line',
+                      editable_line.model_line)
+    self.assertEquals(None, editable_line.salary_range_relative_url)
+    
+    # PaySheetTransaction_createAllPaySheetLineList is the script used to create line and cells in the
+    # paysheet using the listbox input
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
+      listbox=[dict(listbox_key='0',
+                    employee_share_price=1,
+                    employee_share_quantity=2,
+                    model_line='paysheet_model_module/model_one/line',
+                    salary_range_relative_url='',)])
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(1, len(pay_sheet_line_list))
+    pay_sheet_line = pay_sheet_line_list[0]
+    self.assertEquals(self.labour, pay_sheet_line.getResourceValue())
+    cell = pay_sheet_line.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(1, cell.getPrice())
+    self.assertEquals(2, cell.getQuantity())
+    
+    # if the script is called again, previous content is erased.
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
+      listbox=[dict(listbox_key='0',
+                    employee_share_price=0.5,
+                    employee_share_quantity=10,
+                    model_line='paysheet_model_module/model_one/line',
+                    salary_range_relative_url='',)])
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(1, len(pay_sheet_line_list))
+    pay_sheet_line = pay_sheet_line_list[0]
+    self.assertEquals(self.labour, pay_sheet_line.getResourceValue())
+    cell = pay_sheet_line.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(0.5, cell.getPrice())
+    self.assertEquals(10, cell.getQuantity())
+    
+    # If the user enters a null quantity, the line will not be created
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
+      listbox=[dict(listbox_key='0',
+                    employee_share_price=1,
+                    employee_share_quantity=0,
+                    model_line='paysheet_model_module/model_one/line',
+                    salary_range_relative_url='',)])
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(0, len(pay_sheet_line_list))
+  
 
 
 import unittest
