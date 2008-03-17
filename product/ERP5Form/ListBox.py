@@ -1497,6 +1497,24 @@ class ListBoxRenderer:
         # it is not displayed.
         selection.edit(report = report_tree.selection_domain)
 
+        # FIXME: The following is only meant to be a temporary workaround.
+        # Eventually, Selection should be rewritten to provide a more complete
+        # API than just one __call__ method, and to support method_name
+        # redefinition by the domain.
+
+        # If the domain has a context_url, list_method or stat_method
+        # parameters, we should use them instead of the ListBox ones when
+        # looking for objects in the domain.
+        domain_context = report_tree.obj.getProperty('context_url', None)
+        if domain_context is not None:
+          domain_context = context.restrictedTraverse(domain_context)
+        else:
+          domain_context = context
+        domain_list_method = report_tree.obj.getProperty('list_method',
+            list_method)
+        domain_stat_method = report_tree.obj.getProperty('stat_method',
+            stat_method)
+
         if report_tree.is_pure_summary and self.showStat():
           # Push a new select_expression.
           new_param_dict = param_dict.copy()
@@ -1504,7 +1522,7 @@ class ListBoxRenderer:
           selection.edit(params = new_param_dict)
 
           # Query the stat.
-          stat_brain = selection(method = stat_method, context = context, REQUEST = self.request)
+          stat_brain = selection(method=domain_stat_method, context=domain_context, REQUEST=self.request)
 
           domain_title = report_tree.obj.getTitle()# XXX Yusei Keep original domain title before overriding
 
@@ -1530,7 +1548,7 @@ class ListBoxRenderer:
 
           if list_method is not None:
             # FIXME: this should use a count method, if present, and obtain objects, only if necessary.
-            object_list = selection(method = list_method, context = context, REQUEST = self.request)
+            object_list = selection(method=domain_list_method, context=domain_context, REQUEST=self.request)
           else:
             # If list_method is None, use already selected values.
             object_list = self.getSelectionTool().getSelectionValueList(selection_name,
@@ -1603,12 +1621,44 @@ class ListBoxRenderer:
       selection.edit(params = param_dict, report = None)
 
       if self.isDomainTreeMode():
-        selection.edit(domain = self.getDomainSelection())
+        domain_selection = self.getDomainSelection()
+        selection.edit(domain=domain_selection)
+        if domain_selection is not None:
+          for k, d in domain_selection.asDomainDict().iteritems():
+            if k is not None:
+              domain = domain_selection._getDomainObject(
+                  context.getPortalObject(), d)
+              # FIXME: The following is only meant to be a temporary
+              # workaround. Eventually, Selection should be rewritten to
+              # provide a more complete API than just one __call__ method, and
+              # to support method_name redefinition by the domain.
+
+              # If the domain has a context_url, list_method or count_method
+              # parameters, we should use them instead of the ListBox ones
+              # when looking for objects in the domain.
+              domain_context = domain.getProperty('context_url', None)
+              if domain_context is not None:
+                domain_context = context.restrictedTraverse(domain_context)
+              else:
+                domain_context = context
+              domain_list_method = domain.getProperty('list_method',
+                  list_method)
+              domain_count_method = domain.getProperty('count_method',
+                  count_method)
+              break
+        else:
+          domain_context = context
+          domain_list_method = list_method
+          domain_count_method = count_method
+      else:
+        domain_context = context
+        domain_list_method = list_method
+        domain_count_method = count_method
 
       if list_method is not None:
         if count_method is not None and not selection.invert_mode and max_lines > 0:
           # If the count method is available, get only required objects.
-          count = selection(method = count_method, context = context, REQUEST = self.request)
+          count = selection(method=domain_count_method, context=domain_context, REQUEST=self.request)
           object_list_len = int(count[0][0])
 
           # Tweak the line start.
@@ -1620,7 +1670,7 @@ class ListBoxRenderer:
           new_param_dict = param_dict.copy()
           new_param_dict['limit'] = (start, max_lines)
           selection.edit(params = new_param_dict)
-          object_list = selection(method = list_method, context = context, REQUEST = self.request)
+          object_list = selection(method=domain_list_method, context=domain_context, REQUEST=self.request)
           selection.edit(params = param_dict) # XXX Necessary?
 
           # Add padding for convenience.
@@ -1632,7 +1682,7 @@ class ListBoxRenderer:
           report_section_list.append(ReportSection(is_summary = False,
                                                    object_list_len = object_list_len - len(object_list) - start))
         else:
-          object_list = selection(method = list_method, context = context, REQUEST = self.request)
+          object_list = selection(method=domain_list_method, context=domain_context, REQUEST=self.request)
           object_list_len = len(object_list)
           report_section_list.append(ReportSection(is_summary = False,
                                                    object_list = object_list,
