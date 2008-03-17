@@ -73,6 +73,16 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     error_list = self.validator.validate(odf_file_data)
     if error_list:
       self.fail(''.join(error_list))
+  
+  def _assertFieldInGroup(self, field_type, form_id, group):
+    for f in self.portal[form_id].get_fields_in_group(group):
+      if f.meta_type == 'ProxyField':
+        if f.getRecursiveTemplateField().meta_type == field_type:
+          break
+      if f.meta_type == field_type:
+        break
+    else:
+      self.fail('No %s found in %s (%s group)' % (field_type, form_id, group))
 
   def test_skin_selection(self):
     self.assertTrue(self.skin in
@@ -222,6 +232,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._validate(response.getBody())
 
   def test_image_field_form_view(self):
+    self._assertFieldInGroup('ImageField', 'Image_view', 'right')
     response = self.publish(
        '/%s/person_module/pers/img/Image_view'
         % self.portal.getId(), basic=self.auth)
@@ -233,6 +244,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._validate(response.getBody())
 
   def test_image_field_form_view_bottom_group(self):
+    self._assertFieldInGroup(
+        'ImageField', 'Image_viewFullSizedImage', 'bottom')
     response = self.publish(
        '/%s/person_module/pers/img/Image_viewFullSizedImage'
         % self.portal.getId(), basic=self.auth)
@@ -243,7 +256,30 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
+  def test_textarea_center_group(self):
+    self._assertFieldInGroup('TextAreaField', 'Person_view', 'center')
+    self.assert_('my_description' in [f.getId() for f in
+        self.portal.Person_view.get_fields_in_group('center')])
+    self.portal.person_module.pers.setDescription('<Escape>&\nnewline')
+    response = self.publish(
+                   '/%s/person_module/pers/Person_view'
+                   % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    body = response.getBody()
+    self._validate(body)
 
+    if self.skin == 'ODT':
+      # Is it good to do this only for ODT ?
+      from Products.ERP5OOo.OOoUtils import OOoParser
+      parser = OOoParser()
+      parser.openFromString(body)
+      content_xml = parser.oo_files['content.xml']
+      self.assert_('&lt;Escape&gt;&amp;<text:line-break/>newline' in content_xml)
+     
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'
