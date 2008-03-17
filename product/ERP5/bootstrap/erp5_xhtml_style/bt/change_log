@@ -1,4 +1,7 @@
-2008-03-06 fabien
+2008-03-18 fabien
+* change the autoFocus() function of the erp5.js file to give the focus to the first text input of the view.
+
+2008-03-17 fabien
 * Add new selector for matrixbox style attribute wich were hardcoded (and not valid) before r19976.
 
 2008-03-06 jerome
