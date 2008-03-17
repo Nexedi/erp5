@@ -1,3 +1,6 @@
+2008-3-17 Yusei
+* Remove portal_contributions (erp5_ingestion will provides it).
+
 2008-3-14 Yusei
 * Add dependency to erp5_ingestion.
 * Version up to 0.9.3.
