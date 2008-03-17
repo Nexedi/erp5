@@ -235,7 +235,7 @@
 \n
 <input type="hidden" name="listbox_uid:list" value="" />\n
 \n
-<script language="JavaScript"\n
+<script type="text/javascript"\n
   tal:define="size python:len(line_list);\n
               start_frame python:here.renderer.getLineStart();\n
               end_frame python:start_frame+size;"\n
@@ -245,7 +245,7 @@
   ">\n
 </script>\n
 \n
-<script language="JavaScript">\n
+<script type="text/javascript">\n
 var parent_node = getElementsByTagAndClassName("div", "ListContent")[0];\n
 \n
 function makeThumnailNode(parent_node, frame, src){\n
@@ -253,7 +253,7 @@ function makeThumnailNode(parent_node, frame, src){\n
   img_node.src = src;\n
   img_node.style.margin="6px 2px";\n
   var a_node = document.createElement("a");\n
-  a_node.href="PDF_viewHTMLPreviewAsImage?selection_index="+frame+"&selection_name="+SELECTION_NAME;\n
+  a_node.href="PDF_viewHTMLPreviewAsImage?selection_index="+frame+"&amp;selection_name="+SELECTION_NAME;\n
   a_node.appendChild(img_node);\n
   parent_node.appendChild(a_node);\n
 }\n
