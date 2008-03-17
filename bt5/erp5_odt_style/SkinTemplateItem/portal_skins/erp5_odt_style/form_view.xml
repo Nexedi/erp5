@@ -218,7 +218,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       </text:sequence-decls>  \n
     <tal:block metal:define-macro="form_layout"\n
              tal:define="dummy python: request.set(\'here\',here); ">\n
-     <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
+      <!-- standard groups -->\n
+     <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'center\', \'hidden\')]">\n
          <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
           <tal:block tal:condition="field_list">\n
           <table:table table:style-name=\'field-table\' table:name=\'field-table\'>\n
@@ -280,6 +281,32 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
+\n
+      <!-- center group -->\n
+     <tal:block tal:define="field_list python: form.get_fields_in_group(\'center\')">\n
+      <tal:block tal:repeat="field field_list">\n
+       <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
+        <tal:block tal:condition="python: field_type not in (\'ImageField\', )">\n
+          <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
+                  tal:content="python: field.get_value(\'title\')"/>\n
+          <text:p text:style-name=\'field-content-center\'\n
+            tal:content="structure python: field.get_value(\'default\').replace(\'&amp;\', \'&amp;amp;;\').replace(\'&gt;\', \'&gt;gt;;\').replace(\'&lt;\', \'&lt;lt;;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+        </tal:block>\n
+    <tal:block tal:condition="python: field_type == \'ImageField\'">\n
+     <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
+                  tal:content="python: field.get_value(\'title\')"/>\n
+\n
+     <text:p text:style-name=\'field-content-center\'\n
+             tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
+        <office:include_img tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+                                            path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
+     </text:p>\n
+    </tal:block>\n
+    </tal:block>\n
+    </tal:block>\n
+   </tal:block>    \n
+\n
+      <!-- bottom group -->\n
      <tal:block tal:define="field_list python: form.get_fields_in_group(\'bottom\')">\n
      <tal:block tal:repeat="field field_list">\n
      <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n

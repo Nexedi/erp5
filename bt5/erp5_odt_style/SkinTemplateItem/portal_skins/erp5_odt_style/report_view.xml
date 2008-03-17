@@ -279,6 +279,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                          </tal:block>\n
                         </tal:block>\n
                       </table:table>\n
+<!-- TODO: use styles instead of empty lines -->\n
                       <tal:block tal:condition="form/get_fields">\n
                        <text:p/>\n
                        <text:p/>\n
