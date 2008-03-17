@@ -236,7 +236,7 @@ class MatrixBoxWidget(Widget.Widget):
           first_tab = tab[1] or ''
           header = """\
   <!-- Matrix Content -->
-  %s<br>
+  %s<br/>
   <div class="MatrixContent">
    <table cellpadding="0" cellspacing="0" border="0">
   """ % first_tab
@@ -244,13 +244,9 @@ class MatrixBoxWidget(Widget.Widget):
           # Create the footer. This should be replaced by DTML
           # And work as some kind of parameter
           footer = """\
-        </div>
-       </td>
-      </div>
-     </tr>
      <tr>
-      <td colspan="%s" width="100" align="center" valign="middle"
-          class="Data">
+      <td colspan="%s" align="center" valign="middle"
+          class="Data footer">
       </td>
      </tr>
     </table>
