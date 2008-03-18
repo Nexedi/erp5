@@ -102,4 +102,15 @@ class Item(XMLObject, Amount, ImmobilisableItem):
           local_price = resource.getPrice(self.asContext( context=context, **kw))
       return local_price
   
-  
+    security.declareProtected(Permissions.ModifyPortalContent, 'getRemainingQuantity')
+    def getRemainingQuantity(self):
+        """
+        Computes the quantity of an item minus quantity of all sub_items
+        """
+        sub_quantity = 0
+        sub_item_list = [document
+                         for document in self.objectValues()
+                         if document.isItem()]
+        for sub_item in sub_item_list :
+            sub_quantity += sub_item.getQuantity()
+        return self.getQuantity() - sub_quantity
