@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import convertToUpperCase
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
@@ -61,15 +62,46 @@ class InternetProtocolAddress(Base, Coordinate):
 
   def asText(self):
     """
+    Return the address as a complete formatted string.
     """
-    raise NotImplementedError
+    result = Coordinate.asText(self)
+    if result is None:
+      tmp = []
+      for prop in PropertySheet.InternetProtocolAddress._properties:
+        property_id = prop['id']
+        getter_name = 'get%s' % convertToUpperCase(property_id)
+        getter_method = getattr(self, getter_name)
+        value = getter_method() or ''
+        tmp.append('%s:%s' % (property_id, value))
+      result = '\n'.join(tmp)
+    return result
 
-  def fromText(self):
+  def fromText(self, coordinate_text):
     """
+    Try to import data from text.
     """
-    raise NotImplementedError
+    property_id_list = [i['id'] for i in PropertySheet.InternetProtocolAddress._properties]
+
+    for line in coordinate_text.split('\n'):
+      if not ':' in line:
+        continue
+      name, value = line.split(':', 1)
+      if name in property_id_list:
+        setter_name = 'set%s' % convertToUpperCase(name)
+        setter_method = getattr(self, setter_name)
+        setter_method(value)
 
   def standardTextFormat(self):
     """
+    Return the standard format string.
     """
-    raise NotImplementedError
+    return """
+host_name:mycomputer
+ip_address:192.168.0.10
+netmask:255.255.255.0
+netmask_bit:24
+network_address:192.168.0.0
+broadcast_address:192.168.0.255
+dns_server_ip_address:192.168.0.1
+gateway_ip_address:192.168.0.1
+network_interface:eth0"""
