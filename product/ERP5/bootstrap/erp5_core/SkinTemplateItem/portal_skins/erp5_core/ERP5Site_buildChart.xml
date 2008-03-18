@@ -1,0 +1,538 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?>\n
+<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"\n
+                         xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"\n
+                         xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"\n
+                         xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"\n
+                         xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"\n
+                         xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"\n
+                         xmlns:xlink="http://www.w3.org/1999/xlink"\n
+                         xmlns:dc="http://purl.org/dc/elements/1.1/"\n
+                         xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"\n
+                         xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"\n
+                         xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"\n
+                         xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"\n
+                         xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" \n
+                         xmlns:math="http://www.w3.org/1998/Math/MathML"\n
+                         xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"\n
+                         xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"\n
+                         xmlns:ooo="http://openoffice.org/2004/office"\n
+                         xmlns:ooow="http://openoffice.org/2004/writer"\n
+                         xmlns:oooc="http://openoffice.org/2004/calc"\n
+                         xmlns:dom="http://www.w3.org/2001/xml-events"\n
+                         xmlns:xforms="http://www.w3.org/2002/xforms"\n
+                         xmlns:xsd="http://www.w3.org/2001/XMLSchema"\n
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n
+                         xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+                         xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+                         xmlns:i18n="http://xml.zope.org/namespaces/i18n" \n
+                         office:version="1.0"\n
+                         tal:define="form python: getattr(here, request.chart_form_id) ;\n
+                         listbox python: getattr(form, request.chart_field_id);\n
+                         line_list python: listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
+                         line_count python:len(line_list);\n
+                         column_list python:line_list[0].getColumnItemList();\n
+                         column_count python:len(column_list)">\n
+\n
+  <office:automatic-styles>\n
+    <number:number-style style:name="N0">\n
+      <number:number number:min-integer-digits="1"/>\n
+    </number:number-style>\n
+    <style:style style:name="chart_frame" style:family="chart">\n
+      <style:graphic-properties draw:stroke="none" \n
+                                  svg:stroke-width="0cm" \n
+                                  svg:stroke-color="#000000" \n
+                                  draw:fill-color="#FFFFFF" \n
+                                  draw:opacity="0%"/>\n
+    </style:style>\n
+\n
+\n
+    <style:style style:name="chart_title" style:family="chart">\n
+      <style:chart-properties style:direction="ltr"/>\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:text-properties fo:font-family="\'DejaVu Sans\'"\n
+                             style:font-family-generic="swiss"\n
+                             style:font-pitch="variable"\n
+                             fo:font-size="35pt"\n
+                             style:font-family-asian="\'DejaVu Sans\'"\n
+                             style:font-family-generic-asian="system"\n
+                             style:font-pitch-asian="variable"\n
+                             style:font-size-asian="35pt"\n
+                             style:font-family-complex="Tahoma"\n
+                             style:font-family-generic-complex="system"\n
+                             style:font-pitch-complex="variable"\n
+                             style:font-size-complex="35pt"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="chart_legend" style:family="chart">\n
+      <style:graphic-properties draw:fill="none"/>\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+    </style:style>\n
+\n
+    <style:style style:name="chart_picture" style:family="chart">\n
+      <style:chart-properties chart:lines="true"\n
+                              tal:attributes="chart:three-dimensional request/chart_three_dimensional | string:false;\n
+                              chart:deep request/deep ; \n
+                              chart:stock-with-volume request/stock_with_volume | string:false; \n
+                              chart:japanese-candle-stick request/chart_japanese_candle_stick | string:false;\n
+                              chart:vertical request/chart_position | string:false;\n
+                              chart:stacked request/chart_stacked | string:false;\n
+                              chart:percentage request/chart_percentage | string:false;\n
+                              chart:symbol-type request/symbol_type ;\n
+                              chart:series-source request/series_source;\n
+                              chart:connect-bars request/connect_bars;\n
+                              chart:data-label-number request/data_label_number ;\n
+                              chart:data-label-symbol request/data_label_symbol | string:false;\n
+                              chart:data-label-text request/data_label_text | string:false ;\n
+                              chart:lines-used request/lines_used | string:0;\n
+                              chart:regression-type request/regression_type ;\n
+                              chart:interpolation request/interpolation ;\n
+                              chart:mean-value request/chart_mean_value | string:false;\n
+                              chart:error-margin request/error_margin | string:0;\n
+                              chart:error-lower-limit request/error_lower_limit | string:0;\n
+                              chart:error-upper-limit request/error_upper_limit | string:0;\n
+                              chart:error-percentage request/error_percentage | string:0;\n
+                              chart:error-category request/error_category | string:none;"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="chart_x_axis" \n
+                 style:family="chart" \n
+                 style:data-style-name="N0">\n
+      <style:chart-properties chart:display-label="true" \n
+                              chart:tick-marks-major-inner="true" chart:tick-marks-major-outer="true" \n
+                              chart:logarithmic="false" \n
+                              chart:text-overlap="true" \n
+                              text:line-break="true" \n
+                              chart:label-arrangement="side-by-side" \n
+                              chart:visible="true" \n
+                              style:direction="ltr"/>\n
+      <style:graphic-properties draw:stroke="solid" svg:stroke-width="0cm" svg:stroke-color="#000000"/>\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+    </style:style>\n
+\n
+    <style:style style:name="chart_y_axis" \n
+                 style:family="chart" \n
+                 style:data-style-name="N0">\n
+      <style:chart-properties chart:display-label="true" \n
+                              chart:tick-marks-major-inner="true"\n
+                              chart:tick-marks-major-outer="true" \n
+                              chart:logarithmic="false"\n
+                              chart:origin="0"\n
+                              chart:gap-width="100"\n
+                              chart:overlap="0"\n
+                              chart:text-overlap="false"\n
+                              text:line-break="false"\n
+                              chart:label-arrangement="side-by-side"\n
+                              chart:visible="true"\n
+                              style:direction="ltr"/>\n
+      <style:graphic-properties draw:stroke="solid"\n
+                                svg:stroke-width="0cm"\n
+                                svg:stroke-color="#000000"/>\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+    </style:style>\n
+\n
+    <style:style style:family="chart" style:name="sector_pie">\n
+      <style:graphic-properties  svg:stroke-color=\'#ffffff\' />\n
+      <style:chart-properties tal:attributes="chart:pie-offset python:request.sector_pie_offset;"/>\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+    </style:style>\n
+\n
+    <style:style style:family="chart" style:name="other_style">\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+    </style:style>\n
+\n
+    <tal:block tal:repeat="column_item python:column_list[1:]">\n
+      <!-- style for chart:bar and serie data columns-->\n
+      <style:style style:family="chart"\n
+                   tal:attributes="style:name python:\'data_bar_%s\' % column_item[0]">\n
+        <style:graphic-properties  svg:stroke-color=\'#000000\'\n
+                                   tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');\n
+                                   "/>\n
+        <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+      </style:style>\n
+      <!-- style for chart:line and serie data columns-->\n
+      <style:style style:family="chart"\n
+                   tal:attributes="style:name python:\'data_line_%s\' % column_item[0]">\n
+        <style:graphic-properties  tal:attributes="svg:stroke-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');"/>\n
+        <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+      </style:style>\n
+      <!-- style for chart:circle and series data rows-->\n
+      <style:style style:family="chart"\n
+                   tal:attributes="style:name python:\'data_circle_%s\' % column_item[0]">\n
+\n
+        <style:graphic-properties  svg:stroke-color=\'#000000\' tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');\n
+                                   "/>\n
+        <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
+      </style:style>\n
+    </tal:block>\n
+\n
+    <style:style style:name="chart_wall" style:family="chart">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="chart_floor" style:family="chart">\n
+      <style:graphic-properties draw:stroke="none" draw:fill-color="#999999"/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+\n
+  <tal:block tal:define="global col_char python:\'B\';\n
+             global chart_type request/chart_type;\n
+             global series_source request/series_source;\n
+             global user_column_id_dict request/user_column_id_dict;\n
+             global user_data_title request/user_data_title;\n
+             global grid_graph request/grid_graph;\n
+             global data_label_text request/data_label_text;\n
+             global position_legend request/position_legend;"/>\n
+\n
+  <office:body>\n
+    <office:chart>\n
+      <chart:chart svg:width="30cm"\n
+                   svg:height="30cm"\n
+                   chart:style-name="chart_frame"\n
+                   tal:attributes="chart:class request/chart_type ;">\n
+        <tal:block tal:define="bool request/chart_title_or_no"\n
+                   tal:condition="python:bool==\'true\'">\n
+          <chart:title chart:style-name="chart_title">\n
+            <text:p tal:content="request/chart_title | string:User Statistics">\n
+              User Statistics\n
+            </text:p>\n
+          </chart:title>\n
+        </tal:block>\n
+        <!-- Legend Of The Graph-->\n
+        <tal:block tal:define="bool request/chart_legend"\n
+                   tal:condition="python:bool==\'true\'">\n
+              <chart:legend tal:attributes="chart:legend-position position_legend"\n
+                            chart:style-name="chart_legend" />\n
+        </tal:block>\n
+        <!-- Graph according chart_type. Here: chart:line or chart:bar -->\n
+        <tal:block tal:condition="python:chart_type==\'chart:bar\' \n
+                    or chart_type==\'chart:line\'">\n
+          <chart:plot-area  chart:style-name="chart_picture">\n
+            <chart:axis chart:dimension="x"\n
+                        chart:name="primary-x"\n
+                        chart:style-name="chart_x_axis">\n
+              <chart:categories tal:attributes="table:cell-range-address python:\'local-table.A2:.A%s\' % line_count"/>\n
+            </chart:axis>\n
+            <chart:axis chart:dimension="y"\n
+                        chart:name="primary-y"\n
+                        chart:style-name="chart_y_axis">\n
+              <chart:grid tal:condition="python:grid_graph==\'true\'"\n
+                          tal:attributes="chart:class request/grid_size | string:major ;" />\n
+            </chart:axis>\n
+            <tal:block tal:condition="python:chart_type==\'chart:bar\' \n
+                        and series_source==\'columns\' \n
+                        and len(user_column_id_dict.keys())!=0">\n
+              <tal:block tal:repeat="column_item python:column_list[1:]">\n
+                <tal:block tal:condition="python:user_column_id_dict.has_key(column_item[0])">\n
+                  <chart:series tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, line_count);\n
+                                chart:label-cell-address python:\'local-table.%s1\' % col_char;\n
+                                chart:style-name python:\'data_bar_%s\' % column_item[0];">\n
+                    <chart:data-point tal:attributes="chart:repeated line_count"/>\n
+                  </chart:series>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:chart_type==\'chart:bar\' \n
+                        and series_source==\'columns\' \n
+                        and len(user_column_id_dict.keys())==0">\n
+              <tal:block tal:repeat="column_item python:column_list[1:]">\n
+                <chart:series \n
+                              tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, line_count);\n
+                              chart:label-cell-address python:\'local-table.%s1\' % col_char;\n
+                              chart:style-name python:\'data_bar_%s\' % column_item[0];">\n
+                  <chart:data-point  tal:attributes="chart:repeated line_count"/>\n
+                </chart:series>\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:series_source==\'rows\' ">\n
+              <tal:block tal:repeat="line_item python:line_list">\n
+                <chart:series chart:style-name="other_style"\n
+                              tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, column_count);\n
+                              chart:label-cell-address python:\'local-table.%s1\' % col_char;">\n
+                  <chart:data-point  tal:attributes="chart:repeated column_count"/>\n
+                </chart:series>\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:chart_type==\'chart:line\' \n
+                        and series_source==\'columns\' \n
+                        and len(user_column_id_dict.keys())!=0">\n
+              <tal:block tal:repeat="column_item python:column_list[1:]">\n
+                <tal:block tal:condition="python:user_column_id_dict.has_key(column_item[0]) ">\n
+                  <chart:series \n
+                                tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, column_count);\n
+                                chart:label-cell-address python:\'local-table.%s1\' % col_char;\n
+                                chart:style-name python:\'data_line_%s\' % column_item[0];">\n
+                    <chart:data-point  tal:attributes="chart:repeated python:line_count"/>\n
+                  </chart:series>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="python:chart_type==\'chart:line\' and series_source==\'columns\' and len(user_column_id_dict.keys())==0">\n
+              <tal:block tal:repeat="column_item python:column_list[1:]">\n
+                <chart:series \n
+                              tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, column_count);\n
+                              chart:label-cell-address python:\'local-table.%s1\' % col_char;\n
+                              chart:style-name python:\'data_line_%s\' % column_item[0];">\n
+                  <chart:data-point  tal:attributes="chart:repeated python:line_count"/>\n
+                </chart:series>\n
+              </tal:block>\n
+            </tal:block>\n
+            <chart:wall chart:style-name="chart_wall"/>\n
+            <chart:floor chart:style-name="chart_floor"/>\n
+          </chart:plot-area>\n
+        </tal:block>\n
+\n
+        <!-- Graph according chart_type and series_source. Here: chart:circle and data in columns-->\n
+        <tal:block tal:condition="python:chart_type==\'chart:circle\' \n
+                   and series_source==\'columns\' ">\n
+          <chart:plot-area  chart:style-name="chart_picture">\n
+            <chart:axis chart:dimension="y"\n
+                        chart:name="primary-y"\n
+                        chart:style-name="chart_y_axis">\n
+            </chart:axis>\n
+            <tal:block tal:repeat="column_item python:column_list[1:]">\n
+              <chart:series \n
+                            tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, column_count);\n
+                            chart:label-cell-address python:\'local-table.%s1\' % col_char;">\n
+                <chart:data-point  tal:attributes="chart:repeated python:line_count"\n
+                                   chart:style-name="sector_pie"/>\n
+              </chart:series>\n
+            </tal:block>\n
+          </chart:plot-area>\n
+        </tal:block>\n
+        <!-- Graph according chart_type and series_source. Here: chart:circle and data in rows-->\n
+        <tal:block tal:condition="python:chart_type==\'chart:circle\'\n
+                                  and series_source==\'rows\'">\n
+          <chart:plot-area  chart:style-name="chart_picture">\n
+            <tal:block  tal:condition="python:len(user_column_id_dict.keys())==0">\n
+              <tal:block tal:repeat="column_item python:column_list[1:]">\n
+                <chart:series tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, line_count);\n
+                              chart:label-cell-address python:\'local-table.%s1\' % col_char;\n
+                              chart:style-name python:\'data_circle_%s\' % column_item[0];">\n
+                  <chart:data-point  chart:style-name="sector_pie"\n
+                                     tal:attributes="chart:repeated column_count" />\n
+                </chart:series>\n
+              </tal:block>\n
+            </tal:block>  \n
+            <tal:block tal:condition="python:len(user_column_id_dict.keys())!=0">\n
+              <tal:block tal:repeat="column_item python:column_list[1:]">\n
+                <tal:block tal:condition="python:user_column_id_dict.has_key(column_item[0])">\n
+                  <chart:series \n
+                                tal:attributes="chart:values-cell-range-address python:\'local-table.%s2:.%s%s\' % (col_char, col_char, line_count);\n
+                                chart:label-cell-address python:\'local-table.%s1\' % col_char;\n
+                                chart:style-name python:\'data_circle_%s\' % column_item[0];">\n
+                    <chart:data-point  chart:style-name="sector_pie" tal:attributes="chart:repeated column_count" />\n
+                  </chart:series>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+          </chart:plot-area>\n
+        </tal:block>\n
+\n
+        <tal:block tal:condition="python:len(user_column_id_dict.keys())==0" >\n
+          <!-- Storage all ListBox Data in Spreadsheet--> \n
+          <table:table table:name="local-table">\n
+            <table:table-header-columns>\n
+              <table:table-column/>\n
+            </table:table-header-columns>\n
+            <table:table-columns>\n
+              <table:table-column tal:attributes="table:number-columns-repeated column_count"/>\n
+            </table:table-columns>\n
+\n
+            <table:table-header-rows>\n
+              <table:table-row>\n
+                <table:table-cell office:value-type="string">\n
+                  <text:p></text:p>\n
+                </table:table-cell>\n
+                <tal:block tal:repeat="column_item python:column_list[1:] ">  \n
+                  <table:table-cell office:value-type="string">\n
+                    <text:p tal:content="python:column_item[1]">Documents</text:p>\n
+                  </table:table-cell> \n
+                </tal:block>\n
+              </table:table-row>\n
+            </table:table-header-rows>\n
+\n
+            <table:table-rows>\n
+              <tal:block tal:repeat="line python:line_list[1:]"> \n
+                <table:table-row>\n
+                  <tal:block tal:repeat="column_item column_list">\n
+                    <tal:block tal:define="column_id python:column_item[0];\n
+                               column_type python:line.getColumnPropertyTypeName(column_id);\n
+                               column_value python:line.getColumnProperty(column_id);\n
+                               value_type python:((column_type in (\'float\', \'int\', \'long\')) and \'float\') or \'string\'">\n
+                      <table:table-cell \n
+                                        tal:condition="python: value_type==\'string\'"\n
+                                        tal:attributes="office:value-type value_type">\n
+                        <text:p tal:content="column_value"></text:p>\n
+                      </table:table-cell>\n
+                      <table:table-cell\n
+                                       tal:condition="python:value_type != \'string\'"\n
+                                       tal:attributes="office:value python:column_value;\n
+                                       office:value-type value_type">\n
+                        <text:p></text:p>\n
+                      </table:table-cell>\n
+                    </tal:block>\n
+                  </tal:block> \n
+                </table:table-row>\n
+              </tal:block>\n
+            </table:table-rows>\n
+          </table:table>\n
+        </tal:block>\n
+\n
+        <tal:block tal:condition="python:len(user_column_id_dict.keys())!=0" >\n
+          <!-- Storage Data given by user in Spreadsheet-->\n
+          <table:table table:name="local-table">\n
+            <table:table-header-columns>\n
+              <table:table-column/>\n
+            </table:table-header-columns>\n
+            <table:table-columns>\n
+              <table:table-column tal:attributes="table:number-columns-repeated python:len(user_column_id_dict.keys())"/>\n
+            </table:table-columns>\n
+            <table:table-header-rows>\n
+              <table:table-row>\n
+                <table:table-cell office:value-type="string">\n
+                  <text:p></text:p>\n
+                </table:table-cell>\n
+                <tal:block tal:repeat="column_item python:column_list[1:] ">  \n
+                  <tal:block tal:condition="python:user_column_id_dict.has_key(column_item[0]) ">\n
+                    <table:table-cell office:value-type="string">\n
+                      <text:p tal:content="python:column_item[1]">Documents</text:p>\n
+                    </table:table-cell> \n
+                  </tal:block>\n
+                </tal:block>\n
+              </table:table-row>\n
+            </table:table-header-rows>\n
+            <table:table-rows>\n
+              <tal:block tal:repeat="line python:line_list[1:]"> \n
+                <table:table-row>\n
+\n
+                  <tal:block tal:repeat="column_item column_list">\n
+                    <tal:block tal:define="column_id python:column_item[0];">\n
+                      <tal:block tal:condition="python:user_data_title!=\'\'">\n
+                        <tal:block tal:condition="python:user_data_title==column_id"\n
+                                   tal:define="column_value python:line.getColumnProperty(column_id);">\n
+                          <table:table-cell tal:attributes="office:value-type python:\'string\'">\n
+                            <text:p tal:content="column_value"></text:p>\n
+                          </table:table-cell>\n
+                        </tal:block>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python:user_data_title==\'\'">\n
+                    <tal:block tal:define="column_id python:column_list[0][0];\n
+                               column_type python:line.getColumnPropertyTypeName(column_id);\n
+                               column_value python:line.getColumnProperty(column_id);\n
+                               ">\n
+                      <table:table-cell \n
+                                        tal:attributes="office:value-type python:\'string\'">\n
+                        <text:p tal:content="column_value"></text:p>\n
+                      </table:table-cell>\n
+                    </tal:block> \n
+                  </tal:block>\n
+                  <tal:block tal:repeat="column_item column_list">\n
+                    <tal:block tal:condition="python:user_column_id_dict.has_key(column_item[0]) ">\n
+                      <tal:block tal:define="column_id python:column_item[0];\n
+                                 column_type python:line.getColumnPropertyTypeName(column_id);\n
+                                 column_value python:line.getColumnProperty(column_id);\n
+                                 value_type python:((column_type in (\'float\', \'int\', \'long\')) and \'float\') or \'string\'">\n
+                        <table:table-cell tal:condition="python: value_type==\'string\'"\n
+                                          tal:attributes="office:value-type value_type">\n
+                          <text:p tal:content="column_value"></text:p>\n
+                        </table:table-cell>\n
+                        <table:table-cell tal:condition="python:value_type != \'string\'"\n
+                                          tal:attributes="office:value python:column_value;\n
+                                          office:value-type value_type">\n
+                          <text:p></text:p>\n
+                        </table:table-cell>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </table:table-row>\n
+              </tal:block>\n
+            </table:table-rows>\n
+          </table:table>\n
+        </tal:block>\n
+      </chart:chart>\n
+    </office:chart>\n
+  </office:body>\n
+</office:document-content>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.chart</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_buildChart</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Base_getODGChartStyle.xlarge</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
+                         xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
+                         xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
+                         xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
+                         xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
+                         xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
+                         xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\'\n
+                         xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
+                         xmlns:smil=\'urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0\'\n
+                         xmlns:presentation=\'urn:oasis:names:tc:opendocument:xmlns:presentation:1.0\'\n
+                         xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
+                         xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
+                         xmlns:anim=\'urn:oasis:names:tc:opendocument:xmlns:animation:1.0\'\n
+                         xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
+                         xmlns:ooo=\'http://openoffice.org/2004/office\'\n
+                         xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
+                         xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
+                         xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
+                         xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\'\n
+                         xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
+                         xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
+                         xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
+                         xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
+                         xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
+                         xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
+                         xmlns:oooc=\'http://openoffice.org/2004/calc\' \n
+                         xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+                         xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+                         xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+                         tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+                         office:version=\'1.0\'>\n
+ \n
+<tal:block metal:define-macro="style_text_properties">\n
+  <style:text-properties fo:font-family="\'DejaVu Sans\'"\n
+                         style:font-family-generic="swiss"\n
+                         style:font-pitch="variable"\n
+                         fo:font-size="18pt"\n
+                         style:font-family-asian="\'DejaVu Sans\'"\n
+                         style:font-family-generic-asian="system"\n
+                         style:font-pitch-asian="variable"\n
+                         style:font-size-asian="18pt"\n
+                         style:font-family-complex="Tahoma"\n
+                         style:font-family-generic-complex="system"\n
+                         style:font-pitch-complex="variable"\n
+                         style:font-size-complex="18pt"/>\n
+\n
+</tal:block> \n
+</office:document-content>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.graphics</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>OOoChart_macroLibrary</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

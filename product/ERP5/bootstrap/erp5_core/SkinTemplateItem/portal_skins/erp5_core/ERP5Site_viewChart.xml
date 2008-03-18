@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">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
+bFBLBQYAAAAABAAEAA8BAAAYEgAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
+                         xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
+                         xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
+                         xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
+                         xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
+                         xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
+                         xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\'\n
+                         xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
+                         xmlns:smil=\'urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0\'\n
+                         xmlns:presentation=\'urn:oasis:names:tc:opendocument:xmlns:presentation:1.0\'\n
+                         xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
+                         xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
+                         xmlns:anim=\'urn:oasis:names:tc:opendocument:xmlns:animation:1.0\'\n
+                         xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
+                         xmlns:ooo=\'http://openoffice.org/2004/office\'\n
+                         xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
+                         xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
+                         xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
+                         xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\'\n
+                         xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
+                         xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
+                         xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
+                         xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
+                         xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
+                         xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
+                         xmlns:oooc=\'http://openoffice.org/2004/calc\' \n
+                         xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+                         xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+                         xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+                         tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+                         office:version=\'1.0\'>\n
+  <office:scripts/>\n
+  <office:automatic-styles>\n
+    <style:style style:family=\'drawing-page\' style:name=\'dp1\'/>\n
+    <style:style style:parent-style-name=\'standard\' style:family=\'graphic\' style:name=\'gr1\'>\n
+      <style:graphic-properties draw:ole-draw-aspect=\'1\'/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <office:drawing tal:define="display request/display | nothing;">\n
+      <tal:block tal:condition="display">\n
+        <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
+                       preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
+                       % (display.capitalize());\n
+                       global ratio python:int(0.025) ">\n
+          <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.025) ;\n
+                    global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.025 );"/>\n
+          </tal:block>\n
+        </tal:block>\n
+      <draw:page draw:style-name=\'dp1\' \n
+                 draw:name=\'page1\'\n
+                 draw:master-page-name=\'Standard\'>\n
+        <office:forms form:apply-design-mode=\'false\'\n
+                      form:automatic-focus=\'false\'/>\n
+        <draw:frame draw:style-name=\'gr1\'\n
+                    draw:layer=\'layout\'\n
+                    svg:x=\'0cm\'\n
+                    svg:y=\'0cm\'\n
+                    tal:attributes="svg:height height;\n
+                    svg:width width ">\n
+          <office:include path="ERP5Site_buildChart"\n
+                          xlink:type=\'simple\'\n
+                          xlink:actuate=\'onLoad\'\n
+                          xlink:show=\'embed\'/>\n
+        </draw:frame>\n
+      </draw:page>\n
+    </office:drawing>\n
+  </office:body>\n
+</office:document-content>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.graphics</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_viewChart</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Base_getODGChartStyle.dynamic</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
