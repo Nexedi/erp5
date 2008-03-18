@@ -4,5 +4,6 @@ check_amount
 check_type
 composition
 emission_letter
+payment_type
 site
 vault_type
