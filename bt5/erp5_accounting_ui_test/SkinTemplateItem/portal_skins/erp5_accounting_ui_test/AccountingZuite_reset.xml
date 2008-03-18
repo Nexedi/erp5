@@ -105,6 +105,7 @@ for form in context.getPortalObject().portal_skins\\\n
 stool.setSelectionFor(\'person_selection\', None)\n
 stool.setSelectionFor(\'organisation_selection\', None)\n
 stool.setSelectionFor(\'grouping_reference_fast_input_selection\', None)\n
+stool.setSelectionFor(\'accounting_transaction_module_grouping_reference_fast_input\', None)\n
 \n
 # delete the "dummy account" we create in test_account_gap_parallel_list_field\n
 dummy_account_list = portal.account_module.searchFolder(\n
