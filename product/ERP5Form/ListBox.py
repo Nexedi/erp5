@@ -1620,6 +1620,7 @@ class ListBoxRenderer:
       # Flat list mode or domain tree mode.
       selection.edit(params = param_dict, report = None)
 
+      domain_found = 0
       if self.isDomainTreeMode():
         domain_selection = self.getDomainSelection()
         selection.edit(domain=domain_selection)
@@ -1645,12 +1646,9 @@ class ListBoxRenderer:
                   list_method)
               domain_count_method = domain.getProperty('count_method',
                   count_method)
+              domain_found = 1
               break
-        else:
-          domain_context = context
-          domain_list_method = list_method
-          domain_count_method = count_method
-      else:
+      if not domain_found:
         domain_context = context
         domain_list_method = list_method
         domain_count_method = count_method
