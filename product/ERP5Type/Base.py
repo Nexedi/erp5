@@ -3519,6 +3519,9 @@ class Base( CopyContainer,
     key = ('default_reindex_parameter', id(aq_base(self)))
     return tv.get(key)
 
+  security.declareProtected(Permissions.View, 'isItem' )
+  def isItem(self):
+    return self.portal_type in self.getPortalItemTypeList()
 
 InitializeClass(Base)
 
