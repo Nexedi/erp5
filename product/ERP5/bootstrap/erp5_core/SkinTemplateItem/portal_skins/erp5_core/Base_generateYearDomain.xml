@@ -74,16 +74,14 @@ from Products.ERP5Type.Message import Message\n
 from Products.ERP5Type.Document import newTempBase\n
 from string import zfill\n
 \n
-portal_object = context.getPortalObject()\n
+portal = context.getPortalObject()\n
 request = context.REQUEST\n
 domain_list = []\n
 form_id=request.get(\'form_id\')\n
 \n
 selection_name = request.get(\'selection_name\')\n
-selection = context.portal_selections.getSelectionFor(\n
-                                                               selection_name, request)\n
+params = portal.portal_selections.getSelectionParamsFor(selection_name, request)\n
 \n
-params = selection.getParams()\n
 zoom_begin = DateTime(params.get(\'bound_start\', DateTime()))\n
 year = zoom_begin.year() + params.get(\'bound_variation\', 0)\n
 current_date = DateTime(year, 1, 1)\n
@@ -91,22 +89,19 @@ current_date = DateTime(year, 1, 1)\n
 default_link_url =\'setLanePath?form_id=%s&list_selection_name=%s\' %(\n
                                  form_id, selection_name)\n
 \n
-# Definning date order using user Preference Options\n
-try:\n
-  date_order = context.portal_preferences.getActivePreference().getPreferredDateOrder()\n
-  if (date_order is None) or date_order not in [ \'dmy\', \'ymd\' , \'mdy\' ]:\n
-    date_order = \'ymd\'\n
-except AttributeError:\n
-  date_order = \'ymd\'\n
-\n
+# Define date format using user Preferences\n
+date_order = portal.portal_preferences.getPreferredDateOrder()\n
+date_format = dict(ymd=\'%m/%d\',\n
+                   dmy=\'%d/%m\',\n
+                   mdy=\'%m/%d\').get(date_order, \'%m/%d\')\n
 \n
 category_list = []\n
-if depth == 0:  \n
+if depth == 0:\n
   # getting list of months\n
   count = 0\n
   while   count < 12:\n
     # Create one Temp Object\n
-    o = newTempBase(portal_object, id=\'year\' ,uid=\'new_%s\' % zfill(\'year\',4))\n
+    o = newTempBase(portal, id=\'year\' ,uid=\'new_%s\' % zfill(\'year\',4))\n
     # Seting delimiter \n
     if current_date.month() in [1, 7]:\n
       o.setProperty(\'delimiter_type\', 1)\n
@@ -123,22 +118,18 @@ if depth == 0:  \n
     \n
     o.setProperty(\'relative_position\', int(current_date))\n
 \n
-    date_order_list = []\n
-    for i in date_order:\n
-      if i == \'m\': date_order_list.append(current_date.month())\n
-      if i == \'y\': date_order_list.append(current_date.year())\n
-\n
-    o.setProperty(\'title\', str(date_order_list[0]) + \'/\' + str(date_order_list[1]))\n
-\n
-    # Defining ToolTip (Optional)\n
-    tp = \'%s %s\' % (Message(domain=\'erp5_ui\', message=current_date.Day(),mapping=None), str(current_date))\n
-    o.setProperty(\'tooltip\', tp)\n
+    title = Message(\'erp5_ui\',\n
+                    \'${month_name} ${year}\',\n
+                    mapping=dict(month_name=Message(\'erp5_ui\',\n
+                                                current_date.Month()),\n
+                                 year=str(current_date.year()))).translate()\n
+    o.setProperty(\'title\', title)\n
 \n
     # Defining Link\n
     link = \'%s&bound_start=%s&lane_path=base_month_domain\' % ( default_link_url, current_date)\n
-    o.setProperty(\'link\', link) \n
+    o.setProperty(\'link\', link)\n
     \n
-    category_list.append(o) \n
+    category_list.append(o)\n
     current_date = DateTime(str(current_date.year()) + \'/\' + str((current_date.month() +1)) + \'/1\')\n
     count += 1\n
 else:\n
@@ -170,6 +161,10 @@ return domain_list\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_lazy_compilation</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -216,12 +211,11 @@ return domain_list\n
                             <string>zfill</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_object</string>
+                            <string>portal</string>
                             <string>request</string>
                             <string>domain_list</string>
                             <string>form_id</string>
                             <string>selection_name</string>
-                            <string>selection</string>
                             <string>params</string>
                             <string>DateTime</string>
                             <string>zoom_begin</string>
@@ -229,21 +223,18 @@ return domain_list\n
                             <string>current_date</string>
                             <string>default_link_url</string>
                             <string>date_order</string>
-                            <string>None</string>
-                            <string>AttributeError</string>
+                            <string>dict</string>
+                            <string>date_format</string>
                             <string>category_list</string>
                             <string>count</string>
                             <string>o</string>
                             <string>stop_date</string>
                             <string>int</string>
-                            <string>date_order_list</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
                             <string>str</string>
-                            <string>_getitem_</string>
-                            <string>tp</string>
+                            <string>title</string>
                             <string>link</string>
                             <string>_inplacevar_</string>
+                            <string>_getiter_</string>
                             <string>category</string>
                             <string>domain</string>
                             <string>script</string>

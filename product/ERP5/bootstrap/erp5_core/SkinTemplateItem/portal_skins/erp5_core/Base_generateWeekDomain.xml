@@ -74,21 +74,19 @@ from Products.ERP5Type.Message import Message\n
 from Products.ERP5Type.Document import newTempBase\n
 from string import zfill\n
 \n
-portal_object = context.getPortalObject()\n
+portal = context.getPortalObject()\n
 request = context.REQUEST\n
 domain_list = []\n
 form_id=request.get(\'form_id\')\n
 \n
 selection_name = request.get(\'selection_name\')\n
-selection = context.portal_selections.getSelectionFor(\n
-                                 selection_name, request)\n
+params = context.portal_selections.getSelectionParamsFor(selection_name, request)\n
 \n
-params = selection.getParams()\n
 bound_variation = params.get(\'bound_variation\', 0)\n
 bound_start = DateTime(params.get(\'bound_start\', DateTime()))\n
-bound_start = DateTime(bound_start.year() , bound_start.month() , bound_start.day()) \n
+bound_start = DateTime(bound_start.year() , bound_start.month() , bound_start.day())\n
 \n
-# Normalize Week.\n
+# Normalize Week. XXX this should be in preferences as well\n
 while bound_start.Day() is not \'Sunday\':\n
    bound_start =  bound_start - 1\n
 current_date =  bound_start + 7 * bound_variation\n
@@ -97,20 +95,18 @@ bound_stop  = current_date + 7\n
 default_link_url =\'setLanePath?form_id=%s&list_selection_name=%s\' %(\n
                                  form_id, selection_name)\n
 \n
-# Definning date order using user Preference Options\n
-try:\n
-  date_order = context.portal_preferences.getActivePreference().getPreferredDateOrder()\n
-  if (date_order is None) or date_order not in [ \'dmy\', \'ymd\' , \'mdy\' ]:\n
-    date_order = \'ymd\'\n
-except AttributeError:\n
-  date_order = \'ymd\'\n
+# Define date format using user Preferences\n
+date_order = portal.portal_preferences.getPreferredDateOrder()\n
+date_format = dict(ymd=\'%Y/%m/%d\',\n
+                   dmy=\'%d/%m/%Y\',\n
+                   mdy=\'%m/%d/%Y\').get(date_order, \'%Y/%m/%d\')\n
 \n
 category_list = []\n
-if depth == 0:  \n
+if depth == 0:\n
   # This case show Seven days\n
   while current_date < bound_stop:\n
     # Create one Temp Object\n
-    o = newTempBase(portal_object, id=\'week\' ,uid=\'new_%s\' % zfill(\'week\',4))\n
+    o = newTempBase(portal, id=\'week\', uid=\'new_%s\' % zfill(\'week\',4))\n
      # Setting Axis Dates start and stop\n
     o.setProperty(\'start\',current_date)\n
     o.setProperty(\'stop\', current_date+1)\n
@@ -124,28 +120,22 @@ if depth == 0:  \n
     else:\n
       o.setProperty(\'delimiter_type\', 0)\n
 \n
-    # defining date order\n
-    date_order_list = []\n
-    for i in date_order:\n
-      if i == \'d\': date_order_list.append(current_date.day())\n
-      if i == \'m\': date_order_list.append(current_date.month())\n
-      if i == \'y\': date_order_list.append(current_date.year())\n
-\n
-    title = \'%s   %s/%s/%s\' % (Message(domain=\'erp5_ui\', message=current_date.Day(), mapping=None),\n
-                               str(date_order_list[0]), \n
-                               str(date_order_list[1]),\n
-                               str(date_order_list[2]))\n
+    title = Message(\'erp5_ui\',\n
+                    \'${day_name} ${date}\',\n
+                    mapping=dict(day_name=Message(\'erp5_ui\',\n
+                                                current_date.Day()),\n
+                                 date=current_date.strftime(date_format))).translate()\n
     o.setProperty(\'title\', title)\n
 \n
     # Defining ToolTip (Optional)\n
-    tp = \'%s %s\' % (Message(domain=\'erp5_ui\', message=current_date.Day(),mapping=None), str(current_date))\n
-    o.setProperty(\'tooltip\', tp) \n
+    tp = \'%s %s\' % (Message(domain=\'erp5_ui\', message=current_date.Day()), str(current_date))\n
+    o.setProperty(\'tooltip\', tp)\n
 \n
     # Defining Link (Optional)\n
     link = \'%s&bound_start=%s&lane_path=base_day_domain\' % ( default_link_url, current_date)\n
-    o.setProperty(\'link\', link) \n
+    o.setProperty(\'link\', link)\n
 \n
-    category_list.append(o) \n
+    category_list.append(o)\n
     current_date = current_date + 1\n
 else:\n
   return domain_list\n
@@ -176,6 +166,10 @@ return domain_list\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_lazy_compilation</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -222,12 +216,11 @@ return domain_list\n
                             <string>zfill</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_object</string>
+                            <string>portal</string>
                             <string>request</string>
                             <string>domain_list</string>
                             <string>form_id</string>
                             <string>selection_name</string>
-                            <string>selection</string>
                             <string>params</string>
                             <string>bound_variation</string>
                             <string>DateTime</string>
@@ -236,19 +229,16 @@ return domain_list\n
                             <string>bound_stop</string>
                             <string>default_link_url</string>
                             <string>date_order</string>
-                            <string>None</string>
-                            <string>AttributeError</string>
+                            <string>dict</string>
+                            <string>date_format</string>
                             <string>category_list</string>
                             <string>o</string>
                             <string>int</string>
-                            <string>date_order_list</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
-                            <string>str</string>
-                            <string>_getitem_</string>
                             <string>title</string>
+                            <string>str</string>
                             <string>tp</string>
                             <string>link</string>
+                            <string>_getiter_</string>
                             <string>category</string>
                             <string>domain</string>
                             <string>script</string>
