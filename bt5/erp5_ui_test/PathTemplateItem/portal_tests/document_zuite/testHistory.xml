@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -67,15 +64,42 @@
 </thead><tbody>\n
 \n
 <tr>\n
+  <td>store</td>\n
+  <td tal:content="python: \'/\' + here.getPortalObject().getId()">erp5</td>\n
+  <td>base_url</td>\n
+</tr>\n
+<tr>\n
   <td>open</td>\n
-  <td tal:content="string: ${here/portal_url}/bar_module/view"></td>\n
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_action</td>\n
-  <td>Add Bar</td>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+  <td></td>\n
 </tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/ListBoxZuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/FooModule_createObjects?portal_type=Bar&amp;num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/0</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_title</td>\n
@@ -141,7 +165,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
-  <td></td> <!-- before -->\n
+  <td>Title 0</td> <!-- before -->\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
