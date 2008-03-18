@@ -104,7 +104,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseCalendar_FieldLibrary</string> </value>
+                    <value> <string>Calendar_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

@@ -13,8 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
+                <string>columns</string>
+                <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -76,12 +80,58 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Int Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>inventoriated_quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Calendar_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key>                 <string>portal_types</string> </key>
@@ -99,8 +149,23 @@
                     <value> <string>group_calendar_line_selection</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Int Index</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Calendar Lines</string> </value>
                 </item>
               </dictionary>
             </value>
