@@ -136,8 +136,9 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin, ERP5TypeTestCase
     # open counter date and counter
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.bi_counter_vault)
-
-
+    # create a payment category
+    self.payment_order = self.portal.portal_categories.payment_type.newContent(portal_type="Category", id="payment_order")
+    
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
@@ -182,6 +183,7 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin, ERP5TypeTestCase
                                     source_total_asset_price=20000.0,
                                     grouping_reference="lettering",
                                     description='test',
+                                    payment_type_value=self.payment_order,
                                     )
     # execute tic
     self.stepTic()
