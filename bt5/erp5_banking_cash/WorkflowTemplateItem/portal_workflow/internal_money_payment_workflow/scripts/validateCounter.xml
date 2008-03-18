@@ -81,6 +81,9 @@ transaction.Baobab_checkCounterDateOpen(site=source, date=transaction.getStartDa
 \n
 context.Baobab_checkCounterOpened(source)\n
 \n
+if transaction.getPaymentType() in (None, ""):\n
+  msg = Message(domain="ui", message="No payment type defined.")\n
+  raise ValidationFailed, (msg,)\n
 \n
 \n
 #test if the source or the destination is correct\n
@@ -180,9 +183,9 @@ if resource == 2:\n
                             <string>None</string>
                             <string>source</string>
                             <string>context</string>
+                            <string>msg</string>
                             <string>amount</string>
                             <string>total_price</string>
-                            <string>msg</string>
                             <string>site</string>
                             <string>vault</string>
                             <string>resource</string>

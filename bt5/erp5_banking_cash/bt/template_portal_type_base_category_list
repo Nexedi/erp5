@@ -9,6 +9,7 @@ Container Line | cash_status
 Container Line | emission_letter
 Container Line | variation
 Foreign Cash Reception | currency_exchange_type
+Internal Money Payment | payment_type
 Monetary Destruction Cell | variation
 Monetary Recall Cell | variation
 Money Deposit | source_trade

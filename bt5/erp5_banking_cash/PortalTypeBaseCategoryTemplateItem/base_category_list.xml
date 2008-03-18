@@ -24,6 +24,9 @@
  <portal_type id="Foreign Cash Reception">
   <item>currency_exchange_type</item>
  </portal_type>
+ <portal_type id="Internal Money Payment">
+  <item>payment_type</item>
+ </portal_type>
  <portal_type id="Monetary Destruction Cell">
   <item>variation</item>
  </portal_type>

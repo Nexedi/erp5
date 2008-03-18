@@ -108,6 +108,7 @@
                         <string>my_source_reference</string>
                         <string>my_source_total_asset_price</string>
                         <string>my_grouping_reference</string>
+                        <string>my_payment_type</string>
                       </list>
                     </value>
                 </item>
