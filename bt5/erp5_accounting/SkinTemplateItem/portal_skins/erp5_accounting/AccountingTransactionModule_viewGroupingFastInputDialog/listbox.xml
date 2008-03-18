@@ -329,6 +329,14 @@
                           <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery_portal_type</string>
                           <string>Transaction Type</string>
                         </tuple>
@@ -391,6 +399,10 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
                         <tuple>
                           <string>debit</string>
                           <string>Debit</string>
@@ -498,8 +510,16 @@
                           <string>Account</string>
                         </tuple>
                         <tuple>
-                          <string>mirror_section_title</string>
+                          <string>Movement_getMirrorSectionTitle</string>
                           <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>

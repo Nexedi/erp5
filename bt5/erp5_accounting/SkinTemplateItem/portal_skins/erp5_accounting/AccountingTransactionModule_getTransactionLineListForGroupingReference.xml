@@ -80,9 +80,11 @@ orig_sort_on = portal.portal_selections.getSelectionSortOrder(\n
                  \'accounting_transaction_module_grouping_reference_fast_input\')\n
 sort_on = []\n
 for sort_column, sort_order in orig_sort_on:\n
-  if sort_column == \'node_title\':\n
+  if sort_column in (\'date\', \'parent_title\'):\n
+    sort_on += [(sort_column, sort_order)]\n
+  elif sort_column == \'node_title\':\n
     sort_on += [(\'stock.node_uid\', sort_order)]\n
-  elif sort_column == \'mirror_section_title\':\n
+  elif sort_column == \'Movement_getMirrorSectionTitle\':\n
     sort_on += [(\'stock.mirror_section_uid\', sort_order)]\n
 \n
 extra_query_keys = {}\n

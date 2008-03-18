@@ -102,6 +102,7 @@
                         <string>listbox_credit</string>
                         <string>listbox_delivery_portal_type</string>
                         <string>listbox_node_title</string>
+                        <string>listbox_date</string>
                       </list>
                     </value>
                 </item>
