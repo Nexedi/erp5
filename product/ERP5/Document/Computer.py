@@ -1,8 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
-#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                         Yusei TAHARA <yusei@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+#                    Yusei TAHARA <yusei@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,19 +28,33 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.Item import Item
+from Products.ERP5.Document.Machine import Machine
 
 
-class Machine(Item):
-    """
-    Machine represents 
-    """
+class Computer(Machine):
+  """
+  This class represents a computer like personal computer, printer, router.
+  """
 
-    meta_type = 'ERP5 Machine'
-    portal_type = 'Machine'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  meta_type = 'ERP5 Computer'
+  portal_type = 'Computer'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.DublinCore
+                      , PropertySheet.Item
+                      , PropertySheet.Amount
+                      , PropertySheet.Computer
+                      , PropertySheet.Mapping
+                      , PropertySheet.Task
+                      , PropertySheet.Reference
+                      )

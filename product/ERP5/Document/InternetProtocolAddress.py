@@ -1,8 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
-#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                         Yusei TAHARA <yusei@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+#                    Yusei TAHARA <yusei@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,20 +27,49 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.Item import Item
+from Products.ERP5Type.Base import Base
 
+from Products.ERP5.Document.Coordinate import Coordinate
 
-class Machine(Item):
+import string
+
+class InternetProtocolAddress(Base, Coordinate):
+  """
+  A internet protocol address holds a address of
+  a computer on computer network using TCP/IP.
+  """
+  meta_type = 'ERP5 Internet Protocol Address'
+  portal_type = 'Internet Protocol Address'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.InternetProtocolAddress
+                      )
+
+  # Declarative interfaces
+  __implements__ = ( Interface.Coordinate, )
+
+  def asText(self):
     """
-    Machine represents 
     """
+    raise NotImplementedError
 
-    meta_type = 'ERP5 Machine'
-    portal_type = 'Machine'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  def fromText(self):
+    """
+    """
+    raise NotImplementedError
 
-    # Declarative security
-    security = ClassSecurityInfo()
+  def standardTextFormat(self):
+    """
+    """
+    raise NotImplementedError
