@@ -77,24 +77,17 @@ function clickSaveButton(act) {\n
 // else if no element have autofocus class, the first element wich is not the\n
 // search field will get the focus. This is generaly the title input text of\n
 // a view\n
-\n
 function autoFocus() {\n
-  var inputs = document.getElementsByTagName("input");\n
-  var input_to_focus = 0;\n
-  for (i=0;i<inputs.length;i++) {\n
-    if (inputs[i].className == "autofocus") {\n
-      input_to_focus = inputs[i];\n
-    }\n
-  }\n
-  if (input_to_focus != 0) {\n
-    input_to_focus.focus();\n
+  var first_autofocus_expr = ".//input[@class=\'autofocus\']"\n
+  var FIRST_RESULT = XPathResult.FIRST_ORDERED_NODE_TYPE\n
+\n
+  var input = document.evaluate(first_autofocus_expr, document, null, FIRST_RESULT, null).singleNodeValue;\n
+  if (input) {\n
+    input.focus();\n
   }else{\n
-    for ( var i=0; i<inputs.length; i++ ){\n
-      if (inputs[i].getAttribute("type") == "text" && inputs[i].getAttribute("name") != "field_your_search_text"){\n
-        inputs[i].focus();\n
-        break;\n
-      }\n
-    }\n
+    var first_text_input_expr = ".//input[@type=\'text\'][@name != \'field_your_search_text\']"\n
+    var first_text_input = document.evaluate(first_text_input_expr, document, null, FIRST_RESULT, null).singleNodeValue;\n
+    first_text_input.focus();\n
   }\n
 }\n
 \n
