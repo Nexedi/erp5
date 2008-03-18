@@ -31,85 +31,195 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Field import ZMIField
 from Selection import Selection
+from Globals import get_request
+from Products.ERP5OOo.Document.OOoDocument import STANDARD_IMAGE_FORMAT_LIST
+
+from Globals import DTMLFile
+
+
 
 from zLOG import LOG
-
-# XXX This should be move to preferences - just as for image
-defaultdisplays = {'thumbnail' : (128,128),
-                   'xsmall'    : (200,200),
-                   'small'     : (320,320),
-                   'medium'    : (480,480),
-                   'large'     : (768,768),
-                   'xlarge'    : (1024,1024)
-                  }
 
 class OOoChartWidget(Widget.Widget):
   """
   This class is capabale of producing ODF
   charts based on data obtained through a
   listbox.
+  Some properties are useless
+  http://books.evc-cit.info/odbook/ch08.html#chart-plot-area-example
+    - mean-value
+    - error-margin
+    - error-upper-limit
+    - error-lower-limit
+    - error-category
+    - error-percentage
+    - chart-japanese-candle-stick and stock-with-volume,chart:stock-updown-bars. These attributs are used with a chart:stock
   """
+  
   property_names = list(Widget.Widget.property_names)
-
   # Default has no meaning in OOoChart.
   property_names.remove('default')
-
+  
   form_id = fields.StringField(
-                                'form_id',
-                                title='Form ID',
-                                description= \
-                                  "ID of the master form.",
-                                default="",
-                                required=1)
+                              'form_id',
+                              title='Form ID',
+                              description= \
+                                "ID of the master form.",
+                              default="",
+                              required=1)
   property_names.append('form_id')
 
   field_id = fields.StringField(
-                                'field_id',
-                                title='Field ID',
-                                description= \
-                                  "ID of the listbox in the master form.",
-                                default="",
-                                required=1)
+                              'field_id',
+                              title='Field ID',
+                              description= \
+                                "ID of the listbox in the master form.",
+                              default="",
+                              required=1)
   property_names.append('field_id')
 
-  image_display = fields.StringField('image_display',
-                              title='Image Display',
-                              description=(
-           "Render size of this chart in HTML mode."),
-                              default='large',
-                              required=1)
+  image_display = fields.ListField('image_display',
+                            title='Image Display',
+                            description=(
+          "Render size of this chart in HTML mode."),
+                            default='medium',
+                                  items=[('thumbnail','thumbnail'),
+                                        ('xsmall', 'xsmall'),
+                                        ('small', 'small'),
+                                        ('medium', 'medium'),
+                                        ('large', 'large'),
+                                        ('xlarge', 'xlarge'),
+                                        ],
+                                  size=1)
   property_names.append('image_display')
 
   image_format = fields.StringField('image_format',
-                              title='Image Format',
-                              description=(
-      "The format in which the chart should be converted to."),
-                              default='png',
-                              required=0)
+                            title='Image Format',
+                            description=(
+    "The format in which the chart should be converted to."),
+                            default='png',
+                            required=0)
   property_names.append('image_format')
 
   ooo_template = fields.StringField('ooo_template',
-                                title='OOo Template',
-                                description=('The ID of a OOo Page Template'
-                                            ' to render the ListBox'),
-                                default='',
-                                required=0)
+                              title='OOo Template',
+                              description=('The ID of a OOo Page Template'
+                                          ' to render the ListBox'),
+                              default='ERP5Site_viewChart',
+                              required=0)
   property_names.append('ooo_template')
 
+
+  chart_type = fields.ListField('chart_type',
+                                  title='Chart type',
+                                  description=('Type of the Chart'),
+                                  default='chart:bar',
+                                  items=[('bar', 'chart:bar'),
+                                        ('circle', 'chart:circle'),
+                                        ('line', 'chart:line'),
+                                        ],
+                                  size=0)
+  property_names.append('chart_type')
+
+
   colour_column_list = fields.ListTextAreaField('colour_column_list',
-                                title="Data Colour",
-                                description=(
-      "A list of colours for each data associated to a column."),
-                                default=[],
-                                required=1)
+                              title="Data Colour",
+                              description=(
+    "A list of colours for each data associated to a column."),
+                              default=[],
+                              required=1)
   property_names.append('colour_column_list')
 
-  chart_japanese_candle_stick = fields.CheckBoxField('chart_japanese_candle_stick',
-                              title='Japanese Candle Stick',
-                              description=('XXX Unknown'),
+  # vertical ="true"
+  chart_position = fields.ListField('chart_position',
+                                   title='Bar(s) Position',
+                                   description=('Render the bar in horizontal position or vertical position'),
+                                   default='true',
+                                   items=[('horizontal', 'true'),
+                                          ('vertical', 'false'),
+                                          ],
+                                   size=0)
+  property_names.append('chart_position')
+  
+  #legend of the chart or not
+  chart_legend = fields.CheckBoxField('chart_legend',
+                                         title='Chart Legend',
+                                         description=('Show Chart Legend or no'),
+                                         default=1,
+                                         required=0)
+  property_names.append('chart_legend')
+  
+  
+  position_legend = fields.ListField('position_legend',
+                                       title='Position Legend',
+                                       description=('Legend Position according to the graph'),
+                                       default='end',
+                                       items=[('bottom', 'bottom'),
+                                              ('end', 'end'),
+                                              ('start', 'start'),
+                                              ('top', 'top'),
+                                              ],
+                                       size=1)
+  property_names.append('position_legend')
+
+  #legend of the chart or not
+  chart_title_or_no = fields.CheckBoxField('chart_title_or_no',
+                                         title='Title Graph',
+                                         description=('Show Title on Graph or no '),
+                                         default=1,
+                                         required=0)
+  property_names.append('chart_title_or_no')
+  
+  #grid or not
+  grid_graph = fields.CheckBoxField('grid_graph',
+                                         title=' grid graph',
+                                         description=('Show Grid or no'),
+                                         default=1,
+                                         required=0)
+  property_names.append('grid_graph')
+  
+  
+  grid_size = fields.ListField('grid_size',
+                                   title='Grid Size',
+                                   description=('Render a big grid size or a small grid size'),
+                                   default='major',
+                                   items=[('major', 'major'),
+                                          ('minor', 'minor'),
+                                          ],
+                                   size=0)
+  property_names.append('grid_size')
+  
+  
+  user_data_title = fields.StringField('user_data_title',
+                                title="User Column ID For X-axis",
+                                description=(
+      "Column ID choose by user to define the X-axes."),
+                                required=0)
+  property_names.append('user_data_title')
+
+  user_column_id_list = fields.ListTextAreaField('user_column_id_list',
+                                title="User Column ID List",
+                                description=(
+      "A list of columns ID choose by user to draw the graph."),
+                                default=[],
+                                required=0)
+  property_names.append('user_column_id_list')
+
+
+  chart_stacked = fields.CheckBoxField('chart_stacked',
+                              title='stacked bars ',
+                              description=('stacked bars or not'),
                               default=0,
                               required=0)
-  property_names.append('chart_japanese_candle_stick')
+  property_names.append('chart_stacked')
+
+  #connect-bars="false"
+  connect_bars = fields.CheckBoxField('connect_bars',
+                                      title='Connect Bars',
+                                      description=(''),
+                                      default=0,
+                                      required=0)
+  property_names.append('connect_bars')
 
 
   chart_three_dimensional = fields.CheckBoxField('chart_three_dimensional',
@@ -119,82 +229,112 @@ class OOoChartWidget(Widget.Widget):
                               required=0)
   property_names.append('chart_three_dimensional')
 
-  chart_mean_value = fields.CheckBoxField('chart_mean_value',
-                              title='Chart Mean Value',
-                              description=('XXX Unknown'),
+  #deep="false"
+  deep = fields.CheckBoxField('deep',
+                              title='Deep',
+                              description=('Deep'),
                               default=0,
                               required=0)
-  property_names.append('chart_mean_value')
+  property_names.append('deep')
+  
+  # sector_pie_offset Default:0
+  sector_pie_offset = fields.IntegerField('sector_pie_offset',
+                                        title='Sector Pie Offset',
+                                        description=(''),
+                                        default=0,
+                                        required=0)
+  property_names.append('sector_pie_offset')
+  
 
 
-#"""
-#chart:japanese-candle-stick="false" chart:stock-with-volume="false" chart:three-dimensional="false" chart:deep="false" chart:lines="false" chart:interpolation="none" chart:symbol-type="none" chart:vertical="true" chart:lines-used="0" chart:connect-bars="false" chart:series-source="columns" chart:mean-value="false" chart:error-margin="0" chart:error-lower-limit="0" chart:error-upper-limit="0" chart:error-category="none" chart:error-percentage="0" chart:regression-type="none" chart:data-label-number="none" chart:data-label-text="false" chart:data-label-symbol="false"/>
-#"""
+  #interpolation="none", cubic-spline, b-spline
+  interpolation = fields.ListField('interpolation',
+                                   title='Interpolation',
+                                   description=(''),
+                                   default='none',
+                                   items=[('none', 'none'),
+                                          ('cubic-spline', 'cubic-spline'),
+                                          ('b-spline', 'b-spline')],
+                                   size=1)
+  property_names.append('interpolation')
 
-  default = fields.TextAreaField('default',
-                                title='Default',
-                                description=(
-      "Default value of the text in the widget."),
-                                default="",
-                                width=20, height=3,
-                                required=0)
+  #symbol-type="none", automatic
+  symbol_type = fields.ListField('symbol_type',
+                                 title='Symbol Type',
+                                 description=(''),
+                                 default='none',
+                                 items=[('none', 'none'),
+                                        ('automatic', 'automatic'),],
+                                 size=1)
+  property_names.append('symbol_type')
 
-  selection_name = fields.StringField('selection_name',
-                              title='Selection Name',
-                              description=('The name of the selection to store'
-                                            'params of selection'),
-                              default='',
-                              required=0)
+  #lines-used="0" 
+  lines_used = fields.ListField('lines_used',
+                                title='Lines Used',
+                                description=(''),
+                                default='0',
+                                items=[('0', '0'),
+                                       ('1', '1')],
+                                size=1)
+  property_names.append('lines_used')
 
-  data_method = fields.StringField('data_method',
-                              title='Data Method',
-                              description=('The method wich returns data'),
-                              default='',
-                              required=0)
+  
+  #series-source=columns or rows
+  series_source = fields.ListField('series_source',
+                                   title='Series Source',
+                                   description=(''),
+                                   default='columns',
+                                   items=[('columns', 'columns'),
+                                          ('rows', 'rows'),],
+                                   size=1)
+  property_names.append('series_source')
 
-  chart_style = fields.StringField('chart_style',
-                              title='Chart Style',
-                              description=('The kind of Chart we want'),
-                              default='bar_3d',
-                              required=0)
+  #regression-type="none" linear logarithmic exponential power
+  regression_type = fields.ListField('regression_type',
+                                     title='Regression Type',
+                                     description=(''),
+                                     default='none',
+                                     items=[('none', 'none'),
+                                            ('linear', 'linear'),
+                                            ('logarithmic', 'logarithmic'),
+                                            ('exponential', 'exponential'),
+                                            ('power', 'power')],
+                                     size=1)
+  property_names.append('regression_type')
 
-  chart_title = fields.StringField('chart_title',
-                              title='Chart Title',
-                              description=('The Title on the top of the chart'),
-                              default='',
-                              required=0)
+  #data-label-number="none" value percentage
+  data_label_number = fields.ListField('data_label_number',
+                                       title='Data-Label-Number',
+                                       description=(''),
+                                       default='none',
+                                       items=[('none', 'none'),
+                                              ('value', 'value'),
+                                              ('percentage', 'percentage')],
+                                       size=1)
+  property_names.append('data_label_number')
 
-  x_title = fields.StringField('x_title',
-                              title='X Title',
-                              description=('The Title for the X axis'),
-                              default='',
-                              required=0)
+  #data-label-text="false"
+  data_label_text = fields.CheckBoxField('data_label_text',
+                                         title='Data Label Text',
+                                         description=(''),
+                                         default=0,
+                                         required=0)
+  property_names.append('data_label_text')
 
-  y_title = fields.StringField('y_title',
-                              title='Y Title',
-                              description=('The Title for the Y axis'),
-                              default='',
-                              required=0)
-
-  default_params = fields.ListTextAreaField('default_params',
-                              title="Default Parameters",
-                              description=(
-      "Default Parameters for the List Method."),
-                              default=[],
-                              required=0)
-
-  bg_transparent = fields.CheckBoxField('bg_transparent',
-                              title='Transparent Background',
-                              description=('Allows to set the background transparent'),
-                              default='',
-                              required=0)
+  #data-label-symbol="false"
+  data_label_symbol = fields.CheckBoxField('data_label_symbol',
+                                           title='Data Label Symbol',
+                                           description=(''),
+                                           default=0,
+                                           required=0)
+  property_names.append('data_label_symbol')
 
   def render_view(self, field, value, REQUEST=None, render_format='html'):
     """
       Render a Chart in read-only.
     """
     if REQUEST is None: REQUEST=get_request()
-    return self.render(field, key, value, REQUEST, render_format=render_format)
+    return self.render(field, key,  value, REQUEST, render_format=render_format)
 
   def render(self, field, key, value, REQUEST, render_format='html'):
 
@@ -211,19 +351,40 @@ class OOoChartWidget(Widget.Widget):
                          render the chart using that format.
     """
     title = field.get_value('title')
+    alternate_name = field.get_value('alternate_name')
+
+    # Find the applicable context
+    form = field.aq_parent
+    here = getattr(form, 'aq_parent', REQUEST)
 
     # Update the render format based on REQUEST parameters
     render_format = getattr(REQUEST, 'render_format', render_format)
-    if render_format == 'html':
+
+    UrlIconOOo='%s/misc_/ERP5OOo/OOo.png' % here.ERP5Site_getAbsoluteUrl()
+    UrlIconPdf='%s/misc_/ERP5Form/PDF.png' % here.ERP5Site_getAbsoluteUrl()
+
+    if render_format == 'html' :
       css_class = field.get_value('css_class')
       format = field.get_value('image_format')
+      if format == '':
+        format='png'
       display = field.get_value('image_display')
-      alternate_name = field.get_value('alternate_name')
-      main_content = """\
-<div class="OOoChartContent">
-  <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
-</div>""" % (css_class, field.absolute_url(), format, display, title, alternate_name)
-      return main_content
+      if format in STANDARD_IMAGE_FORMAT_LIST:
+        main_content = '''<div class="OOoChartContent">
+          <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
+          </div>''' % (css_class, field.absolute_url(), format, display, title, alternate_name)
+        return main_content
+
+      if format == 'raw':
+        main_content = '''<div class="OOoChartContent">
+          <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
+          ''' % (field.absolute_url(), display, UrlIconOOo)
+        return main_content
+      if format == 'pdf':
+        main_content = '''<div class="OOoChartContent">
+          <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
+          </div>''' % (field.absolute_url(), display, UrlIconPdf)
+        return main_content
 
     # Find the applicable context
     form = field.aq_parent
@@ -234,35 +395,83 @@ class OOoChartWidget(Widget.Widget):
 
     # Build the parameters
     extra_argument_dict = dict(
+      chart_form_id = field.get_value('form_id'),
+      chart_field_id = field.get_value('field_id'),
       chart_title = field.get_value('title'),
+      chart_type = field.get_value('chart_type'),
       colour_column_dict = dict(field.get_value('colour_column_list')),
+      user_column_id_dict = dict(field.get_value('user_column_id_list')),
+      user_data_title= field.get_value('user_data_title'),
+      chart_position = field.get_value('chart_position'),
+      chart_legend = stringBoolean(field.get_value('chart_legend')),
+      chart_title_or_no = stringBoolean(field.get_value('chart_title_or_no')),
+      grid_graph = stringBoolean(field.get_value('grid_graph')),
+      grid_size=field.get_value('grid_size'),
       chart_three_dimensional = stringBoolean(field.get_value('chart_three_dimensional')),
       chart_japanese_candle_stick = stringBoolean(field.get_value('chart_japanese_candle_stick')),
+      deep = stringBoolean(field.get_value('deep')),
+      chart_percentage = stringBoolean(field.get_value('chart_percentage')),
+      chart_stacked = stringBoolean(field.get_value('chart_stacked')),
+      sector_pie_offset = field.get_value('sector_pie_offset'),
+      interpolation = field.get_value('interpolation'),
+      symbol_type = field.get_value('symbol_type'),
+      lines_used = field.get_value('lines_used'),
+      connect_bars = stringBoolean(field.get_value('connect_bars')),
+      series_source = field.get_value('series_source'),
+      stock_with_volume =stringBoolean(field.get_value('stock_with_volume')),
+      mean_value = stringBoolean(field.get_value('mean_value')),
+      error_margin = field.get_value('error_margin'),
+      error_lower_limit = field.get_value('error_lower_limit'),
+      error_upper_limit = field.get_value('error_upper_limit'),
+      error_category = field.get_value('error_category'),
+      error_percentage = field.get_value('error_percentage'),
+      regression_type = field.get_value('regression_type'),
+      data_label_number = field.get_value('data_label_number'),
+      data_label_text = stringBoolean(field.get_value('data_label_text')),
+      data_label_symbol = stringBoolean(field.get_value('data_label_symbol')),
+      position_legend=field.get_value('position_legend'),
     )
-    LOG('extra_argument_dict', 0, repr(extra_argument_dict))
+
     for k, v in extra_argument_dict.items():
       if REQUEST.get(k) is None:
         REQUEST.form[k] = v
 
-    # Find the page template
+
+
     method_id = field.get_value('ooo_template')
+    # Find the page template
     ooo_template = getattr(here, method_id)
 
     # Render the chart
-    if render_format == 'raw':
-      return ooo_template()
     return ooo_template(format=render_format)
 
-OOoChartWidgetInstance = OOoChartWidget()
+
+
 
 class OOoChartValidator(Validator.Validator):
-  property_names = Validator.Validator.property_names
+  """
+  """
+  property_names = ['enabled']
+
+  enabled = fields.CheckBoxField('enabled',
+                                 title="Enabled",
+                                 description=(
+"""If a field is not enabled, it will considered to be not
+in the form during rendering or validation. Be careful
+when you change this state dynamically (in the TALES tab):
+a user could submit a field that since got disabled, or
+get a validation error as a field suddenly got enabled that
+wasn't there when the form was drawn."""),
+                                  default=1)
 
   def validate(self, field, key, REQUEST):
-    result = {}
-    return result
+    return {}
 
+
+OOoChartWidgetInstance = OOoChartWidget()
 OOoChartValidatorInstance = OOoChartValidator()
+
+
 
 class OOoChart(ZMIField):
     meta_type = "OOoChart"
