@@ -244,7 +244,7 @@
                   </tal:block>\n
                 </select>\n
               </td>\n
-              <td class="AnchorColumn" tal:condition="show_anchor_column" class="Data">&nbsp;</td>\n
+              <td class="AnchorColumn Data" tal:condition="show_anchor_column">&nbsp;</td>\n
               <td tal:condition="show_select_column"\n
                 class="Data" style="width: 50px; text-align: center; vertical-align: middle">\n
                 <input id="listbox_check_all" type="image"\n
@@ -343,8 +343,8 @@
                     tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"\n
                     tal:content="structure python: \'%s%s&nbsp;%s\' % (\'&nbsp;&nbsp;\' * line.getDepth(), line.isOpen() and \'-\' or \'+\', section_name)" />\n
                 </td>\n
-                <td class="AnchorColumn" tal:condition="python:show_anchor_column and len(render_result)" class="Data" style="width: 20px;">\n
-                  <a href="#" tal:attributes="href python:render_result[0][4]"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" /></a>\n
+                <td class="AnchorColumn Data" tal:condition="python:show_anchor_column and len(render_result)" style="width: 20px;">\n
+                  <a href="#" tal:attributes="href python:render_result[0][4]"><img src="document_icon.gif" alt="document" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" /></a>\n
                 </td>\n
                 <td tal:condition="show_select_column"\n
                   class="DataA" style="width: 50px; text-align: center; vertical-align: middle"\n
@@ -376,7 +376,7 @@
             <tr tal:condition="here/showStat" id="listbox_stat_line"\n
               tal:attributes="id string:${field_id}_stat_line">\n
               <td tal:condition="is_report_tree_mode" class="Data">&nbsp;</td>\n
-              <td class="AnchorColumn" tal:condition="show_anchor_column" class="Data">&nbsp;</td>\n
+              <td class="AnchorColumn Data" tal:condition="show_anchor_column">&nbsp;</td>\n
               <td tal:condition="show_select_column" class="Data">&nbsp;</td>\n
               <tal:block tal:repeat="value here/getStatValueList">\n
                 <td class="Data" align="left"\n
