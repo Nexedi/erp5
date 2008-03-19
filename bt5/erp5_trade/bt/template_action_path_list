@@ -1,4 +1,3 @@
-Container Cell | view
 Container Line | view
 Container Line | view_quantity
 Container | view
@@ -121,7 +120,6 @@ Sale Trade Condition | view
 Sale Trade Condition | view_discount
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
-Supply Cell | view
 Supply Line | additional_price
 Supply Line | base_price
 Supply Line | discount_ratio
