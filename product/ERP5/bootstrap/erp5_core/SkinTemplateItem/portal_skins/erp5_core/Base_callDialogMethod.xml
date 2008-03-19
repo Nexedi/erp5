@@ -148,6 +148,7 @@ if dialog_method == \'Folder_delete\':\n
 \n
 \n
 form = getattr(context, dialog_id)\n
+\n
 # form can be a python script that returns the form\n
 if not hasattr(form, \'validate_all_to_request\'):\n
   form = form()\n
@@ -183,10 +184,18 @@ for field in form.get_fields():\n
       listbox_id_list.append(k)\n
     elif can_redirect and (v in (None, [], ()) or hasattr(v, \'read\')) : # If we cannot redirect, useless to test it again\n
       can_redirect = 0\n
+\n
     # Cleanup my_ and your_ prefixes\n
     splitted = k.split(\'_\', 1)\n
     if len(splitted) == 2 and splitted[0] in (\'my\', \'your\'):\n
-      kw[splitted[1]] = request_form[splitted[1]] = v\n
+\n
+      if hasattr(v, \'as_dict\'):\n
+        # This is an encapsulated editor\n
+        # convert it\n
+        kw.update(v.as_dict())\n
+      else:\n
+        kw[splitted[1]] = request_form[splitted[1]] = v\n
+\n
     else:\n
       kw[k] = request_form[k] = v\n
 \n
@@ -270,6 +279,7 @@ elif url_params_string != \'\':\n
                               , dialog_method\n
                               , url_params_string\n
                               )\n
+\n
 else:\n
   redirect_url = \'%s/%s\' % ( context.absolute_url()\n
                             , dialog_method\n
