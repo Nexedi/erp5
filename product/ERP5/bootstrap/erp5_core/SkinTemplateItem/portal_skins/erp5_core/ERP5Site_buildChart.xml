@@ -86,6 +86,15 @@
                          column_list python:line_list[0].getColumnItemList();\n
                          column_count python:len(column_list)">\n
 \n
+  <tal:block tal:define="global col_char python:\'B\';\n
+             global chart_type request/chart_type;\n
+             global series_source request/series_source;\n
+             global user_column_id_dict request/user_column_id_dict;\n
+             global user_data_title request/user_data_title;\n
+             global grid_graph request/grid_graph;\n
+             global data_label_text request/data_label_text;\n
+             global position_legend request/position_legend;"/>\n
+\n
   <office:automatic-styles>\n
     <number:number-style style:name="N0">\n
       <number:number number:min-integer-digits="1"/>\n
@@ -123,12 +132,18 @@
 \n
     <style:style style:name="chart_picture" style:family="chart">\n
       <style:chart-properties chart:lines="true"\n
+                              chart:mean-value="false"\n
+                              chart:error-margin="0"\n
+                              chart:error-lower-limit="0"\n
+                              chart:error-upper-limit="0"\n
+                              chart:error-percentage="0"\n
+                              chart:error-category="none"\n
+                              chart:stock-with-volume="false"\n
+                              chart:japanese-candle-stick="false"\n
+                              chart:stacked="false"\n
                               tal:attributes="chart:three-dimensional request/chart_three_dimensional | string:false;\n
                               chart:deep request/deep ; \n
-                              chart:stock-with-volume request/stock_with_volume | string:false; \n
-                              chart:japanese-candle-stick request/chart_japanese_candle_stick | string:false;\n
                               chart:vertical request/chart_position | string:false;\n
-                              chart:stacked request/chart_stacked | string:false;\n
                               chart:percentage request/chart_percentage | string:false;\n
                               chart:symbol-type request/symbol_type ;\n
                               chart:series-source request/series_source;\n
@@ -139,12 +154,7 @@
                               chart:lines-used request/lines_used | string:0;\n
                               chart:regression-type request/regression_type ;\n
                               chart:interpolation request/interpolation ;\n
-                              chart:mean-value request/chart_mean_value | string:false;\n
-                              chart:error-margin request/error_margin | string:0;\n
-                              chart:error-lower-limit request/error_lower_limit | string:0;\n
-                              chart:error-upper-limit request/error_upper_limit | string:0;\n
-                              chart:error-percentage request/error_percentage | string:0;\n
-                              chart:error-category request/error_category | string:none;"/>\n
+                              "/>\n
     </style:style>\n
 \n
     <style:style style:name="chart_x_axis" \n
@@ -212,7 +222,8 @@
       <style:style style:family="chart"\n
                    tal:attributes="style:name python:\'data_circle_%s\' % column_item[0]">\n
 \n
-        <style:graphic-properties  svg:stroke-color=\'#000000\' tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');\n
+        <style:graphic-properties svg:stroke-color=\'#000000\' \n
+                                  tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');\n
                                    "/>\n
         <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
       </style:style>\n
@@ -226,15 +237,6 @@
       <style:graphic-properties draw:stroke="none" draw:fill-color="#999999"/>\n
     </style:style>\n
   </office:automatic-styles>\n
-\n
-  <tal:block tal:define="global col_char python:\'B\';\n
-             global chart_type request/chart_type;\n
-             global series_source request/series_source;\n
-             global user_column_id_dict request/user_column_id_dict;\n
-             global user_data_title request/user_data_title;\n
-             global grid_graph request/grid_graph;\n
-             global data_label_text request/data_label_text;\n
-             global position_legend request/position_legend;"/>\n
 \n
   <office:body>\n
     <office:chart>\n
