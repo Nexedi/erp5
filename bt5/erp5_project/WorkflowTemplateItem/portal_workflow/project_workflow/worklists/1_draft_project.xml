@@ -68,6 +68,8 @@ project_module?validation_state=draft&portal_type=%(portal_type)s&local_roles=%(
             <value>
               <tuple>
                 <string>Owner</string>
+                <string>Assignor</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
