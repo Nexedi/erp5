@@ -65,9 +65,6 @@ class PaySheetModelLine(PaySheetLine, Predicate):
                       , PropertySheet.Price
                       , PropertySheet.VariationRange
                       , PropertySheet.MappedValue
-                      , PropertySheet.ValueAddedTax
-                      , PropertySheet.EcoTax
-                      , PropertySheet.CopyrightTax
                       , PropertySheet.PaySheetModelLine
                       , PropertySheet.Predicate
                       )
