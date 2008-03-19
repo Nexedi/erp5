@@ -1541,33 +1541,42 @@ class Base( CopyContainer,
     modified_property_dict = self._v_modified_property_dict = {}
 
     key_list = kw.keys()
-    ordered_key_list = [k for k in key_list if k not in edit_order]
-    for k in edit_order:
-      if k in key_list:
-        ordered_key_list.append(k)
+    unordered_key_list = [k for k in key_list if k not in edit_order]
+    ordered_key_list = [k for k in edit_order if k in key_list]
+    second_try_key_list = []
 
-    for key in ordered_key_list:
-      # We only change if the value is different
-      # This may be very long...
-      old_value = None
-      if not force_update:
-        try:
-          old_value = self.getProperty(key, evaluate=0)
-        except TypeError:
-          old_value = self.getProperty(key)
+    def setChangedPropertyList(key_list):
+      not_modified_list = []
+      for key in key_list:
+        # We only change if the value is different
+        # This may be very long...
+        old_value = None
+        if not force_update:
+          try:
+            old_value = self.getProperty(key, evaluate=0)
+          except TypeError:
+            old_value = self.getProperty(key)
 
-      if old_value != kw[key] or force_update:
-        # We keep in a thread var the previous values
-        # this can be useful for interaction workflow to implement lookups
-        # XXX If iteraction workflow script is triggered by edit and calls
-        # edit itself, this is useless as the dict will be overwritten
-        # If the keep_existing flag is set to 1, we do not update properties which are defined
-        if not keep_existing or not self.hasProperty(key):
-          modified_property_dict[key] = old_value
-          if key != 'id':
-            self._setProperty(key, kw[key])
-          else:
-            self.setId(kw['id'], reindex=reindex_object)
+        if old_value != kw[key] or force_update:
+          # We keep in a thread var the previous values
+          # this can be useful for interaction workflow to implement lookups
+          # XXX If iteraction workflow script is triggered by edit and calls
+          # edit itself, this is useless as the dict will be overwritten
+          # If the keep_existing flag is set to 1, we do not update properties which are defined
+          if not keep_existing or not self.hasProperty(key):
+            modified_property_dict[key] = old_value
+            if key != 'id':
+              self._setProperty(key, kw[key])
+            else:
+              self.setId(kw['id'], reindex=reindex_object)
+        else:
+          not_modified_list.append(key)
+      return not_modified_list
+
+    unmodified_key_list = setChangedPropertyList(unordered_key_list)
+    setChangedPropertyList(unmodified_key_list)
+    # edit_order MUST be enforced, and done at the complete end
+    setChangedPropertyList(ordered_key_list)
 
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
