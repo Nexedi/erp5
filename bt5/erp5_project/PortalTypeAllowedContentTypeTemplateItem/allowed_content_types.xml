@@ -1,17 +1,17 @@
 <allowed_content_type_list>
  <portal_type id="Project">
-  <item>Project Line</item>
-  <item>File</item>
-  <item>Image</item>
   <item>Project Milestone</item>
+  <item>File</item>
+  <item>Project Line</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Project Line">
-  <item>Project Line</item>
-  <item>Image</item>
   <item>Project Cell</item>
   <item>Folder</item>
+  <item>Project Line</item>
   <item>File</item>
   <item>Document</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Project Module">
   <item>Project</item>
@@ -38,6 +38,7 @@
  </portal_type>
  <portal_type id="Task Report">
   <item>Task Report Line</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Task Report Module">
   <item>Task Report</item>
