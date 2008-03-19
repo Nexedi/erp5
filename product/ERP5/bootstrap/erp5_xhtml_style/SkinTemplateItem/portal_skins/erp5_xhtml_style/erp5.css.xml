@@ -267,6 +267,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_vars</string> </key>
             <value>
               <dictionary/>
@@ -710,8 +716,12 @@ fieldset.bottom .field .input {\n
   border: 1px solid #f40;\n
 }\n
 \n
-.content .invisible label {\n
+.content .invisible > label {\n
   display: None;\n
+}\n
+\n
+.content .invisible > .input {\n
+  float: None;\n
 }\n
 \n
 .login .submit {\n
