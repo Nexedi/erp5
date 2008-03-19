@@ -74,12 +74,21 @@ if object_path is None:\n
   # Sometimes the object_path not comes with the request, when you edit for example.\n
   object_path = request.get(\'URL1\').split(\'/\')[-1]\n
 \n
+def sorted(seq, comparator):\n
+  new_seq = seq[::]\n
+  new_seq.sort(comparator)\n
+  return new_seq\n
+\n
+def display_method(doc):\n
+  return doc.getTitle()\n
+\n
 domain_list = []\n
 organisation =  context.organisation_module.restrictedTraverse(object_path)\n
-for person in organisation.getSubordinationRelatedValueList(\n
-                portal_type=\'Person\', checked_permission=\'View\'):\n
+for person in sorted(organisation.getSubordinationRelatedValueList(\n
+                       portal_type=\'Person\', checked_permission=\'View\'),\n
+                     lambda a, b: cmp(display_method(a), display_method(b))):\n
   domain = parent.generateTempDomain(id=person.getId())\n
-  domain.edit(title = person.getTitle(),\n
+  domain.edit(title = display_method(person),\n
               membership_criterion_base_category = (\'source\', \'destination\'), \n
               membership_criterion_category = (person.getRelativeUrl(),),\n
               domain_generator_method_id = script.id,\n
@@ -134,17 +143,19 @@ return domain_list\n
                             <string>parent</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>object_path</string>
                             <string>None</string>
                             <string>_getitem_</string>
+                            <string>sorted</string>
+                            <string>display_method</string>
                             <string>domain_list</string>
                             <string>organisation</string>
                             <string>_getiter_</string>
                             <string>person</string>
                             <string>domain</string>
-<string>script</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
