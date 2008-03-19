@@ -54,6 +54,7 @@ class Getter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
+                        acquisition_object_id=None,
                         is_list_type = 0,
                         is_tales_type = 0
                   ):
@@ -75,6 +76,7 @@ class Getter(Method):
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
+      self._acquisition_object_id = acquisition_object_id
       self._is_list_type = is_list_type
       self._is_tales_type = is_tales_type
 
@@ -92,6 +94,7 @@ class Getter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
+            acquisition_object_id=self._acquisition_object_id,
             is_list_type=self._is_list_type,
             is_tales_type=self._is_tales_type,
             checked_permission=kw.get('checked_permission', None)
@@ -128,6 +131,7 @@ class Setter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
+                        acquisition_object_id = None,
                         is_list_type = 0,
                         is_tales_type = 0,
                         reindex = 0
@@ -150,6 +154,7 @@ class Setter(Method):
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
+      self._acquisition_object_id = acquisition_object_id
       self._is_list_type = is_list_type
       self._is_tales_type = is_tales_type
       self._reindex = reindex

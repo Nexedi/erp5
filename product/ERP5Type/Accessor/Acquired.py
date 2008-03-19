@@ -51,6 +51,7 @@ class DefaultGetter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
+                        acquisition_object_id=None,
                         is_list_type = 0,
                         is_tales_type = 0
                   ):
@@ -70,6 +71,7 @@ class DefaultGetter(Method):
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
+      self._acquisition_object_id = acquisition_object_id
       self._is_list_type = is_list_type
       self._is_tales_type = is_tales_type
 
@@ -95,6 +97,7 @@ class DefaultGetter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
+            acquisition_object_id=self._acquisition_object_id,
             is_list_type=is_list_type,
             is_tales_type=is_tales_type
             )
@@ -125,6 +128,7 @@ class ListGetter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
+                        acquisition_object_id=None,
                         is_list_type = 0,
                         is_tales_type = 0
                   ):
@@ -144,6 +148,7 @@ class ListGetter(Method):
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
+      self._acquisition_object_id = acquisition_object_id
       self._is_list_type = is_list_type
       self._is_tales_type = is_tales_type
 
@@ -160,6 +165,7 @@ class ListGetter(Method):
       else:
         is_list_type = self._is_list_type
         is_tales_type = self._is_tales_type
+
       return instance._getAcquiredPropertyList(self._key, default, self._null,
             base_category=self._acquisition_base_category,
             portal_type=self._acquisition_portal_type,
@@ -169,6 +175,7 @@ class ListGetter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
+            acquisition_object_id=self._acquisition_object_id,
             is_list_type=is_list_type,
             is_tales_type=is_tales_type
             )
