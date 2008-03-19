@@ -999,9 +999,10 @@ class Base( CopyContainer,
 
   # Generic accessor
   def _getDefaultAcquiredProperty(self, key, default_value, null_value,
-        base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
-        accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-        is_list_type=0, is_tales_type=0, checked_permission=None):
+        acquisition_object_id=None, base_category=None, portal_type=None,
+        copy_value=0, mask_value=0, sync_value=0, accessor_id=None, depends=None,
+        storage_id=None, alt_accessor_id=None, is_list_type=0, is_tales_type=0,
+        checked_permission=None):
     """
       This method implements programmable acquisition of values in ERP5.
 
@@ -1029,6 +1030,8 @@ class Base( CopyContainer,
 
       depends       --    a list of parameters to propagate in the look up process
 
+      acquisition_object_id -- List of object Ids where look up properties
+                               before looking up on acquired objects
       The purpose of copy_value / mask_value / sync_value is to solve issues
       related to relations and synchronisation of data. copy_value determines
       if a value should be copied as an attribute of self. Copying a value is
@@ -1058,9 +1061,10 @@ class Base( CopyContainer,
     tv = getTransactionalVariable(self)
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
-    acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
-                       portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type,
+    acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key,
+                       acquisition_object_id, base_category, portal_type,
+                       copy_value, mask_value, sync_value, accessor_id, depends,
+                       storage_id, alt_accessor_id, is_list_type, is_tales_type,
                        checked_permission)
     if acquisition_key in tv:
       return null_value[0]
@@ -1087,6 +1091,44 @@ class Base( CopyContainer,
           return expression(econtext)
         else:
           return value
+
+      #Look at acquisition object before call acquisition
+      if acquisition_object_id is not None:
+        value = None
+        if isinstance(acquisition_object_id, str):
+          acquisition_object_id = tuple(acquisition_object_id)
+        for object_id in acquisition_object_id:
+          try:
+            value = self[object_id]
+            if value not in null_value:
+              break
+          except (KeyError, AttributeError):
+            pass
+        if copy_value:
+          if getattr(self, storage_id, None) is None:
+            # Copy the value if it does not already exist as an attribute of self
+            # Like in the case of orders / invoices
+            setattr(self, storage_id, value)
+        if is_list_type:
+          # We must provide the first element of the acquired list
+          if value in null_value:
+            result = None
+          else:
+            if isinstance(value, (list, tuple)):
+              if len(value) is 0:
+                result = None
+              else:
+                result = value[0]
+            else:
+              result = value
+        else:
+          # Value is a simple type
+          result = value
+      else:
+        result = None
+      if result not in null_value:
+        return result
+
       # Retrieve the list of related objects
       #LOG("Get Acquired Property self",0,str(self))
       #LOG("Get Acquired Property portal_type",0,str(portal_type))
@@ -1165,6 +1207,7 @@ class Base( CopyContainer,
   def _getAcquiredPropertyList(self, key, default_value, null_value,
      base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
      accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
+     acquisition_object_id=None,
      is_list_type=0, is_tales_type=0, checked_permission=None):
     """
       Default accessor. Implements the default
@@ -1181,7 +1224,8 @@ class Base( CopyContainer,
       portal_type = tuple(portal_type)
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type,
+                       accessor_id, depends, storage_id, alt_accessor_id,
+                       acquisition_object_id, is_list_type, is_tales_type,
                        checked_permission)
     if acquisition_key in tv:
       return null_value
@@ -1198,8 +1242,21 @@ class Base( CopyContainer,
           return expression(econtext)
         else:
           return value
-      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type,
-                                              checked_permission=checked_permission) # Full acquisition
+      super_list = []
+      if acquisition_object_id is not None:
+        if isinstance(acquisition_object_id, str):
+          acquisition_object_id = tuple(acquisition_object_id)
+        for object_id in acquisition_object_id:
+          try:
+            acquisition_object = self[object_id]
+            super_list.append(acquisition_object)
+          except (KeyError, AttributeError):
+            pass
+      super_list.extend(self._getAcquiredValueList(
+                                          base_category,
+                                          portal_type=portal_type,
+                                          checked_permission=checked_permission))
+                                          # Full acquisition
       super_list = [o for o in super_list if o.getPhysicalPath() != self.getPhysicalPath()] # Make sure we do not create stupid loop here
       if len(super_list) > 0:
         value = []
