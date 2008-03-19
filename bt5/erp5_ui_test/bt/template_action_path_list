@@ -12,6 +12,8 @@ Foo | list
 Foo | select_bar
 Foo | view
 Foo | view_duration_field
+Foo | view_formbox
+Foo | view_formbox_dialog
 Foo | view_planning
 Foo | view_proxy_field
 Foo | view_relation_field

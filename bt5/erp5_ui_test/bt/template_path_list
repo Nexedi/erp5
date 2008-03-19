@@ -11,6 +11,8 @@ portal_tests/document_zuite
 portal_tests/document_zuite/**
 portal_tests/duration_field_zuite
 portal_tests/duration_field_zuite/**
+portal_tests/form_box_zuite
+portal_tests/form_box_zuite/**
 portal_tests/integer_field_zuite
 portal_tests/integer_field_zuite/**
 portal_tests/lines_field_zuite
