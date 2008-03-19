@@ -11,13 +11,13 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIAHGmQTg1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+            <value> <string encoding="base64">UEsDBBQAAAAIAMp6cTg1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
 EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOwmk90YjzWix2ltT7TCS9q4TT82j
 qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyvscnaedSNG1HkhT68AitaxaH9D1XiWLjtuv69vJtHyo
 LuBBG6zzwnioLjLsNdR8CNgJCMFoBZzjlDvXN0dXc61oGPcsLruHZEwdgLedkELeJbtNefNu0GOK
 xyDoWRIDJ9pALIMHpdBgnvooVYpxOmLOYnFXEcFgPDAWggcfUshPIBXCRz9GpHI3PYVeDM7em2Jw
 bWFEkq+aLQQq6riT/b1fUHJT9TRJN+pa8LcY7pRPnUhOtXoTnv38v2L+nUt8MEizYy0yzNZ41ttk
-Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAcaZBODVi1zk+AQAASgcAABUA
+Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAynpxODVi1zk+AQAASgcAABUA
 AAAAAAAAAAAAAAAAAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAABxAQAA
 AAA=</string> </value>
         </item>
@@ -63,11 +63,7 @@ AAA=</string> </value>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
-            xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
-            xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-            tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-          office:version=\'1.0\'\n
+<office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:tal=\'http://xml.zope.org/namespaces/tal\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:metal=\'http://xml.zope.org/namespaces/metal\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\' office:version=\'1.0\'\n
           tal:define=\'data_dict here/PurchaseOrder_getODTDataDict\'>\n
   <office:scripts/>\n
   <office:font-face-decls>\n
@@ -173,10 +169,10 @@ AAA=</string> </value>
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
-    <style:style style:family=\'table-row\' style:name=\'Tableau1.8\'>\n
+    <style:style style:family=\'table-row\' style:name=\'Tableau1.5\'>\n
       <style:table-row-properties style:row-height=\'4.83cm\'/>\n
     </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A8\'>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A5\'>\n
       <style:table-cell-properties style:vertical-align=\'middle\' fo:padding=\'0cm\' fo:background-color=\'transparent\' fo:border=\'none\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
@@ -256,6 +252,7 @@ AAA=</string> </value>
   </office:automatic-styles>\n
   <office:body>\n
     <office:text>\n
+      <office:forms form:apply-design-mode=\'false\' form:automatic-focus=\'false\'/>\n
       <text:variable-decls>\n
         <text:variable-decl text:name=\'ds_title\' office:value-type=\'string\'/>\n
         <text:variable-decl text:name=\'ds_address\' office:value-type=\'string\'/>\n
@@ -264,6 +261,8 @@ AAA=</string> </value>
         <text:variable-decl text:name=\'ds_vatid\' office:value-type=\'string\'/>\n
         <text:variable-decl text:name=\'purchase_order\' office:value-type=\'string\'/>\n
         <text:variable-decl text:name=\'purchase_order_tr\' office:value-type=\'string\'/>\n
+        <text:variable-decl text:name=\'page\' office:value-type=\'string\'/>\n
+        <text:variable-decl text:name=\'of\' office:value-type=\'string\'/>\n
       </text:variable-decls>\n
       <text:sequence-decls>\n
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
@@ -300,10 +299,15 @@ AAA=</string> </value>
                         <text:variable-set text:formula=\'ooow:telfax\' text:name=\'ds_telfax\' text:display=\'none\' office:string-value=\'telfax\' office:value-type=\'string\' tal:attributes=\'office:string-value python:data_dict["destination_section_telfax"]\'/>\n
                         <text:variable-set text:formula=\'ooow:email\' text:name=\'ds_email\' text:display=\'none\' office:string-value=\'email\' office:value-type=\'string\' tal:attributes=\'office:string-value python:data_dict["destination_section_email"]\'/>\n
                         <text:variable-set text:formula=\'ooow:vatid\' text:name=\'ds_vatid\' text:display=\'none\' office:string-value=\'vatid\' office:value-type=\'string\' tal:attributes=\'office:string-value python:data_dict["destination_section_vatid"]\'/>\n
-                        <div tal:omit-tag=\'\' tal:define=\'orig_title string:Purchase Order; en_title python:here.Base_translateString(orig_title, lang="en"); my_title python:here.Base_translateString(orig_title)\'>\n
+                        <div tal:omit-tag=\'\' tal:define=\'orig_title string:Purchase Order; en_title python:here.Base_translateString(orig_title, lang="en", encoding=""); my_title python:here.Base_translateString(orig_title, encoding="");\n
+                            orig_page string:Page; en_page python:here.Base_translateString(orig_page, lang="en", encoding=""); my_page python:here.Base_translateString(orig_page, encoding="");\n
+                            orig_of string:of; en_of python:here.Base_translateString(orig_of, lang="en", encoding=""); my_of python:here.Base_translateString(orig_of, encoding="")\'>\n
                         <text:variable-set text:formula=\'ooow:purchase_order\' text:name=\'purchase_order\' text:display=\'none\' office:string-value=\'purchase_order\' office:value-type=\'string\' tal:attributes=\'office:string-value en_title\'/>\n
                         <text:variable-set text:formula=\'ooow:purchase_order_tr\' text:name=\'purchase_order_tr\' text:display=\'none\' office:string-value=\'purchase_order_tr\' office:value-type=\'string\' tal:condition=\'python:my_title!=en_title\' tal:attributes=\'office:string-value my_title\'/>\n
-                        </div><span tal:replace=\'en_string\'/>:</text:p>\n
+                        <text:variable-set text:formula=\'ooow:page\' text:name=\'page\' text:display=\'none\' office:string-value=\'page\' office:value-type=\'string\' tal:attributes=\'office:string-value my_page\'/>\n
+                        <text:variable-set text:formula=\'ooow:of\' text:name=\'of\' text:display=\'none\' office:string-value=\'of\' office:value-type=\'string\' tal:attributes=\'office:string-value my_of\'/>\n
+                        </div>\n
+                        <span tal:replace=\'en_string\'/>:</text:p>\n
                       <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/>:</text:p>\n
                       </div>\n
                     </table:table-cell>\n
@@ -463,36 +467,38 @@ AAA=</string> </value>
           </table:table-row>\n
         </table:table-header-rows>\n
         <table:table-row table:style-name=\'Tableau1.3\' tal:repeat=\'line_dict python:data_dict["line_list"]\'>\n
+        <div tal:omit-tag=\'\' tal:define=\'style_name python:line_dict["style_name"]\'>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["index"]\'>1</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["index"]\' tal:attributes=\'text:style-name style_name\'>1</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["source_reference"]\'>source_ref</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["source_reference"]\' tal:attributes=\'text:style-name style_name\'>source_ref</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["reference"]\'>ref</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["reference"]\' tal:attributes=\'text:style-name style_name\'>ref</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["description"]\'>desc</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["description"]\' tal:attributes=\'text:style-name style_name\'>desc</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_quantity"]\'>qty</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_quantity"]\' tal:attributes=\'text:style-name style_name\'>qty</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["quantity_unit"]\'>qty_u</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["quantity_unit"]\' tal:attributes=\'text:style-name style_name\'>qty_u</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["stop_date"]\'>stop_date</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["stop_date"]\' tal:attributes=\'text:style-name style_name\'>stop_date</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["base_price"]\'>base_price</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["base_price"]\' tal:attributes=\'text:style-name style_name\'>base_price</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_price"]\'>total_price</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_price"]\' tal:attributes=\'text:style-name style_name\'>total_price</text:p>\n
           </table:table-cell>\n
+          </div>\n
         </table:table-row>\n
-        <table:table-row table:style-name=\'Tableau1.8\'>\n
-          <table:table-cell table:style-name=\'Tableau1.A8\' table:number-columns-spanned=\'9\' office:value-type=\'string\'>\n
+        <table:table-row table:style-name=\'Tableau1.5\'>\n
+          <table:table-cell table:style-name=\'Tableau1.A5\' table:number-columns-spanned=\'9\' office:value-type=\'string\'>\n
             <table:table table:style-name=\'Tableau3\' table:name=\'Tableau3\'>\n
               <table:table-column table:style-name=\'Tableau3.A\'/>\n
               <table:table-column table:style-name=\'Tableau3.B\'/>\n
@@ -629,8 +635,7 @@ AAA=</string> </value>
       <text:p text:style-name=\'P4\'/>\n
     </office:text>\n
   </office:body>\n
-</office:document-content>\n
-
+</office:document-content>
 
 ]]></string> </value>
         </item>

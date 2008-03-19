@@ -150,22 +150,45 @@ line_list = []\n
 total_price = 0.0\n
 total_vat = 0.0\n
 \n
-for line in context.getMovementList(sort_on=\'int_index\'):\n
+def getSubLineList(obj):\n
+  sub_list = []\n
+  for x in obj.searchFolder(portal_type=context.getPortalOrderMovementTypeList(), sort_on=\'int_index\'):\n
+    sub_list.append(x)\n
+    sub_list.extend(getSubLineList(x))\n
+  return sub_list\n
+\n
+for line in getSubLineList(context):\n
   prod_desc = line.getResource() is not None and line.getResourceValue().getDescription() or \'\'\n
   desc = getProductAndLineDesc(prod_desc, line.getDescription())\n
-  line_dict = {\n
-    \'index\': line.getIntIndex(),\n
-    \'source_reference\': getSourceReference(line),\n
-    \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
-    \'description\': desc,\n
-    \'total_quantity\': line.getTotalQuantity() or \'\',\n
-    \'quantity_unit\': line.getQuantityUnitTitle() or (line.getResource() and line.getResourceValue().getQuantityUnitTitle()) or \'\',\n
-    \'stop_date\': line.getStopDate() or \'\',\n
-    \'base_price\': line.getPrice() or \'\',\n
-    \'total_price\': line.getTotalPrice() or \'\',\n
-  }\n
-  total_price += line.getTotalPrice() or 0.0\n
-  total_vat += getLineVat(line)\n
+  if line.hasLineContent() or line.hasCellContent():\n
+    # summary\n
+    line_dict = {\n
+      \'style_name\': \'Item_20_Table_20_Title\',\n
+      \'index\': line.getIntIndex(),\n
+      \'source_reference\': getSourceReference(line),\n
+      \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
+      \'description\': desc,\n
+      \'total_quantity\': \'\',\n
+      \'quantity_unit\': \'\',\n
+      \'stop_date\': \'\',\n
+      \'base_price\': \'\',\n
+      \'total_price\': \'\',\n
+    }\n
+  else:\n
+    line_dict = {\n
+      \'style_name\': \'Table_20_Contents\',\n
+      \'index\': line.getIntIndex(),\n
+      \'source_reference\': getSourceReference(line),\n
+      \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
+      \'description\': desc,\n
+      \'total_quantity\': line.getTotalQuantity() or \'\',\n
+      \'quantity_unit\': line.getQuantityUnitTitle() or (line.getResource() and line.getResourceValue().getQuantityUnitTitle()) or \'\',\n
+      \'stop_date\': line.getStopDate() or \'\',\n
+      \'base_price\': line.getPrice() or \'\',\n
+      \'total_price\': line.getTotalPrice() or \'\',\n
+    }\n
+    total_price += line.getTotalPrice() or 0.0\n
+    total_vat += getLineVat(line)\n
   line_list.append(line_dict.copy())\n
 \n
 data_dict = {\n
@@ -190,15 +213,15 @@ data_dict = {\n
       context.getDestination() and context.getDestinationValue().getFaxText() or \'\'),\n
   \'destination_email\': getEmail(context.getDestination() and context.getDestinationValue().getEmailText() or \'\'),\n
 \n
-  \'destination_section_title\': context.getDestinationSectionTitle() or \'\',\n
-  \'destination_section_address\': getOneLineAddress(\n
+  \'destination_section_title\': unicode(context.getDestinationSectionTitle() or \'\', \'utf8\'),\n
+  \'destination_section_address\': unicode(getOneLineAddress(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressText() or \'\',\n
-      context.getDestinationSection() and context.getDestinationSectionValue().getRegionTitle() or \'\'),\n
-  \'destination_section_telfax\': getPhoneAndFax(\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getRegionTitle() or \'\'), \'utf8\'),\n
+  \'destination_section_telfax\': unicode(getPhoneAndFax(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\',\n
-      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'),\n
-  \'destination_section_email\': getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'),\n
-  \'destination_section_vatid\': getVatId(context.getDestinationSection() and context.getDestinationSectionValue().getVatCode() or \'\'),\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'), \'utf8\'),\n
+  \'destination_section_email\': unicode(getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'), \'utf8\'),\n
+  \'destination_section_vatid\': unicode(getVatId(context.getDestinationSection() and context.getDestinationSectionValue().getVatCode() or \'\'), \'utf8\'),\n
 \n
   \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
   \'destination_decision_telfax\': getPhoneAndFax(context.getDestinationDecision() and context.getDestinationDecisionValue().getTelephoneText() or \'\',\n
@@ -284,6 +307,7 @@ return data_dict\n
                             <string>line_list</string>
                             <string>total_price</string>
                             <string>total_vat</string>
+                            <string>getSubLineList</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>None</string>
@@ -291,6 +315,7 @@ return data_dict\n
                             <string>desc</string>
                             <string>line_dict</string>
                             <string>_inplacevar_</string>
+                            <string>unicode</string>
                             <string>data_dict</string>
                           </tuple>
                         </value>
