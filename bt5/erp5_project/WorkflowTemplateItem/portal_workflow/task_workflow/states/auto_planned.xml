@@ -84,7 +84,9 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -93,7 +95,9 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -102,6 +106,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>

@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Ordered Tasks (%(count)s)</string> </value>
+            <value> <string>Tasks to order (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-task_module?simulation_state=ordered&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
+task_module?simulation_state=planned&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Ordered tasks to review</string> </value>
+            <value> <string>Planned tasks to review</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ task_module?simulation_state=ordered&portal_type=%(portal_type)s&local_roles=%(l
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ordered_task</string> </value>
+            <value> <string>2_planned_task</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -57,11 +57,8 @@ task_module?simulation_state=ordered&portal_type=%(portal_type)s&local_roles=%(l
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -71,6 +68,7 @@ task_module?simulation_state=ordered&portal_type=%(portal_type)s&local_roles=%(l
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -80,24 +78,21 @@ task_module?simulation_state=ordered&portal_type=%(portal_type)s&local_roles=%(l
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>ordered</string>
+                        <string>planned</string>
                       </tuple>
                     </value>
                 </item>
