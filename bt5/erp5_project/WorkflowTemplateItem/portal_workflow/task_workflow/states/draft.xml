@@ -97,6 +97,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -107,6 +108,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
