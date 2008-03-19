@@ -34,10 +34,6 @@ from Selection import Selection
 from Globals import get_request
 from Products.ERP5OOo.Document.OOoDocument import STANDARD_IMAGE_FORMAT_LIST
 
-from Globals import DTMLFile
-
-
-
 from zLOG import LOG
 
 class OOoChartWidget(Widget.Widget):
@@ -55,11 +51,17 @@ class OOoChartWidget(Widget.Widget):
     - error-percentage
     - chart-japanese-candle-stick and stock-with-volume,chart:stock-updown-bars. These attributs are used with a chart:stock
   """
-  
+
   property_names = list(Widget.Widget.property_names)
-  # Default has no meaning in OOoChart.
-  property_names.remove('default')
-  
+
+  default = fields.StringField(
+                                'default',
+                                title='Default',
+                                description=(
+    "A default value (not used)."),
+                                default="",
+                                required=0)
+
   form_id = fields.StringField(
                               'form_id',
                               title='Form ID',
@@ -111,7 +113,7 @@ class OOoChartWidget(Widget.Widget):
 
 
   chart_type = fields.ListField('chart_type',
-                                  title='Chart type',
+                                  title='Chart Type',
                                   description=('Type of the Chart'),
                                   default='chart:bar',
                                   items=[('bar', 'chart:bar'),
@@ -123,24 +125,24 @@ class OOoChartWidget(Widget.Widget):
 
 
   colour_column_list = fields.ListTextAreaField('colour_column_list',
-                              title="Data Colour",
+                              title="Data Color",
                               description=(
-    "A list of colours for each data associated to a column."),
+    "A list of colors for each data associated to a column."),
                               default=[],
                               required=1)
   property_names.append('colour_column_list')
 
   # vertical ="true"
   chart_position = fields.ListField('chart_position',
-                                   title='Bar(s) Position',
+                                   title='Bar Position',
                                    description=('Render the bar in horizontal position or vertical position'),
-                                   default='true',
+                                   default='false',
                                    items=[('horizontal', 'true'),
                                           ('vertical', 'false'),
                                           ],
                                    size=0)
   property_names.append('chart_position')
-  
+
   #legend of the chart or not
   chart_legend = fields.CheckBoxField('chart_legend',
                                          title='Chart Legend',
@@ -148,10 +150,10 @@ class OOoChartWidget(Widget.Widget):
                                          default=1,
                                          required=0)
   property_names.append('chart_legend')
-  
-  
+
+
   position_legend = fields.ListField('position_legend',
-                                       title='Position Legend',
+                                       title='Legend Position',
                                        description=('Legend Position according to the graph'),
                                        default='end',
                                        items=[('bottom', 'bottom'),
@@ -164,21 +166,21 @@ class OOoChartWidget(Widget.Widget):
 
   #legend of the chart or not
   chart_title_or_no = fields.CheckBoxField('chart_title_or_no',
-                                         title='Title Graph',
+                                         title='Chart Title ',
                                          description=('Show Title on Graph or no '),
                                          default=1,
                                          required=0)
   property_names.append('chart_title_or_no')
-  
+
   #grid or not
   grid_graph = fields.CheckBoxField('grid_graph',
-                                         title=' grid graph',
+                                         title='Chart Grid ',
                                          description=('Show Grid or no'),
                                          default=1,
                                          required=0)
   property_names.append('grid_graph')
-  
-  
+
+
   grid_size = fields.ListField('grid_size',
                                    title='Grid Size',
                                    description=('Render a big grid size or a small grid size'),
@@ -188,8 +190,7 @@ class OOoChartWidget(Widget.Widget):
                                           ],
                                    size=0)
   property_names.append('grid_size')
-  
-  
+
   user_data_title = fields.StringField('user_data_title',
                                 title="User Column ID For X-axis",
                                 description=(
@@ -207,7 +208,7 @@ class OOoChartWidget(Widget.Widget):
 
 
   chart_stacked = fields.CheckBoxField('chart_stacked',
-                              title='stacked bars ',
+                              title='Stacked Bars',
                               description=('stacked bars or not'),
                               default=0,
                               required=0)
@@ -236,7 +237,7 @@ class OOoChartWidget(Widget.Widget):
                               default=0,
                               required=0)
   property_names.append('deep')
-  
+
   # sector_pie_offset Default:0
   sector_pie_offset = fields.IntegerField('sector_pie_offset',
                                         title='Sector Pie Offset',
@@ -329,12 +330,12 @@ class OOoChartWidget(Widget.Widget):
                                            required=0)
   property_names.append('data_label_symbol')
 
-  def render_view(self, field, value, REQUEST=None, render_format='html'):
+  def render_view(self, field, value, key=None, REQUEST=None, render_format='html'):
     """
       Render a Chart in read-only.
     """
     if REQUEST is None: REQUEST=get_request()
-    return self.render(field, key,  value, REQUEST, render_format=render_format)
+    return self.render(field, key, value, REQUEST, render_format=render_format)
 
   def render(self, field, key, value, REQUEST, render_format='html'):
 
@@ -350,6 +351,7 @@ class OOoChartWidget(Widget.Widget):
                          If the format is set to an image type (ex. png)
                          render the chart using that format.
     """
+
     title = field.get_value('title')
     alternate_name = field.get_value('alternate_name')
 
@@ -393,7 +395,7 @@ class OOoChartWidget(Widget.Widget):
     def stringBoolean(value):
       return str(bool(value)).lower()
 
-    # Build the parameters
+    #Build the parameters
     extra_argument_dict = dict(
       chart_form_id = field.get_value('form_id'),
       chart_field_id = field.get_value('field_id'),
@@ -408,9 +410,7 @@ class OOoChartWidget(Widget.Widget):
       grid_graph = stringBoolean(field.get_value('grid_graph')),
       grid_size=field.get_value('grid_size'),
       chart_three_dimensional = stringBoolean(field.get_value('chart_three_dimensional')),
-      chart_japanese_candle_stick = stringBoolean(field.get_value('chart_japanese_candle_stick')),
       deep = stringBoolean(field.get_value('deep')),
-      chart_percentage = stringBoolean(field.get_value('chart_percentage')),
       chart_stacked = stringBoolean(field.get_value('chart_stacked')),
       sector_pie_offset = field.get_value('sector_pie_offset'),
       interpolation = field.get_value('interpolation'),
@@ -418,13 +418,6 @@ class OOoChartWidget(Widget.Widget):
       lines_used = field.get_value('lines_used'),
       connect_bars = stringBoolean(field.get_value('connect_bars')),
       series_source = field.get_value('series_source'),
-      stock_with_volume =stringBoolean(field.get_value('stock_with_volume')),
-      mean_value = stringBoolean(field.get_value('mean_value')),
-      error_margin = field.get_value('error_margin'),
-      error_lower_limit = field.get_value('error_lower_limit'),
-      error_upper_limit = field.get_value('error_upper_limit'),
-      error_category = field.get_value('error_category'),
-      error_percentage = field.get_value('error_percentage'),
       regression_type = field.get_value('regression_type'),
       data_label_number = field.get_value('data_label_number'),
       data_label_text = stringBoolean(field.get_value('data_label_text')),
@@ -436,8 +429,6 @@ class OOoChartWidget(Widget.Widget):
       if REQUEST.get(k) is None:
         REQUEST.form[k] = v
 
-
-
     method_id = field.get_value('ooo_template')
     # Find the page template
     ooo_template = getattr(here, method_id)
@@ -445,33 +436,17 @@ class OOoChartWidget(Widget.Widget):
     # Render the chart
     return ooo_template(format=render_format)
 
-
-
-
 class OOoChartValidator(Validator.Validator):
   """
   """
-  property_names = ['enabled']
+  property_names =Validator.Validator.property_names
 
-  enabled = fields.CheckBoxField('enabled',
-                                 title="Enabled",
-                                 description=(
-"""If a field is not enabled, it will considered to be not
-in the form during rendering or validation. Be careful
-when you change this state dynamically (in the TALES tab):
-a user could submit a field that since got disabled, or
-get a validation error as a field suddenly got enabled that
-wasn't there when the form was drawn."""),
-                                  default=1)
+  def validate(self, key,field,  REQUEST):
 
-  def validate(self, field, key, REQUEST):
     return {}
-
 
 OOoChartWidgetInstance = OOoChartWidget()
 OOoChartValidatorInstance = OOoChartValidator()
-
-
 
 class OOoChart(ZMIField):
     meta_type = "OOoChart"
