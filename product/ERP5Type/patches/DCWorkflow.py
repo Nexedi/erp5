@@ -183,7 +183,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
               if dict.has_key('local_roles'):
-                fmt_data._push({'local_roles': join(dict['local_roles'],';')})
+                fmt_data._push({'local_roles': join(dict['local_roles'],'%3B')})
               else:
                 fmt_data._push({'local_roles': ''})
               res.append((id, {'name': qdef.actbox_name % fmt_data,
