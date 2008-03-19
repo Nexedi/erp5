@@ -1401,6 +1401,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 prop.get('acquisition_sync_value',0),
                 prop.get('storage_id'),
                 prop.get('alt_accessor_id'),
+                prop.get('acquisition_object_id'),
                 (prop['type'] in list_types or prop.get('multivalued', 0)),
                 (prop['type'] == 'tales')
                 )
@@ -1474,6 +1475,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 prop.get('acquisition_sync_value',0),
                 prop.get('storage_id'),
                 prop.get('alt_accessor_id'),
+                prop.get('acquisition_object_id'),
                 (prop['type'] in list_types or prop.get('multivalued', 0)),
                 (prop['type'] == 'tales')
                 )
