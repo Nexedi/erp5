@@ -61,26 +61,28 @@ class SQLQueue(RAMQueue, SQLBase):
     and provide sequentiality. Should not create conflict
     because use of OOBTree.
   """
-  def prepareQueueMessage(self, activity_tool, m):
-    if m.is_registered:
-      id_tool = activity_tool.getPortalObject().portal_ids
-      uid = id_tool.generateNewLengthId(id_group='portal_activity_queue', store=0)
-      path = '/'.join(m.object_path)
-      method_id = m.method_id
-      priority = m.activity_kw.get('priority', 1)
-      date = m.activity_kw.get('at_date', None)
-      if date is None:
-        date = self.getNow(activity_tool)
-      tag = m.activity_kw.get('tag', '')
-      serialization_tag = m.activity_kw.get('serialization_tag', '')
-      activity_tool.SQLQueue_writeMessage(uid=uid,
-                                          path=path,
-                                          method_id=method_id,
-                                          priority=priority,
-                                          message=self.dumpMessage(m),
-                                          date=date,
-                                          tag=tag,
-                                          serialization_tag=serialization_tag)
+
+  def prepareQueueMessageList(self, activity_tool, message_list):
+    registered_message_list = [m for m in message_list if m.is_registered]
+    if len(registered_message_list):
+      uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(
+        id_group='portal_activity_queue', id_count=len(registered_message_list),
+        store=0)
+      path_list = ['/'.join(m.object_path) for m in registered_message_list]
+      method_id_list = [m.method_id for m in registered_message_list]
+      priority_list = [m.activity_kw.get('priority', 1) for m in registered_message_list]
+      date_list = [m.activity_kw.get('at_date', None) for m in registered_message_list]
+      tag_list = [m.activity_kw.get('tag', '') for m in registered_message_list]
+      serialization_tag_list = [m.activity_kw.get('serialization_tag', '') for m in registered_message_list]
+      message_list = [self.dumpMessage(m) for m in registered_message_list]
+      activity_tool.SQLQueue_writeMessageList(uid_list=uid_list,
+                                              path_list=path_list,
+                                              method_id_list=method_id_list,
+                                              priority_list=priority_list,
+                                              message_list=message_list,
+                                              date_list=date_list,
+                                              tag_list=tag_list,
+                                              serialization_tag_list=serialization_tag_list)
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
