@@ -250,10 +250,6 @@
                           <string>region</string>
                           <string>region</string>
                         </tuple>
-                        <tuple>
-                          <string>validated_project_domain</string>
-                          <string>Open Project</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -78,12 +78,22 @@ else:\n
 \n
 for category in category_list:\n
   domain = parent.generateTempDomain(id=\'sub%s\' % category.getId())\n
+  \n
+  membership_criterion_category = []\n
+  sub_category_list = [category]\n
+  while sub_category_list:\n
+    sub_category = sub_category_list.pop()\n
+    membership_criterion_category.append(\'source_project/%s\' % sub_category.getRelativeUrl())\n
+    sub_category_list.extend(sub_category.contentValues(portal_type=\'Project Line\'))\n
+\n
   domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'source_project\', ), \n
-              membership_criterion_category = (\'source_project/%s\' % category.getRelativeUrl(),),\n
+              membership_criterion_base_category = (\'source_project\', ),\n
+              membership_criterion_category = membership_criterion_category,\n
               domain_generator_method_id = script.id,\n
               parent_url=category.getRelativeUrl(),\n
               uid = category.getUid())\n
+\n
+  context.log(str(membership_criterion_category))\n
                 \n
   domain_list.append(domain)\n
 \n
@@ -151,7 +161,11 @@ return domain_list\n
                             <string>parent_object</string>
                             <string>category</string>
                             <string>domain</string>
+                            <string>membership_criterion_category</string>
+                            <string>sub_category_list</string>
+                            <string>sub_category</string>
                             <string>script</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
