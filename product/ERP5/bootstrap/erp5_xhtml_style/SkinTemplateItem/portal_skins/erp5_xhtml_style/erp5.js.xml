@@ -87,7 +87,9 @@ function autoFocus() {\n
   }else{\n
     var first_text_input_expr = ".//input[@type=\'text\'][@name != \'field_your_search_text\']"\n
     var first_text_input = document.evaluate(first_text_input_expr, document, null, FIRST_RESULT, null).singleNodeValue;\n
-    first_text_input.focus();\n
+    if (first_text_input){\n
+      first_text_input.focus();\n
+    }\n
   }\n
 }\n
 \n
