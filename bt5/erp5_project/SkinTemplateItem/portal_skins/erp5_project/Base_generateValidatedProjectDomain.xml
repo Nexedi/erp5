@@ -92,8 +92,6 @@ for category in category_list:\n
               domain_generator_method_id = script.id,\n
               parent_url=category.getRelativeUrl(),\n
               uid = category.getUid())\n
-\n
-  context.log(str(membership_criterion_category))\n
                 \n
   domain_list.append(domain)\n
 \n
@@ -165,7 +163,6 @@ return domain_list\n
                             <string>sub_category_list</string>
                             <string>sub_category</string>
                             <string>script</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
