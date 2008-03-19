@@ -76,6 +76,8 @@
                info python: \'Edit this form\\\'s action\';\n
                object python: getattr(here, form.action, None);">\n
       <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link" />\n
+      <div class="clear">\n
+      </div>\n
     </tal:block>\n
   </tal:block>\n
   <tal:block metal:define-macro="field_developper">\n
