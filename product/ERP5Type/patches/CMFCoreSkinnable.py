@@ -15,7 +15,7 @@
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, superGetAttr, SkinDataCleanup, SkinnableObjectManager
 from thread import get_ident
-from zLOG import LOG
+from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
 
 """
@@ -48,7 +48,7 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
         for skin_id in skin_folder.objectIds():
           skin_list[skin_id] = skin_folder_id
       else:
-        LOG('__getattr__', 0, 'Skin folder %s is in selection list '\
+        LOG('__getattr__', WARNING, 'Skin folder %s is in selection list '\
             'but does not exist.' % (skin_folder_id, ))
     skin_selection_mapping[selection_name] = skin_list
   portal_skins._v_skin_location_list = skin_selection_mapping
@@ -77,7 +77,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
           try:
             skin_selection_mapping = portal_skins._v_skin_location_list
           except AttributeError:
-            LOG('Skinnable Monkeypatch __getattr__', 0, 'Initial skin cache fill. This should not happen often. Current thread id:%X' % (get_ident(), ))
+            LOG('Skinnable Monkeypatch __getattr__', DEBUG, 'Initial skin cache fill. This should not happen often. Current thread id:%X' % (get_ident(), ))
             skin_selection_mapping = self.initializeCache()
           try:
             skin_folder_id = skin_selection_mapping[skin_selection_name][name]
@@ -108,7 +108,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
                     resolve[name] = object.aq_base
                     return resolve[name]
                 else:
-                  LOG('__getattr__', 0, 'Skin folder %s is in selection list '\
+                  LOG('__getattr__', WARNING, 'Skin folder %s is in selection list '\
                       'but does not exist.' % (candidate_folder_id, ))
           ignore[name] = None
   if superGetAttr is None:
