@@ -737,6 +737,25 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
     self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
 
+    # retry last action, inverting the modified property
+    # XXX Whether this test is usefull or not completely depends on Python
+    # implementation. Python currently does not guarantee the order of a dict,
+    # so it might very well be that at some point, a change in the
+    # implementation makes the test always succeed, where it would fail with
+    # the curent implementation.
+    person.manage_delObjects(['default_address'])
+
+    person.edit(
+        default_address_city='Lille',
+        default_address_zip_code='69000')
+
+    self.assertNotEquals(person.getDefaultAddress(),
+        organisation.getDefaultAddress())
+    self.assertEquals(person.getDefaultAddressCity(),'Lille')
+    self.assertEquals(person.getDefaultAddressZipCode(), '69000')
+    self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
+
   ##################################
   ##  Tests
   ##################################
