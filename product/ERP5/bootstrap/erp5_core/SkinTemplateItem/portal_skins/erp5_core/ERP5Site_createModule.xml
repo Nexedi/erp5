@@ -82,7 +82,8 @@ module_portal_type_value = portal_types[module_portal_type]\n
 module_portal_type_value.manage_changeProperties(\n
                content_icon=\'folder_icon.gif\',\n
                filter_content_types=1,\n
-               allowed_content_types = (object_portal_type_id, ))\n
+               allowed_content_types=(object_portal_type_id, ),\n
+               group_list=(\'module\',))\n
 \n
 module_list_form_id = (\'%s_view%sList\' % (module_portal_type,\n
                         object_portal_type)).replace(\' \', \'\')\n
