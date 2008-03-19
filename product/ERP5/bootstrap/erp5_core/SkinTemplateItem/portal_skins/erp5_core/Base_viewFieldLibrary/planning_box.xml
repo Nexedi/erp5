@@ -456,7 +456,7 @@
                 </item>
                 <item>
                     <key> <string>info_tooltip</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>getTitle</string> </value>
                 </item>
                 <item>
                     <key> <string>info_topleft</string> </key>
