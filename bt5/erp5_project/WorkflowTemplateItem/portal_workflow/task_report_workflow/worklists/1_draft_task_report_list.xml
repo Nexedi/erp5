@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assigned Tasks (%(count)s)</string> </value>
+            <value> <string>Task Reports to validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_roles=%(local_roles)s&reset=1
+task_report_module?simulation_state=confirmed&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tasks assigned to a user or group which are waiting to be processed</string> </value>
+            <value> <string>Task Reports to validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_role
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>assignee_confirmed_task</string> </value>
+            <value> <string>1_draft_task_report_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -57,11 +57,8 @@ task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_role
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -70,6 +67,8 @@ task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_role
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Owner</string>
+                <string>Assignor</string>
                 <string>Assignee</string>
               </tuple>
             </value>
@@ -80,24 +79,21 @@ task_report_module?simulation_state=confirmed&portal_type=Task+Report&local_role
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>

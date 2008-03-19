@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assigned Tasks (%(count)s)</string> </value>
+            <value> <string>Tasks to close (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-task_report_module?simulation_state=confirmed&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
+task_report_module?simulation_state=stopped&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tasks assigned by a manager which are waiting to be processed</string> </value>
+            <value> <string>Tasks assigned by a manager which need to be closed</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ task_report_module?simulation_state=confirmed&portal_type=%(portal_type)s&local_
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>assignor_confirmed_task</string> </value>
+            <value> <string>5_assignor_stopped_task</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -57,11 +57,8 @@ task_report_module?simulation_state=confirmed&portal_type=%(portal_type)s&local_
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -80,24 +77,21 @@ task_report_module?simulation_state=confirmed&portal_type=%(portal_type)s&local_
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>stopped</string>
                       </tuple>
                     </value>
                 </item>

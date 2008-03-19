@@ -83,6 +83,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -92,6 +93,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

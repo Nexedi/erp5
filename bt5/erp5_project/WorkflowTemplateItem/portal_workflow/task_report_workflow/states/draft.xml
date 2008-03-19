@@ -43,8 +43,8 @@
                 <string>confirm_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
-                <string>deliver</string>
-                <string>deliver_action</string>
+                <string>start</string>
+                <string>start_action</string>
                 <string>stop</string>
                 <string>stop_action</string>
               </tuple>
@@ -95,7 +95,9 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -105,7 +107,9 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -115,6 +119,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>
