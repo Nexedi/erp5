@@ -88,7 +88,7 @@ bound_stop = bound_start + 1\n
 date_order = portal.portal_preferences.getPreferredDateOrder()\n
 date_format = dict(ymd=\'%m/%d %H:00\',\n
                    dmy=\'%d/%m %H:00\',\n
-                   mdy=\'%m/%d %H:00\').get(date_order, \'%Y/%m/%d %H:00\')\n
+                   mdy=\'%m/%d %H:00\').get(date_order, \'%m/%d %H:00\')\n
 \n
 category_list = []\n
 if depth == 0:\n
