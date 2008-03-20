@@ -49,13 +49,13 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Planning Box Field </title>\n
+<title>Test PlanningBox Vertical Column Header Link</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test PlanningBox Column Header Link</td></tr>\n
-</thead><tbody>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Vertical Column Header Link</td></tr>\n
+</thead><tbody tal:define="year python: DateTime().year()">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -161,62 +161,62 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_1"]</td>\n
-  <td tal:content="python: \'%s/1\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:January $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_2"]</td>\n
-  <td tal:content="python: \'%s/2\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:February $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_3"]</td>\n
-  <td tal:content="python: \'%s/3\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:March $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_4"]</td>\n
-  <td tal:content="python: \'%s/4\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:April $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_5"]</td>\n
-  <td tal:content="python: \'%s/5\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:May $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_6"]</td>\n
-  <td tal:content="python: \'%s/6\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:June $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_7"]</td>\n
-  <td tal:content="python: \'%s/7\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:July $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_8"]</td>\n
-  <td tal:content="python: \'%s/8\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:August $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_9"]</td>\n
-  <td tal:content="python: \'%s/9\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:September $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_10"]</td>\n
-  <td tal:content="python: \'%s/10\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:October $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_11"]</td>\n
-  <td tal:content="python: \'%s/11\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:November $year"> </td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_12"]</td>\n
-  <td tal:content="python: \'%s/12\' % (str(DateTime().year()))"> </td>\n
+  <td tal:content="string:December 2008"> </td>\n
 </tr>\n
 <!-- tr>\n
   <td>verifyText</td>\n
