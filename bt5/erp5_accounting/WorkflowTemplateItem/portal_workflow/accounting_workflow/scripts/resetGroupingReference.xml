@@ -146,7 +146,7 @@ for line in transaction.getMovementList(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onRestart</string> </value>
+            <value> <string>resetGroupingReference</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
