@@ -37,6 +37,7 @@ TODO:
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from DateTime import DateTime
 from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -1845,6 +1846,30 @@ class TestInvoice(TestPackingListMixin,
           mid_sequence + seq + end_sequence
       sequence_list.addSequenceString(sequence)
     sequence_list.play(self, quiet=quiet)
+
+
+  def test_Reference(self):
+    # A reference is set automatically on Sale Invoice Transaction
+    supplier = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Supplier')
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client')
+    currency = self.portal.currency_module.newContent(
+                            portal_type='Currency')
+    invoice = self.portal.accounting_module.newContent(
+                    portal_type='Sale Invoice Transaction',
+                    start_date=DateTime(),
+                    price_currency_value=currency,
+                    resource_value=currency,
+                    source_section_value=supplier,
+                    destination_section_value=client)
+    self.portal.portal_workflow.doActionFor(invoice, 'confirm_action')
+
+    # We could generate a better reference here.
+    self.assertEquals('1', invoice.getReference())
+    
 
   def test_15_CopyAndPaste(self, run=RUN_ALL_TESTS):
     """Test copy on paste on Invoice.
