@@ -65,9 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""This is the same as ERP5Type_getSecurityCategoryFromArrow, but with acquisition on categories.\n
-"""\n
+            <value> <string>"""This script is similar to ERP5Type_getSecurityCategoryFromContent, but it\n
+uses acquisition to get categories.\n
 \n
+Note that if you design a security with acquired categories you may have problems\n
+to regenerate security dynamically when thoses acquired values are modified on other\n
+documents from which we acquire those values, just because this "other document" doesn\'t\n
+know which documents are acquiring values.\n
+\n
+If unsure, you should use ERP5Type_getSecurityCategoryFromContent.\n
+"""\n
 category_list = []\n
 \n
 if object is None:\n
@@ -105,7 +112,14 @@ return category_list\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
                 <string>Manager</string>
+                <string>Member</string>
               </tuple>
             </value>
         </item>
@@ -158,7 +172,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_getSecurityCategoryFromAcquiredArrow</string> </value>
+            <value> <string>ERP5Type_getSecurityAcquiredCategoryFromContent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

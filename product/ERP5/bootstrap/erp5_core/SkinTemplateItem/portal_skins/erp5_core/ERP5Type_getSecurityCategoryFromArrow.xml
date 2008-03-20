@@ -65,25 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX For now, this script requires proxy manager\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+log("ERP5Type_getSecurityCategoryFromArrow is deprecated, "\n
+    "use ERP5Type_getSecurityCategoryFromContent instead")\n
 \n
-# base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
-# object : object which we want to assign roles to.\n
-# portal_type : portal type of object\n
-\n
-# must always return a list of dicts\n
-\n
-category_list = []\n
-\n
-if object is None:\n
-  return []\n
-\n
-for base_category in base_category_list:\n
-  category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
-\n
-return category_list\n
+return context.ERP5Type_getSecurityCategoryFromContent(\n
+    base_category_list, user_name, object, portal_type)\n
 </string> </value>
         </item>
         <item>
@@ -144,11 +131,10 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
-                            <string>category_list</string>
-                            <string>None</string>
-                            <string>_getiter_</string>
-                            <string>base_category</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
