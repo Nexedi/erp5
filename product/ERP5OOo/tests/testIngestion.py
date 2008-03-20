@@ -109,7 +109,6 @@ class TestIngestion(ERP5TypeTestCase):
     self.setSystemPreference()
     self.setSimulatedNotificationScript()
     self.setTools()
-    self.setContentTypeRegistry()
 
   def beforeTearDown(self):
     self.portal.portal_caches.clearAllCache()
@@ -141,16 +140,6 @@ class TestIngestion(ERP5TypeTestCase):
       self.portal.manage_addProduct['MimetypesRegistry'].manage_addTool(type='MimeTypes Registry')
     if getattr(self.portal, 'portal_transforms', None) is None:
       self.portal.manage_addProduct['PortalTransforms'].manage_addTool(type='Portal Transforms')
-
-  def setContentTypeRegistry(self):
-    content_type_registry = self.portal.content_type_registry
-    predicate_id = 'Ingested Document'
-    if predicate_id not in content_type_registry.predicate_ids:
-      content_type_registry.addPredicate(predicate_id, 'extension')
-      content_type_registry.predicates[predicate_id][0].edit('emx')
-      content_type_registry.assignTypeName(predicate_id,
-                                            'Document Ingestion Message')
-      content_type_registry.reorderPredicate(predicate_id, 0)
 
   ##################################
   ##  Useful methods
