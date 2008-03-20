@@ -104,7 +104,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                       self.portal._getOb(module_id).getTitle())
     self.assertNotEqual(types_tool.getTypeInfo(module_portal_type), None)
     self.assertNotEqual(types_tool.getTypeInfo(object_portal_type), None)
-    self.assertTrue(module_portal_type in self.getPortalModuleTypeList())
+    self.assertTrue(module_portal_type
+                      in self.portal.getPortalModuleTypeList())
     
     skin_folder = skins_tool._getOb(portal_skins_folder, None)
     self.assertNotEqual(skin_folder, None)
