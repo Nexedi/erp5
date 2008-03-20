@@ -74,7 +74,7 @@ if depth == 0:\n
                                                      validation_state=\'validated\')]\n
 else:\n
   parent_object = context.restrictedTraverse(parent.parent_url)\n
-  category_list = parent_object.contentValues(portal_type=\'Project Line\')\n
+  category_list = parent_object.contentValues(portal_type=\'Project Line\', sort_on=\'int_index\')\n
 \n
 for category in category_list:\n
   domain = parent.generateTempDomain(id=\'sub%s\' % category.getId())\n
