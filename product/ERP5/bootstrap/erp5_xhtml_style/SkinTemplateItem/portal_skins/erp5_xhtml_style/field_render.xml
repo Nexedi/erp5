@@ -68,6 +68,7 @@
            class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
            i18n:attributes="title" i18n:domain="ui">\n
         <tal:block tal:repeat="html_tuple html_render">\n
+         <div>\n
           <label>\n
             <tal:block tal:content="structure python: html_tuple[0]"\n
                        i18n:translate="" i18n:domain="ui" />\n
@@ -84,6 +85,7 @@
                 tal:content="python: field_errors[field_id].error_text"\n
                 i18n:translate="" i18n:domain="ui" />\n
           <p class="clear" tal:condition="not:is_web_mode"></p>\n
+         </div>\n
         </tal:block>\n
       </div>\n
     </tal:block>\n
