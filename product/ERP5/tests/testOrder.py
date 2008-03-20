@@ -320,7 +320,7 @@ class TestOrderMixin:
     """
     order_line = sequence.get('order_line')
     base_id = 'movement'
-    vcl = order_line.getVariationCategoryList(omit_option_base_category=1)
+    vcl = order_line.getVariationCategoryList(omit_optional_variation=1)
     cell_range = order_line.OrderLine_asCellRange(matrixbox=0)
 
     l = len(vcl)

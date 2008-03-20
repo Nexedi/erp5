@@ -250,8 +250,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
            portal_type=self.inventory_line_portal_type)
     inventory_line.edit(resource_value = resource)
     resource_vcl = list(resource.getVariationCategoryList(
-                                   omit_individual_variation=1,
-                                   omit_option_base_category=1))
+        omit_individual_variation=1, omit_optional_variation=1))
     resource_vcl.sort()
     self.assertEquals(len(resource_vcl),2)
     inventory_line.setVariationCategoryList(resource_vcl)

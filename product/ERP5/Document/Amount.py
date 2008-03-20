@@ -38,7 +38,7 @@ from Products.CMFCategory.Renderer import Renderer
 
 
 from zLOG import LOG, ERROR
-
+from warnings import warn
 
 
 class Amount(Base, Variated):
@@ -74,16 +74,22 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryList')
   def getVariationCategoryList(self, default=[], base_category_list=(),
-                               omit_option_base_category=0):
+      omit_optional_variation=0, omit_option_base_category=None):
     """
       Returns the possible discrete variations
       (as a list of relative urls to categories)
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     result = []
     resource = self.getDefaultResourceValue()
     if resource is not None:
       resource_variation_list = resource.getVariationBaseCategoryList(
-                           omit_option_base_category=omit_option_base_category)
+          omit_optional_variation=omit_optional_variation)
       if len(base_category_list) > 0 :
         variation_list = filter(lambda x: x in base_category_list,
                                 resource_variation_list)
@@ -151,15 +157,21 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self, default=[],
-      omit_option_base_category=0):
+      omit_optional_variation=0, omit_option_base_category=None):
     """
       Return the list of base_category from all variation related to
       amount.
       It is maybe a nonsense, but useful for correcting user errors.
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     base_category_list = []
     for category in self.getVariationCategoryList(
-                      omit_option_base_category=omit_option_base_category):
+        omit_optional_variation=omit_optional_variation):
       base_category = category.split('/')[0]
       if base_category not in base_category_list:
         base_category_list.append(base_category)
@@ -231,7 +243,8 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeBaseCategoryList')
-  def getVariationRangeBaseCategoryList(self, default=[], omit_option_base_category=0):
+  def getVariationRangeBaseCategoryList(self, default=[],
+      omit_optional_variation=0, omit_option_base_category=None):
     """
         Returns possible variations base categories for this amount ie.
         the variation base category of the resource (not the
@@ -242,29 +255,41 @@ class Amount(Base, Variated):
         getVariationRangeBaseCategoryList -> notion of
         getVariationBaseCategoryList is different
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     resource = self.getDefaultResourceValue()
     if resource is not None:
       result = resource.getVariationBaseCategoryList(
-                          omit_option_base_category=omit_option_base_category)
+          omit_optional_variation=omit_optional_variation)
     else:
       result = Variated.getVariationRangeBaseCategoryList(self)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeBaseCategoryItemList')
-  def getVariationRangeBaseCategoryItemList(self, omit_option_base_category=0,
-                                            display_id="title",
-                                            display_none_category=0):
+  def getVariationRangeBaseCategoryItemList(self, omit_optional_variation=0,
+      omit_option_base_category=None, display_id="title",
+      display_none_category=0):
     """
         Returns possible variations base categories for this amount ie.
         the variation base category of the resource (not the
         variation range).
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     return self.portal_categories.getItemList(
-                      self.getVariationRangeBaseCategoryList(
-                        omit_option_base_category=omit_option_base_category),
-                      display_id=display_id,
-                      display_none_category=display_none_category)
+        self.getVariationRangeBaseCategoryList(
+            omit_optional_variation=omit_optional_variation),
+        display_id=display_id,
+        display_none_category=display_none_category)
 
   #####################################################################
   #  Variation property API

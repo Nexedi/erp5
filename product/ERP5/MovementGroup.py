@@ -33,6 +33,7 @@ Define in this file all classes intended to group every kind of movement
 """
 
 from zLOG import LOG, DEBUG
+from warnings import warn
 from Products.PythonScripts.Utility import allow_class
 
 class MovementRejected(Exception) : pass
@@ -873,21 +874,35 @@ class FakeMovement:
       path_list.append(movement.getPath())
     return path_list
 
-  def getVariationBaseCategoryList(self, omit_option_base_category=0,**kw):
+  def getVariationBaseCategoryList(self, omit_optional_variation=0,
+      omit_option_base_category=None, **kw):
     """
       Return variation base category list
       Which must be shared by all movement
     """
-    return self.__movement_list[0].getVariationBaseCategoryList(
-                      omit_option_base_category=omit_option_base_category,**kw)
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
 
-  def getVariationCategoryList(self, omit_option_base_category=0,**kw):
+    return self.__movement_list[0].getVariationBaseCategoryList(
+        omit_optional_variation=omit_optional_variation, **kw)
+
+  def getVariationCategoryList(self, omit_optional_variation=0,
+      omit_option_base_category=None, **kw):
     """
       Return variation base category list
       Which must be shared by all movement
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     return self.__movement_list[0].getVariationCategoryList(
-                      omit_option_base_category=omit_option_base_category,**kw)
+        omit_optional_variation=omit_optional_variation, **kw)
 
   def edit(self, **kw):
     """

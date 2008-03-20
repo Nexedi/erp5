@@ -34,6 +34,8 @@ from Products.ERP5Type import Context, Interface, Permissions
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
 
+from warnings import warn
+
 class Variated(Base):
   """
     Variated is a mix-in class for all classes which implement
@@ -59,14 +61,21 @@ class Variated(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryList')
-  def getVariationBaseCategoryList(self, omit_option_base_category=0):
+  def getVariationBaseCategoryList(self, omit_optional_variation=0,
+      omit_option_base_category=None):
     """
       Return the list of variation base category.
-      If omit_option_base_category==1, do not include base category
+      If omit_optional_variation==1, do not include base category
       considered as option (ex: industrial_phase).
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     vbcl = self._baseGetVariationBaseCategoryList()
-    if omit_option_base_category == 1:
+    if omit_optional_variation == 1:
       # XXX First implementation
       # option base category list is a portal method, until the creation
       # of a good API.
@@ -85,30 +94,41 @@ class Variated(Base):
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationCategoryList')
   def getVariationCategoryList(self, base_category_list=(),
-                               omit_option_base_category=0):
+      omit_optional_variation=0, omit_option_base_category=None):
     """
       Returns the list of possible variations
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     return self._getVariationCategoryList(
                                   base_category_list=base_category_list)
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationCategoryItemList')
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
-                                   display_id='logical_path', 
-                                   display_base_category=1,
-                                   current_category=None,
-                                   omit_option_base_category=0,**kw):
+      display_id='logical_path', display_base_category=1,
+      current_category=None, omit_optional_variation=0,
+      omit_option_base_category=None, **kw):
     """
       Returns the list of possible variations
     """
+    #XXX backwards compatibility
+    if omit_option_base_category is not None:
+      warn("Please use omit_optional_variation instead of"\
+          " omit_option_base_category.", DeprecationWarning)
+      omit_optional_variation = omit_option_base_category
+
     variation_category_item_list = []
     if current_category is not None:
       variation_category_item_list.append((current_category,current_category))
 
     if base_category_list is ():
       base_category_list = self.getVariationBaseCategoryList()
-      if omit_option_base_category == 1:
+      if omit_optional_variation == 1:
         base_category_list = [x for x in base_category_list if x not in
                               self.getPortalOptionBaseCategoryList()]
     # Prepare 2 rendering
@@ -202,15 +222,21 @@ class Variated(Base):
   security.declareProtected(Permissions.AccessContentsInformation,
                                     'getVariationBaseCategoryItemList')
   def getVariationBaseCategoryItemList(self, display_id='title_or_id',
-                                       omit_option_base_category=0):
+        omit_optional_variation=0, omit_option_base_category=None):
       """
         Returns base category of the resource
         as a list of tuples (title, id). This is mostly
         useful in ERP5Form instances to generate selection
         menus.
       """
+      #XXX backwards compatibility
+      if omit_option_base_category is not None:
+        warn("Please use omit_optional_variation instead of"\
+            " omit_option_base_category.", DeprecationWarning)
+        omit_optional_variation = omit_option_base_category
+
       variation_base_category_list = self.getVariationBaseCategoryList(
-          omit_option_base_category=omit_option_base_category)
+          omit_optional_variation=omit_optional_variation)
       result = []
       for base_category in variation_base_category_list:
         bc = self.portal_categories.resolveCategory(base_category)
