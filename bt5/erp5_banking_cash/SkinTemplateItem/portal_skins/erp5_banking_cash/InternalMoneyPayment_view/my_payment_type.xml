@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories.payment_type.getCategoryChildTitleItemList()</string> </value>
+            <value> <string>python: here.portal_categories.payment_type.getCategoryChildTitleItemList(display_none_category=0, sort_id=\'int_index\')</string> </value>
         </item>
       </dictionary>
     </pickle>
