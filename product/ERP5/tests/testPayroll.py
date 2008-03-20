@@ -502,16 +502,11 @@ class TestPayrollMixin(ERP5TypeTestCase):
 
 
 class TestPayroll(TestPayrollMixin):
-  RUN_ALL_TESTS = 1
-  QUIET = 0
 
-  def test_01_modelCreation(self, quiet=QUIET, run=RUN_ALL_TESTS):
+  def test_01_modelCreation(self):
     '''
       test the function createModel and test if the model has been well created
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('Model Creation')
 
     if hasattr(self.paysheet_model_module, self.model_id):
       self.paysheet_model_module.manage_delObjects([self.model_id])
@@ -547,14 +542,10 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(self.variation_settings_category_list, 
         self.model.getVariationSettingsCategoryList(base=1))
 
-  def test_02_addModelLine(self, quiet=QUIET, run=RUN_ALL_TESTS):
+  def test_02_addModelLine(self):
     '''
       create a Model Line and test if it has been well created
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('Model Line Creation')
-    
     #model = self.createModel()
     self.addAllSlices(self.model)
 
@@ -593,15 +584,11 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(variation_category_list, 
         model_line.getVariationCategoryList())
 
-  def test_03_createPaySheet(self, quiet=QUIET, run=RUN_ALL_TESTS):
+  def test_03_createPaySheet(self):
     '''
       create a Pay Sheet with the model specialisation and verify it was well
       created
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('PaySheet Creation')
-    
     paysheet_id = 'my_paysheet'
     paysheet_returned = self.createPaySheet(self.model, paysheet_id)
     paysheet_module = self.portal.getDefaultModule(\
@@ -615,15 +602,11 @@ class TestPayroll(TestPayrollMixin):
         self.model.getSourceSectionTitle())
     self.assertEqual(paysheet.getSpecialiseValue(), self.model) 
 
-  def test_04_paySheetCalculation(self, quiet=QUIET, run=RUN_ALL_TESTS):
+  def test_04_paySheetCalculation(self):
     '''
       test if the scripts called by the 'Calculation of the Pay Sheet 
       Transaction' action create the paysheet lines
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('PaySheet Calculation')
-    
     self.addAllSlices(self.model)
 
     model_line_id1 = 'urssaf'
@@ -702,16 +685,11 @@ class TestPayroll(TestPayrollMixin):
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
 
-  def test_05_caculationWithANonNullMinimumValueSlice(self, quiet=QUIET, 
-      run=RUN_ALL_TESTS):
+  def test_05_caculationWithANonNullMinimumValueSlice(self):
     '''
       if the is only slice B (without previous slice A), test that
       the amount paid for this tax is correct
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('Calculation With A Non Null Minimum Value Slice')
-    
     self.addAllSlices(self.model)
 
     model_line_id1 = 'urssaf'
@@ -778,8 +756,7 @@ class TestPayroll(TestPayrollMixin):
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
 
-  def test_06_model_inheritance(self, quiet=QUIET, 
-      run=RUN_ALL_TESTS):
+  def test_06_model_inheritance(self):
     '''
       check that a model can inherite some datas from another
       the ineritance rules are the following :
@@ -795,10 +772,6 @@ class TestPayroll(TestPayrollMixin):
            the parent model,... until there is no parent model to inherite 
            (or until a max loop number has been reached).
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('Model Inheritance')
-
     # create 3 models
     model_employee = self.paysheet_model_module.newContent(id='model_employee',
         portal_type='Pay Sheet Model')
@@ -1018,8 +991,7 @@ class TestPayroll(TestPayrollMixin):
     sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     self.assertEqual(len(sub_object_list), 11)
     
-  def test_07_model_getCell(self, quiet=QUIET, 
-      run=RUN_ALL_TESTS):
+  def test_07_model_getCell(self):
     '''
       Model objects have a overload method called getCell. This method first
       call the XMLMatrix.getCell and if the cell is not found, call
@@ -1032,10 +1004,6 @@ class TestPayroll(TestPayrollMixin):
         - http://en.wikipedia.org/wiki/Breadth-first_search
         - http://en.wikipedia.org/wiki/Depth-first_search
     '''
-    if not run: return
-    if not quiet:
-      self.logMessage('Model getCell')
-
     # create 3 models
     model_employee = self.paysheet_model_module.newContent(id='model_employee',
         portal_type='Pay Sheet Model')
