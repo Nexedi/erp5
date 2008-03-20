@@ -1737,26 +1737,6 @@ class TestTransactions(AccountingTestCase):
     self.assertTrue('A description' in searchable_text)
     self.assertTrue('Some comments' in searchable_text)
 
-  def test_GroupingReferenceResetedOnCopyPaste(self):
-    accounting_module = self.portal.accounting_module
-    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
-      if portal_type == 'Balance Transaction':
-        # Balance Transaction cannot be copy and pasted, because they are not
-        # in visible allowed types.
-        continue
-      transaction = accounting_module.newContent(
-                            portal_type=portal_type)
-      line = transaction.newContent(
-                  id = 'line_with_grouping_reference',
-                  grouping_reference='A',
-                  portal_type=transaction_to_line_mapping[portal_type])
-
-      cp = accounting_module.manage_copyObjects(ids=[transaction.getId()])
-      copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
-      self.failIf(accounting_module[copy_id]\
-          .line_with_grouping_reference.getGroupingReference())
-
-
   # tests for Invoice_createRelatedPaymentTransaction
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
     """Check payment of a Sale Invoice.
@@ -1940,6 +1920,160 @@ class TestTransactions(AccountingTestCase):
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
+
+  # tests for Grouping References
+  def test_GroupingReferenceResetedOnCopyPaste(self):
+    accounting_module = self.portal.accounting_module
+    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
+      if portal_type == 'Balance Transaction':
+        # Balance Transaction cannot be copy and pasted, because they are not
+        # in visible allowed types.
+        continue
+      transaction = accounting_module.newContent(
+                            portal_type=portal_type)
+      line = transaction.newContent(
+                  id = 'line_with_grouping_reference',
+                  grouping_reference='A',
+                  portal_type=transaction_to_line_mapping[portal_type])
+
+      cp = accounting_module.manage_copyObjects(ids=[transaction.getId()])
+      copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
+      self.failIf(accounting_module[copy_id]\
+          .line_with_grouping_reference.getGroupingReference())
+
+  def test_AccountingTransaction_lineResetGroupingReference(self):
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A'),))
+    invoice_line = invoice.line_with_grouping_reference
+
+    other_account_invoice = self._makeOne(
+               title='Other Account Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=100,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A'),))
+    other_account_line = other_account_invoice.line_with_grouping_reference
+    
+    other_section_invoice = self._makeOne(
+               title='Other Section Invoice',
+               destination_section_value=self.organisation_module.client_2,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A'),))
+    other_section_line = other_section_invoice.line_with_grouping_reference
+
+    other_letter_invoice = self._makeOne(
+               title='Other letter Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_with_grouping_reference',
+                           grouping_reference='B'),))
+    other_letter_line = other_letter_invoice.line_with_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_with_grouping_reference
+    
+    # reset from the payment line, the invoice line from the same group will be
+    # ungrouped
+    payment_line.AccountingTransactionLine_resetGroupingReference()
+    self.failIf(payment_line.getGroupingReference())
+    self.failIf(invoice_line.getGroupingReference())
+
+    # other lines are not touched:
+    self.failUnless(other_account_line.getGroupingReference())
+    self.failUnless(other_section_line.getGroupingReference())
+    self.failUnless(other_letter_line.getGroupingReference())
+
+
+  def test_ResetGroupingReferenceAfterRestart(self):
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A'),))
+    
+    invoice_line = invoice.line_with_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_with_grouping_reference
+    invoice.stop()
+    
+    self.portal.portal_workflow.doActionFor(invoice, 'restart_action')
+    get_transaction().commit()
+    self.tic()
+    self.portal.portal_workflow.doActionFor(invoice, 'stop_action')
+    get_transaction().commit()
+    self.tic()
+    # we still have a grouping reference at this point, because the line was
+    # not modified, so the group is still valid
+    self.failUnless(invoice_line.getGroupingReference())
+    self.failUnless(payment_line.getGroupingReference())
+    
+    self.portal.portal_workflow.doActionFor(invoice, 'restart_action')
+    get_transaction().commit()
+    self.tic()
+    # try again, after modifying lines.
+    for line in invoice.getMovementList():
+      line.setQuantity(line.getQuantity() * 1.5)
+    # Now the group is no longer valid, so passing stop transaction again will
+    # ungroup lines.
+    self.portal.portal_workflow.doActionFor(invoice, 'stop_action')
+    
+    # this is done with activities, because we need an up to date catalog to
+    # check if the group is still valid, so we do this in an activity after
+    # this document indexing.
+    self.failUnless(invoice_line.getGroupingReference())
+    self.failUnless(payment_line.getGroupingReference())
+    
+    # after activities invocation, grouping references have been removed
+    get_transaction().commit()
+    self.tic()
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+
 
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
