@@ -177,15 +177,6 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
   def afterSetUp(self):
     portal = self.portal
 
-    # XXX do this in ERP5Site.py ?
-    # sets up content type registry
-    ctr = self.portal.content_type_registry
-    if ctr.getPredicate('mail_message') is None:
-      ctr.addPredicate('mail_message', 'extension')
-    ctr.getPredicate('mail_message').edit(extensions='eml')
-    ctr.assignTypeName('mail_message', 'Mail Message')
-    ctr.reorderPredicate('mail_message', 0)
-
     # create customer organisation and person
     if 'customer' not in portal.organisation_module.objectIds():
       portal.organisation_module.newContent(
