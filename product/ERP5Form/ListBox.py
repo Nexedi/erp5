@@ -2558,8 +2558,8 @@ class ListBoxValidator(Validator.Validator):
             else:
               LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
         if len(errors) > 0:
-            LOG("ListBox FormValidationError",0,str(error_result))
-            LOG("ListBox FormValidationError",0,str(errors))
+            #LOG("ListBox FormValidationError",0,str(error_result))
+            #LOG("ListBox FormValidationError",0,str(errors))
             raise FormValidationError(errors, error_result)
         return result
 
