@@ -1267,6 +1267,37 @@ class TestPayroll(TestPayrollMixin):
     pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEquals(0, len(pay_sheet_line_list))
   
+  def test_paysheet_consistency(self):
+    # minimal test for checkConsistency on a Pay Sheet Transaction and its
+    # subdocuments (may have to be updated when we'll add more constraints).
+    paysheet = self.createPaySheet(self.model)
+    paysheet.setResourceValue(self.portal.currency_module.EUR)
+    paysheet.newContent(portal_type='Pay Sheet Line')
+    paysheet.newContent(portal_type='Pay Sheet Transaction Line')
+    paysheet.newContent(portal_type='Annotation Line')
+    paysheet.newContent(portal_type='Pay Sheet Model Ratio Line')
+    paysheet.newContent(portal_type='Payment Condition')
+    self.assertEquals([], paysheet.checkConsistency())
+  
+  def test_paysheet_model_consistency(self):
+    # minimal test for checkConsistency on a Pay Sheet Model and its
+    # subdocuments (may have to be updated when we'll add more constraints).
+    model = self.model
+    model.newContent(portal_type='Pay Sheet Model Line') # XXX this one needs a
+                                                         # resource
+    model.newContent(portal_type='Annotation Line')
+    model.newContent(portal_type='Pay Sheet Model Ratio Line')
+    model.newContent(portal_type='Payment Condition')
+    self.assertEquals([], model.checkConsistency())
+
+  def test_payroll_service_consistency(self):
+    # minimal test for checkConsistency on a Payroll Service
+    service = self.portal.payroll_service_module.newContent(
+                           portal_type='Payroll Service')
+    service.setBaseAmountList(('bonus', 'gross_salary'))
+    service.setVariationBaseCategoryList(['tax_category'])
+    service.setVariationCategoryList(['tax_category/employee_share'])
+    self.assertEquals([], service.checkConsistency())
 
 
 import unittest
