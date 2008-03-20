@@ -31,6 +31,7 @@
 """
 
 import unittest
+import os
 
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
@@ -159,6 +160,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     """Setup the fixture.
     """
     ERP5TypeTestCase.setUp(self)
+    if os.environ.get('erp5_save_data_fs'):
+      return
     self.portal = self.getPortal()
     self.account_module = self.portal.account_module
     self.accounting_module = self.portal.accounting_module
@@ -189,6 +192,8 @@ class AccountingTestCase(ERP5TypeTestCase):
   def tearDown(self):
     """Remove all documents, except the default ones.
     """
+    if os.environ.get('erp5_save_data_fs'):
+      return
     get_transaction().abort()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
