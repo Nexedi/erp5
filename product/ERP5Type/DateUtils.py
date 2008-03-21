@@ -38,7 +38,7 @@ security.declarePublic('addToDate', 'getClosestDate',
     'getIntervalBetweenDates', 'getMonthAndDaysBetween',
     'getCompletedMonthBetween', 'getRoundedMonthBetween',
     'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
-    'getBissextilCompliantYearFraction',
+    'getBissextilCompliantYearFraction', 'getIntervalListBetweenDates',
     'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
     'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth')
 
@@ -220,6 +220,56 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
       returned_value[key] = value
   return returned_value
 
+
+def getIntervalListBetweenDates(from_date=None, to_date=None,
+                            keys={'year':1, 'month':1, 'week' : 1, 'day':1}):
+  """
+  Return the list of years, months and days (if each is equal to 1 in keys)
+  between the both given dates including the current one.
+  If one of the given dates is None, the date used is the current time.
+  """
+  # key -> format dict
+  format_dict = {'year':'%Y',
+                 'month':'%Y-%m',
+                 'week':'%Y-%V',
+                 'day':'%Y-%m-%d',
+                 }
+    
+  if from_date is None:
+    from_date = DateTime()
+  if to_date is None:
+    to_date = DateTime()
+  if from_date - to_date > 0:
+    from_date, to_date = to_date, from_date
+    to_inverse = 1
+  else:
+    to_inverse = 0  
+    
+  diff_value = {}
+  for key in keys.keys():
+    if key:
+      diff_value[key] = []
+  
+  for current_key in ('year', 'month', 'week', 'day'):
+    if keys.get(current_key, None):
+      new_date = from_date
+      while new_date <= to_date:
+        diff_value[current_key].append(new_date.strftime(format_dict[current_key]))
+        if current_key == "week":
+          new_date = addToDate(new_date, to_add={'day':7})
+        else:
+          new_date = addToDate(new_date, to_add={current_key:1})
+      if not entire and to_date.strftime(format_dict[current_key]) not in diff_value[current_key]:
+        diff_value[current_key].append(to_date.strftime(format_dict[current_key]))
+    
+  returned_value = {}
+  for key, value in diff_value.items():
+    if to_inverse:
+      value.reverse()
+      returned_value[key] = value
+    else:
+      returned_value[key] = value
+  return returned_value
 
 def getMonthAndDaysBetween(from_date=None, to_date=None):
   """
