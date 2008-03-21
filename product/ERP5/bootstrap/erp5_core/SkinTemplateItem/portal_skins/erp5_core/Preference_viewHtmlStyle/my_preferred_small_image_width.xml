@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string>320</string> </value>
                 </item>
                 <item>
@@ -92,7 +92,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Small Image Width</string> </value>
                 </item>
               </dictionary>

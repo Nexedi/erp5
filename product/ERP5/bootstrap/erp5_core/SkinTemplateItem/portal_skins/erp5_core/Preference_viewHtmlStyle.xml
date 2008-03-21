@@ -114,7 +114,7 @@
                         <string>my_preferred_report_style</string>
                         <string>my_preferred_report_format</string>
                         <string>my_preferred_thumbnail_image_height</string>
-                        <string>my_prefered_thumbnail_image_width</string>
+                        <string>my_preferred_thumbnail_image_width</string>
                         <string>my_preferred_xsmall_image_height</string>
                         <string>my_preferred_xsmall_image_width</string>
                         <string>my_preferred_small_image_height</string>
@@ -123,7 +123,7 @@
                         <string>my_preferred_medium_image_width</string>
                         <string>my_preferred_large_image_height</string>
                         <string>my_preferred_large_image_width</string>
-                        <string>my_prefferred_xlarge_image_height</string>
+                        <string>my_preferred_xlarge_image_height</string>
                         <string>my_preferred_xlarge_image_width</string>
                       </list>
                     </value>

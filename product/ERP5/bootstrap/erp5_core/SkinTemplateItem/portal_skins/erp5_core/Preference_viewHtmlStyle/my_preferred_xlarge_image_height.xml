@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_prefered_thumbnail_image_width</string> </value>
+            <value> <string>my_preferred_xlarge_image_height</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,8 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
-                    <value> <string>128</string> </value>
+                    <key> <string>default</string> </key>
+                    <value> <string>1024</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -92,8 +92,8 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Thumbnail Image Width</string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Xlarge Image Height</string> </value>
                 </item>
               </dictionary>
             </value>
