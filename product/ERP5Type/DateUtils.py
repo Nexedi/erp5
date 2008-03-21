@@ -259,7 +259,7 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
           new_date = addToDate(new_date, to_add={'day':7})
         else:
           new_date = addToDate(new_date, to_add={current_key:1})
-      if not entire and to_date.strftime(format_dict[current_key]) not in diff_value[current_key]:
+      if to_date.strftime(format_dict[current_key]) not in diff_value[current_key]:
         diff_value[current_key].append(to_date.strftime(format_dict[current_key]))
     
   returned_value = {}
