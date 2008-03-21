@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_stop_date</string> </value>
+            <value> <string>listbox_delivery_start_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -81,7 +81,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_stop_date</string> </value>
+                    <value> <string>my_start_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Stop Date</string> </value>
+                    <value> <string>Start Date</string> </value>
                 </item>
               </dictionary>
             </value>
