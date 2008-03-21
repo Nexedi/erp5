@@ -11,13 +11,13 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIAMp6cTg1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+            <value> <string encoding="base64">UEsDBBQAAAAIAKKDdTg1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
 EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOwmk90YjzWix2ltT7TCS9q4TT82j
 qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyvscnaedSNG1HkhT68AitaxaH9D1XiWLjtuv69vJtHyo
 LuBBG6zzwnioLjLsNdR8CNgJCMFoBZzjlDvXN0dXc61oGPcsLruHZEwdgLedkELeJbtNefNu0GOK
 xyDoWRIDJ9pALIMHpdBgnvooVYpxOmLOYnFXEcFgPDAWggcfUshPIBXCRz9GpHI3PYVeDM7em2Jw
 bWFEkq+aLQQq6riT/b1fUHJT9TRJN+pa8LcY7pRPnUhOtXoTnv38v2L+nUt8MEizYy0yzNZ41ttk
-Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAynpxODVi1zk+AQAASgcAABUA
+Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAooN1ODVi1zk+AQAASgcAABUA
 AAAAAAAAAAAAAAAAAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAABxAQAA
 AAA=</string> </value>
         </item>
@@ -169,10 +169,10 @@ AAA=</string> </value>
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
-    <style:style style:family=\'table-row\' style:name=\'Tableau1.5\'>\n
+    <style:style style:family=\'table-row\' style:name=\'Tableau1.4\'>\n
       <style:table-row-properties style:row-height=\'4.83cm\'/>\n
     </style:style>\n
-    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A5\'>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A4\'>\n
       <style:table-cell-properties style:vertical-align=\'middle\' fo:padding=\'0cm\' fo:background-color=\'transparent\' fo:border=\'none\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
@@ -252,7 +252,6 @@ AAA=</string> </value>
   </office:automatic-styles>\n
   <office:body>\n
     <office:text>\n
-      <office:forms form:apply-design-mode=\'false\' form:automatic-focus=\'false\'/>\n
       <text:variable-decls>\n
         <text:variable-decl text:name=\'ds_title\' office:value-type=\'string\'/>\n
         <text:variable-decl text:name=\'ds_address\' office:value-type=\'string\'/>\n
@@ -429,8 +428,8 @@ AAA=</string> </value>
           </table:table-row>\n
           <table:table-row>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Line; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'en_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Your Item no.; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
@@ -441,12 +440,12 @@ AAA=</string> </value>
               <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Description; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'en_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Quantity; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\'><span tal:replace=\'en_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Unit; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
@@ -457,19 +456,21 @@ AAA=</string> </value>
               <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Unit Price; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\'><span tal:replace=\'en_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Total Price; en_string python:here.Base_translateString(orig_string, lang="en"); my_string python:here.Base_translateString(orig_string)\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'en_string\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\'><span tal:replace=\'en_string\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/></text:p>\n
             </table:table-cell>\n
           </table:table-row>\n
         </table:table-header-rows>\n
         <table:table-row table:style-name=\'Tableau1.3\' tal:repeat=\'line_dict python:data_dict["line_list"]\'>\n
-        <div tal:omit-tag=\'\' tal:define=\'style_name python:line_dict["style_name"]\'>\n
+        <div tal:omit-tag=\'\' tal:define=\'style_name python:line_dict["style_name"];\n
+                                         left_style_name python:line_dict["left_style_name"];\n
+                                         right_style_name python:line_dict["right_style_name"]\'>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["index"]\' tal:attributes=\'text:style-name style_name\'>1</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["index"]\' tal:attributes=\'text:style-name left_style_name\'>1</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
             <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["source_reference"]\' tal:attributes=\'text:style-name style_name\'>source_ref</text:p>\n
@@ -478,10 +479,10 @@ AAA=</string> </value>
             <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["reference"]\' tal:attributes=\'text:style-name style_name\'>ref</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["description"]\' tal:attributes=\'text:style-name style_name\'>desc</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["description"]\' tal:attributes=\'text:style-name left_style_name\'>desc</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_quantity"]\' tal:attributes=\'text:style-name style_name\'>qty</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_quantity"]\' tal:attributes=\'text:style-name right_style_name\'>qty</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
             <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["quantity_unit"]\' tal:attributes=\'text:style-name style_name\'>qty_u</text:p>\n
@@ -490,10 +491,10 @@ AAA=</string> </value>
             <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["stop_date"]\' tal:attributes=\'text:style-name style_name\'>stop_date</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["base_price"]\' tal:attributes=\'text:style-name style_name\'>base_price</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["base_price"]\' tal:attributes=\'text:style-name right_style_name\'>base_price</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_price"]\' tal:attributes=\'text:style-name style_name\'>total_price</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["total_price"]\' tal:attributes=\'text:style-name right_style_name\'>total_price</text:p>\n
           </table:table-cell>\n
           </div>\n
         </table:table-row>\n
@@ -537,7 +538,7 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/>:</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau3.E2\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["total_price_novat"]\'>800.000,00</text:p>\n
+                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:data_dict["total_price_novat"]\'>800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.2\'>\n
@@ -555,7 +556,7 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/>:</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau3.E3\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["total_vat"]\'>2000</text:p>\n
+                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:data_dict["total_vat"]\'>2000</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.2\'>\n
@@ -573,7 +574,7 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/>:</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau3.E3\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["total_price_vat"]\'>12345</text:p>\n
+                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:data_dict["total_price_vat"]\'>12345</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.1\'>\n
