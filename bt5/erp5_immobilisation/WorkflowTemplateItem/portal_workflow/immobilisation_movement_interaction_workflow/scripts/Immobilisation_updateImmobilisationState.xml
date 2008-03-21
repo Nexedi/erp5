@@ -68,7 +68,7 @@
             <value> <string>movement_content = state_change[\'object\']\n
 #movement_content.log(movement_content.getRelativeUrl())\n
 movement = movement_content.getRootDeliveryValue()\n
-if movement.getImmobilisationState() != \'calculating\':\n
+if getattr(movement, \'getImmobilisationState\', None) is not None and movement.getImmobilisationState() != \'calculating\':\n
   movement.calculateImmobilisationValidity()\n
 </string> </value>
         </item>
@@ -129,6 +129,8 @@ if movement.getImmobilisationState() != \'calculating\':\n
                             <string>movement_content</string>
                             <string>_getattr_</string>
                             <string>movement</string>
+                            <string>getattr</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
