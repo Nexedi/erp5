@@ -74,7 +74,6 @@ portal = context.getPortalObject()\n
 getobject = portal.portal_catalog.getobject\n
 N_ = portal.Base_translateString\n
 psm = N_(\'Nothing matches\')\n
-reset = 0\n
 request = container.REQUEST\n
 precision = request.get(\'precision\', 2)\n
 \n
@@ -124,7 +123,6 @@ if grouping == \'grouping\':\n
   if grouped_line_list:\n
     psm = N_(\'${grouped_line_count} Lines Grouped\',\n
           mapping=dict(grouped_line_count=len(grouped_line_list)))\n
-    reset = 1\n
 \n
     # we check if we can mark some transaction as payed.\n
     transaction_list = {}\n
@@ -162,43 +160,20 @@ if grouping == \'grouping\':\n
           except:\n
             # Workflow action not supported\n
             pass\n
+\n
+# or to ungroup based on how we are called.\n
 else:\n
   assert grouping == \'ungrouping\'\n
-  # or to ungroup based on how we are called.\n
-  amount_per_node_mirror_section = dict()\n
   # XXX is uids multi page safe here ?\n
   line_list = [getobject(line_uid) for line_uid in uids]\n
-  for line in line_list:\n
-    if line.AccountingTransaction_isSourceView(): # XXX not optimal !\n
-      key = (line.getSource(), line.getDestinationSection())\n
-      amount = amount_per_node_mirror_section.get(key, 0)\n
-      amount_per_node_mirror_section[key] = amount +\\\n
-                          (line.getSourceInventoriatedTotalAssetPrice() or 0)\n
-    else:\n
-      key = (line.getDestination(), line.getSourceSection())\n
-      amount = amount_per_node_mirror_section.get(key, 0)\n
-      amount_per_node_mirror_section[key] = amount +\\\n
-                     (line.getDestinationInventoriatedTotalAssetPrice() or 0)\n
-  \n
-  valid = 1\n
-  for node_mirror_section, amount in amount_per_node_mirror_section.items():\n
-    if round(amount, precision) != 0:\n
-      valid = 0\n
-  \n
-  if line_list:\n
-    ref = line_list[0].getGroupingReference()\n
-    for line in line_list:\n
-      if line.getGroupingReference() != ref:\n
-        valid = 0\n
+  ungrouped_line_list = []\n
 \n
-  if valid:\n
-    psm = N_(\'${ungrouped_line_count} Lines Ungrouped\',\n
-          mapping=dict(ungrouped_line_count=len(uids)))\n
-    reset = 1\n
-    for line in line_list:\n
-      line.setGroupingReference(None)\n
-  else:\n
-    psm = N_(\'Ungrouping refused. Check your selection\')\n
+  for line in line_list:\n
+    if line.getGroupingReference():\n
+      ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference())\n
+  \n
+  psm = N_(\'${ungrouped_line_count} Lines Ungrouped\',\n
+            mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))\n
 \n
 request.set(\'portal_status_message\', psm)\n
 return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\n
@@ -269,7 +244,6 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
                             <string>getobject</string>
                             <string>N_</string>
                             <string>psm</string>
-                            <string>reset</string>
                             <string>container</string>
                             <string>request</string>
                             <string>precision</string>
@@ -290,18 +264,11 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
                             <string>account</string>
                             <string>date</string>
                             <string>AssertionError</string>
-                            <string>amount_per_node_mirror_section</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>line_uid</string>
                             <string>line_list</string>
-                            <string>key</string>
-                            <string>amount</string>
-                            <string>valid</string>
-                            <string>node_mirror_section</string>
-                            <string>round</string>
-                            <string>_getitem_</string>
-                            <string>ref</string>
+                            <string>ungrouped_line_list</string>
                           </tuple>
                         </value>
                     </item>

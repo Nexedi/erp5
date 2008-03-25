@@ -70,6 +70,7 @@
 If the parameter keep_if_valid_group is true, then the grouping reference\n
 will be kept as is if the group is still valid, ie. the total quantity\n
 of all accounting lines in the group is 0.\n
+Returns the list of ungroupped lines.\n
 """\n
 portal = context.getPortalObject()\n
 precision = context.getResourceValue(portal_type=\'Currency\').getQuantityPrecision()\n
@@ -98,6 +99,8 @@ if round(sum([(l.total_price or 0) for l in line_list]), precision) == 0 and kee
   \n
 for line in line_list:\n
   line.setGroupingReference(None)\n
+\n
+return line_list\n
 </string> </value>
         </item>
         <item>
