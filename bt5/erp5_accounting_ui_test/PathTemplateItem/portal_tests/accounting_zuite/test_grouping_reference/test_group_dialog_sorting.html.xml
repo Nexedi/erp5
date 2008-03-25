@@ -90,27 +90,27 @@ Sorting in Grouping Dialog\n
 <!-- Sort by date asc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]/button</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[6]/button</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[7]/a</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[7]/a</td>\n
   <td>Client 1 Payment</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[7]/a</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_3\']/td[7]/a</td>\n
   <td>Client 2 Payment</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -118,27 +118,27 @@ Sorting in Grouping Dialog\n
 <!-- Sort by date desc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]/button</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[6]/button</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_3\']/td[7]/a</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[7]/a</td>\n
   <td>Client 1 Payment</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[7]/a</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[7]/a</td>\n
   <td>Client 2 Payment</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -146,27 +146,27 @@ Sorting in Grouping Dialog\n
 <!-- Sort by title asc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]/button</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[7]/button</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[7]/a</td>\n
   <td>Client 1 Payment</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[7]/a</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[7]/a</td>\n
   <td>Client 2 Payment</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_3\']/td[7]/a</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -174,27 +174,27 @@ Sorting in Grouping Dialog\n
 <!-- Sort by title desc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]/button</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[7]/button</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_3\']/td[7]/a</td>\n
   <td>Client 1 Payment</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']/td[7]/a</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[7]/a</td>\n
   <td>Client 2 Payment</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[7]/a</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -202,7 +202,7 @@ Sorting in Grouping Dialog\n
 <!-- Sort by Account Name asc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[6]/button</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[9]/button</td>\n
   <td></td>\n
 </tr>\n
 <!-- all lines have the same account here. -->\n
@@ -211,7 +211,7 @@ Sorting in Grouping Dialog\n
 <!-- Sort by third party title asc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[7]/button</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[10]/button</td>\n
   <td></td>\n
 </tr>\n
 <!-- this is not really sorting by title, but by uid just to make sure lines\n

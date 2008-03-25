@@ -244,12 +244,12 @@ Grouping from entity transaction view\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]/a/text()</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[8]/a/text()</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -351,12 +351,12 @@ Grouping from entity transaction view\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]/a/text()</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[8]/a/text()</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
