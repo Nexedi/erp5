@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -45,6 +42,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>limit_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>select_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -75,12 +78,13 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
-                            <string>select_expression</string>
-                            <string>group_by_expression</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>select_expression</string>
+<string>group_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>limit_expression</string>
                           </list>
                         </value>
                     </item>
@@ -97,12 +101,13 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>from_table_list\n
-where_expression\n
-select_expression\n
-group_by_expression\n
-selection_domain\n
-selection_report</string> </value>
+            <value> <string>from_table_list\r\n
+where_expression\r\n
+select_expression\r\n
+group_by_expression\r\n
+selection_domain\r\n
+selection_report\r\n
+limit_expression</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -118,9 +123,7 @@ selection_report</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -136,7 +139,7 @@ selection_report</string> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
@@ -182,6 +185,9 @@ ORDER BY\n
 GROUP BY\n
   <dtml-var group_by_expression>\n
 </dtml-if>\n
+<dtml-if limit_expression>\n
+LIMIT <dtml-var "limit_expression">\n
+</dtml-if>\n
 
 
 ]]></string> </value>
@@ -191,9 +197,11 @@ GROUP BY\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -252,13 +260,16 @@ WHERE\n
     <dtml-if expression> AND <dtml-var expression> </dtml-if>\n
   </dtml-let>\n
 </dtml-if>\n
+<dtml-if sort_on>\n
+ORDER BY\n
+  <dtml-var sort_on>\n
+</dtml-if>\n
 <dtml-if group_by_expression>\n
 GROUP BY\n
   <dtml-var group_by_expression>\n
 </dtml-if>\n
-<dtml-if sort_on>\n
-ORDER BY\n
-  <dtml-var sort_on>\n
+<dtml-if limit_expression>\n
+LIMIT <dtml-var "limit_expression">\n
 </dtml-if>\n
 
 

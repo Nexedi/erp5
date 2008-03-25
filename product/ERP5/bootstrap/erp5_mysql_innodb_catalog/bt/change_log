@@ -1,3 +1,6 @@
+2008-03-25 aurel
+* z_count_results must retrieve all rows by default as limit is explicitly given by catalog
+
 2007-06-22 yo
 * Remove keyword keys, because there is no way to disable them later.
 
