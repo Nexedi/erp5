@@ -72,11 +72,11 @@
 # - it\'s a Simulation Movement\n
 # - The user is not allowed to edit it\n
 # - it\'s a part of a block \n
-# - the object is one Calendar Period\n
-\n
+# - the object is from secondary layer\n
 \n
 return (not context.portal_membership.checkPermission(\'Modify portal content\', block.parent_activity.object)) or \\\n
-           (not ((block.position_x.relative_begin > 0) and \\\n
+            (block.property_dict[\'sec_layer\']) or \\\n
+            (not ((block.position_x.relative_begin > 0) and \\\n
                    (block.position_x.relative_end < 1) and \\\n
                    (block.property_dict[\'stat\'] == 0)))\n
 
