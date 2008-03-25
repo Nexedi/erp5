@@ -193,6 +193,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security = ClassSecurityInfo()
 
     default_result_limit = 1000
+    default_count_limit = 1
     
     manage_options = ({ 'label' : 'Overview', 'action' : 'manage_overview' },
                      ) + ZCatalog.manage_options
@@ -685,7 +686,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
         catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))        
         query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
-        kw.setdefault('limit', self.default_result_limit)
+        kw.setdefault('limit', self.default_count_limit)
         # get catalog from preference
         return ZCatalog.countResults(self, query=query, sql_catalog_id=catalog_id, **kw)
     
