@@ -77,7 +77,7 @@ module = context.getDefaultModule(portal_type)\n
 # Build selection\n
 person_list = context.portal_selections.getSelectionCheckedValueList(selection_name)\n
 if not person_list:\n
-  person_list = context.portal_selections.getSelectionValueList(selection_name)\n
+  person_list = context.portal_selections.callSelectionFor(selection_name)\n
 \n
 # Find authenticated user\n
 user = context.portal_membership.getAuthenticatedMember()\n
@@ -108,7 +108,7 @@ else:\n
     # This case is not possible\n
     portal_status_message = translateString("The Single Event option can only be used with outgoing messages",\n
                                     mapping = dict(portal_type = portal_type, count=count))\n
-    return context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name, selection_index=selection_index), **kw)\n
+    return context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name), **kw)\n
   # Proceed to event creation\n
   event = module.newContent(portal_type=portal_type, \n
                             description=description, \n
@@ -120,12 +120,10 @@ else:\n
   event.setSourceValue(user_person)\n
   count = 1\n
 \n
-# Redirect to the event module (but is this the best place to go since events are not yet indexed ?)\n
 portal_status_message = translateString("Created and associated ${count} new Events to the selected Ticket.", \n
                                         mapping=dict(count=count))\n
 context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message,\n
-                                                 selection_name=selection_name,\n
-                                                 selection_index=selection_index), **kw)\n
+                                                 selection_name=selection_name), **kw)\n
 
 
 ]]></string> </value>
@@ -144,7 +142,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, title, description, direction, selection_name, selection_index, follow_up, single_event=0, text_content, form_id, **kw</string> </value>
+            <value> <string>portal_type, title, description, direction, selection_name, follow_up, single_event=0, text_content, form_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,7 +162,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -175,7 +173,6 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                             <string>description</string>
                             <string>direction</string>
                             <string>selection_name</string>
-                            <string>selection_index</string>
                             <string>follow_up</string>
                             <string>single_event</string>
                             <string>text_content</string>
