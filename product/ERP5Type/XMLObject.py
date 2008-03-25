@@ -73,18 +73,6 @@ class XMLObject( Folder ):
           , 'action'        : 'XMLObject_view'
           , 'permissions'   : ( Permissions.View, )
           }
-        , { 'id'            : 'history'
-          , 'name'          : 'History'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewHistory'
-          , 'permissions'   : ( Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewMetadata'
-          , 'permissions'   : ( Permissions.ManageProperties, )
-          }
         )
       }
 
