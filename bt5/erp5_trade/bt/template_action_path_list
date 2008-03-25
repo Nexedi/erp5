@@ -53,7 +53,6 @@ Purchase Packing List | payment_condition
 Purchase Packing List | profile_view
 Purchase Packing List | view
 Purchase Packing List | view_discount
-Purchase Supply Cell | view
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
 Purchase Supply Line | discount_ratio
@@ -104,7 +103,6 @@ Sale Packing List | container_fast_input
 Sale Packing List | jump_related_sale_invoice
 Sale Packing List | view
 Sale Packing List | view_container_list
-Sale Supply Cell | view
 Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio
