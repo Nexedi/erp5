@@ -30,8 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Invoice import Invoice
 from Products.ERP5Type.Utils import cartesianProduct
-import pprint
-from zLOG import LOG
+from zLOG import LOG, DEBUG, INFO
 
 #XXX TODO: review naming of new methods
 #XXX WARNING: current API naming may change although model should be stable.
@@ -51,9 +50,6 @@ class PaySheetTransaction(Invoice):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Global variables
-  _transaction_line_portal_type = 'Pay Sheet Transaction Line'
-  
   # Default Properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
@@ -86,9 +82,9 @@ class PaySheetTransaction(Invoice):
 
     # look for ratio lines on the paysheet
     if object_ratio_list:
-      for object in object_ratio_list:
-        if object.getReference() == ratio_reference:
-          return object.getQuantity()
+      for obj in object_ratio_list:
+        if obj.getReference() == ratio_reference:
+          return obj.getQuantity()
 
     # if not find in the paysheet, look on dependence tree
     sub_object_list = self.getInheritedObjectValueList(portal_type_list)
@@ -107,7 +103,7 @@ class PaySheetTransaction(Invoice):
     reference_ratio_list is a list of references to the ratio lines
     we want to get.
     """
-    if not isinstance(ratio_reference_list, list):
+    if not isinstance(ratio_reference_list, (list, tuple)):
       return [self.getRatioQuantityFromReference(ratio_reference_list)]
     return [self.getRatioQuantityFromReference(reference) \
         for reference in ratio_reference_list]
@@ -115,25 +111,18 @@ class PaySheetTransaction(Invoice):
   security.declareProtected(Permissions.AccessContentsInformation,
                           'getRatioQuantityFromReference')
   def getAnnotationLineFromReference(self, reference=None):
+    """Return the annotation line corresponding to the reference.
+    Returns None if reference not found
     """
-    return the annotation line correponding to the reference,
-    None if reference not found
-    """
-    # get Annotation Lines
-    portal_type_list = ['Annotation Line']
-    
-    annotation_line_list = self.contentValues(portal_type=portal_type_list)
-
     # look for annotation lines on the paysheet
+    annotation_line_list = self.contentValues(portal_type=['Annotation Line'])
     if annotation_line_list:
       for annotation_line in annotation_line_list:
         if annotation_line.getReference() == reference:
           return annotation_line
 
     # if not find in the paysheet, look on dependence tree
-    sub_object_list = self.getInheritedObjectValueList(portal_type_list)
-    annotation_line_list = sub_object_list
-    for annotation_line in annotation_line_list:
+    for annotation_line in self.getInheritedObjectValueList(['Annotation Line']):
       if annotation_line.getReference() == reference:
         return annotation_line
 
@@ -142,24 +131,27 @@ class PaySheetTransaction(Invoice):
   security.declareProtected(Permissions.AccessContentsInformation,
                           'getRatioQuantityList')
   def getAnnotationLineListList(self, reference_list):
-    """
-    Return a annotation line list corresponding to the reference_list
+    """Return a list of annotation lines corresponding to the reference_list
     reference_list is a list of references to the Annotation Line we want 
     to get.
     """
-    if not isinstance(reference_list, list):
+    if not isinstance(reference_list, (list, tuple)):
       return [self.getAnnotationLineFromReference(reference_list)]
     return [self.getAnnotationLineFromReference(reference) \
         for reference in reference_list]
 
   security.declareProtected(Permissions.AddPortalContent,
-                          'createPaySheetLine')
-  def createPaySheetLine(self, cell_list, title='', res='', desc='', 
-      base_amount_list=None, int_index=None, categories=None, **kw):
+                            'createPaySheetLine')
+  def createPaySheetLine(self, cell_list, title='', resource='',
+                         description='', base_amount_list=None, int_index=None,
+                         categories=None, **kw):
     '''
     This function register all paysheet informations in paysheet lines and 
     cells. Select good cells only
     '''
+    if not resource:
+      raise ValueError, "Cannot create Pay Sheet Line without resource"
+
     good_cell_list = []
     for cell in cell_list:
       if cell['quantity'] or cell['price']:
@@ -171,23 +163,18 @@ class PaySheetTransaction(Invoice):
     for cell in good_cell_list:
       # Don't add a variation category if already in it
       for category in cell['category_list']:
-        if category not in var_cat_list: 
+        if category not in var_cat_list:
           var_cat_list.append(category)
 
-    # Construct the description
-    description = None
-    if len(desc) > 0:
-      description = desc#'\n'.join(desc)
-
-    source = self.getPortalObject().restrictedTraverse(res).getSource()
+    resource_value = self.getPortalObject().unrestrictedTraverse(resource)
     # Add a new Pay Sheet Line
     payline = self.newContent(
              portal_type                  = 'Pay Sheet Line',
              title                        = title,
              description                  = description,
              destination                  = self.getSourceSection(),
-             source_section               = source,
-             resource                     = res,
+             source_section               = resource_value.getSource(),
+             resource_value               = resource_value,
              destination_section          = self.getDestinationSection(),
              variation_base_category_list = ('tax_category', 'salary_range'),
              variation_category_list      = var_cat_list,
@@ -246,14 +233,12 @@ class PaySheetTransaction(Invoice):
       for tax_category in model_line.getTaxCategoryList():
         if line.has_key('%s_quantity' % tax_category) and \
             line.has_key('%s_price' % tax_category):
-          slice_dict[tax_category]=\
-              {
-                  'quantity' : line['%s_quantity' % tax_category],
-                  'price' : line['%s_price' % tax_category],
-              }
+          slice_dict[tax_category] = dict(
+                      quantity=line['%s_quantity' % tax_category],
+                      price=line['%s_price' % tax_category],)
         else:
-          LOG('Warning, no atribute %s_quantity or %s_price for model_line %s' %
-              tax_category, tax_category, model_line_url, 0, '')
+          LOG('ERP5', INFO, 'No attribute %s_quantity or %s_price for model_line %s' %
+                   ( tax_category, tax_category, model_line_url ))
        
     return model_line_dict
 
@@ -296,20 +281,16 @@ class PaySheetTransaction(Invoice):
 
         model_line_dict[model_line_url][salary_range_relative_url] = {}
         slice_dict = model_line_dict[model_line_url][salary_range_relative_url]
-        slice_dict[tax_category]=\
-          {
-              'quantity' : cell.getQuantity(),
-              'price' : cell.getPrice(),
-          }
-       
+        slice_dict[tax_category] = dict(quantity=cell.getQuantity(),
+                                        price=cell.getPrice())
+
     return model_line_dict
 
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                          'createPaySheetLineList')
+                            'createPaySheetLineList')
   def createPaySheetLineList(self, listbox=None, batch_mode=0, **kw):
-    '''
-      create all Pay Sheet Lines (editable or not)
+    '''Create all Pay Sheet Lines (editable or not)
 
       parameters :
 
@@ -361,42 +342,43 @@ class PaySheetTransaction(Invoice):
       # test with predicate if this model line could be applied
       if not model_line.test(paysheet,):
         # This model_line should not be applied
-        LOG('createPaySheetLineList :', 0, 
-            'Model Line %s will not be applied, because predicates not match' % 
-            model_line.getTitle())
+        LOG('ERP5', DEBUG, 'createPaySheetLineList: Model Line %s (%s) will'
+            ' not be applied, because predicates does not match' %
+            ( model_line.getTitle(), model_line.getRelativeUrl() ))
         continue
 
       service          = model_line.getResourceValue()
       title            = model_line.getTitleOrId()
       int_index        = model_line.getFloatIndex()
-      id               = model_line.getId()
       base_amount_list = model_line.getBaseAmountList()
-      res              = service.getRelativeUrl()
+      resource         = service.getRelativeUrl()
 
       if model_line.getDescription():
-        desc = ''.join(model_line.getDescription())
-      # if the model_line description is empty, the payroll service 
-      # description is used
-      else: 
-        desc = ''.join(service.getDescription())
+        desc = model_line.getDescription()
+        # if the model_line description is empty, the payroll service
+        # description is used
+      else:
+        desc = service.getDescription()
 
       base_category_list = model_line.getVariationBaseCategoryList()
-      list_of_list = []
+      category_list_list = []
       for base_cat in base_category_list:
-        list = model_line.getVariationCategoryList(base_category_list=base_cat)
-        list_of_list.append(list)
-      cartesian_product = cartesianProduct(list_of_list)
+        category_list = model_line.getVariationCategoryList(
+                                        base_category_list=base_cat)
+        category_list_list.append(category_list)
+      cartesian_product = cartesianProduct(category_list_list)
 
       share = None
       slice = 'no_slice'
       indice = 0
       categories = []
-      for tuple in cartesian_product:
+      for cell_coordinates in cartesian_product:
         indice += 1
-        cell = model_line.getCell(*tuple)
+        cell = model_line.getCell(*cell_coordinates)
         if cell is None:
-          LOG("Warning ! can't find the cell corresponding to this tuple : %s",
-              0, tuple)
+          LOG('ERP5', INFO, "Can't find the cell corresponding to those cells"
+              " coordinates : %s" % cell_coordinates)
+          # XXX is it enough to log ?
           continue
 
         if len(cell.getVariationCategoryList(\
@@ -419,7 +401,7 @@ class PaySheetTransaction(Invoice):
 
           def getModifiedCell(cell, slice_dict, tax_category):
             '''
-              return a cell with the modified values (conained in slice_dict)
+              return a cell with the modified values (contained in slice_dict)
             '''
             if slice_dict:
               if slice_dict.has_key(tax_category):
@@ -441,10 +423,6 @@ class PaySheetTransaction(Invoice):
         if model_slice is None:
           pass # that's not a problem :)
 
-          #LOG('createPaySheetLineList :', 0, 'model_slice of slice '
-          #  '"%s" of the model_line "%s" is None' % (slice,
-          #    model_line.getTitle()))
-
         else:
           model_slice_min = model_slice.getQuantityRangeMin()
           model_slice_max = model_slice.getQuantityRangeMax()
@@ -463,7 +441,6 @@ class PaySheetTransaction(Invoice):
         if script_name is None:
           # if model line script is None, get the default model script
           script_name = model.getDefaultCalculationScriptId()
-
         if script_name is None:
           # if no calculation script found, use a default script :
           script_name = 'PaySheetTransaction_defaultCalculationScript'
@@ -474,10 +451,9 @@ class PaySheetTransaction(Invoice):
         calculation_script = getattr(paysheet, script_name, None)
         quantity=0
         price=0
-        #LOG('script_name :', 0, script_name)
         cell_dict = calculation_script(base_amount_dict=base_amount_dict, 
                                         cell=cell,)
-        cell_dict.update({'category_list':tuple})
+        cell_dict.update({'category_list': cell_coordinates})
 
         if cell_dict.has_key('categories'):
           for cat in cell_dict['categories']:
@@ -511,7 +487,7 @@ class PaySheetTransaction(Invoice):
         # create the PaySheetLine
         pay_sheet_line = paysheet.createPaySheetLine(
                                             title     = title,
-                                            res       = res,
+                                            resource  = resource,
                                             int_index = int_index,
                                             desc      = desc,
                                             base_amount_list = base_amount_list,
@@ -522,23 +498,20 @@ class PaySheetTransaction(Invoice):
 
     # this script is used to add a line that permit to have good accounting 
     # lines
-    post_calculation_script = getattr(paysheet,
-                                'PaySheetTransaction_postCalculation', None)
+    post_calculation_script = paysheet._getTypeBasedMethod('postCalculation')
     if post_calculation_script:
       post_calculation_script()
 
     return pay_sheet_line_list
 
   def getInheritedObjectValueList(self, portal_type_list):
-    '''
-      return a list of all subobject of the herited model (incuding the
+    '''Return a list of all subobjects of the herited model (incuding the
       dependencies)
     '''
     model = self.getSpecialiseValue()
 
-    model_reference_dict = \
-        model.getInheritanceModelReferenceDict(\
-        portal_type_list=portal_type_list)
+    model_reference_dict = model.getInheritanceModelReferenceDict(
+                                   portal_type_list=portal_type_list)
 
     # add line of base model without reference
     model_dict = model.getReferenceDict(\
@@ -557,8 +530,9 @@ class PaySheetTransaction(Invoice):
 
     for key in key_list:
       id_list = model_reference_dict[key]
-      model = self.getPortalObject().restrictedTraverse(key)
+      model = self.getPortalObject().unrestrictedTraverse(key)
       if model is None:
+        # XXX is it supposed to happen ?
         LOG("getInheritedObjectValueList :", 0, "can't find model %s" % key)
 
       for id in id_list:
