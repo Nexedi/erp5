@@ -72,10 +72,16 @@ from ZTUtils import make_query\n
 from ZODB.POSException import ConflictError\n
 portal = context.getPortalObject()\n
 getobject = portal.portal_catalog.getobject\n
+stool = portal.portal_selections\n
 N_ = portal.Base_translateString\n
 psm = N_(\'Nothing matches\')\n
 request = container.REQUEST\n
 precision = request.get(\'precision\', 2)\n
+\n
+# update selected uids \n
+stool.updateSelectionCheckedUidList(\n
+    list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
+uids = stool.getSelectionCheckedUidsFor(list_selection_name)\n
 \n
 # XXX when should it be validated ?\n
 if node == \'\':\n
@@ -107,11 +113,6 @@ if uids:\n
 request.set(\'total_selected_amount\', total_selected_amount)\n
 \n
 if update:\n
-  # update selected uids \n
-  portal.portal_selections.updateSelectionCheckedUidList(\n
-            selection_name, uids=uids, listbox_uid=listbox_uid,\n
-            REQUEST=context.REQUEST)\n
-    \n
   request.set(\'portal_status_message\', N_(\'Updated\'))\n
   return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\n
   \n
@@ -123,6 +124,9 @@ if grouping == \'grouping\':\n
   if grouped_line_list:\n
     psm = N_(\'${grouped_line_count} Lines Grouped\',\n
           mapping=dict(grouped_line_count=len(grouped_line_list)))\n
+\n
+    # make sure nothing will be checked next time\n
+    stool.setSelectionCheckedUidsFor(list_selection_name, [])\n
 \n
     # we check if we can mark some transaction as payed.\n
     transaction_list = {}\n
@@ -175,6 +179,9 @@ else:\n
   psm = N_(\'${ungrouped_line_count} Lines Ungrouped\',\n
             mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))\n
 \n
+  # make sure nothing will be checked next time\n
+  stool.setSelectionCheckedUidsFor(list_selection_name, [])\n
+\n
 request.set(\'portal_status_message\', psm)\n
 return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\n
 </string> </value>
@@ -199,7 +206,7 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids=[], listbox=None, listbox_uid=[], selection_name=\'\', grouping=\'\', node=\'\', mirror_section=\'\', update=0, **kw</string> </value>
+            <value> <string>uids=[], listbox=None, listbox_uid=[], list_selection_name=\'\', grouping=\'\', node=\'\', mirror_section=\'\', update=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -228,7 +235,7 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
                             <string>uids</string>
                             <string>listbox</string>
                             <string>listbox_uid</string>
-                            <string>selection_name</string>
+                            <string>list_selection_name</string>
                             <string>grouping</string>
                             <string>node</string>
                             <string>mirror_section</string>
@@ -242,6 +249,7 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
                             <string>context</string>
                             <string>portal</string>
                             <string>getobject</string>
+                            <string>stool</string>
                             <string>N_</string>
                             <string>psm</string>
                             <string>container</string>

@@ -73,7 +73,7 @@ return context.AccountingTransactionModule_setGroupingReference(\n
                         uids=uids,\n
                         listbox=listbox,\n
                         listbox_uid=listbox_uid,\n
-                        selection_name=list_selection_name,\n
+                        list_selection_name=list_selection_name,\n
                         node=node,\n
                         mirror_section=mirror_section,\n
                         update=1)\n
