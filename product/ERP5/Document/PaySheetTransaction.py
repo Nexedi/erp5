@@ -513,10 +513,7 @@ class PaySheetTransaction(Invoice):
     model_reference_dict = model.getInheritanceModelReferenceDict(
                                    portal_type_list=portal_type_list)
 
-    # add line of base model without reference
-    model_dict = model.getReferenceDict(\
-        portal_type_list=portal_type_list,
-        get_none_reference=1)
+    model_dict = model.getReferenceDict(portal_type_list=portal_type_list)
     id_list = model_dict.values()
     if model_reference_dict.has_key(model.getRelativeUrl()):
       model_reference_dict[model.getRelativeUrl()].extend(id_list)

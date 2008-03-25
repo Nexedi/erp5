@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from zLOG import LOG, WARNING, DEBUG
+from zLOG import LOG
 
 #XXX TODO: review naming of new methods
 #XXX WARNING: current API naming may change although model should be stable.
@@ -85,32 +85,17 @@ class PaySheetModel(TradeCondition, XMLMatrix):
     return cell
 
 
-  def getReferenceDict(self, portal_type_list, get_none_reference=0):
-    '''
-      return all objects reference and id of the model wich portal_type is in the
-      portal_type_list
-      - parameters :
-        o get_none_reference : permit to get a dict with all references
-        not defined. This is usefull to get all object on the model paysheet
-        inherite from.
+  def getReferenceDict(self, portal_type_list):
+    '''Return all objects reference and id of the model wich portal_type is in
+    the portal_type_list. If type does not have a reference, it's ID is used.
     '''
     reference_dict={}
 
     object_list = self.contentValues(portal_type=portal_type_list,
-        sort_on='id')
+                                     sort_on='id')
 
-    for object in object_list:
-      reference_method = getattr(object, 'getReference', None)
-      if reference_method is None:
-        LOG('PaySheetModel getReferenceList', 0, '%s have not '
-            'getReference method' % object.getTitle() or
-            object.getRelativeUrl())
-      else:
-        reference = reference_method()
-        if reference is not None and not get_none_reference:
-          reference_dict[reference]=object.getId()
-        elif reference is None and get_none_reference:
-          reference_dict[object.getId()]=object.getId()
+    for obj in object_list:
+      reference_dict[obj.getProperty('reference', obj.getId())] = obj.getId()
 
     return reference_dict
 
