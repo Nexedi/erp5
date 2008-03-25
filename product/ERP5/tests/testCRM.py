@@ -111,11 +111,80 @@ class TestCRM(ERP5TypeTestCase):
                            description='New Desc',
                            direction='incoming')
    
-  def test_PersonModule_CreateRelatedEvent(self):
+  def test_PersonModule_CreateRelatedEventSelectionParams(self):
     # create related event from selected persons.
+    person_module = self.portal.person_module
+    pers1 = person_module.newContent(portal_type='Person', title='Pers1')
+    pers2 = person_module.newContent(portal_type='Person', title='Pers2')
+    pers3 = person_module.newContent(portal_type='Person', title='Pers3')
+    self.portal.person_module.view()
+    self.portal.portal_selections.setSelectionCheckedUidsFor(
+                          'person_module_selection', [])
+    self.portal.portal_selections.setSelectionParamsFor(
+                          'person_module_selection', dict(title='Pers1'))
+    get_transaction().commit()
+    self.tic()
+    person_module.PersonModule_newEvent(portal_type='Mail Message',
+                                        title='The Event Title',
+                                        description='The Event Descr.',
+                                        direction='outgoing',
+                                        selection_name='person_module_selection',
+                                        selection_index=1, # in list mode ?
+                                        follow_up='',
+                                        text_content='Event Content',
+                                        form_id='PersonModule_viewPersonList')
 
-    # XXX this fail when no persons are selected in listbox
-    raise NotImplementedError
+    get_transaction().commit()
+    self.tic()
+
+    related_event = pers1.getDestinationRelatedValue(
+                          portal_type='Mail Message')
+    self.assertNotEquals(None, related_event)
+    self.assertEquals('The Event Title', related_event.getTitle())
+    self.assertEquals('The Event Descr.', related_event.getDescription())
+    self.assertEquals('Event Content', related_event.getTextContent())
+
+    for person in (pers2, pers3):
+      self.assertEquals(None, person.getDestinationRelatedValue(
+                                       portal_type='Mail Message'))
+
+  def test_PersonModule_CreateRelatedEventCheckedUid(self):
+    # create related event from selected persons.
+    person_module = self.portal.person_module
+    pers1 = person_module.newContent(portal_type='Person', title='Pers1')
+    pers2 = person_module.newContent(portal_type='Person', title='Pers2')
+    pers3 = person_module.newContent(portal_type='Person', title='Pers3')
+    self.portal.person_module.view()
+    self.portal.portal_selections.setSelectionCheckedUidsFor(
+          'person_module_selection',
+          [pers1.getUid(), pers2.getUid()])
+    get_transaction().commit()
+    self.tic()
+    person_module.PersonModule_newEvent(portal_type='Mail Message',
+                                        title='The Event Title',
+                                        description='The Event Descr.',
+                                        direction='outgoing',
+                                        selection_name='person_module_selection',
+                                        selection_index=1, # in list mode ?
+                                        follow_up='',
+                                        text_content='Event Content',
+                                        form_id='PersonModule_viewPersonList')
+
+    get_transaction().commit()
+    self.tic()
+
+    for person in (pers1, pers2):
+      related_event = person.getDestinationRelatedValue(
+                            portal_type='Mail Message')
+      self.assertNotEquals(None, related_event)
+      self.assertEquals('The Event Title', related_event.getTitle())
+      self.assertEquals('The Event Descr.', related_event.getDescription())
+      self.assertEquals('Event Content', related_event.getTextContent())
+
+    self.assertEquals(None, pers3.getDestinationRelatedValue(
+                                portal_type='Mail Message'))
+
+  ERP5Site_getFollowUpItemList = 'TODO'
 
   def test_SaleOpportunitySold(self):
     # test the workflow of sale opportunities, when the sale opportunity is
