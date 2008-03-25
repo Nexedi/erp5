@@ -1280,7 +1280,7 @@ class TestPayroll(TestPayrollMixin):
                       portal_type='Pay Sheet Transaction',
                       specialise_value=model)
     
-    paysheet.PaySheetTransaction_applyModel(form_id='view')
+    paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(employee, paysheet.getSourceSectionValue())
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
     self.assertEquals(eur, paysheet.getResourceValue())
@@ -1301,7 +1301,7 @@ class TestPayroll(TestPayrollMixin):
                       portal_type='Pay Sheet Transaction',
                       specialise_value=other_model)
     
-    paysheet.PaySheetTransaction_applyModel(form_id='view')
+    paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(employee, paysheet.getSourceSectionValue())
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
     self.assertEquals(eur, paysheet.getResourceValue())
@@ -1312,7 +1312,7 @@ class TestPayroll(TestPayrollMixin):
 
     # applying twice does not copy subdocument twice
     self.assertEquals(2, len(paysheet.contentValues()))
-    paysheet.PaySheetTransaction_applyModel(form_id='view')
+    paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(2, len(paysheet.contentValues()))
 
 
