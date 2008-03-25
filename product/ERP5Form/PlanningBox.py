@@ -2305,7 +2305,8 @@ class PlanningStructure:
                             lane_axis_range = axis_range,
                             planning=self, warning=warning,
                             error_block_list=error_block_list,
-                            error_info_dict=error_info_dict)
+                            error_info_dict=error_info_dict,
+                            sec_layer_uid_list=basic_structure.sec_layer_uid_list)
 
         if axis_group_object.property_dict['stat'] == 1:
           # case stat group_object, need to update block size to display
@@ -2380,7 +2381,8 @@ class Activity:
   def addBlocs(self, report_axis_start=None, report_axis_stop=None,
                lane_axis_start=None, lane_axis_stop=None,
                lane_axis_range=None, planning=None, warning=0,
-               error_block_list=[], height=0, error_info_dict={}):
+               error_block_list=[], height=0, error_info_dict={},
+               sec_layer_uid_list=[]):
     """
     define list of (begin & stop) values for blocs representing the actual
     activity (can have several blocs if necessary).
@@ -2420,12 +2422,19 @@ class Activity:
         # passive
         block_color = '#D1E8FF'
         block_link = ''
+      
+      property_dict = self.property_dict
+      if self.object.getUid() in sec_layer_uid_list:
+        property_dict['sec_layer'] = 1
+      else:
+        property_dict['sec_layer'] = 0
+
       new_block = Bloc(name= block_name,color=block_color,link=block_link,
                        number = block_number,
                        vertical_view=self.vertical_view, parent_activity=self,
                        warning=warning, error=error,
                        error_text=error_text,zone=zone,
-                       property_dict=self.property_dict)
+                       property_dict=property_dict)
 
       new_block.buildInfoDict(info_dict = self.info)
 
