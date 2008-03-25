@@ -44,8 +44,6 @@ def openTestFile(filename):
 class TestCRM(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base',
-            'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_crm',)
 
   def test_Event_CreateRelatedEvent(self):
@@ -129,7 +127,6 @@ class TestCRM(ERP5TypeTestCase):
                                         description='The Event Descr.',
                                         direction='outgoing',
                                         selection_name='person_module_selection',
-                                        selection_index=1, # in list mode ?
                                         follow_up='',
                                         text_content='Event Content',
                                         form_id='PersonModule_viewPersonList')
@@ -165,7 +162,6 @@ class TestCRM(ERP5TypeTestCase):
                                         description='The Event Descr.',
                                         direction='outgoing',
                                         selection_name='person_module_selection',
-                                        selection_index=1, # in list mode ?
                                         follow_up='',
                                         text_content='Event Content',
                                         form_id='PersonModule_viewPersonList')
@@ -183,8 +179,6 @@ class TestCRM(ERP5TypeTestCase):
 
     self.assertEquals(None, pers3.getDestinationRelatedValue(
                                 portal_type='Mail Message'))
-
-  ERP5Site_getFollowUpItemList = 'TODO'
 
   def test_SaleOpportunitySold(self):
     # test the workflow of sale opportunities, when the sale opportunity is
