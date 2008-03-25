@@ -259,8 +259,11 @@ class OrderMovementGroup(RootMovementGroup):
 
 allow_class(OrderMovementGroup)
 
-class DefineMovementCausalityMovementGroup(RootMovementGroup):
-  """ TODO: docstring """
+class CausalityAssignmentMovementGroup(RootMovementGroup):
+  """ 
+  This movement group is used in order to define the causality
+  on lines and cells.
+  """
 
   def addCausalityToEdit(self, movement):
     order_movement = movement.getOrderValue()
@@ -269,7 +272,7 @@ class DefineMovementCausalityMovementGroup(RootMovementGroup):
       order_movement_url = order_movement.getRelativeUrl()
       if order_movement_url not in causality:
         causality.append(order_movement_url)
-        self.setGroupEdit(causality=causality)
+        self.setGroupEdit(causality_list=causality)
   
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
@@ -279,7 +282,7 @@ class DefineMovementCausalityMovementGroup(RootMovementGroup):
     self.addCausalityToEdit(movement)
     return 1
     
-allow_class(DefineMovementCausalityMovementGroup)
+allow_class(CausalityAssignmentMovementGroup)
 
 class CausalityMovementGroup(RootMovementGroup):
   """ TODO: docstring """

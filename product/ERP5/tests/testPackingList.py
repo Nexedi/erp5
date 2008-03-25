@@ -392,6 +392,8 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list_line = sequence.get('packing_list_line')
     for simulation_line in simulation_line_list:
       self.assertEquals(simulation_line.getDeliveryValue(),packing_list_line)
+      self.assertEquals(packing_list_line.getCausalityValue(), 
+                        simulation_line.getOrderValue())
 
   def stepCheckSimulationDisconnected(self,sequence=None, sequence_list=None, **kw):
     """
