@@ -420,7 +420,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
         base_amount_list             = base_amount_list,
         variation_category_list      = variation_category_list,)
     get_transaction().commit()
-    model_line.reindexObject()
     self.tic()
 
     # put values in Model Line cells
@@ -460,7 +459,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
         stop_date                 = DateTime(2008, 1, 31),)
     paysheet.setPriceCurrency('currency_module/EUR')
     get_transaction().commit()
-    paysheet.reindexObject()
     self.tic()
     return paysheet
 
@@ -476,7 +474,6 @@ class TestPayrollMixin(ERP5TypeTestCase):
                         'Pay Sheet Model Ratio Line']
     paysheet.PaySheetTransaction_copySubObject(portal_type_list)
     get_transaction().commit()
-    paysheet.recursiveReindexObject()
     self.tic()
     return paysheet_line_list
 
@@ -650,9 +647,6 @@ class TestPayroll(TestPayrollMixin):
     paysheet_line_count_before_calculation = \
         len(paysheet.contentValues(portal_type= \
         self.paysheet_line_portal_type))
-
-    # apply the model
-    #paysheet.PaySheetTransaction_applyModel()
 
     # calculate the pay sheet
     pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
@@ -1266,6 +1260,60 @@ class TestPayroll(TestPayrollMixin):
     service.setVariationBaseCategoryList(['tax_category'])
     service.setVariationCategoryList(['tax_category/employee_share'])
     self.assertEquals([], service.checkConsistency())
+
+  def test_apply_model(self):
+    eur = self.portal.currency_module.EUR
+    employee = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee')
+    employer = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Employer')
+    model = self.portal.paysheet_model_module.newContent(
+                      portal_type='Pay Sheet Model',
+                      source_section_value=employee,
+                      destination_section_value=employer,
+                      price_currency_value=eur,
+                      payment_condition_payment_date=DateTime(2008, 1, 1),
+                      work_time_annotation_line_quantity=10)
+    paysheet = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      specialise_value=model)
+    
+    paysheet.PaySheetTransaction_applyModel(form_id='view')
+    self.assertEquals(employee, paysheet.getSourceSectionValue())
+    self.assertEquals(employer, paysheet.getDestinationSectionValue())
+    self.assertEquals(eur, paysheet.getResourceValue())
+    self.assertEquals(eur, paysheet.getPriceCurrencyValue())
+    self.assertEquals(DateTime(2008, 1, 1),
+                      paysheet.getPaymentConditionPaymentDate())
+    self.assertEquals(10, paysheet.getWorkTimeAnnotationLineQuantity())
+
+    # if not found on the first model, values are searched recursivly in the
+    # model hierarchy
+    other_model = self.portal.paysheet_model_module.newContent(
+                      portal_type='Pay Sheet Model',
+                      source_section_value=employee,
+                      destination_section_value=employer,
+                      price_currency_value=eur,
+                      specialise_value=model)
+    paysheet = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      specialise_value=other_model)
+    
+    paysheet.PaySheetTransaction_applyModel(form_id='view')
+    self.assertEquals(employee, paysheet.getSourceSectionValue())
+    self.assertEquals(employer, paysheet.getDestinationSectionValue())
+    self.assertEquals(eur, paysheet.getResourceValue())
+    self.assertEquals(eur, paysheet.getPriceCurrencyValue())
+    self.assertEquals(DateTime(2008, 1, 1),
+                      paysheet.getPaymentConditionPaymentDate())
+    self.assertEquals(10, paysheet.getWorkTimeAnnotationLineQuantity())
+
+    # applying twice does not copy subdocument twice
+    self.assertEquals(2, len(paysheet.contentValues()))
+    paysheet.PaySheetTransaction_applyModel(form_id='view')
+    self.assertEquals(2, len(paysheet.contentValues()))
 
 
 import unittest
