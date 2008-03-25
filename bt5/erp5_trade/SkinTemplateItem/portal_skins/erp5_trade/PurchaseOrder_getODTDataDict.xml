@@ -152,7 +152,8 @@ total_vat = 0.0\n
 \n
 def getSubLineList(obj):\n
   sub_list = []\n
-  for x in obj.searchFolder(portal_type=context.getPortalOrderMovementTypeList(), sort_on=\'int_index\'):\n
+  for x in obj.searchFolder(portal_type=context.getPortalOrderMovementTypeList(),\n
+      sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')]):\n
     sub_list.append(x)\n
     sub_list.extend(getSubLineList(x))\n
   return sub_list\n
@@ -166,7 +167,7 @@ for line in getSubLineList(context):\n
       \'style_name\': \'Item_20_Table_20_Title\',\n
       \'left_style_name\': \'Item_20_Table_20_Title_20_Left\',\n
       \'right_style_name\': \'Item_20_Table_20_Title_20_Right\',\n
-      \'index\': line.getIntIndex(),\n
+      \'index\': line.getReference() or line.getIntIndex(),\n
       \'source_reference\': getSourceReference(line),\n
       \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
       \'description\': desc,\n
@@ -181,7 +182,7 @@ for line in getSubLineList(context):\n
       \'style_name\': \'Table_20_Contents\',\n
       \'left_style_name\': \'Table_20_Contents_20_Left\',\n
       \'right_style_name\': \'Table_20_Contents_20_Right\',\n
-      \'index\': line.getIntIndex(),\n
+      \'index\': line.getReference() or line.getIntIndex(),\n
       \'source_reference\': getSourceReference(line),\n
       \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
       \'description\': desc,\n
@@ -199,7 +200,7 @@ data_dict = {\n
   \'source_section_title\': context.getSourceSectionTitle() or \'\',\n
   \'source_section_address\': getOneLineAddress(\n
       context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressText() or \'\',\n
-      context.getSourceSection() and context.getSourceSectionValue().getRegionTitle() or \'\'),\n
+      context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressRegionTitle() or \'\'),\n
   \'source_section_telfax\': getPhoneAndFax(context.getSourceSection() and context.getSourceSectionValue().getTelephoneText() or \'\',\n
       context.getSourceSection() and context.getSourceSectionValue().getFaxText() or \'\'),\n
   \'source_section_email\': getEmail(context.getSourceSection() and context.getSourceSectionValue().getEmailText() or \'\'),\n
@@ -212,7 +213,7 @@ data_dict = {\n
   \'destination_title\': context.getDestinationTitle() or \'\',\n
   \'destination_address\': getOneLineAddress(\n
       context.getDestination() and context.getDestinationValue().getDefaultAddressText() or \'\',\n
-      context.getDestination() and context.getDestinationValue().getRegionTitle() or \'\'),\n
+      context.getDestination() and context.getDestinationValue().getDefaultAddressRegionTitle() or \'\'),\n
   \'destination_telfax\': getPhoneAndFax(context.getDestination() and context.getDestinationValue().getTelephoneText() or \'\',\n
       context.getDestination() and context.getDestinationValue().getFaxText() or \'\'),\n
   \'destination_email\': getEmail(context.getDestination() and context.getDestinationValue().getEmailText() or \'\'),\n
@@ -220,7 +221,7 @@ data_dict = {\n
   \'destination_section_title\': unicode(context.getDestinationSectionTitle() or \'\', \'utf8\'),\n
   \'destination_section_address\': unicode(getOneLineAddress(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressText() or \'\',\n
-      context.getDestinationSection() and context.getDestinationSectionValue().getRegionTitle() or \'\'), \'utf8\'),\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressRegionTitle() or \'\'), \'utf8\'),\n
   \'destination_section_telfax\': unicode(getPhoneAndFax(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\',\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'), \'utf8\'),\n

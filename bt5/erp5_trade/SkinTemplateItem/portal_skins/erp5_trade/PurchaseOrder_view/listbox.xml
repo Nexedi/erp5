@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>list_method</string>
-                <string>report_root_list</string>
               </list>
             </value>
         </item>
@@ -87,21 +86,6 @@
                     <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>parent_domain</string>
-                          <string>Object Tree</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
-                        </tuple>
-                      </list>
                     </value>
                 </item>
                 <item>

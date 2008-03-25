@@ -227,7 +227,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>parent</string>
+                          <string>parent_domain</string>
                           <string>Object Tree</string>
                         </tuple>
                         <tuple>
