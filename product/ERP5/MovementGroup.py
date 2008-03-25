@@ -259,6 +259,28 @@ class OrderMovementGroup(RootMovementGroup):
 
 allow_class(OrderMovementGroup)
 
+class DefineMovementCausalityMovementGroup(RootMovementGroup):
+  """ TODO: docstring """
+
+  def addCausalityToEdit(self, movement):
+    order_movement = movement.getOrderValue()
+    if order_movement is not None:
+      causality = self.getGroupEditDict().get('causality', [])
+      order_movement_url = order_movement.getRelativeUrl()
+      if order_movement_url not in causality:
+        causality.append(order_movement_url)
+        self.setGroupEdit(causality=causality)
+  
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.addCausalityToEdit(movement)
+    
+  def test(self, movement):
+    self.addCausalityToEdit(movement)
+    return 1
+    
+allow_class(DefineMovementCausalityMovementGroup)
+
 class CausalityMovementGroup(RootMovementGroup):
   """ TODO: docstring """
   
