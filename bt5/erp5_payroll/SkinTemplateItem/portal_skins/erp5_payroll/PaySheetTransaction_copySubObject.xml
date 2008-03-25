@@ -65,20 +65,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  this script copy subobject of the model (corresponding to the \n
-  portal_type_list) in the paysheet\n
+            <value> <string>\'\'\'This script copies sub objects of models (corresponding to the \n
+portal_type_list) in the paysheet.\n
 \'\'\'\n
 \n
 sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
-sub_object_uid_list = [x.getUid() for x in sub_object_list]\n
 \n
-# copy model object\n
-model = context.getSpecialiseValue()\n
-copy_data = model.manage_copyObjects(uids=sub_object_uid_list)\n
+# Erase existing sub objects with same reference\n
+delete_id_list = []\n
+for sub_object in sub_object_list:\n
+  sub_object_reference = sub_object.getProperty(\'reference\', sub_object.getId())\n
+  for existing_sub_object in context.contentValues(portal_type=portal_type_list):\n
+    if sub_object_reference == existing_sub_object.getProperty(\n
+                                    \'reference\', existing_sub_object.getId()):\n
+      delete_id_list.append(existing_sub_object.getId())\n
 \n
-# paste into context (paysheet) folder\n
-context.manage_pasteObjects(copy_data)\n
+if delete_id_list:\n
+  context.manage_delObjects(ids=delete_id_list)\n
+\n
+sub_object_by_model = dict()\n
+for sub_object in sub_object_list:\n
+  sub_object_by_model.setdefault(\n
+           sub_object.getParentValue(), []).append(sub_object.getId())\n
+\n
+for model, sub_object_id_list in sub_object_by_model.items():\n
+  copy_data = model.manage_copyObjects(sub_object_id_list)\n
+  context.manage_pasteObjects(copy_data)\n
 </string> </value>
         </item>
         <item>
@@ -125,12 +137,15 @@ context.manage_pasteObjects(copy_data)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>sub_object_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>delete_id_list</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>sub_object_uid_list</string>
+                            <string>sub_object</string>
+                            <string>sub_object_reference</string>
+                            <string>existing_sub_object</string>
+                            <string>dict</string>
+                            <string>sub_object_by_model</string>
                             <string>model</string>
+                            <string>sub_object_id_list</string>
                             <string>copy_data</string>
                           </tuple>
                         </value>
