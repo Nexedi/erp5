@@ -81,6 +81,7 @@
             <value>
               <tuple>
                 <string>VariantMovementGroup</string>
+                <string>DefineMovementCausalityMovementGroup</string>
               </tuple>
             </value>
         </item>
@@ -114,6 +115,7 @@
               <tuple>
                 <string>ResourceMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
+                <string>DefineMovementCausalityMovementGroup</string>
               </tuple>
             </value>
         </item>
