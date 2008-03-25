@@ -106,6 +106,16 @@ class ContributionTool(BaseTool):
       Finds the appropriate portal type based on the file name
       or if necessary the content of the document.
 
+      Configuration Scripts:
+
+       - Document_findTypeName: receives file name and valid portal type list,
+         and find more appropriate portal type for the current context document.
+         By default, first, this script will find a portal type from file name
+         and next, this will find it from content of the current document.
+
+         You can configure this script in order to define another search order.
+         (e.g. find portal type from content first)
+
       NOTE: XXX This implementation can be greatly accelerated by
       caching a dict resulting which combines getContentTypeRegistryTypeDict
       and valid_portal_type_list
@@ -168,35 +178,11 @@ class ContributionTool(BaseTool):
       # process
       return candidate_index_type # We suppose that there is only one index type in allowed content types
 
-    # Check if the filename tells which portal_type this is
-    portal_type_list = self.getPropertyDictFromFileName(file_name).get('portal_type', [])
-    if isinstance(portal_type_list, str): portal_type_list = [portal_type_list]
-    portal_type_list = filter(lambda x: x in valid_portal_type_list, portal_type_list)
-    if not portal_type_list:
-      portal_type_list = valid_portal_type_list
-    if len(portal_type_list) == 1:
-      # if we have only one, then this is it
-      # LOG('findTypeName single portal_type_list', 0, portal_type_list[0])
-      return portal_type_list[0]
-
-    # If it is still None, we need to read the document
-    # to check which of the candidates is suitable
-    # Let us give a chance to getPropertyDictFromContent to
-    # tell us what is the portal type of this document
-    content_portal_type_list = document.getPropertyDictFromContent().get('portal_type', None)
-    if content_portal_type_list:
-      if isinstance(portal_type, str):
-        content_portal_type_list = [content_portal_type_list]
-      # Filter valid candidates
-      content_portal_type_list = filter(lambda x: x in portal_type_list, content_portal_type_list)
-      if content_portal_type_list:
-        # if we have more than one, then return the first one
-        # LOG('findTypeName from content', 0, content_portal_type_list[0])
-        return content_portal_type_list[0]
-
-    # If portal_type_list is not empty, return the first one
-    # LOG('findTypeName from first portal_type_list', 0, portal_type_list[0])
-    return portal_type_list[0]
+    method = document._getTypeBasedMethod('findTypeName',
+                                          fallback_script_id='Document_findTypeName')
+    portal_type = method(file_name, valid_portal_type_list)
+    if portal_type in valid_portal_type_list:
+      return portal_type
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, url=None, container=None,
