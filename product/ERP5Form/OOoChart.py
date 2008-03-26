@@ -364,7 +364,10 @@ class OOoChartWidget(Widget.Widget):
     UrlIconOOo='%s/misc_/ERP5OOo/OOo.png' % here.ERP5Site_getAbsoluteUrl()
     UrlIconPdf='%s/misc_/ERP5Form/PDF.png' % here.ERP5Site_getAbsoluteUrl()
 
-    if render_format == 'html' :
+    if render_format == 'html':
+      field_absolute_url = '%s/%s/%s' % (here.absolute_url(),
+                                         form.getId(),
+                                         field.getId())
       css_class = field.get_value('css_class')
       format = field.get_value('image_format')
       if format == '':
@@ -372,11 +375,9 @@ class OOoChartWidget(Widget.Widget):
       display = field.get_value('image_display')
       if format in STANDARD_IMAGE_FORMAT_LIST:
         main_content = '''<div class="OOoChartContent">
-          <img class="%s" src="%s/%s/%s?render_format=%s&display=%s" title="%s" alt="%s"/">
+          <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
           </div>''' % (css_class,
-                       here.absolute_url(),
-                       form.getId(),
-                       field.getId(),
+                       field_absolute_url,
                        format,
                        display,
                        title,
@@ -385,19 +386,15 @@ class OOoChartWidget(Widget.Widget):
 
       if format == 'raw':
         main_content = '''<div class="OOoChartContent">
-          <a href="%s/%s/%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
-          ''' % (here.absolute_url(),
-                 form.getId(),
-                 field.getId(),
+          <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
+          ''' % (field_absolute_url,
                  display,
                  UrlIconOOo)
         return main_content
       if format == 'pdf':
         main_content = '''<div class="OOoChartContent">
-          <a href="%s/%s/%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
-          </div>''' % (here.absolute_url(),
-                       form.getId(),
-                       field.getId(),
+          <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
+          </div>''' % (field_absolute_url,
                        display,
                        UrlIconPdf)
         return main_content
