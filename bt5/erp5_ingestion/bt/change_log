@@ -1,3 +1,6 @@
+2008-03-26 yusei
+* Added contribution predicates for both of dms and crm ingestion.
+
 2008-03-25 yusei
 * Added Document_findTypeName. This is a configuration script that defines portal type search order.
 
