@@ -182,7 +182,7 @@
 <!-- Delete Title 0 -->\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/FooModule_deleteObjectList</td>\n
+\t<td>${base_url}/foo_module/FooModule_deleteObjectList</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
