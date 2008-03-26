@@ -25,6 +25,9 @@
  <portal_type id="Category Tool">
   <item>Base Category</item>
  </portal_type>
+ <portal_type id="Contribution Registry Tool">
+  <item>Contribution Predicate</item>
+ </portal_type>
  <portal_type id="Delivery Builder">
   <item>Predicate</item>
  </portal_type>

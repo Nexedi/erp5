@@ -1,3 +1,6 @@
+2008-03-26 Yusei
+* Added contribution registry tool. This will replace content_type_registry.
+
 2008-03-20 Jerome
 * don't get acquired categories in ERP5Type_getSecurityCategoryFromContent and introduce ERP5Type_getSecurityAcquiredCategoryFromContent to get acquired categories.
 * deprecate ERP5Type_getSecurityCategoryFromArrow for ERP5Type_getSecurityCategoryFromContent

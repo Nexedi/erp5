@@ -8,6 +8,7 @@ Cache Factory | SQL Cache
 Cache Tool | Cache Factory
 Category Tool | Base Category
 Category | Category
+Contribution Registry Tool | Contribution Predicate
 Delivery Builder | Predicate
 Delivery Tool | Delivery Builder
 Domain Tool | Base Domain
