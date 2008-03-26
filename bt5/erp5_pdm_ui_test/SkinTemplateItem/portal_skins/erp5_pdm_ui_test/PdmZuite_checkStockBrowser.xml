@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -77,12 +74,18 @@
       <tal:block tal:repeat="inventory_tuple python: [(current_inventory, 3),\n
                                                       (available_inventory, 4),\n
                                                       (future_inventory, 5),\n
-                                                     ]">\n
+]">\n
         <tr>\n
           <td>verifyText</td>\n
           <td tal:content="python: \'//tr[@id=\\\'listbox_data_line_0\\\']/td[%s]\' % inventory_tuple[1]">inventory value</td>\n
           <td tal:content="python: inventory_tuple[0]">current inventory</td>\n
         </tr>\n
+        <tr>\n
+          <td>verifyText</td>\n
+          <td tal:content="python: \'//tr[@id=\\\'listbox_stat_line\\\']/td[%s]\' % inventory_tuple[1]">inventory value</td>\n
+          <td tal:content="python: inventory_tuple[0]">current inventory</td>\n
+        </tr>\n
+\n
         <!-- Check movement history list -->\n
         <tr>\n
           <td>clickAndWait</td>\n
