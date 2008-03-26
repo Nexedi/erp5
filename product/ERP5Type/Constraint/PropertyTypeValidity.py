@@ -95,7 +95,8 @@ class PropertyTypeValidity(Constraint):
     # if this property was a local property and has been later added in a
     # property sheet, we want to remove it from _local_properties
       if fixit and \
-         property_id in [x['id'] for x in obj._local_properties] and \
+         property_id in [x['id'] for x in
+             getattr(obj, '_local_properties', ())] and \
          len([x for x in obj._propertyMap() if x['id'] == property_id]) > 1:
         obj._local_properties = tuple([x for x in obj._local_properties
                                        if x['id'] != property_id])
