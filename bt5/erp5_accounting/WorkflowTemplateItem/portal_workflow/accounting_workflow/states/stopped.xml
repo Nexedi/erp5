@@ -38,7 +38,7 @@
             <value>
               <tuple>
                 <string>cancel</string>
-                <string>cancel_action</string>
+                <string>cancel_accounting_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
                 <string>restart_action</string>
@@ -74,6 +74,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -110,6 +111,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>

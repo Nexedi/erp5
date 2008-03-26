@@ -74,6 +74,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -86,6 +87,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -96,6 +98,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -106,6 +109,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -116,6 +120,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>

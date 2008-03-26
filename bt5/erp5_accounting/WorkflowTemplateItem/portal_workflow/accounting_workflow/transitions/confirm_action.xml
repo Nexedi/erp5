@@ -79,6 +79,7 @@
               <tuple>
                 <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Associate</string>
               </tuple>
             </value>
         </item>

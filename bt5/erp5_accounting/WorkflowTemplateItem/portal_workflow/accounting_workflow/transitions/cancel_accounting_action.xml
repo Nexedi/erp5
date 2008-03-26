@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Cancel Transaction</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string></string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=cancel_accounting_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>cancel</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Cancel the transaction, when it already have a meaning from accounting point of view</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,11 +43,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delete_action</string> </value>
+            <value> <string>cancel_accounting_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>deleted</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -79,8 +79,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
