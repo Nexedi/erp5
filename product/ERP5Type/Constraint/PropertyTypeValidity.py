@@ -91,6 +91,15 @@ class PropertyTypeValidity(Constraint):
         property_type = 'lines'
       else:
         property_type = prop['type']
+
+    # if this property was a local property and has been later added in a
+    # property sheet, we want to remove it from _local_properties
+      if fixit and \
+         property_id in [x['id'] for x in obj._local_properties] and \
+         len([x for x in obj._propertyMap() if x['id'] == property_id]) > 1:
+        obj._local_properties = tuple([x for x in obj._local_properties
+                                       if x['id'] != property_id])
+
       if property_type in self._permissive_type_list:
         continue
       wrong_type = 0
@@ -134,4 +143,5 @@ class PropertyTypeValidity(Constraint):
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:
           obj.setProperty(property_id, oldvalue)
+
     return error_list

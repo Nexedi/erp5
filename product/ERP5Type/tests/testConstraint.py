@@ -1184,23 +1184,45 @@ class TestConstraint(PropertySheetTestCase):
                    expression='error: " ')
     self.assertRaises(CompilerError, constraint.checkConsistency, obj)
   
-  def test_PropertyTypeValidityFixLocalProperties(self):
+  def test_PropertyTypeValidityFixLocalPropertiesString(self):
     """Tests PropertyTypeValidity can repairs local property when this property
-    is added on the class later.
+    is added on the class later, and this property is already in the good type.
     """
     constraint = self._createGenericConstraint(
                    klass_name='PropertyTypeValidity',
                    id='type_validity_constraint', )
     obj = self._makeOne()
     obj.edit(local_property='1')
+    self.assertEquals(1, len(obj._local_properties))
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(),
-                  '''{'id': 'local_property', 'type': 'int'}''')
+                  '''{'id': 'local_property', 'type': 'string'}''')
     constraint.fixConsistency(obj)
-    self.assertEquals(1, obj.getLocalProperty())
+    self.assertEquals((), obj._local_properties)
+    self.assertEquals('1', obj.getLocalProperty())
+    obj.edit(local_property='something else')
+    self.assertEquals('something else', obj.getLocalProperty())
+  
+  def test_PropertyTypeValidityFixLocalPropertiesFloat(self):
+    """Tests PropertyTypeValidity can repairs local property when this property
+    is added on the class later, and this property type changed.
+    """
+    constraint = self._createGenericConstraint(
+                   klass_name='PropertyTypeValidity',
+                   id='type_validity_constraint', )
+    obj = self._makeOne()
+    obj.edit(local_property=1.234)
+    self.assertEquals(1, len(obj._local_properties))
+    #self.assertEquals([], constraint.checkConsistency(obj))
+    # now add a 'local_property' property defined on a property sheet
+    self._addProperty(obj.getPortalType(),
+                  '''{'id': 'local_property', 'type': 'float'}''')
+    constraint.fixConsistency(obj)
+    self.assertEquals((), obj._local_properties)
+    self.assertEquals(1.234, obj.getLocalProperty())
     obj.edit(local_property=3)
-    self.assertEquals(3, obj.getLocalProperty())
+    self.assertEquals(3., obj.getLocalProperty())
   
   def test_PropertyTypeValidityFixLocalPropertiesContent(self):
     """Tests PropertyTypeValidity can repairs local property of type content
