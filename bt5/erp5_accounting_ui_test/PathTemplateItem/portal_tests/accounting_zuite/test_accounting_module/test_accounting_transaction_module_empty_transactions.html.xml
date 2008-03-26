@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -150,13 +147,6 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[2]\n
-</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>\n
 //tr[@id=\'listbox_data_line_0\']/td[3]\n
   </td>\n
   <td></td>\n
@@ -278,7 +268,6 @@ Accounting Transaction Module Displays empty Transactions\n
   <td></td>\n
 </tr>\n
 <tr>\n
-<!-- XXX not erp5_html_style compatible -->\n
   <td>clickAndWait</td>\n
   <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
@@ -323,13 +312,6 @@ Accounting Transaction Module Displays empty Transactions\n
   <td>6 record(s)</td>\n
 </tr>\n
 <!-- column properties line 0 -->\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[2]\n
-</td>\n
-  <td></td>\n
-</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
@@ -387,13 +369,6 @@ Accounting Transaction Module Displays empty Transactions\n
   <td>0.0</td>\n
 </tr>\n
 <!-- column properties line 1 (order for lines 0 and 1 is unknown as we sort on date) -->\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[2]\n
-</td>\n
-  <td></td>\n
-</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
