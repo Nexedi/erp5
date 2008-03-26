@@ -81,10 +81,12 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       self.login()
       self.bar_module = self.getBarModule()
+      self.foo_module = self.portal.foo_module
 
     def beforeTearDown(self):
       get_transaction().abort()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
+      self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
       gender = self.getPortal().portal_categories['gender']
       gender.manage_delObjects(list(gender.objectIds()))
       gender = self.getPortal().portal_caches.clearAllCache()
@@ -216,7 +218,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
 
     def test_viewProxyField(self, quiet=quiet):
       # render a form with proxy fields: Foo_viewProxyField
-      foo = self.portal.foo_module.newContent(
+      foo = self.foo_module.newContent(
                            portal_type='Foo',
                            title='Bar Test',
                            quantity=10000,
