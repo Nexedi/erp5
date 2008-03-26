@@ -72,7 +72,7 @@ class XMLObject( Folder ):
           , 'category'      : 'object_view'
           , 'action'        : 'XMLObject_view'
           , 'permissions'   : ( Permissions.View, )
-          }
+          },
         )
       }
 
