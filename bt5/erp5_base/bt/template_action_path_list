@@ -37,6 +37,7 @@ Person | assignment
 Person | details
 Person | document_view
 Person | financial_view
+Person | person_detailed_report
 Person | report
 Person | terminate_career
 Person | view

@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+request = container.REQUEST\n
+from_date = request.get(\'from_date\', None)\n
+to_date = request.get(\'at_date\', None)\n
+aggregation_level = request.get(\'aggregation_level\', None)\n
+\n
+# build document portal type list\n
+portal_type_list = []\n
+extend = portal_type_list.extend\n
+for title, path in context.ERP5Site_getModuleItemList():\n
+  document_type_list = context.restrictedTraverse(path).allowedContentTypes()\n
+  extend([x.id for x in document_type_list])\n
+\n
+# compute sql params, we group and order by date and portal type\n
+if aggregation_level == "year":\n
+  sql_format = "%Y"\n
+elif aggregation_level == "month":\n
+  sql_format = "%Y-%m"\n
+elif aggregation_level == "week":\n
+  sql_format = "%Y-%u"\n
+elif aggregation_level == "day":\n
+  sql_format = "%Y-%m-%d"\n
+params = {"creation_date":(from_date, to_date)}\n
+query=None\n
+if from_date is not None and to_date is not None:  \n
+  params = {"creation_date":(from_date, to_date)}\n
+  query = Query(range="minngt", **params)\n
+elif from_date is not None:\n
+  params = {"creation_date":from_date}\n
+  query = Query(range="min", **params)\n
+elif to_date is not None:\n
+  params = {"creation_date":to_date}\n
+  query = Query(range="ngt", **params)\n
+select_expression = \'DATE_FORMAT(creation_date, "%s") as date, portal_type\' %sql_format\n
+group_by = \'DATE_FORMAT(creation_date, "%s"), portal_type\' %sql_format\n
+\n
+# count number of object created by the user for each type of document\n
+result_list = context.portal_catalog.countResults(select_expression=select_expression,\n
+                                                  portal_type=portal_type_list,limit=None,\n
+                                                  owner=context.getReference(),query=query,\n
+                                                  group_by_expression=group_by)\n
+\n
+# build result dict per portal_type then period\n
+portal_type_count_dict = {}\n
+for result in result_list:\n
+  if portal_type_count_dict.has_key(result[2]):\n
+    portal_type_count_dict[result[2]][result[1]] = result[0]\n
+  else:\n
+    portal_type_count_dict[result[2]] = {result[1]:result[0]}\n
+\n
+# now filled the listbox with count results\n
+line_list = []\n
+append = line_list.append\n
+period_count_dict = {}\n
+for portal_type in portal_type_list:\n
+    if portal_type_count_dict.has_key(portal_type):\n
+      period_count = portal_type_count_dict[portal_type]\n
+      obj = Object(uid="new_")\n
+      obj["document_type"] = context.Base_translateString(portal_type)\n
+    else:\n
+      continue\n
+    line_counter = 0\n
+    for period in period_list:\n
+      if period_count.has_key(period):\n
+        obj[period] = period_count[period]\n
+        line_counter += period_count[period]\n
+        if period_count_dict.has_key(period):\n
+          period_count_dict[period] = period_count_dict[period] + period_count[period]\n
+        else:\n
+          period_count_dict[period] = period_count[period]\n
+      else:\n
+        obj[period] = 0\n
+    obj[\'total\'] = line_counter\n
+    append(obj)\n
+\n
+# sort lines\n
+def cmpType(a, b):\n
+  return cmp(a[\'document_type\'], b[\'document_type\'])\n
+\n
+line_list.sort(cmpType)\n
+\n
+# build stat line\n
+obj = Object(uid="new_")\n
+obj["document_type"] = \'Total\'\n
+line_counter = 0\n
+for period in period_list:\n
+  if period_count_dict.has_key(period):\n
+    obj[period] = period_count_dict[period]\n
+    line_counter += period_count_dict[period]\n
+  else:\n
+    obj[period] = 0\n
+obj[\'total\'] = line_counter\n
+request.set(\'stat_line\', [obj,])\n
+\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>period_list, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>period_list</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>aggregation_level</string>
+                            <string>portal_type_list</string>
+                            <string>extend</string>
+                            <string>_getiter_</string>
+                            <string>context</string>
+                            <string>title</string>
+                            <string>path</string>
+                            <string>document_type_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>sql_format</string>
+                            <string>params</string>
+                            <string>query</string>
+                            <string>_apply_</string>
+                            <string>select_expression</string>
+                            <string>group_by</string>
+                            <string>result_list</string>
+                            <string>portal_type_count_dict</string>
+                            <string>result</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>line_list</string>
+                            <string>period_count_dict</string>
+                            <string>portal_type</string>
+                            <string>period_count</string>
+                            <string>obj</string>
+                            <string>line_counter</string>
+                            <string>period</string>
+                            <string>_inplacevar_</string>
+                            <string>cmpType</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_getPersonDetailedContributionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
