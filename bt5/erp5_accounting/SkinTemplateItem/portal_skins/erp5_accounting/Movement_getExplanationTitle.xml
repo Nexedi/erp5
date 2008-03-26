@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return brain.title or brain.getObject().getExplanationValue().getTitle()\n
+            <value> <string>movement = brain.getObject()\n
+if movement.hasTitle():\n
+  return movement.getTitle()\n
+return movement.getExplanationValue().getTitle()\n
 </string> </value>
         </item>
         <item>
@@ -118,6 +121,7 @@
                             <string>selection</string>
                             <string>kwd</string>
                             <string>_getattr_</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
