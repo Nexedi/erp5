@@ -47,16 +47,15 @@ class ContentExistence(Constraint):
   message_no_subobject_portal_type = "The document does not contain any"\
                    " subobject of portal portal type ${portal_type}"
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, obj, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
       We are checking that object contains a subobject.
     """
     from Products.ERP5Type.Message import Message
-    obj = object
     error_list = []
-    if self._checkConstraintCondition(object):
+    if self._checkConstraintCondition(obj):
       # Retrieve configuration values from PropertySheet (_constraints)
       portal_type = self.constraint_definition.get('portal_type', ())
       if not len(obj.contentValues(portal_type=portal_type)):
