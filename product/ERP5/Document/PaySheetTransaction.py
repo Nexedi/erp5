@@ -509,32 +509,14 @@ class PaySheetTransaction(Invoice):
       dependencies)
     '''
     model = self.getSpecialiseValue()
-
     model_reference_dict = model.getInheritanceModelReferenceDict(
                                    portal_type_list=portal_type_list)
 
-    model_dict = model.getReferenceDict(portal_type_list=portal_type_list)
-    id_list = model_dict.values()
-    if model_reference_dict.has_key(model.getRelativeUrl()):
-      model_reference_dict[model.getRelativeUrl()].extend(id_list)
-    else:
-      model_reference_dict[model.getRelativeUrl()]=id_list
-
-    # get sub objects
-    key_list = model_reference_dict.keys()
-
     sub_object_list = []
-
-    for key in key_list:
-      id_list = model_reference_dict[key]
-      model = self.getPortalObject().unrestrictedTraverse(key)
-      if model is None:
-        # XXX is it supposed to happen ?
-        LOG("getInheritedObjectValueList :", 0, "can't find model %s" % key)
-
-      for id in id_list:
-        object = model._getOb(id)
-        sub_object_list.append(object)
+    traverse = self.getPortalObject().unrestrictedTraverse
+    for model_url, id_list in model_reference_dict.items():
+      model = traverse(model_url)
+      sub_object_list.extend([model._getOb(x) for x in id_list])
 
     return sub_object_list
 
