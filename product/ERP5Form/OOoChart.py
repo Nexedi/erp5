@@ -358,7 +358,6 @@ class OOoChartWidget(Widget.Widget):
     # Find the applicable context
     form = field.aq_parent
     here = getattr(form, 'aq_parent', REQUEST)
-
     # Update the render format based on REQUEST parameters
     render_format = getattr(REQUEST, 'render_format', render_format)
 
@@ -373,24 +372,35 @@ class OOoChartWidget(Widget.Widget):
       display = field.get_value('image_display')
       if format in STANDARD_IMAGE_FORMAT_LIST:
         main_content = '''<div class="OOoChartContent">
-          <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
-          </div>''' % (css_class, field.absolute_url(), format, display, title, alternate_name)
+          <img class="%s" src="%s/%s/%s?render_format=%s&display=%s" title="%s" alt="%s"/">
+          </div>''' % (css_class,
+                       here.absolute_url(),
+                       form.getId(),
+                       field.getId(),
+                       format,
+                       display,
+                       title,
+                       alternate_name)
         return main_content
 
       if format == 'raw':
         main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
-          ''' % (field.absolute_url(), display, UrlIconOOo)
+          <a href="%s/%s/%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
+          ''' % (here.absolute_url(),
+                 form.getId(),
+                 field.getId(),
+                 display,
+                 UrlIconOOo)
         return main_content
       if format == 'pdf':
         main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
-          </div>''' % (field.absolute_url(), display, UrlIconPdf)
+          <a href="%s/%s/%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
+          </div>''' % (here.absolute_url(),
+                       form.getId(),
+                       field.getId(),
+                       display,
+                       UrlIconPdf)
         return main_content
-
-    # Find the applicable context
-    form = field.aq_parent
-    here = getattr(form, 'aq_parent', REQUEST)
 
     def stringBoolean(value):
       return str(bool(value)).lower()
@@ -432,7 +442,6 @@ class OOoChartWidget(Widget.Widget):
     method_id = field.get_value('ooo_template')
     # Find the page template
     ooo_template = getattr(here, method_id)
-
     # Render the chart
     return ooo_template(format=render_format)
 
