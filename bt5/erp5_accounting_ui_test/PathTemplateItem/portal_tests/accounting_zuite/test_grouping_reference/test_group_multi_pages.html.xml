@@ -250,7 +250,7 @@ Grouping with multiple pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>12 record(s)</td>\n
+  <td>2 record(s)</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
