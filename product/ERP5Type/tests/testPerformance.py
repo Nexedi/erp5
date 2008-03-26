@@ -30,6 +30,7 @@ import unittest
 from time import time
 import gc
 
+from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.CMFCore.tests.base.testcase import LogInterceptor
@@ -39,6 +40,8 @@ from Products.CMFCore.tests.base.testcase import LogInterceptor
 # (which has 31645.6 pystones/second)
 MIN_OBJECT_VIEW=0.112
 MAX_OBJECT_VIEW=0.122
+MIN_OBJECT_PROXYFIELD_VIEW=0.112
+MAX_OBJECT_PROXYFIELD_VIEW=0.122
 CURRENT_MIN_OBJECT_VIEW=0.1220
 CURRENT_MAX_OBJECT_VIEW=0.1280
 MIN_MODULE_VIEW=0.125
@@ -209,6 +212,41 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                             'Tic: %.4f < %.4f < %.4f' % (
                             MIN_TIC, tic_value, MAX_TIC))
         i += 1
+
+
+    def test_viewProxyField(self, quiet=quiet):
+      # render a form with proxy fields: Foo_viewProxyField
+      foo = self.portal.foo_module.newContent(
+                           portal_type='Foo',
+                           title='Bar Test',
+                           quantity=10000,
+                           price=32,
+                           start_date=DateTime(2008,1,1))
+      foo.newContent(portal_type='Foo Line',
+                     title='Line 1')
+      foo.newContent(portal_type='Foo Line',
+                     title='Line 2')
+      get_transaction().commit()
+      self.tic()
+      # Check performance
+      before_view = time()
+      for x in xrange(100):
+        foo.Foo_viewProxyField()
+      after_view = time()
+      req_time = (after_view - before_view)/100.
+
+      if not quiet:
+        print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
+              ( MIN_OBJECT_PROXYFIELD_VIEW,
+                req_time,
+                MAX_OBJECT_PROXYFIELD_VIEW )
+      if DO_TEST:
+        self.failUnless( MIN_OBJECT_PROXYFIELD_VIEW < req_time
+                                    < MAX_OBJECT_PROXYFIELD_VIEW,
+          '%.4f < %.4f < %.4f' % (
+              MIN_OBJECT_PROXYFIELD_VIEW,
+              req_time,
+              MAX_OBJECT_PROXYFIELD_VIEW))
 
 def test_suite():
   suite = unittest.TestSuite()
