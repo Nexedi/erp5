@@ -595,7 +595,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getFutureInventoryStat</string> </value>
+            <value> <string>Resource_statInventory</string> </value>
         </item>
       </dictionary>
     </pickle>
