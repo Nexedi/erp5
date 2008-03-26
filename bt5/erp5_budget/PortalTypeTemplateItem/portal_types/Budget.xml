@@ -98,6 +98,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>
@@ -105,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

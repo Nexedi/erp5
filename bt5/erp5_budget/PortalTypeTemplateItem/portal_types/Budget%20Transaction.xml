@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>    An Order</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -96,6 +96,10 @@
             <value> <string>BudgetTransaction_init</string> </value>
         </item>
         <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>
@@ -103,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Transaction</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
