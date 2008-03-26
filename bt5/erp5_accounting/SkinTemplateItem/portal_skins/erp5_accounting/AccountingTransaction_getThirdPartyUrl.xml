@@ -68,11 +68,6 @@
             <value> <string># XXX bad name: AccountingTransaction_getMirrorSectionUrl sounds more consistent\n
 view_name = \'Entity_viewAccountingTransactionList?reset:int=1\'\n
 \n
-try:\n
-  return \'/%s/%s\' % (context.delivery_mirror_section_url, view_name)\n
-except AttributeError:\n
-  pass\n
-\n
 if brain is not None:\n
   transaction = brain.getObject()\n
 else:\n
@@ -132,11 +127,10 @@ if mirror_section is not None:\n
                             <string>selection_name</string>
                             <string>kwd</string>
                             <string>view_name</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>AttributeError</string>
                             <string>None</string>
+                            <string>_getattr_</string>
                             <string>transaction</string>
+                            <string>context</string>
                             <string>mirror_section</string>
                           </tuple>
                         </value>

@@ -361,6 +361,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -636,11 +642,6 @@ destination_section_where_expression</string> </value>
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
           SELECT main.*,\n
-          <dtml-let portal="portal_url.getPortalObject()"\n
-                    substring_position="len(\'/\'.join(portal.getPhysicalPath()))+1"\n
-                    portal_absolute_url="portal.absolute_url(relative=1)">\n
-          ( SELECT CONCAT(<dtml-sqlvar portal_absolute_url type=string>, SUBSTRING(path, <dtml-var substring_position>)) FROM catalog as mirror_catalog WHERE mirror_catalog.uid=main.delivery_mirror_section_uid ) AS delivery_mirror_section_url,\n
-          </dtml-let>\n
           ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=main.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
           ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
           ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
@@ -1300,11 +1301,6 @@ UNION\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
           SELECT main.*,\n
-          <dtml-let portal="portal_url.getPortalObject()"\n
-                    substring_position="len(\'/\'.join(portal.getPhysicalPath()))+1"\n
-                    portal_absolute_url="portal.absolute_url(relative=1)">\n
-          ( SELECT CONCAT(<dtml-sqlvar portal_absolute_url type=string>, SUBSTRING(path, <dtml-var substring_position>)) FROM catalog as mirror_catalog WHERE mirror_catalog.uid=main.delivery_mirror_section_uid ) AS delivery_mirror_section_url,\n
-          </dtml-let>\n
           ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=main.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
           ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
           ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
