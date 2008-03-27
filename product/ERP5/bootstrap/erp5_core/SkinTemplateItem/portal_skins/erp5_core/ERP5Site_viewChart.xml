@@ -195,10 +195,7 @@ bFBLBQYAAAAABAAEAA8BAAAYEgAAAAA=</string> </value>
                     svg:y=\'0cm\'\n
                     tal:attributes="svg:height height;\n
                     svg:width width ">\n
-          <office:include path="ERP5Site_buildChart"\n
-                          xlink:type=\'simple\'\n
-                          xlink:actuate=\'onLoad\'\n
-                          xlink:show=\'embed\'/>\n
+          <office:include tal:attributes="path python: \'%s/ERP5Site_buildChart\' % here.getPath()" xlink:type=\'simple\' xlink:actuate=\'onLoad\' xlink:show=\'embed\'/>\n
         </draw:frame>\n
       </draw:page>\n
     </office:drawing>\n
