@@ -3302,6 +3302,29 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
 
     self.assertEqual(new_document.getTitle(), 'My Accounting Transaction')
 
+  def test_Base_doAction(self):
+    # test creating a template using Base_doAction script (this is what
+    # erp5_xhtml_style does)
+    self.login('claudie')
+    preference = self.portal.portal_preferences.newContent('Preference')
+    preference.priority = Priority.USER
+    preference.enable()
+
+    get_transaction().commit()
+    self.tic()
+
+    document = self.accounting_module.newContent(
+                              portal_type='Accounting Transaction')
+    document.edit(title='My Accounting Transaction')
+    document.Base_makeTemplateFromDocument(form_id=None)
+    
+    template = preference.objectValues()[0]
+    ret = self.accounting_module.Base_doAction(
+        select_action='template %s' % template.getRelativeUrl(),
+        form_id='', cancel_url='')
+    self.failUnless('Template%20Created' in ret, ret)
+    self.assertEquals(2, len(self.accounting_module.contentValues()))
+
 
 def test_suite():
   suite = unittest.TestSuite()
