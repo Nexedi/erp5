@@ -1,3 +1,6 @@
+2008-03-27 ivan
+* Update MochiKit JS library to 1.4
+
 2008-03-18 fabien
 * change the autoFocus() function of the erp5.js file to give the focus to the first text input of the view.
 
