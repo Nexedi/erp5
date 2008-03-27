@@ -702,7 +702,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 #           'new_category_list: %s' % str(new_category_list))
 #       LOG("CategoryTool, setCategoryMembership", 0 ,
 #           'default_new_category_list: %s' % str(default_new_category_list))
-      self._setCategoryList(context, tuple(default_new_category_list + new_category_list))
+      self.setCategoryList(context, tuple(default_new_category_list + new_category_list))
 
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setDefaultCategoryMembership' )
@@ -1214,6 +1214,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
           result.append(context.getRelativeUrl()) # Pure category is member of itself
       return result
 
+    security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
+    def setCategoryList(self, context, value):
+       self._setCategoryList(context, value)
+       context.reindexObject()
+
     security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
     def _setCategoryList(self, context, value):
        context.categories = tuple(value)
@@ -1253,7 +1258,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             append(cat)
           else:
             requires_update = 1
-      if requires_update: self._setCategoryList(context, tuple(categories))
+      if requires_update: self.setCategoryList(context, tuple(categories))
 
     # Catalog related methods
     def updateRelatedCategory(self, category, previous_category_url, new_category_url):
@@ -1288,7 +1293,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                       previous_category_url,
                                                       new_category_url)
             category_list.append(new_category)
-          self._setCategoryList(o, category_list)
+          self.setCategoryList(o, category_list)
 
           if getattr(aq_base(o),
                     'notifyAfterUpdateRelatedContent', None) is not None:

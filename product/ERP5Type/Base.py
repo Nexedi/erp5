@@ -2292,8 +2292,7 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
   def setCategoryList(self, path_list):
-    self._setCategoryList(path_list)
-    self.reindexObject()
+    self.portal_categories.setCategoryList(self, path_list)
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
   def _setCategoryList(self, path_list):
