@@ -82,6 +82,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_connection.manage_test(sql)
     self._catch_log_errors()
 
+    # remove default predicate which matches anything
+    content_type_registry = portal.content_type_registry
+    if 'any' in content_type_registry.predicate_ids:
+      content_type_registry.removePredicate('any')
+      get_transaction().commit()
+
   def beforeTearDown(self):
     """Remove objects created tests."""
     pw = self.getWorkflowTool()
