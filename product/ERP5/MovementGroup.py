@@ -266,22 +266,26 @@ class CausalityAssignmentMovementGroup(RootMovementGroup):
   """
 
   def addCausalityToEdit(self, movement):
-    order_movement = movement.getOrderValue()
+    parent = movement
+    # Go upper into the simulation tree in order to find an order link
+    while parent.getOrderValue() is None and not(parent.isRootAppliedRule()):
+      parent = parent.getParentValue()
+    order_movement = parent.getOrderValue()
     if order_movement is not None:
       causality = self.getGroupEditDict().get('causality', [])
       order_movement_url = order_movement.getRelativeUrl()
       if order_movement_url not in causality:
         causality.append(order_movement_url)
         self.setGroupEdit(causality_list=causality)
-  
+
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.addCausalityToEdit(movement)
-    
+
   def test(self, movement):
     self.addCausalityToEdit(movement)
     return 1
-    
+
 allow_class(CausalityAssignmentMovementGroup)
 
 class CausalityMovementGroup(RootMovementGroup):
