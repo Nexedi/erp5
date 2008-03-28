@@ -40,6 +40,7 @@ from Products.ERP5Type.tests.utils import installRealClassTool
 from Products.ERP5Type.Utils import removeLocalPropertySheet
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
+from AccessControl import Unauthorized
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 
@@ -1763,6 +1764,65 @@ class TestPropertySheet:
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
     
+    def test_category_accessor_to_unaccessible_documents(self):
+      # Category Accessors raises Unauthorized when you try to access objects
+      # you cannot Access, unless you explictly pass checked_permission=
+
+      region_category = self.getPortal().portal_categories.region
+      beta_id = "beta"
+      beta_title = "Beta System"
+      beta = region_category.newContent(
+              portal_type = "Category",
+              id =          beta_id,
+              title =       beta_title, )
+      beta_path = beta.getCategoryRelativeUrl()
+
+      beta.manage_permission('View', roles=[], acquire=0)
+      beta.manage_permission('Access contents information', roles=[], acquire=0)
+      # with this security setting, it's not possible to access "beta":
+      self.assertRaises(Unauthorized,
+          region_category.restrictedTraverse, "beta")
+
+      gamma_id = "gamma"
+      gamma_title = "Gamma System"
+      gamma = region_category.newContent(
+              portal_type = "Category",
+              id =          gamma_id,
+              title =       gamma_title, )
+      gamma_path = gamma.getCategoryRelativeUrl()
+
+      # Make sure categories are reindexed
+      get_transaction().commit()
+      self.tic()
+
+      # Create a new person, and associate it to beta and gamma.
+      module = self.getPersonModule()
+      foo = module.newContent(portal_type='Person', title='Foo')
+      foo.setRegionValueList((beta, gamma))
+
+      # getRegionList returns relative URLs, no security checks are applied
+      self.assertEquals([beta_path, gamma_path],
+                        foo.getRegionList())
+      self.assertEquals([gamma_path],
+          foo.getRegionList(checked_permission='View'))
+      
+      # getRegionValueList raises Unauthorized if document is related to
+      # private documents (as always, unless you pass checked_permission)
+      self.assertRaises(Unauthorized, foo.getRegionValueList)
+      self.assertRaises(Unauthorized, foo.getRegionValueSet)
+      self.assertEquals([gamma],
+          foo.getRegionValueList(checked_permission='View'))
+
+      # same for property accessors 
+      self.assertRaises(Unauthorized, foo.getRegionTitleList)
+      self.assertRaises(Unauthorized, foo.getRegionTitleSet)
+      self.assertEquals(["Gamma System"],
+          foo.getRegionTitleList(checked_permission='View'))
+
+      # same for default accessors
+      self.assertRaises(Unauthorized, foo.getRegionValue)
+      self.assertRaises(Unauthorized, foo.getRegionTitle)
+
     def test_list_accessors(self):
       self._addProperty('Person', '''{'id': 'dummy',
                                       'type': 'lines',

@@ -2007,13 +2007,7 @@ class Base( CopyContainer,
     ref_list = []
     for path in self._getAcquiredCategoryMembershipList(id, base=1,
                                                 spec=spec,  filter=filter, **kw):
-      try:
-        value = self._getCategoryTool().resolveCategory(path)
-        if value is not None: ref_list.append(value)
-      except ConflictError:
-        raise
-      except:
-        LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
+      ref_list.append(self._getCategoryTool().resolveCategory(path))
     return ref_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 
