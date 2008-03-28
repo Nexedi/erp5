@@ -757,10 +757,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         keyword_type = self.getPropertyType(subnode)
         # This is the case where the property is a list
         keyword = str(subnode.nodeName)
-        if len(subnode.childNodes) > 0: # We check that this tag is not empty
-          data = subnode.childNodes[0].data
-        else:
-          data = None
+        data = None
+        while subnode.hasChildNodes(): # We check that this tag is not empty
+          subnode = subnode.firstChild
+          if subnode.nodeType == subnode.TEXT_NODE:
+            data = subnode.data
         args[keyword] = data
         #if args.has_key(keyword):
         #  LOG('newObject',0,'data: %s' % str(args[keyword]))
