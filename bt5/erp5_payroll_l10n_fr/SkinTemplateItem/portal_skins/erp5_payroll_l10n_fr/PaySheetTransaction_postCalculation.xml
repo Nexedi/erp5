@@ -78,8 +78,8 @@ new_cell = {\'category_list\' : [\'tax_category/employee_share\',],\n
 \n
 pay_sheet_line = context.createPaySheetLine(\\\n
           title     = \'total employee contributions\',\n
-          res       = \'payroll_service_module/total_employee_contributions\',\n
-          desc      = \'this line permit to calculate the sum of the employer\'\n
+          resource  = \'payroll_service_module/total_employee_contributions\',\n
+          description = \'this line permit to calculate the sum of the employer\'\n
                       \' share and permit to calculate the net salary\',\n
           cell_list = [new_cell],)\n
 </string> </value>
