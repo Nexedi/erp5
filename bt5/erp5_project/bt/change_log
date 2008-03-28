@@ -1,3 +1,6 @@
+2008-03-28 Yusei
+* Copy task's destination_decision value to task report.
+
 2008-03-12 Fabien
 * associate Requirement Document to a validation workflow.
 * set role acquisition to 0

@@ -83,6 +83,7 @@ if packing_list.getSimulationState() == \'draft\':\n
     delivery_mode=related_order.getDeliveryMode(),\n
     incoterm=related_order.getIncoterm(),\n
     source_administration_value=related_order.getSourceAdministrationValue(),\n
+    destination_decision_value=related_order.getDestinationDecisionValue(),\n
     title=related_order.getTitle()\n
   )\n
 \n
