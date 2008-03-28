@@ -134,7 +134,13 @@ class Message:
     self.traceback = None
     self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
-    # Store REQUEST Info ?
+    # Store REQUEST Info
+    request = getattr(obj, 'REQUEST', None)
+    if request is not None:
+      self.request_info = dict(
+        SERVER_URL=request.other['SERVER_URL'],
+        VirtualRootPhysicalPath=request.other.get('VirtualRootPhysicalPath'),
+        _script=list(request._script))
 
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
@@ -805,7 +811,18 @@ class ActivityTool (Folder, UniqueObject):
         if parents is None:
           warn('CMFActivity.ActivityTool.invoke: PARENTS is not defined in REQUEST. It should only happen in unit tests.')
           request['PARENTS'] = self.aq_chain[:]
-        new_request_container = request_container.__class__(REQUEST=request.clone())
+        
+        # restore request information
+        new_request = request.clone()
+        request_info = getattr(message, 'request_info', None)
+        if request_info is not None:
+          new_request.other['SERVER_URL'] = request_info['SERVER_URL']
+          virtual_root_path = request_info.get('VirtualRootPhysicalPath')
+          if virtual_root_path:
+            new_request.other['VirtualRootPhysicalPath'] = virtual_root_path
+          new_request._script = request_info['_script']
+
+        new_request_container = request_container.__class__(REQUEST=new_request)
         # Recreate acquisition chain.
         my_self = new_request_container
         base_chain.reverse()

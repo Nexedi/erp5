@@ -2798,6 +2798,45 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckSerializationTag('SQLQueue')
 
+  def test_108_testAbsoluteUrl(self):
+    # Tests that absolute_url works in activities. The URL generation is based
+    # on REQUEST information when the method was activated.
+    request = self.portal.REQUEST
+
+    request.setServerURL('http', 'test.erp5.org', '9080')
+    request.other['PARENTS'] = [self.portal.organisation_module]
+    request.setVirtualRoot('virtual_root')
+
+    calls = []
+    def checkAbsoluteUrl(self):
+      calls.append(self.absolute_url())
+    Organisation.checkAbsoluteUrl = checkAbsoluteUrl
+
+    try:
+      o = self.portal.organisation_module.newContent(
+                    portal_type='Organisation', id='test_obj')
+      self.assertEquals(o.absolute_url(),
+          'http://test.erp5.org:9080/virtual_root/test_obj')
+      o.activate().checkAbsoluteUrl()
+      
+      # Reset server URL and virtual root before executing messages.
+      # This simulates the case of activities beeing executed with different
+      # REQUEST, such as TimerServer.
+      request.setServerURL('https', 'anotherhost.erp5.org', '443')
+      request.other['PARENTS'] = [self.app]
+      request.setVirtualRoot('')
+      # obviously, the object url is different
+      self.assertEquals(o.absolute_url(),
+          'https://anotherhost.erp5.org/%s/organisation_module/test_obj'
+           % self.portal.getId())
+
+      # but activities are executed using the previous request information
+      self.flushAllActivities(loop_size=1000)
+      self.assertEquals(calls, ['http://test.erp5.org:9080/virtual_root/test_obj'])
+    finally:
+      delattr(Organisation, 'checkAbsoluteUrl')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
