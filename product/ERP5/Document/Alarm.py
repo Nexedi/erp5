@@ -432,10 +432,8 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     notification_tool = getToolByName(self, 'portal_notifications')
     candidate_list = self.getDestinationValueList()
-    if candidate_list:
-      recipient = candidate_list
-    else:
-      recipient = None
+    if not candidate_list:
+      candidate_list = None
     if self.sense():
       prefix = 'ERROR'
     else:
