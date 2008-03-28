@@ -1,1 +1,6 @@
+Accounting Transaction | AccountingTransaction
+Balance Transaction | AccountingTransaction
 Cash Register | BankAccount
+Payment Transaction | AccountingTransaction
+Purchase Invoice Transaction | AccountingTransaction
+Sale Invoice Transaction | AccountingTransaction

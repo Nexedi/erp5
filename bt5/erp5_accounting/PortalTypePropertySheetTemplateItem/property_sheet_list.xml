@@ -1,5 +1,20 @@
 <property_sheet_list>
+ <portal_type id="Accounting Transaction">
+  <item>AccountingTransaction</item>
+ </portal_type>
+ <portal_type id="Balance Transaction">
+  <item>AccountingTransaction</item>
+ </portal_type>
  <portal_type id="Cash Register">
   <item>BankAccount</item>
+ </portal_type>
+ <portal_type id="Payment Transaction">
+  <item>AccountingTransaction</item>
+ </portal_type>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>AccountingTransaction</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>AccountingTransaction</item>
  </portal_type>
 </property_sheet_list>
