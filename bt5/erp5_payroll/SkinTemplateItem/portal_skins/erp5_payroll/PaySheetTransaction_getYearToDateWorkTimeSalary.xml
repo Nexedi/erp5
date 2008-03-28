@@ -76,6 +76,7 @@ search_params = \\\n
    \'portal_type\'         : \'Pay Sheet Transaction\',\n
    \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
    \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
+   \'delivery.destination_section_uid\' : context.getDestinationSectionUid(),\n
    \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
   }\n
 \n
@@ -85,6 +86,11 @@ yearly_work_time = 0\n
 for paysheet in paysheet_list:\n
   annotation_line = paysheet.getAnnotationLineFromReference(\\\n
       reference=\'work_time_annotation_line\')\n
+  if annotation_line is None:\n
+    annotation_line = getattr(paysheet, \'work_time_annotation_line\', None)\n
+  if annotation_line is None:\n
+    raise ValueError, "Paysheet %s has no Annotation Line with reference work_time_annotation_line"\\\n
+                             % paysheet.getRelativeUrl()\n
   nb_heures = annotation_line.getQuantity()\n
   yearly_work_time += nb_heures\n
 \n
@@ -99,6 +105,12 @@ return yearly_work_time\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -145,6 +157,9 @@ return yearly_work_time\n
                             <string>_getiter_</string>
                             <string>paysheet</string>
                             <string>annotation_line</string>
+                            <string>None</string>
+                            <string>getattr</string>
+                            <string>ValueError</string>
                             <string>nb_heures</string>
                             <string>_inplacevar_</string>
                           </tuple>
