@@ -127,7 +127,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
     else:\n
       specific_reference = transaction.getDestinationReference()\n
     displayed_transaction[transaction.getUid()] = 1\n
-    title = mvt.getTitle() or transaction.getTitle()\n
+    title = mvt.hasTitle() and mvt.getTitle() or transaction.getTitle()\n
     date = brain.date\n
   else:\n
     specific_reference = \'\'\n
