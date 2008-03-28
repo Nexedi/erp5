@@ -436,7 +436,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     if self.sense():
       prefix = 'ERROR'
     else:
-      if notification_mode != 'always'
+      if notification_mode != 'always':
         return
       prefix = 'INFO'
     notification_tool = getToolByName(self, 'portal_notifications')
