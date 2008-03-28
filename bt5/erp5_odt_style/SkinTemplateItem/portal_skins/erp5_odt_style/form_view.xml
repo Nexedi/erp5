@@ -213,6 +213,9 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
+    <style:style style:name="inline-graphic" style:family="graphic" style:parent-style-name="Graphics">\n
+       <style:graphic-properties style:run-through="foreground" style:wrap="none" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:horizontal-pos="center" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0cm 0cm 0cm 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>\n
+    </style:style>\n
   </office:automatic-styles>\n
   <office:body>\n
     <office:text>\n
@@ -304,7 +307,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
 \n
      <text:p text:style-name=\'field-content-center\'\n
              tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
-        <office:include_img tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+        <office:include_img style="inline-graphic"\n
+                            tal:attributes="width python: (size and size[0] or 100) / 20.;\n
                                             path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
      </text:p>\n
     </tal:block>\n
@@ -329,7 +333,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
     <tal:block tal:condition="python: field_type == \'ImageField\'">\n
      <text:p text:style-name=\'field-content\'\n
              tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
-        <office:include_img tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+        <office:include_img style="inline-graphic"\n
+                            tal:attributes="width python: (size and size[0] or 100) / 20.;\n
                                             path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
      </text:p>\n
     </tal:block>\n
