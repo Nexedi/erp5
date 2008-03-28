@@ -362,7 +362,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       if result.severity > result.INFO:
         return True
       # This is the default case
-      if getattr(result, 'result'):
+      if getattr(result, 'result', False):
         return True
 
     return False
