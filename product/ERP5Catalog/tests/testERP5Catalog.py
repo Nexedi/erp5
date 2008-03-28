@@ -2080,36 +2080,36 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_ignore_empty_string(self, quiet=quiet, run=run_all_test):
     if not run: return  
     # ERP5Catalog ignore empty strings by default
-    doc_with_title = self._makeOrganisation(title='X')
-    doc_with_empty_title = self._makeOrganisation(title='')
+    doc_with_description = self._makeOrganisation(description='X')
+    doc_with_empty_description = self._makeOrganisation(description='')
     ctool = self.getCatalogTool()
     def searchResults(**kw):
       kw['portal_type'] = 'Organisation'
       return set([x.getObject() for x in ctool.searchResults(**kw)])
     
-    # title='' is ignored
-    self.assertEquals(set([doc_with_empty_title, doc_with_title]),
-                      searchResults(title=''))
+    # description='' is ignored
+    self.assertEquals(set([doc_with_empty_description, doc_with_description]),
+                      searchResults(description=''))
     # unless we exlicitly say we don't want to ignore empty strings
-    self.assertEquals(set([doc_with_empty_title]),
-                      searchResults(ignore_empty_string=0, title=''))
+    self.assertEquals(set([doc_with_empty_description]),
+                      searchResults(ignore_empty_string=0, description=''))
 
   def test_ignore_empty_string_related_key(self):
     # ERP5Catalog ignore empty strings by default, also on related keys
-    region_with_empty_title = self.portal.portal_categories.region.newContent(
-                                        portal_type='Category', title='')
-    doc_with_empty_region_title = self._makeOrganisation(title='X',
-                            region_value=region_with_empty_title)
-    doc_without_region = self._makeOrganisation(title='')
+    region_with_empty_description = self.portal.portal_categories.region.newContent(
+                                        portal_type='Category', description='')
+    doc_with_empty_region_description = self._makeOrganisation(
+                            region_value=region_with_empty_description)
+    doc_without_region = self._makeOrganisation()
     ctool = self.getCatalogTool()
     def searchResults(**kw):
       kw['portal_type'] = 'Organisation'
       return set([x.getObject() for x in ctool.searchResults(**kw)])
     
-    self.assertEquals(set([doc_with_empty_region_title, doc_without_region]),
-                      searchResults(region_title=''))
-    self.assertEquals(set([doc_with_empty_region_title]),
-        searchResults(ignore_empty_string=0, region_title=''))
+    self.assertEquals(set([doc_with_empty_region_description, doc_without_region]),
+                      searchResults(region_description=''))
+    self.assertEquals(set([doc_with_empty_region_description]),
+        searchResults(ignore_empty_string=0, region_description=''))
 
   def test_complex_query(self, quiet=quiet, run=run_all_test):
     # Make sure that complex query works on real environment.
