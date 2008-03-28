@@ -1,3 +1,9 @@
+2008-03-28 Yusei
+* Removed causality from acquired base categories on destination_administration,
+destination_decision, destination_payment,
+source_administration, source_decision,
+source_payment.
+
 2008-03-27 Kazuhiko
 * clear order/delivery on related simulation movements only when its value is the deleted movement.
 
