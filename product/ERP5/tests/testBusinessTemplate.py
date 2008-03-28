@@ -83,8 +83,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self._catch_log_errors()
 
     # remove default predicate which matches anything
-    content_type_registry = portal.content_type_registry
-    if 'any' in content_type_registry.predicate_ids:
+    content_type_registry = getattr(portal, 'content_type_registry', None)
+    if (content_type_registry is not None and
+        'any' in content_type_registry.predicate_ids):
       content_type_registry.removePredicate('any')
       get_transaction().commit()
 
