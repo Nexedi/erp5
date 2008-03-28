@@ -64,7 +64,6 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Reference
                       , PropertySheet.Comment
                       , PropertySheet.PaymentCondition
-                      , PropertySheet.AccountingTransaction
                       )
     
     def hasSourceSectionAccounting(self):
@@ -113,7 +112,7 @@ class AccountingTransaction(Delivery):
         if prop:
           text_list.append(str(prop))
       return ' '.join(text_list)
-
+  
 # Compatibility
 # It may be necessary to create an alias after removing the Transaction class
 # Products.ERP5Type.Document.Transaction = AccountingTransaction
