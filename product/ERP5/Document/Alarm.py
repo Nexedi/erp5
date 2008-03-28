@@ -430,14 +430,19 @@ class Alarm(XMLObject, PeriodicityMixin):
     to the system address if nothing was defined or to 
     notify all agents defined on the alarm if specified.
     """
+    notification_mode = self.getAlarmNotificationMode()
+    if notification_mode == 'never':
+      return
+    if self.sense():
+      prefix = 'ERROR'
+    else:
+      if notification_mode != 'always'
+        return
+      prefix = 'INFO'
     notification_tool = getToolByName(self, 'portal_notifications')
     candidate_list = self.getDestinationValueList()
     if not candidate_list:
       candidate_list = None
-    if self.sense():
-      prefix = 'ERROR'
-    else:
-      prefix = 'INFO'
     notification_tool.sendMessage(recipient=candidate_list, 
                 subject='[%s] ERP5 Alarm Notification: %s' %
                   (prefix, self.getTitle()),
