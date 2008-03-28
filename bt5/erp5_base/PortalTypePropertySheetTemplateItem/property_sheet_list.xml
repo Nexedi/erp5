@@ -1,4 +1,10 @@
 <property_sheet_list>
+ <portal_type id="Organisation">
+  <item>DefaultImage</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>DefaultImage</item>
+ </portal_type>
  <portal_type id="Query">
   <item>TextDocument</item>
  </portal_type>
