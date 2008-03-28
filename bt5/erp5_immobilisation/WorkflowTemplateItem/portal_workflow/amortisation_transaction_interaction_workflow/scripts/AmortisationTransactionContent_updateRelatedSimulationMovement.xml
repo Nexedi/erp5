@@ -66,8 +66,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>line = state_change[\'object\']\n
+# Clean simulation\n
 for simulation_movement in line.getDeliveryRelatedValueList():\n
-  simulation_movement.edit(delivery=\'\')\n
+  if simulation_movement.getDelivery() == line.getRelativeUrl():\n
+    simulation_movement.setDelivery(None)\n
 </string> </value>
         </item>
         <item>
@@ -128,6 +130,7 @@ for simulation_movement in line.getDeliveryRelatedValueList():\n
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>simulation_movement</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
