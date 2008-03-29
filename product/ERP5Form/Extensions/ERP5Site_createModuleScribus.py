@@ -148,7 +148,8 @@ def ERP5Site_createModuleScribus(self,
   # take the input ScribusFile and read the content
   xml_string = ScribusParser.getContentFile(import_scribus_file)
   if xml_string == None:
-    print "no field was defined in the Scribus file"
+    LOG('ERP5Site_createModuleScribus', 0, 
+        'no field was defined in the Scribus file')
     pass
   else:
 
@@ -156,7 +157,8 @@ def ERP5Site_createModuleScribus(self,
     # get string from ScribusFile content
     output_string = str(xml_string)
 
-    print " createmodule > ScribusParser.getXmlObjectPropertiesDict"
+    LOG('ERP5Site_createModuleScribus', 0, 
+        'createmodule > ScribusParser.getXmlObjectPropertiesDict')
     # building a tree from the output string elaborated from the
     # original Scribus file.
     # create a list of pages containing a dict of all the page_objects
@@ -168,10 +170,12 @@ def ERP5Site_createModuleScribus(self,
     #pdb.set_trace()
     (text_field_list, keep_page, page_gap) = \
         ScribusParser.getXmlObjectsPropertiesDict(xml_string)
-    print " createmodule < ScribusParser.getXmlObjectPropertiesDict\n"
+    LOG('ERP5Site_createModuleScribus', 0, 
+        'createmodule < ScribusParser.getXmlObjectPropertiesDict')
 
 
-    print " createmodule > ScribusParser.getPropertiesConversionDict"
+    LOG('ERP5Site_createModuleScribus', 0, 
+        'createmodule > ScribusParser.getPropertiesConversionDict')
     # parsing text_field_list created from the getXmlObjectsPropertiesDict
     # to extract all the usefull properties and organize elements. Then check
     # attributes to get properties values.
@@ -179,12 +183,14 @@ def ERP5Site_createModuleScribus(self,
     widget_properties = \
         ScribusParser.getPropertiesConversionDict(text_field_list)
 
-    print " createmodule < ScribusParser.getPropertiesConversionDict\n"
+    LOG('ERP5Site_createModuleScribus', 0, 
+        'createmodule < ScribusParser.getPropertiesConversionDict')
 
 
     # testing if final rendering is PDF-like
     if option_html == 1:
-      print " createmodule > generating background"
+      LOG('ERP5Site_createModuleScribus', 0, 
+          'createmodule > generating background')
       ## BACKGROUND GENERATOR
       # extract background pictures from the PDF document, convert them in the right
       # format (JPG) and add them to the skin folder as Image objects.
@@ -196,9 +202,12 @@ def ERP5Site_createModuleScribus(self,
 
       page_width, page_height = image_size
 
-      print "   height = " + str(page_height)
-      print "   width = " + str(page_width)
-      print " createmodule < background generated\n"
+      LOG('ERP5Site_createModuleScribus', 0,
+          '   height = %s' % str(page_height))
+      LOG('ERP5Site_createModuleScribus', 0,
+          '   width = %s' % str(page_width))
+      LOG('ERP5Site_createModuleScribus', 0,
+          'createmodule < background generated')
 
     # add field from OrderedWidgetProperties in ERP5 Module created
     # radiofield_widget_properties = {}
@@ -216,7 +225,8 @@ def ERP5Site_createModuleScribus(self,
     properties_css_dict = ManageCSS.setInit()
 
     # BEGINING DATA INTERPRETATION
-    print " createmodule > begining data interpretation"
+    LOG('ERP5Site_createModuleScribus', 0, 
+        'createmodule > begining data interpretation')
     #iterating pages
     #print "   %s" % int(global_properties['page'])
     for page_iterator in range(int(global_properties['page'])):
@@ -290,7 +300,8 @@ def ERP5Site_createModuleScribus(self,
 
 
   # CREATING OBJECT FORM AND MANAGING GROUPS
-  print " createmodule > generate fields in ERP Form"
+  LOG('ERP5Site_createModuleScribus', 0, 
+      'createmodule > generate fields in ERP Form')
   # CREATING ERP5 OBJECT FORM
   # create ERP5 Form to handle object view
   ManageFiles.setERP5Form(factory,
@@ -315,12 +326,14 @@ def ERP5Site_createModuleScribus(self,
                                      option_html
                                      )
 
-  print " createmodule < fields created in ERP5 Form\n"
+  LOG('ERP5Site_createModuleScribus', 0, 
+      'createmodule < fields created in ERP5 Form')
 
 
 
   # PDF IMPORTATION AND TALES GENERATION
-  print " createmodule > managing PDF settings"
+  LOG('ERP5Site_createModuleScribus', 0, 
+      'createmodule > managing PDF settings')
   # read all the content of the PDF document and save it in the skin_folder
   # as a PDFForm. then iterate the fields to get the corresponding TALES
   # expressions and save them in the PDFForm.
@@ -330,13 +343,14 @@ def ERP5Site_createModuleScribus(self,
                          object_title,
                          pdf_file=import_pdf_file
                          )
-  print " createmodule < PDF settings managed\n"
+  LOG('ERP5Site_createModuleScribus', 0, 'createmodule < PDF settings managed')
 
 
 
   # PROPERTYSHEET AND DOCUMENT CREATION
 
-  print " createmodule > PropertySheet and Document creation"
+  LOG('ERP5Site_createModuleScribus', 0, 
+      'createmodule > PropertySheet and Document creation')
   # recover personal properties and save them in a PropertySheet
   # then create the Document related to the object
   ManageFiles.setPropertySheetAndDocument(global_properties,
@@ -350,7 +364,8 @@ def ERP5Site_createModuleScribus(self,
   initializeLocalPropertySheetRegistry()
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
-  print " createmodule < PropertySheet and Document imported\n"
+  LOG('ERP5Site_createModuleScribus', 0, 
+      'createmodule < PropertySheet and Document imported')
 
 
   # OBJECT PORTAL TYPE
