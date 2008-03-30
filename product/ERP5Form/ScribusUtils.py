@@ -345,14 +345,14 @@ class ManageModule:
           # field_nb is already used by another field. this can appen
           # when there are several pages in the document. In such case
           # the script find automatically the closest available value.
-          LOG('ManageModule', 0, 
+          LOG('ManageModule', ERROR, 
               'can not add %s to dict : %s already used by %s ' % \
               (field_id, field_nb, field_nb_dict[field_nb]))
           field_nb = field_nb + 1
           while field_nb in field_nb_dict.keys():
             # trying next value
             field_nb = field_nb + 1
-        LOG('ManageModule', 0, '  add %s to %s' % (field_id, field_nb))
+        LOG('ManageModule', INFO, '  add %s to %s' % (field_id, field_nb))
         # value is available, no problem to link field_id to this field_nb
         field_nb_dict[field_nb] = field_id
 
@@ -556,7 +556,7 @@ class ManageFiles:
 
               else:
                 TALES = "python: here.getProperty('" + cell_name[3:] +"')"
-            LOG('ManageFiles', 0, '   %s > %s ' % (cell_name, TALES))
+            LOG('ManageFiles', INFO, '   %s > %s ' % (cell_name, TALES))
             c.setCellTALES(cell_name, TALES)
 
   def getPDFFile(self, file_descriptor):
