@@ -731,9 +731,6 @@ class ERP5TypeTestCase(PortalTestCase):
               # Quit the test in order to get a clean site
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
-              get_transaction().commit()
-              ZopeTestCase.close(app)
-              if not quiet:
                 ZopeTestCase._print('Data.fs created\n')
               get_transaction().commit()
               ZopeTestCase.close(app)
