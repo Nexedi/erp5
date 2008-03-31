@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>StringField</string>
-        </tuple>
-        <none/>
+        <global name="StringField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_webmaster</string> </value>
+            <value> <string>my_layout_configuration_form_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -239,11 +236,11 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Webmaster User ID</string> </value>
+                    <value> <string>Configuration Form ID</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
