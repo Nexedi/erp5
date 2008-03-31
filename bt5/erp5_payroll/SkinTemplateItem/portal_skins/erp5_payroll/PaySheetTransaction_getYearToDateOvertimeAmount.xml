@@ -81,7 +81,7 @@ params = {\n
     \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
     \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
     \'precision\' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),\n
-    \'resource_category\' : [\'base_amount/over_time\',]\n
+    \'resource_category\' : [\'base_amount/overtime\',]\n
     #\'src__\' : 1\n
   }\n
 \n
@@ -96,6 +96,12 @@ return portal_simulation.getInventoryAssetPrice(**params)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
