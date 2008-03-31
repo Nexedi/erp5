@@ -33,7 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
 
-class TestCreateModuleScribus(ERP5TypeTestCase):
+class TestScribusUtils(ERP5TypeTestCase):
   username = 'rc'
 
   def getTitle(self):
@@ -77,6 +77,36 @@ class TestCreateModuleScribus(ERP5TypeTestCase):
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
 
 
+  def test_ModuleCreationWithBackground(self):
+    self.portal.ERP5Site_createModuleScribus(
+              self,
+              option_html=1,
+              desired_width=800,
+              desired_height=1132,
+              module_portal_type="Dummy Module",
+              portal_skins_folder="erp5_test",
+              object_portal_type="Dummy",
+              object_title="Dummy",
+              module_id="dummy_module",
+              module_title="Dummy Module Title",
+              import_pdf_file=self.makeFileUpload('test_background.pdf'),
+              import_scribus_file=self.makeFileUpload('test_background.sla'),)
+
+    self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_test", None), None)
+    self.assertEquals("Dummy Module Title",
+                      self.portal.dummy_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
+
+    # test the background existense
+    skin_folder = self.portal.portal_skins._getOb("erp5_test", None)
+    background_object = getattr(skin_folder,'Dummy_background_0', None)
+    self.assertNotEquals(background_object, None)
+
+
   def test_ModuleListBox(self):
     self.portal.ERP5Site_createModuleScribus(
                   module_portal_type="Dummy Module",
@@ -103,8 +133,50 @@ class TestCreateModuleScribus(ERP5TypeTestCase):
     self.portal.changeSkin(None)
     self.portal.dummy_module.DummyModule_viewDummyList()
 
+  def test_SimpleModuleUpdate(self):
+    # first module creation:
+    self.portal.ERP5Site_createModuleScribus(
+                  module_id="dummy_module",
+                  module_portal_type="Dummy Module",
+                  module_title="Dummy Module Title",
+                  import_pdf_file=self.makeFileUpload('test_1.pdf'),
+                  import_scribus_file=self.makeFileUpload('test_1.sla'),
+                  portal_skins_folder="erp5_test",
+                  object_title="Dummy",
+                  object_portal_type="Dummy")
+
+    self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_test", None), None)
+    self.assertEquals("Dummy Module Title",
+                      self.portal.dummy_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
+
+    # check that a field with title text_1 (present in the sla file) has been created
+    # in the form
+    self.assertNotEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
+      'text_1', None), None)
+
+
+    # Update the ERP5Form, scribus, PDFForm, css and background picture
+    self.portal.ERP5Site_updateModuleScribus(
+                  self,
+                  import_pdf_file=self.makeFileUpload('test_1.pdf'),
+                  import_scribus_file=self.makeFileUpload('test_2.sla'),
+                  object_portal_type="Dummy")
+
+    # check that the modified field with title text_couscous (present in the
+    # new sla file) has been created in the form
+    self.assertNotEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
+      'text_couscous', None), None)
+    # the old field text_1 must have been removed
+    self.assertEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
+      'text_1', None), None)
+
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCreateModuleScribus))
+  suite.addTest(unittest.makeSuite(TestScribusUtils))
   return suite
