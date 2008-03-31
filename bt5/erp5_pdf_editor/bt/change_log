@@ -1,3 +1,6 @@
+2008-03-31 fabien
+* add update_module_scribus portal action that permit to update the forms of a module created using the create_module_scribus action
+
 2006-08-16 jerome
 * added missing form_render_PDFeForm
 
