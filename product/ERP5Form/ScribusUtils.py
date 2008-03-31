@@ -590,8 +590,6 @@ class ManageFiles:
 
     # opening new file on HDD to save created background image content
     temp_image = NamedTemporaryFile()
-    # this is made to have a name not yet used by the system
-    temp_image_name = temp_image.name + background_format
 
     # going to the begining of the input file
     pdf_file.seek(0)
@@ -599,35 +597,44 @@ class ManageFiles:
     temp_pdf.write(pdf_file.read())
     temp_pdf.seek(0)
      
+    def makeImageList():
+      background_image_list = []
+      # convert add a '-N' string a the end of the file name if there is more
+      # than one page in the pdf file (where N is the number of the page,
+      # begining at 0)
+      if os.path.exists(temp_image.name):
+        # thats mean there's only one page in the pdf file
+        background_image_list.append(temp_image.name)
+      else:
+        # in the case of multi-pages pdf file, we must find all files
+        image_number = 0
+        while os.path.exists(temp_image.name + '-%s' % image_number):
+          background_image_list.append(temp_image.name + '-%s' % image_number)
+          image_number += 1
+      return background_image_list
+
     try:
       result = commands.getstatusoutput('convert -density %s -resize %sx%s '\
           '%s %s' % (resolution, desired_width, desired_height, temp_pdf.name,
-          background_format + ':' + temp_image_name))
+          background_format + ':' + temp_image.name))
 
       # check that the command has been done succeful
       if result[0] != 0:
         LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'convert command'\
             'failed with the following error message : \n%s' % result[1])
-        temp_image.close()
+
+        # delete all images created in this method before raise an error
+        background_image_list = makeImageList()
+        for background_image in background_image_list:
+          if os.path.exists(background_image):
+            os.remove(background_image)
+
         raise ValueError, 'Error: convert command failed with the following'\
                           'error message : \n%s' % result[1]
     finally:
       temp_pdf.close()
     
-    background_image_list = []
-    # convert add a '-N' string a the end of the file name if there is more
-    # than one page in the pdf file (where N is the number of the page,
-    # begining at 0)
-    if os.path.exists(temp_image_name):
-      # thats mean there's only one page in the pdf file
-      background_image_list.append(temp_image_name)
-    else:
-      # in the case of multi-pages pdf file, we must find all files
-      image_number = 0
-      while os.path.exists(temp_image_name + '-%s' % image_number):
-        background_image_list.append(temp_image_name + '-%s' % image_number)
-        image_number += 1
-      
+    background_image_list = makeImageList()
     if not len(background_image_list):
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
           'image found')
@@ -654,14 +661,16 @@ class ManageFiles:
       image_number += 1
 
       # remove the file from the system
-      result = commands.getstatusoutput('rm -f %s' % background_image)
+      if os.path.exists(background_image):
+        os.remove(background_image)
 
     size_x = int(real_size_x)
     size_y = int(real_size_y)
     LOG('ScribusUtils.setBackgroundPictures :', INFO, 
         'return size : x=%s, y=%s' % (size_x, size_y))
    
-    temp_image.close()
+    if os.path.exists(temp_image.name):
+      temp_image.close()
     return (size_x, size_y)
 
   security.declarePublic('getPageattributes')
@@ -694,10 +703,31 @@ class ManageFiles:
     original_result= commands.getstatusoutput('identify %s' % \
         (ScribusUtilsOriginaltempsPPMName + '*'))
 
-    # this line permit to delete tempory files (about 24 Mo for each file !)
-    # it's temporary because this function mus be rewrited or deleted
+    def makePPMFileList():
+      ppm_list = []
+      # pdftoppm add a '-N' string a the end of the file name if there is more
+      # than one page in the pdf file (where N is the number of the page,
+      # begining at 1)
+      if os.path.exists(ScribusUtilsOriginaltempsPDFName):
+        # thats mean there's only one page in the pdf file
+        ppm_list.append(ScribusUtilsOriginaltempsPDFName)
+      else:
+        # in the case of multi-pages pdf file, we must find all files
+        image_number = 1
+        while os.path.exists(ScribusUtilsOriginaltempsPDFName + '-%s' %\
+            image_number):
+          ppm_list.append(ScribusUtilsOriginaltempsPDFName + '-%s' % \
+              image_number)
+          image_number += 1
+      return ppm_list
+
+    # this line permit to delete tempory files (about 2.4 Mo for each file !)
+    # it's temporary because this function must be rewrited or deleted
     # (perhaps setBackgroundPictures could return attributes list)
-    ScribusUtilsOriginaltempsPPM.close()
+    ppm_list = makePPMFileList()
+    for ppm in ppm_list:
+      if os.path.exists(ppm):
+        os.remove(ppm)
 
     pg_nbr = len(original_result[1].split('\n'))
     real_size_x = {}
