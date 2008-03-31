@@ -740,13 +740,13 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                                     'proxy_flag':proxy_flag,
                                     'matched_rate':0
                                     }
-                    if not default_field_library_path in form_order:
-                        matched_append(default_field_library_path,
-                                       matched_item)
-                    if not default_field_library_path in \
-                                          perfect_matched_form_order:
-                        perfect_matched_append(default_field_library_path,
-                                               matched_item)
+
+                    if not i in [item['field_object']
+                                 for item in matched.get(default_field_library_path, ())]:
+                      matched_append(default_field_library_path, matched_item)
+                    if not i in [item['field_object']
+                                 for item in perfect_matched.get(default_field_library_path, ())]:
+                      perfect_matched_append(default_field_library_path, matched_item)
 
         id_ = field.getId()
         meta_type = field.meta_type
