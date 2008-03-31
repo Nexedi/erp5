@@ -28,6 +28,7 @@
 
 import md5
 import unittest
+import sys
 
 from random import randint
 from Testing import ZopeTestCase
@@ -1822,6 +1823,46 @@ class TestPropertySheet:
       # same for default accessors
       self.assertRaises(Unauthorized, foo.getRegionValue)
       self.assertRaises(Unauthorized, foo.getRegionTitle)
+
+
+    def test_category_accessor_to_non_existing_documents(self):
+      # tests behaviour of category accessors with relations to non existing
+      # documents.
+      region_category = self.getPortal().portal_categories.region
+      beta_id = "beta"
+      beta_title = "Beta System"
+      beta = region_category.newContent(
+              portal_type = "Category",
+              id =          beta_id,
+              title =       beta_title, )
+      beta_path = beta.getCategoryRelativeUrl()
+
+      # gamma does not exist
+
+      # Make sure categories are reindexed
+      get_transaction().commit()
+      self.tic()
+
+      # Create a new person, and associate it to beta and gamma.
+      module = self.getPersonModule()
+      foo = module.newContent(portal_type='Person', title='Foo')
+      foo.setRegionList(('beta', 'gamma'))
+
+      self.assertEquals([beta_path, 'gamma'],
+                        foo.getRegionList())
+      # using relations to non existant objects will issue a warning in
+      # event.log
+      self._catch_log_errors(ignored_level=sys.maxint)
+      self.assertEquals([beta],
+                        foo.getRegionValueList())
+      self.assertEquals([beta_title],
+                        foo.getRegionTitleList())
+      self._ignore_log_errors()
+      logged_errors = [ logrecord for logrecord in self.logged
+                        if logrecord[0] == 'CMFCategory' ]
+      self.assertEquals('Could not access object region/gamma',
+                        logged_errors[0][2])
+      
 
     def test_list_accessors(self):
       self._addProperty('Person', '''{'id': 'dummy',

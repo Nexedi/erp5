@@ -2007,7 +2007,9 @@ class Base( CopyContainer,
     ref_list = []
     for path in self._getAcquiredCategoryMembershipList(id, base=1,
                                                 spec=spec,  filter=filter, **kw):
-      ref_list.append(self._getCategoryTool().resolveCategory(path))
+      category = self._getCategoryTool().resolveCategory(path)
+      if category is not None:
+        ref_list.append(category)
     return ref_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 
