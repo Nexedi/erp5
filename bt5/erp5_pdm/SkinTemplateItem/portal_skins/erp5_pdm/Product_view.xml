@@ -53,12 +53,22 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -101,6 +111,8 @@
                         <string>my_ean13_code</string>
                         <string>my_aggregated_portal_type_list</string>
                         <string>my_required_aggregated_portal_type_list</string>
+                        <string>my_default_image_path</string>
+                        <string>my_default_image_file</string>
                       </list>
                     </value>
                 </item>

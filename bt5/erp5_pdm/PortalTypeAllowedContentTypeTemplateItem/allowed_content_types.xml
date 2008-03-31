@@ -8,6 +8,7 @@
   <item>Component</item>
  </portal_type>
  <portal_type id="Product">
+  <item>Image</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
   <item>Purchase Supply Line</item>

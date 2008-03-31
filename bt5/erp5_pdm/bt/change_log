@@ -1,3 +1,6 @@
+2008-03-31 jerome
+* Add default_image on Products.
+
 2008-02-07 alex
 * proxify some fields, use Resource_viewFieldLibrary instead of BasePdm_fieldLibrary
 * on resource, add two supply types (purchase and sale) instead of one
