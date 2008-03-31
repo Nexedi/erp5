@@ -1,3 +1,6 @@
+2008-03-31 yusei
+* Add a type based method for rewriting mail message.
+
 2008-03-17 yusei
 * Add source_project and destination_project fields for Ticket_view.
 

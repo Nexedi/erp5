@@ -65,82 +65,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  This script is called during the metadata discovery process\n
-  for each event which has been ingested through the email interface\n
-  by portal contributions. It tries to analyse the text content \n
-  to define the different event parameters.\n
+            <value> <string>miss = (None, None)\n
 \n
-  This version provides only early support.\n
+# length of portal type name must be less than 100.\n
+value_first_lowered = value[:100].lower()\n
 \n
-  TODO:\n
-  - support forwarded messages\n
-  - support incoming / outgoing messages (in releation with \n
-    Event_finishIngestion)\n
-"""\n
+if not \':\' in value_first_lowered:\n
+  return miss\n
 \n
-getResultValue = context.getPortalObject().portal_catalog.getResultValue\n
+Base_translateString = context.Base_translateString\n
+language_list = context.Localizer.get_supported_languages()\n
+translated_portal_type_list = []\n
 \n
-def getPersonList(information_text):\n
-  result = []\n
-  for recipient in information_text.split(\',\'):\n
-    if "<" in recipient:\n
-      recipient = recipient[recipient.find(\'<\') + 1:]\n
-      recipient = recipient[:recipient.find(\'>\')]\n
-    if recipient:\n
-      email = getResultValue(url_string=recipient, portal_type="Email")\n
-      if email is not None:\n
-        result.append(email.getParentValue().getRelativeUrl())\n
-  return result\n
+def addCandidateTypeName(name, portal_type):\n
+  translated_portal_type_list.append((name, portal_type))\n
+  if \' \' in name:\n
+    alternative = name.split(\' \')[0]\n
+    translated_portal_type_list.append((alternative, portal_type))\n
 \n
-content_information = context.getContentInformation()\n
-sender_list = getPersonList(content_information.get(\'From\', \'\'))\n
-to_list = getPersonList(content_information.get(\'To\', \'\'))\n
-cc_list = getPersonList(content_information.get(\'CC\', \'\'))\n
+for type_name in context.getPortalEventTypeList():\n
+  addCandidateTypeName(type_name, type_name)\n
+  for language in language_list:\n
+    translated = Base_translateString(type_name, lang=language)\n
+    if translated != type_name:\n
+      addCandidateTypeName(translated, type_name)\n
 \n
-# Build references\n
-reference_search_list = []\n
-text_search_list = []\n
-for text, prop_dict in context.getSearchableReferenceList():\n
-  if text:\n
-    text_search_list.append(text)\n
-  if prop_dict.has_key(\'reference\'):\n
-    reference_search_list.append(prop_dict[\'reference\'])\n
+for translated, type_name in translated_portal_type_list:\n
+  prefix = \'%s:\' % translated.lower()\n
+  if value_first_lowered.startswith(prefix):\n
+    return type_name, translated\n
 \n
-# Search reference ticket or project\n
-follow_up_type_list = context.getPortalProjectTypeList() + context.getPortalTicketTypeList()\n
-follow_up = None\n
-if reference_search_list:\n
-  follow_up = getResultValue(reference=reference_search_list, portal_type=follow_up_type_list)\n
-if follow_up is None and text_search_list:\n
-  follow_up = getResultValue(reference=text_search_list, portal_type=follow_up_type_list)\n
-\n
-# Find portal type\n
-subject = content_information.get(\'Subject\', \'\')\n
-body = context.asText()\n
-portal_type = None\n
-for text in (subject, body):\n
-  portal_type, matched_value = context.Base_findPortalTypeNameAndMatchedValueForEvent(text)\n
-  if portal_type is not None:\n
-    break\n
-\n
-# Build dict.\n
-result = {}\n
-if sender_list:\n
-  result[\'source_list\'] = sender_list\n
-if to_list or cc_list:\n
-  result[\'destination_list\'] = to_list + cc_list\n
-if follow_up is not None:\n
-  result[\'follow_up\'] = follow_up.getRelativeUrl()\n
-if portal_type is not None:\n
-  result[\'portal_type\'] = portal_type\n
-\n
-return result\n
-
-
-]]></string> </value>
+return miss\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -155,14 +111,8 @@ return result\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>value</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -182,35 +132,28 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>getResultValue</string>
-                            <string>getPersonList</string>
-                            <string>content_information</string>
-                            <string>sender_list</string>
-                            <string>to_list</string>
-                            <string>cc_list</string>
-                            <string>reference_search_list</string>
-                            <string>text_search_list</string>
-                            <string>_getiter_</string>
-                            <string>text</string>
-                            <string>prop_dict</string>
-                            <string>_getitem_</string>
-                            <string>follow_up_type_list</string>
+                            <string>value</string>
                             <string>None</string>
-                            <string>follow_up</string>
-                            <string>subject</string>
-                            <string>body</string>
-                            <string>portal_type</string>
-                            <string>matched_value</string>
-                            <string>result</string>
-                            <string>_write_</string>
+                            <string>miss</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>value_first_lowered</string>
+                            <string>context</string>
+                            <string>Base_translateString</string>
+                            <string>language_list</string>
+                            <string>translated_portal_type_list</string>
+                            <string>addCandidateTypeName</string>
+                            <string>_getiter_</string>
+                            <string>type_name</string>
+                            <string>language</string>
+                            <string>translated</string>
+                            <string>prefix</string>
                           </tuple>
                         </value>
                     </item>
@@ -227,7 +170,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_getPropertyDictFromContent</string> </value>
+            <value> <string>Base_findPortalTypeNameAndMatchedValueForEvent</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
