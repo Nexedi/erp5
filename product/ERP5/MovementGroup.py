@@ -272,7 +272,7 @@ class CausalityAssignmentMovementGroup(RootMovementGroup):
       parent = parent.getParentValue()
     order_movement = parent.getOrderValue()
     if order_movement is not None:
-      causality = self.getGroupEditDict().get('causality', [])
+      causality = self.getGroupEditDict().get('causality_list', [])
       order_movement_url = order_movement.getRelativeUrl()
       if order_movement_url not in causality:
         causality.append(order_movement_url)
