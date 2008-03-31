@@ -131,7 +131,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
     date = brain.date\n
   else:\n
     specific_reference = \'\'\n
-    title = mvt.getTitle() or \'\'\n
+    title = mvt.hasTitle() and mvt.getTitle() or \'\'\n
     date = None\n
 \n
   line_list.append( Object(uid=\'new_\',\n
@@ -162,6 +162,12 @@ return line_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

@@ -139,7 +139,7 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
                  debit=debit,\n
                  credit=credit,\n
                  Movement_getExplanationTitle=\n
-                            mvt.getTitle() or transaction.getTitle()))\n
+                   mvt.hasTitle() and mvt.getTitle() or transaction.getTitle()))\n
 \n
 context.REQUEST.set(\n
   \'Account_statNotGroupedAccountingTransactionList.total_debit\', total_debit)\n
