@@ -273,10 +273,15 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-  def _ingestMail(self, filename):
+  def _readTestData(self, filename):
+    """read test data from data directory."""
+    return file(os.path.join(os.path.dirname(__file__),
+                             'test_data', 'crm_emails', filename)).read()
+
+  def _ingestMail(self, filename=None, data=None):
     """ingest an email from the mail in data dir named `filename`"""
-    data = file(os.path.join(os.path.dirname(__file__),
-                  'test_data', 'crm_emails', filename)).read()
+    if data is None:
+      data=self._readTestData(filename)
     return self.portal.portal_contributions.newContent(
                     portal_type='Mail Message',
                     container_path='event_module',
@@ -334,8 +339,70 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(None, event.getFollowUp())
- 
- 
+
+  def test_portal_type_determination(self):
+    """
+    Make sure that ingested email will be correctly converted to
+    appropriate portal type by email metadata.
+    """
+    message = email.message_from_string(self._readTestData('simple'))
+    message.replace_header('subject', 'Visit:Company A')
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Visit')
+    self.assertEqual(document.getTitle(), 'Company A')
+
+    message = email.message_from_string(self._readTestData('simple'))
+    message.replace_header('subject', 'Fax:Company B')
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Fax Message')
+    self.assertEqual(document.getTitle(), 'Company B')
+
+    message = email.message_from_string(self._readTestData('simple'))
+    message.replace_header('subject', 'TEST:Company B')
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Mail Message')
+    self.assertEqual(document.getTitle(), 'TEST:Company B')
+
+    message = email.message_from_string(self._readTestData('simple'))
+    message.replace_header('subject', 'visit:Company A')
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Visit')
+    self.assertEqual(document.getTitle(), 'Company A')
+
+    message = email.message_from_string(self._readTestData('simple'))
+    message.replace_header('subject', 'phone:Company B')
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Phone Call')
+    self.assertEqual(document.getTitle(), 'Company B')
+
+    message = email.message_from_string(self._readTestData('simple'))
+    message.replace_header('subject', 'LETTER:Company C')
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Letter')
+    self.assertEqual(document.getTitle(), 'Company C')
+
+    message = email.message_from_string(self._readTestData('simple'))
+    body = message.get_payload()
+    message.set_payload('Visit:%s' % body)
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Visit')
+    self.assertEqual(document.getTextContent(), body)
+
+    message = email.message_from_string(self._readTestData('simple'))
+    body = message.get_payload()
+    message.set_payload('PHONE CALL:%s' % body)
+    data = message.as_string()
+    document = self._ingestMail(self, data=data)
+    self.assertEqual(document.portal_type, 'Phone Call')
+    self.assertEqual(document.getTextContent(), body)
+
 ## TODO:
 ##  def test_forwarder_mail(self):
 ##    # if there is a forwarded email, import the forwarded email
