@@ -609,7 +609,8 @@ class ManageFiles:
         LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'convert command'\
             'failed with the following error message : \n%s' % result[1])
         temp_image.close()
-        raise
+        raise ValueError, 'Error: convert command failed with the following'\
+                          'error message : \n%s' % result[1]
     finally:
       temp_pdf.close()
     
@@ -631,7 +632,8 @@ class ManageFiles:
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
           'image found')
       temp_image.close()
-      raise
+      raise ValueError, 'Error: ScribusUtils.setBackgroundPictures : '\
+                        'no background'
 
     # get the real size of the first image
     # this could be usefull if the user only defined one dimention
