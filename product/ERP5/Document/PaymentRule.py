@@ -33,14 +33,11 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
 
-from zLOG import LOG
+from zLOG import LOG, INFO
 
 class PaymentRule(Rule):
-    """
-      Payment Rule generates payment simulation movement from invoice transaction simulation movements.
-      This one is a very s(imple|tupid) one : if the parent movement is a 'receivable' one,
-      we just create two submovements : 'receivable' (as credit)
-      and 'bank' (as debit) with the same quantity as the parent.
+    """Payment Rule generates payment simulation movement from invoice
+    transaction simulation movements.
     """
 
     # CMF Type Definition
@@ -65,59 +62,115 @@ class PaymentRule(Rule):
                       , PropertySheet.Task
                       )
 
+    receivable_account_type_list = ('asset/receivable', )
+    payable_account_type_list = ('liability/payable', )
+
+
+    def _getPaymentConditionList(self, movement):
+      """Returns payment conditions for this movement.
+      """
+      while 1:
+        delivery_movement = movement.getDeliveryValue()
+        if delivery_movement is not None:
+          explanation = delivery_movement.getExplanationValue()
+          payment_condition_list = explanation.contentValues(
+                 filter=dict(portal_type='Payment Condition'))
+          if payment_condition_list:
+            return payment_condition_list
+
+        order_movement = movement.getOrderValue()
+        if order_movement is not None:
+          explanation = order_movement.getExplanationValue()
+          payment_condition_list = explanation.contentValues(
+                 filter=dict(portal_type='Payment Condition'))
+          if payment_condition_list:
+            return payment_condition_list
+
+        movement = movement.getParentValue().getParentValue()
+        if movement.getPortalType() != 'Simulation Movement':
+          LOG('ERP5', INFO, "PaymentRule couldn't find payment condition")
+          return []
+     
+    def _createMovementsForPaymentCondition(self,
+          applied_rule, payment_condition):
+      """Create simulation movements for this payment condition.
+      """
+      simulation_movement = applied_rule.getParentValue()
+      date = payment_condition.TradeCondition_getDueDate()
+      
+      if payment_condition.getQuantity():
+        quantity = payment_condition.getQuantity()
+      else:
+        ratio = payment_condition.getEfficiency(1)
+        quantity = simulation_movement.getQuantity() * ratio
+
+      edit_dict = dict(
+            causality_value=payment_condition,
+            payment_mode=payment_condition.getPaymentMode(),
+            source=simulation_movement.getSource(),
+            source_section=simulation_movement.getSourceSection(),
+            source_payment=payment_condition.getSourcePayment() or
+                              simulation_movement.getSourcePayment(),
+            destination=simulation_movement.getDestination(),
+            destination_section=simulation_movement.getDestinationSection(),
+            destination_payment=payment_condition.getDestinationPayment() or
+                              simulation_movement.getDestinationPayment(),
+            resource=simulation_movement.getResource(),
+            start_date=date,
+            price=1,
+            quantity= - quantity,)
+      
+      applied_rule.newContent( **edit_dict )
+
+      edit_dict['source'] = self.getSourcePayment()
+      edit_dict['destination'] = self.getDestinationPayment()
+      edit_dict['quantity'] = - edit_dict['quantity']
+      applied_rule.newContent( **edit_dict )
+      
+      
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, **kw):
-      """
-        Expands the current movement downward.
-
-        -> new status -> expanded
-
-        An applied rule can be expanded only if its parent movement
-        is expanded.
+      """Expands the current movement downward.
       """
       payment_line_type = 'Simulation Movement'
 
       my_parent_movement = applied_rule.getParentValue()
+      # generate for source
+      bank_account = self.getDestinationPaymentValue(
+                             portal_type='Account')
+      assert bank_account is not None
 
-      if my_parent_movement.getQuantity() is not None:
-        bank_id = 'bank'
-        if bank_id in applied_rule.objectIds():
-          bank_movement = applied_rule[bank_id]
+      for payment_condition in self._getPaymentConditionList(
+                                            my_parent_movement):
+        payment_condition_url = payment_condition.getRelativeUrl()
+        # look for a movement for this payment condition:
+        corresponding_movement_list = []
+        for simulation_movement in applied_rule.contentValues():
+          if simulation_movement.getCausality() == payment_condition_url:
+            corresponding_movement_list.append(simulation_movement)
+        if not corresponding_movement_list:
+          self._createMovementsForPaymentCondition(applied_rule,
+                                                   payment_condition)
         else:
-          bank_movement = applied_rule.newContent(
-                portal_type=payment_line_type,
-                id = bank_id)
-        receivable_id = 'receivable'
-        if receivable_id in applied_rule.objectIds():
-          receivable_movement = applied_rule[receivable_id]
-        else:
-          receivable_movement = applied_rule.newContent(
-                portal_type=payment_line_type,
-                id = receivable_id)
-        
-        # TODO: specify this using a rule in portal_rules
-        # TODO: generate many movement according to different trade conditions	
-        bank_movement.edit(
-          resource = my_parent_movement.getResource(),
-          quantity = my_parent_movement.getQuantity(),
-          source = 'account/banques_etablissements_financiers', # XXX Not Generic
-          destination = 'account/banques_etablissements_financiers', # XXX Not Generic
-          source_section = my_parent_movement.getSourceSection(),
-          destination_section = my_parent_movement.getDestinationSection(),
-        )
-        receivable_movement.edit(
-          resource = my_parent_movement.getResource(),
-          quantity = - my_parent_movement.getQuantity(),
-          source = 'account/creance_client', # XXX Not Generic
-          destination = 'account/dette_fournisseur', # XXX Not Generic
-          source_section = my_parent_movement.getSourceSection(),
-          destination_section = my_parent_movement.getDestinationSection(),
-        )
-        
-      Rule.expand(self, applied_rule, **kw)
+          # TODO: update corresponding_movement_list
+          pass
+      
+      #Rule.expand(self, applied_rule, **kw)
 
+    def test(self, context, tested_base_category_list=None):
+      """Test if this rule apply.
+      """
+      if context.getParentValue()\
+          .getSpecialiseValue().getPortalType() == 'Payment Rule':
+        return False
 
-    def isDeliverable(self, m):
-      if m.getSimulationState() in self.getPortalDraftOrderStateList():
-        return 0
-      return 1
+      for account in ( context.getSourceValue(portal_type='Account'),
+          context.getDestinationValue(portal_type='Account')):
+        if account is not None:
+          account_type = account.getAccountType()
+          if account_type in self.receivable_account_type_list or \
+              account_type in self.payable_account_type_list:
+            return True
+
+      return False
+
