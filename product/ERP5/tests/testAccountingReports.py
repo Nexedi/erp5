@@ -768,7 +768,6 @@ class TestAccountingReports(AccountingTestCase):
               portal_type='Sale Invoice Transaction',
               title='Transaction 2',
               source_reference='2',
-              simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 2),
               lines=(dict(source_value=account_module.receivable,
@@ -792,13 +791,15 @@ class TestAccountingReports(AccountingTestCase):
                      dict(source_value=account_module.receivable,
                           grouping_reference='A',
                           source_credit=200.0)))
+    # we validate t2 later, otherwise grouping reference will be cleaned up
+    t2.stop()
+    t2.deliver()
 
     # Another invoice, grouped with a payment transaction in the period
     t4 = self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Transaction 4',
               source_reference='4',
-              simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 4),
               lines=(dict(source_value=account_module.receivable,
@@ -820,7 +821,11 @@ class TestAccountingReports(AccountingTestCase):
                      dict(source_value=account_module.receivable,
                           grouping_reference='B',
                           source_credit=400.0)))
-    
+    t4.stop()
+    t4.deliver()
+    get_transaction().commit()
+    self.tic()
+
     # set request variables and render                 
     request_form = self.portal.REQUEST.form
     request_form['node'] = \
@@ -2080,7 +2085,7 @@ class TestAccountingReports(AccountingTestCase):
       if group != 'hidden':
         for field in form.get_fields_in_group(group):
           if field.getId() != 'listbox':
-            self.fail('Field %s should not be visible', field.getId())
+            self.fail('Field %s should not be visible' % field.getId())
     report_section.popReport(self.portal)
     
     # report layout
