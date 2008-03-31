@@ -100,90 +100,6 @@ class ContributionTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
-  security.declarePrivate('findTypeName')
-  def findTypeName(self, file_name, document, container=None):
-    """
-      Finds the appropriate portal type based on the file name
-      or if necessary the content of the document.
-
-      Configuration Scripts:
-
-       - Document_findTypeName: receives file name and valid portal type list,
-         and find more appropriate portal type for the current context document.
-         By default, first, this script will find a portal type from file name
-         and next, this will find it from content of the current document.
-
-         You can configure this script in order to define another search order.
-         (e.g. find portal type from content first)
-
-      NOTE: XXX This implementation can be greatly accelerated by
-      caching a dict resulting which combines getContentTypeRegistryTypeDict
-      and valid_portal_type_list
-    """
-    def getContentTypeRegistryTypeDict():
-      result = {}
-      for id, pred in self.content_type_registry.listPredicates():
-        (p, type) = pred
-        result[type] = None
-      return result
-
-    portal_type = None
-    # We should only consider those portal_types which share the
-    # same constructor with the current object and which are not
-    # part of the definitions of content_type_registry. For
-    # example if content type registry has a definition for
-    # RSS feed, then there is no reason to consider this type
-    # whenever receiving some text/html content although both
-    # types share the same constructor. However, if Memo has
-    # same constructor as Text and Memo is not in content_type_registry
-    # then it should be considered.
-    extra_valid_portal_type_list = []
-    content_registry_type_dict = getContentTypeRegistryTypeDict()
-    portal_type_tool = self.portal_types
-    for pt in portal_type_tool.objectValues():
-      if hasattr(pt, 'factory') and pt.factory == portal_type_tool[document.getPortalType()].factory:
-        if not content_registry_type_dict.has_key(pt.id):
-          extra_valid_portal_type_list.append(pt.id)
-
-    if not extra_valid_portal_type_list:
-      # There is really no ambiguity here
-      # The portal_type set by PUT_factory is appropriate
-      # This is the best case we can get
-      # LOG('findTypeName no ambiguity', 0, document.portal_type)
-      return document.portal_type
-
-    valid_portal_type_list = [document.portal_type] + extra_valid_portal_type_list
-    # LOG('valid_portal_type_list', 0, str(valid_portal_type_list))
-
-    # If a container is defined, filter valid portal types with allowedContentTypes
-    if container is not None:
-      allowed_type_list = map(lambda x: x.id, container.allowedContentTypes())
-      # LOG('allowed_type_list', 0, str(allowed_type_list))
-      valid_portal_type_list = filter(lambda x: x in allowed_type_list, valid_portal_type_list)
-      # LOG('filtered valid_portal_type_list', 0, str(valid_portal_type_list))
-
-    # Check if there is any intersection with index portal types
-    # If not, we do not need to even check if content is an index
-    is_index_candidate = False
-    for index_type in self.getPortalCrawlerIndexTypeList():
-      if index_type in valid_portal_type_list:
-        is_index_candidate = True
-        candidate_index_type = index_type
-
-    if is_index_candidate and document.isIndexContent(container=container):
-      # If this document has to be created inside an External Source (container)
-      # we need to analyse its content to determine whether it is or not
-      # an index document. Index documents should not be searchable as documents
-      # and should not be considered in the depth calculation of the crawling 
-      # process
-      return candidate_index_type # We suppose that there is only one index type in allowed content types
-
-    method = document._getTypeBasedMethod('findTypeName',
-                                          fallback_script_id='Document_findTypeName')
-    portal_type = method(file_name, valid_portal_type_list)
-    if portal_type in valid_portal_type_list:
-      return portal_type
-
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, url=None, container=None,
                        container_path=None,
@@ -326,7 +242,7 @@ class ContributionTool(BaseTool):
         extension = '.%s' % file_name.split('.')[-1]
       file_name = '%s%s' % (self.generateNewId(), extension)
 
-    ob = self.PUT_factory(file_name, mime_type, None)
+    ob = self.PUT_factory(file_name, mime_type, data)
 
     # Raise an error if we could not guess the portal type
     if ob is None:
@@ -340,6 +256,12 @@ class ContributionTool(BaseTool):
     # Then put the file inside ourselves for a short while
     BaseTool._setObject(self, object_id, ob)
     document = BaseTool._getOb(self, object_id)
+
+    rewrite_method = document._getTypeBasedMethod('rewriteIngestionData')
+    if rewrite_method is not None:
+      modified_kw = rewrite_method(**kw.copy())
+      if modified_kw is not None:
+        kw.update(modified_kw)
 
     try:
       # Then edit the document contents (so that upload can happen)
@@ -461,13 +383,7 @@ class ContributionTool(BaseTool):
       # portal_type based on the document content
       # (ex. a Memo is a kind of Text which can be identified
       # by the fact it includes some specific content)
-      portal_type = self.findTypeName(name, ob.__of__(self), container=container)
-      if portal_type is None: portal_type = ob.portal_type
-      ob._setPortalTypeName(portal_type) # This is redundant with finishConstruction
-                                       # but necessary to move objects to appropriate
-                                       # location based on their content. Since the
-                                       # object is already constructed here, we
-                                       # can safely change its portal_type
+
       # Now we know the portal_type, let us find the module
       # to which we should move the document to
       if container is None:
