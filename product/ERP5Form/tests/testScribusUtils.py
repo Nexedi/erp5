@@ -32,8 +32,12 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
+from zLOG import LOG
 
 class TestScribusUtils(ERP5TypeTestCase):
+  '''Unit test for SribusUtils API'''
+
+  run_all_test = True
   username = 'rc'
 
   def getTitle(self):
@@ -56,7 +60,14 @@ class TestScribusUtils(ERP5TypeTestCase):
             os.path.join(os.path.dirname(__file__),
             'data', filename), 'rb')
 
-  def test_SimpleModuleCreation(self):
+  def test_01_SimpleModuleCreation(self, quiet=0, run=run_all_test):
+    ''' Just create a module using scribus file and pdf file with minimal 
+        option'''
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\ntest_01_SimpleModuleCreation')
+      LOG('Testing... ',0,'test_01_SimpleModuleCreation')
+
     self.portal.ERP5Site_createModuleScribus(
                   module_portal_type="Dummy Module",
                   portal_skins_folder="erp5_test",
@@ -77,7 +88,14 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
 
 
-  def test_ModuleCreationWithBackground(self):
+  def test_02_ModuleCreationWithBackground(self, quiet=0, run=run_all_test):
+    '''Create a module with the option_html. That mean, a background will be
+    generated (using convert), and a css file created'''
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\ntest_02_ModuleCreationWithBackground')
+      LOG('Testing... ',0,'test_02_ModuleCreationWithBackground')
+
     self.portal.ERP5Site_createModuleScribus(
               self,
               option_html=1,
@@ -107,7 +125,13 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEquals(background_object, None)
 
 
-  def test_ModuleListBox(self):
+  def test_03_ModuleListBox(self, quiet=0, run=run_all_test):
+    '''Check the module listBox could be rendered without errors'''
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\ntest_03_ModuleListBox')
+      LOG('Testing... ',0,'test_03_ModuleListBox')
+
     self.portal.ERP5Site_createModuleScribus(
                   module_portal_type="Dummy Module",
                   portal_skins_folder="erp5_test",
@@ -133,7 +157,15 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.portal.changeSkin(None)
     self.portal.dummy_module.DummyModule_viewDummyList()
 
-  def test_SimpleModuleUpdate(self):
+  def test_04_SimpleModuleUpdate(self, quiet=0, run=run_all_test):
+    ''' Update a module created with a scribus file and pdf file.
+        Change a field name in the new scribus file, and check that after 
+        update, the ERP5 StringField have the new name.'''
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\ntest_04_SimpleModuleUpdate')
+      LOG('Testing... ',0,'test_04_SimpleModuleUpdate')
+
     # first module creation:
     self.portal.ERP5Site_createModuleScribus(
                   module_id="dummy_module",
@@ -154,8 +186,8 @@ class TestScribusUtils(ERP5TypeTestCase):
                         None)
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
 
-    # check that a field with title text_1 (present in the sla file) has been created
-    # in the form
+    # check that a field with title text_1 (present in the sla file) 
+    # has been created in the form
     self.assertNotEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
       'text_1', None), None)
 
