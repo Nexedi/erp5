@@ -206,11 +206,18 @@ class Folder:
     Returns -- Bare and empty object of the appropriate type (or None, if
     we don't know what to do)
     """
-    registry = getToolByName(self, 'content_type_registry', None)
-    if registry is None:
-      return None
+    findPortalTypeName = None
+    registry = getToolByName(self, 'portal_contribution_registry', None)
+    if registry is not None:
+      findPortalTypeName = registry.findPortalTypeName
+    else:
+      # Keep backward compatibility
+      registry = getToolByName(self, 'content_type_registry', None)
+      if registry is None:
+        return None
+      findPortalTypeName = registry.findTypeName
 
-    portal_type = registry.findTypeName( name, typ, body )
+    portal_type = findPortalTypeName(name, typ, body)
     if portal_type is None:
       return None
 
