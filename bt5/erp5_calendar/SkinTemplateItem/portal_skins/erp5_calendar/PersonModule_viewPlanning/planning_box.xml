@@ -573,7 +573,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>organisation_planning_domain</string>
+                          <string>person_module_planning_domain</string>
                           <string>Persons</string>
                         </tuple>
                       </list>
@@ -605,7 +605,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>organisation_planning_selection</string> </value>
+                    <value> <string>person_module_planning_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>size_border_width_left</string> </key>
@@ -755,7 +755,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: test(context.portal_selections.getSelectionParamsFor(field.get_value(\'selection_name\')).get(\'lane_path\', \'base_month_domain\') in [\'base_day_domain\', \'base_week_domain\'], \'Organisation_getAvailableTimeMovementList\', \'\')</string> </value>
+            <value> <string>python: test(context.portal_selections.getSelectionParamsFor(field.get_value(\'selection_name\')).get(\'lane_path\', \'base_month_domain\') in [\'base_day_domain\', \'base_week_domain\'], \'PersonModule_getAvailableTimeMovementList\', \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -771,7 +771,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Organisation_getTaskMovementHistoryList</string> </value>
+            <value> <string>PersonModule_getMovementHistoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
