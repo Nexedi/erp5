@@ -199,6 +199,15 @@ Sorting in Grouping Dialog\n
 </tr>\n
 <!-- }}} -->\n
 \n
+<!-- Sort by grouping reference asc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[2]/button</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+\n
 <!-- Sort by Account Name asc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
