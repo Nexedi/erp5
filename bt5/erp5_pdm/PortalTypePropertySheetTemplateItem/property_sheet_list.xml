@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Component">
+  <item>DefaultImage</item>
+ </portal_type>
  <portal_type id="Product">
   <item>DefaultImage</item>
  </portal_type>

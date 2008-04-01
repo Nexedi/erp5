@@ -1,5 +1,5 @@
 2008-03-31 jerome
-* Add default_image on Products.
+* Add default_image on Products and Component.
 
 2008-02-07 alex
 * proxify some fields, use Resource_viewFieldLibrary instead of BasePdm_fieldLibrary
