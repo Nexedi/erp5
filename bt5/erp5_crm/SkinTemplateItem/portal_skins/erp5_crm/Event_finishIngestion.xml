@@ -71,6 +71,38 @@
   are marked as \'New\' and appear in the worklist.\n
 """\n
 context.receive()\n
+\n
+# Forwarded mail\n
+forwarded_mail = False\n
+subject = context.getContentInformation().get(\'Subject\')\n
+forwarded_mark_list = (\'Fwd\', \'Fw\', \'Tr\',)\n
+if subject is not None and \':\' in subject:\n
+  if subject[0]==\'[\':# some email client enclose subject with \'[]\'\n
+    subject = subject[1:]\n
+  for mark in forwarded_mark_list:\n
+    if subject.startswith(mark+\':\'):\n
+      forwarded_mail = True\n
+      break\n
+if forwarded_mail is True:\n
+  # find original recipient\n
+  source = context.getSource()\n
+  if source is not None:\n
+    context.setDestination(source)\n
+\n
+  # find original sender\n
+  body = context.getTextContent()\n
+  from_header = \'From: \'\n
+  from_header_length = len(from_header)\n
+  Base_getPersonListFromFromHeader = context.Base_getPersonListFromFromHeader\n
+  line = \'\'\n
+  for line in body.split(\'\\n\'):\n
+    if line.startswith(from_header):\n
+      break\n
+  if line:\n
+    from_text = line[from_header_length:]\n
+    person_list = Base_getPersonListFromFromHeader(from_text)\n
+    if person_list:\n
+      context.setSource(person_list[0].getRelativeUrl())\n
 </string> </value>
         </item>
         <item>
@@ -120,7 +152,25 @@ context.receive()\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>False</string>
+                            <string>forwarded_mail</string>
+                            <string>subject</string>
+                            <string>forwarded_mark_list</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>mark</string>
+                            <string>True</string>
+                            <string>source</string>
+                            <string>body</string>
+                            <string>from_header</string>
+                            <string>len</string>
+                            <string>from_header_length</string>
+                            <string>Base_getPersonListFromFromHeader</string>
+                            <string>line</string>
+                            <string>from_text</string>
+                            <string>person_list</string>
                           </tuple>
                         </value>
                     </item>
