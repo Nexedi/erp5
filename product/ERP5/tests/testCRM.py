@@ -348,42 +348,42 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     message = email.message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'Visit:Company A')
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Visit')
     self.assertEqual(document.getTitle(), 'Company A')
 
     message = email.message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'Fax:Company B')
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Fax Message')
     self.assertEqual(document.getTitle(), 'Company B')
 
     message = email.message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'TEST:Company B')
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Mail Message')
     self.assertEqual(document.getTitle(), 'TEST:Company B')
 
     message = email.message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'visit:Company A')
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Visit')
     self.assertEqual(document.getTitle(), 'Company A')
 
     message = email.message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'phone:Company B')
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Phone Call')
     self.assertEqual(document.getTitle(), 'Company B')
 
     message = email.message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'LETTER:Company C')
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Letter')
     self.assertEqual(document.getTitle(), 'Company C')
 
@@ -391,7 +391,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     body = message.get_payload()
     message.set_payload('Visit:%s' % body)
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Visit')
     self.assertEqual(document.getTextContent(), body)
 
@@ -399,14 +399,28 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     body = message.get_payload()
     message.set_payload('PHONE CALL:%s' % body)
     data = message.as_string()
-    document = self._ingestMail(self, data=data)
+    document = self._ingestMail(data=data)
     self.assertEqual(document.portal_type, 'Phone Call')
     self.assertEqual(document.getTextContent(), body)
 
+  def test_forwarder_mail(self):
+    """
+    Make sure that if ingested email is forwarded one, the sender of
+    original mail should be the sender of event and the sender of
+    forwarded mail should be the recipient of event.
+    """
+    document = self._ingestMail(filename='forwarded')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(document.getContentInformation().get('From'), 'Me <me@erp5.org>')
+    self.assertEqual(document.getContentInformation().get('To'), 'crm@erp5.org')
+    self.assertEqual(document.getSourceValue().getTitle(), 'Sender')
+    self.assertEqual(document.getDestinationValue().getTitle(), 'Me')
+
+
 ## TODO:
-##  def test_forwarder_mail(self):
-##    # if there is a forwarded email, import the forwarded email
-##    event = self._ingestMail('forwarded')
 ##
 ##  def test_attachements(self):
 ##    event = self._ingestMail('with_attachements')
