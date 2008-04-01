@@ -191,6 +191,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>grouping_reference</string>
+                          <string>Grouping</string>
+                        </tuple>
+                        <tuple>
                           <string>node_title</string>
                           <string>Account</string>
                         </tuple>
