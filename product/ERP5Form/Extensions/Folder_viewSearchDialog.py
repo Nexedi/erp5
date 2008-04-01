@@ -101,8 +101,7 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${title} Usage',
-                                         mapping=dict(title=column_title)),
+    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(column_title), usage=N_('Usage'))),
                                 items=[(N_('Equals To'), ''),
                                        (N_('Greater Than'), 'min'),
                                        (N_('Lower Than'),'max'),
@@ -137,8 +136,7 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${title} Usage',
-                                         mapping=dict(title=column_title)),
+    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(column_title), usage=N_('Usage'))),
                                 items=[(N_('Equals To'), ''),
                                        (N_('Greater Than'), 'min'),
                                        (N_('Lower Than'),'max'),
@@ -184,8 +182,7 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=str(N_('${title} Search Mode',
-                             mapping=dict(title=field_title)))), ['title'])
+    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(title), usage=N_('Search Mode')))))
     field._surcharged_tales(
         dict(
             default=TALESMethod(
@@ -204,8 +201,7 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${title} Key',
-                                         mapping=dict(title=column_title)),
+    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(column_title), usage=N_('Search Key'))),
                                 description='',
                                 items=[(N_('Default (${search_key})',
                                             mapping=dict(search_key=
