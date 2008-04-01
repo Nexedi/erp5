@@ -60,13 +60,9 @@ class TestScribusUtils(ERP5TypeTestCase):
             os.path.join(os.path.dirname(__file__),
             'data', filename), 'rb')
 
-  def test_01_SimpleModuleCreation(self, quiet=0, run=run_all_test):
-    ''' Just create a module using scribus file and pdf file with minimal 
-        option'''
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\ntest_01_SimpleModuleCreation')
-      LOG('Testing... ',0,'test_01_SimpleModuleCreation')
+  def test_01_SimpleModuleCreation(self):
+    '''Just create a module using scribus file and pdf file with minimal 
+    option'''
 
     self.portal.ERP5Site_createModuleScribus(
                   module_portal_type="Dummy Module",
@@ -88,13 +84,9 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
 
 
-  def test_02_ModuleCreationWithBackground(self, quiet=0, run=run_all_test):
+  def test_02_ModuleCreationWithBackground(self):
     '''Create a module with the option_html. That mean, a background will be
     generated (using convert), and a css file created'''
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\ntest_02_ModuleCreationWithBackground')
-      LOG('Testing... ',0,'test_02_ModuleCreationWithBackground')
 
     self.portal.ERP5Site_createModuleScribus(
               self,
@@ -125,12 +117,8 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEquals(background_object, None)
 
 
-  def test_03_ModuleListBox(self, quiet=0, run=run_all_test):
+  def test_03_ModuleListBox(self):
     '''Check the module listBox could be rendered without errors'''
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\ntest_03_ModuleListBox')
-      LOG('Testing... ',0,'test_03_ModuleListBox')
 
     self.portal.ERP5Site_createModuleScribus(
                   module_portal_type="Dummy Module",
@@ -157,14 +145,10 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.portal.changeSkin(None)
     self.portal.dummy_module.DummyModule_viewDummyList()
 
-  def test_04_SimpleModuleUpdate(self, quiet=0, run=run_all_test):
+  def test_04_SimpleModuleUpdate(self):
     ''' Update a module created with a scribus file and pdf file.
         Change a field name in the new scribus file, and check that after 
         update, the ERP5 StringField have the new name.'''
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\ntest_04_SimpleModuleUpdate')
-      LOG('Testing... ',0,'test_04_SimpleModuleUpdate')
 
     # first module creation:
     self.portal.ERP5Site_createModuleScribus(
