@@ -305,7 +305,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       # able to notify the user after all processes are ended
       # We do some inspection to keep compatibility
       # (because fixit and tag were not set previously)
-      tag='Alarm_activeSense_%s' % self.getId()
+      tag='Alarm_activeSense_%s_%s' % (self.getId(), DateTime())
       kw = {}
       method = getattr(self, method_id)
       name_list = method.func_code.co_varnames
