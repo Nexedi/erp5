@@ -632,15 +632,13 @@ class ManageFiles:
         raise ValueError, 'Error: convert command failed with the following'\
                           'error message : \n%s' % result[1]
     finally:
-      if os.path.exists(temp_pdf.name):
-        temp_pdf.close()
+      temp_pdf.close()
     
     background_image_list = makeImageList()
     if not len(background_image_list):
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
           'image found')
-      if os.path.exists(temp_image.name):
-        temp_image.close()
+      temp_image.close()
       raise ValueError, 'Error: ScribusUtils.setBackgroundPictures : '\
                         'no background'
 
@@ -662,23 +660,19 @@ class ManageFiles:
       addImageMethod(form_page_id, temp_background_file, "background image")
       image_number += 1
 
+    # delete all images created in this method before raise an error
     background_image_list = makeImageList()
-    if len(background_image_list) > 1:
-      # if there is more than one page : delete all the pages created by 
-      # convert using remove method, else, the unique page will be delete at 
-      # the close() call
-      for background_image in background_image_list[1:]:
-        # remove the file from the system
-        if os.path.exists(background_image):
-          os.remove(background_image)
+    for background_image in background_image_list[1:]:
+      # remove the file from the system
+      if os.path.exists(background_image):
+        os.remove(background_image)
+    temp_image.close()
 
     size_x = int(real_size_x)
     size_y = int(real_size_y)
     LOG('ScribusUtils.setBackgroundPictures :', INFO, 
         'return size : x=%s, y=%s' % (size_x, size_y))
    
-    if os.path.exists(temp_image.name):
-      temp_image.close()
     return (size_x, size_y)
 
   security.declarePublic('getPageattributes')
@@ -690,7 +684,7 @@ class ManageFiles:
     from tempfile import NamedTemporaryFile
     # opening new file on HDD to save PDF content
     ScribusUtilsOriginalTempPDF= NamedTemporaryFile(mode= "w+b")
-    ScribusUtilsOriginaltempsPDFName= NamedTemporaryFile().name
+    ScribusUtilsOriginaltempsPDFName = ScribusUtilsOriginalTempPDF.name
 
     # going to the begining of the input file
 
@@ -706,7 +700,7 @@ class ManageFiles:
     height_groups = []
     # launching first soft to convert from PDF to PPM
     ScribusUtilsOriginaltempsPPM = NamedTemporaryFile(mode="w+b")
-    ScribusUtilsOriginaltempsPPMName = NamedTemporaryFile().name
+    ScribusUtilsOriginaltempsPPMName = ScribusUtilsOriginaltempsPPM.name
     original_result = commands.getstatusoutput('pdftoppm -r %s %s %s' % (72, 
       ScribusUtilsOriginaltempsPDFName, ScribusUtilsOriginaltempsPPMName))
     original_result= commands.getstatusoutput('identify %s' % \
@@ -717,26 +711,28 @@ class ManageFiles:
       # pdftoppm add a '-N' string a the end of the file name if there is more
       # than one page in the pdf file (where N is the number of the page,
       # begining at 1)
-      if os.path.exists(ScribusUtilsOriginaltempsPDFName):
+      if os.path.exists(ScribusUtilsOriginaltempsPPMName):
         # thats mean there's only one page in the pdf file
-        ppm_list.append(ScribusUtilsOriginaltempsPDFName)
-      else:
-        # in the case of multi-pages pdf file, we must find all files
-        image_number = 1
-        while os.path.exists(ScribusUtilsOriginaltempsPDFName + '-%s' %\
-            image_number):
-          ppm_list.append(ScribusUtilsOriginaltempsPDFName + '-%s' % \
-              image_number)
-          image_number += 1
+        ppm_list.append(ScribusUtilsOriginaltempsPPMName)
+      # try to find the other pages if there is more than one (in case of 
+      # multi-pages pdf file)
+      image_number = 1
+      while os.path.exists(ScribusUtilsOriginaltempsPPMName + '-%s.ppm' %\
+          image_number):
+        ppm_list.append(ScribusUtilsOriginaltempsPPMName + '-%s.ppm' % \
+            image_number)
+        image_number += 1
       return ppm_list
 
-    # this line permit to delete tempory files (about 2.4 Mo for each file !)
+    # this lines permit to delete tempory files (about 2.4 Mo for each file !)
     # it's temporary because this function must be rewrited or deleted
     # (perhaps setBackgroundPictures could return attributes list)
     ppm_list = makePPMFileList()
-    for ppm in ppm_list:
+    for ppm in ppm_list[1:]:
       if os.path.exists(ppm):
         os.remove(ppm)
+    ScribusUtilsOriginaltempsPPM.close()
+    ScribusUtilsOriginalTempPDF.close()
 
     pg_nbr = len(original_result[1].split('\n'))
     real_size_x = {}
@@ -751,6 +747,7 @@ class ManageFiles:
       actual_page_width = real_size_y[page_iterator]
       width_groups.append(actual_page_width)
       height_groups.append(actual_page_height)
+
     return (width_groups, height_groups)
 
   security.declarePublic('setPropertySheetAndDocument')
