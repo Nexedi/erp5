@@ -80,16 +80,6 @@ class TestInvoice(TestPackingListMixin,
   invoice_cell_portal_type = 'Invoice Cell'
   invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
 
-  def validateRules(self):
-    """
-    try to validate all rules in rule_tool XXX except the default payment rule.
-    """
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getId() != 'default_payment_rule':
-        rule.validate()
-
   def getTitle(self):
     return "Invoices"
 
