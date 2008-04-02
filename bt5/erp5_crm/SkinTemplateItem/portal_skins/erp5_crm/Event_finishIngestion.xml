@@ -93,16 +93,16 @@ if forwarded_mail is True:\n
   body = context.getTextContent()\n
   from_header = \'From: \'\n
   from_header_length = len(from_header)\n
-  Base_getPersonListFromFromHeader = context.Base_getPersonListFromFromHeader\n
+  Base_getEntityListFromFromHeader = context.Base_getEntityListFromFromHeader\n
   line = \'\'\n
   for line in body.split(\'\\n\'):\n
     if line.startswith(from_header):\n
       break\n
   if line:\n
     from_text = line[from_header_length:]\n
-    person_list = Base_getPersonListFromFromHeader(from_text)\n
-    if person_list:\n
-      context.setSource(person_list[0].getRelativeUrl())\n
+    entity_list = Base_getEntityListFromFromHeader(from_text)\n
+    if entity_list:\n
+      context.setSource(entity_list[0].getRelativeUrl())\n
 </string> </value>
         </item>
         <item>
@@ -167,10 +167,10 @@ if forwarded_mail is True:\n
                             <string>from_header</string>
                             <string>len</string>
                             <string>from_header_length</string>
-                            <string>Base_getPersonListFromFromHeader</string>
+                            <string>Base_getEntityListFromFromHeader</string>
                             <string>line</string>
                             <string>from_text</string>
-                            <string>person_list</string>
+                            <string>entity_list</string>
                           </tuple>
                         </value>
                     </item>
