@@ -1,3 +1,7 @@
+2008-04-02 fabien
+* use searchFolder instead of contentValues to get the use case.
+* get the 'validated' use cases instead of the draft.
+
 2008-03-17 fabien
 * Translate and reindent UseCaseModule_viewUseCaseReportAsSxw.
 make it working on Use Case Object and Module instead of just module.

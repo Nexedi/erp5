@@ -146,8 +146,7 @@
     \n
     <text:p text:style-name=\'Text body\'>Nexedi SA</text:p>\n
     \n
-    <div tal:omit-tag=\'\' tal:repeat=\'usecase  python:here.objectValues(portal_type="Use Case",sort_on=(("int_index",),)) or (context,)\'>\n
-      <tal:block tal:condition="python: usecase.getValidationState() == \'draft\'">\n
+    <div tal:omit-tag=\'\' tal:repeat=\'usecase  python:here.searchFolder(portal_type="Use Case",sort_on=(("int_index",),), validation_state="validated") or (context,)\'>\n
         <text:h text:style-name=\'Heading 2\' text:level=\'2\' i18n:domain="ui" i18n:translate="">Use Case : <span tal:replace=\'usecase/getTitle\'>Title</span></text:h>\n
         \n
         <text:p text:style-name=\'Text body\' tal:content=\'usecase/getDescription\'>Use Case Description</text:p>\n
@@ -271,7 +270,6 @@
          \n
 \n
             \n
-      </tal:block>\n
     </div>\n
   </office:body>\n
 </office:document-content>\n
