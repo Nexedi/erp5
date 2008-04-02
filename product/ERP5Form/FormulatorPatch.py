@@ -496,6 +496,15 @@ def Widget_render_css(self, field, REQUEST):
   pass
 Widget.render_css = Widget_render_css
 
+def Widget_get_css_list(self, field, REQUEST):
+  """
+    Return CSS needed by the widget - to be overwritten in field classes.
+    Should return a list of CSS file names.
+    These names will be appended to global css_list and included in a rendered page.
+  """
+  return []
+Widget.get_css_list = Widget_get_css_list
+
 def Widget_get_javascript_list(self, field, REQUEST):
   """
     Return JS needed by the widget - to be overwritten in field classes.
@@ -1456,16 +1465,26 @@ Field.render_pdf = Field_render_pdf
 
 def Field_render_css(self, REQUEST=None):
   """
-  Generate css content which will be added in the html header.
+  Generate css content which will be added inline.
 
   XXX key parameter may be needed.
   """
   return self.widget.render_css(self, REQUEST)
 Field.render_css = Field_render_css
 
+def Field_get_css_list(self, REQUEST=None):
+  """
+    Returns list of css sheets needed by the field
+    to be included in global css imports
+  """
+  return self.widget.get_css_list(self, REQUEST)
+Field.get_css_list = Field_get_css_list
+
+
 def Field_get_javascript_list(self, REQUEST=None):
   """
-  Returns list of javascript needed by the field
+    Returns list of javascript needed by the field
+    to be included in global js imports
   """
   return self.widget.get_javascript_list(self, REQUEST)
 Field.get_javascript_list = Field_get_javascript_list
