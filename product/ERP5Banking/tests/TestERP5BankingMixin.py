@@ -665,6 +665,8 @@ class TestERP5BankingMixin:
                 portal_type=None, force_check=0):
     if date is None:
       date = DateTime().Date()
+    if not isinstance(date, str):
+      date = date.Date()
     if site is None:
       site = self.testsite
     date_object = container.newContent(id=id, portal_type=portal_type,
