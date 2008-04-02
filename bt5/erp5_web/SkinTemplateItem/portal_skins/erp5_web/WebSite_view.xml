@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom (Subsections)</string> </key>
+                    <key> <string>bottom (Subsections)</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -84,7 +84,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center (Description)</string> </key>
+                    <key> <string>center (Description)</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
@@ -92,7 +92,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left (Content)</string> </key>
+                    <key> <string>left (Content)</string> </key>
                     <value>
                       <list>
                         <string>my_id</string>
@@ -105,13 +105,14 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right (Layout)</string> </key>
+                    <key> <string>right (Layout)</string> </key>
                     <value>
                       <list>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
                         <string>my_custom_render_method_id</string>
                         <string>my_layout_configuration_form_id</string>
+                        <string>my_subject_list</string>
                       </list>
                     </value>
                 </item>
