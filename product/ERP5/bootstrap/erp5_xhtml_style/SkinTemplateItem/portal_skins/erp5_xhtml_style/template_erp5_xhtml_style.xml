@@ -90,11 +90,10 @@ IDEAS:\n
               </tal:block>\n
             </tal:block>\n
           </tal:block>\n
-          <!-- May need to remove duplicates -->\n
-          <tal:block tal:repeat="css css_list">\n
+          <tal:block tal:repeat="css python: {}.fromkeys(css_list).keys()">\n
             <link tal:attributes="href css" type="text/css" rel="stylesheet" />\n
           </tal:block>\n
-          <tal:block tal:repeat="js js_list">\n
+          <tal:block tal:repeat="js python: {}.fromkeys(js_list).keys()">\n
             <script tal:attributes="src js" type="text/javascript"></script>\n
           </tal:block>\n
           <link rel="icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
