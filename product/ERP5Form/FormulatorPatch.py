@@ -489,14 +489,18 @@ Widget.render_pdf = Widget.render_view
 
 def Widget_render_css(self, field, REQUEST):
   """
-  Default render css for widget
+    Default render css for widget - to be overwritten in field classes.
+    Should return valid css code as string.
+    The value returned by this method will be used as inline style for a field.
   """
   pass
 Widget.render_css = Widget_render_css
 
 def Widget_get_javascript_list(self, field, REQUEST):
   """
-  Return JS needed by the widget
+    Return JS needed by the widget - to be overwritten in field classes.
+    Should return a list of javascript file names.
+    These names will be appended to global js_list and included in a rendered page.
   """
   return []
 Widget.get_javascript_list = Widget_get_javascript_list
