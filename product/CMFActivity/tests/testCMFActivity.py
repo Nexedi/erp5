@@ -66,16 +66,6 @@ class TestCMFActivity(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
-
-      the business template crm give the following things :
-      modules:
-        - person
-        - organisation
-      base categories:
-        - region
-        - subordination
-
-      /organisation
     """
     return ('erp5_base',)
 
