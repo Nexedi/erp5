@@ -510,17 +510,16 @@ Alarm URL: %s
     """
     returns something like ['Sunday','Monday',...]
     """
-    #alarm_date = self._baseGetAlarmDate()
-    #if alarm_date is None:
-    #  alarm_date = self.getPeriodicityStartDate()
     alarm_date=None
-    result_list = self.Alarm_zGetAlarmDate(uid=self.getUid())
-    if len(result_list)==1:
-      alarm_date = result_list[0].alarm_date
-      periodicity_start_date = self.getPeriodicityStartDate()
-      if alarm_date < periodicity_start_date:
-        alarm_date = periodicity_start_date
-      # convert the date to the user provided timezone
-      alarm_zone = periodicity_start_date.timezone()
-      alarm_date = alarm_date.toZone(alarm_zone)
+    # No periodicity start date, return None
+    if self.getPeriodicityStartDate() is not None:
+      result_list = self.Alarm_zGetAlarmDate(uid=self.getUid())
+      if len(result_list)==1:
+        alarm_date = result_list[0].alarm_date
+        periodicity_start_date = self.getPeriodicityStartDate()
+        if alarm_date < periodicity_start_date:
+          alarm_date = periodicity_start_date
+        # convert the date to the user provided timezone
+        alarm_zone = periodicity_start_date.timezone()
+        alarm_date = alarm_date.toZone(alarm_zone)
     return alarm_date

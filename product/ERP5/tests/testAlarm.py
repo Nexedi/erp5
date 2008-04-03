@@ -444,7 +444,7 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_16_uncatalog(self, quiet=0, run=run_all_test):
     """
-    Check that deleting a alarm uncatalogs it.
+    Check that deleting an alarm uncatalogs it.
     """
     if not run: return
     if not quiet:
@@ -479,6 +479,47 @@ class TestAlarm(ERP5TypeTestCase):
     sql = 'select * from alarm where uid=%s' % alarm_uid
     result = sql_connection.manage_test(sql)
     self.assertEquals(0, len(result))
+
+  def test_17_tic(self, quiet=0, run=run_all_test):
+    """
+    Make sure that the tic method on alarm is working
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test AlarmTool Tic'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    alarm = self.newAlarm()
+    alarm.setEnabled(True)
+    get_transaction().commit()
+    self.tic()
+
+    get_transaction().commit()
+    self.tic()
+    sense_method_id = 'Alarm_testSenseMethodForTic'
+    skin_folder_id = 'custom'
+    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts']\
+        .manage_addPythonScript(id=sense_method_id)
+    # Make the sense method fail
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
+          'context.setDescription("a")')
+    del skin_folder
+    alarm.setActiveSenseMethodId(sense_method_id)
+    get_transaction().commit()
+    self.tic()
+    alarm_tool = self.getPortal().portal_alarms
+    # Nothing should happens yet
+    alarm_tool.tic()
+    self.assertTrue(alarm.getDescription() in (None, ''))
+    now = DateTime()
+    date = addToDate(now, day=1)
+    alarm.setPeriodicityStartDate(date)
+    alarm.setPeriodicityMinuteFrequency(1)
+    get_transaction().commit()
+    self.tic()
+    alarm_tool.tic()
+    self.assertEquals(alarm.getDescription(), 'a')
 
 def test_suite():
   suite = unittest.TestSuite()
