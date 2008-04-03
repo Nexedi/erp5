@@ -67,6 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ERP5Type.Errors import TransformationRuleError\n
 # Test if we must transform\n
 # The test should actually be based on nodes, paths\n
 # and capacities, which is not possible now\n
@@ -152,6 +153,8 @@ return True\n
                         <value>
                           <tuple>
                             <string>rule</string>
+                            <string>Products.ERP5Type.Errors</string>
+                            <string>TransformationRuleError</string>
                             <string>context</string>
                             <string>movement</string>
                             <string>_getattr_</string>
@@ -167,7 +170,6 @@ return True\n
                             <string>current_tranfo_link_list</string>
                             <string>len</string>
                             <string>length</string>
-                            <string>TransformationRuleError</string>
                             <string>True</string>
                           </tuple>
                         </value>
