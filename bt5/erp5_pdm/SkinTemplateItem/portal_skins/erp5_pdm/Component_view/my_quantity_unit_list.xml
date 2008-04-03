@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_industrial_phase_list</string> </value>
+            <value> <string>my_quantity_unit_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,10 +65,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -84,7 +80,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_industrial_phase_list</string> </value>
+                    <value> <string>my_quantity_unit_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

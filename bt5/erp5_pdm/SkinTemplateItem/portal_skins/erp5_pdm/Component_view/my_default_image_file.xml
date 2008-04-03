@@ -82,7 +82,7 @@
               <dictionary>
                 <item>
                     <key>                 <string>description</string> </key>
-                    <value> <string>Upload the photo for this person.</string> </value>
+                    <value> <string>Upload the photo for this Component.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

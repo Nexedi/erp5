@@ -43,24 +43,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -68,7 +52,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -88,7 +72,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -105,12 +91,14 @@
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
-                        <string>my_quantity_unit</string>
-                        <string>my_industrial_phase_list</string>
                         <string>my_product_line</string>
+                        <string>my_quantity_unit_list</string>
                         <string>my_ean13_code</string>
                         <string>my_aggregated_portal_type_list</string>
                         <string>my_required_aggregated_portal_type_list</string>
+                        <string>my_variation_base_category_list</string>
+                        <string>my_optional_variation_base_category_list</string>
+                        <string>my_individual_variation_base_category</string>
                         <string>my_default_image_path</string>
                         <string>my_default_image_file</string>
                       </list>
@@ -126,6 +114,7 @@
                         <string>my_base_height</string>
                         <string>my_base_volume</string>
                         <string>my_comment</string>
+                        <string>my_variation_category_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>

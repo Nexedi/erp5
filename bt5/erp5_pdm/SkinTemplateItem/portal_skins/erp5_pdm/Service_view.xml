@@ -43,12 +43,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -68,7 +62,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -79,7 +72,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -91,21 +86,18 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
-                        <string>my_quantity_unit</string>
                         <string>my_product_line</string>
+                        <string>my_quantity_unit_list</string>
                         <string>my_aggregated_portal_type_list</string>
                         <string>my_required_aggregated_portal_type_list</string>
+                        <string>my_variation_base_category_list</string>
+                        <string>my_optional_variation_base_category_list</string>
+                        <string>my_individual_variation_base_category</string>
                       </list>
                     </value>
                 </item>
@@ -113,9 +105,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_variation_base_category_list</string>
-                        <string>my_variation_category_list</string>
                         <string>my_comment</string>
+                        <string>my_variation_category_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
