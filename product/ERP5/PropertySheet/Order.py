@@ -70,7 +70,7 @@ class Order:
 
   _constraints = (
     { 'id'            : 'applied_rule',
-      'description'   : 'There must at most one Applied Rule using this order',
+      'description'   : 'There must be at most one Applied Rule using this order',
       'type'          : 'CategoryRelatedMembershipArity',
       'min_arity'     : '0',
       'max_arity'     : '1',
