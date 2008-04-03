@@ -16,8 +16,10 @@ class DeferredCatalogError(Exception):
 
 class ImmobilisationValidityError(Exception):pass
 class ImmobilisationCalculationError(Exception):pass
+class TransformationRuleError(Exception):pass
 
 allow_class(DeferredCatalogError)
 allow_class(ImmobilisationValidityError)
 allow_class(ImmobilisationCalculationError)
 allow_class(WorkflowException)
+allow_class(TransformationRuleError)
