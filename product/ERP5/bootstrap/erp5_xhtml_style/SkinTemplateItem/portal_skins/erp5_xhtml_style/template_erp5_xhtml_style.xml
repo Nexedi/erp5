@@ -71,7 +71,7 @@ IDEAS:\n
           <meta name="description" content=""\n
                 tal:attributes="content title | string:ERP5 Free Open Source ERP and CRM" />\n
           <meta name="keywords" content=""\n
-                tal:attributes="content python:\', \'.join(here.getPropertyList(\'subject\', []) or [])" />\n
+                tal:attributes="content python:\', \'.join(here.getProperty(\'subject_list\', []) or [])" />\n
           <meta name="robots" content="index, follow" />\n
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
           <meta http-equiv="Content-Script-Type" content="text/javascript" />\n
