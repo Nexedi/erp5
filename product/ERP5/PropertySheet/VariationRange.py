@@ -39,7 +39,29 @@ class VariationRange:
             'description' : 'A list of base categories which define possible discrete variations. '\
                             'Variation ranges are stored as category membership. '\
                             '(prev. variation_category_list).',
-            'type'        : 'lines',
+            'type'        : 'tokens',
+            'default'     : [],
+            'mode'        : 'w' },
+        {   'id'          : 'optional_variation_base_category',
+            'storage_id'  : 'optional_variation_base_category_list', 
+            'description' : 'A list of optional base categories which define possible discrete variations. '\
+                            'Variation ranges are stored as category membership. '\
+                            '(prev. variation_category_list).',
+            'type'        : 'tokens',
+            'default'     : [],
+            'mode'        : 'w' },
+        {   'id'          : 'individual_variation_base_category',
+            'storage_id'  : 'individual_variation_base_category_list', 
+            'description' : 'A list of individual base categories which define possible discrete variations. '\
+                            'Variation ranges are stored as category membership. '\
+                            '(prev. variation_category_list).',
+            'type'        : 'tokens',
+            'default'     : [],
+            'mode'        : 'w' },
+        {   'id'          : 'variation_property',
+            'storage_id'  : 'variation_property_list', # Coramy Compatibility
+            'description' : 'A list of properties which define variations',
+            'type'        : 'tokens',
             'default'     : [],
             'mode'        : 'w' },
         {   'id'          : 'variation_base_category_line',
@@ -55,13 +77,6 @@ class VariationRange:
             'type'        : 'lines',
             'default'     : [],
             'mode'        : 'w' },
-        {   'id'          : 'variation_property',
-            'storage_id'  : 'variation_property_list', # Coramy Compatibility
-            'description' : 'A list of properties which define variations',
-            'type'        : 'lines',
-            'default'     : [],
-            'mode'        : 'w' },
-
     )
 
     _categories = ('variation',)

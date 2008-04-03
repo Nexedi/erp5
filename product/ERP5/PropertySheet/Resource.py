@@ -136,21 +136,6 @@ class Resource:
             'description' : 'time of the resource',
             'type'        : 'float',
             'mode'        : 'w' },
-        # Definition of the variation domain
-        {   'id'          : 'variation_base_category',
-            'storage_id'  : 'variation_base_category_list', # Coramy Compatibility
-            'description' : 'A list of base categories which define possible discrete variations. '\
-                            'Variation ranges are stored as category membership. '\
-                            '(prev. variation_category_list).',
-            'type'        : 'tokens',
-            'default'     : [],
-            'mode'        : 'w' },
-        {   'id'          : 'variation_property',
-            'storage_id'  : 'variation_property_list', # Coramy Compatibility
-            'description' : 'A list of properties which define variations',
-            'type'        : 'tokens',
-            'default'     : [],
-            'mode'        : 'w' },
         # Sourcing / planning properties
         {   'id'          : 'source_title',
             'storage_id'  : 'default_source_title', # Compatibility
