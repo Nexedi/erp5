@@ -82,7 +82,8 @@ class Resource(XMLMatrix, Variated):
     def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
                                           root=1, display_id='title', 
                                           display_base_category=1,
-                                          current_category=None, **kw):
+                                          current_category=None,
+                                          omit_individual_variation=0, **kw):
         """
           Returns possible variations
 
@@ -113,41 +114,40 @@ class Resource(XMLMatrix, Variated):
         """
         result = []
         if base_category_list is ():
-          base_category_list = self.getVariationBaseCategoryList()
-        elif type(base_category_list) is type('a'):
+          base_category_list = self.getVariationBaseCategoryList(
+              omit_individual_variation=omit_individual_variation)
+        elif isinstance(base_category_list, str):
           base_category_list = (base_category_list,)
 
+        individual_variation_list = self.searchFolder(
+            portal_type=self.getPortalVariationTypeList(),
+            sort_on=[('title','ascending')])
+        individual_variation_list = [x.getObject() for x in
+            individual_variation_list]
         other_base_category_dict = dict([(i,1) for i in base_category_list])
-        other_variations = self.searchFolder( \
-                               portal_type=self.getPortalVariationTypeList(),
-                               sort_on=[('title','ascending')])
-        other_variations = [x.getObject() for x in other_variations]
-        other_variations = [x for x in other_variations if x is not None]
+ 
+        if not omit_individual_variation:              
+          for variation in individual_variation_list:
+            for base_category in variation.getVariationBaseCategoryList():
+              if base_category_list is ()\
+                  or base_category in base_category_list:
+                other_base_category_dict[base_category] = 0
+                # XXX now, call Renderer a lot of time.
+                # Better implementation needed
+                result.extend(Renderer(
+                    base_category=base_category, 
+                    display_base_category=display_base_category,
+                    display_none_category=0, base=base,
+                    current_category=current_category,
+                    display_id=display_id).render([variation]))
 
-        for object in other_variations:
-          for base_category in object.getVariationBaseCategoryList():
-            if (base_category_list is ()) or \
-               (base_category in base_category_list):
-              other_base_category_dict[base_category] = 0
-              # XXX now, call Renderer a lot of time.
-              # Better implementation needed
-              result.extend(Renderer(
-                                   base_category=base_category, 
-                                   display_base_category=display_base_category,
-                                   display_none_category=0, base=base,
-                                   current_category=current_category,
-                                   display_id=display_id).\
-                                                     render([object]))
-
-        other_base_category_item_list = filter(lambda x: x[1]==1, 
-            other_base_category_dict.items())
-        other_base_category_list = map(lambda x: x[0],
-            other_base_category_item_list)
+        other_base_category_list = [x for x, y in
+            other_base_category_dict.iteritems() if y == 1]
         # Get category variation
-        if len(other_base_category_list) != 0:
-          result += Variated.getVariationRangeCategoryItemList(
+        if other_base_category_list:
+          result.extend(Variated.getVariationRangeCategoryItemList(
               self, base_category_list=other_base_category_list,
-              base=base, display_base_category=display_base_category, **kw)
+              base=base, display_base_category=display_base_category, **kw))
         # Return result
         return result
 
@@ -169,31 +169,37 @@ class Resource(XMLMatrix, Variated):
         *old parameters: base=1, current_category=None, 
                          display_id='getTitle' (default value getTitleOrId)
       """
+      base_category_list = base_category_list or \
+          self.getVariationBaseCategoryList()
+      
+      individual_bc_list = self.getIndividualVariationBaseCategoryList()
+      other_bc_list = [x for x in base_category_list if x not
+          in individual_bc_list]
+      
       result = Variated.getVariationCategoryItemList(self, 
-                            base_category_list=base_category_list, 
+                            base_category_list=other_bc_list, 
                             display_base_category=display_base_category, 
                             display_id=display_id, base=base, **kw)
+      
       if not omit_individual_variation:
-        other_variations = self.searchFolder(
-                              portal_type=self.getPortalVariationTypeList())
+        individual_variation_list = self.searchFolder(
+            portal_type=self.getPortalVariationTypeList())
+        individual_variation_list = [x.getObject() for x in
+            individual_variation_list]
 
-        other_variations = map(lambda x: x.getObject(), other_variations)
-        other_variations = filter(lambda x: x is not None, other_variations)
-
-        for object in other_variations:
-          for base_category in object.getVariationBaseCategoryList():
-            if (base_category_list is ()) or \
-               (base_category in base_category_list):
+        for variation in individual_variation_list:
+          for base_category in variation.getVariationBaseCategoryList():
+            if (base_category_list is () or base_category in
+                base_category_list) and base_category in individual_bc_list:
               # XXX append object, relative_url ?
               # XXX now, call Renderer a lot of time.
               # Better implementation needed
               result.extend(Renderer(
-                             base_category=base_category, 
-                             display_base_category=display_base_category,
-                             display_none_category=0, base=base,
-                             current_category=current_category,
-                             display_id=display_id, **kw).\
-                                               render([object]))
+                  base_category=base_category,
+                  display_base_category=display_base_category,
+                  display_none_category=0, base=base,
+                  current_category=current_category, display_id=display_id,
+                  **kw).render([variation]))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -231,7 +237,7 @@ class Resource(XMLMatrix, Variated):
       vcil = self.getVariationCategoryItemList(
                     base_category_list=base_category_list,
                     omit_individual_variation=omit_individual_variation,**kw)
-      return map(lambda x: x[1], vcil)
+      return [x[1] for x in vcil]
 
     # Unit conversion
     security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')

@@ -62,7 +62,7 @@ class Variated(Base):
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self, omit_optional_variation=0,
-      omit_option_base_category=None):
+      omit_option_base_category=None, omit_individual_variation=0):
     """
       Return the list of variation base category.
       If omit_optional_variation==1, do not include base category
@@ -81,6 +81,12 @@ class Variated(Base):
       # of a good API.
       option_base_category_list = self.getPortalOptionBaseCategoryList()
       vbcl = [x for x in vbcl if x not in option_base_category_list]
+    else:
+      vbcl.extend(self.getOptionalVariationBaseCategoryList())
+      
+    if omit_individual_variation == 0:
+      vbcl.extend(self.getIndividualVariationBaseCategoryList())
+      
     return vbcl
 
   security.declareProtected(Permissions.AccessContentsInformation, 
@@ -222,7 +228,8 @@ class Variated(Base):
   security.declareProtected(Permissions.AccessContentsInformation,
                                     'getVariationBaseCategoryItemList')
   def getVariationBaseCategoryItemList(self, display_id='title_or_id',
-        omit_optional_variation=0, omit_option_base_category=None):
+        omit_optional_variation=0, omit_option_base_category=None,
+        omit_individual_variation=0):
       """
         Returns base category of the resource
         as a list of tuples (title, id). This is mostly
@@ -236,7 +243,8 @@ class Variated(Base):
         omit_optional_variation = omit_option_base_category
 
       variation_base_category_list = self.getVariationBaseCategoryList(
-          omit_optional_variation=omit_optional_variation)
+          omit_optional_variation=omit_optional_variation,
+          omit_individual_variation=omit_individual_variation)
       result = []
       for base_category in variation_base_category_list:
         bc = self.portal_categories.resolveCategory(base_category)
@@ -348,16 +356,18 @@ class Variated(Base):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeCategoryList')
   def getVariationRangeCategoryList(self, base_category_list=(), base=1,
-                                    root=1, current_category=None):
+                                    root=1, current_category=None,
+                                    omit_individual_variation=0):
     """
       Returns the range of acceptable categories
     """
     vrcil = self.getVariationRangeCategoryItemList(
-                               base_category_list=base_category_list,
-                               base=base, root=root, 
-                               current_category=current_category)
+                          base_category_list=base_category_list,
+                          base=base, root=root, 
+                          current_category=current_category,
+                          omit_individual_variation=omit_individual_variation)
     # display is on left
-    return map(lambda x: x[1], vrcil)
+    return [x[1] for x in vrcil]
 
   # Context related methods
   security.declarePublic('newVariationValue')
