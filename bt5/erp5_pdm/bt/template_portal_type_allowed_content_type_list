@@ -1,16 +1,19 @@
 Component Module | Component
+Component | Component Individual Variation
 Component | Image
 Component | Purchase Supply Line
 Component | Sale Supply Line
 Component | Supply Line
 Product Module | Product
 Product | Image
+Product | Product Individual Variation
 Product | Purchase Supply Line
 Product | Sale Supply Line
 Product | Supply Line
 Service Module | Service
 Service | Purchase Supply Line
 Service | Sale Supply Line
+Service | Service Individual Variation
 Service | Supply Line
 Transformation Module | Transformation
 Transformation Operation | Mapped Value

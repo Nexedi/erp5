@@ -44,6 +44,10 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -71,61 +75,44 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_base_height</string>
-                        <string>my_base_length</string>
-                        <string>my_base_weight</string>
-                        <string>my_base_width</string>
-                        <string>my_comment</string>
-                        <string>my_description</string>
-                        <string>my_title</string>
-                        <string>my_translated_validation_state_title</string>
-                        <string>my_product_line</string>
-                        <string>my_reference</string>
-                        <string>my_resource</string>
-                        <string>my_product_module_listbox</string>
-                        <string>my_service_module_listbox</string>
-                        <string>my_ean13_code</string>
-                        <string>my_aggregated_portal_type_list</string>
-                        <string>my_required_aggregated_portal_type_list</string>
-                        <string>my_component_module_listbox</string>
-                        <string>my_base_volume</string>
-                        <string>my_quantity_unit_list</string>
-                        <string>my_portal_variation_base_category_list</string>
-                        <string>my_variation_base_category_list</string>
-                        <string>my_optional_variation_base_category_list</string>
-                        <string>my_individual_variation_base_category</string>
-                        <string>my_variation_category_list</string>
-                        <string>my_component_individual_variation_listbox</string>
-                        <string>my_product_individual_variation_listbox</string>
-                        <string>my_service_individual_variation_listbox</string>
+                        <string>my_preferred_product_variation_base_category_list</string>
+                        <string>my_preferred_product_optional_variation_base_category_list</string>
+                        <string>my_preferred_product_individual_variation_base_category_list</string>
+                        <string>my_preferred_service_variation_base_category_list</string>
+                        <string>my_preferred_service_optional_variation_base_category_list</string>
+                        <string>my_preferred_service_individual_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_preferred_component_variation_base_category_list</string>
+                        <string>my_preferred_component_optional_variation_base_category_list</string>
+                        <string>my_preferred_component_individual_variation_base_category_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -133,7 +120,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Resource_viewFieldLibrary</string> </value>
+            <value> <string>Preference_viewResourceData</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -141,7 +128,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Resource_viewFieldLibrary</string> </value>
+            <value> <string>Preference_viewVariationConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -153,11 +144,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Resource view Field Library</string> </value>
+            <value> <string>PDM</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

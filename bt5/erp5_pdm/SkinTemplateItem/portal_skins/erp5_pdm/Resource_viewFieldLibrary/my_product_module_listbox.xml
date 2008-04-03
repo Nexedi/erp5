@@ -19,6 +19,8 @@
                 <string>selection_name</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
+                <string>report_tree</string>
+                <string>report_root_list</string>
               </list>
             </value>
         </item>
@@ -80,7 +82,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -111,7 +113,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -134,22 +136,22 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>domain_root_list</string> </key>
+                    <key>                 <string>domain_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>quantity_unit</string>
-                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
                           <string>product_line</string>
-                          <string>product_line</string>
+                          <string>Product Line</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
+                    <key>                 <string>domain_tree</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -161,7 +163,30 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>product_line</string>
+                          <string>Product Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent</string>
+                          <string>Parent</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>report_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>product_module_selection</string> </value>
                 </item>
                 <item>
@@ -169,7 +194,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Products</string> </value>
                 </item>
               </dictionary>

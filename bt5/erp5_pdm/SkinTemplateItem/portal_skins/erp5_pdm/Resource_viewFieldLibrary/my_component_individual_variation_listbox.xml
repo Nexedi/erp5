@@ -14,12 +14,14 @@
             <value>
               <list>
                 <string>title</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_reference</string> </value>
+            <value> <string>my_component_individual_variation_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,11 +78,26 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_product_individual_variation_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Resource_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Component Individual Variation</string>
+                          <string>Component Individual Variation</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>component_individual_variation_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -88,7 +105,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Reference</string> </value>
+                    <value> <string>Component Individual Variations</string> </value>
                 </item>
               </dictionary>
             </value>

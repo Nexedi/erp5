@@ -14,13 +14,18 @@
             <value>
               <list>
                 <string>title</string>
+                <string>columns</string>
+                <string>all_columns</string>
+                <string>sort_columns</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
                 <string>enabled</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_product_line</string> </value>
+            <value> <string>my_product_individual_variation_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -57,6 +62,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key>                 <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -68,6 +81,18 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>portal_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -86,16 +111,76 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_base_category</string>
+                          <string>Base Category</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_base_category</string>
+                          <string>Base Category</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Product Individual Variation</string>
+                          <string>Product Individual Variation</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>product_individual_variation_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_base_category</string>
+                          <string>Base Category</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -103,7 +188,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Product Line</string> </value>
+                    <value> <string>Product Individual Variations</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -122,7 +207,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories[field.getId().replace(\'my_\', \'\', 1)], \'getCategoryChildItemList\')(checked_permission=\'View\', display_none_category=0)</string> </value>
+            <value> <string>python: here.contentValues(filter={\'portal_type\': here.getPortalVariationTypeList()})</string> </value>
         </item>
       </dictionary>
     </pickle>

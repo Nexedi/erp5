@@ -34,25 +34,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_property_domain_dict</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>short_title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
             <key> <string>_roles</string> </key>
             <value>
               <list/>
@@ -60,7 +41,7 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -76,19 +57,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>organisation_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Resource</string> </value>
+            <value> <string>ERP5 Variation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Product is a tangible good which can be produced and traded (ex. a pen, a bicycle, a suit, etc.). Products may define multiple variations and configuration options. Trading information such as price, customer, reference, etc. may be defined on a Product, although it is recommended in complex environments to use Sale Supplies for that purpose. In a production environment, Components are procured and Products are sold.</string> </value>
+            <value> <string>A Variation</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addResource</string> </value>
+            <value> <string>addVariation</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -98,7 +79,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>resource</string>
+                <string>variation</string>
               </tuple>
             </value>
         </item>
@@ -110,11 +91,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Product</string> </value>
+            <value> <string>Component Individual Variation</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>IndividualVariation_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
@@ -129,46 +110,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
-        </item>
-        <item>
-            <key> <string>property_name</string> </key>
-            <value> <string>short_title</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
-        </item>
-        <item>
-            <key> <string>property_name</string> </key>
-            <value> <string>title</string> </value>
         </item>
       </dictionary>
     </pickle>

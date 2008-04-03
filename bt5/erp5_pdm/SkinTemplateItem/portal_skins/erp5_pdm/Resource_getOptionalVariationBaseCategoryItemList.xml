@@ -65,9 +65,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.edit(\n
-  variation_base_category_list=(\'industrial_phase\', ),\n
-)\n
+            <value> <string>"""\n
+This script returns the list of base categories on the preferred\n
+variations for services. It is intended to be used\n
+by ListField instances.\n
+"""\n
+\n
+portal_type = context.getPortalType()\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def getOptionalVariationBaseCategoryList(portal_type):\n
+  result = []\n
+  #xxx default preference value [] for fix a bug\n
+  method_name = \'getPreferred%sOptionalVariationBaseCategoryList\' % portal_type.replace(\' \', \'\')\n
+  method = getattr(context.portal_preferences, method_name)\n
+  url_list = method([])\n
+  for url in url_list:\n
+    base_category = context.portal_categories[url]\n
+    result.append((base_category.getTranslatedTitle(), base_category.getRelativeUrl()))\n
+  return result\n
+\n
+getOptionalVariationBaseCategoryList = CachingMethod(getOptionalVariationBaseCategoryList,\n
+    id=(script.id, context.Localizer.get_selected_language()),\n
+    cache_factory=\'erp5_ui_long\')\n
+\n
+return getOptionalVariationBaseCategoryList(portal_type)\n
 </string> </value>
         </item>
         <item>
@@ -83,14 +106,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,10 +133,13 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_type</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>getOptionalVariationBaseCategoryList</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,7 +156,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Product_init</string> </value>
+            <value> <string>Resource_getOptionalVariationBaseCategoryItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

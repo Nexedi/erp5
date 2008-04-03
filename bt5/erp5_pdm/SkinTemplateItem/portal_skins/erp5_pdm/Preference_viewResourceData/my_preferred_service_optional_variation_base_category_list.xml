@@ -10,23 +10,16 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
                 <string>title</string>
-                <string>enabled</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_industrial_phase_list</string> </value>
+            <value> <string>my_preferred_service_optional_variation_base_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -63,12 +56,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -78,10 +65,6 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -92,43 +75,23 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category_list</string> </value>
+                    <value> <string>my_portal_variation_base_category_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Resource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Industrial Phase</string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Service Optional Variation</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories[field.getId().replace(\'my_\', \'\', 1).replace(\'_list\', \'\')], \'getCategoryChildItemList\')(checked_permission=\'View\', display_none_category=0)</string> </value>
         </item>
       </dictionary>
     </pickle>
