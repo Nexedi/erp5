@@ -108,6 +108,9 @@ def Field_get_user_input_value(self, key, REQUEST):
   """
   return REQUEST.form[key]
 
+def Field_render_odf(self, field=None, key=None, value=None, REQUEST=None, render_format='ooo'):
+  return self.widget.render_odf(self, key, value, REQUEST, render_format)
+
 Field.generate_field_key = Field_generate_field_key
 Field.render = Field_render
 Field.render_sub_field = Field_render_sub_field
@@ -115,6 +118,7 @@ Field.generate_subfield_key = Field_generate_subfield_key
 Field.validate_sub_field = Field_validate_sub_field
 Field._render_helper = Field_render_helper
 Field._get_user_input_value = Field_get_user_input_value
+Field.render_odf = Field_render_odf
 
 ProxyField._render_helper = Field_render_helper
 
