@@ -226,7 +226,7 @@ class SQLQueue(RAMQueue, SQLBase):
             LOG('SQLQueue', TRACE, 'Freed message %r' % (uid, ))
     if len(deletable_uid_list):
       try:
-        activity_tool.SQLQueue_delMessage(uid=deletable_uid_list)
+        self._retryOnLockError(activity_tool.SQLQueue_delMessage, kw={'uid': deletable_uid_list})
       except:
         LOG('SQLQueue', ERROR, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
       else:

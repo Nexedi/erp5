@@ -26,6 +26,10 @@
 #
 ##############################################################################
 
+from _mysql_exceptions import OperationalError
+from MySQLdb.constants import ER
+from zLOG import LOG, INFO
+
 class SQLBase:
   """
     Define a set of common methods for SQL-based storage of activities.
@@ -49,3 +53,20 @@ class SQLBase:
     if priority is None:
       priority = default
     return priority
+
+  def _retryOnLockError(self, method, args=(), kw=None):
+    if kw is None:
+      kw = {}
+    while True:
+      try:
+        result = method(*args, **kw)
+      except OperationalError, value:
+        if isinstance(value, OperationalError) and \
+           value[0] in (ER.LOCK_WAIT_TIMEOUT, ER.LOCK_DEADLOCK):
+          LOG('SQLBase', INFO, 'Got a lock error, retrying...')
+        else:
+          raise
+      else:
+        break
+    return result
+

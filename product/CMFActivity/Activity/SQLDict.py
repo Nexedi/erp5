@@ -378,7 +378,7 @@ class SQLDict(RAMDict, SQLBase):
           delay_uid_list.append(uid)
     if len(deletable_uid_list):
       try:
-        activity_tool.SQLDict_delMessage(uid=deletable_uid_list)
+        self._retryOnLockError(activity_tool.SQLDict_delMessage, kw={'uid': deletable_uid_list})
       except:
         LOG('SQLDict', ERROR, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
       else:
