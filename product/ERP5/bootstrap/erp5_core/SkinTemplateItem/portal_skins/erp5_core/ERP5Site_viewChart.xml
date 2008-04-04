@@ -177,14 +177,14 @@ bFBLBQYAAAAABAAEAA8BAAAYEgAAAAA=</string> </value>
     <office:drawing tal:define="display request/display | nothing;">\n
       <tal:block tal:condition="display">\n
         <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
-                       preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
-                       % (display.capitalize());\n
-                       global ratio python:int(0.025) ">\n
+                   preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
+                   % (display.capitalize());\n
+                   global ratio python:int(0.025) ">\n
           <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.025) ;\n
-                    global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.025 );"/>\n
-          </tal:block>\n
+                     global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.025 );"/>\n
         </tal:block>\n
-      <draw:page draw:style-name=\'dp1\' \n
+      </tal:block>\n
+      <draw:page draw:style-name=\'dp1\'\n
                  draw:name=\'page1\'\n
                  draw:master-page-name=\'Standard\'>\n
         <office:forms form:apply-design-mode=\'false\'\n
@@ -193,8 +193,8 @@ bFBLBQYAAAAABAAEAA8BAAAYEgAAAAA=</string> </value>
                     draw:layer=\'layout\'\n
                     svg:x=\'0cm\'\n
                     svg:y=\'0cm\'\n
-                    tal:attributes="svg:height height;\n
-                    svg:width width ">\n
+                    tal:attributes="svg:height height | string:10cm;\n
+                    svg:width width | string:10cm">\n
           <office:include tal:attributes="path python: \'%s/ERP5Site_buildChart\' % here.getPath()" xlink:type=\'simple\' xlink:actuate=\'onLoad\' xlink:show=\'embed\'/>\n
         </draw:frame>\n
       </draw:page>\n
