@@ -447,6 +447,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     # It's an equivalent to DOTALL option passing (but sub can't get options parameter)
     text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
     text = re.sub('<\s*office:include\s+(.*?)\s*/\s*>(?s)', replaceIncludes, text)
+    text = re.sub('&lt;\s*office:include\s+(.*?)\s*/\s*&gt;(?s)', replaceIncludes, text)
     return (text, attached_files_dict)
 
   # Proxy method to PageTemplate
