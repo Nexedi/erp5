@@ -38,7 +38,7 @@ from StringIO import StringIO
 from zLOG import LOG, TRACE, WARNING, ERROR, INFO
 import imghdr
 import random
-import getopt, sys, os
+import getopt, sys, os, re
 from urllib import quote
 
 from Products.ERP5.ERP5Site import ERP5Site
@@ -568,8 +568,8 @@ class ManageFiles:
                             pdf_file,
                             object_names,
                             skin_folder,
-                            desired_height,
                             desired_width,
+                            desired_height,
                             resolution,
                             background_format
                             ):
@@ -588,8 +588,10 @@ class ManageFiles:
     # opening new file on HDD to save PDF content
     temp_pdf = NamedTemporaryFile()
 
-    # opening new file on HDD to save created background image content
+    # get an unused file name on HDD to save created background image content
     temp_image = NamedTemporaryFile()
+    temp_image_name = temp_image.name
+    temp_image.close()
 
     # going to the begining of the input file
     pdf_file.seek(0)
@@ -602,21 +604,21 @@ class ManageFiles:
       # convert add a '-N' string a the end of the file name if there is more
       # than one page in the pdf file (where N is the number of the page,
       # begining at 0)
-      if os.path.exists(temp_image.name):
+      if os.path.exists(temp_image_name):
         # thats mean there's only one page in the pdf file
-        background_image_list.append(temp_image.name)
+        background_image_list.append(temp_image_name)
       else:
         # in the case of multi-pages pdf file, we must find all files
         image_number = 0
-        while os.path.exists(temp_image.name + '-%s' % image_number):
-          background_image_list.append(temp_image.name + '-%s' % image_number)
+        while os.path.exists(temp_image_name + '-%s' % image_number):
+          background_image_list.append(temp_image_name + '-%s' % image_number)
           image_number += 1
       return background_image_list
 
     try:
-      result = commands.getstatusoutput('convert -density %s -resize %sx%s '\
+      result = commands.getstatusoutput('convert -verbose -density %s -resize %sx%s '\
           '%s %s' % (resolution, desired_width, desired_height, temp_pdf.name,
-          background_format + ':' + temp_image.name))
+          background_format + ':' + temp_image_name))
 
       # check that the command has been done succeful
       if result[0] != 0:
@@ -638,18 +640,26 @@ class ManageFiles:
     if not len(background_image_list):
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
           'image found')
-      temp_image.close()
       raise ValueError, 'Error: ScribusUtils.setBackgroundPictures : '\
                         'no background'
 
     # get the real size of the first image
-    # this could be usefull if the user only defined one dimention
-    # and convert has calculate the other using proportionnality
-    file_result= commands.getstatusoutput('identify %s' %\
-        background_image_list[0])
+    # this could be usefull if the user only defined one dimention :
+    # convert command has calculate the other using proportionnality
+    rawstr = r'''
+        PDF\s        # The line begin with PDF 
+        (\d+)x(\d+)  # old file size
+        =>           # Separator between old and new size
+        (\d+)x(\d+)  # The matching pattern : width and height'''
+    compile_obj = re.compile(rawstr, re.MULTILINE | re.VERBOSE)
+    match_obj_list = re.findall(compile_obj, result[1])
+    
+    # old size is not use now, and depends of the density convert parameter
+    #old_size_x = match_obj_list[0][0]
+    #old_size_y = match_obj_list[0][1]
 
-    real_size_x = file_result[1].split(' ')[2].split('x')[0]
-    real_size_y = file_result[1].split(' ')[2].split('x')[1]
+    real_size_x = match_obj_list[0][2]
+    real_size_y = match_obj_list[0][3]
 
     # add images in erp5 :
     image_number = 0
@@ -662,11 +672,10 @@ class ManageFiles:
 
     # delete all images created in this method before raise an error
     background_image_list = makeImageList()
-    for background_image in background_image_list[1:]:
+    for background_image in background_image_list:
       # remove the file from the system
       if os.path.exists(background_image):
         os.remove(background_image)
-    temp_image.close()
 
     size_x = int(real_size_x)
     size_y = int(real_size_y)
@@ -675,11 +684,14 @@ class ManageFiles:
    
     return (size_x, size_y)
 
-  security.declarePublic('getPageattributes')
-  def getPageattributes (self,
+  security.declarePublic('getPageAttributes')
+  def getPageAttributes (self,
                          global_properties,
                          pdf_file
                         ):
+    '''return the size of the original pdf file (in pts)
+    This is usefull to calculate proportionnality between original size and
+    desired size. That permit to place correctly the fields on the page'''
     import commands
     from tempfile import NamedTemporaryFile
     # opening new file on HDD to save PDF content
@@ -694,61 +706,32 @@ class ManageFiles:
     pdf_file.seek(0)
     # saving content
     temp_pdf.write(pdf_file.read())
-    if os.path.exists(temp_pdf.name):
-      temp_pdf.close()    
-    width_groups = []
-    height_groups = []
-    # launching first soft to convert from PDF to PPM
-    ScribusUtilsOriginaltempsPPM = NamedTemporaryFile(mode="w+b")
-    ScribusUtilsOriginaltempsPPMName = ScribusUtilsOriginaltempsPPM.name
-    original_result = commands.getstatusoutput('pdftoppm -r %s %s %s' % (72, 
-      ScribusUtilsOriginaltempsPDFName, ScribusUtilsOriginaltempsPPMName))
-    original_result= commands.getstatusoutput('identify %s' % \
-        (ScribusUtilsOriginaltempsPPMName + '*'))
+    temp_pdf.close()    
 
-    def makePPMFileList():
-      ppm_list = []
-      # pdftoppm add a '-N' string a the end of the file name if there is more
-      # than one page in the pdf file (where N is the number of the page,
-      # begining at 1)
-      if os.path.exists(ScribusUtilsOriginaltempsPPMName):
-        # thats mean there's only one page in the pdf file
-        ppm_list.append(ScribusUtilsOriginaltempsPPMName)
-      # try to find the other pages if there is more than one (in case of 
-      # multi-pages pdf file)
-      image_number = 1
-      while os.path.exists(ScribusUtilsOriginaltempsPPMName + '-%s.ppm' %\
-          image_number):
-        ppm_list.append(ScribusUtilsOriginaltempsPPMName + '-%s.ppm' % \
-            image_number)
-        image_number += 1
-      return ppm_list
+    
+    command_output = commands.getstatusoutput('pdfinfo %s' % \
+        ScribusUtilsOriginaltempsPDFName)
 
-    # this lines permit to delete tempory files (about 2.4 Mo for each file !)
-    # it's temporary because this function must be rewrited or deleted
-    # (perhaps setBackgroundPictures could return attributes list)
-    ppm_list = makePPMFileList()
-    for ppm in ppm_list[1:]:
-      if os.path.exists(ppm):
-        os.remove(ppm)
-    ScribusUtilsOriginaltempsPPM.close()
-    ScribusUtilsOriginalTempPDF.close()
+    if command_output[0] != 0:
+        LOG('ScribusUtils.getPageAttributes :', ERROR, 'pdfinfo command'\
+            'failed with the following error message : \n%s' % command_output[1])
+        raise ValueError, 'Error: convert command failed with the following'\
+                          'error message : \n%s' % command_output[1]
+    
+    # get the pdf page size
+    rawstr = r'''
+        Page\ssize:        #begining of the instersting line
+        \s*                #some spaces
+        (\S+)\sx\s(\S+)    #the matching pattern : width and height in pts'''
+    compile_obj = re.compile(rawstr, re.MULTILINE | re.VERBOSE)
+    match_obj = re.search(compile_obj, command_output[1])
+    width, height = match_obj.groups()
+    width = int(round(float(width)))
+    height = int(round(float(height)))
 
-    pg_nbr = len(original_result[1].split('\n'))
-    real_size_x = {}
-    real_size_y = {}
-    for i in range(0,pg_nbr):
-      real_size_x[i]= \
-         float(original_result[1].split('\n')[i].split(' ')[2].split('x')[1])
-      real_size_y[i]= \
-         float(original_result[1].split('\n')[i].split(' ')[2].split('x')[0])
-    for page_iterator in range(global_properties['page']):  
-      actual_page_height = real_size_x[page_iterator]
-      actual_page_width = real_size_y[page_iterator]
-      width_groups.append(actual_page_width)
-      height_groups.append(actual_page_height)
+    LOG('width_groups, height_groups', 0, '%s, %s' % (width, height))
+    return (width, height)
 
-    return (width_groups, height_groups)
 
   security.declarePublic('setPropertySheetAndDocument')
   def setPropertySheetAndDocument(self,
@@ -844,10 +827,10 @@ class ManageCSS:
           ,properties_css_dict
           ,page_iterator
           ,page_id
-          ,page_height
-          ,page_width
-          ,width_groups
-          ,height_groups):
+          ,new_width
+          ,new_height
+          ,old_width
+          ,old_height):
     """
     recover all CSS data relative to the current page and save these
     information in the output dict
@@ -875,13 +858,13 @@ class ManageCSS:
       properties_css_page['margin-top'] = "%spx" % (40)
 
     # set width and height on page block
-    properties_css_page['width'] = str (page_width) + 'px'
-    properties_css_page['height'] = str (page_height) + 'px'
+    properties_css_page['width'] = str (new_width) + 'px'
+    properties_css_page['height'] = str (new_height) + 'px'
 
-    properties_page['actual_width'] = width_groups[page_iterator]
-    properties_page['actual_height'] = height_groups[page_iterator] 
-    properties_css_background['height'] = str(page_height) + 'px'
-    properties_css_background['width'] = str (page_width) + 'px'
+    properties_page['actual_width'] = old_width
+    properties_page['actual_height'] = old_height 
+    properties_css_background['height'] = str(new_height) + 'px'
+    properties_css_background['width'] = str (new_width) + 'px'
     # adding properties dict to global dicts
     properties_css_dict['head'][page_id] = properties_css_page
     properties_css_dict['head'][background_id] = properties_css_background
@@ -918,8 +901,8 @@ class ManageCSS:
       # be found from the current's page top left corner.
       # that's why Y position must be updated
 
-      scaling_factor1 = page_width/properties_page['actual_width']
-      scaling_factor2 = page_height/properties_page['actual_height']
+      scaling_factor1 = float(page_width)/properties_page['actual_width']
+      scaling_factor2 = float(page_height)/properties_page['actual_height']
 
       properties_field['position_y'] = \
          str(float(properties_field['position_y']) - \

@@ -221,15 +221,15 @@ def ERP5Site_updateModuleScribus(self,
       # used only with option_html == 1
       # recover image_size
       image_size = ManageFiles.setBackgroundPictures(import_pdf_file,
-          object_names, skin_folder, desired_height, desired_width,
+          object_names, skin_folder, desired_width, desired_height,
           resolution, background_format)
 
-      page_width, page_height = image_size
+      new_width, new_height = image_size
 
       LOG('ERP5Site_updateModuleScribus', INFO,
-          '   height = %s' % str(page_height))
+          '   height = %s' % str(new_height))
       LOG('ERP5Site_updateModuleScribus', INFO,
-          '   width = %s' % str(page_width))
+          '   width = %s' % str(new_width))
       LOG('ERP5Site_updateModuleScribus', INFO, 
           'createmodule < background generated')
 
@@ -263,17 +263,17 @@ def ERP5Site_updateModuleScribus(self,
         # get CSS class properties relative to the actual page
         # (background picture position, picture size, etc.)
         # and add them to the css dict
-        width_groups, height_groups = ManageFiles.getPageattributes(
+        old_width, old_height = ManageFiles.getPageAttributes(
                                               global_properties,
                                               import_pdf_file)
         properties_css_dict, properties_page = \
             ManageCSS.setPageProperties(properties_css_dict,
                                         page_iterator,
                                         page_id,
-                                        page_height,
-                                        page_width,
-                                        width_groups,
-                                        height_groups)
+                                        new_width,
+                                        new_height,
+                                        old_width,
+                                        old_height)
 
       # RESUME DATA INTERPRETATION
       # iterating pageobjects in page
@@ -290,8 +290,8 @@ def ERP5Site_updateModuleScribus(self,
             properties_css_dict = ManageCSS.setFieldProperties(
                                             properties_css_dict,
                                             page_content[index],
-                                            page_width,
-                                            page_height,
+                                            new_width,
+                                            new_height,
                                             page_iterator,
                                             page_gap,
                                             keep_page,
@@ -313,7 +313,7 @@ def ERP5Site_updateModuleScribus(self,
 
       # add last properties to css dict, including implementation
       # of a n+1 page to prevent bug when rendering under Konqueror
-      ManageCSS.setFinalProperties(properties_css_dict, page_height,
+      ManageCSS.setFinalProperties(properties_css_dict, new_height,
                                    space_between_pages)
 
       # generate output string from dict
