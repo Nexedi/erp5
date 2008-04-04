@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity
+from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
 from RAMQueue import RAMQueue
 from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
         abortTransactionSynchronously
@@ -197,12 +197,13 @@ class SQLQueue(RAMQueue, SQLBase):
     final_error_uid_list = []
     message_with_active_process_list = []
     notify_user_list = []
+    non_executable_message_list = []
     for uid, m, priority in message_uid_priority_list:
-      if m.is_executed:
+      if m.is_executed == MESSAGE_EXECUTED:
         deletable_uid_list.append(uid)
         if m.active_process:
           message_with_active_process_list.append(m)
-      else:
+      elif m.is_executed == MESSAGE_NOT_EXECUTED:
         if type(m.exc_type) is ClassType and \
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
@@ -224,6 +225,11 @@ class SQLQueue(RAMQueue, SQLBase):
             LOG('SQLQueue', ERROR, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
           else:
             LOG('SQLQueue', TRACE, 'Freed message %r' % (uid, ))
+      else:
+        # Internal CMFActivity error: the message can not be executed because
+        # something is missing (context object cannot be found, method cannot
+        # be accessed on object).
+        non_executable_message_list.append(uid)
     if len(deletable_uid_list):
       try:
         self._retryOnLockError(activity_tool.SQLQueue_delMessage, kw={'uid': deletable_uid_list})
@@ -249,6 +255,12 @@ class SQLQueue(RAMQueue, SQLBase):
                                              processing_node=INVOKE_ERROR_STATE)
       except:
         LOG('SQLQueue', ERROR, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+    if len(non_executable_message_list):
+      try:
+        activity_tool.SQLQueue_assignMessage(uid=non_executable_message_list,
+                                             processing_node=VALIDATE_ERROR_STATE)
+      except:
+        LOG('SQLQueue', ERROR, 'Failed to set message to invalid path state for %r' % (final_error_uid_list, ), error=sys.exc_info())
     try:
       for m in notify_user_list:
         m.notifyUser(activity_tool)
@@ -287,7 +299,7 @@ class SQLQueue(RAMQueue, SQLBase):
         # Try to invoke
         try:
           activity_tool.invoke(value[1])
-          if value[1].is_executed:
+          if value[1].is_executed != MESSAGE_NOT_EXECUTED:
             # Commit so that if a message raises it doesn't causes previous
             # successfull messages to be rolled back. This commit might fail,
             # so it is protected the same way as activity execution by the
@@ -307,7 +319,7 @@ class SQLQueue(RAMQueue, SQLBase):
           # We must make sure that the message is not set as executed.
           # It is possible that the message is executed but the commit
           # of the transaction fails
-          value[1].is_executed = 0
+          value[1].is_executed = MESSAGE_NOT_EXECUTED
           try:
             makeMessageListAvailable([value[0]])
           except:
@@ -368,7 +380,7 @@ class SQLQueue(RAMQueue, SQLBase):
             validate_value = m.validate(self, activity_tool)
             if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-              if not m.is_executed:                                                 # Make sure message could be invoked
+              if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (m.method_id , path))
@@ -391,7 +403,7 @@ class SQLQueue(RAMQueue, SQLBase):
           validate_value = m.validate(self, activity_tool)
           if validate_value is VALID:
             activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-            if not m.is_executed:                                                 # Make sure message could be invoked
+            if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
               # The message no longer exists
               raise ActivityFlushError, (
                   'Could not evaluate %s on %s' % (method_id , path))

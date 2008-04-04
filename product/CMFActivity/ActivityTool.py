@@ -104,6 +104,10 @@ def registerActivity(activity):
   activity_instance = activity()
   activity_dict[activity.__name__] = activity_instance
 
+MESSAGE_NOT_EXECUTED = 0
+MESSAGE_EXECUTED = 1
+MESSAGE_NOT_EXECUTABLE = 2
+
 class Message:
   """Activity Message Class.
 
@@ -128,7 +132,7 @@ class Message:
     self.method_id = method_id
     self.args = args
     self.kw = kw
-    self.is_executed = 0
+    self.is_executed = MESSAGE_NOT_EXECUTED
     self.exc_type = None
     self.exc_value = None
     self.traceback = None
@@ -206,30 +210,41 @@ class Message:
   def __call__(self, activity_tool):
     try:
       obj = self.getObject(activity_tool)
-      old_security_manager = getSecurityManager()
-      # Change user if required (TO BE DONE)
-      # We will change the user only in order to execute this method
-      user = self.changeUser(self.user_name, activity_tool)
+    except KeyError:
+      self.is_executed = MESSAGE_NOT_EXECUTABLE
+    else:
       try:
-        result = getattr(obj, self.method_id)(*self.args, **self.kw)
-      finally:
-        setSecurityManager(old_security_manager)
+        old_security_manager = getSecurityManager()
+        # Change user if required (TO BE DONE)
+        # We will change the user only in order to execute this method
+        user = self.changeUser(self.user_name, activity_tool)
+        # XXX: There is no check to see if user is allowed to access
+        # that method !
+        method = getattr(obj, self.method_id, None)
+        try:
+          if method is None:
+            self.is_executed = MESSAGE_NOT_EXECUTABLE
+          else:
+            result = method(*self.args, **self.kw)
+        finally:
+          setSecurityManager(old_security_manager)
 
-      self.activateResult(activity_tool, result, obj)
-      self.is_executed = 1
-    except:
-      self.is_executed = 0
-      exc_info = sys.exc_info()
-      self.exc_type = exc_info[0]
-      self.exc_value = str(exc_info[1])
-      self.traceback = ''.join(ExceptionFormatter.format_exception(
-                               *exc_info))
-      LOG('ActivityTool', WARNING,
-          'Could not call method %s on object %s' % (
-          self.method_id, self.object_path), error=exc_info)
-      # push the error in ZODB error_log
-      if getattr(activity_tool, 'error_log', None) is not None:
-        activity_tool.error_log.raising(exc_info)
+        if method is not None:
+          self.activateResult(activity_tool, result, obj)
+          self.is_executed = MESSAGE_EXECUTED
+      except:
+        self.is_executed = MESSAGE_NOT_EXECUTED
+        exc_info = sys.exc_info()
+        self.exc_type = exc_info[0]
+        self.exc_value = str(exc_info[1])
+        self.traceback = ''.join(ExceptionFormatter.format_exception(
+                                 *exc_info))
+        LOG('ActivityTool', WARNING,
+            'Could not call method %s on object %s' % (
+            self.method_id, self.object_path), error=exc_info)
+        # push the error in ZODB error_log
+        if getattr(activity_tool, 'error_log', None) is not None:
+          activity_tool.error_log.raising(exc_info)
 
   def validate(self, activity, activity_tool, check_order_validation=1):
     return activity.validate(activity_tool, self,
@@ -846,13 +861,17 @@ class ActivityTool (Folder, UniqueObject):
       expanded_object_list = []
       new_message_list = []
       path_dict = {}
-      # Filter the list of messages. If an object is not available, ignore such a message.
+      # Filter the list of messages. If an object is not available, mark its message as non-executable.
       # In addition, expand an object if necessary, and make sure that no duplication happens.
       for m in message_list:
         # alternate method is used to segregate objects which cannot be grouped.
         alternate_method_id = m.activity_kw.get('alternate_method_id')
         try:
           obj = m.getObject(self)
+        except KeyError:
+          m.is_executed = MESSAGE_NOT_EXECUTABLE
+          continue
+        try:
           i = len(new_message_list) # This is an index of this message in new_message_list.
           if m.hasExpandMethod():
             for subobj in m.getObjectList(self):
@@ -890,7 +909,7 @@ class ActivityTool (Folder, UniqueObject):
           object_list.append(obj)
           new_message_list.append(m)
         except:
-          m.is_executed = 0
+          m.is_executed = MESSAGE_NOT_EXECUTED
           exc_info = sys.exc_info()
           m.exc_type = exc_info[0]
           m.exc_value = str(exc_info[1])
@@ -917,7 +936,7 @@ class ActivityTool (Folder, UniqueObject):
         traceback = ''.join(ExceptionFormatter.format_exception(
                             *exc_info))
         for m in new_message_list:
-          m.is_executed = 0
+          m.is_executed = MESSAGE_NOT_EXECUTED
           m.exc_type = exc_type
           m.exc_value = exc_value
           m.traceback = traceback
@@ -937,16 +956,16 @@ class ActivityTool (Folder, UniqueObject):
           object = object_list[i]
           m = new_message_list[i]
           if i in failed_message_dict:
-            m.is_executed = 0
+            m.is_executed = MESSAGE_NOT_EXECUTED
             LOG('ActivityTool', WARNING,
                 'the method %s partially failed on object %s' %
                 (m.method_id, m.object_path,))
           else:
             try:
               m.activateResult(self, result, object)
-              m.is_executed = 1
+              m.is_executed = MESSAGE_EXECUTED
             except:
-              m.is_executed = 0
+              m.is_executed = MESSAGE_NOT_EXECUTED
               m.exc_type = sys.exc_info()[0]
               LOG('ActivityTool', WARNING,
                   'Could not call method %s on object %s' % (

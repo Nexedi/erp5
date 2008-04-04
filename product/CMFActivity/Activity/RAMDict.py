@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity
+from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_EXECUTED
 from Products.CMFActivity.Errors import ActivityFlushError
 from Queue import Queue, VALID
 
@@ -83,7 +83,7 @@ class RAMDict(Queue):
     for key, m in self.getDict(path).items():
       if m.validate(self, activity_tool) is VALID:
         activity_tool.invoke(m)
-        if m.is_executed:
+        if m.is_executed == MESSAGE_EXECUTED:
           del self.getDict(path)[key]
           get_transaction().commit()
           return 0
@@ -133,7 +133,7 @@ class RAMDict(Queue):
             # First Validate
             if m.validate(self, activity_tool) is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-              if not m.is_executed:                                                 # Make sure message could be invoked
+              if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (method_id , path))
@@ -158,7 +158,7 @@ class RAMDict(Queue):
           LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
           if invoke:
             activity_tool.invoke(m)
-            if m.is_executed:
+            if m.is_executed == MESSAGE_EXECUTED:
               method_dict[m.method_id] = 1
               self.deleteMessage(activity_tool, m)
           else:

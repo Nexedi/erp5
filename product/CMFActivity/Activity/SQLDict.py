@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity
+from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
 from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
         abortTransactionSynchronously
 from RAMDict import RAMDict
@@ -344,9 +344,10 @@ class SQLDict(RAMDict, SQLBase):
     make_available_uid_list = []
     message_with_active_process_list = []
     notify_user_list = []
-    something_failed = (len([x for x in message_uid_priority_list if not x[1].is_executed]) != 0)
+    non_executable_message_list = []
+    something_failed = (len([x for x in message_uid_priority_list if x[1].is_executed == MESSAGE_NOT_EXECUTED]) != 0)
     for uid, m, priority in message_uid_priority_list:
-      if m.is_executed:
+      if m.is_executed == MESSAGE_EXECUTED:
         if something_failed:
           make_available_uid_list.append(uid)
           make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
@@ -357,7 +358,7 @@ class SQLDict(RAMDict, SQLBase):
             # XXX: Bug here: Even if a duplicate message has an active_process,
             # it won't be called on the duplicate.
             message_with_active_process_list.append(m)
-      else:
+      elif m.is_executed == MESSAGE_NOT_EXECUTED:
         # Should duplicate messages follow strictly the original message, or
         # should they be just made available again ?
         make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
@@ -376,6 +377,11 @@ class SQLDict(RAMDict, SQLBase):
           except:
             LOG('SQLDict', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
           delay_uid_list.append(uid)
+      else:
+        # Internal CMFActivity error: the message can not be executed because
+        # something is missing (context object cannot be found, method cannot
+        # be accessed on object).
+        non_executable_message_list.append(uid)
     if len(deletable_uid_list):
       try:
         self._retryOnLockError(activity_tool.SQLDict_delMessage, kw={'uid': deletable_uid_list})
@@ -396,6 +402,11 @@ class SQLDict(RAMDict, SQLBase):
                                             processing_node=INVOKE_ERROR_STATE)
       except:
         LOG('SQLDict', ERROR, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
+    if len(non_executable_message_list):
+      try:
+        activity_tool.SQLDict_assignMessage(uid=non_executable_message_list, processing_node=VALIDATE_ERROR_STATE)
+      except:
+        LOG('SQLDict', ERROR, 'Failed to set message to invalid path state for %r' % (non_executable_message_list, ), error=sys.exc_info())
     if len(make_available_uid_list):
       try:
         makeMessageListAvailable(make_available_uid_list)
@@ -472,7 +483,7 @@ class SQLDict(RAMDict, SQLBase):
         else:
           LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list))
       # Abort if something failed.
-      if len([x for x in message_uid_priority_list if not x[1].is_executed]) != 0:
+      if len([x for x in message_uid_priority_list if x[1].is_executed == MESSAGE_NOT_EXECUTED]) != 0:
         endTransaction = abortTransactionSynchronously
       else:
         endTransaction = get_transaction().commit
@@ -489,7 +500,7 @@ class SQLDict(RAMDict, SQLBase):
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
             raise
         for x in message_uid_priority_list:
-          x[1].is_executed = 0
+          x[1].is_executed = MESSAGE_NOT_EXECUTED
         failed_message_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(failed_message_uid_list, uid_to_duplicate_uid_list_dict)
@@ -541,7 +552,7 @@ class SQLDict(RAMDict, SQLBase):
               validate_value = m.validate(self, activity_tool)
               if validate_value is VALID:
                 activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-                if not m.is_executed:                                                 # Make sure message could be invoked
+                if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                   # The message no longer exists
                   raise ActivityFlushError, (
                       'Could not evaluate %s on %s' % (m.method_id , path))
@@ -572,7 +583,7 @@ class SQLDict(RAMDict, SQLBase):
             if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
 #               LOG('SQLDict.flush m.is_executed',0,m.is_executed)
-              if not m.is_executed:                                                 # Make sure message could be invoked
+              if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (m.method_id , path))

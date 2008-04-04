@@ -2826,6 +2826,93 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'checkAbsoluteUrl')
 
+  def CheckMissingActivityContextObject(self, activity):
+    """
+      Check that a message whose context has ben deleted goes to -3
+      processing_node.
+      This must happen on first message execution, without any delay.
+    """
+    readMessageList = getattr(self.getPortalObject(), '%s_readMessageList' % (activity, ))
+    activity_tool = self.getActivityTool()
+    container = self.getPortal().organisation_module
+    organisation = container.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    organisation.activate(activity=activity).getTitle()
+    get_transaction().commit()
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    # Here, we delete the subobject using most low-level method, to avoid
+    # pending activity to be removed.
+    organisation_id = organisation.id
+    container._delOb(organisation_id)
+    del organisation # Avoid keeping a reference to a deleted object.
+    get_transaction().commit()
+    self.assertEqual(getattr(container, organisation_id, None), None)
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    activity_tool.distribute()
+    self.assertEquals(len(readMessageList(processing_node=-3,
+                            include_processing=1)), 0)
+    activity_tool.tic()
+    self.assertEquals(len(readMessageList(processing_node=-3,
+                            include_processing=1)), 1)
+
+  def test_109_checkMissingActivityContextObjectSQLDict(self, quiet=0,
+      run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck missing activity context object (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckMissingActivityContextObject('SQLDict')
+
+  def test_110_checkMissingActivityContextObjectSQLQueue(self, quiet=0,
+      run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck missing activity context object (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckMissingActivityContextObject('SQLQueue')
+
+  def test_111_checkMissingActivityContextObjectSQLDict(self, quiet=0,
+      run=run_all_test):
+    """
+      This is similar to tst 108, but here the object will be missing for an
+      activity with a group_method_id.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck missing activity context object with ' \
+                'group_method_id (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    readMessageList = self.getPortalObject().SQLDict_readMessageList
+    activity_tool = self.getActivityTool()
+    container = self.getPortalObject().organisation_module
+    organisation = container.newContent(portal_type='Organisation')
+    organisation_2 = container.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    organisation.reindexObject()
+    organisation_2.reindexObject()
+    get_transaction().commit()
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    # Here, we delete the subobject using most low-level method, to avoid
+    # pending activity to be removed.
+    organisation_id = organisation.id
+    container._delOb(organisation_id)
+    del organisation # Avoid keeping a reference to a deleted object.
+    get_transaction().commit()
+    self.assertEqual(getattr(container, organisation_id, None), None)
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    activity_tool.distribute()
+    self.assertEquals(len(readMessageList(processing_node=-3,
+                            include_processing=1)), 0)
+    activity_tool.tic()
+    self.assertEquals(len(readMessageList(processing_node=-3,
+                            include_processing=1)), 1)
+    # The message excuted on "organisation_2" must have succeeded.
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
 
 def test_suite():
   suite = unittest.TestSuite()
