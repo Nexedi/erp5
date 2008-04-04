@@ -119,6 +119,7 @@ class OOoChartWidget(Widget.Widget):
                                   items=[('bar', 'chart:bar'),
                                         ('circle', 'chart:circle'),
                                         ('line', 'chart:line'),
+                                        ('scatter', 'chart:scatter'),
                                         ],
                                   size=0)
   property_names.append('chart_type')
@@ -192,24 +193,24 @@ class OOoChartWidget(Widget.Widget):
   property_names.append('grid_size')
 
   user_data_title = fields.StringField('user_data_title',
-                                title="User Column ID For X-axis",
+                                title="Overide Labelled Column ID",
                                 description=(
-      "Column ID choose by user to define the X-axes."),
+      "Column Id choose by user to define the label."),
                                 required=0)
   property_names.append('user_data_title')
 
   user_column_id_list = fields.ListTextAreaField('user_column_id_list',
-                                title="User Column ID List",
+                                title="Overide Column Ids",
                                 description=(
-      "A list of columns ID choose by user to draw the graph."),
+      "A list of column Ids choose by user to draw the graph."),
                                 default=[],
                                 required=0)
   property_names.append('user_column_id_list')
 
 
   chart_stacked = fields.CheckBoxField('chart_stacked',
-                              title='Stacked Bars',
-                              description=('stacked bars or not'),
+                              title='Stacked Data',
+                              description=('stacked data or not'),
                               default=0,
                               required=0)
   property_names.append('chart_stacked')
@@ -279,7 +280,7 @@ class OOoChartWidget(Widget.Widget):
                                 size=1)
   property_names.append('lines_used')
 
-  
+
   #series-source=columns or rows
   series_source = fields.ListField('series_source',
                                    title='Series Source',
@@ -305,7 +306,7 @@ class OOoChartWidget(Widget.Widget):
 
   #data-label-number="none" value percentage
   data_label_number = fields.ListField('data_label_number',
-                                       title='Data-Label-Number',
+                                       title='Data Label Number',
                                        description=(''),
                                        default='none',
                                        items=[('none', 'none'),
@@ -330,79 +331,12 @@ class OOoChartWidget(Widget.Widget):
                                            required=0)
   property_names.append('data_label_symbol')
 
-  def render_view(self, field, value, key=None, REQUEST=None, render_format='html'):
-    """
-      Render a Chart in read-only.
-    """
-    if REQUEST is None: REQUEST=get_request()
-    return self.render(field, key, value, REQUEST, render_format=render_format)
 
-  def render(self, field, key, value, REQUEST, render_format='html'):
-
-    """
-      Render a chart.
-
-      render_format   -- If the format is set to html, render the chart
-                         as a URL to ourselves with a png render_format
-
-                         If the format is set to 'raw', render the chart
-                         as raw XML.
-
-                         If the format is set to an image type (ex. png)
-                         render the chart using that format.
-    """
-
-    title = field.get_value('title')
-    alternate_name = field.get_value('alternate_name')
-
-    # Find the applicable context
-    form = field.aq_parent
-    here = getattr(form, 'aq_parent', REQUEST)
-    # Update the render format based on REQUEST parameters
-    render_format = getattr(REQUEST, 'render_format', render_format)
-
-    UrlIconOOo='%s/misc_/ERP5OOo/OOo.png' % here.ERP5Site_getAbsoluteUrl()
-    UrlIconPdf='%s/misc_/ERP5Form/PDF.png' % here.ERP5Site_getAbsoluteUrl()
-
-    if render_format == 'html':
-      field_absolute_url = '%s/%s/%s' % (here.absolute_url(),
-                                         form.getId(),
-                                         field.getId())
-      css_class = field.get_value('css_class')
-      format = field.get_value('image_format')
-      if format == '':
-        format='png'
-      display = field.get_value('image_display')
-      if format in STANDARD_IMAGE_FORMAT_LIST:
-        main_content = '''<div class="OOoChartContent">
-          <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
-          </div>''' % (css_class,
-                       field_absolute_url,
-                       format,
-                       display,
-                       title,
-                       alternate_name)
-        return main_content
-
-      if format == 'raw':
-        main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
-          ''' % (field_absolute_url,
-                 display,
-                 UrlIconOOo)
-        return main_content
-      if format == 'pdf':
-        main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
-          </div>''' % (field_absolute_url,
-                       display,
-                       UrlIconPdf)
-        return main_content
-
+  def getArgumentDict(self, field, REQUEST):
+    """ Build argument Dict """
     def stringBoolean(value):
       return str(bool(value)).lower()
 
-    #Build the parameters
     extra_argument_dict = dict(
       chart_form_id = field.get_value('form_id'),
       chart_field_id = field.get_value('field_id'),
@@ -435,10 +369,96 @@ class OOoChartWidget(Widget.Widget):
     for k, v in extra_argument_dict.items():
       if REQUEST.get(k) is None:
         REQUEST.form[k] = v
+    return extra_argument_dict
+
+
+  def render_view(self, field, value, key=None, REQUEST=None, render_format='html'):
+    """
+      Render a Chart in read-only.
+    """
+    if REQUEST is None: REQUEST=get_request()
+    return self.render(field, key, value, REQUEST, render_format=render_format)
+
+
+  def render_odf(self, field, key, value, REQUEST, render_format='ooo'):
+    """
+      Render a Chart for ODT Style.
+    """
+    form = field.aq_parent
+    here = getattr(form, 'aq_parent', REQUEST)
+    extra_context = self.getArgumentDict(field, here.REQUEST)
+    content = '''
+                  <office:include  style="inline-graphic" path="%s/ERP5Site_buildChart" xlink:type="simple" xlink:actuate="onLoad" xlink:show="embed"/>
+                  ''' % here.getPath()
+    return content
+
+
+  def render(self, field, key, value, REQUEST, render_format='html'):
+
+    """
+      Render a chart.
+
+      render_format   -- If the format is set to html, render the chart
+                         as a URL to ourselves with a png render_format
+
+                         If the format is set to 'raw', render the chart
+                         as raw XML.
+
+                         If the format is set to an image type (ex. png)
+                         render the chart using that format.
+    """
+
+    title = field.get_value('title')
+    alternate_name = field.get_value('alternate_name')
+
+    # Find the applicable context
+    form = field.aq_parent
+    here = getattr(form, 'aq_parent', REQUEST)
+    # Update the render format based on REQUEST parameters
+    render_format = getattr(REQUEST, 'render_format', render_format)
+    UrlIconOOo='%s/misc_/ERP5OOo/OOo.png' % here.ERP5Site_getAbsoluteUrl()
+    UrlIconPdf='%s/misc_/ERP5Form/PDF.png' % here.ERP5Site_getAbsoluteUrl()
+    if render_format == 'html':
+      field_absolute_url = '%s/%s/%s' % (here.absolute_url(),
+                                         form.getId(),
+                                         field.getId())
+      css_class = field.get_value('css_class')
+      format = field.get_value('image_format') or 'png'
+      display = field.get_value('image_display')
+      if format in STANDARD_IMAGE_FORMAT_LIST:
+        main_content = '''<div class="OOoChartContent">
+          <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
+          </div>''' % (css_class,
+                       field_absolute_url,
+                       format,
+                       display,
+                       title,
+                       alternate_name)
+        return main_content
+      elif format == 'raw':
+        main_content = '''<div class="OOoChartContent">
+          <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
+          ''' % (field_absolute_url,
+                 display,
+                 UrlIconOOo)
+        return main_content
+      elif format == 'pdf':
+        main_content = '''<div class="OOoChartContent">
+          <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
+          </div>''' % (field_absolute_url,
+                       display,
+                       UrlIconPdf)
+        return main_content
+      else:
+        raise NotImplementedError, 'Format: %s not handled' % format
+
+    extra_context = self.getArgumentDict(field, REQUEST)
 
     method_id = field.get_value('ooo_template')
+
     # Find the page template
     ooo_template = getattr(here, method_id)
+
     # Render the chart
     return ooo_template(format=render_format)
 
@@ -456,7 +476,5 @@ OOoChartValidatorInstance = OOoChartValidator()
 
 class OOoChart(ZMIField):
     meta_type = "OOoChart"
-
     widget = OOoChartWidgetInstance
     validator = OOoChartValidatorInstance
-
