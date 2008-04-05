@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,7 +66,7 @@
                  dummy python: response.redirect(url);" />\n
     </tal:block>\n
     <tal:block tal:condition="not: isAnon">\n
-      <tal:block tal:define="came_from python: request.get(\'came_from\') or here.absolute_url() + \'/view\';\n
+      <tal:block tal:define="came_from python: request.get(\'came_from\') or request.get(\'field_came_from\') or here.absolute_url() + \'/view\';\n
                  dummy python: response.redirect(came_from);" />\n
     </tal:block>\n
   </tal:block>\n
