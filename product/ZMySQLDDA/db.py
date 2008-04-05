@@ -100,6 +100,7 @@ from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, INFO
+from ZODB.POSException import ConflictError
 
 import string, sys
 from string import strip, split, find, upper, rfind
@@ -113,6 +114,11 @@ hosed_connection = (
 
 query_syntax_error = (
     ER.BAD_FIELD_ERROR,
+    )
+
+lock_error = (
+    ER.LOCK_WAIT_TIMEOUT,
+    ER.LOCK_DEADLOCK,
     )
 
 key_types = {
@@ -393,6 +399,8 @@ class DeferredDB(TM):
       except OperationalError, m:
         if m[0] in query_syntax_error:
           raise OperationalError(m[0], '%s: %s' % (m[1], query))
+        if m[0] in lock_error:
+          raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
         if ((not force_reconnect) and \
             (self._mysql_lock or self._transactions)) or \
            m[0] not in hosed_connection:

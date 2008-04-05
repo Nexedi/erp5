@@ -26,9 +26,8 @@
 #
 ##############################################################################
 
-from _mysql_exceptions import OperationalError
-from MySQLdb.constants import ER
 from zLOG import LOG, INFO
+from ZODB.POSException import ConflictError
 
 class SQLBase:
   """
@@ -60,12 +59,10 @@ class SQLBase:
     while True:
       try:
         result = method(*args, **kw)
-      except OperationalError, value:
-        if isinstance(value, OperationalError) and \
-           value[0] in (ER.LOCK_WAIT_TIMEOUT, ER.LOCK_DEADLOCK):
-          LOG('SQLBase', INFO, 'Got a lock error, retrying...')
-        else:
-          raise
+      except ConflictError:
+        # Note that this code assumes that a database adapter translates
+        # a lock error into a conflict error.
+        LOG('SQLBase', INFO, 'Got a lock error, retrying...')
       else:
         break
     return result
