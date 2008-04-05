@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -60,7 +57,10 @@
 \n
 <tal:block\n
   tal:define="is_web_mode  python: True;\n
-              portal_type  python: here.getPortalType()">\n
+              portal_type  python: here.getPortalType();\n
+              actions      request/actions | python:\n
+                           here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
+              dummy        python:request.set(\'actions\', actions);">\n
 \n
   <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->\n
   <!-- <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/> -->\n
@@ -68,7 +68,7 @@
   <!-- Edit button menu -->\n
   <div name="adminSection" class="adminSection">\n
     <h3 i18n:translate="" i18n:domain="ui">Edit</h3>\n
-    <ul tal:define="edit_link_list python: context.Base_getAdminToolboxEditShortcutList()">\n
+    <ul tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">\n
       <li tal:repeat="link edit_link_list">\n
         <a tal:attributes="href python: link[\'url\']">\n
           <img tal:attributes="src   python: link[\'icon\'];\n
@@ -85,7 +85,7 @@
 \n
        We need to setup the actions variable from the request because\n
        this template is called from outside the main rendering process-->\n
-  <div name="adminSection" class="adminSection" tal:define="actions request/actions">\n
+  <div name="adminSection" class="adminSection">\n
     <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
     <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
   </div>\n
