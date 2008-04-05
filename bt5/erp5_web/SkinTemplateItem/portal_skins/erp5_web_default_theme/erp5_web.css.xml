@@ -3,15 +3,16 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_all_cache</string> </value>
+        </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
@@ -112,6 +113,7 @@ a img, h3 img, button img, li img {vertical-align: middle}\n
 ul {list-style-position: inside}\n
 li {margin-left: 1em}\n
 \n
+fieldset#hidden_fieldset,\n
 .doNotDisplay {display: none}\n
 \n
 .hiddenLabel label {display: none}\n
