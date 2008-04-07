@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Guess a grouping references for lines whose uids are passed as\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Guess a grouping references for lines whose uids are passed as\n
 accounting_transaction_line_uid_list.\n
 If accounting_transaction_line_uid_list is not passed, this script assumes that\n
 it\'s called on the context of an accounting transaction and it guess the group\n
@@ -81,6 +83,16 @@ ctool = portal.portal_catalog\n
 \n
 allow_grouping_with_different_quantity = portal.portal_preferences.getPreference(\n
                                          \'preferred_grouping_with_different_quantities\', 0)\n
+\n
+def int2letter(i):\n
+  """Convert an integer to letters, to use as a grouping reference code.\n
+  A, B, C ..., Z, AA, AB, ..., AZ, BA, ..., ZZ, AAA ...\n
+  """\n
+  if i < 26:\n
+    return (chr(i + ord(\'A\')))\n
+  d, m = divmod(i, 26)\n
+  return int2letter(d - 1) + int2letter(m)\n
+\n
 \n
 def isSource(accounting_transaction):\n
   section_cat = portal.portal_preferences\\\n
@@ -136,9 +148,7 @@ for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
           (\'grouping_reference\', node, section, mirror_section))\n
     \n
     # convert from int to letters\n
-    d, m = divmod(grouping_reference, 26)\n
-    string_reference = \'A\' * d\n
-    string_reference += (chr(m + ord(\'A\')))\n
+    string_reference = int2letter(grouping_reference)\n
 \n
     for line in line_info_list:\n
       line_obj = portal.restrictedTraverse(line[\'path\'])\n
@@ -146,7 +156,9 @@ for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
       changed_lines.append(line[\'path\'])\n
 \n
 return changed_lines\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -201,6 +213,7 @@ return changed_lines\n
                             <string>portal</string>
                             <string>ctool</string>
                             <string>allow_grouping_with_different_quantity</string>
+                            <string>int2letter</string>
                             <string>isSource</string>
                             <string>accounting_transaction_line_value_list</string>
                             <string>None</string>
@@ -224,13 +237,7 @@ return changed_lines\n
                             <string>default_currency</string>
                             <string>round</string>
                             <string>grouping_reference</string>
-                            <string>divmod</string>
-                            <string>d</string>
-                            <string>m</string>
                             <string>string_reference</string>
-                            <string>_inplacevar_</string>
-                            <string>chr</string>
-                            <string>ord</string>
                             <string>line_obj</string>
                           </tuple>
                         </value>
