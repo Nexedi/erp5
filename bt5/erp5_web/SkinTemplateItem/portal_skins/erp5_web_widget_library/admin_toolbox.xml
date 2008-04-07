@@ -108,7 +108,7 @@
         <span id="clone_document_title"><tal:block tal:replace="python: \'Clone %s %s\' % ((portal_type in [\'Web Site\', \'Web Section\'] and \'Default\') or \'Current\', portal_type)"/></span>\n
       </h3>\n
 \n
-      <fieldset>\n
+      <fieldset style="display:block;float:left">\n
         <!--legend class="group_title">left</legend-->\n
 \n
           <div class="field">\n
