@@ -383,6 +383,28 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                   <div metal:use-macro="here/listbox_odt_macro/macros/listbox" />\n
                 </tal:block>\n
               </tal:block>\n
+              <tal:block tal:condition="python: field_type not in (\'ImageField\', \'OOoChart\')">\n
+                <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None;\n
+                                       value python: field.get_value(\'default\')">\n
+                  <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
+                    <tal:block tal:repeat="item value">\n
+                      <text:p text:style-name=\'field-content-center\'\n
+                           tal:content="python: str(item)"\n
+                           tal:condition="not:item_list"/>\n
+                      <text:p text:style-name=\'field-content\'\n
+                           tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
+                           tal:condition="item_list" />\n
+                    </tal:block>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
+                    <text:p text:style-name=\'field-content-center\'\n
+                           tal:content="python: field.render_pdf(value)"/>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: value is None">\n
+                    <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
               <tal:block tal:condition="python: field_type == \'ImageField\'">\n
                 <text:p text:style-name=\'field-content\'\n
                   tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
