@@ -135,7 +135,7 @@ class ConversionCacheMixin:
     """
     self._cached_time = PersistentMapping()
     self._cached_data = PersistentMapping()
-    self._cached_mime = PersistentMapping()
+    self._cached_size = PersistentMapping()
 
   security.declareProtected(Permissions.View, 'updateConversionCache')
   def updateConversionCache(self):
@@ -144,8 +144,8 @@ class ConversionCacheMixin:
       self._cached_time = PersistentMapping()
     if not hasattr(aself, '_cached_data') or self._cached_data is None:
       self._cached_data = PersistentMapping()
-    if not hasattr(aself, '_cached_mime') or self._cached_mime is None:
-      self._cached_mime = PersistentMapping()
+    if not hasattr(aself, '_cached_size') or self._cached_size is None:
+      self._cached_size = PersistentMapping()
 
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **format):
@@ -183,6 +183,9 @@ class ConversionCacheMixin:
         # is useful to remove the wrapper from a temp object
         # which may have been used to generate data
       self.updateConversion(**format)
+      self._cached_size[tformat] = len(data)
+    else:
+      self._cached_size[tformat] = 0
     self._p_changed = 1
 
   security.declareProtected(Permissions.View, 'getConversion')
@@ -198,7 +201,18 @@ class ConversionCacheMixin:
     """
     self.updateConversionCache()
     tformat = makeSortedTuple(format)
-    return self._cached_mime.get(tformat, ''), self._cached_data.get(tformat, '')
+    return self._cached_mime[tformat], self._cached_data[tformat]
+
+  security.declareProtected(Permissions.View, 'getConversionSize')
+  def getConversionSize(self, **format):
+    """
+    Returns the size of the converted document.
+    """
+    self.updateConversionCache()
+    tformat = makeSortedTuple(format)
+    if not self._cached_size.has_key(tformat):
+      self._cached_size[tformat] = len(self._cached_data[tformat])
+    return self._cached_size[tformat]
 
   security.declareProtected(Permissions.ViewManagementScreens, 'getConversionCacheInfo')
   def getConversionCacheInfo(self):
@@ -1138,10 +1152,17 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
         formats require certain permission
     """
     if format == 'html':
-      return 'text/html', ''
+      return 'text/html', '' # XXX - Why ?
     if format in ('text', 'txt'):
-      return 'text/plain', ''
+      return 'text/plain', '' # XXX - Why ?
     raise NotImplementedError
+
+  def getConvertedSize(self, format):
+    """
+      Returns the size of the converted document
+    """
+    format, data = self.convert(format)
+    return len(data)
 
   security.declareProtected(Permissions.View, 'asText')
   def asText(self):
