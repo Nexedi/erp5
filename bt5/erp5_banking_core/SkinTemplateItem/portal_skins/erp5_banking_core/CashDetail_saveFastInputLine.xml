@@ -73,6 +73,26 @@ ADD_PERMISSION =  \'Add portal content\'\n
 if not u.has_permission(ADD_PERMISSION,context):\n
   raise ValueError, "How did you manage to be there ???"\n
 \n
+request  = context.REQUEST\n
+N_ = context.Base_translateString\n
+\n
+def recurse(document):\n
+  result = document.hasActivity()\n
+  if not result:\n
+    for subdocument in document.objectValues():\n
+      result = recurse(subdocument)\n
+      if result:\n
+        break\n
+  return result\n
+\n
+def deleteContent(container, document_id):\n
+  document = container[document_id]\n
+  if recurse(document):\n
+    return True\n
+  else:\n
+    container.deleteContent(document_id)\n
+    return False\n
+\n
 cell_base_id = \'movement\'\n
 line_kwd = {\'base_id\':cell_base_id}\n
 \n
@@ -101,219 +121,224 @@ per_resource_dict = {}\n
 error = 0\n
 negative_quantity = 0\n
 float_quantity = 0\n
+variation_not_defined = 0\n
+remaining_activity = None\n
 # remove previous line\n
 # specific case for monetary issue\n
 if context.getPortalType() == "Monetary Issue":\n
   old_line = [id for id in context.objectIds()]\n
-  if len(old_line)>0:\n
-    for line_id in old_line:\n
-      context.deleteContent(line_id)\n
 else:\n
   old_line = [x.getObject().getId() for x in context.objectValues(portal_type=[line_portal_type,])]\n
-  if len(old_line)>0:\n
-    for line_id in old_line:\n
-      context.deleteContent(line_id)\n
+if len(old_line)>0:\n
+  for line_id in old_line:\n
+    if deleteContent(context, line_id):\n
+      error = 1\n
+      remaining_activity = \'%s/%s\' % (context.getPath(), line_id)\n
+      break\n
 \n
-# get the list of movement we need to create\n
-for line in listbox:\n
-  for counter in xrange(1, len(column_base_list)+1):\n
-    quantity = line["column%s" %(str(counter),)]\n
-    if quantity != 0 and quantity != \'\':\n
-      if quantity < 0:\n
-        error = 1\n
-        negative_quantity = 1\n
-      if check_float:\n
-        if int("%i" % quantity) != quantity:\n
+if not error:\n
+  # get the list of movement we need to create\n
+  for line in listbox:\n
+    for counter in xrange(1, len(column_base_list)+1):\n
+      quantity = line["column%s" %(str(counter),)]\n
+      if quantity != 0 and quantity != \'\':\n
+        if quantity < 0:\n
           error = 1\n
-          float_quantity = 1\n
-      #context.log("listboxline", line)\n
-      movement = {}\n
-      movement[\'quantity\'] = quantity\n
-      # get variation for the cell\n
-      if column_base_category == \'cash_status\':\n
-        movement[\'cash_status\'] =  "cash_status/%s" %cash_status_list[counter-1]\n
-        if line.has_key(\'emission_letter\'):\n
-          movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
-        elif len(emission_letter_list) == 1:\n
-          movement[\'emission_letter\'] =  "emission_letter/%s" %(emission_letter_list[0].lower(),)\n
+          negative_quantity = 1\n
+        if check_float:\n
+          if int("%i" % quantity) != quantity:\n
+            error = 1\n
+            float_quantity = 1\n
+        #context.log("listboxline", line)\n
+        movement = {}\n
+        movement[\'quantity\'] = quantity\n
+        # get variation for the cell\n
+        if column_base_category == \'cash_status\':\n
+          movement[\'cash_status\'] =  "cash_status/%s" %cash_status_list[counter-1]\n
+          if line.has_key(\'emission_letter\'):\n
+            movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+          elif len(emission_letter_list) == 1:\n
+            movement[\'emission_letter\'] =  "emission_letter/%s" %(emission_letter_list[0].lower(),)\n
+          else:\n
+            movement[\'emission_letter\'] = "emission_letter/not_defined" %line[\'emission_letter\']\n
+          if line.has_key(\'variation\'):\n
+            movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+          elif len(variation_list) == 1:\n
+            movement[\'variation\'] = "variation/%s" %(variation_list[0],)\n
+          else:\n
+            movement[\'variation\'] = "variation/not_defined"\n
+        elif column_base_category == \'emission_letter\':\n
+          if line.has_key(\'cash_status\'):\n
+            movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+          elif len(cash_status_list) == 1:\n
+            movement[\'cash_status\'] =  "cash_status/%s" %(cash_status_list[0],)\n
+          else:\n
+            movement[\'cash_status\'] =  "cash_status/not_defined"\n
+          movement[\'emission_letter\'] = "emission_letter/%s" %emission_letter_list[counter-1]\n
+          if line.has_key(\'variation\'):\n
+            movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+          elif len(variation_list) == 1:\n
+            movement[\'variation\'] = "variation/%s" %(variation_list[0],)\n
+          else:\n
+            movement[\'variation\'] = "variation/not_defined"\n
         else:\n
-          movement[\'emission_letter\'] = "emission_letter/not_defined" %line[\'emission_letter\']\n
-        if line.has_key(\'variation\'):\n
-          movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
-        elif len(variation_list) == 1:\n
-          movement[\'variation\'] = "variation/%s" %(variation_list[0],)\n
+          if line.has_key(\'cash_status\'):\n
+            movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+          elif len(cash_status_list) == 1:\n
+            movement[\'cash_status\'] =  "cash_status/%s" %(cash_status_list[0],)\n
+          else:\n
+            movement[\'cash_status\'] =  "cash_status/not_defined"\n
+          if line.has_key(\'emission_letter\'):\n
+            movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+          elif len(emission_letter_list) == 1:\n
+            movement[\'emission_letter\'] =  "emission_letter/%s" %(emission_letter_list[0].lower(),)\n
+          else:\n
+            movement[\'emission_letter\'] = "emission_letter/not_defined"\n
+          movement[\'variation\'] = "variation/%s" %variation_list[counter-1]\n
+        #context.log("movement", movement)\n
+        # generate a key based on variation\n
+        # this will allow us to check if there is multiple line for the same resource + variation\n
+        movement_key = \'%s_%s_%s\' %(movement[\'cash_status\'], movement[\'emission_letter\'], movement[\'variation\'])\n
+        resource_id = line["resource_id"]\n
+        if per_resource_dict.has_key(resource_id) and per_resource_dict[resource_id].has_key(movement_key):\n
+          # add quantity in case af same movement\n
+          per_resource_dict[resource_id][movement_key][\'quantity\'] = per_resource_dict[resource_id][movement_key][\'quantity\'] + movement[\'quantity\']\n
+        elif per_resource_dict.has_key(resource_id):\n
+          # add variation for this resource\n
+          per_resource_dict[resource_id][movement_key] = movement\n
         else:\n
-          movement[\'variation\'] = "variation/not_defined"\n
-      elif column_base_category == \'emission_letter\':\n
-        if line.has_key(\'cash_status\'):\n
-          movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
-        elif len(cash_status_list) == 1:\n
-          movement[\'cash_status\'] =  "cash_status/%s" %(cash_status_list[0],)\n
+          # create a dict of variation for this resource\n
+          per_resource_dict[resource_id] = {movement_key:movement,}\n
+  #context.log("resource", per_resource_dict)\n
+  # create the movement\n
+  variation_not_defined = 0\n
+  for resource_id in per_resource_dict.keys():\n
+    if error == 1:\n
+      break\n
+    variation_list_dict = per_resource_dict[resource_id].values()\n
+    # get the resource\n
+    #resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'), id = resource_id)\n
+    #if len(resource_list) == 0:\n
+    #  #context.log(\'CashDetail_saveFastInputLine\', \'Cannot get the resource object for id = %s\' %(resource_id,))\n
+    #  continue\n
+    resource_object = context.currency_cash_module[resource_id]\n
+    # get the variation\n
+    emission_letter_dict = {}\n
+    cash_status_dict = {}\n
+    variation_dict = {}\n
+    for variation in variation_list_dict:\n
+      letter = variation[\'emission_letter\']\n
+      status = variation[\'cash_status\']\n
+      variation = variation[\'variation\']\n
+      # check if variation exist for the resource\n
+      if column_base_category == "variation":\n
+  #       if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
+  #         variation_not_defined = 1\n
+  #         break\n
+        if variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
+          variation_not_defined = 1\n
+          error = 1\n
+          break\n
+      # for the letter, if coin, must always be not_defined\n
+      if letter != \'emission_letter/not_defined\' and letter.replace(\'emission_letter/\',\'\') not in resource_object.getEmissionLetterList()+[\'mixed\']:\n
+        old_letter = letter\n
+        letter = \'emission_letter/not_defined\'\n
+        # replace key in per_resource_dict\n
+        old_key = \'%s_%s_%s\' %(status, old_letter, variation)\n
+        key = \'%s_%s_%s\' %(status, letter, variation)\n
+        #context.log("change key, old/new", str((old_key, key)))\n
+        per_resource_dict[resource_id][key] = per_resource_dict[resource_id].pop(old_key)\n
+        per_resource_dict[resource_id][key][\'emission_letter\'] = letter\n
+        #context.log(\'per_resource_dict[resource_id][key]\', per_resource_dict[resource_id][key])\n
+      if not emission_letter_dict.has_key(letter):\n
+        emission_letter_dict[letter] = 1\n
+      if not cash_status_dict.has_key(status):\n
+        cash_status_dict[status] = 1\n
+      if not variation_dict.has_key(variation):\n
+        variation_dict[variation] = 1\n
+    # get new list dict in case wa had modified it\n
+    variation_list_dict = per_resource_dict[resource_id].values()\n
+    #ontext.log("cariation_list_dict after modif", variation_list_dict)\n
+    variation_category_list = emission_letter_dict.keys() + cash_status_dict.keys() + variation_dict.keys()\n
+    # create the cash line\n
+    #context.log("variation_category_list", variation_category_list)\n
+    line = context.newContent(portal_type           = line_portal_type\n
+                              , resource      = resource_object.getRelativeUrl() # banknote or coin\n
+                              , quantity_unit = \'unit\'\n
+                              )\n
+    # set base category list on line\n
+    line.setVariationBaseCategoryList(base_category_list)\n
+    # set category list line\n
+    line.setVariationCategoryList(variation_category_list)\n
+    line.updateCellRange(script_id=\'CashDetail_asCellRange\', base_id=cell_base_id)\n
+    # create cell\n
+    cell_range_key_list = line.getCellRangeKeyList(base_id=cell_base_id)\n
+    if cell_range_key_list <> [[None, None]] :\n
+      for k in cell_range_key_list:\n
+        # check we don\'t create a cell for variation which is not defined\n
+        key = "%s_%s_%s" %(k[2], k[0], k[1])\n
+        if not per_resource_dict[resource_id].has_key(key):\n
+          #context.log("not", key)\n
+          continue\n
+        category_list = filter(lambda k_item: k_item is not None, k)\n
+        c = line.newCell(*k, **line_kwd)\n
+        if use_inventory == \'True\':\n
+          mapped_value_list = [\'price\', \'inventory\']\n
         else:\n
-          movement[\'cash_status\'] =  "cash_status/not_defined"\n
-        movement[\'emission_letter\'] = "emission_letter/%s" %emission_letter_list[counter-1]\n
-        if line.has_key(\'variation\'):\n
-          movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
-        elif len(variation_list) == 1:\n
-          movement[\'variation\'] = "variation/%s" %(variation_list[0],)\n
-        else:\n
-          movement[\'variation\'] = "variation/not_defined"\n
+          mapped_value_list = [\'price\', \'quantity\']\n
+        #context.log("creating", str((category_list, mapped_value_list)))\n
+        c.edit(membership_criterion_category_list = category_list\n
+              , mapped_value_property_list       = mapped_value_list\n
+              , category_list                    = category_list\n
+              , price                            = resource_object.getBasePrice()\n
+              , force_update                     = 1\n
+              )\n
+    # set quantity on cell to define quantity of bank notes / coins\n
+    #context.log("variation_list_dict before browse", variation_list_dict)\n
+    for variation_item in variation_list_dict:\n
+      variation = variation_item[column_base_category]\n
+      if column_base_category == "cash_status":\n
+        cell = line.getCell(variation_item["emission_letter"],\n
+                            variation_item["variation"],\n
+                            variation,\n
+                            base_id=cell_base_id)\n
+      elif column_base_category == "emission_letter":\n
+        cell = line.getCell(variation,\n
+                            variation_item["variation"],\n
+                            variation_item["cash_status"],\n
+                            base_id=cell_base_id)\n
       else:\n
-        if line.has_key(\'cash_status\'):\n
-          movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
-        elif len(cash_status_list) == 1:\n
-          movement[\'cash_status\'] =  "cash_status/%s" %(cash_status_list[0],)\n
+        #context.log("variation_item[\'emission_letter\']", variation_item["emission_letter"])\n
+        cell = line.getCell(variation_item["emission_letter"],\n
+                            variation,\n
+                            variation_item["cash_status"],\n
+                            base_id=cell_base_id)\n
+      # set quantity\n
+      #context.log(\'cell, variation\', str((cell, variation)))\n
+      if cell is not None:\n
+        if use_inventory == \'True\':\n
+          cell.setInventory(variation_item["quantity"])\n
         else:\n
-          movement[\'cash_status\'] =  "cash_status/not_defined"\n
-        if line.has_key(\'emission_letter\'):\n
-          movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
-        elif len(emission_letter_list) == 1:\n
-          movement[\'emission_letter\'] =  "emission_letter/%s" %(emission_letter_list[0].lower(),)\n
-        else:\n
-          movement[\'emission_letter\'] = "emission_letter/not_defined"\n
-        movement[\'variation\'] = "variation/%s" %variation_list[counter-1]\n
-      #context.log("movement", movement)\n
-      # generate a key based on variation\n
-      # this will allow us to check if there is multiple line for the same resource + variation\n
-      movement_key = \'%s_%s_%s\' %(movement[\'cash_status\'], movement[\'emission_letter\'], movement[\'variation\'])\n
-      resource_id = line["resource_id"]\n
-      if per_resource_dict.has_key(resource_id) and per_resource_dict[resource_id].has_key(movement_key):\n
-        # add quantity in case af same movement\n
-        per_resource_dict[resource_id][movement_key][\'quantity\'] = per_resource_dict[resource_id][movement_key][\'quantity\'] + movement[\'quantity\']\n
-      elif per_resource_dict.has_key(resource_id):\n
-        # add variation for this resource\n
-        per_resource_dict[resource_id][movement_key] = movement\n
-      else:\n
-        # create a dict of variation for this resource\n
-        per_resource_dict[resource_id] = {movement_key:movement,}\n
-#context.log("resource", per_resource_dict)\n
-# create the movement\n
-variation_not_defined = 0\n
-for resource_id in per_resource_dict.keys():\n
-  if error == 1:\n
-    break\n
-  variation_list_dict = per_resource_dict[resource_id].values()\n
-  # get the resource\n
-  #resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'), id = resource_id)\n
-  #if len(resource_list) == 0:\n
-  #  #context.log(\'CashDetail_saveFastInputLine\', \'Cannot get the resource object for id = %s\' %(resource_id,))\n
-  #  continue\n
-  resource_object = context.currency_cash_module[resource_id]\n
-  # get the variation\n
-  emission_letter_dict = {}\n
-  cash_status_dict = {}\n
-  variation_dict = {}\n
-  for variation in variation_list_dict:\n
-    letter = variation[\'emission_letter\']\n
-    status = variation[\'cash_status\']\n
-    variation = variation[\'variation\']\n
-    # check if variation exist for the resource\n
-    if column_base_category == "variation":\n
-#       if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
-#         variation_not_defined = 1\n
-#         break\n
-      if variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
-        variation_not_defined = 1\n
-        error = 1\n
-        break\n
-    # for the letter, if coin, must always be not_defined\n
-    if letter != \'emission_letter/not_defined\' and letter.replace(\'emission_letter/\',\'\') not in resource_object.getEmissionLetterList()+[\'mixed\']:\n
-      old_letter = letter\n
-      letter = \'emission_letter/not_defined\'\n
-      # replace key in per_resource_dict\n
-      old_key = \'%s_%s_%s\' %(status, old_letter, variation)\n
-      key = \'%s_%s_%s\' %(status, letter, variation)\n
-      #context.log("change key, old/new", str((old_key, key)))\n
-      per_resource_dict[resource_id][key] = per_resource_dict[resource_id].pop(old_key)\n
-      per_resource_dict[resource_id][key][\'emission_letter\'] = letter\n
-      #context.log(\'per_resource_dict[resource_id][key]\', per_resource_dict[resource_id][key])\n
-    if not emission_letter_dict.has_key(letter):\n
-      emission_letter_dict[letter] = 1\n
-    if not cash_status_dict.has_key(status):\n
-      cash_status_dict[status] = 1\n
-    if not variation_dict.has_key(variation):\n
-      variation_dict[variation] = 1\n
-  # get new list dict in case wa had modified it\n
-  variation_list_dict = per_resource_dict[resource_id].values()\n
-  #ontext.log("cariation_list_dict after modif", variation_list_dict)\n
-  variation_category_list = emission_letter_dict.keys() + cash_status_dict.keys() + variation_dict.keys()\n
-  # create the cash line\n
-  #context.log("variation_category_list", variation_category_list)\n
-  line = context.newContent(portal_type           = line_portal_type\n
-                            , resource      = resource_object.getRelativeUrl() # banknote or coin\n
-                            , quantity_unit = \'unit\'\n
-                            )\n
-  # set base category list on line\n
-  line.setVariationBaseCategoryList(base_category_list)\n
-  # set category list line\n
-  line.setVariationCategoryList(variation_category_list)\n
-  line.updateCellRange(script_id=\'CashDetail_asCellRange\', base_id=cell_base_id)\n
-  # create cell\n
-  cell_range_key_list = line.getCellRangeKeyList(base_id=cell_base_id)\n
-  if cell_range_key_list <> [[None, None]] :\n
-    for k in cell_range_key_list:\n
-      # check we don\'t create a cell for variation which is not defined\n
-      key = "%s_%s_%s" %(k[2], k[0], k[1])\n
-      if not per_resource_dict[resource_id].has_key(key):\n
-        #context.log("not", key)\n
-        continue\n
-      category_list = filter(lambda k_item: k_item is not None, k)\n
-      c = line.newCell(*k, **line_kwd)\n
-      if use_inventory == \'True\':\n
-        mapped_value_list = [\'price\', \'inventory\']\n
-      else:\n
-        mapped_value_list = [\'price\', \'quantity\']\n
-      #context.log("creating", str((category_list, mapped_value_list)))\n
-      c.edit(membership_criterion_category_list = category_list\n
-             , mapped_value_property_list       = mapped_value_list\n
-             , category_list                    = category_list\n
-             , price                            = resource_object.getBasePrice()\n
-             , force_update                     = 1\n
-             )\n
-  # set quantity on cell to define quantity of bank notes / coins\n
-  #context.log("variation_list_dict before browse", variation_list_dict)\n
-  for variation_item in variation_list_dict:\n
-    variation = variation_item[column_base_category]\n
-    if column_base_category == "cash_status":\n
-      cell = line.getCell(variation_item["emission_letter"],\n
-                          variation_item["variation"],\n
-                          variation,\n
-                          base_id=cell_base_id)\n
-    elif column_base_category == "emission_letter":\n
-      cell = line.getCell(variation,\n
-                          variation_item["variation"],\n
-                          variation_item["cash_status"],\n
-                          base_id=cell_base_id)\n
-    else:\n
-      #context.log("variation_item[\'emission_letter\']", variation_item["emission_letter"])\n
-      cell = line.getCell(variation_item["emission_letter"],\n
-                          variation,\n
-                          variation_item["cash_status"],\n
-                          base_id=cell_base_id)\n
-    # set quantity\n
-    #context.log(\'cell, variation\', str((cell, variation)))\n
-    if cell is not None:\n
-      if use_inventory == \'True\':\n
-        cell.setInventory(variation_item["quantity"])\n
-      else:\n
-        cell.setQuantity(variation_item["quantity"])\n
-  line.getPrice() # Call getPrice now because it will be called on reindexation and it modifies the line.\n
-                  # So better modify it here so it\'s only saved once to ZODB.\n
+          cell.setQuantity(variation_item["quantity"])\n
+    line.getPrice() # Call getPrice now because it will be called on reindexation and it modifies the line.\n
+                    # So better modify it here so it\'s only saved once to ZODB.\n
+  if error:\n
+    # Delete what was already created\n
+    old_line = [x.getObject() for x in context.objectValues(portal_type=[line_portal_type,])]\n
+    if len(old_line)>0:\n
+      for object_list in old_line:\n
+        context.deleteContent(object_list.getId())\n
 \n
-request  = context.REQUEST\n
-N_ = context.Base_translateString\n
 \n
 if error:\n
-  old_line = [x.getObject() for x in context.objectValues(portal_type=[line_portal_type,])]\n
-  if len(old_line)>0:\n
-    for object_list in old_line:\n
-      context.deleteContent(object_list.getId())\n
   if variation_not_defined:\n
     message = N_("$title doesn\'t exist for $variation", mapping = {\'title\':resource_object.getTranslatedTitle(), \'variation\':variation.replace(\'variation/\',\'\')})\n
   if negative_quantity:\n
     message = N_("You must not enter negative values")\n
   if float_quantity:\n
     message = N_("You must enter integer values")\n
+  if remaining_activity is not None:\n
+    message = N_("There are operations pending on $path. Please try again later.", mapping={\'path\': remaining_activity})\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                   , "portal_status_message=%s" %message\n
                                   )\n
@@ -392,6 +417,10 @@ else:\n
                             <string>ADD_PERMISSION</string>
                             <string>context</string>
                             <string>ValueError</string>
+                            <string>request</string>
+                            <string>N_</string>
+                            <string>recurse</string>
+                            <string>deleteContent</string>
                             <string>cell_base_id</string>
                             <string>line_kwd</string>
                             <string>_getitem_</string>
@@ -413,14 +442,17 @@ else:\n
                             <string>error</string>
                             <string>negative_quantity</string>
                             <string>float_quantity</string>
+                            <string>variation_not_defined</string>
+                            <string>None</string>
+                            <string>remaining_activity</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>id</string>
                             <string>old_line</string>
+                            <string>x</string>
                             <string>len</string>
                             <string>line_id</string>
-                            <string>x</string>
                             <string>line</string>
                             <string>xrange</string>
                             <string>counter</string>
@@ -430,7 +462,6 @@ else:\n
                             <string>_write_</string>
                             <string>movement_key</string>
                             <string>resource_id</string>
-                            <string>variation_not_defined</string>
                             <string>variation_list_dict</string>
                             <string>resource_object</string>
                             <string>emission_letter_dict</string>
@@ -444,7 +475,6 @@ else:\n
                             <string>key</string>
                             <string>variation_category_list</string>
                             <string>cell_range_key_list</string>
-                            <string>None</string>
                             <string>k</string>
                             <string>filter</string>
                             <string>category_list</string>
@@ -453,8 +483,6 @@ else:\n
                             <string>mapped_value_list</string>
                             <string>variation_item</string>
                             <string>cell</string>
-                            <string>request</string>
-                            <string>N_</string>
                             <string>object_list</string>
                             <string>message</string>
                             <string>redirect_url</string>
