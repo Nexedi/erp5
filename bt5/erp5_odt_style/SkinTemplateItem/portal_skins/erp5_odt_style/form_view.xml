@@ -264,11 +264,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                             </tal:block>\n
                             <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
                               <text:p text:style-name=\'field-content\'\n
-                                 tal:content="python:str(value)"\n
-                                 tal:condition="not:item_list" />\n
-                              <text:p text:style-name=\'field-content\'\n
-                                     tal:content="python: field.render_pdf(value)"\n
-                                     tal:condition="item_list" />\n
+                                     tal:content="python: field.render_pdf(value)"/>\n
                             </tal:block>\n
                             <tal:block tal:condition="python: value is None">\n
                               <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
@@ -429,7 +425,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       </tal:block>\n
     </office:text>\n
   </office:body>\n
-</office:document-content>
+</office:document-content>\n
+
 
 ]]></string> </value>
         </item>
