@@ -118,14 +118,17 @@ class WebSection(Domain, PermanentURLMixIn):
       return PermanentURLMixIn.__bobo_traverse__(self, request, name)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
-    def getLayoutProperty(self, default):
+    def getLayoutProperty(self, key, d=MARKER):
       """
         A simple method to get a property of the current by 
         acquiring it from the current section or its parents
       """
       section = aq_inner(self)
       while section.getPortalType() in ('Web Section', 'Web Site'):
-        result = section.getProperty(default)
+        if d is MARKER:
+          result = section.getProperty(key)
+        else:
+          result = section.getProperty(key, d)
         if result:
           return result
         section = section.aq_parent
