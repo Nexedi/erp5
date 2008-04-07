@@ -42,7 +42,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>reference_list</string>
+<string>reference_list</string>
                           </list>
                         </value>
                     </item>
@@ -141,7 +141,7 @@ FROM\n
            <dtml-unless sequence-end> OR </dtml-unless>\n
          </dtml-in>\n
         )\n
-    ORDER BY reference, language_order DESC, version DESC\n
+    ORDER BY reference, language_order DESC, version DESC, revision DESC\n
   ) AS innersub\n
 )\n
 AS sub\n
@@ -228,7 +228,7 @@ FROM\n
            <dtml-unless sequence-end> OR </dtml-unless>\n
          </dtml-in>\n
         )\n
-    ORDER BY reference, language_order DESC, version DESC\n
+    ORDER BY reference, language_order DESC, version DESC, revision DESC\n
   ) AS innersub\n
 )\n
 AS sub\n

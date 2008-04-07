@@ -42,7 +42,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>reference</string>
+<string>reference</string>
                           </list>
                         </value>
                     </item>
@@ -140,7 +140,7 @@ FROM\n
         <dtml-sqltest "\'%\'+str(reference)+\'%\'" column=SearchableText op=like type=string>\n
       AND\n
         <dtml-sqltest reference op=ne type=string>\n
-    ORDER BY reference, language_order DESC, version DESC\n
+    ORDER BY reference, language_order DESC, version DESC, revision DESC\n
   ) AS innersub\n
 )\n
 AS sub\n
@@ -226,7 +226,7 @@ FROM\n
         <dtml-sqltest "\'%\'+str(reference)+\'%\'" column=SearchableText op=like type=string>\n
       AND\n
         <dtml-sqltest reference op=ne type=string>\n
-    ORDER BY reference, language_order DESC, version DESC\n
+    ORDER BY reference, language_order DESC, version DESC, revision DESC\n
   ) AS innersub\n
 )\n
 AS sub\n
