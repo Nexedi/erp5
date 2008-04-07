@@ -99,11 +99,8 @@ def resourceSalePriceSortMethod(a, b):\n
      else:\n
        return sourceSortMethod(a, b)\n
 \n
-try:\n
+if hasattr(context, \'getExplanationValue\'):\n
   explanation = context.getExplanationValue()\n
-except:\n
-  pass\n
-else:\n
   if explanation is not None:\n
     explanation_type = explanation.getPortalType()\n
     # XXX FIXME: Hardcoded values\n
@@ -171,8 +168,9 @@ else:\n
                             <string>destinationSortMethod</string>
                             <string>resourcePurchasePriceSortMethod</string>
                             <string>resourceSalePriceSortMethod</string>
-                            <string>_getattr_</string>
+                            <string>hasattr</string>
                             <string>context</string>
+                            <string>_getattr_</string>
                             <string>explanation</string>
                             <string>None</string>
                             <string>explanation_type</string>
