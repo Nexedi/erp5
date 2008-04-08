@@ -28,10 +28,9 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Path import Path
+from Products.ERP5.Document.Delivery import Delivery
 
-class Calendar(Path, XMLObject):
+class Calendar(Delivery):
     """
      Calendar contains Calendar Lines.
     """
