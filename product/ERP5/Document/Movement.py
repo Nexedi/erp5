@@ -492,7 +492,9 @@ class Movement(XMLObject, Amount):
     """
       Returns the relative_url of the explanation of this movement.
     """
-    return self.getDelivery()
+    explanation = self.getExplanationValue()
+    if explanation is not None:
+      return explanation.getRelativeUrl()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationUid')
@@ -500,7 +502,9 @@ class Movement(XMLObject, Amount):
     """
       Returns the uid of the explanation of this movement.
     """
-    return self.getDeliveryUid()
+    explanation = self.getExplanationValue()
+    if explanation is not None:
+      return explanation.getUid()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationValue')

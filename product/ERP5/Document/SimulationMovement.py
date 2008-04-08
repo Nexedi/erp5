@@ -275,26 +275,6 @@ class SimulationMovement(Movement):
     self.setCausalityState('diverged')
 
   security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanation')
-  def getExplanation(self):
-    """Returns the delivery's relative_url if any or the order's
-    relative_url related to the root applied rule if any.
-    """
-    explanation_value = self.getExplanationValue()
-    if explanation_value is not None :
-      return explanation_value.getRelativeUrl()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanationUid')
-  def getExplanationUid(self):
-    """Returns the delivery's uid if any or the order's uid related to
-    the root applied rule if any.
-    """
-    explanation_value = self.getExplanationValue()
-    if explanation_value is not None :
-      return explanation_value.getUid()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationValue')
   def getExplanationValue(self):
     """Returns the delivery if any or the order related to the root
