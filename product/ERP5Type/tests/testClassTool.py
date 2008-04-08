@@ -131,8 +131,10 @@ class TestClassTool(ERP5TypeTestCase):
     # This tests checks that Documentation Helper works with propertysheets
     # that define their categories using expressions.
     from Products.ERP5Type.Document.Movement import Movement
+    from Products.ERP5Type.Document.Delivery import Delivery
     from Products.CMFCore.Expression import Expression
-    movement = Movement('testing_id').__of__(self.getPortal())
+    movement = Movement('dummy_movement').__of__(
+                        Delivery('dummy_delivery').__of__(self.portal))
     # This test relies on the fact that Movement class has categories defined
     # by an expression. 
     category_list = []
