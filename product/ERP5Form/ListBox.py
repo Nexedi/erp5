@@ -941,28 +941,24 @@ class ListBoxRenderer:
       list_method_name = self.getListMethodName()
       meta_type_list = self.getMetaTypeList()
       portal_type_list = self.getPortalTypeList()
-      if list_method_name == 'objectValues':
-        if meta_type_list is not None:
-          params.setdefault('spec', meta_type_list)
-      else:
-        if portal_type_list is not None:
-          params.setdefault('portal_type', portal_type_list)
-        elif meta_type_list is not None:
-          params.setdefault('meta_type', meta_type_list)
+      if portal_type_list is not None:
+        params.setdefault('portal_type', portal_type_list)
+      elif meta_type_list is not None:
+        params.setdefault('meta_type', meta_type_list)
 
-        # Remove useless parameters as FileUpload
-        for k, v in params.items():
-          if k == "listbox":
-            # listbox can also contain useless parameters
-            new_list = []
-            for line in v:
-              for k1, v1 in line.items():
-                if v1 in (None, '') or hasattr(v1, 'read'):
-                  del line[k1]
-              new_list.append(line)
-            params[k] = new_list
-          if v in (None, '') or hasattr(v, 'read'):
-            del params[k]
+      # Remove useless parameters as FileUpload
+      for k, v in params.items():
+        if k == "listbox":
+          # listbox can also contain useless parameters
+          new_list = []
+          for line in v:
+            for k1, v1 in line.items():
+              if v1 in (None, '') or hasattr(v1, 'read'):
+                del line[k1]
+            new_list.append(line)
+          params[k] = new_list
+        if v in (None, '') or hasattr(v, 'read'):
+          del params[k]
 
       # remove some erp5_xhtml_style specific parameters
       params.pop('saved_form_data', None)
