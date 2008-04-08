@@ -1,6 +1,6 @@
 ##############################################################################
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
-#          Jerome Perrin <jerome@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+#          Deheunynck Thibaut <thibaut@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
