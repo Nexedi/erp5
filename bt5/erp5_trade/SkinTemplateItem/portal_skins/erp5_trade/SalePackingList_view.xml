@@ -82,7 +82,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -97,12 +97,11 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_source_title</string>
                         <string>my_source_section_title</string>
                         <string>my_source_administration_title</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
-                        <string>my_source_title</string>
-                        <string>immobilisation_state</string>
                       </list>
                     </value>
                 </item>
@@ -115,9 +114,11 @@
                         <string>my_destination_section_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>simulation_state</string>
-                        <string>my_causality_state</string>
-                        <string>my_container_state</string>
+                        <string>my_comment</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_causality_state_title</string>
+                        <string>my_translated_immobilisation_state_title</string>
+                        <string>my_translated_container_state_title</string>
                       </list>
                     </value>
                 </item>
