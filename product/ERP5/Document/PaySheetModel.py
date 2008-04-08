@@ -31,17 +31,18 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5.Document.Delivery import Delivery
 from zLOG import LOG
 
 #XXX TODO: review naming of new methods
 #XXX WARNING: current API naming may change although model should be stable.
 
-class PaySheetModel(TradeCondition, XMLMatrix):
-  """
+class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
+  """A PaySheetModel defines calculation rules for paysheets.
+
     PaySheetModel are used to define calculating rules specific to a 
-    date, a convention, a enmployees group...
-    This permit to applied a whole of calculating rules on a whole of
-    pay sheets
+    date, a convention, a group of employees ...
+    The class inherit from Delivery, because it contains movements.
   """
 
   meta_type = 'ERP5 Pay Sheet Model'
