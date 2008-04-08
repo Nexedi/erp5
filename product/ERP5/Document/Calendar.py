@@ -44,9 +44,6 @@ class Calendar(Delivery):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # XXX Should be removed if interface are not a good Idea.
-    #__implements__ = ( Interface.Inventory, )
-
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
