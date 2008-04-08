@@ -84,7 +84,7 @@ class Event(EmailDocument, Movement):
       """
       return 1
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantity')
     def getQuantity(self):
       """
@@ -92,3 +92,24 @@ class Event(EmailDocument, Movement):
       """
       # Provide opportunity to script this
       return 1.
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getExplanation')
+    def getExplanation(self):
+      """An event is it's own explanation
+      """
+      return self.getRelativeUrl()
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getExplanationUid')
+    def getExplanationUid(self):
+      """An event is it's own explanation
+      """
+      return self.getUid()
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                               'getExplanationValue')
+    def getExplanationValue(self):
+      """An event is it's own explanation
+      """
+      return self
