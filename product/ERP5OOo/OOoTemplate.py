@@ -240,8 +240,7 @@ class OOoTemplate(ZopePageTemplate):
 
   def renderIncludes(self, here, text, sub_document=None):
     attached_files_dict = {}
-    arguments_re = re.compile('(\w+)\s*=\s*"(.*?)"\s*',re.DOTALL)
-
+    arguments_re = re.compile('(\w+:?\w+)\s*=\s*"(.*?)"\s*',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
       ret = []
       for opt_name in opts_names:
@@ -257,10 +256,8 @@ class OOoTemplate(ZopePageTemplate):
 
     def replaceIncludes(match):
       tag_string = match.group(1)
-
       # Build a dictionary with tag parameters
-      options_dict = dict(arguments_re.findall(match.group(1)))
-
+      options_dict = dict(arguments_re.findall(tag_string))
       # Find the page template based on the path and remove path from dict
       document = self._resolvePath(options_dict['path'].encode())
       document_text = ZopePageTemplate.pt_render(document) # extra_context is missing
@@ -334,8 +331,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       parameter_list = []
       for k, v in options_dict.items():
         parameter_list.append('%s="%s"' % (k, v))
-      new_tag = '<draw:object draw:name="ERP5IncludedObject%d" xlink:href="./%s" %s/>' %\
-                 (actual_idx, dir_name.split('/')[-1], ' '.join(parameter_list))
+      new_tag = '<draw:object xlink:href="./%s" %s/>' %\
+                 (dir_name.split('/')[-1], ' '.join(parameter_list))
       return new_tag
 
     def replaceIncludesImg(match):
@@ -447,9 +444,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     # It's an equivalent to DOTALL option passing (but sub can't get options parameter)
     text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
     text = re.sub('<\s*office:include\s+(.*?)\s*/\s*>(?s)', replaceIncludes, text)
-    text = re.sub('&lt;\s*office:include\s+(.*?)\s*/\s*&gt;(?s)', replaceIncludes, text)
-    return (text, attached_files_dict)
 
+    return (text, attached_files_dict)
   # Proxy method to PageTemplate
   def pt_render(self, source=0, extra_context={}):
     # Get request
