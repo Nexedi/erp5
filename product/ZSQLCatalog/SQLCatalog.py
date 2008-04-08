@@ -2359,6 +2359,7 @@ class Catalog(Folder,
             'isPredicate':  ob.isPredicate, # XXX
             'isDocument':   ob.isDocument, # XXX
             'isInventory':  ob.isInventory, # XXX
+            'portal_type':  ob.portal_type, # XXX
             'isInventoryMovement': ob.isInventoryMovement, # XXX
             }
         return getEngine().getContext(data)
