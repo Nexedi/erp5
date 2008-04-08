@@ -154,6 +154,7 @@ class Resource(XMLMatrix, Variated):
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list=(), 
+                                     omit_optional_variation=0,
                                      omit_individual_variation=1, base=1,
                                      current_category=None,
                                      display_base_category=1,
@@ -173,8 +174,16 @@ class Resource(XMLMatrix, Variated):
           self.getVariationBaseCategoryList()
       
       individual_bc_list = self.getIndividualVariationBaseCategoryList()
-      other_bc_list = [x for x in base_category_list if x not
-          in individual_bc_list]
+      other_bc_list = [x for x in base_category_list
+          if not x in individual_bc_list]
+
+      if omit_optional_variation:
+        optional_bc_list = self.getOptionalVariationBaseCategoryList()\
+            or self.getPortalOptionBaseCategoryList()
+        if optional_bc_list:
+          other_bc_list = [x for x in other_bc_list
+              if not x in optional_bc_list]
+              
       
       result = Variated.getVariationCategoryItemList(self, 
                             base_category_list=other_bc_list, 
@@ -189,8 +198,12 @@ class Resource(XMLMatrix, Variated):
 
         for variation in individual_variation_list:
           for base_category in variation.getVariationBaseCategoryList():
-            if (base_category_list is () or base_category in
-                base_category_list) and base_category in individual_bc_list:
+            # backwards compatbility: if individual_bc_list is empty, allow
+            # all individual variation base categories.
+            if (base_category_list is ()
+                or base_category in base_category_list)\
+               and (not len(individual_bc_list)
+                    or base_category in individual_bc_list):
               # XXX append object, relative_url ?
               # XXX now, call Renderer a lot of time.
               # Better implementation needed
