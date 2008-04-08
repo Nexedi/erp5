@@ -68,7 +68,7 @@ class OOoChartWidget(Widget.Widget):
                               description= \
                                 "ID of the master form.",
                               default="",
-                              required=1)
+                              required=0)
   property_names.append('form_id')
 
   field_id = fields.StringField(
@@ -77,7 +77,7 @@ class OOoChartWidget(Widget.Widget):
                               description= \
                                 "ID of the listbox in the master form.",
                               default="",
-                              required=1)
+                              required=0)
   property_names.append('field_id')
 
   image_display = fields.ListField('image_display',
@@ -130,7 +130,7 @@ class OOoChartWidget(Widget.Widget):
                               description=(
     "A list of colors for each data associated to a column."),
                               default=[],
-                              required=1)
+                              required=0)
   property_names.append('colour_column_list')
 
   # vertical ="true"
@@ -336,10 +336,16 @@ class OOoChartWidget(Widget.Widget):
     """ Build argument Dict """
     def stringBoolean(value):
       return str(bool(value)).lower()
-
+    form = field.aq_parent
+    form_id = field.get_value('form_id')
+    if form_id in ('', None):
+      form_id = form.getId()
+    field_id = field.get_value('field_id')
+    if field_id in ('', None):
+      field_id = 'listbox'
     extra_argument_dict = dict(
-      chart_form_id = field.get_value('form_id'),
-      chart_field_id = field.get_value('field_id'),
+      chart_form_id = form_id,
+      chart_field_id = field_id,
       chart_title = field.get_value('title'),
       chart_type = field.get_value('chart_type'),
       colour_column_dict = dict(field.get_value('colour_column_list')),
@@ -410,9 +416,9 @@ class OOoChartWidget(Widget.Widget):
 
     title = field.get_value('title')
     alternate_name = field.get_value('alternate_name')
-
-    # Find the applicable context
     form = field.aq_parent
+    
+    # Find the applicable context
     here = getattr(form, 'aq_parent', REQUEST)
     # Update the render format based on REQUEST parameters
     render_format = getattr(REQUEST, 'render_format', render_format)
