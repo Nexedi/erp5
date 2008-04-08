@@ -2354,13 +2354,15 @@ class Catalog(Folder,
             #'request':      getattr( ob, 'REQUEST', None ),
             #'modules':      SecureModuleImporter,
             #'user':         getSecurityManager().getUser(),
-            'isDelivery':   ob.isDelivery, # XXX
-            'isMovement':   ob.isMovement, # XXX
-            'isPredicate':  ob.isPredicate, # XXX
-            'isDocument':   ob.isDocument, # XXX
-            'isInventory':  ob.isInventory, # XXX
-            'portal_type':  ob.portal_type, # XXX
-            'isInventoryMovement': ob.isInventoryMovement, # XXX
+            # XXX these below are defined, because there is no
+            # accessor for some attributes, and restricted environment
+            # may not access them directly.
+            'isDelivery':   ob.isDelivery,
+            'isMovement':   ob.isMovement,
+            'isPredicate':  ob.isPredicate,
+            'isDocument':   ob.isDocument,
+            'isInventory':  ob.isInventory,
+            'isInventoryMovement': ob.isInventoryMovement,
             }
         return getEngine().getContext(data)
 
