@@ -283,7 +283,7 @@
                     style:family="chart"\n
                     tal:attributes="style:name python:\'data_bar_%s\' % column_item[0]">\n
         <style:graphic-properties  svg:stroke-color=\'#000000\'\n
-                                  tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');\n
+                                  tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0]);\n
                                   "/>\n
         <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
       </style:style>\n
@@ -292,7 +292,7 @@
       <style:style tal:condition="python:chart_type==\'chart:line\' or chart_type==\'chart:scatter\' and series_source==\'columns\'"\n
                     style:family="chart"\n
                     tal:attributes="style:name python:\'data_line_%s\' % column_item[0]">\n
-        <style:graphic-properties  tal:attributes="svg:stroke-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\'); "/>\n
+        <style:graphic-properties  tal:attributes="svg:stroke-color python:request.colour_column_dict.get(column_item[0]); "/>\n
         <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
       </style:style>\n
 \n
@@ -302,7 +302,7 @@
                     tal:attributes="style:name python:\'data_circle_%s\' % column_item[0]">\n
 \n
         <style:graphic-properties svg:stroke-color=\'#000000\'\n
-                                  tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0], \'#ff6f00\');\n
+                                  tal:attributes="draw:fill-color python:request.colour_column_dict.get(column_item[0]);\n
                                   "/>\n
         <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/style_text_properties" />\n
       </style:style>\n
