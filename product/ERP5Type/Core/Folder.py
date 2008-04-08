@@ -113,7 +113,7 @@ class FolderMixIn(ExtensionClass.Base):
     pt = self._getTypesTool()
     if container is None:
       container = self
-    if id is None:
+    if id is None and not temp_object:
       new_id = str(container.generateNewId( id_group=id_group,
                                             default=default,
                                             method=method))
