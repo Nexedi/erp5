@@ -81,7 +81,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -95,8 +97,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_destination_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
                         <string>my_destination_decision_title</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
@@ -108,8 +110,8 @@
                     <value>
                       <list>
                         <string>my_causality_title</string>
-                        <string>my_source_title</string>
                         <string>my_source_section_title</string>
+                        <string>my_source_title</string>
                         <string>my_source_decision_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
