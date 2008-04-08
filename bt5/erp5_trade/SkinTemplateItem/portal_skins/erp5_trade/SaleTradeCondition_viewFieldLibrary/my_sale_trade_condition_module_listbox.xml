@@ -126,7 +126,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Purchase Trade Condition</string>
+                          <string>Sale Trade Condition</string>
                         </tuple>
                         <tuple>
                           <string>default_source_section_title</string>
