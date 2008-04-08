@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>global</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Purchase Packing List to Deliver (%(count)s)</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+purchase_packing_list_module?simulation_state=received&portal_type=Purchase+Packing+List&local_roles=%(local_roles)s&reset=1
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>received_purchase</string> </value>
+        </item>
+        <item>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Purchase Packing List</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>received</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
