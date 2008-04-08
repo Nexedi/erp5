@@ -290,6 +290,32 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.logout()
       self.login()
 
+      # Check that temp object creation do not write in the ZODB
+      class WriteError(Exception):
+        pass
+      def _setLastId(self, id):
+        raise WriteError
+      portal.person_module.__class__._setLastId = _setLastId
+      try:
+        try:
+          o = portal.person_module.newContent(portal_type="Person", 
+                                              temp_object=1)
+        except WriteError:
+          raise self.failureException, "Container last ID modified"
+      finally:
+        delattr(portal.person_module.__class__, '_setLastId')
+
+      # Check that creating 2 consecutive temp object automatically increases
+      # their ID
+      o = portal.person_module.newContent(portal_type="Person", 
+                                          temp_object=1)
+      first_id = o.getId()
+      o = portal.person_module.newContent(portal_type="Person", 
+                                          temp_object=1)
+      second_id = o.getId()
+      self.assertNotEquals(first_id, second_id)
+      self.assertEquals(str(int(first_id) + 1), second_id)
+
     def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
       """
         This test provides basic testing of category
