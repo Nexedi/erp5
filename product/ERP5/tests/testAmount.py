@@ -246,8 +246,11 @@ class TestMovement(ERP5TypeTestCase):
   def _makeOne(self, *args, **kw):
     from Products.ERP5.Document.Movement import Movement
     mvt = Movement(*args, **kw)
-    # return it wrapped, so that it can access the types tool in _aq_dynamic
-    return mvt.__of__(self.portal)
+    from Products.ERP5.Document.Delivery import Delivery
+    delivery = Delivery('delivery').__of__(self.portal)
+    # return it wrapped in a delivery, so that it can access the types tool in
+    # _aq_dynamic, and so that getExplanationValue works as expected
+    return mvt.__of__(delivery)
 
   def testQuantity(self):
     mvt = self._makeOne('mvt')
