@@ -102,7 +102,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_prevision_quantity</string>
+                      </list>
                     </value>
                 </item>
                 <item>

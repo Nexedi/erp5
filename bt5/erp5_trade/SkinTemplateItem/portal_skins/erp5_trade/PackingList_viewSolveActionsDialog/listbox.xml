@@ -351,6 +351,10 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
+                          <string>prevision_quantity</string>
+                          <string>Prevision Quantity</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity_unit</string>
                           <string>Unit</string>
                         </tuple>
@@ -416,6 +420,10 @@
                         <tuple>
                           <string>choice</string>
                           <string>Choice</string>
+                        </tuple>
+                        <tuple>
+                          <string>prevision_quantity</string>
+                          <string>Prevision Quantity</string>
                         </tuple>
                       </list>
                     </value>
