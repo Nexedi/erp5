@@ -35,7 +35,7 @@ from zLOG import LOG, WARNING
 
 class OrderRule(DeliveryRule):
   """
-  Order Rule object make sure an Order in the similation
+  Order Rule object make sure an Order in the simulation
   is consistent with the real order
 
   WARNING: what to do with movement split ?
@@ -109,7 +109,8 @@ class OrderRule(DeliveryRule):
         related_order = order_movement_dict.get(movement.getPath(), None)
         if related_order is None:
           related_order = movement.getOrderRelatedValue()
-        property_dict = self._getExpandablePropertyDict(applied_rule, movement)      
+        property_dict = self._getExpandablePropertyDict(
+                                            applied_rule, movement)
         if related_order is None:
           # Generate a simulation movement
           # Do not try to create meaningfull IDs, as order movement can be
@@ -172,22 +173,23 @@ class OrderRule(DeliveryRule):
 #                                 "Hardcoded properties set")
       default_property_list = (
         'source',
-        'source_section', 
-        'destination', 
-        'destination_section', 
-        'start_date', 
+        'source_section',
+        'destination',
+        'destination_section',
+        'start_date',
         'stop_date',
-        'resource', 
+        'resource',
         'variation_category_list',
-        'variation_property_dict', 
-        'aggregate_list', 
-        'price', 
+        'variation_property_dict',
+        'aggregate_list',
+        'price',
         'price_currency',
-        'quantity', 
-        'quantity_unit', 
+        'quantity',
+        'quantity_unit',
       )
   
       for prop in default_property_list:
          property_dict[prop] = movement.getProperty(prop)
        
     return property_dict
+
