@@ -88,9 +88,11 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_int_index</string>
                         <string>my_resource_title</string>
-                        <string>my_variation_category_list</string>
                         <string>my_amortisation_method</string>
+                        <string>my_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -98,10 +100,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_inventory</string>
+                        <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_price</string>
                         <string>my_aggregate_title_list</string>
+                        <string>my_total_price</string>
+                        <string>my_total_quantity</string>
                       </list>
                     </value>
                 </item>

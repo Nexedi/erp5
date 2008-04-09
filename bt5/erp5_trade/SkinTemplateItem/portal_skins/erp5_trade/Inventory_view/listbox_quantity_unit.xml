@@ -10,8 +10,22 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>items</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource_title</string> </value>
+            <value> <string>listbox_quantity_unit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -29,15 +43,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -48,12 +62,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -67,19 +91,43 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_resource_title</string> </value>
+                    <value> <string>my_quantity_unit</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>InventoryLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: cell.getResource() and cell.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or getattr(here.portal_categories[\'quantity_unit\'], preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(base=0, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
