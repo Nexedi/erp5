@@ -165,7 +165,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
         response = self.publish(
                       '/%s/%s/my_OOoChart?render_format=%s&display=medium'
                       % (self.portal.getId(), self.form_id, image_format), self.auth )
-        self.assertEquals(HTTP_OK, response.getStatus())
+        self.assertEquals(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
 
       # render pdf
       response = self.publish(
