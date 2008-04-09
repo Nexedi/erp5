@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>archived</string> </value>
+            <value> <string>released</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
