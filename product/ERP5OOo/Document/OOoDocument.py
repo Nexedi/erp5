@@ -145,7 +145,8 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
   rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
   rx_compr = re.compile('\s+')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'isSupportBaseDataConversion')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isSupportBaseDataConversion')
   def isSupportBaseDataConversion(self):
     """
     OOoDocument is needed to conversion to base format.

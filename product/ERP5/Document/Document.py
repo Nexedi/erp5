@@ -1302,7 +1302,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'isSupportBaseDataConversion')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isSupportBaseDataConversion')
   def isSupportBaseDataConversion(self):
     """
     This is a public interface to check a document that is support conversion
