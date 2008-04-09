@@ -62,23 +62,23 @@ class OOoChartWidget(Widget.Widget):
                                 default="",
                                 required=0)
 
-  form_id = fields.StringField(
-                              'form_id',
-                              title='Form ID',
+  listbox_form_id = fields.StringField(
+                              'listbox_form_id',
+                              title='ListBox Form ID',
                               description= \
                                 "ID of the master form.",
                               default="",
                               required=0)
-  property_names.append('form_id')
+  property_names.append('listbox_form_id')
 
-  field_id = fields.StringField(
-                              'field_id',
-                              title='Field ID',
+  listbox_id = fields.StringField(
+                              'listbox_id',
+                              title='ListBox ID',
                               description= \
                                 "ID of the listbox in the master form.",
                               default="",
                               required=0)
-  property_names.append('field_id')
+  property_names.append('listbox_id')
 
   image_display = fields.ListField('image_display',
                             title='Image Display',
@@ -337,15 +337,15 @@ class OOoChartWidget(Widget.Widget):
     def stringBoolean(value):
       return str(bool(value)).lower()
     form = field.aq_parent
-    form_id = field.get_value('form_id')
-    if form_id in ('', None):
-      form_id = form.getId()
-    field_id = field.get_value('field_id')
-    if field_id in ('', None):
-      field_id = 'listbox'
+    listbox_form_id = field.get_value('listbox_form_id')
+    if listbox_form_id in ('', None):
+      listbox_form_id = form.getId()
+    listbox_id = field.get_value('listbox_id')
+    if listbox_id in ('', None):
+      listbox_id = 'listbox'
     extra_argument_dict = dict(
-      chart_form_id = form_id,
-      chart_field_id = field_id,
+      chart_form_id = listbox_form_id,
+      chart_field_id = listbox_id,
       chart_title = field.get_value('title'),
       chart_type = field.get_value('chart_type'),
       colour_column_dict = dict(field.get_value('colour_column_list')),
@@ -417,7 +417,7 @@ class OOoChartWidget(Widget.Widget):
     title = field.get_value('title')
     alternate_name = field.get_value('alternate_name')
     form = field.aq_parent
-    
+
     # Find the applicable context
     here = getattr(form, 'aq_parent', REQUEST)
     # Update the render format based on REQUEST parameters
