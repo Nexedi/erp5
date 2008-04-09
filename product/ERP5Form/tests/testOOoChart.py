@@ -36,6 +36,7 @@ from Products.ERP5OOo.tests.utils import Validator
 from Acquisition import aq_base
 from Products.ERP5Type.Utils import get_request
 from Products.ERP5OOo.Document.OOoDocument import STANDARD_IMAGE_FORMAT_LIST
+from Products.ERP5Type.Core.Folder import Folder
 
 HTTP_OK = 200
 debug = 0
@@ -43,6 +44,7 @@ debug = 0
 class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
     """Tests OOoChart a and this render for ERP5."""
     form_id = 'TestOOochart_viewForm'
+    ooo_chart_id = 'my_ooochart'
     nb_persons = 10
     content_type = 'application/vnd.oasis.opendocument.graphics'
     skin = 'ODG'
@@ -57,39 +59,46 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.auth = 'ERP5TypeTestCase:'
       portal = self.getPortal()
       container = portal.portal_skins.custom
-      container._setObject(self.form_id, ERP5Form(self.form_id, 'View'))
-      form = getattr(container, self.form_id)
-      # create some persons in person_module
-      self.createPersons()
-      # add a ListBox field
-      form.manage_addField('listbox', 'listbox', 'ListBox')
-      form.listbox.ListBox_setPropertyList(field_list_method='zCountDocumentPerOwner',
-                              field_count_method='',
-                              field_columns=['owner | Owner',
-                                            'owner_count | Owner Count',
-                                            'number_count | Reference Count'],
-                              )
+      if self.form_id not in container.objectIds():
+        container._setObject(self.form_id, ERP5Form(self.form_id, 'View'))
+        form = getattr(container, self.form_id)
 
-      # create a Field OOoChart
-      form.manage_addField('my_OOoChart', 'my_OOoChart', 'OOoChart')
-      form.my_OOoChart.manage_edit_xmlrpc(dict(form_id=self.form_id, field_id='listbox'))
- 
-      # create a ZSQL Method
-      sql = """SELECT owner, count(uid) AS owner_count,
-               count(reference) AS number_count
-               FROM catalog
-               WHERE portal_type = 'Person'
-               GROUP BY owner ORDER BY owner_count DESC"""
+        # create some persons in person_module
+        self.createPersons()
+        # add a ListBox field
+        form.manage_addField('listbox', 'listbox', 'ListBox')
+        form.listbox.ListBox_setPropertyList(field_list_method='zCountDocumentPerOwner',
+                                field_count_method='',
+                                field_columns=['owner | Owner',
+                                              'owner_count | Owner Count',
+                                              'number_count | Reference Count'],
+                                )
 
-      template = String(source_string=sql)
-      container.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod('zCountDocumentPerOwner', 'zCountDocumentPerOwner', 'erp5_sql_connection', '', template)
-      # enable preference
-      preference = self.getPortal().portal_preferences.default_site_preference
-      preference.setPriority(1)
-      if preference.getPreferenceState() == 'disabled':
-        self.getWorkflowTool().doActionFor(ob=preference,
-                                           action='enable_action',
-                                           wf_id='preference_workflow')
+        # create a Field OOoChart
+        form.manage_addField(self.ooo_chart_id, self.ooo_chart_id, 'OOoChart')
+        
+        # create a Field OOoChart
+        form.manage_addField('your_ooochart', 'your_ooochart', 'OOoChart')
+
+
+
+        # create a ZSQL Method
+        sql = """SELECT owner, count(uid) AS owner_count,
+                count(reference) AS number_count
+                FROM catalog
+                WHERE portal_type = 'Person'
+                GROUP BY owner ORDER BY owner_count DESC"""
+
+        template = String(source_string=sql)
+        container.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod('zCountDocumentPerOwner', 'zCountDocumentPerOwner', 'erp5_sql_connection', '', template)
+        # enable preference
+        preference = self.getPortal().portal_preferences.default_site_preference
+        preference.setPriority(1)
+        if preference.getPreferenceState() == 'disabled':
+          self.getWorkflowTool().doActionFor(ob=preference,
+                                            action='enable_action',
+                                            wf_id='preference_workflow')
+
       self.validator = Validator()
       get_transaction().commit()
       self.tic()
@@ -112,7 +121,9 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertTrue(self.form_id in portal.portal_skins.custom.objectIds())
       getattr(aq_base(portal.portal_skins.custom), self.form_id)
       form = getattr(portal.portal_skins.custom, self.form_id)
-      listbox = form.listbox
+      #listbox = form.listbox
+      listbox = getattr(form, 'listbox')
+      self.assertEquals(listbox.meta_type, 'ListBox')
       request = get_request()
       request['here'] = portal.portal_skins.custom
       line_list = [l for l in listbox.get_value('default',
@@ -123,10 +134,12 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertEquals(2, len(line_list))
 
       # Does the field OOoChart exist ?
-      OOoChart = form.my_OOoChart
+      ooochart = getattr(form, self.ooo_chart_id)
+      self.assertEquals(ooochart.meta_type, 'OOoChart')
+
       response = self.publish(
-                    '/%s/%s/my_OOoChart?render_format=&display=medium'
-                    % (self.portal.getId(), self.form_id), self.auth )
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       # test render raw
       self.assertEquals(HTTP_OK, response.getStatus())
       content_type = response.getHeader('content-type')
@@ -153,7 +166,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       doc_build = libxml2.parseDoc(content_xml_build)
       xpath = '//@*[name() = "office:value"]'
       values = doc_build.xpathEval(xpath)
-      # Test the datas presence in the file XML
+      # Test the data presence in the file XML
       self.assertNotEquals(0, len(values))
       # 2 values because there are - 10 document created by a owner 
       #                            - 0 Reference count
@@ -163,43 +176,136 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # render image
       for image_format in STANDARD_IMAGE_FORMAT_LIST:
         response = self.publish(
-                      '/%s/%s/my_OOoChart?render_format=%s&display=medium'
-                      % (self.portal.getId(), self.form_id, image_format), self.auth )
+                      '/%s/%s/%s?render_format=%s&display=medium'
+                      % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )
         self.assertEquals(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
 
       # render pdf
       response = self.publish(
-                    '/%s/%s/my_OOoChart?render_format=pdf&display=medium'
-                    % (self.portal.getId(), self.form_id), self.auth )
+                    '/%s/%s/%s?render_format=pdf&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       self.assertEquals(HTTP_OK, response.getStatus())
 
 
       # Change some params  and restart (circle, bar, ...)
       # chart type : circle
-      form.my_OOoChart.manage_edit_xmlrpc(dict(chart_type='chart:circle'))
+      form.my_ooochart.manage_edit_xmlrpc(dict(chart_type='chart:circle'))
       response = self.publish(
-                    '/%s/%s/my_OOoChart?render_format=&display=medium'
-                    % (self.portal.getId(), self.form_id), self.auth )
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       # Test ODG (zip) with other params
       body = response.getBody()
       # Test Validation Relax NG
       self._validate(body)
 
       # chart type : line
-      form.my_OOoChart.manage_edit_xmlrpc(dict(chart_type='chart:line'))
+      form.my_ooochart.manage_edit_xmlrpc(dict(chart_type='chart:line'))
       response = self.publish(
-                    '/%s/%s/my_OOoChart?render_format=&display=medium'
-                    % (self.portal.getId(), self.form_id), self.auth )
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       # Test ODG (zip) with other params
       body = response.getBody()
       # Test Validation Relax NG
       self._validate(body)
 
       #chart type : scatter
-      form.my_OOoChart.manage_edit_xmlrpc(dict(chart_type='chart:scatter'))
+      form.my_ooochart.manage_edit_xmlrpc(dict(chart_type='chart:scatter'))
       response = self.publish(
-                    '/%s/%s/my_OOoChart?render_format=&display=medium'
-                    % (self.portal.getId(), self.form_id), self.auth )
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
+      # Test ODG (zip) with other params
+      body = response.getBody()
+      # Test Validation Relax NG
+      self._validate(body)
+
+    def test_proxy_ooo_chart(self):
+      portal = self.getPortal()
+      # Does the form exist ?
+      self.assertTrue(self.form_id in portal.portal_skins.custom.objectIds())
+      getattr(aq_base(portal.portal_skins.custom), self.form_id)
+      form = getattr(portal.portal_skins.custom, self.form_id)
+
+      #Proxify the Field my_ooochart
+      form.proxifyField({self.ooo_chart_id:'TestOOochart_viewForm.your_ooochart'})
+      # Does the field OOoChart exist ?
+      ooochart = getattr(form, self.ooo_chart_id)
+      self.assertEquals(ooochart.meta_type, 'ProxyField')
+      response = self.publish(
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
+      # test render raw
+      self.assertEquals(HTTP_OK, response.getStatus())
+      content_type = response.getHeader('content-type')
+
+      # test content type : application/vnd.oasis.opendocument.graphics
+      self.assertTrue(content_type.startswith(self.content_type), content_type)
+      content_disposition = response.getHeader('content-disposition')
+      self.assertEquals('inline', content_disposition.split(';')[0])
+      # Test ODG (zip)
+      body = response.getBody()
+      # Test Validation Relax NG
+      self._validate(body)
+
+      from Products.ERP5OOo.OOoUtils import OOoParser
+      parser = OOoParser()
+      parser.openFromString(body)
+      content_xml_view = parser.oo_files['content.xml']
+      import libxml2
+      doc_view = libxml2.parseDoc(content_xml_view)
+      xpath = '//@*[name() = "xlink:href"]'
+      num_object = doc_view.xpathEval(xpath)[0].content[2:]
+
+      content_xml_build = parser.oo_files['%s/content.xml' % num_object]
+      doc_build = libxml2.parseDoc(content_xml_build)
+      xpath = '//@*[name() = "office:value"]'
+      values = doc_build.xpathEval(xpath)
+      # Test the data presence in the file XML
+      self.assertNotEquals(0, len(values))
+      # 2 values because there are - 10 document created by a owner 
+      #                            - 0 Reference count
+      self.assertEquals(2, len(values))
+
+      # Test the differents render
+      # render image
+      for image_format in STANDARD_IMAGE_FORMAT_LIST:
+        response = self.publish(
+                      '/%s/%s/%s?render_format=%s&display=medium'
+                      % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )
+        self.assertEquals(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
+
+      # render pdf
+      response = self.publish(
+                    '/%s/%s/%s?render_format=pdf&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
+      self.assertEquals(HTTP_OK, response.getStatus())
+
+
+      # Change some params  and restart (circle, bar, ...)
+      # chart type : circle
+      form.my_ooochart.manage_edit_xmlrpc(dict(chart_type='chart:circle'))
+      response = self.publish(
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
+      # Test ODG (zip) with other params
+      body = response.getBody()
+      # Test Validation Relax NG
+      self._validate(body)
+
+      # chart type : line
+      form.my_ooochart.manage_edit_xmlrpc(dict(chart_type='chart:line'))
+      response = self.publish(
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
+      # Test ODG (zip) with other params
+      body = response.getBody()
+      # Test Validation Relax NG
+      self._validate(body)
+
+      #chart type : scatter
+      form.my_ooochart.manage_edit_xmlrpc(dict(chart_type='chart:scatter'))
+      response = self.publish(
+                    '/%s/%s/%s?render_format=&display=medium'
+                    % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       # Test ODG (zip) with other params
       body = response.getBody()
       # Test Validation Relax NG
