@@ -875,6 +875,7 @@ class SimulationTool(BaseTool):
     def getInventoryList(self, src__=0, optimisation__=True,
                          ignore_variation=0, standardise=0,
                          omit_simulation=0, 
+                         default_stock_table='stock',
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1, 
                          precision=None, connection_id=None, **kw):
@@ -918,11 +919,14 @@ class SimulationTool(BaseTool):
       kw.update(self._getDefaultGroupByParameters(**kw))
       sql_kw, new_kw = self._generateKeywordDict(**kw)
       stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(
-                       table='stock', sql_kw=sql_kw, new_kw=new_kw)
+                       table=default_stock_table, sql_kw=sql_kw, new_kw=new_kw)
       Resource_zGetFullInventoryDate = \
         getattr(self, 'Resource_zGetFullInventoryDate', None)
+      EQUAL_DATE_TABLE_ID = 'inventory_stock'
+      GREATER_THAN_DATE_TABLE_ID = 'stock'
       optimisation_success = optimisation__ and \
-                             Resource_zGetFullInventoryDate is not None
+                             Resource_zGetFullInventoryDate is not None and \
+                             (GREATER_THAN_DATE_TABLE_ID == default_stock_table)
       # Generate first query parameter dict
       if optimisation_success:
         def getFirstQueryParameterDict(query_generator_kw):
@@ -1009,8 +1013,6 @@ class SimulationTool(BaseTool):
                                         full_text_search_keys = full_text_search_keys)
               equal_date_query_list = []
               greater_than_date_query_list = []
-              EQUAL_DATE_TABLE_ID = 'inventory_stock'
-              GREATER_THAN_DATE_TABLE_ID = 'stock'
               for inventory_date_line_dict in \
                   inventory_date_line_list.dictionaries():
                 date = inventory_date_line_dict['date']
@@ -1058,7 +1060,7 @@ class SimulationTool(BaseTool):
                 (where_query, greater_than_date_query)
               # Get initial inventory amount
               initial_inventory_line_list = self.Resource_zGetInventoryList(
-                stock_table_id='inventory_stock',
+                stock_table_id=EQUAL_DATE_TABLE_ID,
                 src__=src__, ignore_variation=ignore_variation,
                 standardise=standardise, omit_simulation=omit_simulation,
                 selection_domain=selection_domain,
@@ -1067,7 +1069,7 @@ class SimulationTool(BaseTool):
                 statistic=statistic, **inventory_stock_sql_kw)
               # Get delta inventory
               delta_inventory_line_list = self.Resource_zGetInventoryList(
-                stock_table_id='stock',
+                stock_table_id=GREATER_THAN_DATE_TABLE_ID,
                 src__=src__, ignore_variation=ignore_variation,
                 standardise=standardise, omit_simulation=omit_simulation,
                 selection_domain=selection_domain,
@@ -1181,7 +1183,7 @@ class SimulationTool(BaseTool):
             optimisation_success = False
       if not optimisation_success:
         result = self.Resource_zGetInventoryList(
-                    stock_table_id='stock',
+                    stock_table_id=default_stock_table,
                     src__=src__, ignore_variation=ignore_variation,
                     standardise=standardise, omit_simulation=omit_simulation,
                     selection_domain=selection_domain,
