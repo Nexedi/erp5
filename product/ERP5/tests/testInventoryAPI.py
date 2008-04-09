@@ -43,6 +43,7 @@ from Testing import ZopeTestCase
 from Products.ERP5.Document.OrderRule import OrderRule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -1632,6 +1633,7 @@ class TestInventoryDocument(InventoryAPITestCase):
     # TODO: It would be better to strip numbers below seconds instead of below
     # days.
     self.MAX_DATE = MAX_DATE = DateTime(DateTime().Date()) - 1
+    self.DUPLICATE_INVENTORY_DATE = MAX_DATE - 8 # Newest
     self.INVENTORY_DATE_3 = INVENTORY_DATE_3 = MAX_DATE - 10 # Newest
     self.INVENTORY_QUANTITY_3 = INVENTORY_QUANTITY_3 = 100000
     self.INVENTORY_DATE_2 = INVENTORY_DATE_2 = INVENTORY_DATE_3 - 10
@@ -2000,7 +2002,59 @@ class TestInventoryDocument(InventoryAPITestCase):
                       self.getInventory(optimisation__=False,
                                         **inventory_kw))
 
+  def test_14_TwoInventoryWithSameDateAndResourceAndNode(self):
+    """
+    It makes no sense to validate two inventories with same date,
+    same resource, and same node. The calculation of inventories
+    will not work in such case. So here we test that a constraint
+    does not allow such things
+    """
+    portal = self.getPortal()
+    inventory_module = portal.getDefaultModule(portal_type='Inventory')
+    inventory = inventory_module.newContent(portal_type='Inventory')
+    date = self.DUPLICATE_INVENTORY_DATE
+    inventory.edit(destination_value=self.node,
+                   destination_section_value=self.section,
+                   start_date=date)
+    inventory_line = inventory.newContent(
+        resource_value = self.resource,
+        quantity = 1)
+    self.workflow_tool = portal.portal_workflow
+    workflow_id = 'inventory_workflow'
+    transition_id = 'deliver_action'
+    workflow_id= 'inventory_workflow'
+    self.workflow_tool.doActionFor(inventory, transition_id,
+            wf_id=workflow_id)
+    self.assertEquals('delivered', inventory.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+    
+    # We should detect the previous inventory and fails
+    new_inventory = inventory.Base_createCloneDocument(batch_mode=1)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
+        new_inventory, transition_id, wf_id=workflow_id)
+    workflow_history = self.workflow_tool.getInfoFor(ob=new_inventory, 
+        name='history', wf_id=workflow_id)
+    workflow_error_message = str(workflow_history[-1]['error_message'])
+    self.assertTrue(workflow_error_message.find('There is already an inventory')>=0)
 
+    # Add a case in order to check a bug when the other inventory at the
+    # same date does not change stock values
+    new_inventory = inventory.Base_createCloneDocument(batch_mode=1)
+    new_inventory.setStartDate(self.DUPLICATE_INVENTORY_DATE + 1)
+    self.workflow_tool.doActionFor(new_inventory, transition_id,
+            wf_id=workflow_id)
+    self.assertEquals('delivered', new_inventory.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+
+    new_inventory = new_inventory.Base_createCloneDocument(batch_mode=1)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
+        new_inventory, transition_id, wf_id=workflow_id)
+    workflow_history = self.workflow_tool.getInfoFor(ob=new_inventory, 
+        name='history', wf_id=workflow_id)
+    workflow_error_message = str(workflow_history[-1]['error_message'])
+    self.assertTrue(workflow_error_message.find('There is already an inventory')>=0)
 
 def test_suite():
   suite = unittest.TestSuite()
