@@ -119,6 +119,7 @@
                         <string>planning_box</string>
                         <string>my_comment</string>
                         <string>my_multi_list_field</string>
+                        <string>my_checkbox</string>
                       </list>
                     </value>
                 </item>
