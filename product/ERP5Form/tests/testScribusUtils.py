@@ -32,7 +32,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 
 class TestScribusUtils(ERP5TypeTestCase):
   '''Unit test for SribusUtils API'''
@@ -190,6 +189,104 @@ class TestScribusUtils(ERP5TypeTestCase):
     # the old field text_1 must have been removed
     self.assertEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
       'text_1', None), None)
+
+  def test_05_requiredFields(self):
+    ''' Set required property on a scribus field. After creating module with
+    scribus, the ERP5 field should have the required property set on.'''
+
+    # module creation using scribus file containing fields with requied
+    # property set:
+    self.portal.ERP5Site_createModuleScribus(
+          module_id="dummy_module",
+          module_portal_type="Dummy Module",
+          module_title="Dummy Module Title",
+          import_pdf_file=self.makeFileUpload('test_field_properties.pdf'),
+          import_scribus_file=self.makeFileUpload('test_field_properties.sla'),
+          portal_skins_folder="erp5_test",
+          object_title="Dummy",
+          object_portal_type="Dummy")
+
+    self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_test", None), None)
+    self.assertEquals("Dummy Module Title",
+                      self.portal.dummy_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
+
+    # define some field lists
+    required_field_name_list = ['my_required_string_field',
+                                'my_required_date']
+    not_required_field_name_list = [ 'my_simple_string_field', 
+                                     'my_simple_date']
+    all_field_name_list = required_field_name_list + \
+                                        not_required_field_name_list
+
+    # check the that fields prensent in the sla file have been created in the
+    # erp5 form
+    form = self.portal.portal_skins.erp5_test.Dummy_view
+    for field_name in all_field_name_list:
+      self.assertNotEquals(getattr(form, field_name, None), None)
+
+    # check the required fields are required :
+    for field_name in required_field_name_list:
+      field = getattr(form, field_name, None)
+      self.assertEquals(field.values['required'], 1)
+
+    # check fields not required are not :
+    for field_name in not_required_field_name_list:
+      field = getattr(form, field_name, None)
+      self.assertNotEquals(field.values['required'], 1)
+
+  def test_06_readOnlyFields(self):
+    ''' Set read only property on a scribus field. After creating module with
+    scribus, it should not be possible to edit it.'''
+    # module creation using scribus file containing fields with read only
+    # property set:
+    self.portal.ERP5Site_createModuleScribus(
+          module_id="dummy_module",
+          module_portal_type="Dummy Module",
+          module_title="Dummy Module Title",
+          import_pdf_file=self.makeFileUpload('test_field_properties.pdf'),
+          import_scribus_file=self.makeFileUpload('test_field_properties.sla'),
+          portal_skins_folder="erp5_test",
+          object_title="Dummy",
+          object_portal_type="Dummy")
+
+    self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_test", None), None)
+    self.assertEquals("Dummy Module Title",
+                      self.portal.dummy_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
+
+    # define some field lists
+    read_only_field_name_list = ['my_read_only_string_field',
+                                'my_read_only_date']
+    not_read_only_field_name_list = [ 'my_simple_string_field', 
+                                     'my_simple_date']
+    all_field_name_list = read_only_field_name_list + \
+                                        not_read_only_field_name_list
+
+    # check the that fields prensent in the sla file have been created in the
+    # erp5 form
+    form = self.portal.portal_skins.erp5_test.Dummy_view
+    for field_name in all_field_name_list:
+      self.assertNotEquals(getattr(form, field_name, None), None)
+
+    # check the read_only fields are read_only :
+    for field_name in read_only_field_name_list:
+      field = getattr(form, field_name, None)
+      self.assertEquals(field.values['editable'], 1)
+
+    # check fields not read_only are not :
+    for field_name in not_read_only_field_name_list:
+      field = getattr(form, field_name, None)
+      self.assertNotEquals(field.values['editable'], 1)
+
 
 
 def test_suite():
