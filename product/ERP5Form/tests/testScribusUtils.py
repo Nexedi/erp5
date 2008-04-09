@@ -280,12 +280,12 @@ class TestScribusUtils(ERP5TypeTestCase):
     # check the read_only fields are read_only :
     for field_name in read_only_field_name_list:
       field = getattr(form, field_name, None)
-      self.assertEquals(field.values['editable'], 1)
+      self.assertEquals(field.values['editable'], 0)
 
     # check fields not read_only are not :
     for field_name in not_read_only_field_name_list:
       field = getattr(form, field_name, None)
-      self.assertNotEquals(field.values['editable'], 1)
+      self.assertEquals(field.values['editable'], 1)
 
 
 
