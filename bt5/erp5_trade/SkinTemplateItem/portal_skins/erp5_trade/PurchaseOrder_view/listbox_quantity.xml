@@ -62,7 +62,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -89,7 +89,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
