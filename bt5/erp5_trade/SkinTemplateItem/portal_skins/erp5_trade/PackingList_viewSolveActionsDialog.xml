@@ -96,15 +96,15 @@
                       <list>
                         <string>listbox_choice</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_prevision_quantity</string>
+                        <string>listbox_quantity_unit</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_prevision_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
