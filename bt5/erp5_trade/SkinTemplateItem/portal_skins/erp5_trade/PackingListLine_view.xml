@@ -95,6 +95,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_int_index</string>
                         <string>my_resource_title</string>
                         <string>my_variation_category_list</string>
                         <string>my_amortisation_method</string>
@@ -108,6 +110,10 @@
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_price</string>
+                        <string>my_start_date</string>
+                        <string>my_source_title</string>
+                        <string>my_stop_date</string>
+                        <string>my_destination_title</string>
                         <string>my_total_quantity</string>
                         <string>my_total_price</string>
                       </list>
