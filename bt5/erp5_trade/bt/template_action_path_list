@@ -16,6 +16,8 @@ Inventory Line | inventory_view
 Inventory Line | price_view
 Inventory Line | view
 Inventory Module | view
+Inventory Module | view_stock_export
+Inventory Module | view_stock_report
 Inventory | view
 Order Rule | view
 Organisation | jump_to_purchase_order
