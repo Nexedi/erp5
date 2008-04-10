@@ -10,20 +10,14 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
+            <key> <string>_owner</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>report_tree</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_purchase_packing_list_lines_listbox</string> </value>
+            <value> <string>listbox_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -80,63 +74,18 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_purchase_order_lines_listbox</string> </value>
+                    <value> <string>my_stop_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>PurchaseOrder_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Purchase Packing List Line</string>
-                          <string>Purchase Packing List Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>report_tree</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key>                 <string>selection_name</string> </key>
-                    <value> <string>purchase_packing_list_line_selection</string> </value>
+                    <value> <string>PackingListLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Purchase Packing List Lines</string> </value>
-                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>getMovementList</string> </value>
         </item>
       </dictionary>
     </pickle>
