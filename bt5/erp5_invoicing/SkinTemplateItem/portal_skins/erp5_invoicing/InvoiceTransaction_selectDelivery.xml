@@ -66,14 +66,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>#\n
-#  This method is used by the sale_invoice_transaction_builder\n
-# delivery builder to select the Sale Invoice Transaction \n
-# in which creating new Sale Invoice Transaction Lines.\n
+#  This method is used by the invoice_transaction_builder\n
+# delivery builder to select the Invoice Transaction \n
+# in which creating new Invoice Transaction Lines.\n
 #\n
 \n
-LOG = lambda msg:context.log("SaleInvoiceTransaction_selectDelivery", msg)\n
+LOG = lambda msg: context.log("InvoiceTransaction_selectDelivery", msg)\n
+LOG = lambda msg: "disabled"\n
 \n
-LOG("movements = %s"%movement_list)\n
+LOG("movements = %s" % movement_list)\n
 \n
 deliveries_keys = {}\n
 for movement in movement_list :\n
@@ -86,7 +87,7 @@ for movement in movement_list :\n
 \n
   deliveries_keys[line.getExplanationValue()] = 1\n
 \n
-LOG("deliveries = %s"%deliveries_keys.keys())\n
+LOG("deliveries = %s" % deliveries_keys.keys())\n
 return filter(lambda x : x is not None, deliveries_keys.keys())\n
 </string> </value>
         </item>
