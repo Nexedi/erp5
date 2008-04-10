@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>cancelled</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Cancelled</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -64,48 +64,49 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
