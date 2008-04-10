@@ -110,8 +110,6 @@
                         <string>my_source_section</string>
                         <string>my_source_title</string>
                         <string>my_source_decision_title</string>
-                        <string>my_segmentation</string>
-                        <string>my_received_date</string>
                         <string>my_order</string>
                         <string>my_origin</string>
                         <string>my_price_currency</string>
