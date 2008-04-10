@@ -1,3 +1,9 @@
+2008-04-10 fabien
+* add css class for div with no input inside. This is necessary to have a correct rendering of readOnly fields (non editable).
+* remove string after '/>'. This is tipicaly time and date separator that make the field rendering position bad.
+* replace some unused div with tal:block, this make html source code more clean
+
+
 2008-03-31 fabien
 * add update_module_scribus portal action that permit to update the forms of a module created using the create_module_scribus action
 

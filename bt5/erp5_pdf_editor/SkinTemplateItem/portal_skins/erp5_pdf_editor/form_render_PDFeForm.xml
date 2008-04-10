@@ -148,12 +148,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                     output rendering as a single field.\n
                     UPDATE : with xhtml_style, this \n
                   </div>\n
-                  <div tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error -->\n
+                  <div class="input" tal:attributes="class python: (\'<\' not in struct) and \'%s_class\' % name or \'\'" tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error -->\n
                     <div tal:replace="structure struct"\n
                           tal:attributes="class string:${name}_class;\n
                           title field/title"/>\n
                   </div>\n
-                  <div tal:condition="python: field_errors.has_key(field.id)"><!-- field has errors-->\n
+                  <div class="input" tal:attributes="class python: (\'<\' not in struct) and \'%s_class\' % name or \'\'" tal:condition="python: field_errors.has_key(field.id)"><!-- field has errors-->\n
                     <div tal:replace="structure struct"\n
                     i18n:attributes="title"\n
                     tal:attributes="class string:${name}_class_error;\n
@@ -172,17 +172,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                     in the document before processing the next input\n
                   </div>\n
                   <tal:block tal:condition="python: \'hidden\' not in struct_input_div[1]">\n
-                    <div tal:define="struct_range python:range(struct_input_len)"\n
+                    <tal:block tal:define="struct_range python:range(struct_input_len)"\n
                           tal:repeat="struct_ind python:struct_range[1:]">\n
                       <div tal:condition="python:(not field_errors.has_key(field.id))"><!-- field has no error 1-->\n
                         <div tal:define="struct_content python:struct_input_div[struct_ind];\n
+                          struct_content python:\'/>\'in struct_content and struct_content[:struct_content.rfind(\'/>\')+2] or struct_content;\n
                                                         struct_final python:\'%s %s\' %\n
                                                         (\'<input \', struct_content);\n
                                                         class_final python:\'%s%s%s\' %\n
                                                         (class_base,\'_class_\', struct_ind)"\n
                               tal:replace="structure struct_final"\n
                               tal:attributes="class class_final;\n
-                                              title field/title"/>\n
+                                              title field/title">\n
+                        </div>\n
                       </div>\n
                       <div tal:condition="python:field_errors.has_key(field.id)"><!-- field has errors 1-->\n
                         <div tal:define="struct_content python:struct_input_div[struct_ind];\n
@@ -195,13 +197,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                               tal:attributes="class class_final;\n
                               title field/title"/>\n
                       </div>\n
-                    </div>\n
+                    </tal:block>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: \'hidden\' in struct_input_div[1]">\n
                     <!-- processing CheckBoxField in xhtml_style -->\n
                     <div tal:define="struct_range python:range(struct_input_len)"\n
                           tal:repeat="struct_ind python:struct_range[1:]">\n
-                      <div tal:condition="python:(not field_errors.has_key(field.id))">\n
+                      <tal:block tal:condition="python:(not field_errors.has_key(field.id))">\n
                         <!-- field has no error 2-->\n
                         <div tal:define="struct_content python:struct_input_div[struct_ind];\n
                                           struct_final python:\'%s %s\' %\n
@@ -211,8 +213,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                           tal:replace="structure struct_final"\n
                                           tal:attributes="class class_final;\n
                                           title field/title"/>\n
-                      </div>\n
-                      <div tal:condition="python:field_errors.has_key(field.id)">\n
+                      </tal:block>\n
+                      <tal:block tal:condition="python:field_errors.has_key(field.id)">\n
                         <!-- field has errors 2-->\n
                         <div tal:define="struct_content python:struct_input_div[struct_ind];\n
                                           struct_final python:\'%s %s\' %\n
@@ -222,7 +224,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                               tal:replace="structure struct_final"\n
                               tal:attributes="class class_final;\n
                               title field/title"/>\n
-                      </div>\n
+                      </tal:block>\n
                     </div>\n
                   </tal:block>\n
                 </div>\n
