@@ -21,6 +21,7 @@ Link | edit_workflow
 Organisation | edit_workflow
 Organisation | validation_workflow
 Person | edit_workflow
+Person | user_account_workflow
 Person | validation_workflow
 Query | edit_workflow
 Query | query_workflow
