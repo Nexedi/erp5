@@ -72,11 +72,9 @@
                 <item>
                     <key> <string>Set own password</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
+                      <list>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

@@ -1,4 +1,7 @@
 2008-04-10 yo
+* Disable Set Own Password for Assignor and Assignee.
+
+2008-04-10 yo
 * Add user_account_workflow which is associated with Person by default. This workflow allows Assignor, Assignee and Manger to create a user, only if a user login (reference) is empty.
 
 2008-03-28 jerome
