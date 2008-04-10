@@ -99,13 +99,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>required</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -113,7 +113,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Site</string> </value>
                 </item>
               </dictionary>

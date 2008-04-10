@@ -81,7 +81,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The invoiced person or organisation.</string> </value>
                 </item>
                 <item>

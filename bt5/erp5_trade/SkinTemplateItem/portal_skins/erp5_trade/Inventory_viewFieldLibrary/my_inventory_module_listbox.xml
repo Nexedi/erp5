@@ -79,7 +79,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>all_columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -106,7 +106,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -141,7 +141,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -168,7 +168,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>inventory_module_selection</string> </value>
                 </item>
                 <item>
@@ -176,7 +176,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Inventories</string> </value>
                 </item>
               </dictionary>

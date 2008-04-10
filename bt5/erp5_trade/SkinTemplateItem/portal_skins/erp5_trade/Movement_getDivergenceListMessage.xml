@@ -121,7 +121,7 @@ return \', \'.join(message_list)\n
                             <string>message_list</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>m</string>
                             <string>str</string>
                           </tuple>

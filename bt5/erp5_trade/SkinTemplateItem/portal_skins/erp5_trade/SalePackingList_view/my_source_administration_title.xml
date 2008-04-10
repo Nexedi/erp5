@@ -81,7 +81,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier.</string> </value>
                 </item>
                 <item>
