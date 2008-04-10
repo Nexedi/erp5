@@ -84,7 +84,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>external_validator</string> </key>
+                    <key> <string>external_validator</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -102,7 +102,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>EAN-13 Code</string> </value>
                 </item>
               </dictionary>
