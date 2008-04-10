@@ -1664,7 +1664,7 @@ class ScribusParser:
         anflag_properties['multiline'] = 0
         anflag_properties['noExport'] = 0
         anflag_properties['required'] = 0
-        anflag_properties['readOnly'] = 0
+        anflag_properties['editable'] = 1
         # analysing result
         LOG('ScribusParser', INFO, '      => ANFLAG = ' + str(temp_ANFLAG))
         # These tests uses some special variables
@@ -1701,7 +1701,7 @@ class ScribusParser:
           anflag_properties['required'] = 1
         if temp_ANFLAG == long(def_readOnly):
           # 'read only" field
-          anflag_properties['readOnly'] = 1
+          anflag_properties['editable'] = 0
 
         # getting maximum number of caracters the field can hold
         # note : only used for textfields ('StringField', 'IntegerField',
@@ -1804,6 +1804,12 @@ class ScribusParser:
         object_properties['required'] = \
             sp.getObjectTooltipProperty('required',
                                         anflag_properties['required'],
+                                        object_name,
+                                        tooltipfield_properties_dict)
+
+        object_properties['editable'] = \
+            sp.getObjectTooltipProperty('editable',
+                                        anflag_properties['editable'],
                                         object_name,
                                         tooltipfield_properties_dict)
 
@@ -2034,6 +2040,9 @@ class ScribusParser:
     # required attribute specify if the user has to fill this field
     object_dict['attributes']['required'] =\
                properties_field['required']
+    # editable attribute specify if the user can fill this field or not
+    object_dict['attributes']['editable'] =\
+               properties_field['editable']
     # max number of caracters that can be entered in a field
     # only used with String fieds (including Integer and Float fields)
     if 'maximum_input' in properties_field.keys():
