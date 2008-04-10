@@ -79,10 +79,11 @@ def ERP5Site_updateModuleScribus(self,
   option_html = option_html
 
   # get object_title and portal_skin object using the object_portal_type
-  # to search the view in portal_skins folder
+  # (without any spaces) to search the view in portal_skins folder
+  temp_portal_type = object_portal_type.replace(' ', '')
   search_param = {
                   'obj_metatypes': 'ERP5 Form',
-                  'obj_searchterm': '%s_view' % object_portal_type,
+                  'obj_searchterm': '%s_view' % temp_portal_type,
                   'search_sub': 1
                  }
   result = portal.portal_skins.PrincipiaFind( portal.portal_skins, 
