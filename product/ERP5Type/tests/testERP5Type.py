@@ -313,8 +313,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       o = portal.person_module.newContent(portal_type="Person", 
                                           temp_object=1)
       second_id = o.getId()
-      self.assertNotEquals(first_id, second_id)
-      self.assertEquals(str(int(first_id) + 1), second_id)
+      self.assertEquals(first_id, second_id)
+      self.assertEquals('None', second_id)
 
     def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
       """
