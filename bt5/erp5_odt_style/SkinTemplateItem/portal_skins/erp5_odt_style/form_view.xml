@@ -406,13 +406,14 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                 </tal:block>\n
               </tal:block>\n
               <tal:block tal:condition="python: field_type == \'ImageField\'">\n
-                <text:p text:style-name=\'field-content\'\n
-                  tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
-                <text:p text:style-name=\'field-content-center\'>\n
+                <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
+                        tal:content="python: field.get_value(\'title\')"/>\n
+                \n
+                <text:p text:style-name=\'field-content-center\'\n
+                        tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
                   <office:include_img style="inline-graphic"\n
-                                  tal:attributes="width python: (size and size[0] or 100) / 20.;\n
-                                  path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
-                </text:p>\n
+                                      tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+                                      path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
               </text:p>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'OOoChart\'">\n
