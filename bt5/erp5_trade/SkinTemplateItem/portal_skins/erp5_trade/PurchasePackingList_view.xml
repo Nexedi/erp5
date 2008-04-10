@@ -89,7 +89,11 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_stop_date</string>
+                        <string>listbox_quantity_unit</string>
+                        <string>listbox_quantity</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -102,9 +106,6 @@
                         <string>my_destination_decision_title</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
-                        <string>listbox_stop_date</string>
-                        <string>listbox_quantity_unit</string>
-                        <string>listbox_quantity</string>
                       </list>
                     </value>
                 </item>
