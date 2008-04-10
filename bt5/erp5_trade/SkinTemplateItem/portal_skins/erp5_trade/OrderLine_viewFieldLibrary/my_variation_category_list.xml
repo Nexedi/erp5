@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>hash_script_id</string>
                 <string>title</string>
-                <string>size</string>
                 <string>items</string>
+                <string>size</string>
+                <string>hash_script_id</string>
               </list>
             </value>
         </item>
@@ -67,13 +67,25 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>hash_script_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key>                 <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -92,11 +104,17 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>hash_script_id</string> </key>
-                    <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
+                    <key> <string>hash_script_id</string> </key>
+                    <value> <string>Base_getMultiListFieldPropertyDictList</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>size</string> </key>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
                     <value> <int>5</int> </value>
                 </item>
                 <item>
@@ -104,7 +122,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Variation</string> </value>
                 </item>
               </dictionary>
@@ -124,7 +142,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0)</string> </value>
         </item>
       </dictionary>
     </pickle>

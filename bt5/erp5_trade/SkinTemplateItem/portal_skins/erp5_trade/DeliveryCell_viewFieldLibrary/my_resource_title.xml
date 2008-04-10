@@ -83,15 +83,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>allow_creation</string> </key>
+                    <key> <string>allow_creation</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>allow_jump</string> </key>
+                    <key> <string>allow_jump</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
