@@ -124,11 +124,18 @@ def ERP5Site_updateModuleScribus(self,
   skin_folder = ManageModule.setSkinFolder(portal,
                                            portal_skins_folder)
 
-  # all object in the skin_folder should be re-generated to be updated
+  # all object created using ERP5Site_createModuleScribus in the skin_folder 
+  # should be re-generated to be updated
   # except the module form view (because it don't change)
   object_id_list = []
+  object_to_delete_list = ['%s_view' % temp_portal_type,
+                           '%s_css.css' % temp_portal_type,
+                           '%s_view%sAsPdf' % (temp_portal_type,
+                             temp_portal_type)]
   for object in skin_folder._objects:
-    if 'Module_view' not in object['id'] and temp_portal_type in object['id']:
+    if object['id'] in object_to_delete_list:
+      object_id_list.append(object['id'])
+    elif '%s_background' % temp_portal_type in object['id']:
       object_id_list.append(object['id'])
 
   # move the old objects in portal_trash
