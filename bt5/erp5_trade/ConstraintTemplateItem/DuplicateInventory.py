@@ -76,49 +76,44 @@ class DuplicateInventory(Constraint):
     # way to make sure that it is impossible to validate two inventories
     # in the same time (required because we have message with right tags
     # only when the transaction is finished)
-    node_value.serialize()
+    if node_value is not None:
+      node_value.serialize()
 
-    # For each resource, we look that there is not any inventory for
-    # the same date, the same resource and the same node, or if there
-    # is already such kind of inventories being indexed
-    resource_and_variation_list = []
-    date = inventory.getStartDate()
-    date_string = repr(date)
-    countMessageWithTag = inventory.portal_activities.countMessageWithTag
-    portal = inventory.getPortalObject()
-    getObjectFromUid = portal.portal_catalog.getObject
-    getCurrentInventoryList = portal.portal_simulation.getCurrentInventoryList
-    resource_and_variation_list = []
-    for movement in inventory.getMovementList():
-      resource =  movement.getResource()
-      if resource is not None and movement.getQuantity() not in (None,''):
-        variation_text = movement.getVariationText()
-        if (resource,variation_text) not in resource_and_variation_list:
-          resource_and_variation_list.append((resource,variation_text))
-          tag = '%s_%s_%s' % (date_string, resource, variation_text)
-          if countMessageWithTag(tag) > 0 :
-            errors.append(self.generateDuplicateError(portal, obj, resource,
-                                  variation_text))
-          # Call sql request in order to see if there is another inventory
-          # for this node, resource, variation_text and date
-          inventory_list = getCurrentInventoryList(resource=resource,
-                                   variation_text=variation_text,
-                                   from_date=date, at_date=date,
-                                   default_stock_table='inventory_stock',
-                                   node=node)
-          LOG('inventory_list sql src', 0, getCurrentInventoryList(resource=resource,
-            variation_text=variation_text,
-            from_date=date, at_date=date,
-            default_stock_table='inventory_stock',
-            node=node, src__=1))
-          LOG('len inventory_list',0,len(inventory_list))
-          for inventory in inventory_list:
-            movement = getObjectFromUid(inventory.stock_uid)
-            if movement.getPortalType().find('Inventory') >= 0:
+      # For each resource, we look that there is not any inventory for
+      # the same date, the same resource and the same node, or if there
+      # is already such kind of inventories being indexed
+      resource_and_variation_list = []
+      date = inventory.getStartDate()
+      date_string = repr(date)
+      countMessageWithTag = inventory.portal_activities.countMessageWithTag
+      portal = inventory.getPortalObject()
+      getObjectFromUid = portal.portal_catalog.getObject
+      getCurrentInventoryList = portal.portal_simulation.getCurrentInventoryList
+      resource_and_variation_list = []
+      for movement in inventory.getMovementList():
+        resource =  movement.getResource()
+        if resource is not None and movement.getQuantity() not in (None,''):
+          variation_text = movement.getVariationText()
+          if (resource,variation_text) not in resource_and_variation_list:
+            resource_and_variation_list.append((resource,variation_text))
+            tag = '%s_%s_%s' % (date_string, resource, variation_text)
+            if countMessageWithTag(tag) > 0 :
               errors.append(self.generateDuplicateError(portal, obj, resource,
-                                  variation_text))
-        # Now we must reindex with some particular tags
-        activate_kw = {'tag': tag}
-        movement.reindexObject(activate_kw=activate_kw)
+                                    variation_text))
+            # Call sql request in order to see if there is another inventory
+            # for this node, resource, variation_text and date
+            inventory_list = getCurrentInventoryList(resource=resource,
+                                     variation_text=variation_text,
+                                     from_date=date, at_date=date,
+                                     default_stock_table='inventory_stock',
+                                     node=node)
+            for inventory in inventory_list:
+              movement = getObjectFromUid(inventory.stock_uid)
+              if movement.getPortalType().find('Inventory') >= 0:
+                errors.append(self.generateDuplicateError(portal, obj, resource,
+                                    variation_text))
+          # Now we must reindex with some particular tags
+          activate_kw = {'tag': tag}
+          movement.reindexObject(activate_kw=activate_kw)
     
     return errors

@@ -65,42 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Message import Message\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 inventory = state_change[\'object\']\n
 \n
-# Make sure the start_date is defined\n
-start_date = inventory.getStartDate()\n
-if start_date is None:\n
-  text = "Sorry, you must define the inventory date"\n
-  message = Message(domain=\'ui\', message=text)\n
-  raise ValidationFailed, message\n
-\n
-# Make sure the node is defined\n
-node = inventory.getDestination()\n
-if node is None:\n
-  text = "Sorry, you must define the inventory warehouse"\n
-  message = Message(domain=\'ui\', message=text)\n
-  raise ValidationFailed, message\n
-\n
-for line in inventory.getMovementList():\n
-  if line.getResource() is None:\n
-    text = "Sorry, no resource for line $line_title"\n
-    message = Message(domain=\'ui\', message=text,\n
-                      mapping={\'line_title\': line.getTitle()})\n
-    raise ValidationFailed, message\n
-\n
-\n
 # use of the constraint\n
-error_list = inventory.checkConsistency()\n
-if len(error_list) > 0:\n
-  raise ValidationFailed, (error_list[0].getTranslatedMessage(),)\n
-
-
-]]></string> </value>
+inventory.Base_checkConsistency()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -151,15 +123,6 @@ if len(error_list) > 0:\n
                             <string>_getitem_</string>
                             <string>inventory</string>
                             <string>_getattr_</string>
-                            <string>start_date</string>
-                            <string>None</string>
-                            <string>text</string>
-                            <string>message</string>
-                            <string>node</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>error_list</string>
-                            <string>len</string>
                           </tuple>
                         </value>
                     </item>

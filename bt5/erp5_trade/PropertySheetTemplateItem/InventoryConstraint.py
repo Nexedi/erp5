@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from Products.CMFCore.Expression import Expression
+
 class InventoryConstraint:
   """
   Inventory Constraint
@@ -34,5 +36,22 @@ class InventoryConstraint:
     'id': 'duplicate_inventory',
     'type': 'DuplicateInventory',
     },
-          
+    { 'id'            : 'category_existence',
+      'description'   : 'Source, Destination and Sections must be defined',
+      'type'          : 'CategoryExistence',
+      'portal_type'   : Expression('python: portal.getPortalNodeTypeList()'),
+      'destination'        : 1,
+      'destination_section': 1,
+    },
+    { 'id'            : 'start_date',
+      'description'   : 'Start Date must be defined',
+      'type'          : 'PropertyExistence',
+      'start_date'    : 1,
+    },
+    { 'id'            : 'resource_on_line',
+      'description'   : 'Resource must be defined on all lines',
+      'type'          : 'TALESConstraint',
+      'expression'    : 'python: None not in [x.getResourceValue() for x in object.getMovementList()]',
+      'message_expression_false': 'You must define a resource on all lines',
+    },
   )
