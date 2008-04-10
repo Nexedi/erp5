@@ -21,13 +21,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Purchase Orders to Confirm (%(count)s)</string> </value>
+            <value> <string>Sale Orders to Plan (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_order_module?simulation_state=ordered&portal_type=Purchase+Order&local_roles=%(local_roles)s&reset=1
+sale_order_module?simulation_state=draft&portal_type=Sale+Order&local_roles:list=Assignee&local_roles:list=Owner&reset=1
 
 ]]></string> </value>
         </item>
@@ -38,23 +38,44 @@ purchase_order_module?simulation_state=ordered&portal_type=Purchase+Order&local_
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ordered_purchase</string> </value>
+            <value> <string>5_draft_sale_order_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="PersistentMapping" module="Persistence.mapping"/>
@@ -71,7 +92,7 @@ purchase_order_module?simulation_state=ordered&portal_type=Purchase+Order&local_
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Purchase Order</string>
+                        <string>Sale Order</string>
                       </tuple>
                     </value>
                 </item>
@@ -79,7 +100,7 @@ purchase_order_module?simulation_state=ordered&portal_type=Purchase+Order&local_
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>ordered</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>

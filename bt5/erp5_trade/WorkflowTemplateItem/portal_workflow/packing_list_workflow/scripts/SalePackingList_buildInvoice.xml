@@ -115,7 +115,7 @@ if packing_list.getPortalType() == \'Sale Packing List\':\n
                             <string>_getitem_</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

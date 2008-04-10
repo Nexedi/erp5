@@ -21,13 +21,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Packing List to Receive (%(count)s)</string> </value>
+            <value> <string>Sale Packing List to Ship (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_packing_list_module?simulation_state=shipped&portal_type=Sale+Packing+List&local_roles=%(local_roles)s&reset=1
+sale_packing_list_module?simulation_state=ready&portal_type=Sale+Packing+List&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
@@ -38,23 +38,44 @@ sale_packing_list_module?simulation_state=shipped&portal_type=Sale+Packing+List&
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>shipped_sale</string> </value>
+            <value> <string>6_ready_sale_packing_list_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="PersistentMapping" module="Persistence.mapping"/>
@@ -79,7 +100,7 @@ sale_packing_list_module?simulation_state=shipped&portal_type=Sale+Packing+List&
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>shipped</string>
+                        <string>ready</string>
                       </tuple>
                     </value>
                 </item>

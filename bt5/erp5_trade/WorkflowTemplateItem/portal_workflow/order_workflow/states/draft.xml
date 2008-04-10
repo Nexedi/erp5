@@ -86,6 +86,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -138,6 +139,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
