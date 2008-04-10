@@ -128,7 +128,7 @@ def ERP5Site_updateModuleScribus(self,
   # except the module form view (because it don't change)
   object_id_list = []
   for object in skin_folder._objects:
-    if 'Module_view' not in object['id']:
+    if 'Module_view' not in object['id'] and temp_portal_type in object['id']:
       object_id_list.append(object['id'])
 
   # move the old objects in portal_trash
