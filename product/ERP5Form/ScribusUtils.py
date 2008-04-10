@@ -1059,8 +1059,20 @@ class ManageCSS:
             '  input_order=%s' % properties_field['input_order'])
         # defining global field rendering (for Date), ignoring for the moment
         # the whole part about the time
+
+        # this following field refere to no existing field, it's use only 
+        # when editable property is unchecked (there is only one field 
+        # without _class_N but just _class, so, the 3 existing CSS selector 
+        # can't be applied, that the reason for this new one)
+        field_dict[0] = {}
+        field_dict[0]['width'] = \
+            str(scaling_factor1*float(width_part*(field_nb+1))) + 'px'
+        field_dict[0]['margin-left'] = \
+           str(scaling_factor1 *float(properties_field['position_x'])) + 'px'
+
         if properties_field['input_order'] in \
              ['day/month/year', 'dmy', 'month/day/year', 'mdy']:
+
           # specified input order. must be dd/mm/yyyy or mm/dd/yyyy (year is
           # the last field).
           # processing first field
@@ -1137,13 +1149,16 @@ class ManageCSS:
 
       field_nb_range = field_nb + 1
       field_range = range(field_nb_range)
-      field_range = field_range[1:]
+      field_range = field_range
       for iterator in field_range:
         # iterator take the field_id according to the field_nb
         # ie (0..field_nb)
         #iterator = it + 1
         LOG('ManageCSS', INFO, '   sub_field_id=%s' % iterator)
-        class_name = field_name + '_class_' + str(iterator)
+        if iterator == 0:
+          class_name = field_name + '_class'
+        else:
+          class_name = field_name + '_class_' + str(iterator)
         LOG('ManageCSS', INFO, '   class_name=%s' % class_name)
 
         # managing standard class properties
@@ -1169,7 +1184,10 @@ class ManageCSS:
       # final printing for testing
       LOG('ManageCSS', INFO, '\n\n   final printing')
       for iterator in field_range:
-        class_name = field_name + '_class_' + str(iterator)
+        if iterator == 0:
+          class_name = field_name + '_class'
+        else:
+          class_name = field_name + '_class_' + str(iterator)
         LOG('ManageCSS', INFO, '    class=%s' % class_name)
         for prop_id in properties_css_dict['standard'][class_name].keys():
           LOG('ManageCSS', INFO, '      prop:%s=%s' % \
@@ -1862,12 +1880,12 @@ class ScribusParser:
           # when creating the fdf file to fill the PDF form.
           object_properties['date_separator'] = \
                 sp.getObjectTooltipProperty('date_separator',
-                                            '  ',
+                                            '/',
                                             object_name,
                                             tooltipfield_properties_dict)
           object_properties['time_separator'] = \
                 sp.getObjectTooltipProperty('time_separator',
-                                            '  ',
+                                            ':',
                                             object_name,
                                             tooltipfield_properties_dict)
 
@@ -2071,17 +2089,11 @@ class ScribusParser:
       # checking if date only or date + time
       object_dict['attributes']['date_only'] = \
           int(properties_field['date_only'])
-      if option_html == 1:
-        # defining default separators to '' to prevent bug when rendering in
-        # graphic mode
-        object_dict['attributes']['date_separator'] = ''
-        object_dict['attributes']['time_separator'] = ''
-      else:
-        # rendering is ERP5 type, can keep the final date and time separators
-        object_dict['attributes']['date_separator'] = \
-            properties_field['date_separator']
-        object_dict['attributes']['time_separator'] = \
-            properties_field['time_separator']
+
+      object_dict['attributes']['date_separator'] = \
+          properties_field['date_separator']
+      object_dict['attributes']['time_separator'] = \
+          properties_field['time_separator']
     # getting special attributes for RelationStringField
     elif object_dict['erp_type'] == 'RelationStringField':
       portal_type_item = properties_field['portal_type'].capitalize()
