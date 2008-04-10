@@ -209,7 +209,10 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_error_log(self):
     self.failUnless('error_log' in self.portal.objectIds())
-  
+    self.failUnless(self.portal.error_log.getProperties()['copy_to_zlog'])
+    self.failIf('Unauthorized' in
+                self.portal.error_log.getProperties()['ignored_exceptions'])
+
   def test_03_getDefaultModule(self, quiet=quiet, run=run_all_test):
     """
     test getDefaultModule method

@@ -1320,6 +1320,10 @@ class ERP5Generator(PortalGenerator):
     # Add an error_log
     if 'error_log' not in p.objectIds():
       manage_addErrorLog(p)
+      p.error_log.setProperties(keep_entries=20,
+                                copy_to_zlog=True,
+                                ignored_exceptions=('NotFound', 'Redirect'))
+
 
     # Remove unused default actions
     def removeActionsFromTool(tool, remove_list):
