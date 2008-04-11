@@ -398,7 +398,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                   </tal:block>\n
                   <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
                     <text:p text:style-name=\'field-content-center\'\n
-                           tal:content="python: field.render_pdf(value)"/>\n
+                  tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: value is None">\n
                     <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
