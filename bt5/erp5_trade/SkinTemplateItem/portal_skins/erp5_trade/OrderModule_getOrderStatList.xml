@@ -1,0 +1,443 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.PythonScripts.standard import Object\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+request = container.REQUEST\n
+from_date = request.get(\'from_date\', None)\n
+to_date = request.get(\'at_date\', None)\n
+aggregation_level = request.get(\'aggregation_level\', None)\n
+report_group_by = request.get(\'group_by\', None)\n
+# get all category\n
+incoterm = request.get(\'incoterm\', None)\n
+group = request.get(\'group\', None)\n
+order = request.get(\'order\', None)\n
+delivery_mode = request.get(\'delivery_mode\', None)\n
+\n
+catalog_params = {}\n
+\n
+# get all organisation for the selected group\n
+if group not in (\'\', None):\n
+  group_uid = context.portal_categories.group[group].getUid()\n
+  organisation_uid_list = [x.uid for x in context.portal_catalog(portal_type="Organisation", default_group_uid=group_uid)]\n
+  if report_type == "sale":\n
+    catalog_params[\'default_source_section_uid\'] = organisation_uid_list\n
+  elif report_type:\n
+    catalog_params[\'default_destination_section_uid\'] = organisation_uid_list\n
+    \n
+# add category params if defined\n
+if incoterm not in (\'\', None):\n
+  incoterm_uid = context.portal_categories.incoterm[incoterm].getUid()\n
+  catalog_params[\'default_incoterm_uid\'] = incoterm_uid\n
+if order not in (\'\', None):\n
+  order_uid = context.portal_categories.order[order].getUid()\n
+  catalog_params[\'default_order_uid\'] = order_uid\n
+if delivery_mode not in (\'\', None):\n
+  delivery_mode_uid = context.portal_categories.delivery_mode[delivery_mode].getUid()\n
+  catalog_params[\'default_delivery_mode_uid\'] = delivery_mode_uid\n
+\n
+# compute sql params, we group and order by date and portal type\n
+if aggregation_level == "year":\n
+  date_format = "%Y"\n
+elif aggregation_level == "month":\n
+  date_format = "%Y-%m"\n
+elif aggregation_level == "week":\n
+  date_format = "%Y-%u"\n
+elif aggregation_level == "day":\n
+  date_format = "%Y-%m-%d"\n
+\n
+params = {"delivery.start_date":(from_date, to_date)}\n
+query=None\n
+if from_date is not None and to_date is not None:  \n
+  params = {"delivery.start_date":(from_date, to_date)}\n
+  query = Query(range="minngt", **params)\n
+elif from_date is not None:\n
+  params = {"delivery.start_date":from_date}\n
+  query = Query(range="min", **params)\n
+elif to_date is not None:\n
+  params = {"delivery.start_date":to_date}\n
+  query = Query(range="ngt", **params)\n
+\n
+sort_on_list = [ (\'delivery.destination_section_uid\', \'ASC\'), (\'delivery.start_date\',\'ASC\')]\n
+result_list = context.portal_catalog.searchResults(limit=None,query=query,\n
+                                                   portal_type=doc_portal_type,\n
+                                                   sort_on=sort_on_list,\n
+                                                   **catalog_params)\n
+\n
+# we build two dict, one that store amount per period per client\n
+# and another that either store amount per period per product and per client\n
+# or only amount per period per product dependings on choosen group by\n
+client_dict = {}\n
+product_dict = {}\n
+for result in result_list:\n
+  result = result.getObject()\n
+  period = result.getStartDate().strftime(date_format)\n
+  if report_group_by in ("client", "both"):\n
+    # client_title -> period -> amount\n
+    if report_type == "sale":\n
+      client_title = result.getDestinationSectionTitle()\n
+    else:\n
+      client_title = result.getSourceSectionTitle()\n
+    if not client_dict.has_key(client_title):\n
+      client_dict[client_title] = {}\n
+    if client_dict[client_title].has_key(period):\n
+      client_dict[client_title][period][\'amount\'] = client_dict[client_title][period][\'amount\'] + result.getTotalPrice()\n
+    else:\n
+      client_dict[client_title][period] = {\'amount\' : result.getTotalPrice()}\n
+    if not product_dict.has_key(client_title):      \n
+      line_dict = product_dict[client_title] = {}\n
+    else:\n
+      line_dict = product_dict[client_title]\n
+  else:\n
+    line_dict = product_dict\n
+\n
+  if report_group_by != "client":\n
+    # client_title -> product_title -> period -> amount/quantity...\n
+    # or product_title -> period -> amount/quantity...\n
+    for line in result.contentValues(filter = {\'portal_type\':line_portal_type}):\n
+      product_title = line.getResourceTitle()\n
+      if not line_dict.has_key(product_title):\n
+        line_dict[product_title] = {period :{"amount" : line.getTotalPrice(),\n
+                                             "quantity" : line.getTotalQuantity(),\n
+                                             "quantity_unit" : line.getQuantityUnit()}}\n
+      else:\n
+        if not line_dict[product_title].has_key(period):\n
+          line_dict[product_title][period] = {"amount" : line.getTotalPrice(),\n
+                                               "quantity" : line.getTotalQuantity(),\n
+                                               "quantity_unit" : line.getQuantityUnit()}\n
+        else:\n
+          line_dict[product_title][period][\'amount\'] = line_dict[product_title][period][\'amount\'] + line.getTotalPrice()\n
+          line_dict[product_title][period][\'quantity\'] = line_dict[product_title][period][\'quantity\'] + line.getTotalQuantity()\n
+\n
+\n
+\n
+def sortProduct(a, b):\n
+  return cmp(a[\'product\'], b[\'product\'])\n
+\n
+period_counter_dict = {}\n
+line_list = []\n
+append = line_list.append\n
+extend = line_list.extend\n
+# we build lines for listbox\n
+if len(client_dict):\n
+  # third party or third party + products\n
+  for client_title in client_dict.keys():\n
+    # lines for third party\n
+    obj = Object(uid="new_")\n
+    obj[\'client\'] = client_title\n
+    line_total_amount = 0\n
+    for period in period_list:\n
+      # client -> period\n
+      if client_dict[client_title].has_key(period):\n
+        obj[\'Amount %s\' %(period)] = round(client_dict[client_title][period][\'amount\'], 2)\n
+        line_total_amount += client_dict[client_title][period][\'amount\']\n
+        if report_group_by == "client":\n
+          if period_counter_dict.has_key(\'Amount %s\' %(period)):\n
+            period_counter_dict[\'Amount %s\' %(period)] = period_counter_dict[\'Amount %s\' %(period)] + client_dict[client_title][period][\'amount\']\n
+          else:\n
+            period_counter_dict[\'Amount %s\' %(period)] = client_dict[client_title][period][\'amount\']\n
+      else:\n
+        obj[\'Amount %s\' %(period)] = 0\n
+    obj[\'total amount\'] = round(line_total_amount, 2)\n
+    if report_group_by == "client":\n
+      if period_counter_dict.has_key(\'total amount\'):\n
+        period_counter_dict[\'total amount\'] = period_counter_dict[\'total amount\'] + line_total_amount\n
+      else:\n
+        period_counter_dict[\'total amount\'] = line_total_amount\n
+\n
+    append(obj)\n
+    if report_group_by == "both":\n
+      product_lines_list = []\n
+      # one line per product\n
+      if product_dict.has_key(client_title):\n
+        line_product_dict = product_dict[client_title]\n
+        for product_title in line_product_dict.keys():\n
+          obj = Object(uid="new_")\n
+          obj[\'product\'] = product_title\n
+          line_total_amount = 0\n
+          line_total_quantity = 0\n
+          for period in period_list:\n
+            if line_product_dict[product_title].has_key(period):\n
+              obj[\'Amount %s\' %(period)] = round(line_product_dict[product_title][period][\'amount\'], 2)\n
+              obj[\'Quantity %s\' %(period)] = line_product_dict[product_title][period][\'quantity\']\n
+              obj[\'Quantity Unit %s\' %(period)] = line_product_dict[product_title][period][\'quantity_unit\']\n
+              # total columns\n
+              line_total_amount += line_product_dict[product_title][period][\'amount\']\n
+              line_total_quantity += line_product_dict[product_title][period][\'quantity\']\n
+              # counter for stat line\n
+              if period_counter_dict.has_key(\'Amount %s\' %(period)):\n
+                period_counter_dict[\'Amount %s\' %(period)] = period_counter_dict[\'Amount %s\' %(period)] + \\\n
+                                                             line_product_dict[product_title][period][\'amount\']\n
+              else:\n
+                period_counter_dict[\'Amount %s\' %(period)] = line_product_dict[product_title][period][\'amount\']\n
+              \n
+            else:\n
+              obj[\'Amount %s\' %(period)] = 0\n
+              obj[\'Quantity %s\' %(period)] = 0\n
+              obj[\'Quantity Unit %s\' %(period)] = ""\n
+          \n
+          obj[\'total quantity\'] = line_total_quantity\n
+          obj[\'total amount\'] = round(line_total_amount, 2)\n
+          # total for stat line\n
+          if period_counter_dict.has_key(\'total amount\'):\n
+            period_counter_dict[\'total amount\'] = period_counter_dict[\'total amount\'] + line_total_amount\n
+          else:\n
+            period_counter_dict[\'total amount\'] = line_total_amount\n
+\n
+          product_lines_list.append(obj)\n
+      # sort product list\n
+      product_lines_list.sort(sortProduct)\n
+      extend(product_lines_list)\n
+else:\n
+  # products\n
+  if report_group_by == "product":\n
+    for product_title in product_dict.keys():\n
+      obj = Object(uid="new_")\n
+      obj[\'product\'] = product_title\n
+      line_total_amount = 0\n
+      line_total_quantity = 0    \n
+      for period in period_list:\n
+        if product_dict[product_title].has_key(period):\n
+          obj[\'Amount %s\' %(period)] = round(product_dict[product_title][period][\'amount\'],2)\n
+          obj[\'Quantity %s\' %(period)] = product_dict[product_title][period][\'quantity\']\n
+          obj[\'Quantity Unit %s\' %(period)] = product_dict[product_title][period][\'quantity_unit\']\n
+          # total column\n
+          line_total_amount += product_dict[product_title][period][\'amount\']\n
+          line_total_quantity += product_dict[product_title][period][\'quantity\']\n
+          # counter for stat line\n
+          if period_counter_dict.has_key(\'Amount %s\' %(period)):\n
+            period_counter_dict[\'Amount %s\' %(period)] = period_counter_dict[\'Amount %s\' %(period)] + product_dict[product_title][period][\'amount\']\n
+          else:\n
+            period_counter_dict[\'Amount %s\' %(period)] = product_dict[product_title][period][\'amount\']\n
+        else:\n
+          obj[\'Amount %s\' %(period)] = 0\n
+          obj[\'Quantity %s\' %(period)] = 0\n
+          obj[\'Quantity Unit %s\' %(period)] = ""\n
+\n
+      obj[\'total quantity\'] = line_total_quantity\n
+      obj[\'total amount\'] = round(line_total_amount,2)\n
+      # total for stat line\n
+      if period_counter_dict.has_key(\'total amount\'):\n
+        period_counter_dict[\'total amount\'] = period_counter_dict[\'total amount\'] + line_total_amount\n
+      else:\n
+        period_counter_dict[\'total amount\'] = line_total_amount\n
+      append(obj)   \n
+\n
+    line_list.sort(sortProduct)\n
+\n
+obj = Object(uid="new_")\n
+obj["client"] = \'Total\'\n
+for k,v in period_counter_dict.items():\n
+  if "mount" in k:\n
+    v = round(v, 2)\n
+  obj[k] = v\n
+\n
+request.set(\'stat_line\', [obj,])\n
+\n
+return line_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>period_list, report_type, doc_portal_type, line_portal_type, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>period_list</string>
+                            <string>report_type</string>
+                            <string>doc_portal_type</string>
+                            <string>line_portal_type</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>aggregation_level</string>
+                            <string>report_group_by</string>
+                            <string>incoterm</string>
+                            <string>group</string>
+                            <string>order</string>
+                            <string>delivery_mode</string>
+                            <string>catalog_params</string>
+                            <string>_getitem_</string>
+                            <string>context</string>
+                            <string>group_uid</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>organisation_uid_list</string>
+                            <string>_write_</string>
+                            <string>incoterm_uid</string>
+                            <string>order_uid</string>
+                            <string>delivery_mode_uid</string>
+                            <string>date_format</string>
+                            <string>params</string>
+                            <string>query</string>
+                            <string>_apply_</string>
+                            <string>sort_on_list</string>
+                            <string>result_list</string>
+                            <string>client_dict</string>
+                            <string>product_dict</string>
+                            <string>result</string>
+                            <string>period</string>
+                            <string>client_title</string>
+                            <string>line_dict</string>
+                            <string>line</string>
+                            <string>product_title</string>
+                            <string>sortProduct</string>
+                            <string>period_counter_dict</string>
+                            <string>line_list</string>
+                            <string>extend</string>
+                            <string>len</string>
+                            <string>obj</string>
+                            <string>line_total_amount</string>
+                            <string>round</string>
+                            <string>_inplacevar_</string>
+                            <string>product_lines_list</string>
+                            <string>line_product_dict</string>
+                            <string>line_total_quantity</string>
+                            <string>k</string>
+                            <string>v</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>OrderModule_getOrderStatList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
