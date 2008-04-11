@@ -394,7 +394,7 @@ class OOoChartWidget(Widget.Widget):
     here = getattr(form, 'aq_parent', REQUEST)
     extra_context = self.getArgumentDict(field, here.REQUEST)
     content = '''
-                  <office:include  style="inline-graphic" path="%s/ERP5Site_buildChart" xlink:type="simple" xlink:actuate="onLoad" xlink:show="embed"/>
+                  <office:include path="%s/ERP5Site_buildChart" xlink:type="simple" xlink:actuate="onLoad" xlink:show="embed"/>
                   ''' % here.getPath()
     return content
 
