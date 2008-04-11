@@ -406,9 +406,6 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                 </tal:block>\n
               </tal:block>\n
               <tal:block tal:condition="python: field_type == \'ImageField\'">\n
-                <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
-                        tal:content="python: field.get_value(\'title\')"/>\n
-                \n
                 <text:p text:style-name=\'field-content-center\'\n
                         tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
                   <office:include_img style="inline-graphic"\n
@@ -417,9 +414,6 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
               </text:p>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'OOoChart\'">\n
-              <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
-                    tal:content="python: field.get_value(\'title\')"/>\n
-              <text:p text:style-name=\'standard\'/>\n
               <tal:block tal:define="display python: field.get_value(\'image_display\') "\n
                       tal:condition="display">\n
                   <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
