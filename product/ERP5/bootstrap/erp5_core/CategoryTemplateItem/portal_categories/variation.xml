@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.BaseCategory</string>
-          <string>BaseCategory</string>
-        </tuple>
-        <none/>
+        <global name="BaseCategory" module="Products.ERP5Type.Document.BaseCategory"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -16,24 +13,6 @@
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_count</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -82,7 +61,9 @@
         <item>
             <key> <string>category_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>variation</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -93,7 +74,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -173,9 +156,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Variation</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -190,46 +171,6 @@
             </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>
