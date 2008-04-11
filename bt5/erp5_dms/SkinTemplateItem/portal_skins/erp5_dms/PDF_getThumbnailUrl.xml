@@ -69,9 +69,8 @@
 \n
 display = \'thumbnail\'\n
 format = \'jpg\'\n
-context.convert(format=format, display=display, frame=frame)\n
 \n
-url = "%s?%s" % (context.absolute_url(), make_query(display=display, format=format, frame=frame))\n
+url = "%s/index_html?%s" % (context.absolute_url(), make_query(display=display, format=format, frame=frame))\n
 \n
 return url\n
 </string> </value>
@@ -97,6 +96,12 @@ return url\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>frame</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
