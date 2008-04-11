@@ -309,7 +309,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id):
           script = self.scripts[script_name]
-          ob = self.restrictedTraverse(ob_url)
+          ob = self.unrestrictedTraverse(ob_url)
           tdef = self.interactions.get(tdef_id)
           sci = StateChangeInfo(
                         ob, self, status, tdef, None, None, None)
