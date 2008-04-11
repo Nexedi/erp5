@@ -74,8 +74,8 @@ function clickSaveButton(act) {\n
 \n
 \n
 // The first input element with an "autofocus" class will get the focus,\n
-// else if no element have autofocus class, the first element wich is not the\n
-// search field will get the focus. This is generaly the title input text of\n
+// else if no element have autofocus class, the first element which is not the\n
+// search field will get the focus. This is generally the title input text of\n
 // a view\n
 function autoFocus() {\n
   var first_autofocus_expr = ".//input[@class=\'autofocus\']"\n
@@ -85,11 +85,12 @@ function autoFocus() {\n
   if (input) {\n
     input.focus();\n
   }else{\n
-    var first_text_input_expr = ".//input[@type=\'text\'][@name != \'field_your_search_text\']"\n
-    var first_text_input = document.evaluate(first_text_input_expr, document, null, FIRST_RESULT, null).singleNodeValue;\n
-    if (first_text_input){\n
-      first_text_input.focus();\n
-    }\n
+    // The following is disabled, because it is too annoying to have an auto focus at everywhere.\n
+    //var first_text_input_expr = ".//input[@type=\'text\'][@name != \'field_your_search_text\']"\n
+    //var first_text_input = document.evaluate(first_text_input_expr, document, null, FIRST_RESULT, null).singleNodeValue;\n
+    //if (first_text_input){\n
+    //  first_text_input.focus();\n
+    //}\n
   }\n
 }\n
 \n

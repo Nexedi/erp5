@@ -1,3 +1,6 @@
+2008-04-11 yo
+* Disable auto focus for forms which do not have an element with the autofocus class.
+
 2008-03-27 ivan
 * Update MochiKit JS library to 1.4
 
