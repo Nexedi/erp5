@@ -193,8 +193,8 @@ class TestResource(ERP5TypeTestCase):
   def stepSetIndividualVariationWithEmptyBase(self, sequence=None,
                                               sequence_list=None, **kw):
     """
-      Set individual variation to current resource with empty base
-      category
+    Set the individual variation of the current resource to a base category
+    that contains no subobjects.
     """
     resource = sequence.get('resource')
     morphology_list = []
@@ -213,8 +213,8 @@ class TestResource(ERP5TypeTestCase):
   def stepSetIndividualVariationWithFillBase(self, sequence=None,
                                               sequence_list=None, **kw):
     """
-      Set individual variation to current resource with fill base
-      category
+    Set the individual variation of the current resource to a base category
+    that contains some subobjects.
     """
     resource = sequence.get('resource')
     colour_list = []
@@ -321,8 +321,8 @@ class TestResource(ERP5TypeTestCase):
   def stepCheckGetVariationCategoryList(self, sequence=None,
                                                  sequence_list=None, **kw):
     """
-      Check if getVariationCategoryList returns the good result,
-      with parameter omit_individual_variation=1.
+    Check if getVariationCategoryList returns the good result, with default
+    value for omit_individual_variation parameter
     """
     resource = sequence.get('resource')
     vcl = resource.getVariationCategoryList()
