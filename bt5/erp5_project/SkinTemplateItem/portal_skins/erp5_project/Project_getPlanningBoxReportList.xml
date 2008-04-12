@@ -65,40 +65,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string># Get the objects based on domain used\n
 \n
-project_line_portal_type = \'Project Line\'\n
-domain_list = []\n
+selection_tool = context.portal_selections\n
+selection = selection_tool.getSelectionFor(\'project_planning_selection\')\n
 \n
-object_path = request.get(\'object_path\')\n
-if object_path is None:\n
-  # Sometimes the object_path not comes with the request, when you edit for example.\n
-  object_path = context.REQUEST.get(\'URL1\').split(\'/\')[-1]\n
+def getSourceProjectRelatedValueList():\n
+    object_path = context.getRelativeUrl()\n
+    search_path = \'\'.join(["%", object_path,"%"])\n
+    return_list = []\n
+    for line in context.portal_catalog(path=search_path ):\n
+      return_list.extend([ i for i in line.getObject().getSourceProjectRelatedValueList(**kw) if i not in return_list])\n
+    return return_list\n
 \n
-domain_list = []\n
+if selection is not None:\n
+  if selection.report_path in [\'project_person_domain\' ]:\n
+    return context.getSourceProjectRelatedValueList(**kw)\n
 \n
-if depth == 0:\n
-  category_list = [context.project_module.restrictedTraverse(object_path)]\n
-  \n
-else:\n
-  category_list = []\n
-  parent_category_list = parent.getMembershipCriterionCategoryList()\n
-  for parent_category in parent_category_list:\n
-    parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
-    category_list.extend(context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type))\n
+  if selection.report_path in [\'project_person_task_report_domain\']:\n
+    # It was required filter to one specific portal type\n
+    kw[\'portal_type\'] = [\'Task Report\']\n
+    return context.getSourceProjectRelatedValueList(**kw)\n
 \n
-i=0\n
-for category in category_list:\n
-  domain = parent.generateTempDomain(id = \'%s_%s\' % (depth, i))\n
-  domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'source_project\', ), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
-              domain_generator_method_id = script.id,\n
-              uid = category.getUid())\n
-  i += 1\n
-  domain_list.append(domain)\n
+  if selection.report_path in [\'project_project_domain\']:\n
+    return getSourceProjectRelatedValueList()\n
 \n
-return domain_list\n
+  if selection.report_path in [\'project_project_task_report_domain\']:\n
+    # It was required filter to one specific portal type\n
+    kw[\'portal_type\'] = [\'Task Report\']\n
+    return getSourceProjectRelatedValueList()\n
+\n
+\n
+return context.searchFolder(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -115,7 +113,7 @@ return domain_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>depth, parent, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,32 +133,21 @@ return domain_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>depth</string>
-                            <string>parent</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>project_line_portal_type</string>
-                            <string>domain_list</string>
-                            <string>object_path</string>
+                            <string>selection_tool</string>
+                            <string>selection</string>
+                            <string>getSourceProjectRelatedValueList</string>
                             <string>None</string>
-                            <string>_getitem_</string>
-                            <string>category_list</string>
-                            <string>parent_category_list</string>
-                            <string>_getiter_</string>
-                            <string>parent_category</string>
-                            <string>i</string>
-                            <string>category</string>
-                            <string>domain</string>
-                            <string>script</string>
-                            <string>_inplacevar_</string>
+                            <string>_apply_</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,7 +164,7 @@ return domain_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Project_generateProjectDomain</string> </value>
+            <value> <string>Project_getPlanningBoxReportList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
