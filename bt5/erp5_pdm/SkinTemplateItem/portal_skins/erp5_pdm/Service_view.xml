@@ -43,6 +43,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -98,6 +104,7 @@
                         <string>my_variation_base_category_list</string>
                         <string>my_optional_variation_base_category_list</string>
                         <string>my_individual_variation_base_category</string>
+                        <string>my_base_contribution_list</string>
                       </list>
                     </value>
                 </item>
