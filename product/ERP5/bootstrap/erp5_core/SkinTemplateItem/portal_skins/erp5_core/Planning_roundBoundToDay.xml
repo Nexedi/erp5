@@ -71,18 +71,17 @@
 Script used by PlanningBox validator to round the bound dates to the\n
 closest full day.\n
 """\n
-if axis == \'begin\':\n
-  if full_date.hour() > 12: \n
-    return DateTime(full_date.Date()) + 1\n
-  else:\n
-    return DateTime(full_date.Date())\n
+if full_date.hour() > 12: \n
+  return DateTime(full_date.Date()) + 1\n
+else:\n
+  return DateTime(full_date.Date())\n
 \n
-if axis == \'end\':\n
-    # round to 23:59:59\n
-    if full_date.hour() > 12:\n
-      return DateTime(full_date.Date()) + 1  - (1.0/(24*3600))\n
-    else:\n
-      return DateTime(full_date.Date())  - (1.0/(24*3600))\n
+#if axis == \'end\':\n
+#    # round to 23:59:59\n
+#    if full_date.hour() > 12:\n
+#      return DateTime(full_date.Date()) + 1  - (1.0/(24*3600))\n
+#    else:\n
+#      return DateTime(full_date.Date())  - (1.0/(24*3600))\n
 
 
 ]]></string> </value>
