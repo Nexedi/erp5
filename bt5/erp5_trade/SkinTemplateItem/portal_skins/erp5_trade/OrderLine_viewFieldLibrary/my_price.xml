@@ -57,7 +57,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
+                    <key>                 <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -75,7 +75,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -122,7 +122,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/isMovement</string> </value>
+            <value> <string>python: here.isMovement() and not here.getVariationCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>

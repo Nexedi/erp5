@@ -64,13 +64,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
+                    <key>                 <string>editable</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
+                    <key>                 <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -86,7 +86,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key>                 <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -147,7 +147,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/isMovement</string> </value>
+            <value> <string>python: cell.isMovement() and not cell.getVariationCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>
