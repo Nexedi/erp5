@@ -784,10 +784,10 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals(order.getDestinationAdministrationPersonTitle(), 'toto')
 
     packing_list.setDestinationAdministrationValue(None)
-    packing_list.setCausalityValue(None)
+    packing_list.setOrderValue(None)
     self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), None)
 
-    packing_list.setCausalityValue(order)
+    packing_list.setOrderValue(order)
     self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
 
   def test_22_UserFriendlyException(self, quiet=quiet, run=run_all_test):
