@@ -91,12 +91,12 @@ dimension_ids_list = []\n
 if matrixbox:\n
   for dimension_result in dimension_result_list:\n
     dimension_ids_list.append(\n
-              [(x.getObject().getRelativeUrl(),\n
+              [(x.getObject().getId(),\n
                 x.getObject().getTitle()) for x in dimension_result])\n
 else :\n
   for dimension_result in dimension_result_list :\n
     dimension_ids_list.append(\n
-          [x.getObject().getRelativeUrl() for x in dimension_result])\n
+          [x.getObject().getId() for x in dimension_result])\n
 \n
 return dimension_ids_list\n
 # vim: syntax=python\n
