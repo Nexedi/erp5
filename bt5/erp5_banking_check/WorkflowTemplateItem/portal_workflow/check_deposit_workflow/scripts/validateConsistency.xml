@@ -88,6 +88,10 @@ if transaction.getDestinationSection() in ("", None) and \\\n
   msg = Message(domain=\'ui\', message="You must defined an account or and accounting code as destination.")\n
   raise ValidationFailed, (msg,)\n
 \n
+if transaction.getSite() in ("", None):\n
+  msg = Message(domain=\'ui\', message="You must defined site on document.")\n
+  raise ValidationFailed, (msg,)\n
+\n
 # Check the amount.\n
 price = transaction.getSourceTotalAssetPrice()\n
 if price is None or price <= 0:\n
