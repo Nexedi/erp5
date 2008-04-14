@@ -79,16 +79,29 @@ category_list = [\n
 ]\n
 new_category_dict = {}\n
 \n
+\n
+def getPropertyFromTradeCondition(trade_condition, property_name):\n
+  """Get a property from the trade condition, or from a specialised trade\n
+  condition\n
+  """\n
+  v = trade_condition.getProperty(property_name)\n
+  if v:\n
+    return v\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    v = getPropertyFromTradeCondition(\n
+              specialised_trade_condition, property_name)\n
+    if v:\n
+      return v\n
+\n
+\n
 for category in category_list:\n
   if force or not order.getPropertyList(category):\n
-    value_list = trade_condition.getPropertyList(category)\n
-    if value_list:\n
-     if len(value_list) == 1:\n
-       new_category_dict[category] = value_list[0]\n
-     else:\n
-       new_category_dict[\'%s_list\' % category] = value_list\n
+    v = getPropertyFromTradeCondition(trade_condition, category)\n
+    if v:\n
+      new_category_dict[category] = v\n
 \n
 def copyObjects(portal_type):\n
+  # TODO: iterate on specialise tree\n
   filter_dict = {\'portal_type\': portal_type}\n
   if len(order.contentIds(filter=filter_dict)) == 0:\n
     to_copy = trade_condition.contentIds(filter=filter_dict)\n
@@ -101,6 +114,38 @@ copyObjects(\'Payment Condition\')\n
 \n
 # copy discounts if none exist\n
 copyObjects(\'Discount\')\n
+\n
+# initialise tax lines\n
+def initialiseTaxLineList(order, trade_condition):\n
+  for tax_model_line in trade_condition.contentValues(portal_type=\'Tax Model Line\'):\n
+    tax_model_line_reference = tax_model_line.getReference()\n
+    if not tax_model_line_reference or tax_model_line_reference not in [\n
+            x.getProperty(\'reference\') for x in\n
+            order.contentValues(portal_type=\'Tax Line\')]:\n
+      tax_line = order.newContent(\n
+            portal_type=\'Tax Line\',\n
+            resource=tax_model_line.getResource(),\n
+            reference=tax_model_line_reference,\n
+            float_index=tax_model_line.getFloatIndex(),\n
+            base_application_list=tax_model_line.getBaseApplicationList(),\n
+            # XXX tax model line or tax model line resource ?\n
+            base_contribution_list=tax_model_line.getBaseContributionList(),\n
+            quantity=0,\n
+            price=0,)\n
+      # calculation_script\n
+      if tax_model_line.getProperty(\'calculation_script_id\'):\n
+        raise NotImplementedError\n
+      # fixed_amount\n
+      if tax_model_line.getQuantity():\n
+        raise NotImplementedError\n
+      # ratio\n
+      tax_line.setPrice(tax_model_line.getEfficiency())\n
+  \n
+  # recurse on other trade conditions\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    initialiseTaxLineList(order, specialised_trade_condition)\n
+\n
+initialiseTaxLineList(context, trade_condition)\n
 \n
 # set specialise\n
 new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
@@ -156,14 +201,14 @@ order.edit(**new_category_dict)\n
                             <string>order</string>
                             <string>category_list</string>
                             <string>new_category_dict</string>
+                            <string>getPropertyFromTradeCondition</string>
                             <string>_getiter_</string>
                             <string>category</string>
                             <string>_getattr_</string>
-                            <string>value_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
+                            <string>v</string>
                             <string>_write_</string>
                             <string>copyObjects</string>
+                            <string>initialiseTaxLineList</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
