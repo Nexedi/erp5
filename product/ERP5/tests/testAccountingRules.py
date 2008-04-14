@@ -145,8 +145,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         if not cat in path.objectIds() :
           path = path.newContent(
             portal_type = 'Category',
-            id = cat,
-            immediate_reindex = 1 )
+            id = cat)
         else:
           path = getattr(path, cat)
     # check categories have been created
@@ -213,7 +212,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       int_index = '1',
       membership_criterion_base_category_list = ['product_line',],
       membership_criterion_category_list = ['product_line/storever/notebook'],
-      immediate_reindex = 1,
     )
     predicate_product_barebone = invoice_transaction_rule.newContent(
       id = 'product_barebone',
@@ -223,7 +221,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       int_index = '2',
       membership_criterion_base_category_list = ['product_line',],
       membership_criterion_category_list = ['product_line/storever/barebone'],
-      immediate_reindex = 1,
     )
     # ... and destination_region
     predicate_region_france = invoice_transaction_rule.newContent(
@@ -235,7 +232,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       membership_criterion_base_category_list = ['destination_region',],
       membership_criterion_category_list =
                     ['destination_region/region/europe/west/france'],
-      immediate_reindex = 1,
     )
     predicate_region_africa = invoice_transaction_rule.newContent(
       id = 'region_africa',
@@ -245,7 +241,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       int_index = '2',
       membership_criterion_base_category_list = ['destination_region',],
       membership_criterion_category_list = ['destination_region/region/africa'],
-      immediate_reindex = 1,
     )
     # sanity checks
     self.failUnless(predicate_product_notebook != None)
@@ -381,28 +376,24 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         portal_type = self.account_portal_type,
         title = "Income Notebook",
         account_type = "income",
-        immediate_reindex = 1,
       )
       income = account_module.newContent(
         id = "income_barebone",
         portal_type = self.account_portal_type,
         title = "Income Barebone",
         account_type = "income",
-        immediate_reindex = 1,
       )
       receivable = account_module.newContent(
         id = "receivable",
         portal_type=self.account_portal_type,
         title = "Receivable",
         account_type = "asset/receivable",
-        immediate_reindex = 1,
       )
       collected_vat = account_module.newContent(
         id = "collected_vat",
         portal_type=self.account_portal_type,
         title = "Collected VAT",
         account_type = "liability/payable/collected_vat",
-        immediate_reindex = 1,
       )
     # store accounts in sequence object
     sequence.edit(
@@ -424,7 +415,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         id = "vendor",
         title = "Vendor",
         region = "europe/west/france",
-        immediate_reindex = 1,
       )
       self.assertNotEquals(vendor.getDefaultRegionValue(), None)
       client_fr = organisation_module.newContent(
@@ -432,7 +422,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         id = "client_fr",
         title = "French Client",
         region = "europe/west/france",
-        immediate_reindex = 1,
       )
       self.assertNotEquals(client_fr.getDefaultRegionValue(), None)
     sequence.edit(
@@ -455,7 +444,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         portal_type = self.product_portal_type,
         product_line = 'storever/notebook',
         base_price = 3.0,
-        immediate_reindex = 1,
       )
       # sets some variation categories on the notebook product
       notebook.setVariationBaseCategoryList(["hd_size", "cpu_freq"])
@@ -471,7 +459,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         portal_type = self.product_portal_type,
         product_line = 'storever/barebone',
         base_price = 5.0,
-        immediate_reindex = 1,
       )
     sequence.edit(
       notebook = product_module.notebook,
@@ -822,7 +809,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       int_index = '3',
       membership_criterion_base_category_list = ['product_line',],
       membership_criterion_category_list = ['product_line/storever/openbrick'],
-      immediate_reindex = 1,
     )
     invoice_transaction_rule.updateMatrix()
     self.tic()
@@ -851,7 +837,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       string_index = 'region', int_index = '2',
       membership_criterion_base_category_list = ['destination_region',],
       membership_criterion_category_list = ['destination_region/region/africa'],
-      immediate_reindex = 1,
     )
     invoice_transaction_rule.updateMatrix()
     cell_list = invoice_transaction_rule.contentValues(
