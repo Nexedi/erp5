@@ -90,7 +90,6 @@
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Order Rule</item>
-  <item>Tax Rule</item>
   <item>Delivery Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
@@ -131,8 +130,8 @@
   <item>Sale Supply</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
-  <item>Discount</item>
   <item>Tax Model Line</item>
+  <item>Discount</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
