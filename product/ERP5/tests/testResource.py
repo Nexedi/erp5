@@ -575,6 +575,12 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     i = 1
     self.logMessage("Starting New Option Pricing Case %i..." % i)
+    # Fill the PDM preferences
+    preference = self.portal.portal_preferences.default_site_preference
+    preference.setPreferredProductOptionalVariationBaseCategoryList(['industrial_phase'])
+    preference.enable()
+    get_transaction().commit()
+    self.tic()
     # Create another product/supply, in order to be sure that the
     # nothing will be generated from this supply!
     self.logMessage("Creating fake product...", tab=1)
