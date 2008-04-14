@@ -127,7 +127,7 @@ PRIORITY:%(priority)s""" % ( {\n
 print """BEGIN:VCALENDAR\n
 PRODID:-//ERP5//NONSGML Task Report Module//EN \n
 VERSION:2.0"""\n
-obj_list = context.getPortalObject().portal_selections.callSelectionFor("task_report_selection")\n
+obj_list = context.getPortalObject().portal_selections.callSelectionFor("task_report_module_selection")\n
 for obj in obj_list : \n
   print printTask(obj.getObject())\n
 print "END:VCALENDAR"\n
