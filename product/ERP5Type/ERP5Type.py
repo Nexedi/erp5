@@ -172,7 +172,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       'container', 'container_line',
       # Trade
       'discount', 'payment_condition', 'payment_node',
-      'supply', 'supply_path', 'inventory_movement',
+      'supply', 'supply_path', 'inventory_movement', 'tax_movement',
       # PDM
       'transformation', 'variation', 'sub_variation',
       'product', 'service',
