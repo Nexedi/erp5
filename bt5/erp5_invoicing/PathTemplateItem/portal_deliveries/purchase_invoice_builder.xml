@@ -110,6 +110,7 @@
                 <string>PathMovementGroup</string>
                 <string>SectionPathMovementGroup</string>
                 <string>CausalityMovementGroup</string>
+                <string>PriceCurrencyMovementGroup</string>
               </tuple>
             </value>
         </item>
@@ -119,6 +120,7 @@
               <tuple>
                 <string>ResourceMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
+                <string>BaseContributionMovementGroup</string>
               </tuple>
             </value>
         </item>
