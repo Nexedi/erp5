@@ -75,6 +75,7 @@ portal_deliveries = sci.getPortal().portal_deliveries\n
 \n
 builder_by_ptype = {\n
   \'Sale Invoice Transaction\' : \'sale_invoice_transaction_builder\',\n
+  \'Purchase Invoice Transaction\' : \'purchase_invoice_transaction_builder\',\n
   \'Pay Sheet Transaction\' :  \'pay_sheet_transaction_builder\',\n
 }\n
 \n
