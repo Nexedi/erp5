@@ -1,8 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                    Romain Courteaud <romain@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jerome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,37 +26,58 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.Delivery import Delivery
 
-class TradeCondition(Delivery, Path):
-    """
-      Trade Conditions are used to store the conditions (payment, logistic,...)
-      which should be applied (and used in the orders) when two companies make
-      business together
-    """
+from Products.ERP5.Document.DeliveryLine import DeliveryLine
 
-    meta_type = 'ERP5 Trade Condition'
-    portal_type = 'Trade Condition'
-    isPredicate = 1
+
+class TaxLine(DeliveryLine):
+    """ Tax Line
+    """
+    meta_type = 'ERP5 Tax Line'
+    portal_type = 'Tax Line'
 
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+    # Declarative interfaces
+    __implements__ = ( Interface.Variated, )
+
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Folder
-                      , PropertySheet.Comment
+                      , PropertySheet.Amount
+                      , PropertySheet.Task
                       , PropertySheet.Arrow
-                      , PropertySheet.TradeCondition
-                      , PropertySheet.Order
+                      , PropertySheet.Movement
+                      , PropertySheet.Price
+                      , PropertySheet.VariationRange
+                      , PropertySheet.ItemAggregation
+                      , PropertySheet.Reference
+                      , PropertySheet.SortIndex
                       )
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
+    def isAccountable(self):
+      """ """
+      return 1 # XXX not sure
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasCellContent')
+    def hasCellContent(self, base_id='movement'):
+      """Tax line does not contain cell
+      """
+      return 0
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isMovement' )
+    def isMovement(self):
+      """Tax lines are movements
+      """
+      return 1
 

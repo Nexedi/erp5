@@ -1177,6 +1177,18 @@ class RequirementMovementGroup(RootMovementGroup):
   def test(self,movement):
     return self.getRequirementList(movement) == self.requirement_list
 
+class BaseContributionMovementGroup(PropertyMovementGroup):
+  """ Group movements that have the same base contributions."""
+  _property = 'base_contribution_list'
+
+class BaseApplicationMovementGroup(PropertyMovementGroup):
+  """ Group movements that have the same base applications."""
+  _property = 'base_application_list'
+
+class PriceCurrencyMovementGroup(PropertyMovementGroup):
+  """ Group movements that have the same price currency."""
+  _property = 'price_currency'
+
 class QuantityUnitMovementGroup(PropertyMovementGroup):
   """ Group movements that have the same quantity unit."""
   _property = 'quantity_unit'

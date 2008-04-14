@@ -610,6 +610,16 @@ class ERP5Site(FolderMixIn, CMFSite):
            self._getPortalConfiguration('portal_invoice_movement_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalTaxMovementTypeList')
+  def getPortalTaxMovementTypeList(self):
+    """
+      Return tax movement types.
+    """
+    return self._getPortalGroupedTypeList('tax_movement') or \
+           self._getPortalConfiguration('portal_tax_movement_type_list')
+
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalOrderMovementTypeList')
   def getPortalOrderMovementTypeList(self):
     """

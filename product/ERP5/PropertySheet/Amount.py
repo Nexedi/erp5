@@ -126,6 +126,7 @@ class Amount:
  )
 
   _categories = ('resource', 'quantity_unit',
+                 'base_application', 'base_contribution',
                  # Acquired categories
                  'product_line', )
   

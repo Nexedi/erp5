@@ -106,6 +106,9 @@ class OrderRule(DeliveryRule):
           order_movement_dict[order_movement.getPath()] = s_m
       # Create or modify movements
       for movement in order_movement_list:
+        # FIXME: to be improved later
+        if  movement.getPortalType() not in ('Tax Line', ):
+          continue
         related_order = order_movement_dict.get(movement.getPath(), None)
         if related_order is None:
           related_order = movement.getOrderRelatedValue()
@@ -181,6 +184,7 @@ class OrderRule(DeliveryRule):
         'resource',
         'variation_category_list',
         'variation_property_dict',
+        'base_contribution_list',
         'aggregate_list',
         'price',
         'price_currency',

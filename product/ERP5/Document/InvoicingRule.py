@@ -97,6 +97,7 @@ class InvoicingRule(Rule):
         'resource': context_movement.getResource(),
         'variation_category_list': context_movement.getVariationCategoryList(),
         'variation_property_dict': context_movement.getVariationPropertyDict(),
+        'base_contribution_list': context_movement.getBaseContributionList(),
         'aggregate_list': context_movement.getAggregateList(),
         'quantity': context_movement.getCorrectedQuantity(),
         'quantity_unit': context_movement.getQuantityUnit(),

@@ -132,6 +132,8 @@ class DeliveryRule(Rule):
               quantity_unit=deliv_mvt.getQuantityUnit(),
               price=deliv_mvt.getPrice(),
               price_currency=deliv_mvt.getPriceCurrency(),
+              base_contribution_list=deliv_mvt.getBaseContributionList(),
+              base_application_list=deliv_mvt.getBaseApplicationList(),
           )
         elif sim_mvt in existing_movement_list:
           if sim_mvt not in immutable_movement_list:
@@ -158,6 +160,8 @@ class DeliveryRule(Rule):
                 quantity_unit=deliv_mvt.getQuantityUnit(),
                 price=deliv_mvt.getPrice(),
                 price_currency=deliv_mvt.getPriceCurrency(),
+                base_contribution_list=deliv_mvt.getBaseContributionList(),
+                base_application_list=deliv_mvt.getBaseApplicationList(),
                 force_update=1)
           else:
             # modification disallowed, must compensate
