@@ -70,8 +70,10 @@
 # A mapping base_application -> total_price\n
 base_application_dict = dict()\n
 \n
+portal = context.getPortalObject()\n
+\n
 # skip tax movement, because they will be added later\n
-valid_movement_type_list = [t for t in context.getPortalMovementTypeList()\n
+valid_movement_type_list = [t for t in portal.getPortalMovementTypeList()\n
                                 if t != \'Tax Line\']\n
 \n
 def sorted(seq, comp):\n
@@ -92,9 +94,9 @@ for tax_line in sorted(\n
       for base_contribution in movement.getBaseContributionList():\n
         # XXX non optimal loops, may needs optimisation\n
         if base_contribution == base_application:\n
-          applicable_movement_list[movement] = 1\n
+          applicable_movement_list[movement.getRelativeUrl()] = 1\n
   \n
-  for movement in applicable_movement_list:\n
+  for movement in [portal.restrictedTraverse(x) for x in applicable_movement_list.keys()]:\n
     movement_price = movement.getTotalPrice(fast=0) or 0\n
     if tax_line.getProperty(\'calculation_script_id\'):\n
       raise NotImplementedError\n
@@ -160,11 +162,12 @@ for tax_line in sorted(\n
                           <tuple>
                             <string>dict</string>
                             <string>base_application_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>t</string>
                             <string>valid_movement_type_list</string>
                             <string>sorted</string>
@@ -177,6 +180,7 @@ for tax_line in sorted(\n
                             <string>base_contribution_list</string>
                             <string>base_contribution</string>
                             <string>_write_</string>
+                            <string>x</string>
                             <string>movement_price</string>
                             <string>NotImplementedError</string>
                             <string>base_amount</string>
