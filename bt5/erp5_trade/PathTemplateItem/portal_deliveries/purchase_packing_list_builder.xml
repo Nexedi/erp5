@@ -72,6 +72,7 @@
                 <string>DateMovementGroup</string>
                 <string>PathMovementGroup</string>
                 <string>SectionPathMovementGroup</string>
+                <string>PriceCurrencyMovementGroup</string>
               </tuple>
             </value>
         </item>
