@@ -2009,8 +2009,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(order_line.getTotalPrice(fast=1), 12)
 
     self.assertEquals(cell.getTotalQuantity(), 4)
-    self.assertEquals(cell.getTotalPrice(fast=0), 12)
-    self.assertEquals(cell.getTotalPrice(fast=1), 12)
+    self.assertEquals(cell.getTotalPrice(), 12)
 
     # add sub_line to line, cell and line are not movements
     sub_order_line = order_line.newContent(
@@ -2035,8 +2034,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(order_line.getTotalPrice(fast=1), 20)
 
     self.assertEquals(cell.getTotalQuantity(), 0)
-    self.assertEquals(cell.getTotalPrice(fast=0), 0)
-    self.assertEquals(cell.getTotalPrice(fast=1), 0)
+    self.assertEquals(cell.getTotalPrice(), 0)
 
     self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 5)
     self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 5)
@@ -2073,8 +2071,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(order_line.getTotalPrice(fast=1), 30)
 
     self.assertEquals(cell.getTotalQuantity(), 0)
-    self.assertEquals(cell.getTotalPrice(fast=0), 0)
-    self.assertEquals(cell.getTotalPrice(fast=1), 0)
+    self.assertEquals(cell.getTotalPrice(), 0)
 
     self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 6)
     self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 6)
@@ -2082,8 +2079,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(sub_order_line.getTotalPrice(fast=1), 30)
 
     self.assertEquals(sub_cell.getTotalQuantity(), 6)
-    self.assertEquals(sub_cell.getTotalPrice(fast=0), 30)
-    self.assertEquals(sub_cell.getTotalPrice(fast=1), 30)
+    self.assertEquals(sub_cell.getTotalPrice(), 30)
 
     # delete sub_line, cell is movement again
     order_line.manage_delObjects([sub_order_line.getId()])
@@ -2104,8 +2100,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(order_line.getTotalPrice(fast=1), 12)
 
     self.assertEquals(cell.getTotalQuantity(), 4)
-    self.assertEquals(cell.getTotalPrice(fast=0), 12)
-    self.assertEquals(cell.getTotalPrice(fast=1), 12)
+    self.assertEquals(cell.getTotalPrice(), 12)
 
     # delete cell, line is movement again
     order_line.manage_delObjects([cell.getId()])
