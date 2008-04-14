@@ -604,8 +604,9 @@ for block_object in planning.content:\n
   block_dict[\'height\'] = block_object.position_y.relative_range * size_planning_height\n
   if block_object.parent_activity.height is not None:\n
     block_dict[\'height\'] = block_dict[\'height\']*block_object.parent_activity.height\n
-\n
-  block_dict[\'width\'] = block_object.position_x.relative_range * size_planning_width\n
+  \n
+  # width - border width * 2 to prevent wrong edition\n
+  block_dict[\'width\'] = (block_object.position_x.relative_range * size_planning_width) - 2\n
   #block_dict[\'height\'] = block_object.position_y.relative_range * size_planning_height\n
   block_dict[\'margin-left\'] = block_object.position_x.relative_begin * size_planning_width\n
   block_dict[\'margin-top\'] = block_object.position_y.relative_begin * size_planning_height\n
