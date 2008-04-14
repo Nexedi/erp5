@@ -80,7 +80,7 @@ class OrderRule(DeliveryRule):
     order = applied_rule.getDefaultCausalityValue()
     if order is not None:
       order_movement_list = order.getMovementList(
-                     portal_type=order.getPortalOrderMovementTypeList()):
+                     portal_type=order.getPortalOrderMovementTypeList())
       # check existing movements
       for movement in applied_rule.contentValues(portal_type=movement_type):
         if (not movement.getLastExpandSimulationState() in
