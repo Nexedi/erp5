@@ -75,8 +75,7 @@ if packing_list.getSimulationState() == \'draft\':\n
     comment = related_order.getComment(),\n
     delivery_mode = related_order.getDeliveryMode(),\n
     incoterm = related_order.getIncoterm(),\n
-    source_administration_value = related_order.getSourceAdministrationValue(),\n
-    title = related_order.getTitle()\n
+    source_administration_value = related_order.getSourceAdministrationValue()\n
   )\n
 \n
   # copy PaymentCondition if none is defined on Packing List\n
