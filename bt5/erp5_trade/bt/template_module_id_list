@@ -9,3 +9,4 @@ sale_order_module
 sale_packing_list_module
 sale_supply_module
 sale_trade_condition_module
+tax_module

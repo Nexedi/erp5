@@ -53,11 +53,11 @@
  </chain>
  <chain>
   <type>Purchase Order Cell</type>
-  <workflow>order_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>order_movement_simulation_interaction_workflow, tax_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Line</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>tax_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List</type>
@@ -97,11 +97,11 @@
  </chain>
  <chain>
   <type>Sale Order Cell</type>
-  <workflow>edit_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_movement_simulation_interaction_workflow, tax_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Line</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>tax_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>

@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Calculate the tax price for this movement.\n
+\n
+We assume that all movemnt equally participate to each tax applied to base\n
+amounts they are contributing to.\n
+\n
+"""\n
+\n
+total_price = context.getTotalPrice()\n
+\n
+contributed_tax_line_list = []\n
+adjusted_tax_line_list = []\n
+tax_line_list = context.getExplanationValue().contentValues(\n
+                                 portal_type=\'Tax Line\')\n
+\n
+# 1 find all tax lines that this line contributed to\n
+for base_amount in context.getBaseContributionList():\n
+  for tax_line in tax_line_list:\n
+    if base_amount in tax_line.getBaseApplicationList():\n
+      contributed_tax_line_list.append(tax_line)\n
+\n
+other_movement_list = [m for m in context.getExplanationValue().getMovementList(\n
+                        portal_type=context.getPortalMovementTypeList())]\n
+# 2 for each tax line, calculate the corresponding ratio\n
+for tax_line in contributed_tax_line_list:\n
+  # XXX only the first one is used here !\n
+  #  this assume that a tax will be applied to only one base_amount\n
+  base_amount = tax_line.getBaseApplication()\n
+  base_total_price = 0\n
+  for movement in other_movement_list:\n
+    if base_amount in movement.getBaseContributionList():\n
+      base_total_price += movement.getTotalPrice(fast=0)\n
+  \n
+  adjusted_tax_line_list.append(tax_line.asContext(quantity=\n
+    # XXX round ?\n
+        tax_line.getQuantity() * total_price / base_total_price))\n
+\n
+return adjusted_tax_line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>total_price</string>
+                            <string>contributed_tax_line_list</string>
+                            <string>adjusted_tax_line_list</string>
+                            <string>tax_line_list</string>
+                            <string>_getiter_</string>
+                            <string>base_amount</string>
+                            <string>tax_line</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>m</string>
+                            <string>other_movement_list</string>
+                            <string>base_total_price</string>
+                            <string>movement</string>
+                            <string>_inplacevar_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DeliveryMovement_getCorrespondingTaxLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

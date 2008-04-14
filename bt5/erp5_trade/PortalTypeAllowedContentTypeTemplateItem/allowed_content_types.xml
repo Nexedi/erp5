@@ -37,6 +37,7 @@
  <portal_type id="Purchase Order">
   <item>Payment Condition</item>
   <item>Purchase Order Line</item>
+  <item>Tax Line</item>
   <item>Discount</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
@@ -50,6 +51,7 @@
   <item>Payment Condition</item>
   <item>Purchase Packing List Line</item>
   <item>Discount</item>
+  <item>Tax Line</item>
  </portal_type>
  <portal_type id="Purchase Packing List Line">
   <item>Purchase Packing List Cell</item>
@@ -69,6 +71,7 @@
   <item>Purchase Supply</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition">
+  <item>Tax Model Line</item>
   <item>Discount</item>
   <item>Payment Condition</item>
  </portal_type>
@@ -87,9 +90,11 @@
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Order Rule</item>
+  <item>Tax Rule</item>
   <item>Delivery Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
+  <item>Tax Line</item>
   <item>Discount</item>
   <item>Sale Order Line</item>
   <item>Payment Condition</item>
@@ -104,6 +109,7 @@
  <portal_type id="Sale Packing List">
   <item>Discount</item>
   <item>Payment Condition</item>
+  <item>Tax Line</item>
   <item>Sale Packing List Line</item>
   <item>Container</item>
  </portal_type>
@@ -126,6 +132,7 @@
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>Discount</item>
+  <item>Tax Model Line</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
@@ -134,5 +141,8 @@
  <portal_type id="Supply Line">
   <item>Supply Cell</item>
   <item>Predicate</item>
+ </portal_type>
+ <portal_type id="Tax Module">
+  <item>Tax</item>
  </portal_type>
 </allowed_content_type_list>

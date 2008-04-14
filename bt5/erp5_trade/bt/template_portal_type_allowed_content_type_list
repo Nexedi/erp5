@@ -19,11 +19,13 @@ Purchase Order Module | Purchase Order
 Purchase Order | Discount
 Purchase Order | Payment Condition
 Purchase Order | Purchase Order Line
+Purchase Order | Tax Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
 Purchase Packing List | Discount
 Purchase Packing List | Payment Condition
 Purchase Packing List | Purchase Packing List Line
+Purchase Packing List | Tax Line
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply Module | Purchase Supply
@@ -32,24 +34,28 @@ Purchase Supply | Supply Line
 Purchase Trade Condition Module | Purchase Trade Condition
 Purchase Trade Condition | Discount
 Purchase Trade Condition | Payment Condition
+Purchase Trade Condition | Tax Model Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
 Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
 Rule Tool | Order Rule
+Rule Tool | Tax Rule
 Sale Order Line | Sale Order Cell
 Sale Order Line | Sale Order Line
 Sale Order Module | Sale Order
 Sale Order | Discount
 Sale Order | Payment Condition
 Sale Order | Sale Order Line
+Sale Order | Tax Line
 Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container
 Sale Packing List | Discount
 Sale Packing List | Payment Condition
 Sale Packing List | Sale Packing List Line
+Sale Packing List | Tax Line
 Sale Supply Line | Predicate
 Sale Supply Line | Sale Supply Cell
 Sale Supply Module | Sale Supply
@@ -58,5 +64,7 @@ Sale Supply | Supply Line
 Sale Trade Condition Module | Sale Trade Condition
 Sale Trade Condition | Discount
 Sale Trade Condition | Payment Condition
+Sale Trade Condition | Tax Model Line
 Supply Line | Predicate
 Supply Line | Supply Cell
+Tax Module | Tax

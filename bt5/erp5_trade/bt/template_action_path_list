@@ -42,6 +42,7 @@ Purchase Order | payment_condition
 Purchase Order | profile_view
 Purchase Order | view
 Purchase Order | view_discount
+Purchase Order | view_tax
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Cell | view
 Purchase Packing List Line | apparel_fabric_item_fast_input
@@ -71,6 +72,7 @@ Purchase Trade Condition | view
 Purchase Trade Condition | view_discount
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
+Purchase Trade Condition | view_tax
 Returned Sale Packing List Cell | view
 Returned Sale Packing List Line | price_view
 Returned Sale Packing List Line | quantity_view
@@ -96,6 +98,7 @@ Sale Order | sale_order_planning
 Sale Order | view
 Sale Order | view_discount
 Sale Order | view_stock
+Sale Order | view_tax
 Sale Packing List Cell | view
 Sale Packing List Line | price_view
 Sale Packing List Line | quantity_view
@@ -122,6 +125,7 @@ Sale Trade Condition | view
 Sale Trade Condition | view_discount
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
+Sale Trade Condition | view_tax
 Supply Line | additional_price
 Supply Line | base_price
 Supply Line | discount_ratio
@@ -130,3 +134,7 @@ Supply Line | non_discountable__additional_price
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
 Supply Line | view
+Tax Line | view
+Tax Model Line | view
+Tax Module | view
+Tax | view
