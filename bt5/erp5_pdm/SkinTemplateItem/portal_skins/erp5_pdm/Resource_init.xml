@@ -77,7 +77,7 @@ if individual:\n
       individual_variation_base_category=individual)\n
 else:\n
   context.edit(variation_base_category_list=base,\n
-      optional_variation_optional_base_category_list=optional)\n
+      optional_variation_base_category_list=optional)\n
 </string> </value>
         </item>
         <item>
