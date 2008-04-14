@@ -99,15 +99,19 @@ def resourceSalePriceSortMethod(a, b):\n
      else:\n
        return sourceSortMethod(a, b)\n
 \n
-if hasattr(context, \'getExplanationValue\'):\n
+try:\n
   explanation = context.getExplanationValue()\n
-  if explanation is not None:\n
-    explanation_type = explanation.getPortalType()\n
-    # XXX FIXME: Hardcoded values\n
-    if "Purchase" in explanation_type:\n
-      kw[\'sort_method\'] = resourcePurchasePriceSortMethod\n
-    elif "Sale" in explanation_type:\n
-      kw[\'sort_method\'] = resourceSalePriceSortMethod\n
+except AttributeError:\n
+  # Sometime, movements doesn\'t have an explanation.\n
+  explanation = None\n
+\n
+if explanation is not None:\n
+  explanation_type = explanation.getPortalType()\n
+  # XXX FIXME: Hardcoded values\n
+  if "Purchase" in explanation_type:\n
+    kw[\'sort_method\'] = resourcePurchasePriceSortMethod\n
+  elif "Sale" in explanation_type:\n
+    kw[\'sort_method\'] = resourceSalePriceSortMethod\n
 \n
 resource = context.getResourceValue()\n
 if resource is not None:\n
@@ -168,10 +172,10 @@ else:\n
                             <string>destinationSortMethod</string>
                             <string>resourcePurchasePriceSortMethod</string>
                             <string>resourceSalePriceSortMethod</string>
-                            <string>hasattr</string>
-                            <string>context</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>explanation</string>
+                            <string>AttributeError</string>
                             <string>None</string>
                             <string>explanation_type</string>
                             <string>_write_</string>
