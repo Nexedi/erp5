@@ -63,11 +63,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -90,11 +90,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string>destination</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>

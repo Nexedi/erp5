@@ -121,6 +121,7 @@
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_causality_state_title</string>
                       </list>
                     </value>
                 </item>

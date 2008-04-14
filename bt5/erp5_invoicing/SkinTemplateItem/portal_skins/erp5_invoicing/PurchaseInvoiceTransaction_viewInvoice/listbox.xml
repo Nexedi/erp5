@@ -89,7 +89,7 @@
                     <value> <string>Invoice_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>purchase_invoice_line_selection</string> </value>
                 </item>
                 <item>

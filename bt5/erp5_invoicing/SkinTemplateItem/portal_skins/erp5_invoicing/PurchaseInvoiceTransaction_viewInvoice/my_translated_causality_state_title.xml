@@ -19,13 +19,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_causality_title_list</string> </value>
+            <value> <string>my_translated_causality_state_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -81,27 +81,52 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_causality_title_list</string> </value>
+                    <value> <string>my_translated_workflow_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Invoice_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Purchase Packing List</string>
-                          <string>Purchase Packing List</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>not_viewable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>read_only</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Causality State</string> </value>
+                </item>
+                <item>
+                    <key> <string>viewable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>viewable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>

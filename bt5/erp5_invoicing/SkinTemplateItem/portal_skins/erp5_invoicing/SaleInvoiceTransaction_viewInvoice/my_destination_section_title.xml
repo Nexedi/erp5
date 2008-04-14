@@ -84,15 +84,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string>destination_section</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -123,7 +123,7 @@
                     <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
