@@ -1,3 +1,6 @@
+2008-4-14 yusei
+* Remove Document Ingestion Message from event group.
+
 2008-3-17 Yusei
 * Remove content_type_registry
 (erp5_core will provides generic good set).
