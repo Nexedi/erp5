@@ -292,10 +292,11 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         (start_value, stop_value) = \
              self.getActivityBounds(activity_object, activity_block_moved_list,
                                     activity_block_list)
+
         # call specific external method to round value
         if round_script is not None:
-          start_value = round_script(start_value)
-          stop_value = round_script(stop_value)
+          start_value = round_script(start_value, axis='begin')
+          stop_value = round_script(stop_value, axis='end')
         # adding object name to list of objects to update
         if activity_object.object.getUrl() not in update_list:
           update_list.append(activity_object.object.getUrl())
