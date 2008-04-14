@@ -32,9 +32,8 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.Delivery import Delivery
 
-class TradeCondition(Delivery, Path):
+class TradeCondition(Path):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
       which should be applied (and used in the orders) when two companies make
