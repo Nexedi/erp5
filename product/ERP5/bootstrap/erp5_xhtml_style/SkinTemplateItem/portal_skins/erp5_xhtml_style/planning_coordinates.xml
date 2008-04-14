@@ -577,12 +577,13 @@ properties_structure[\'frame\'][\'planning_content\'] = content_dict\n
 \n
 \n
 # processing blocks in the planning content\n
+block_border_width = 1\n
 for block_object in planning.content:\n
   block_dict = {\n
     \'position\': \'absolute\',\n
     \'border-style\': \'solid\',\n
     \'border-color\':  \'#53676e\',\n
-    \'border-width\': 1,\n
+    \'border-width\': block_border_width,\n
   }\n
 \n
   if block_object.error == 1:      # task has error (not validated)\n
@@ -605,8 +606,12 @@ for block_object in planning.content:\n
   if block_object.parent_activity.height is not None:\n
     block_dict[\'height\'] = block_dict[\'height\']*block_object.parent_activity.height\n
   \n
-  # width - border width * 2 to prevent wrong edition\n
-  block_dict[\'width\'] = (block_object.position_x.relative_range * size_planning_width) - 2\n
+  # the width - border width * 2 (left and right)\n
+  # When you edit one object, border was added as a part of size. So 2*border-width pixels \n
+  # was added every edition. 2 is because left and right.\n
+  # the width - border-width * 2 (left and right)\n
+  block_dict[\'width\'] = (block_object.position_x.relative_range * size_planning_width) - \\\n
+                                                                           (2*block_border_width)\n
   #block_dict[\'height\'] = block_object.position_y.relative_range * size_planning_height\n
   block_dict[\'margin-left\'] = block_object.position_x.relative_begin * size_planning_width\n
   block_dict[\'margin-top\'] = block_object.position_y.relative_begin * size_planning_height\n
@@ -837,6 +842,7 @@ return properties_structure\n
                             <string>lane_axis_info_dict</string>
                             <string>lane_axis_line_dict</string>
                             <string>content_dict</string>
+                            <string>block_border_width</string>
                             <string>block_object</string>
                             <string>block_dict</string>
                             <string>context</string>
