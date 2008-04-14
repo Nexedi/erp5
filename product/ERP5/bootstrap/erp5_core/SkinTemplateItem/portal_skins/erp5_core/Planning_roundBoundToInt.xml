@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -95,7 +92,7 @@ return int(value + 0.5)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>value</string> </value>
+            <value> <string>value, axis=\'begin\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,13 +112,14 @@ return int(value + 0.5)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>value</string>
+                            <string>axis</string>
                             <string>int</string>
                           </tuple>
                         </value>
@@ -134,12 +132,18 @@ return int(value + 0.5)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>begin</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Planning_roundBoundToInt</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

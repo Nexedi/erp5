@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -74,11 +71,18 @@
 Script used by PlanningBox validator to round the bound dates to the\n
 closest full day.\n
 """\n
+if axis == \'begin\':\n
+  if full_date.hour() > 12: \n
+    return DateTime(full_date.Date()) + 1\n
+  else:\n
+    return DateTime(full_date.Date())\n
 \n
-if full_date.hour() > 12:\n
-  return DateTime(full_date.Date()) + 1\n
-else:\n
-  return DateTime(full_date.Date())\n
+if axis == \'end\':\n
+    # round to 23:59:59\n
+    if full_date.hour() > 12:\n
+      return DateTime(full_date.Date()) + 1  - (1.0/(24*3600))\n
+    else:\n
+      return DateTime(full_date.Date())  - (1.0/(24*3600))\n
 
 
 ]]></string> </value>
@@ -103,7 +107,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>full_date</string> </value>
+            <value> <string>full_date, axis=\'begin\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,13 +127,14 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>full_date</string>
+                            <string>axis</string>
                             <string>_getattr_</string>
                             <string>DateTime</string>
                           </tuple>
@@ -143,12 +148,18 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>begin</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Planning_roundBoundToDay</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
