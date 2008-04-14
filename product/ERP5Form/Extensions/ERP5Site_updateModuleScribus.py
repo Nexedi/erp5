@@ -83,7 +83,7 @@ def ERP5Site_updateModuleScribus(self,
   temp_portal_type = object_portal_type.replace(' ', '')
   search_param = {
                   'obj_metatypes': 'ERP5 Form',
-                  'obj_searchterm': '%s_view' % temp_portal_type,
+                  'obj_ids': ['%s_view' % temp_portal_type,],
                   'search_sub': 1
                  }
   result = portal.portal_skins.PrincipiaFind( portal.portal_skins, 
@@ -98,7 +98,7 @@ def ERP5Site_updateModuleScribus(self,
   # We should have only one result
   if len(good_result) > 1:
     raise ValueError, "Error: There is more than one result for the "\
-                            "view '%s_view'" % object_portal_type
+        "view '%s_view' : %s" % (object_portal_type, good_result)
   elif len(good_result) < 1:
     raise ValueError, "Error: There is no result for the view "\
                             "'%s_view'" % object_portal_type
