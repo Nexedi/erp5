@@ -65,10 +65,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list =sci[\'object\']\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+packing_list = sci[\'object\']\n
+delivery_tool = sci.getPortal().portal_deliveries\n
 \n
 if packing_list.getPortalType() == \'Sale Packing List\':\n
-  return context.PackingList_buildInvoice(sci)\n
+  tag = \'build_invoice_%s\' % packing_list.getRelativeUrl()\n
+  invoice_line_builder = getattr(delivery_tool, \'sale_invoice_builder\', None)\n
+  if invoice_line_builder is not None:\n
+    invoice_line_builder.activate(\n
+          tag=tag,\n
+          activate_kw=dict(tag=tag),\n
+          after_method_id = [ \'expand\', \n
+                              \'recursiveImmediateReindexObject\',\n
+                              \'updateAppliedRule\',\n
+                              \'immediateReindexObject\' ],\n
+          ).build()\n
+  else:\n
+    log(\'no sale_invoice_builder found\')\n
+\n
+  invoice_tax_builder = getattr(delivery_tool, \'sale_invoice_tax_builder\', None)\n
+  if invoice_tax_builder is not None:\n
+    invoice_tax_builder.activate(\n
+          tag=tag,\n
+          after_method_id = [ \'expand\', \n
+                              \'recursiveImmediateReindexObject\',\n
+                              \'updateAppliedRule\',\n
+                              \'immediateReindexObject\' ],\n
+          ).build()\n
+  else:\n
+    log(\'no sale_invoice_tax_builder found\')\n
 </string> </value>
         </item>
         <item>
@@ -112,10 +138,18 @@ if packing_list.getPortalType() == \'Sale Packing List\':\n
                         <value>
                           <tuple>
                             <string>sci</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getitem_</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>delivery_tool</string>
+                            <string>tag</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>invoice_line_builder</string>
+                            <string>dict</string>
+                            <string>invoice_tax_builder</string>
                           </tuple>
                         </value>
                     </item>
