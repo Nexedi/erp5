@@ -68,20 +68,12 @@
             <value> <string>movement = context\n
 \n
 parent = movement.getParentValue()\n
-if parent.getPortalType() != \'Applied Rule\':\n
-  return False\n
+if parent.getPortalType() == \'Applied Rule\':\n
+  parent_rule = parent.getSpecialiseValue()\n
+  if parent_rule.getPortalType() not in [\'Delivery Rule\', \'Order Rule\']:\n
+    return False\n
 \n
-parent_rule = parent.getSpecialiseValue()\n
-if parent_rule.getPortalType() not in [\'Invoice Rule\', \'Invoicing Rule\']:\n
-  return False\n
-\n
-delivery_movement = movement.getDeliveryValue()\n
-if delivery_movement is not None and (\n
-   delivery_movement.getPortalType() not in movement.getPortalInvoiceMovementTypeList()\n
-    and delivery_movement.getPortalType() not in movement.getPortalTaxMovementTypeList()):\n
-  return False\n
-\n
-return rule.getMatchingCell(movement) is not None\n
+return True\n
 </string> </value>
         </item>
         <item>
@@ -131,14 +123,13 @@ return rule.getMatchingCell(movement) is not None\n
                         <value>
                           <tuple>
                             <string>rule</string>
-                            <string>context</string>
+<string>context</string>
                             <string>movement</string>
                             <string>_getattr_</string>
                             <string>parent</string>
-                            <string>False</string>
                             <string>parent_rule</string>
-                            <string>delivery_movement</string>
-                            <string>None</string>
+                            <string>False</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -155,7 +146,7 @@ return rule.getMatchingCell(movement) is not None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SimulationMovement_testInvoiceTransactionRule</string> </value>
+            <value> <string>SimulationMovement_testTaxRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

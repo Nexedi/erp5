@@ -10,8 +10,14 @@ Invoicing Rule | Quantity Divergence Tester
 Purchase Invoice Transaction | Discount
 Purchase Invoice Transaction | Invoice Line
 Purchase Invoice Transaction | Payment Condition
+Purchase Invoice Transaction | Tax Line
 Rule Tool | Invoice Transaction Rule
 Rule Tool | Invoicing Rule
+Rule Tool | Tax Rule
 Sale Invoice Transaction | Discount
 Sale Invoice Transaction | Invoice Line
 Sale Invoice Transaction | Payment Condition
+Sale Invoice Transaction | Tax Line
+Tax Rule | Category Divergence Tester
+Tax Rule | Property Divergence Tester
+Tax Rule | Quantity Divergence Tester
