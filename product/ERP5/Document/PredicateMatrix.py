@@ -88,8 +88,8 @@ class PredicateMatrix(XMLMatrix):
       for k in cell_range_key_list :
         c = self.newCell(*k, **kwd)
         c.edit( mapped_value_property_list = ( 'title',),
-                predicate_category_list = filter(
-                                  lambda k_item: k_item is not None, k),
+                predicate_category_list = [self._getOb(k_item).getRelativeUrl()
+                                           for k_item in k],
                 title = " * ".join(map(lambda k_item : \
                         self.unrestrictedTraverse(k_item).getTitle(), k)),
                 force_update = 1
