@@ -63,7 +63,6 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
-                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -112,14 +111,6 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>not_assigned</string> </key>
-                    <value>
-                      <list>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>right</string> </key>
                     <value>
                       <list>
@@ -128,6 +119,7 @@
                         <string>my_acquisition_append_value</string>
                         <string>my_acquisition_sync_value</string>
                         <string>my_category_type_list</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

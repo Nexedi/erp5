@@ -69,7 +69,6 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
-                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -101,6 +100,7 @@
                         <string>listbox_id</string>
                         <string>listbox_int_index</string>
                         <string>listbox_title</string>
+                        <string>listbox_short_title</string>
                       </list>
                     </value>
                 </item>
@@ -111,15 +111,6 @@
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_short_title</string>
-                        <string>listbox_short_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>not_assigned</string> </key>
-                    <value>
-                      <list>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -129,6 +120,7 @@
                       <list>
                         <string>my_codification</string>
                         <string>my_int_index</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
