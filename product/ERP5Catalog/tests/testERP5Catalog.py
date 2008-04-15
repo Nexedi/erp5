@@ -2608,6 +2608,28 @@ VALUES
     self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='foo_org%ion_1')))
 
+  def test_SearchedStringIsNotStripped(self, quiet=quiet, run=run_all_test):
+    """
+      Check that extra spaces in lookup values are preserved
+    """
+    if not run:
+      return
+
+    portal_type = 'Organisation'
+    folder = self.getOrganisationModule()
+    first_doc = folder.newContent(portal_type=portal_type, reference="foo")
+    second_doc = folder.newContent(portal_type=portal_type, reference=" foo")
+    get_transaction().commit()
+    self.tic()
+    def compareSet(reference, document_list):
+      result = folder.portal_catalog(portal_type=portal_type,
+                                     reference=reference)
+      self.assertSameSet(document_list, [x.getObject() for x in result])
+    compareSet('foo', [first_doc])
+    compareSet(' foo', [second_doc])
+    compareSet('foo ', [])
+    compareSet(' foo ', [])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
