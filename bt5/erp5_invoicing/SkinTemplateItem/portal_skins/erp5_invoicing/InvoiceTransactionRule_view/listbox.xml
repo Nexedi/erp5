@@ -87,7 +87,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -114,14 +114,9 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>membership_criterion_category_list</string>
-                          <string>Value</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -133,7 +128,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -144,11 +139,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>rule_predicate_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -159,7 +154,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>sort_columns</string> </key>
+                    <key>                 <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -186,7 +181,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Predicates</string> </value>
                 </item>
               </dictionary>
