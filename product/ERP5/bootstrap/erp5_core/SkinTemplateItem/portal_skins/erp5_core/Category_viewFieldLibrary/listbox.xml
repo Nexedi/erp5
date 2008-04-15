@@ -22,7 +22,6 @@
                 <string>search</string>
                 <string>select</string>
                 <string>editable_columns</string>
-                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -86,10 +85,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -188,15 +183,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
                     <key>                 <string>list_method</string> </key>
