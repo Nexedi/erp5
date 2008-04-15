@@ -104,7 +104,7 @@
                                   svg:stroke-width="0cm"\n
                                   svg:stroke-color="#000000"\n
                                   draw:fill-color="#FFFFFF"\n
-                                  draw:opacity="0%"/>\n
+                                  draw:opacity="100%"/>\n
     </style:style>\n
     <style:style style:name="chart_title" style:family="chart">\n
       <style:chart-properties style:direction="ltr"/>\n
