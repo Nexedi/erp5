@@ -60,7 +60,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def login(self, quiet=0):
     uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
+    uf._doAddUser('seb', '', ['Manager', 'Assignor'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
@@ -90,7 +90,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     wf.interactions.addInteraction(id='edit_interaction')
     self.interaction = wf.interactions['edit_interaction']
     self.getWorkflowTool().setChainForPortalTypes(
-                  [self.portal_type],'test_workflow')
+                  [self.portal_type],'test_workflow, validation_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
   
   def createInteractionWorkflowWithTwoInteractions(self):
@@ -110,7 +110,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     wf.interactions.addInteraction(id='editB')
     self.interactionB = wf.interactions['editB']
     self.getWorkflowTool().setChainForPortalTypes(
-                  [self.portal_type],'test_workflow')
+                  [self.portal_type],'test_workflow, validation_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def test_01(self, quiet=0, run=run_all_test):
@@ -572,6 +572,22 @@ context.setDescription('%s,%s,%s' % (d, args, result))
 
     self.assertEquals(self.organisation.doSomethingStupid__roles__, ())
 
+  def test_wrap_workflow_transition(self):
+    self.logMessage('Wrap workflow transition')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'default',
+            method_id='validate',
+            after_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = "context = sci[\'object\']\n" +\
+           "context.setDescription('titi')"
+    self.script.ZPythonScript_edit(params, body)
+    self.createData()
+    self.assertEquals('', self.organisation.getDescription())
+    self.portal.portal_workflow.doActionFor(self.organisation, 'validate_action')
+    self.assertEquals('validated', self.organisation.getValidationState())
+    self.assertEquals('titi', self.organisation.getDescription())
 
 def test_suite():
   suite = unittest.TestSuite()
