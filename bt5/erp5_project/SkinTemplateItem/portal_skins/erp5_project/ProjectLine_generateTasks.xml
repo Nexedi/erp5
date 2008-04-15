@@ -109,9 +109,9 @@ for item in task_items:\n
       \n
       if item[\'requirement\'] is not None:\n
           if isinstance(item[\'requirement\'],str):\n
-              task.setRequirement(item[\'requirement\'])\n
+              task.setTaskLineRequirement(item[\'requirement\'])\n
           else:\n
-              task.setRequirementList(item[\'requirement\'])\n
+              task.setTaskLineRequirementList(item[\'requirement\'])\n
       task.setSourceProjectValue(context_obj)\n
 \n
 # return to the project\n
