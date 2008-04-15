@@ -8,6 +8,9 @@
  <portal_type id="Inventory Line">
   <item>Inventory Cell</item>
  </portal_type>
+ <portal_type id="Purchase Order">
+  <item>Tax Line</item>
+ </portal_type>
  <portal_type id="Purchase Order Line">
   <item>Purchase Order Cell</item>
  </portal_type>
@@ -18,11 +21,14 @@
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Purchase Supply Line">
-  <item>Purchase Supply Cell</item>
   <item>Predicate</item>
+  <item>Purchase Supply Cell</item>
  </portal_type>
  <portal_type id="Returned Sale Packing List Line">
   <item>Returned Sale Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Sale Order">
+  <item>Tax Line</item>
  </portal_type>
  <portal_type id="Sale Order Line">
   <item>Sale Order Cell</item>
@@ -34,8 +40,8 @@
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Sale Supply Line">
-  <item>Predicate</item>
   <item>Sale Supply Cell</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Supply Line">
   <item>Predicate</item>
