@@ -145,7 +145,8 @@ def initialiseTaxLineList(order, trade_condition):\n
   for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
     initialiseTaxLineList(order, specialised_trade_condition)\n
 \n
-initialiseTaxLineList(context, trade_condition)\n
+if not len(context.contentValues(portal_type=\'Tax Line\')):\n
+  initialiseTaxLineList(context, trade_condition)\n
 \n
 # set specialise\n
 new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
@@ -163,6 +164,12 @@ order.edit(**new_category_dict)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -209,6 +216,7 @@ order.edit(**new_category_dict)\n
                             <string>_write_</string>
                             <string>copyObjects</string>
                             <string>initialiseTaxLineList</string>
+                            <string>len</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
