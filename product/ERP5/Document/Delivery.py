@@ -107,13 +107,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       """
       return self._getDestinationTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-    # Pricing
-    security.declareProtected( Permissions.ModifyPortalContent, 'updatePrice' )
-    def updatePrice(self):
-      for c in self.objectValues():
-        if hasattr(aq_base(c), 'updatePrice'):
-          c.updatePrice()
-
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getTotalPrice')
     def getTotalPrice(self, fast=0, src__=0, **kw):

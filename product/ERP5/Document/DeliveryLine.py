@@ -75,17 +75,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
 
-    # Explicit acquisition of aq_dynamic generated method
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getSimulationState')
-    def getSimulationState(self):
-      """
-        Explicitly acquire simulation_state from parent
-      """
-      method = getattr(self.getParentValue(),'getSimulationState', None)
-      if method is not None:
-        return method()
-    
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):

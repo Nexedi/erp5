@@ -72,14 +72,6 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
                       , PropertySheet.ItemAggregation
                       )
 
-    # Explicit acquisition of aq_dynamic generated method
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
-    def getSimulationState(self):
-      """
-        Explicitly acquire simulation_state from parent
-      """
-      return self.getParentValue().getSimulationState()
-    
     
     # MatrixBox methods      
     security.declareProtected( Permissions.AccessContentsInformation,
@@ -98,113 +90,12 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       """
       return self.getParentValue().getParentValue().isAccountable()
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-    def getProperty(self, key, d=None):
-      """
-        Generic accessor. First we check if the value
-        exists. Else we call the real accessor
-      """
-
-      #try:
-      if 1:
-        # If mapped_value_property_list is not set
-        # then it creates an exception
-        if key in self.getMappedValuePropertyList([]):
-          if getattr(self, key, None) is not None:
-            return getattr(self, key)
-          else:
-            LOG("Not Found Property %s"%key, -100,"")
-            return self.getParentValue().getProperty(key)
-      #except:
-      #  LOG("WARNING: ERP5", 0, 'Could not access mapped value property %s' % key)
-      #  return None
-      # Standard accessor
-      try:
-        result = Movement.getProperty(self, key, d=d)
-      except AttributeError:
-        result = None
-      return result
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'updatePrice' )
-    def updatePrice(self):
-      if 'price' in self.getMappedValuePropertyList([]):
-        # Try to compute an average price by accessing simulation movements
-        # This should always return 0 in the case of OrderCell
-        total_quantity = 0.0
-        total_price = 0.0
-        for m in self.getDeliveryRelatedValueList(portal_type="Simulation Movement"):
-          order = m.getOrderValue()
-          if order is not None:
-            # Price is defined in an order
-            price = m.getPrice()
-            quantity = m.getQuantity()
-            try:
-              price = float(price)
-              quantity = float(quantity)
-            except TypeError:
-              price = 0.0
-              quantity = 0.0
-            total_quantity += quantity
-            total_price += quantity * price
-        if total_quantity:
-          # Update local price
-          # self._setPrice(total_price / total_quantity)
-          self.setPrice( total_price / total_quantity )
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'getPrice' )
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
     def getPrice(self, context=None, REQUEST=None, **kw):
       """
-        Returns the price if defined on the cell
-        or acquire it
+      call Movement.getPrice
       """
-      # Call a script on the context
-      if 'price' in self.getMappedValuePropertyList([]):
-        if getattr(aq_base(self), 'price', None) is not None:
-          # default returns a price defined by the mapped value
-          return getattr(self, 'price')
-        else:
-          return self.getParentValue().getProperty('price') # Price is acquired
-      else:
-        return None
-
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getQuantity' )
-    def getQuantity(self):
-      """
-        Returns the quantity if defined on the cell
-        or acquire it
-      """
-      # Call a script on the context
-      if 'quantity' in self.getMappedValuePropertyList([]):
-        if getattr(aq_base(self), 'quantity', None) is not None:
-          return getattr(self, 'quantity')
-        else:
-          return self.getParentValue().getProperty('quantity')
-      else:
-        # We have acquisition here which me should mimic
-        return self.getParentValue().getQuantity()
-
-    # Required for indexing
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventoriatedQuantity')
-    def getInventoriatedQuantity(self):
-      """
-      """
-      return Movement.getInventoriatedQuantity(self)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getStartDate')
-    def getStartDate(self):
-      """
-      """
-      return self._baseGetStartDate()
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getStopDate')
-    def getStopDate(self):
-      """
-      """
-      return self._baseGetStopDate()
+      return Movement.getPrice(self, context=context, REQUEST=REQUEST, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getRootDeliveryValue')
