@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_codification</string> </value>
+            <value> <string>my_short_title</string> </value>
         </item>
         <item>
             <key> <string>isIndexable</string> </key>
@@ -78,7 +78,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_codification</string> </value>
+                    <value> <string>my_short_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

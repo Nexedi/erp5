@@ -1,3 +1,7 @@
+2008-04-15 Fabien
+* add a field librairy Category_viewFieldLibrary and proxify BaseCategory_view and Category_view
+* add short_title field in Category_view
+
 2008-04-01 Jerome
 * Add utility scripts to help in writing domain generation scripts: BaseDomain_generateDomainFromCurrentDocument and BaseDomain_generateDomainFromSelection.
 
