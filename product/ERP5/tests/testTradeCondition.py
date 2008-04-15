@@ -500,6 +500,13 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     self.assertEquals(50, tax_line1.getQuantity())
     self.assertEquals((50*0.2), tax_line2.getQuantity())
     
+    tax_movement_list = order_line.DeliveryMovement_getCorrespondingTaxLineList()
+    self.assertEquals(2, len(tax_movement_list))
+    tax_1_movement = [m for m in tax_movement_list if m.getPrice() == 0.2][0]
+    self.assertEquals(tax_1_movement.getQuantity(), 50)
+    tax_2_movement = [m for m in tax_movement_list if m.getPrice() == 0.5][0]
+    self.assertEquals(tax_2_movement.getQuantity(), 50*0.2)
+
 
   def test_update_order_line_quantity_update_tax_line(self):
     base_1 = self.base_amount.newContent(
@@ -733,7 +740,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     tax_3_movement = [m for m in tax_movement_list if m.getPrice() == 0.3][0]
     self.assertEquals(tax_3_movement.getQuantity(), 4)
     
-    tax_movement_list = line_2.DeliveryMovement_getCorrespondingTaxLineList()
+    tax_movement_list = line_3.DeliveryMovement_getCorrespondingTaxLineList()
     self.assertEquals(3, len(tax_movement_list))
     tax_1_movement = [m for m in tax_movement_list if m.getPrice() == 0.1][0]
     self.assertEquals(tax_1_movement.getQuantity(), 9)
