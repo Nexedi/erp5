@@ -108,24 +108,16 @@ def getVatId(vat_id):\n
     s += \'%s: %s\' % (T_(\'VAT ID\'), vat_id)\n
   return s\n
 \n
-def getLineVat(line):\n
-  vat = 0.0\n
-  s_m_list = line.getOrderRelatedValueList()\n
-  for s_m in s_m_list:\n
-    a_r_list = [x for x in s_m.objectValues() if x.getSpecialiseValue().getPortalType() == \'Invoicing Rule\']\n
-    if a_r_list:\n
-      a_r = a_r_list[0]\n
-      inv_s_m_list = a_r.objectValues()\n
-      if inv_s_m_list:\n
-        inv_s_m = inv_s_m_list[0]\n
-        acc_a_r_list = [x for x in inv_s_m.objectValues() if x.getSpecialiseValue().getPortalType() == \'Invoice Transaction Rule\']\n
-        if acc_a_r_list:\n
-          acc_a_r = acc_a_r_list[0]\n
-          acc_s_m_list = [x for x in acc_a_r.objectValues() if \'vat\' in x.getDestinationValue().getAccountType()]\n
-          if acc_s_m_list:\n
-            acc_s_m = acc_s_m_list[0]\n
-            vat += acc_s_m.getQuantity(0.0)\n
-  return vat\n
+preferred_date_order = context.getPortalObject().portal_preferences.getPreferredDateOrder() or \'ymd\'\n
+separator = \'/\'\n
+def getOrderedDate(date):\n
+  if date is None:\n
+    return \'\'\n
+  pattern = separator.join(list(preferred_date_order))\n
+  pattern = pattern.replace(\'y\', \'%Y\')\n
+  pattern = pattern.replace(\'m\', \'%m\')\n
+  pattern = pattern.replace(\'d\', \'%d\')\n
+  return date.strftime(pattern)\n
 \n
 def getSourceReference(line):\n
   category_list = line.getAcquiredCategoryList()\n
@@ -154,6 +146,8 @@ def getSubLineList(obj):\n
   sub_list = []\n
   for x in obj.searchFolder(portal_type=context.getPortalOrderMovementTypeList(),\n
       sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')]):\n
+    if x.getPortalType() in obj.getPortalTaxMovementTypeList():\n
+      continue\n
     sub_list.append(x)\n
     sub_list.extend(getSubLineList(x))\n
   return sub_list\n
@@ -188,12 +182,11 @@ for line in getSubLineList(context):\n
       \'description\': desc,\n
       \'total_quantity\': line.getTotalQuantity() or \'\',\n
       \'quantity_unit\': line.getQuantityUnitTitle() or (line.getResource() and line.getResourceValue().getQuantityUnitTitle()) or \'\',\n
-      \'stop_date\': line.getStopDate() or \'\',\n
+      \'stop_date\': getOrderedDate(line.getStopDate()) or \'\',\n
       \'base_price\': line.getPrice() or \'\',\n
       \'total_price\': line.getTotalPrice() or \'\',\n
     }\n
     total_price += line.getTotalPrice() or 0.0\n
-    total_vat += getLineVat(line)\n
   line_list.append(line_dict.copy())\n
 \n
 data_dict = {\n
@@ -219,6 +212,7 @@ data_dict = {\n
   \'destination_email\': getEmail(context.getDestination() and context.getDestinationValue().getEmailText() or \'\'),\n
 \n
   \'destination_section_title\': unicode(context.getDestinationSectionTitle() or \'\', \'utf8\'),\n
+  \'destination_section_image_path\': context.getDestinationSectionValue().getDefaultImagePath(),\n
   \'destination_section_address\': unicode(getOneLineAddress(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressText() or \'\',\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressRegionTitle() or \'\'), \'utf8\'),\n
@@ -234,14 +228,14 @@ data_dict = {\n
   \'destination_decision_email\': getEmail(context.getDestinationDecision() and context.getDestinationDecisionValue().getEmailText() or \'\'),\n
 \n
   \'reference\': context.getReference() or \'\',\n
-  \'start_date\': context.getStartDate() or \'\',\n
+  \'start_date\': getOrderedDate(context.getStartDate()) or \'\',\n
   \'currency\': context.getPriceCurrencyReference() or \'\',\n
   \'payment_condition\': getPaymentConditionText(context),\n
   \'delivery_mode\': context.getDeliveryModeTitle() or \'\',\n
   \'incoterm\': context.getIncoterm() and context.getIncotermValue().getCodification() or \'\',\n
 \n
   \'total_price_novat\': total_price,\n
-  \'total_vat\': total_vat,\n
+  \'vat_list\': context.searchFolder(portal_type=context.getPortalTaxMovementTypeList(), order_by=\'title\'),\n
   \'total_price_vat\': total_price + total_vat,\n
   \'description\': getFieldAsString(context.getDescription()),\n
 \n
@@ -306,7 +300,9 @@ return data_dict\n
                             <string>getPhoneAndFax</string>
                             <string>getEmail</string>
                             <string>getVatId</string>
-                            <string>getLineVat</string>
+                            <string>preferred_date_order</string>
+                            <string>separator</string>
+                            <string>getOrderedDate</string>
                             <string>getSourceReference</string>
                             <string>getPaymentConditionText</string>
                             <string>line_list</string>
