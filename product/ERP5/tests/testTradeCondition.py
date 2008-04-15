@@ -719,11 +719,28 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                            line_2.getTotalPrice(),
                            line_3.getTotalPrice()]), tax_line_3.getQuantity())
 
-    # TODO: test DeliveryMovement_getCorrespondingTaxLineList
     tax_movement_list = line_1.DeliveryMovement_getCorrespondingTaxLineList()
     self.assertEquals(2, len(tax_movement_list))
     tax_1_movement = [m for m in tax_movement_list if m.getPrice() == 0.1][0]
-#    self.assertEquals(
+    self.assertEquals(tax_1_movement.getQuantity(), 1)
+    tax_3_movement = [m for m in tax_movement_list if m.getPrice() == 0.3][0]
+    self.assertEquals(tax_3_movement.getQuantity(), 1)
+    
+    tax_movement_list = line_2.DeliveryMovement_getCorrespondingTaxLineList()
+    self.assertEquals(2, len(tax_movement_list))
+    tax_2_movement = [m for m in tax_movement_list if m.getPrice() == 0.2][0]
+    self.assertEquals(tax_2_movement.getQuantity(), 4)
+    tax_3_movement = [m for m in tax_movement_list if m.getPrice() == 0.3][0]
+    self.assertEquals(tax_3_movement.getQuantity(), 4)
+    
+    tax_movement_list = line_2.DeliveryMovement_getCorrespondingTaxLineList()
+    self.assertEquals(3, len(tax_movement_list))
+    tax_1_movement = [m for m in tax_movement_list if m.getPrice() == 0.1][0]
+    self.assertEquals(tax_1_movement.getQuantity(), 9)
+    tax_2_movement = [m for m in tax_movement_list if m.getPrice() == 0.2][0]
+    self.assertEquals(tax_2_movement.getQuantity(), 9)
+    tax_3_movement = [m for m in tax_movement_list if m.getPrice() == 0.3][0]
+    self.assertEquals(tax_3_movement.getQuantity(), 9)
     
     
 
