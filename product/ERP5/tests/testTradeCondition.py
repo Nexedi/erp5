@@ -261,6 +261,21 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEquals(DateTime(2001, 01, 01),
                       self.order.getPaymentConditionPaymentDate())
 
+  def test_apply_twice_trade_condition_copy_subobjects(self):
+    self.trade_condition.setPaymentConditionTradeDate('custom')
+    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 01, 01))
+    self.order.setSpecialiseValue(self.trade_condition)
+
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    self.assertEquals(1, len(self.order.contentValues(
+                                portal_type='Payment Condition')))
+    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEquals(DateTime(2001, 01, 01),
+                      self.order.getPaymentConditionPaymentDate())
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    self.assertEquals(1, len(self.order.contentValues(
+                                portal_type='Payment Condition')))
+
   def test_apply_trade_condition_copy_subobjects_with_hierarchy(self):
     other_trade_condition = self.trade_condition_module.newContent(
                             portal_type=self.trade_condition.getPortalType(),
@@ -335,6 +350,35 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 class TestTaxLineCalculation(TradeConditionTestCase):
   """Test calculating Tax Lines.
   """
+  def test_apply_trade_condition_twice_and_tax_lines(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+    tax_model_line = self.trade_condition.newContent(
+                  portal_type='Tax Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.tax)
+    
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+
+    # this creates a tax line, with quantity 0, and it will be updated when
+    # needed
+    tax_line_list = self.order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(0, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
+    
+    # if we apply twice, we don't have the tax lines twice
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    tax_line_list = self.order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+
+
   def test_simple_tax_model_line_calculation(self):
     base_1 = self.base_amount.newContent(
                           portal_type='Category',
