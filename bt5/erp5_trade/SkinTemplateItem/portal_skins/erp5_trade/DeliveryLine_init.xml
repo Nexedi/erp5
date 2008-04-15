@@ -143,7 +143,7 @@ line.edit(reference=reference, int_index=index)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchasePackingListLine_init</string> </value>
+            <value> <string>DeliveryLine_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
