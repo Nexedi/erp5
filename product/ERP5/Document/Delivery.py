@@ -116,7 +116,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getTotalPrice')
-    def getTotalPrice(self, fast=1, src__=0, **kw):
+    def getTotalPrice(self, fast=0, src__=0, **kw):
       """ Returns the total price for this order
         if the `fast` argument is set to a true value, then it use
         SQLCatalog to compute the price, otherwise it sums the total
@@ -139,7 +139,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getTotalQuantity')
-    def getTotalQuantity(self, fast=1, src__=0, **kw):
+    def getTotalQuantity(self, fast=0, src__=0, **kw):
       """ Returns the total quantity of this order.
         if the `fast` argument is set to a true value, then it use
         SQLCatalog to compute the quantity, otherwise it sums the total

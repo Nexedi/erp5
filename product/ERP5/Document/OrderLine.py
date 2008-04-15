@@ -80,11 +80,13 @@ class OrderLine(DeliveryLine):
         transactional_variable[call_method_key] = result
       return result
 
-    def _getTotalPrice(self, context, fast=1):
-      """
+    def _getTotalPrice(self, context, fast=0):
+      """Returns the total price for this order line.
+
       if hasLineContent: return sum of lines total price
       if hasCellContent: return sum of cells total price
       else: return quantity * price
+      if fast is argument true, then a SQL method will be used.
       """
       base_id = 'movement'
       if self.hasLineContent():
@@ -104,11 +106,13 @@ class OrderLine(DeliveryLine):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalQuantity')
-    def getTotalQuantity(self, fast=1):
-      """
+    def getTotalQuantity(self, fast=0):
+      """Returns the total quantity of this order line.
+
       if hasLineContent: return sum of lines total quantity
       if hasCellContent: return sum of cells total quantity
       else: return quantity
+      if fast argument is true, then a SQL method will be used.
       """
       base_id = 'movement'
       if self.hasLineContent():
