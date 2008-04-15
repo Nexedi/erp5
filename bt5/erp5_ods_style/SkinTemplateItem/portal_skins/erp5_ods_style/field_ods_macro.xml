@@ -69,8 +69,8 @@
           <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox" />\n
         </tal:block>\n
       </tal:block>\n
-      <tal:block tal:condition="python: field_meta_type not in (\'ListBox\', \'MatrixBox\')"\n
-                 tal:define="warning_log python: context.log(\'field_ods_macro ignored field:%s\' % field)">\n
+      <tal:block tal:condition="python: field_meta_type not in (\'ListBox\', \'MatrixBox\', \'OOoChart\')">\n
+        <tal:block tal:define="warning_log python: context.log(\'field_ods_macro ignored field:%s\' % field)"/>\n
         <table:table-row table:style-name="ro2">\n
           <table:table-cell/>\n
         </table:table-row>\n
