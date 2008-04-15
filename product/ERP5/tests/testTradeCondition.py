@@ -87,8 +87,7 @@ class TradeConditionTestCase(ERP5TypeTestCase):
                    self.portal.portal_simulation,
                    self.trade_condition_module,
                    self.order_module,
-                   self.portal.portal_categories.base_amount,
-                   self.portal.portal_categories.product_line):
+                   self.portal.portal_categories.base_amount,):
       module.manage_delObjects(list(module.objectIds()))
     if 'test_invoice_transaction_rule' in self.portal.portal_rules.objectIds():
       self.portal.portal_rules.manage_delObjects('test_invoice_transaction_rule')
@@ -131,16 +130,6 @@ class AccountingBuildTestCase(TradeConditionTestCase):
     for account in self.portal.account_module.contentValues():
       self.assertNotEquals(account.getAccountTypeValue(), None)
       account.validate()
-
-    dummy_resource = self.portal.portal_categories.product_line.newContent(
-                                    id='dummy_resource',
-                                    title='Dummy Resource')
-    self.resource.setProductLineValue(dummy_resource)
-    dummy_tax = self.portal.portal_categories.product_line.newContent(
-                                    id='dummy_tax',
-                                    title='Dummy Tax')
-    # FIXME: tax should not have a product line
-    self.tax.setProductLineValue(dummy_tax)
     
     itr = self.portal.portal_rules.newContent(
                         portal_type='Invoice Transaction Rule',
@@ -154,15 +143,13 @@ class AccountingBuildTestCase(TradeConditionTestCase):
             string_index='resource_type',
             title='Resource Product',
             int_index=1,
-            membership_criterion_base_category_list=['product_line',],
-            membership_criterion_category_list=['product_line/dummy_resource'],)
+            test_method_id='SimulationMovement_isDeliveryMovement' )
     predicate = itr.newContent(portal_type='Predicate')
     predicate.edit(
             string_index='resource_type',
             title='Resource Tax',
             int_index=2,
-            membership_criterion_base_category_list=['product_line',],
-            membership_criterion_category_list=['product_line/dummy_tax'],)
+            test_method_id='SimulationMovement_isTaxMovement' )
     get_transaction().commit()
     self.tic()
     accounting_rule_cell_list = itr.contentValues(
