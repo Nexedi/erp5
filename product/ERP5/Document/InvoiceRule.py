@@ -73,11 +73,11 @@ class InvoiceRule(DeliveryRule):
       return 0
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, 
-               movement_type_method='getPortalInvoiceMovementTypeList', **kw):
+    def expand(self, applied_rule, **kw):
       """
         Call expand defined on DeliveryRule.
       """
-      DeliveryRule.expand(self, applied_rule, 
-                          movement_type_method=movement_type_method,
-                          **kw)
+      kw['delivery_movement_type_list'] = \
+          self.getPortalInvoiceMovementTypeList() + \
+          self.getPortalTaxMovementTypeList()
+      DeliveryRule.expand(self, applied_rule, **kw)

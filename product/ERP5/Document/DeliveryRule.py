@@ -61,7 +61,7 @@ class DeliveryRule(Rule):
 
   # Simulation workflow
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, **kw):
+  def expand(self, applied_rule, delivery_movement_type_list=None, **kw):
     """
     Expands the additional Delivery movements to a new simulation tree.
     Expand is only allowed to create or modify simulation movements for
@@ -77,8 +77,11 @@ class DeliveryRule(Rule):
     existing_movement_list = []
     immutable_movement_list = []
     delivery = applied_rule.getDefaultCausalityValue()
+    if delivery_movement_type_list is None:
+      delivery_movement_type_list = self.getPortalDeliveryMovementTypeList()
     if delivery is not None:
-      delivery_movement_list = delivery.getMovementList()
+      delivery_movement_list = delivery.getMovementList(
+                                            portal_type=delivery_movement_type_list)
       # Check existing movements
       for movement in applied_rule.contentValues(portal_type=movement_type):
         if movement.getLastExpandSimulationState() in \
@@ -95,7 +98,7 @@ class DeliveryRule(Rule):
           immutable_movement_list.append(movement)
 
       # Create or modify movements
-      for deliv_mvt in delivery.getMovementList():
+      for deliv_mvt in delivery_movement_list:
         sim_mvt = deliv_mvt.getDeliveryRelatedValue()
         if sim_mvt is None:
           # create a new deliv_mvt
