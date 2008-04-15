@@ -107,6 +107,7 @@
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_causality_title</string>
+                        <string>listbox_reference</string>
                       </list>
                     </value>
                 </item>

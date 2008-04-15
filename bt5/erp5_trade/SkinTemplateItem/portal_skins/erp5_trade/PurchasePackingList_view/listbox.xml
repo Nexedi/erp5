@@ -80,7 +80,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_purchase_packing_list_lines_listbox</string> </value>
+                    <value> <string>my_purchase_packing_list_movements_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
