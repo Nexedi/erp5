@@ -43,6 +43,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -93,6 +99,7 @@
                         <string>listbox_stop_date</string>
                         <string>listbox_quantity_unit</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_reference</string>
                       </list>
                     </value>
                 </item>
@@ -107,7 +114,6 @@
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_causality_title</string>
-                        <string>listbox_reference</string>
                       </list>
                     </value>
                 </item>
