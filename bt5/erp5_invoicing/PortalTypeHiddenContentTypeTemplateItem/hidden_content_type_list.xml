@@ -5,4 +5,10 @@
  <portal_type id="Invoice Transaction Rule">
   <item>Accounting Rule Cell</item>
  </portal_type>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>Tax Line</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>Tax Line</item>
+ </portal_type>
 </hidden_content_type_list>
