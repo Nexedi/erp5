@@ -1940,7 +1940,7 @@ class ListBoxRendererLine:
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          if hasattr(aq_self(brain), alias):
+          if brain is not obj and getattr(aq_self(brain), alias, None) is not None:
             original_value = getattr(brain, alias)
             processed_value = original_value
           elif obj is not None:
