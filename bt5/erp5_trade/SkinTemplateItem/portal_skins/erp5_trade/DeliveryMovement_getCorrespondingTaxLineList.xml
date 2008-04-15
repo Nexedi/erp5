@@ -89,16 +89,17 @@ other_movement_list = [m for m in context.getExplanationValue().getMovementList(
                         portal_type=context.getPortalMovementTypeList())]\n
 # 2 for each tax line, calculate the corresponding ratio\n
 for tax_line in contributed_tax_line_list:\n
-  # XXX only the first one is used here !\n
-  #  this assume that a tax will be applied to only one base_amount\n
-  base_amount = tax_line.getBaseApplication()\n
   base_total_price = 0\n
-  for movement in other_movement_list:\n
-    if base_amount in movement.getBaseContributionList():\n
-      base_total_price += movement.getTotalPrice(fast=0)\n
-  \n
+  added_movement_list = {}\n
+  for base_amount in tax_line.getBaseApplicationList():\n
+    for movement in other_movement_list:\n
+      if base_amount in movement.getBaseContributionList():\n
+        if movement.getRelativeUrl() not in added_movement_list:\n
+          base_total_price += movement.getTotalPrice(fast=0)\n
+          added_movement_list[movement.getRelativeUrl()] = 1\n
+\n
   adjusted_tax_line_list.append(tax_line.asContext(quantity=\n
-    # XXX round ?\n
+        # XXX round ?\n
         tax_line.getQuantity() * total_price / base_total_price))\n
 \n
 return adjusted_tax_line_list\n
@@ -164,8 +165,10 @@ return adjusted_tax_line_list\n
                             <string>m</string>
                             <string>other_movement_list</string>
                             <string>base_total_price</string>
+                            <string>added_movement_list</string>
                             <string>movement</string>
                             <string>_inplacevar_</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
