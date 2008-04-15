@@ -110,6 +110,7 @@
                       <list>
                         <string>my_int_index</string>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_destination_title</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>

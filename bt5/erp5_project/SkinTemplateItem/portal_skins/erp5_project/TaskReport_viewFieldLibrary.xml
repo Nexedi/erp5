@@ -109,6 +109,7 @@
                         <string>my_comment</string>
                         <string>my_source_section_title</string>
                         <string>my_price_currency</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
