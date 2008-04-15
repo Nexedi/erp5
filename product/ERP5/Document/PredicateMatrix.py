@@ -91,7 +91,7 @@ class PredicateMatrix(XMLMatrix):
                 predicate_category_list = filter(
                                   lambda k_item: k_item is not None, k),
                 title = " * ".join(map(lambda k_item : \
-                        self.restrictedTraverse(k_item).getTitle(), k)),
+                        self.unrestrictedTraverse(k_item).getTitle(), k)),
                 force_update = 1
               )
     else :
