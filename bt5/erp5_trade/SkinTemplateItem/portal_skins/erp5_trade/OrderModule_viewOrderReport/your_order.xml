@@ -98,7 +98,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -110,13 +110,13 @@
                     <value> <string>Base_viewReportFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>size</string> </key>
+                    <key> <string>size</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -124,7 +124,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Order Type</string> </value>
                 </item>
               </dictionary>

@@ -127,6 +127,7 @@ elif to_date is not None:\n
 sort_on_list = [ (\'delivery.destination_section_uid\', \'ASC\'), (\'delivery.start_date\',\'ASC\')]\n
 result_list = context.portal_catalog.searchResults(limit=None,query=query,\n
                                                    portal_type=doc_portal_type,\n
+                                                   simulation_state=simulation_state,\n
                                                    sort_on=sort_on_list,\n
                                                    **catalog_params)\n
 \n
@@ -325,7 +326,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>period_list, report_type, doc_portal_type, line_portal_type, **kw</string> </value>
+            <value> <string>period_list, report_type, doc_portal_type, line_portal_type, simulation_state,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -345,7 +346,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -355,6 +356,7 @@ return line_list\n
                             <string>report_type</string>
                             <string>doc_portal_type</string>
                             <string>line_portal_type</string>
+                            <string>simulation_state</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>

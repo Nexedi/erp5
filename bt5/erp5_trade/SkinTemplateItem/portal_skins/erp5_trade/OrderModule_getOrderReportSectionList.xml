@@ -75,6 +75,7 @@ aggregation_level = context.REQUEST.get(\'aggregation_level\')\n
 from_date = context.REQUEST.get(\'from_date\')\n
 to_date = context.REQUEST.get(\'at_date\')\n
 group_by = context.REQUEST.get(\'group_by\')\n
+simulation_state = context.REQUEST.get(\'simulation_state\')\n
 \n
 selection_columns = [(\'group_by\', "Group by")]\n
 if from_date is None:\n
@@ -132,7 +133,8 @@ else:\n
   raise ValueError, "unknown type for report"\n
 \n
 params=dict(period_list=interval_list, report_type=report_type,\n
-            doc_portal_type=doc_portal_type, line_portal_type=line_portal_type)\n
+            doc_portal_type=doc_portal_type, line_portal_type=line_portal_type,\n
+            simulation_state=simulation_state)\n
 \n
 # stat columns of the listbox\n
 stat_columns = stat_columns + interval_column_list + total_stat_list\n
@@ -208,6 +210,7 @@ return result\n
                             <string>from_date</string>
                             <string>to_date</string>
                             <string>group_by</string>
+                            <string>simulation_state</string>
                             <string>selection_columns</string>
                             <string>None</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
