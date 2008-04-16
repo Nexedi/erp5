@@ -22,10 +22,6 @@ Purchase Packing List
 Purchase Packing List Cell
 Purchase Packing List Line
 Purchase Packing List Module
-Purchase Supply
-Purchase Supply Cell
-Purchase Supply Line
-Purchase Supply Module
 Purchase Trade Condition
 Purchase Trade Condition Module
 Returned Sale Packing List
@@ -40,14 +36,8 @@ Sale Packing List
 Sale Packing List Cell
 Sale Packing List Line
 Sale Packing List Module
-Sale Supply
-Sale Supply Cell
-Sale Supply Line
-Sale Supply Module
 Sale Trade Condition
 Sale Trade Condition Module
-Supply Cell
-Supply Line
 Tax
 Tax Line
 Tax Model Line

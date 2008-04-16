@@ -5,6 +5,5 @@ order_workflow
 packing_list_causality_workflow
 packing_list_container_workflow
 packing_list_workflow
-supply_line_interaction_workflow
 tax_interaction_workflow
 trade_matrix_workflow

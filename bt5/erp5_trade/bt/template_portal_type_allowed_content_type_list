@@ -26,11 +26,6 @@ Purchase Packing List | Discount
 Purchase Packing List | Payment Condition
 Purchase Packing List | Purchase Packing List Line
 Purchase Packing List | Tax Line
-Purchase Supply Line | Predicate
-Purchase Supply Line | Purchase Supply Cell
-Purchase Supply Module | Purchase Supply
-Purchase Supply | Purchase Supply Line
-Purchase Supply | Supply Line
 Purchase Trade Condition Module | Purchase Trade Condition
 Purchase Trade Condition | Discount
 Purchase Trade Condition | Payment Condition
@@ -55,15 +50,8 @@ Sale Packing List | Discount
 Sale Packing List | Payment Condition
 Sale Packing List | Sale Packing List Line
 Sale Packing List | Tax Line
-Sale Supply Line | Predicate
-Sale Supply Line | Sale Supply Cell
-Sale Supply Module | Sale Supply
-Sale Supply | Sale Supply Line
-Sale Supply | Supply Line
 Sale Trade Condition Module | Sale Trade Condition
 Sale Trade Condition | Discount
 Sale Trade Condition | Payment Condition
 Sale Trade Condition | Tax Model Line
-Supply Line | Predicate
-Supply Line | Supply Cell
 Tax Module | Tax
