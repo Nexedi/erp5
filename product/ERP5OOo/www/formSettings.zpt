@@ -11,11 +11,16 @@
                 tal:attributes="value request/title | here/title | nothing"/></td>
     </tr>
     <tr>
+      <td class="form-label">OOo XML File Id (Manipulated File)</td>
+      <td><input name="xml_file_id" value="default_xml_file_id"
+                 type="text" size="20"
+                 tal:attributes="value request/ooo_xml_file_id | here/ooo_xml_file_id | nothing"/></td>
+    </tr>
+    <tr>
       <td class="form-label">OOo Stylesheet (Master Document)</td>
       <td><input name="ooo_stylesheet" value="default_ooo_template" type="text" size="20"
                 tal:attributes="value request/ooo_stylesheet | here/ooo_stylesheet | nothing"/></td>
     </tr>
-
     <tr>
       <td align="left" valign="top">
       <div class="form-element">

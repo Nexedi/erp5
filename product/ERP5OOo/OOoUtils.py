@@ -134,13 +134,13 @@ class OOoBuilder(Implicit):
   def getMimeType(self):
     return self.extract('mimetype')
 
-  def prepareContentXml(self, xsl_content=None):
+  def prepareContentXml(self, ooo_xml_file_id, xsl_content=None):
     """
       extracts content.xml text and prepare it :
         - add tal namespace
         - indent the xml
     """
-    content_xml = self.extract('content.xml')
+    content_xml = self.extract(ooo_xml_file_id)
     output = StringIO()
     try:
       import libxml2
@@ -156,9 +156,6 @@ class OOoBuilder(Implicit):
       tal = root.newNs('http://xml.zope.org/namespaces/tal', 'tal')
       i18n = root.newNs('http://xml.zope.org/namespaces/i18n', 'i18n')
       metal = root.newNs('http://xml.zope.org/namespaces/metal', 'metal')
-      root.setNs(tal)
-      root.setNs(i18n)
-      root.setNs(metal)
       root.setNsProp(tal, 'attributes', 'dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')')
       buff = libxml2.createOutputBuffer(output, 'utf-8')
       result_doc.saveFormatFileTo(buff, 'utf-8', 1)

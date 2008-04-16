@@ -36,6 +36,23 @@ templates.
 
   <tr>
     <td align="left" valign="top">
+    <div class="form-label">
+    Edited XML File Id
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <select type="select" name="xml_file_id">
+      <option value=""></option>
+      <option value="content.xml" selected="selected">Content</option>
+      <option value="styles.xml">Styles</option>
+      <option value="meta.xml">Meta</option>
+      <option value="settings.xml">Settings</option>
+    </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
       <div class="form-optional">
         File
       </div>

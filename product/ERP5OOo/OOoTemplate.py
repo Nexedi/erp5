@@ -63,15 +63,16 @@ import Products.ERP5Type.Document
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
 
-def addOOoTemplate(self, id, title="", REQUEST=None):
+def addOOoTemplate(self, id, title="", xml_file_id="content.xml", REQUEST=None):
   """Add OOo template to folder.
 
   id     -- the id of the new OOo template to add
   title  -- the title of the OOo to add
+  xml_file_id -- The Id of edited xml file
   Result -- empty string
   """
   # add actual object
-  id = self._setObject(id, OOoTemplate(id, title))
+  id = self._setObject(id, OOoTemplate(id, title, xml_file_id))
   if REQUEST is not None:
     file = REQUEST.form.get('file')
     if file.filename:
@@ -142,6 +143,7 @@ class OOoTemplate(ZopePageTemplate):
 
   # Default Attributes
   ooo_stylesheet = 'Base_getODTStyleSheet'
+  ooo_xml_file_id = 'content.xml'
 
   # Default content type
   #content_type = 'application/vnd.sun.xml.writer' # Writer type by default
@@ -160,11 +162,11 @@ class OOoTemplate(ZopePageTemplate):
                                   __name__='formSettings')
   formSettings._owner = None
 
-  def __init__(self,*args,**kw):
-    ZopePageTemplate.__init__(self,*args,**kw)
+  def __init__(self, id, title, xml_file_id='content.xml', *args,**kw):
+    ZopePageTemplate.__init__(self, id, title, *args, **kw)
     # we store the attachments of the uploaded document
     self.OLE_documents_zipstring = None
-
+    self.ooo_xml_file_id = xml_file_id
   # Every OOoTemplate uses UTF-8 or Unicode, so a special StringIO class
   # must be used, which does not care about response.
   def StringIO(self):
@@ -207,8 +209,7 @@ class OOoTemplate(ZopePageTemplate):
       xsl_content = None
       if xsl_dtml is not None:
         xsl_content = xsl_dtml()
-      file = builder.prepareContentXml(xsl_content)
-
+      file = builder.prepareContentXml(self.ooo_xml_file_id, xsl_content)
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
   security.declareProtected('Change Page Templates', 'pt_edit')
@@ -220,13 +221,14 @@ class OOoTemplate(ZopePageTemplate):
     self.write(text)
 
   security.declareProtected('Change Page Templates', 'doSettings')
-  def doSettings(self, REQUEST, title, ooo_stylesheet):
+  def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet):
     """
-      Change title and ooo_stylesheet.
+      Change title, xml_file_id and ooo_stylesheet.
     """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError, "File is locked via WebDAV"
     self.ooo_stylesheet = ooo_stylesheet
+    self.ooo_xml_file_id = xml_file_id
     self.pt_setTitle(title)
     #REQUEST.set('text', self.read()) # May not equal 'text'!
     message = "Saved changes."
@@ -507,7 +509,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       return doc_xml
 
     # Replace content.xml in master openoffice template
-    ooo_builder.replace('content.xml', doc_xml)
+    ooo_builder.replace(self.ooo_xml_file_id, doc_xml)
 
     # Old templates correction
     try:
