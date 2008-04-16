@@ -50,11 +50,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>PurchaseOrder_printODT</string> </value>
+            <value> <string>PurchaseOrder_viewAsODT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
