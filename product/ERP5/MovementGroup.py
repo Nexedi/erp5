@@ -450,6 +450,29 @@ class PaymentPathMovementGroup(RootMovementGroup):
     return source_payment_list == self.source_payment_list and \
         destination_payment_list == self.destination_payment_list
 
+class AdministrationPathMovementGroup(RootMovementGroup):
+  """ Groups movement that have the same source_administration and
+  destination_administration."""
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    source_administration_list = movement.getSourceAdministrationList()
+    destination_administration_list = movement.getDestinationAdministrationList()
+    source_administration_list.sort() ; destination_administration_list.sort()
+
+    self.source_administration_list = source_administration_list
+    self.destination_administration_list = destination_administration_list
+
+    self.setGroupEdit(
+        source_administration_list=source_administration_list,
+        destination_administration_list=destination_administration_list
+    )
+
+  def test(self, movement):
+    source_administration_list = movement.getSourceAdministrationList()
+    destination_administration_list = movement.getDestinationAdministrationList()
+    source_administration_list.sort() ; destination_administration_list.sort()
+    return source_administration_list == self.source_administration_list and \
+        destination_administration_list == self.destination_administration_list
 
 class TradePathMovementGroup(RootMovementGroup):
   """
