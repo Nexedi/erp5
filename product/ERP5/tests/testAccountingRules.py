@@ -993,10 +993,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def stepClearAccountingModule(self, sequence, **kw) :
     """ clear the content of accounting module """
     self.tic() # make sure message queue is empty
-    # cancel accounting transaction to be able to delete them
-    for transaction in self.getAccountingModule().objectValues() :
-      self.getPortal().portal_workflow.doActionFor(
-        transaction, 'cancel_action', wf_id='accounting_workflow')
     # delete
     self.getAccountingModule().deleteContent(
         list(self.getAccountingModule().objectIds()))
@@ -1185,8 +1181,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEquals(invoice.getSimulationState(), 'planned')
 
   def stepConfirmInvoice(self, sequence, **kw) :
-    """ put the invoice in the `confirmed` state, which will 
-      start the delivery builder """
+    """ put the invoice in the `confirmed` state, which does nothing specific,
+    the delivery builder is invoked when starting the invoice.
+    """
     invoice = sequence.get('invoice')
     self.getPortal().portal_workflow.doActionFor(
       invoice, 'confirm_action',
@@ -1195,6 +1192,24 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     )
     self.assertEquals(invoice.getSimulationState(), 'confirmed')
   
+  def stepCheckNoAccountingLinesBuiltYet(self, sequence, **kw) :
+    invoice = sequence.get('invoice')
+    self.assertEquals(0, len(invoice.getMovementList(
+                    portal_type=invoice.getPortalAccountingMovementTypeList())))
+  
+  def stepStartInvoice(self, sequence, **kw) :
+    """ put the invoice in the `started` state, which starts the delivery
+    builder.
+    """
+    invoice = sequence.get('invoice')
+    self.getPortal().portal_workflow.doActionFor(
+      invoice, 'start_action',
+      wf_id = 'accounting_workflow',
+      skip_period_validation = 1
+    )
+    self.assertEquals(invoice.getSimulationState(), 'started')
+
+
   def stepCheckAccountingLinesCoherantWithSimulation(self, sequence, **kw) :
     """ checks that accounting lines are created on the sale invoice 
     transaction """
@@ -1464,6 +1479,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckPaymentRuleIsApplied
       stepConfirmInvoice
       stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
+      stepTic
       stepCheckAccountingLinesCoherantWithSimulation
       """, quiet=quiet )
 
@@ -1491,6 +1509,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepClearAccountingModule
       stepCreateSimpleSaleInvoice
       stepConfirmInvoice
+      stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
@@ -1523,6 +1544,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateSimpleSaleInvoiceTwoLines
       stepConfirmInvoice
       stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
+      stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
@@ -1553,6 +1577,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepClearAccountingModule
       stepCreateSimpleSaleInvoiceTwoCells
       stepConfirmInvoice
+      stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
@@ -1591,6 +1618,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepAddInvoiceLine
       stepConfirmInvoice
       stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
+      stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
@@ -1622,6 +1652,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic
       stepEditInvoiceLine
       stepConfirmInvoice
+      stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
@@ -1657,6 +1690,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic
       stepConfirmInvoice
       stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
+      stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
@@ -1688,6 +1724,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic
       stepAddCellsInInvoiceLine
       stepConfirmInvoice
+      stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
@@ -1726,6 +1765,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       """
       stepConfirmInvoice
       stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
+      stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
@@ -1760,6 +1802,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateMultiLineSaleInvoice
       stepPlanInvoice
       stepConfirmInvoice
+      stepTic
+      stepCheckNoAccountingLinesBuiltYet
+      stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForMultiLineInvoice
       stepRebuildAndCheckNothingIsCreated
