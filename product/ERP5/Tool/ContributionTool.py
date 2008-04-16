@@ -210,26 +210,27 @@ class ContributionTool(BaseTool):
 
     #
     # Check if same file is already exists. if it exists, then update it.
-    # 
+    #
     if portal_type is None:
-      content_type_registry = getToolByName(self, 'content_type_registry')
-      portal_type = content_type_registry.findTypeName(file_name, None, None)
-      property_dict = self.getMatchedFileNamePatternDict(file_name)
-      reference = property_dict.get('reference', None)
-      version  = property_dict.get('version', None)
-      language  = property_dict.get('language', None)
-      if portal_type and reference and version and language:
-        portal_catalog = getToolByName(self, 'portal_catalog')
-        document = portal_catalog.getResultValue(portal_type=portal_type,
-                                                 reference=reference,
-                                                 version=version,
-                                                 language=language)
-        if document is not None:
-          # document is already uploaded. So overrides file.
-          if not _checkPermission(Permissions.ModifyPortalContent, document):
-            raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
-          document.edit(file=kw['file'])
-          return document
+      registry = getToolByName(self, 'portal_contribution_registry', None)
+      if registry is not None:
+        portal_type = registry.findPortalTypeName(file_name, None, None)
+        property_dict = self.getMatchedFileNamePatternDict(file_name)
+        reference = property_dict.get('reference', None)
+        version  = property_dict.get('version', None)
+        language  = property_dict.get('language', None)
+        if portal_type and reference and version and language:
+          portal_catalog = getToolByName(self, 'portal_catalog')
+          document = portal_catalog.getResultValue(portal_type=portal_type,
+                                                   reference=reference,
+                                                   version=version,
+                                                   language=language)
+          if document is not None:
+            # document is already uploaded. So overrides file.
+            if not _checkPermission(Permissions.ModifyPortalContent, document):
+              raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
+            document.edit(file=kw['file'])
+            return document
 
     #
     # Strong possibility of a new file.
@@ -360,10 +361,8 @@ class ContributionTool(BaseTool):
       (as long as the one we find is compatible) and move the
       document to the appropriate module.
 
-      content_type_registry must be set up so that an appropriate
-      portal_type with appropriate meta_type is found for every
-      kind of document. However, a different portal_type might
-      be used in the end.
+      portal_contribution_registry will find appropriate portal type
+      name by file_name and content itself.
 
       The ContributionTool instance must be configured in such
       way that _verifyObjectPaste will return TRUE.
