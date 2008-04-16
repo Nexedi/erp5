@@ -101,8 +101,7 @@ class TestInvoice(TestPackingListMixin,
         if not cat in path.objectIds() :
           path = path.newContent(
                     portal_type='Category',
-                    id=cat,
-                    immediate_reindex=1 )
+                    id=cat,)
         else:
           path = path[cat]
     # check categories have been created
@@ -1973,9 +1972,8 @@ class TestInvoice(TestPackingListMixin,
          invoice_transaction_applied_rule.contentValues()[0]
     self.assertEquals(order_price_currency,
           invoice_transaction_movement.getResource())
-    # TODO: price currency have to be copied on simulation movements too
-    # self.assertEquals(order_price_currency,
-    #      invoice_transaction_movement.getPriceCurrency())
+    self.assertEquals(order_price_currency,
+          invoice_transaction_movement.getPriceCurrency())
 
 #class TestPurchaseInvoice(TestInvoice):
 #  order_portal_type = 'Purchase Order'
