@@ -1,4 +1,6 @@
 component_module
 product_module
+purchase_supply_module
+sale_supply_module
 service_module
 transformation_module

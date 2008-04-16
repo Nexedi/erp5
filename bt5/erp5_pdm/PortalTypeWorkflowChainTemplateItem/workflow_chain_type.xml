@@ -8,8 +8,28 @@
   <workflow>validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Purchase Supply</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Supply Line</type>
+  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Supply</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Supply Line</type>
+  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Service</type>
   <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Supply Line</type>
+  <workflow>supply_line_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation</type>

@@ -4,9 +4,19 @@ Component Module
 Product
 Product Individual Variation
 Product Module
+Purchase Supply
+Purchase Supply Cell
+Purchase Supply Line
+Purchase Supply Module
+Sale Supply
+Sale Supply Cell
+Sale Supply Line
+Sale Supply Module
 Service
 Service Individual Variation
 Service Module
+Supply Cell
+Supply Line
 Transformation
 Transformation Module
 Transformation Operation

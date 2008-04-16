@@ -19,14 +19,40 @@
  <portal_type id="Product Module">
   <item>Product</item>
  </portal_type>
+ <portal_type id="Purchase Supply">
+  <item>Purchase Supply Line</item>
+  <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Purchase Supply Line">
+  <item>Purchase Supply Cell</item>
+  <item>Predicate</item>
+ </portal_type>
+ <portal_type id="Purchase Supply Module">
+  <item>Purchase Supply</item>
+ </portal_type>
+ <portal_type id="Sale Supply">
+  <item>Sale Supply Line</item>
+  <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Sale Supply Line">
+  <item>Predicate</item>
+  <item>Sale Supply Cell</item>
+ </portal_type>
+ <portal_type id="Sale Supply Module">
+  <item>Sale Supply</item>
+ </portal_type>
  <portal_type id="Service">
   <item>Supply Line</item>
   <item>Service Individual Variation</item>
-  <item>Sale Supply Line</item>
   <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Service Module">
   <item>Service</item>
+ </portal_type>
+ <portal_type id="Supply Line">
+  <item>Supply Cell</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Transformation">
   <item>Transformation Transformed Resource</item>

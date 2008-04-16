@@ -5,4 +5,7 @@
  <portal_type id="Product">
   <item>DefaultImage</item>
  </portal_type>
+ <portal_type id="Supply Cell">
+  <item>Reference</item>
+ </portal_type>
 </property_sheet_list>

@@ -10,11 +10,23 @@ Product | Product Individual Variation
 Product | Purchase Supply Line
 Product | Sale Supply Line
 Product | Supply Line
+Purchase Supply Line | Predicate
+Purchase Supply Line | Purchase Supply Cell
+Purchase Supply Module | Purchase Supply
+Purchase Supply | Purchase Supply Line
+Purchase Supply | Supply Line
+Sale Supply Line | Predicate
+Sale Supply Line | Sale Supply Cell
+Sale Supply Module | Sale Supply
+Sale Supply | Sale Supply Line
+Sale Supply | Supply Line
 Service Module | Service
 Service | Purchase Supply Line
 Service | Sale Supply Line
 Service | Service Individual Variation
 Service | Supply Line
+Supply Line | Predicate
+Supply Line | Supply Cell
 Transformation Module | Transformation
 Transformation Operation | Mapped Value
 Transformation Transformed Resource | Mapped Value

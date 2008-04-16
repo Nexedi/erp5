@@ -6,7 +6,15 @@ Product | Image
 Product | Purchase Supply Line
 Product | Sale Supply Line
 Product | Supply Line
+Purchase Supply Line | Predicate
+Purchase Supply Line | Purchase Supply Cell
+Purchase Supply | Supply Line
+Sale Supply Line | Predicate
+Sale Supply Line | Sale Supply Cell
+Sale Supply | Supply Line
 Service | Purchase Supply Line
 Service | Sale Supply Line
 Service | Supply Line
+Supply Line | Predicate
+Supply Line | Supply Cell
 Transformation Transformed Resource | Mapped Value
