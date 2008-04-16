@@ -1,6 +1,3 @@
-Component Individual Variation | history
-Component Individual Variation | metadata
-Component Individual Variation | print
 Component Individual Variation | view
 Component Module | view
 Component | purchase_price_view
@@ -8,18 +5,12 @@ Component | sale_price_view
 Component | view
 Component | view_flow_capacity
 Preference | pdm_preference
-Product Individual Variation | history
-Product Individual Variation | metadata
-Product Individual Variation | print
 Product Individual Variation | view
 Product Module | view
 Product | purchase_price_view
 Product | sale_price_view
 Product | view
 Product | view_stock
-Service Individual Variation | history
-Service Individual Variation | metadata
-Service Individual Variation | print
 Service Individual Variation | view
 Service Module | view
 Service | purchase_price_view
