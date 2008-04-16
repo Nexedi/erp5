@@ -94,7 +94,7 @@ for listitem in listbox :\n
                                   container_quantity))\n
         else :\n
           desired_lines[resource.getRelativeUrl()] = [\n
-                                  (movement.getVariationCategoryList(), \n
+                                  (movement.getVariationCategoryList(),\n
                                   container_quantity)]\n
 \n
 # we build \'container_count\' containers \n
@@ -107,7 +107,7 @@ for container_number in range(container_count) :\n
                           portal_type="Container",\n
                           title=new_container_id,\n
                           int_index=next_container_number,\n
-                          serial_number="%06d%04d" % (int(delivery.getId()), \n
+                          serial_number="%06d%04d" % (int(delivery.getId()),\n
                                                       next_container_number),\n
                           resource = container_type,\n
                           gross_weight = gross_weight,\n
@@ -196,7 +196,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\',selection_index=None,selection_name=\'\',dialog_category=\'object_exchange\',container_count=0,container_type=\'\',gross_weight=0,listbox=None,cancel_url=\'\',next_container_int_index=1,**kw</string> </value>
+            <value> <string>form_id=\'\',selection_index=None,selection_name=\'\',dialog_category=\'object_exchange\',container_count=0,container_type=\'\',gross_weight=0,listbox=[],cancel_url=\'\',next_container_int_index=1,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -293,7 +293,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                 <int>0</int>
                 <string></string>
                 <int>0</int>
-                <none/>
+                <list/>
                 <string></string>
                 <int>1</int>
               </tuple>
