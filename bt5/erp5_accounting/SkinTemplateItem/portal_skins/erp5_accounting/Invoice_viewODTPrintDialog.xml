@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Invoice_viewAsODT</string> </value>
+            <value> <string>Invoice_printAsODT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
