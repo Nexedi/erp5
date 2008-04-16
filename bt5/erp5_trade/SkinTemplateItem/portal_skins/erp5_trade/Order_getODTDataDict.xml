@@ -121,7 +121,10 @@ def getOrderedDate(date):\n
 \n
 def getSourceReference(line):\n
   category_list = line.getAcquiredCategoryList()\n
-  portal_type_list = [\'Purchase Supply Line\', \'Purchase Supply Cell\']\n
+  portal_type_list = (\'Purchase Supply Line\',\n
+                      \'Purchase Supply Cell\',\n
+                      \'Sale Supply Line\',\n
+                      \'Sale Supply Cell\',)\n
   tmp_context = line.asContext(context=line, categories=category_list)\n
   predicate_list = context.portal_domains.searchPredicateList(tmp_context, portal_type=portal_type_list)\n
   for predicate in predicate_list:\n
@@ -199,9 +202,13 @@ data_dict = {\n
   \'source_section_email\': getEmail(context.getSourceSection() and context.getSourceSectionValue().getEmailText() or \'\'),\n
 \n
   \'source_decision_title\': context.getSourceDecisionTitle() or \'\',\n
+  \'source_decision_address\': unicode(getOneLineAddress(\n
+      context.getSourceDecision() and context.getSourceDecisionValue().getDefaultAddressText() or \'\',\n
+      context.getSourceDecision() and context.getSourceDecisionValue().getDefaultAddressRegionTitle() or \'\'), \'utf8\'),\n
   \'source_decision_telfax\': getPhoneAndFax(context.getSourceDecision() and context.getSourceDecisionValue().getTelephoneText() or \'\',\n
       context.getSourceDecision() and context.getSourceDecisionValue().getFaxText() or \'\'),\n
   \'source_decision_email\': getEmail(context.getSourceDecision() and context.getSourceDecisionValue().getEmailText() or \'\'),\n
+  \'source_decision_vatid\': unicode(getVatId(context.getSourceDecision() and context.getSourceDecisionValue().getVatCode() or \'\'), \'utf8\'),\n
 \n
   \'destination_title\': context.getDestinationTitle() or \'\',\n
   \'destination_address\': getOneLineAddress(\n
@@ -229,6 +236,7 @@ data_dict = {\n
 \n
   \'reference\': context.getReference() or \'\',\n
   \'start_date\': getOrderedDate(context.getStartDate()) or \'\',\n
+  \'stop_date\': getOrderedDate(context.getStopDate()) or \'\',\n
   \'currency\': context.getPriceCurrencyReference() or \'\',\n
   \'payment_condition\': getPaymentConditionText(context),\n
   \'delivery_mode\': context.getDeliveryModeTitle() or \'\',\n
@@ -236,7 +244,6 @@ data_dict = {\n
 \n
   \'total_price_novat\': total_price,\n
   \'vat_list\': context.searchFolder(portal_type=context.getPortalTaxMovementTypeList(), order_by=\'title\'),\n
-  \'total_price_vat\': total_price + total_vat,\n
   \'description\': getFieldAsString(context.getDescription()),\n
 \n
   \'line_list\': line_list,\n
@@ -334,7 +341,7 @@ return data_dict\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchaseOrder_getODTDataDict</string> </value>
+            <value> <string>Order_getODTDataDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

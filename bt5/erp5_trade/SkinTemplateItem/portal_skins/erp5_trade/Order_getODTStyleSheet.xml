@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>PurchaseOrder_getODTStyleSheet</string> </value>
+            <value> <string>Order_getODTStyleSheet</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
