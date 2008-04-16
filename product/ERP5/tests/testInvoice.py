@@ -277,26 +277,6 @@ class TestInvoice(TestPackingListMixin,
     invoice.portal_workflow.doActionFor(invoice,
           transition_name, wf_id='accounting_workflow')
 
-  def stepConfirmInvoice(self, sequence=None, sequence_list=None, **kw):
-    """ set the Packing List as Ready. This must build the invoice. """
-    self.modifyInvoiceState('confirm_action', sequence=sequence)
-    invoice = sequence.get('invoice')
-    self.assertEquals(invoice.getSimulationState(), 'confirmed')
-
-  def stepSetReadyInvoice(self, sequence=None, sequence_list=None, **kw):
-    """ set the Packing List as Ready. This must build the invoice. """
-    self.modifyInvoiceState('set_ready_action', sequence=sequence)
-    invoice = sequence.get('invoice')
-    self.assertEquals(invoice.getSimulationState(), 'ready')
-
-  def stepSetReadyNewInvoice(self, sequence=None,
-                                 sequence_list=None, **kw):
-    """ set the Packing List as Ready. This must build the invoice. """
-    invoice = sequence.get('new_invoice')
-    self.modifyInvoiceState('set_ready_action', sequence=sequence,
-                                invoice=invoice)
-    self.assertEquals(invoice.getSimulationState(), 'ready')
-
   def stepStartInvoice(self, sequence=None, sequence_list=None, **kw):
     self.modifyInvoiceState('start_action', sequence=sequence)
     invoice = sequence.get('invoice')
@@ -373,8 +353,8 @@ class TestInvoice(TestPackingListMixin,
 
       invoice = related_invoice_list[0].getObject()
       self.failUnless(invoice is not None)
-      # Invoices created by Delivery Builder are in planned state
-      self.assertEquals(invoice.getSimulationState(), 'planned')
+      # Invoices created by Delivery Builder are in confirmed state
+      self.assertEquals(invoice.getSimulationState(), 'confirmed')
 
       # Get the list of simulation movements of packing list ...
       packing_list_simulation_movement_list = []
@@ -622,29 +602,31 @@ class TestInvoice(TestPackingListMixin,
 
   def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
     """ checks invoice properties are well set. """
-    # New we will check that we have two invoices
+    # Now we will check that we have two invoices created
     packing_list = sequence.get('packing_list')
     invoice_list = packing_list.getCausalityRelatedValueList(
          portal_type=self.sale_invoice_transaction_portal_type)
     self.assertEquals(len(invoice_list),1)
     invoice = invoice_list[0]
+    self.assertEquals(invoice.getSimulationState(), 'confirmed')
     sequence.edit(invoice=invoice)
     new_packing_list = sequence.get('new_packing_list')
     new_invoice_list = new_packing_list.getCausalityRelatedValueList(
         portal_type=self.sale_invoice_transaction_portal_type)
     self.assertEquals(len(new_invoice_list),1)
     new_invoice = new_invoice_list[0]
+    self.assertEquals(new_invoice.getSimulationState(), 'confirmed')
     sequence.edit(new_invoice=new_invoice)
 
-  def stepConfirmTwoInvoices(self,sequence=None, sequence_list=None, **kw):
-    """ confirm both invoices. """
+  def stepStartTwoInvoices(self,sequence=None, sequence_list=None, **kw):
+    """ start both invoices. """
     portal = self.getPortal()
     invoice = sequence.get('invoice')
     new_invoice = sequence.get('new_invoice')
     portal.portal_workflow.doActionFor(invoice,
-        'confirm_action',wf_id='accounting_workflow')
+        'start_action',wf_id='accounting_workflow')
     portal.portal_workflow.doActionFor(new_invoice,
-        'confirm_action',wf_id='accounting_workflow')
+        'start_action',wf_id='accounting_workflow')
 
   def stepCheckTwoInvoicesTransactionLines(self,sequence=None,
                                            sequence_list=None, **kw):
@@ -940,9 +922,9 @@ class TestInvoice(TestPackingListMixin,
     for movement in invoice.getMovementList():
       movement.edit(resource_value=sequence.get('resource'))
 
-  def stepCheckConfirmInvoiceFails(self, sequence=None, sequence_list=[]):
+  def stepCheckStartInvoiceFail(self, sequence=None, sequence_list=[]):
     """
-    checks that it's not possible to confirm an invoice with really wrong
+    checks that it's not possible to start an invoice with really wrong
     lines
     """
     try:
@@ -961,7 +943,7 @@ class TestInvoice(TestPackingListMixin,
       activity_tool = self.getActivityTool()
       activity_tool.manageClearActivities(keep=0)
     else:
-      self.fail("Error: stepConfirmInvoice didn't fail, the builder script"
+      self.fail("Error: stepStartInvoice didn't fail, the builder script"
           + " InvoiceTransaction_postTransactionLineGeneration should have"
           + " complained that accounting movements use multiple resources")
 
@@ -1193,7 +1175,7 @@ class TestInvoice(TestPackingListMixin,
         stepTic
         stepCheckTwoInvoices
         stepRemoveDateMovementGroupForTransactionBuilder
-        stepConfirmTwoInvoices
+        stepStartTwoInvoices
         stepTic
         stepCheckTwoInvoicesTransactionLines
         stepCheckInvoicesConsistency
@@ -1482,7 +1464,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckPackingListIsSolved
     stepCheckInvoiceTransactionRule
 
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1555,7 +1537,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceIsDiverged
     stepAcceptDecisionInvoice
     stepTic
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1646,7 +1628,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceIsCalculating
     stepAcceptDecisionInvoice
     stepTic
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1684,7 +1666,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceIsCalculating
     stepAcceptDecisionInvoice
     stepTic
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1737,7 +1719,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceIsCalculating
     stepSplitAndDeferInvoice
     stepTic
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1756,7 +1738,7 @@ class TestInvoice(TestPackingListMixin,
 
     stepSwitchInvoices
 
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1804,7 +1786,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceIsCalculating
     stepAcceptDecisionInvoice
     stepTic
-    stepConfirmInvoice
+    stepStartInvoice
     stepTic
     stepStopInvoice
     stepTic
@@ -1905,7 +1887,7 @@ class TestInvoice(TestPackingListMixin,
           stepCheckInvoicesConsistency
           stepAddInvoiceLines
           stepTic
-          stepConfirmInvoice
+          stepStartInvoice
           stepTic
           stepCheckSimulationTrees
           """)
@@ -1932,8 +1914,8 @@ class TestInvoice(TestPackingListMixin,
           stepCheckInvoiceBuilding
           stepAddWrongInvoiceLines
           stepTic
-          stepConfirmInvoice
-          stepCheckConfirmInvoiceFails
+          stepStartInvoice
+          stepCheckStartInvoiceFail
           stepCheckSimulationTrees
           """)
     sequence_list.play(self, quiet=quiet)
@@ -1973,7 +1955,7 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(order_price_currency,
           invoice_transaction_movement.getResource())
     self.assertEquals(order_price_currency,
-          invoice_transaction_movement.getPriceCurrency())
+          delivery_movement.getPriceCurrency())
 
 #class TestPurchaseInvoice(TestInvoice):
 #  order_portal_type = 'Purchase Order'
