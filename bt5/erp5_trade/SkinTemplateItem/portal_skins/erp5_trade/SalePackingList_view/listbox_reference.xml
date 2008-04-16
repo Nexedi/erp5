@@ -18,14 +18,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>portal_type</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_causality_title</string> </value>
+            <value> <string>listbox_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -82,22 +80,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_causality_title</string> </value>
+                    <value> <string>my_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SalePackingList_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Sale Order</string>
-                          <string>Sale Order</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>PackingListLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

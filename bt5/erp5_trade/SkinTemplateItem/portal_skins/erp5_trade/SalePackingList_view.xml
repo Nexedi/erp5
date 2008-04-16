@@ -96,6 +96,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
+                        <string>listbox_quantity</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_stop_date</string>
                         <string>listbox_quantity_unit</string>
                       </list>
                     </value>
@@ -105,8 +108,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_title</string>
                         <string>my_source_section_title</string>
+                        <string>my_source_title</string>
                         <string>my_source_administration_title</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
@@ -119,8 +122,8 @@
                     <value>
                       <list>
                         <string>my_reference</string>
-                        <string>my_destination_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_comment</string>

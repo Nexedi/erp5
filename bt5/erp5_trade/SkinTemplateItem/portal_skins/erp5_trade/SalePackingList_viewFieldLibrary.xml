@@ -132,6 +132,7 @@
                         <string>my_causality_title</string>
                         <string>my_sale_packing_list_lines_listbox</string>
                         <string>my_translated_container_state_title</string>
+                        <string>my_sale_packing_list_movements_listbox</string>
                       </list>
                     </value>
                 </item>
