@@ -257,12 +257,7 @@ class Message:
   def notifyUser(self, activity_tool, message="Failed Processing Activity"):
     """Notify the user that the activity failed."""
     portal = activity_tool.getPortalObject()
-    user_email = None
-    user = portal.portal_membership.getMemberById(self.user_name)
-    if user is not None:
-      user_email = user.getProperty('email')
-    if user_email in ('', None):
-      user_email = portal.getProperty('email_to_address',
+    user_email = portal.getProperty('email_to_address',
                        portal.getProperty('email_from_address'))
     mail_text = """From: %s
 To: %s
