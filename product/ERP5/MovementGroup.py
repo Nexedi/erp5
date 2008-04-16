@@ -398,17 +398,6 @@ class PathMovementGroup(RootMovementGroup):
 
 allow_class(PathMovementGroup)
 
-class ColourMovementGroup(RootMovementGroup):
-  """ Group movements that have the same color category."""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.colour = movement.getColour()
-
-  def test(self, movement):
-    return movement.getColour() == self.colour
-
-allow_class(ColourMovementGroup)
-
 class SectionPathMovementGroup(RootMovementGroup):
   """ Groups movement that have the same source_section and
   destination_section."""
@@ -1197,5 +1186,9 @@ allow_class(QuantityUnitMovementGroup)
 class PaymentModeMovementGroup(PropertyMovementGroup):
   """ Group movements that have the same payment mode."""
   _property = 'payment_mode'
-allow_class(PaymentModeMovementGroup)
 
+class ColourMovementGroup(RootMovementGroup):
+  """ Group movements that have the same colour category."""
+  _property = 'colour'
+
+  
