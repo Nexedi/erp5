@@ -268,7 +268,6 @@ class TestInvoice(TestPackingListMixin,
     packing_list = sequence.get('packing_list')
     self.assertEquals(packing_list.getSimulationState(), 'cancelled')
 
-
   def modifyInvoiceState(self, transition_name,
                              sequence,invoice=None):
     """ calls the workflow for the invoice """
@@ -448,9 +447,10 @@ class TestInvoice(TestPackingListMixin,
     invoice_transaction_rule_list = []
     for order_rule in order_rule_list :
       for order_simulation_movement in order_rule.objectValues() :
-        temp_invoicing_rule_list = order_simulation_movement.objectValues()
+        temp_invoicing_rule_list = [ar for ar in order_simulation_movement.objectValues()
+          if ar.getSpecialiseValue().getPortalType() == 'Invoicing Rule']
         self.assertEquals(len(temp_invoicing_rule_list), 1)
-        invoicing_rule_list.extend(order_simulation_movement.objectValues())
+        invoicing_rule_list.extend(temp_invoicing_rule_list)
     sequence.edit(invoicing_rule_list=invoicing_rule_list)
     invoicing_rule = invoicing_rule_list[0]
     sequence.edit(invoicing_rule = invoicing_rule)
@@ -960,7 +960,7 @@ class TestInvoice(TestPackingListMixin,
     rule_dict = {
         'Order Rule': {
           'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
-          'next_rule_list': ['Invoicing Rule'],
+          'next_rule_list': ['Invoicing Rule', 'Tax Rule'],
           },
         'Invoicing Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
