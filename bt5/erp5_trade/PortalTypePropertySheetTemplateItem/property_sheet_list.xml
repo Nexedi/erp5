@@ -4,6 +4,5 @@
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>PaymentCondition</item>
-  <item>Comment</item>
  </portal_type>
 </property_sheet_list>
