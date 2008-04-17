@@ -995,7 +995,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     if not run: return
     if not quiet: printAndLog('test_02_FileExtensionRegistry')
-    reg = self.portal.content_type_registry
+    reg = self.portal.portal_contribution_registry
     correct_type_mapping = {
             'doc' : 'Text',
             'txt' : 'Text',
@@ -1018,7 +1018,8 @@ class TestIngestion(ERP5TypeTestCase):
           }
     for type, portal_type in correct_type_mapping.items():
       file_name = 'aaa.' + type
-      self.assertEquals(reg.findTypeName(file_name, None, None), portal_type)
+      self.assertEquals(reg.findPortalTypeName(file_name, None, None),
+                        portal_type)
 
   def test_03_TextDoc(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
