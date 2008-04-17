@@ -42,7 +42,7 @@ class TestTradeReports(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_trade', 'erp5_pdm')
+    return ('erp5_base', 'erp5_trade', 'erp5_pdm', )
 
   def login(self):
     """login with Manager roles."""
@@ -52,13 +52,14 @@ class TestTradeReports(ERP5TypeTestCase):
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
 
-  def setUp(self):
+
+  def afterSetUp(self):
     """Setup the fixture.
     """
-    ERP5TypeTestCase.setUp(self)
     self.portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.inventory_module = self.portal.inventory_module
+    self.sale_order_module = self.portal.sale_order_module
     self.product_module = self.portal.product_module
     self.portal_categories = self.portal.portal_categories
  
@@ -79,6 +80,14 @@ class TestTradeReports(ERP5TypeTestCase):
                                   reference=colour_id,
                                   id=colour_id)
 
+    # create group categories
+    for group_id in ('g1', 'g2',):
+      if not self.portal_categories['group'].has_key(group_id):
+        self.portal_categories.group.newContent(
+                                  portal_type='Category',
+                                  title=group_id,
+                                  reference=group_id,
+                                  id=group_id)
     # create organisations
     if not self.organisation_module.has_key('Organisation_1'): 
       org = self.portal.organisation_module.newContent(
@@ -86,6 +95,7 @@ class TestTradeReports(ERP5TypeTestCase):
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1',
+                              group='g1',
                               site='demo_site_A')
     if not self.organisation_module.has_key('Organisation_2'): 
       org = self.portal.organisation_module.newContent(
@@ -93,8 +103,17 @@ class TestTradeReports(ERP5TypeTestCase):
                               reference='Organisation_2',
                               title='Organisation_2',
                               id='Organisation_2',
+                              group='g2',
                               site='demo_site_B')
-
+    # create unit categories
+    for unit_id in ('kg', 'g',):
+      if not self.portal_categories['quantity_unit'].has_key(unit_id): 
+        self.portal_categories.quantity_unit.newContent(
+                                  portal_type='Category',
+                                  title=unit_id,
+                                  reference=unit_id,
+                                  id=unit_id)
+      
     # Create products
     module = self.portal.product_module
     if not module.has_key('product_B'): 
@@ -103,6 +122,7 @@ class TestTradeReports(ERP5TypeTestCase):
           id='product_B',
           title='product_B',
           reference='ref 1',
+          quantity_unit='kg'
           )
     if not module.has_key('product_A'): 
       product = module.newContent(
@@ -110,6 +130,7 @@ class TestTradeReports(ERP5TypeTestCase):
           id='product_A',
           title='product_A',
           reference='ref 2',
+          quantity_unit='g'
           )
     if not module.has_key('product_C'): 
       product = module.newContent(
@@ -125,7 +146,7 @@ class TestTradeReports(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-  def tearDown(self):
+  def beforeTearDown(self):
     """Remove all documents.
     """
     get_transaction().abort()
@@ -144,8 +165,6 @@ class TestTradeReports(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-    ERP5TypeTestCase.tearDown(self)
-
   @reindex  
   def _makeOneInventory(self, simulation_state='draft', 
                         resource=None, quantity=None, **kw):
@@ -163,6 +182,26 @@ class TestTradeReports(ERP5TypeTestCase):
     self.assertEquals(simulation_state, inventory.getSimulationState())
     return inventory
 
+  @reindex
+  def _makeOneSaleOrder(self, resource_dict={}, cancel=False, **kw):
+    """
+    Create a sale order
+    """
+    sale_order = self.sale_order_module.newContent(portal_type="Sale Order", **kw)
+    for product, values in resource_dict.iteritems():
+      sale_order_line = sale_order.newContent(portal_type="Sale Order Line",
+                                              resource=product,
+                                              quantity=values["quantity"],
+                                              price=values["price"])
+      
+    self.assertEquals(sale_order.getSimulationState(), 'draft')
+    if cancel:
+      sale_order.cancel()
+      self.assertEquals(sale_order.getSimulationState(), 'cancelled')
+      
+    return sale_order
+      
+
   def checkLineProperties(self, line, **kw):
     """Check properties of a report line.
     """
@@ -170,6 +209,291 @@ class TestTradeReports(ERP5TypeTestCase):
       self.assertEquals(v, line.getColumnProperty(k),
           '`%s`: expected: %r actual: %r' % (k, v, line.getColumnProperty(k)))
   # /utility methods for ERP5 Report
+
+  def testSaleOrderReport(self):
+    """
+    Sale order report.
+    """
+    # Create sales orders
+    first = self._makeOneSaleOrder(
+              title='SO 1',
+              destination_value=self.organisation_module.Organisation_1,
+              destination_section_value=self.organisation_module.Organisation_1,
+              destination_decision_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_2,
+              source_section_value=self.organisation_module.Organisation_2,
+              source_decision_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2006, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":11, "price":3},
+                               'product_module/product_B':{"quantity":7, "price":6},}
+              )
+    second = self._makeOneSaleOrder(
+              title='SO 2',
+              destination_value=self.organisation_module.Organisation_1,
+              destination_section_value=self.organisation_module.Organisation_1,
+              destination_decision_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_2,
+              source_section_value=self.organisation_module.Organisation_2,
+              source_decision_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2007, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":3, "price":3},}
+              )
+    third = self._makeOneSaleOrder(
+              title='SO 3',
+              destination_value=self.organisation_module.Organisation_2,
+              destination_section_value=self.organisation_module.Organisation_2,
+              destination_decision_value=self.organisation_module.Organisation_2,
+              source_value=self.organisation_module.Organisation_1,
+              source_section_value=self.organisation_module.Organisation_1,
+              source_decision_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2006, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":5, "price":3},
+                               'product_module/product_B':{"quantity":1, "price":6},}
+              )
+    fourth = self._makeOneSaleOrder(
+              title='SO 4',
+              destination_value=self.organisation_module.Organisation_1,
+              destination_section_value=self.organisation_module.Organisation_1,
+              destination_decision_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_2,
+              source_section_value=self.organisation_module.Organisation_2,
+              source_decision_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2007, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":17, "price":3},
+                               'product_module/product_B':{"quantity":13, "price":6},},
+              cancel=True
+              )
+
+    get_transaction().commit()
+    self.tic()
+
+
+    request = self.portal.REQUEST
+    #
+    # Before 2006
+    #
+    request['from_date'] = DateTime(2004, 1, 1)
+    request['at_date'] = DateTime(2005, 1, 1)
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['simulation_state'] = ['cancelled', 'draft']
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(0, len(data_line_list))
+
+    #
+    # Year 2005 + 2006, all documents
+    #
+    request['from_date'] = DateTime(2005, 2, 2)
+    request['at_date'] = DateTime("2006-12-31")
+
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEquals(6, len(data_line_list))
+    self.assertEquals(1, len(stat_line_list))
+
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list, ['client',
+                    'product',
+                    'Amount 2005',
+                    'Quantity 2005',
+                    'Quantity Unit 2005',
+                    'Amount 2006',
+                    'Quantity 2006',
+                    'Quantity Unit 2006',
+                    'total amount',
+                    'total quantity'])
+    
+    # First Organisation
+    d =  {'Amount 2005': 0,
+                 'Amount 2006': 75.0,
+                 'Quantity 2005': None,
+                 'Quantity 2006': None,
+                 'Quantity Unit 2005': None,
+                 'Quantity Unit 2006': None,
+                 'client': 'Organisation_1',
+                 'product': None,
+                 'total amount': 75.0,
+                 'total quantity': None}
+    self.checkLineProperties(data_line_list[0],**d)
+
+    # Product one for first organisation
+    d={'Amount 2005': 0,
+                 'Amount 2006': 33.0,
+                 'Quantity 2005': 0,
+                 'Quantity 2006': 11.0,
+                 'Quantity Unit 2005': '',
+                 'Quantity Unit 2006': 'g',
+                 'client': None,
+                 'product': 'product_A',
+                 'total amount': 33.0,
+                 'total quantity': 11.0}
+    self.checkLineProperties(data_line_list[1],**d)
+                             
+    # Product two for first organisation
+    d = {'Amount 2005': 0,
+                 'Amount 2006': 42.0,
+                 'Quantity 2005': 0,
+                 'Quantity 2006': 7.0,
+                 'Quantity Unit 2005': '',
+                 'Quantity Unit 2006': 'kg',
+                 'client': None,
+                 'product': 'product_B',
+                 'total amount': 42.0,
+                 'total quantity': 7.0}
+    self.checkLineProperties(data_line_list[2],**d)
+                             
+    # Second organisation
+    d = {'Amount 2005': 0,
+                 'Amount 2006': 21.0,
+                 'Quantity 2005': None,
+                 'Quantity 2006': None,
+                 'Quantity Unit 2005': None,
+                 'Quantity Unit 2006': None,
+                 'client': 'Organisation_2',
+                 'product': None,
+                 'total amount': 21.0,
+                 'total quantity': None}
+    self.checkLineProperties(data_line_list[3],**d)
+                             
+    # Product one for second organisation
+    d = {'Amount 2005': 0,
+                 'Amount 2006': 15.0,
+                 'Quantity 2005': 0,
+                 'Quantity 2006': 5.0,
+                 'Quantity Unit 2005': '',
+                 'Quantity Unit 2006': 'g',
+                 'client': None,
+                 'product': 'product_A',
+                 'total amount': 15.0,
+                 'total quantity': 5.0}
+    self.checkLineProperties(data_line_list[4],**d)
+                             
+    # Product two for second organisation
+    d = {'Amount 2005': 0,
+                 'Amount 2006': 6.0,
+                 'Quantity 2005': 0,
+                 'Quantity 2006': 1.0,
+                 'Quantity Unit 2005': '',
+                 'Quantity Unit 2006': 'kg',
+                 'client': None,
+                 'product': 'product_B',
+                 'total amount': 6.0,
+                 'total quantity': 1.0}
+    self.checkLineProperties(data_line_list[5],**d)
+                             
+    # stat line
+    d = {'Amount 2005': None,
+                 'Amount 2006': 96.0,
+                 'Quantity 2005': None,
+                 'Quantity 2006': None,
+                 'Quantity Unit 2005': None,
+                 'Quantity Unit 2006': None,
+                 'client': 'Total',
+                 'product': None,
+                 'total amount': 96.0,
+                 'total quantity': None}
+    self.checkLineProperties(stat_line_list[0],**d)
+                             
+    
+    #
+    # Year 2006 + 2007, only draft documents and one group
+    #
+    request['from_date'] = DateTime(2006, 2, 2)
+    request['at_date'] = DateTime(2007, 12, 31)
+    request['simulation_state'] = ['draft',]
+    request['group'] = 'g2'
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEquals(3, len(data_line_list))
+    self.assertEquals(1, len(stat_line_list))
+    # First organisation    
+    d = {'Amount 2006': 75.0,
+                 'Amount 2007': 9.0,
+                 'Quantity 2006': None,
+                 'Quantity 2007': None,
+                 'Quantity Unit 2006': None,
+                 'Quantity Unit 2007': None,
+                 'client': 'Organisation_1',
+                 'product': None,
+                 'total amount': 84.0,
+                 'total quantity': None}
+    self.checkLineProperties(data_line_list[0],**d)
+    # Product one for organisation
+    d = {'Amount 2006': 33.0,
+                 'Amount 2007': 9.0,
+                 'Quantity 2006': 11.0,
+                 'Quantity 2007': 3.0,
+                 'Quantity Unit 2006': 'g',
+                 'Quantity Unit 2007': 'g',
+                 'client': None,
+                 'product': 'product_A',
+                 'total amount': 42.0,
+                 'total quantity': 14.0}
+    # Product two for organisation
+    self.checkLineProperties(data_line_list[1],**d)
+    d = {'Amount 2006': 42.0,
+                 'Amount 2007': 0,
+                 'Quantity 2006': 7.0,
+                 'Quantity 2007': 0,
+                 'Quantity Unit 2006': 'kg',
+                 'Quantity Unit 2007': '',
+                 'client': None,
+                 'product': 'product_B',
+                 'total amount': 42.0,
+                 'total quantity': 7.0}
+    self.checkLineProperties(data_line_list[2],**d)
+    # stat line
+    d = {'Amount 2006': 75.0,
+                 'Amount 2007': 9.0,
+                 'Quantity 2006': None,
+                 'Quantity 2007': None,
+                 'Quantity Unit 2006': None,
+                 'Quantity Unit 2007': None,
+                 'client': 'Total',
+                 'product': None,
+                 'total amount': 84.0,
+                 'total quantity': None}
+    self.checkLineProperties(stat_line_list[0],**d)
+
+  # utility methods for ERP5 Report
+  def getReportSectionList(self, context, report_name):
+    """Get the list of report sections in a report."""
+    report = getattr(context, report_name)
+    report_method = getattr(context, report.report_method)
+    return report_method()
+
+  def getListBoxLineList(self, report_section):
+    """Render the listbox in a report section, return None if no listbox exists
+    in the report_section.
+    """
+    result = None
+    here = report_section.getObject(self.portal)
+    report_section.pushReport(self.portal)
+    form = getattr(here, report_section.getFormId())
+    if form.has_field('listbox'):
+      result = form.listbox.get_value('default',
+                                      render_format='list',
+                                      REQUEST=self.portal.REQUEST)
+    report_section.popReport(self.portal)
+    return result
+
+        
 
   def testStockReport(self):
     """
@@ -277,7 +601,7 @@ class TestTradeReports(ERP5TypeTestCase):
                    resource_reference='ref 2',
                    variation_text='',
                    inventory=11,
-                   quantity_unit='')
+                   quantity_unit='g')
 
     ################################
     # Futur date
@@ -298,14 +622,14 @@ class TestTradeReports(ERP5TypeTestCase):
                    resource_reference='ref 1',
                    variation_text='',
                    inventory=33,
-                   quantity_unit='')
+                   quantity_unit='kg')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='product_A',
                    resource_reference='ref 2',
                    variation_text='',
                    inventory=22,
-                   quantity_unit='')
+                   quantity_unit='g')
     self.checkLineProperties(
                    data_line_list[2],
                    resource_title='variated product',
