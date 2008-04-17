@@ -147,7 +147,7 @@ class PasswordTool(BaseTool):
       
     # redirect to form as all is ok
     REQUEST.set("password_key", key)
-    return self.getPortalObject().reset_password_form(REQUEST=REQUEST)
+    return self.reset_password_form(REQUEST=REQUEST)
 
 
   def removeExpiredRequests(self, **kw):
