@@ -1,3 +1,6 @@
+2008-4-17 yusei
+* Revise version to 5.0.
+
 2008-4-1 yusei
 * When receive forwarded mail, update recipient and sender automatically.
 
