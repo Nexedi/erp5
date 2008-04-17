@@ -153,7 +153,7 @@ form.listbox.manage_edit_xmlrpc(\n
          field_id=\'my_list_mode_listbox\'))\n
 \n
 form.listbox.manage_edit_surcharged_xmlrpc(\n
-    dict(selection_name=(\'_\'.join(object_title.split())).lower(),\n
+    dict(selection_name=(\'_\'.join(module_portal_type.split())).lower() + \'_selection\',\n
          title=module_title,\n
          portal_type=[(object_portal_type, object_portal_type), ], ))\n
 \n
