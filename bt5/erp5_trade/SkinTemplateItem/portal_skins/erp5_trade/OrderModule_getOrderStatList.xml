@@ -166,12 +166,12 @@ for result in result_list:\n
       if not line_dict.has_key(product_title):\n
         line_dict[product_title] = {period :{"amount" : line.getTotalPrice(),\n
                                              "quantity" : line.getTotalQuantity(),\n
-                                             "quantity_unit" : line.getQuantityUnit()}}\n
+                                             "quantity_unit" : line.getQuantityUnitTranslatedTitle()}}\n
       else:\n
         if not line_dict[product_title].has_key(period):\n
           line_dict[product_title][period] = {"amount" : line.getTotalPrice(),\n
                                                "quantity" : line.getTotalQuantity(),\n
-                                               "quantity_unit" : line.getQuantityUnit()}\n
+                                               "quantity_unit" : line.getQuantityUnitTranslatedTitle()}\n
         else:\n
           line_dict[product_title][period][\'amount\'] = line_dict[product_title][period][\'amount\'] + line.getTotalPrice()\n
           line_dict[product_title][period][\'quantity\'] = line_dict[product_title][period][\'quantity\'] + line.getTotalQuantity()\n
