@@ -36,6 +36,7 @@ from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
+from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
 
 from Products.DCWorkflow import Guard
 def formatNameUnion(names):
@@ -200,6 +201,8 @@ class SecurityTestCase(ERP5TypeTestCase):
         workflow_transitions_description = []
         for wf in self.workflow_tool.getWorkflowsFor(document) or []:
           if wf.getId() == 'edit_workflow':
+            continue
+          if isinstance(wf, InteractionWorkflowDefinition):
             continue
           for wf_transition_id in wf._getWorkflowStateOf(
                                                 document).getTransitions():
