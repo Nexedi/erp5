@@ -1,3 +1,6 @@
+2008-04-17 yusei
+* Revise version to 5.0.
+
 2008-04-15 Fabien
 * add a field librairy Category_viewFieldLibrary and proxify BaseCategory_view and Category_view
 * add short_title field in Category_view

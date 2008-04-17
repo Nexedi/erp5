@@ -1,3 +1,6 @@
+2008-04-17 yusei
+* Revise version to 5.0.
+
 2008-03-25 aurel
 * z_count_results must retrieve all rows by default as limit is explicitly given by catalog
 
