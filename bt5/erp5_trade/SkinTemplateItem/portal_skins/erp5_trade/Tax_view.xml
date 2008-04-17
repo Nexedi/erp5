@@ -87,37 +87,40 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_short_title</string>
-                        <string>my_base_contribution_list</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_short_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_base_contribution_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

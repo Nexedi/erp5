@@ -1,3 +1,6 @@
+2008-04-17 jerome
+* Add new discount system, similar to new tax system.
+
 2008-04-16 alex
 * move Supplies to PDM
 * push version to 1.0rc17

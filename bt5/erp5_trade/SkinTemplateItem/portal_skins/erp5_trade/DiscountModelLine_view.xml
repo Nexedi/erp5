@@ -108,21 +108,23 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_base_contribution_list</string>
-                        <string>my_base_application_list</string>
-                        <string>my_calculation_script_id</string>
-                        <string>my_efficiency</string>
-                        <string>my_quantity</string>
+                        <string>my_title</string>
+                        <string>my_float_index</string>
                         <string>my_reference</string>
                         <string>my_resource_title</string>
-                        <string>my_float_index</string>
+                        <string>my_base_application_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_calculation_script_id</string>
+                        <string>my_efficiency</string>
+                        <string>my_quantity</string>
+                        <string>my_base_contribution_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -130,7 +132,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Tax_viewFieldLibrary</string> </value>
+            <value> <string>DiscountModelLine_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -138,7 +140,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Tax_view</string> </value>
+            <value> <string>DiscountModelLine_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -154,7 +156,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Field Library for Taxs</string> </value>
+            <value> <string>Discount Model Line</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

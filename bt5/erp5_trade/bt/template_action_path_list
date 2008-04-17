@@ -3,6 +3,9 @@ Container Line | view_quantity
 Container | view
 Delivery Cell | view
 Delivery Rule | view
+Discount Model Line | view
+Discount Module | view
+Discount | view
 Discount | view
 Internal Packing List Cell | view
 Internal Packing List Line | quantity_view

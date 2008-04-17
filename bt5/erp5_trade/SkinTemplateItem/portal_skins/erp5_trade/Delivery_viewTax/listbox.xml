@@ -94,6 +94,10 @@
                           <string>Ratio</string>
                         </tuple>
                         <tuple>
+                          <string>resource_title</string>
+                          <string>Tax</string>
+                        </tuple>
+                        <tuple>
                           <string>base_application_title</string>
                           <string>Base Application</string>
                         </tuple>

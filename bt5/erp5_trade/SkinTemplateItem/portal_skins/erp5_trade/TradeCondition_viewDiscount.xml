@@ -85,27 +85,23 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_discount</string>
-                        <string>listbox_discount_ratio</string>
-                        <string>listbox_discount_type</string>
-                        <string>listbox_immediate_discount</string>
-                        <string>listbox_int_index</string>
+                        <string>listbox_efficiency</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

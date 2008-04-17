@@ -12,12 +12,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>portal_type</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_int_index</string> </value>
+            <value> <string>my_resource_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,15 +77,30 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_int_index</string> </value>
+                    <value> <string>my_resource_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Discount_viewFieldLibrary</string> </value>
+                    <value> <string>Tax_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Discount</string>
+                          <string>Discount</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Discount</string> </value>
                 </item>
               </dictionary>
             </value>

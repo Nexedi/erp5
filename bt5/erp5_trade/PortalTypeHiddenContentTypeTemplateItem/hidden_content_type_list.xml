@@ -9,6 +9,7 @@
   <item>Inventory Cell</item>
  </portal_type>
  <portal_type id="Purchase Order">
+  <item>Discount Line</item>
   <item>Tax Line</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
@@ -21,6 +22,7 @@
   <item>Returned Sale Packing List Cell</item>
  </portal_type>
  <portal_type id="Sale Order">
+  <item>Discount Line</item>
   <item>Tax Line</item>
  </portal_type>
  <portal_type id="Sale Order Line">

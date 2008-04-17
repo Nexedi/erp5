@@ -57,19 +57,20 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Resource</string> </value>
+            <value> <string>ERP5 Tax Line</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Discount resources.</string> </value>
+            <value> <string>Discounts are used in orders, trade condition,...\n
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addResource</string> </value>
+            <value> <string>addTaxLine</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -79,7 +80,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>resource</string>
+                <string>discount</string>
+                <string>tax_movement</string>
               </tuple>
             </value>
         </item>
@@ -91,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Discount</string> </value>
+            <value> <string>Discount Line</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

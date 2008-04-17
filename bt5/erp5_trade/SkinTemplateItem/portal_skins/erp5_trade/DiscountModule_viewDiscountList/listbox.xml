@@ -16,19 +16,15 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>all_columns</string>
+                <string>search_columns</string>
                 <string>sort_columns</string>
-                <string>sort</string>
                 <string>selection_name</string>
-                <string>portal_types</string>
-                <string>editable_columns</string>
-                <string>domain_root_list</string>
-                <string>report_root_list</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_discount_view_listbox</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -84,129 +80,61 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>discount_type</string>
-                          <string>Type</string>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
                         </tuple>
                         <tuple>
-                          <string>discount</string>
-                          <string>Amount</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>discount_ratio</string>
-                          <string>Ratio</string>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
                         </tuple>
                         <tuple>
-                          <string>immediate_discount</string>
-                          <string>Immediate Discount</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>discount_type</string>
-                          <string>Type</string>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
                         </tuple>
                         <tuple>
-                          <string>discount</string>
-                          <string>Amount</string>
-                        </tuple>
-                        <tuple>
-                          <string>discount_ratio</string>
-                          <string>Ratio</string>
-                        </tuple>
-                        <tuple>
-                          <string>immediate_discount</string>
-                          <string>Immediate Discount</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>domain_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>discount_type</string>
-                          <string>Discount type</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>discount_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>discount</string>
-                          <string>Amount</string>
-                        </tuple>
-                        <tuple>
-                          <string>discount_ratio</string>
-                          <string>Ratio</string>
-                        </tuple>
-                        <tuple>
-                          <string>immediate_discount</string>
-                          <string>Immediate Discount</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -217,50 +145,59 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>search_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>discount_type</string>
-                          <string>Discount type</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>discount_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>ascending</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>discount_type</string>
-                          <string>Type</string>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>discount_module_selection</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -270,7 +207,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Discounts</string> </value>
                 </item>
               </dictionary>

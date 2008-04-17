@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_discount_ratio</string> </value>
+            <value> <string>my_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,8 +75,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_percent</string> </value>
+                    <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -85,10 +89,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Ratio</string> </value>
                 </item>
               </dictionary>
             </value>

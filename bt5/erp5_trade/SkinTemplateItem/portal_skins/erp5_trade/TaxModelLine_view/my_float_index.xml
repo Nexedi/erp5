@@ -90,7 +90,7 @@
                     <value> <string>Tax_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>input_style</string> </key>
+                    <key> <string>input_style</string> </key>
                     <value> <string>-1234.5</string> </value>
                 </item>
                 <item>
@@ -98,7 +98,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Calculation Order</string> </value>
                 </item>
               </dictionary>
