@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>trade_condition_discount</string> </value>
+            <value> <string>view_discount</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>5.0</float> </value>
+            <value> <float>4.9</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TradeCondition_viewDiscount</string> </value>
+            <value> <string>string:${object_url}/Delivery_viewDiscount</string> </value>
         </item>
       </dictionary>
     </pickle>

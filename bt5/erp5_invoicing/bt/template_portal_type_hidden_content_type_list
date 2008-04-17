@@ -1,4 +1,6 @@
 Invoice Line | Invoice Cell
 Invoice Transaction Rule | Accounting Rule Cell
+Purchase Invoice Transaction | Discount Line
 Purchase Invoice Transaction | Tax Line
+Sale Invoice Transaction | Discount Line
 Sale Invoice Transaction | Tax Line

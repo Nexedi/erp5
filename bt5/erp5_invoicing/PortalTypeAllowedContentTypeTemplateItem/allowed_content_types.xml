@@ -11,23 +11,23 @@
  </portal_type>
  <portal_type id="Invoicing Rule">
   <item>Category Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
   <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
-  <item>Discount</item>
   <item>Payment Condition</item>
   <item>Tax Line</item>
+  <item>Discount Line</item>
   <item>Invoice Line</item>
  </portal_type>
  <portal_type id="Rule Tool">
+  <item>Tax Rule</item>
   <item>Invoice Transaction Rule</item>
   <item>Invoicing Rule</item>
-  <item>Tax Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>Payment Condition</item>
-  <item>Discount</item>
+  <item>Discount Line</item>
   <item>Tax Line</item>
   <item>Invoice Line</item>
  </portal_type>
