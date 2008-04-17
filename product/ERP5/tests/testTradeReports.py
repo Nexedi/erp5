@@ -110,7 +110,7 @@ class TestTradeReports(ERP5TypeTestCase):
       if not self.portal_categories['quantity_unit'].has_key(unit_id): 
         self.portal_categories.quantity_unit.newContent(
                                   portal_type='Category',
-                                  title=unit_id,
+                                  title=unit_id.title(),
                                   reference=unit_id,
                                   id=unit_id)
       
@@ -333,7 +333,7 @@ class TestTradeReports(ERP5TypeTestCase):
                  'Quantity 2005': 0,
                  'Quantity 2006': 11.0,
                  'Quantity Unit 2005': '',
-                 'Quantity Unit 2006': 'g',
+                 'Quantity Unit 2006': 'G',
                  'client': None,
                  'product': 'product_A',
                  'total amount': 33.0,
@@ -346,7 +346,7 @@ class TestTradeReports(ERP5TypeTestCase):
                  'Quantity 2005': 0,
                  'Quantity 2006': 7.0,
                  'Quantity Unit 2005': '',
-                 'Quantity Unit 2006': 'kg',
+                 'Quantity Unit 2006': 'Kg',
                  'client': None,
                  'product': 'product_B',
                  'total amount': 42.0,
@@ -372,7 +372,7 @@ class TestTradeReports(ERP5TypeTestCase):
                  'Quantity 2005': 0,
                  'Quantity 2006': 5.0,
                  'Quantity Unit 2005': '',
-                 'Quantity Unit 2006': 'g',
+                 'Quantity Unit 2006': 'G',
                  'client': None,
                  'product': 'product_A',
                  'total amount': 15.0,
@@ -385,7 +385,7 @@ class TestTradeReports(ERP5TypeTestCase):
                  'Quantity 2005': 0,
                  'Quantity 2006': 1.0,
                  'Quantity Unit 2005': '',
-                 'Quantity Unit 2006': 'kg',
+                 'Quantity Unit 2006': 'Kg',
                  'client': None,
                  'product': 'product_B',
                  'total amount': 6.0,
@@ -439,8 +439,8 @@ class TestTradeReports(ERP5TypeTestCase):
                  'Amount 2007': 9.0,
                  'Quantity 2006': 11.0,
                  'Quantity 2007': 3.0,
-                 'Quantity Unit 2006': 'g',
-                 'Quantity Unit 2007': 'g',
+                 'Quantity Unit 2006': 'G',
+                 'Quantity Unit 2007': 'G',
                  'client': None,
                  'product': 'product_A',
                  'total amount': 42.0,
@@ -451,7 +451,7 @@ class TestTradeReports(ERP5TypeTestCase):
                  'Amount 2007': 0,
                  'Quantity 2006': 7.0,
                  'Quantity 2007': 0,
-                 'Quantity Unit 2006': 'kg',
+                 'Quantity Unit 2006': 'Kg',
                  'Quantity Unit 2007': '',
                  'client': None,
                  'product': 'product_B',
@@ -601,7 +601,7 @@ class TestTradeReports(ERP5TypeTestCase):
                    resource_reference='ref 2',
                    variation_text='',
                    inventory=11,
-                   quantity_unit='g')
+                   quantity_unit='G')
 
     ################################
     # Futur date
@@ -622,14 +622,14 @@ class TestTradeReports(ERP5TypeTestCase):
                    resource_reference='ref 1',
                    variation_text='',
                    inventory=33,
-                   quantity_unit='kg')
+                   quantity_unit='Kg')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='product_A',
                    resource_reference='ref 2',
                    variation_text='',
                    inventory=22,
-                   quantity_unit='g')
+                   quantity_unit='G')
     self.checkLineProperties(
                    data_line_list[2],
                    resource_title='variated product',
