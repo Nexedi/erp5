@@ -1,2 +1,5 @@
+2008-04-17 yusei
+* Revise version to 5.0.
+
 2008-03-14 yusei
 * move email and subject table from erp5_dms_mysql_innodb_catalog.
