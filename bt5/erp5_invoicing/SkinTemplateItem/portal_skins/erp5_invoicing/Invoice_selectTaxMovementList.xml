@@ -71,7 +71,7 @@ LOG = lambda msg:context.log(script.getId(), msg)\n
 kw[\'parent_specialise_portal_type\'] = \'Tax Rule\'\n
 #kw[\'explanation_portal_type\']       = [\'Purchase Order\', \'Purchase Invoice Transaction\', \'Purchase Packing List\']\n
 kw[\'portal_type\']                   = \'Simulation Movement\'\n
-kw[\'simulation_state\'] = [\'started\']\n
+kw[\'simulation_state\'] = [\'confirmed\']\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 \n
