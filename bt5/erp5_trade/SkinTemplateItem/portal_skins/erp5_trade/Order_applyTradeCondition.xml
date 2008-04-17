@@ -100,20 +100,50 @@ for category in category_list:\n
     if v:\n
       new_category_dict[category] = v\n
 \n
-def copyObjects(portal_type):\n
-  # TODO: iterate on specialise tree\n
-  filter_dict = {\'portal_type\': portal_type}\n
-  if len(order.contentIds(filter=filter_dict)) == 0:\n
-    to_copy = trade_condition.contentIds(filter=filter_dict)\n
-    if len(to_copy) > 0 :\n
-      copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
-      order.manage_pasteObjects(copy_data)\n
 \n
-# copy payments if none exist\n
-copyObjects(\'Payment Condition\')\n
+def copyPaymentCondition(order, trade_condition):\n
+  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+  to_copy = trade_condition.contentIds(filter=filter_dict)\n
+  if len(to_copy) > 0 :\n
+    copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+    order.manage_pasteObjects(copy_data)\n
+  for other_trade_condition in trade_condition.getSpecialiseValueList():\n
+    copyPaymentCondition(order, other_trade_condition)\n
+  \n
+filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+if len(order.contentIds(filter=filter_dict)) == 0:\n
+  copyPaymentCondition(order, trade_condition)\n
 \n
-# copy discounts if none exist\n
-copyObjects(\'Discount\')\n
+# initialise discount lines\n
+def initialiseDiscountLineList(order, trade_condition):\n
+  for discount_model_line in trade_condition.contentValues(\n
+                                             portal_type=\'Discount Model Line\'):\n
+    discount_model_line_reference = tax_model_line.getReference()\n
+    if not discount_model_line_reference or discount_model_line_reference not in [\n
+            x.getProperty(\'reference\') for x in\n
+            order.contentValues(portal_type=\'Discount Line\')]:\n
+      discount_line = order.newContent(\n
+            portal_type=\'Discount Line\',\n
+            resource=discount_model_line.getResource(),\n
+            reference=discount_model_line_reference,\n
+            float_index=discount_model_line.getFloatIndex(),\n
+            base_application_list=discount_model_line.getBaseApplicationList(),\n
+            base_contribution_list=discount_model_line.getBaseContributionList(),\n
+            quantity=0,\n
+            price=0,)\n
+      # calculation_script\n
+      if discount_model_line.getProperty(\'calculation_script_id\'):\n
+        raise NotImplementedError\n
+      # fixed_amount\n
+      if discount_model_line.getQuantity():\n
+        raise NotImplementedError\n
+      # ratio\n
+      discount_line.setPrice(discount_model_line.getEfficiency())\n
+  \n
+  # recurse on other trade conditions\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    initialiseDiscountLineList(order, specialised_trade_condition)\n
+\n
 \n
 # initialise tax lines\n
 def initialiseTaxLineList(order, trade_condition):\n
@@ -128,7 +158,6 @@ def initialiseTaxLineList(order, trade_condition):\n
             reference=tax_model_line_reference,\n
             float_index=tax_model_line.getFloatIndex(),\n
             base_application_list=tax_model_line.getBaseApplicationList(),\n
-            # XXX tax model line or tax model line resource ?\n
             base_contribution_list=tax_model_line.getBaseContributionList(),\n
             quantity=0,\n
             price=0,)\n
@@ -145,8 +174,13 @@ def initialiseTaxLineList(order, trade_condition):\n
   for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
     initialiseTaxLineList(order, specialised_trade_condition)\n
 \n
-if not len(context.contentValues(portal_type=\'Tax Line\')):\n
+if not len(context.contentValues(portal_type=(\'Discount Line\', \'Tax Line\'))):\n
   initialiseTaxLineList(context, trade_condition)\n
+  initialiseDiscountLineList(context, trade_condition)\n
+ \n
+# if the order already contain lines, immediately update tax line\n
+if order.getMovementList():\n
+  order.Delivery_updateTaxLineList()\n
 \n
 # set specialise\n
 new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
@@ -214,9 +248,11 @@ order.edit(**new_category_dict)\n
                             <string>_getattr_</string>
                             <string>v</string>
                             <string>_write_</string>
-                            <string>copyObjects</string>
-                            <string>initialiseTaxLineList</string>
+                            <string>copyPaymentCondition</string>
+                            <string>filter_dict</string>
                             <string>len</string>
+                            <string>initialiseDiscountLineList</string>
+                            <string>initialiseTaxLineList</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
