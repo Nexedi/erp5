@@ -385,6 +385,8 @@ def ERP5Site_createModuleScribus(self,
                               object_portal_type,
                               module_title)
 
+  # Clear caches so that module is immediatly visible
+  portal.portal_caches.clearAllCache()
 
   # manage redirection URL
   if not selection_index:
