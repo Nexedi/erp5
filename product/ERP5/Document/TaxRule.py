@@ -105,13 +105,3 @@ class TaxRule(DeliveryRule):
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
 
-  def test(self, context, *args, **kw):
-    """Test if this rule can be applied.
-
-    We return false immediatly if the rule won't create any simulation
-    movement, to prevent creating an empty applied rule.
-    """
-    if not (context.DeliveryMovement_getCorrespondingTaxLineList()):
-      return False
-    return DeliveryRule.test(self, context, *args, **kw)
-
