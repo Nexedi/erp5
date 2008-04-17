@@ -52,6 +52,9 @@ class TradeConditionTestCase(ERP5TypeTestCase):
     self.tax = self.portal.tax_module.newContent(
                                     portal_type='Tax',
                                     title='Tax')
+    self.discount = self.portal.discount_module.newContent(
+                                    portal_type='Discount',
+                                    title='Discount')
     self.client = self.portal.organisation_module.newContent(
                                     portal_type='Organisation',
                                     title='Client')
@@ -306,6 +309,19 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEquals([], tax_model_line.checkConsistency())
     self.assertEquals([], self.trade_condition.checkConsistency())
   
+  def test_discount_model_line_consistency(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    discount_model_line = self.trade_condition.newContent(
+                  portal_type='Discount Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.discount)
+    self.assertEquals([], discount_model_line.checkConsistency())
+    self.assertEquals([], self.trade_condition.checkConsistency())
+
   def test_view_tax_model_line(self):
     base_1 = self.base_amount.newContent(
                           portal_type='Category',
@@ -319,6 +335,20 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     # TODO: fail if a field has an error
     tax_model_line.view()
     self.trade_condition.TradeCondition_viewTax()
+
+  def test_view_discount_model_line(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    discount_model_line = self.trade_condition.newContent(
+                  portal_type='Discount Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.discount)
+    # TODO: fail if a field has an error
+    discount_model_line.view()
+    self.trade_condition.TradeCondition_viewDiscount()
 
   def test_tax_line_consistency(self):
     base_1 = self.base_amount.newContent(
@@ -345,6 +375,32 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     # TODO: fail if a field has an error
     tax_line.view()
     self.order.Delivery_viewTax()
+
+  def test_discount_line_consistency(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    discount_line = self.order.newContent(
+                        portal_type='Discount Line',
+                        resource_value=self.discount,
+                        base_application_value=base_1,
+                        quantity=0,
+                        efficiency=5.5)
+    self.assertEquals([], discount_line.checkConsistency())
+
+  def test_view_discount_line(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    discount_line = self.order.newContent(
+                        portal_type='Discount Line',
+                        resource_value=self.discount,
+                        base_application_value=base_1,
+                        quantity=0,
+                        efficiency=5.5)
+    # TODO: fail if a field has an error
+    discount_line.view()
+    self.order.Delivery_viewDiscount()
 
 
 class TestTaxLineCalculation(TradeConditionTestCase):
@@ -378,6 +434,32 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
 
+  def test_apply_trade_condition_after_line_creation(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+    tax_model_line = self.trade_condition.newContent(
+                  portal_type='Tax Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.tax)
+    
+    order_line = self.order.newContent(
+                          portal_type=self.order_line_type,
+                          resource_value=self.resource,
+                          quantity=10,
+                          price=10,)
+
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+
+    tax_line_list = self.order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(100, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
 
   def test_simple_tax_model_line_calculation(self):
     base_1 = self.base_amount.newContent(
@@ -1202,7 +1284,8 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
 
     invoice.plan()
     invoice.confirm()
-    self.assertEquals('confirmed', invoice.getSimulationState())
+    invoice.start()
+    self.assertEquals('started', invoice.getSimulationState())
     get_transaction().commit()
     self.tic()
     related_applied_rule_list = invoice.getCausalityRelatedValueList(
@@ -1259,11 +1342,20 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
 
 
 class DiscountCalculation:
-  """Test Calculating Discount
+  """Test Discount Calculations
   """
   def test_simple_discount_model_line_calculation(self):
-    discount_line =self.trade_condition.newContent(
-                     portal_type='Discount Model Line')
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+    discount_model_line =self.trade_condition.newContent(
+                    portal_type='Discount Model Line',
+                    base_application_value=base_1,
+                    float_index=1,
+                    efficiency=0.2,
+                    resource_value=self.discount)
+    
 
 
 class TestWithSaleOrder:
