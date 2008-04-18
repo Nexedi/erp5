@@ -371,7 +371,7 @@ class WizardTool(BaseTool):
       LOG("Wizard", ERROR, "[FAIL] Import of Nexedi Configurator bt5 file(%s)" %bt5_filename)
       raise
     bt5_io.close()
-    ## install bt5
+    install bt5
     portal_workflow =  getToolByName(self.getPortalObject(), 'portal_workflow')
     business_template.install()
   
