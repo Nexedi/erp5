@@ -1,0 +1,8 @@
+<base_category_list>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>specialise</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>specialise</item>
+ </portal_type>
+</base_category_list>
