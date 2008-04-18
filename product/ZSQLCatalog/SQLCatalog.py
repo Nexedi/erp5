@@ -39,6 +39,7 @@ import sys
 import urllib
 import string
 import pprint
+import threading
 from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
@@ -2371,13 +2372,23 @@ Globals.default__class_init__(Catalog)
 
 class CatalogError(Exception): pass
 
+# pool of global preinitialized search keys instances
+SEARCH_KEY_INSTANCE_POOL = threading.local()
 # hook search keys and Query implementation 
 def getSearchKeyInstance(search_key_class):
   """ Return instance of respective search_key class.
       We should have them initialized only once."""
   global SEARCH_KEY_INSTANCE_POOL
-  lexer = SEARCH_KEY_INSTANCE_POOL[search_key_class]
-  return lexer 
+  if not hasattr(SEARCH_KEY_INSTANCE_POOL, 'pool'):
+    pool = dict()
+    for klass in (DefaultKey, RawKey, KeyWordKey, DateTimeKey,
+                             FullTextKey, FloatKey, ScriptableKey, KeyMappingKey):
+      search_key_instance = klass()
+      search_key_instance.build()
+      pool[klass] = search_key_instance
+    SEARCH_KEY_INSTANCE_POOL.pool = pool
+
+  return SEARCH_KEY_INSTANCE_POOL.pool[search_key_class]
   
 from Query.Query import QueryMixin
 from Query.SimpleQuery import NegatedQuery, SimpleQuery
@@ -2386,7 +2397,7 @@ from Query.ComplexQuery import ComplexQuery
 # for of backwards compatability  
 QueryMixin = QueryMixin
 Query = SimpleQuery
-NegatedQuery = NegatedQuery 
+NegatedQuery = NegatedQuery
 ComplexQuery = ComplexQuery
  
 from Products.ZSQLCatalog.SearchKey.DefaultKey import DefaultKey
@@ -2397,10 +2408,4 @@ from Products.ZSQLCatalog.SearchKey.FullTextKey import FullTextKey
 from Products.ZSQLCatalog.SearchKey.FloatKey import FloatKey
 from Products.ZSQLCatalog.SearchKey.ScriptableKey import ScriptableKey, KeyMappingKey
 
-# pool of global preinitialized search keys instances
-SEARCH_KEY_INSTANCE_POOL = {}
-for search_key_class in (DefaultKey, RawKey, KeyWordKey, DateTimeKey, 
-                         FullTextKey, FloatKey, ScriptableKey, KeyMappingKey):
-  search_key_instance = search_key_class()
-  search_key_instance.build()
-  SEARCH_KEY_INSTANCE_POOL[search_key_class] = search_key_instance
+
