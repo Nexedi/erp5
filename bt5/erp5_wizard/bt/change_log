@@ -1,0 +1,8 @@
+2007-12-06 yo
+* Move portal_wizard to Tools.
+
+2007-10-03 Yusei
+* Added a exclusive preference object for erp5 express and its view form.
+
+2006-04-14 Romain
+* First build.
