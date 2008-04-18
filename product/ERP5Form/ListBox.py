@@ -1925,7 +1925,7 @@ class ListBoxRendererLine:
             processed_value = original_value
       else:
         # This is an usual line.
-        obj = self.getObject()
+        obj = None # Only evaluate if needed
         brain = self.getBrain()
 
         # Use a widget, if any.
@@ -1934,37 +1934,40 @@ class ListBoxRendererLine:
         if editable_field is not None:
           tales = editable_field.tales.get('default', '')
           if tales:
+            if obj is None: obj = self.getObject()
             original_value = editable_field.__of__(obj).get_value('default',
                                                         cell=brain)
             processed_value = original_value
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          if brain is not obj and getattr(aq_self(brain), alias, None) is not None:
+          if (obj is None or brain is not obj) and getattr(aq_self(brain), alias, None) is not None:
             original_value = getattr(brain, alias)
             processed_value = original_value
-          elif obj is not None:
-            try:
-              # Get the trailing part.
-              try:
-                property_id = sql[sql.rindex('.') + 1:]
-              except ValueError:
-                property_id = sql
-
-              try:
-                original_value = obj.getProperty(property_id, _marker)
-                if original_value is _marker:
-                  raise AttributeError, property_id
-                processed_value = original_value
-              except AttributeError:
-                original_value = getattr(obj, property_id, None)
-                processed_value = original_value
-            except (AttributeError, KeyError, Unauthorized):
-              original_value = None
-              processed_value = 'Could not evaluate %s' % property_id
           else:
-            original_value = None
-            processed_value = 'Object does not exist'
+            obj = self.getObject()
+            if obj is not None:
+              try:
+                # Get the trailing part.
+                try:
+                  property_id = sql[sql.rindex('.') + 1:]
+                except ValueError:
+                  property_id = sql
+  
+                try:
+                  original_value = obj.getProperty(property_id, _marker)
+                  if original_value is _marker:
+                    raise AttributeError, property_id
+                  processed_value = original_value
+                except AttributeError:
+                  original_value = getattr(obj, property_id, None)
+                  processed_value = original_value
+              except (AttributeError, KeyError, Unauthorized):
+                original_value = None
+                processed_value = 'Could not evaluate %s' % property_id
+            else:
+              original_value = None
+              processed_value = 'Object does not exist'
 
       # If the value is callable, evaluate it.
       if callable(original_value):
