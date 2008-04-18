@@ -104,7 +104,7 @@ else :\n
 \n
   order.Order_applyTradeCondition(trade_condition, force=force)\n
   # set date\n
-  if order.getReceivedDate() is None:\n
+  if hasattr(order, \'getReceivedDate\') and order.getReceivedDate() is None:\n
     context.setReceivedDate(DateTime())\n
 \n
   redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
@@ -176,6 +176,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
                             <string>_inplacevar_</string>
                             <string>redirect_url</string>
                             <string>trade_condition</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
