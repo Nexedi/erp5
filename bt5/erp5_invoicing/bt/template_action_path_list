@@ -8,6 +8,7 @@ Purchase Invoice Transaction | view_discount
 Purchase Invoice Transaction | view_invoice
 Purchase Invoice Transaction | view_tax
 Sale Invoice Transaction | invoice_item_list
+Sale Invoice Transaction | invoice_print
 Sale Invoice Transaction | jump_to_related_sale_packing_list
 Sale Invoice Transaction | payment_condition
 Sale Invoice Transaction | trade_condition_profile_view
