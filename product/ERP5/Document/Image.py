@@ -39,7 +39,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
 from DocumentTemplate.DT_Util import html_quote
-from Products.CMFCore.utils import _setCacheHeaders
+from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
@@ -333,8 +333,8 @@ class Image(File, OFSImage):
       """Return the image data."""
       self._upradeImage()
 
-      _setCacheHeaders(self, dict(display=display, format=format, quality=quality, 
-                                  resolution=resolution, frame=frame))
+      _setCacheHeaders(_ViewEmulator().__of__(self), dict(display=display,
+          format=format, quality=quality, resolution=resolution, frame=frame))
 
       # display may be set from a cookie (?)
       if (display is not None or resolution is not None or quality != 75 or format != ''\

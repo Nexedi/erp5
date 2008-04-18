@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.utils import _setCacheHeaders
+from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type.WebDAVSupport import TextContent
@@ -150,7 +150,7 @@ class TextDocument(Document, TextContent):
         Convert text using portal_transforms
       """
       # Accelerate rendering in Web mode
-      _setCacheHeaders(self, {'format' : format})
+      _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
       # Return the raw content
       if format == 'raw':
         return 'text/plain', self.getTextContent()
@@ -171,7 +171,7 @@ class TextDocument(Document, TextContent):
         return mime_type, ''
 
     def __call__(self):
-      _setCacheHeaders(self, {})
+      _setCacheHeaders(_ViewEmulator().__of__(self), {})
       return Document.__call__(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')

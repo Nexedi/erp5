@@ -36,7 +36,8 @@ from AccessControl import Unauthorized
 from OFS.Image import Pdata
 from OFS.Image import File as OFSFile
 from OFS.content_types import guess_content_type
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders
+from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
+    _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -170,7 +171,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       by calling getTargetFormatItemList.
     """
     # Accelerate rendering in Web mode
-    _setCacheHeaders(self, {'format' : format})
+    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
 
     # Verify that the format is acceptable (from permission point of view)
     method = self._getTypeBasedMethod('checkConversionFormatPermission', 

@@ -34,7 +34,7 @@ from Globals import get_request
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName, _checkPermission
-from Products.CMFCore.utils import _setCacheHeaders
+from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
@@ -307,7 +307,7 @@ class EmailDocument(File, TextDocument):
       Convert text using portal_transforms
     """
     # Accelerate rendering in Web mode
-    _setCacheHeaders(self, {'format' : format})
+    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
     # Return the raw content
     if format == 'raw':
       return 'text/plain', self.getTextContent()
