@@ -103,6 +103,7 @@
                         <string>my_title</string>
                         <string>my_resource_title</string>
                         <string>my_variation_category_list</string>
+                        <string>my_base_contribution_list</string>
                       </list>
                     </value>
                 </item>
