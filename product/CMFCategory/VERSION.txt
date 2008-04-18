@@ -1,1 +1,1 @@
-CMFCategory 0.14
+CMFCategory 5.0

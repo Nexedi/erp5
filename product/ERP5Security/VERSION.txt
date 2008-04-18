@@ -1,1 +1,1 @@
-ERP5Security 0.14
+ERP5Security 5.0
