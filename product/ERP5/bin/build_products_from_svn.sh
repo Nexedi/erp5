@@ -64,7 +64,7 @@ for MODULE in $MODULES; do
 done
 
 # Publish the repository
-mv -f "$LOCALDIR/"*.tgz "$BT5DIR"
+mv -f "$LOCALDIR/"*.tgz "$PRODUCTSDIR"
 
 # Clean up
 cleanup
