@@ -91,7 +91,7 @@ return context.Invoice_viewAsODT(format=format)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>target_language=\'\', format=\'pdf\'</string> </value>
+            <value> <string>target_language=\'\', format=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -136,7 +136,7 @@ return context.Invoice_viewAsODT(format=format)\n
             <value>
               <tuple>
                 <string></string>
-                <string>pdf</string>
+                <string></string>
               </tuple>
             </value>
         </item>
