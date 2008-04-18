@@ -371,7 +371,7 @@ class WizardTool(BaseTool):
       LOG("Wizard", ERROR, "[FAIL] Import of Nexedi Configurator bt5 file(%s)" %bt5_filename)
       raise
     bt5_io.close()
-    install bt5
+    #install bt5
     portal_workflow =  getToolByName(self.getPortalObject(), 'portal_workflow')
     business_template.install()
   
@@ -397,8 +397,8 @@ class WizardTool(BaseTool):
       if bt5_id.startswith('http://'):
         ## direct download of bt5 files available
         if install_standard_bt5:
-          #bt  = portal_templates.download(bt5_id)
-          #bt.install()
+          bt  = portal_templates.download(bt5_id)
+          bt.install()
           LOG("Wizard", INFO, 
               "[OK] standard bt5 installation (HTTP) from %s" %bt5_id)
       else:
