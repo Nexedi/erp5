@@ -32,7 +32,7 @@ GENBTLIST="products/ERP5/bin"
 BASELOCALDIR="/tmp"
 LOCALDIR="$BASELOCALDIR/$$"
 # Local directory to receive butiness templates
-BT5DIR="$repostiry"
+BT5DIR="$repository"
 
 
 function cleanup {

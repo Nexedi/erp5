@@ -30,7 +30,7 @@ MODULES="products"
 BASELOCALDIR="/tmp"
 LOCALDIR="$BASELOCALDIR/$$"
 # Local directory to receive products
-PRODUCTSDIR="$repostiry"
+PRODUCTSDIR="$repository"
 
 
 function cleanup {
