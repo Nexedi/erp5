@@ -735,6 +735,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return tuple(list(self.getPortalOrderMovementTypeList()) +
                  list(self.getPortalDeliveryMovementTypeList()) +
+                 list(self.getPortalTaxMovementTypeList()) +
                  list(self.getPortalInvoiceMovementTypeList()))
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -746,6 +747,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     return tuple(list(self.getPortalOrderMovementTypeList()) +
                  list(self.getPortalDeliveryMovementTypeList()) +
                  list(self.getPortalInvoiceMovementTypeList()) +
+                 list(self.getPortalTaxMovementTypeList()) +
                  ['Simulation Movement'])
 
   security.declareProtected(Permissions.AccessContentsInformation,
