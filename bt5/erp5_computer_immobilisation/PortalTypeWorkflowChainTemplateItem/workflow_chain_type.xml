@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Computer</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Computer Partition</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Internet Protocol Address</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
