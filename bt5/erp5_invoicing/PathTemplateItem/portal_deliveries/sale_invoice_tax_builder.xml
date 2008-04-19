@@ -80,9 +80,7 @@
         </item>
         <item>
             <key> <string>delivery_after_generation_script_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Invoice_reindexRelatedSimulation</string> </value>
         </item>
         <item>
             <key> <string>delivery_cell_collect_order</string> </key>
