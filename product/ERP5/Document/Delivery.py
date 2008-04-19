@@ -246,25 +246,18 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       return container_list
 
     def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
-        method_id = 'expand',**kw):
+                                       method_id='expand', **kw):
       for my_simulation_movement in self.getDeliveryRelatedValueList(
                                       portal_type = 'Simulation Movement'):
-          # And apply
-          getattr(my_simulation_movement.getObject(), method_id)(**kw)
-      for m in self.contentValues(filter={'portal_type':
-                                      self.getPortalMovementTypeList()}):
+        # And apply
+        getattr(my_simulation_movement.getObject(), method_id)(**kw)
+
+      for m in self.getMovementList():
         # Find related in simulation
         for my_simulation_movement in m.getDeliveryRelatedValueList(
                                   portal_type = 'Simulation Movement'):
           # And apply
           getattr(my_simulation_movement.getObject(), method_id)(**kw)
-        for c in m.contentValues(filter={'portal_type':
-                                        self.getPortalMovementTypeList()}):
-          for my_simulation_movement in c.getDeliveryRelatedValueList(
-                                  portal_type = 'Simulation Movement'):
-            # And apply
-            getattr(my_simulation_movement.getObject(), method_id)(**kw)
-
 
     #######################################################
     # Causality computation
