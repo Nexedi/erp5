@@ -84,6 +84,7 @@ class TaxRule(DeliveryRule):
 
         property_dict = dict()
         for prop in ('price', 'base_application_list',
+                     'price_currency', 'payment_mode',
                      'base_contribution_list', 'resource'):
           property_dict[prop] = tax_movement.getProperty(prop)
 
