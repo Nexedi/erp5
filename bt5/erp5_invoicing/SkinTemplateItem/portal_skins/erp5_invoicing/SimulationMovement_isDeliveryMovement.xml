@@ -67,11 +67,15 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Tests if this simulation movement is not related to a Tax Movement\n
 """\n
-real_movement = context.getDeliveryValue()\n
-if real_movement is None:\n
-  real_movement = context.getOrderValue()\n
+def testSimulationMovement(movement):\n
+  real_movement = movement.getDeliveryValue()\n
+  if real_movement is None:\n
+    real_movement = movement.getOrderValue()\n
+  if real_movement is None:\n
+    return testSimulationMovement(movement.getParentValue().getParentValue())\n
+  return real_movement.getPortalType() not in context.getPortalTaxMovementTypeList()\n
 \n
-return real_movement.getPortalType() not in context.getPortalTaxMovementTypeList()\n
+return testSimulationMovement(context)\n
 </string> </value>
         </item>
         <item>
@@ -120,10 +124,8 @@ return real_movement.getPortalType() not in context.getPortalTaxMovementTypeList
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-<string>context</string>
-                            <string>real_movement</string>
-                            <string>None</string>
+                            <string>testSimulationMovement</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
