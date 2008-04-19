@@ -864,7 +864,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     
     
 
-class TestTaxLineOrderSimulation(TradeConditionTestCase):
+class TestTaxLineOrderSimulation(AccountingBuildTestCase):
   """Test Simulation of Tax Lines on Orders
   """
   def test_tax_line_simulation(self):
@@ -1096,6 +1096,91 @@ class TestTaxLineOrderSimulation(TradeConditionTestCase):
     self.assertEquals([], related_invoice.getCausalityRelatedValueList(
                                 portal_type='Applied Rule'))
     
+  def test_tax_line_build_accounting(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+    tax_model_line = self.trade_condition.newContent(
+                  portal_type='Tax Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.tax)
+    
+    order = self.order
+    order.Order_applyTradeCondition(self.trade_condition, force=1)
+    order.setSourceSectionValue(self.vendor)
+    order.setSourceValue(self.vendor)
+    order.setDestinationSectionValue(self.client)
+    order.setDestinationValue(self.client)
+    order.setPriceCurrencyValue(self.currency)
+    order.setStartDate(DateTime(2001, 1, 1))
+    order_line = order.newContent(
+                          portal_type=self.order_line_type,
+                          resource_value=self.resource,
+                          quantity=2,
+                          price=15,)
+    order.plan()
+    order.confirm()
+    self.assertEquals('confirmed', order.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+    related_delivery = order.getCausalityRelatedValue(
+                  portal_type=('Purchase Packing List', 'Sale Packing List'))
+    self.assertNotEquals(related_delivery, None)
+    related_delivery.setReady()
+    related_delivery.start()
+    related_delivery.stop()
+    related_delivery.deliver()
+    self.assertEquals('delivered', related_delivery.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+    
+    related_invoice = related_delivery.getCausalityRelatedValue(
+                  portal_type=('Purchase Invoice Transaction',
+                               'Sale Invoice Transaction'))
+    self.assertNotEquals(related_invoice, None)
+    self.assertEquals('confirmed', related_invoice.getSimulationState())
+    self.assertEquals('solved', related_invoice.getCausalityState())
+    accounting_line_list = related_invoice.getMovementList(
+                    portal_type=self.portal.getPortalAccountingMovementTypeList())
+    self.assertEquals(0, len(accounting_line_list))
+
+    related_invoice.start()
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('started', related_invoice.getSimulationState())
+    self.assertEquals('solved', related_invoice.getCausalityState())
+
+    accounting_line_list = related_invoice.getMovementList(
+                    portal_type=self.portal.getPortalAccountingMovementTypeList())
+    self.assertEquals(3, len(accounting_line_list))
+    receivable_line = [l for l in accounting_line_list if
+                        l.getSourceValue() == self.receivable_account][0]
+    self.assertEquals(self.payable_account,
+                      receivable_line.getDestinationValue())
+    self.assertEquals(36, receivable_line.getSourceDebit())
+    
+    tax_line = [l for l in accounting_line_list if
+                        l.getSourceValue() == self.collected_tax_account][0]
+    self.assertEquals(self.refundable_tax_account,
+                      tax_line.getDestinationValue())
+    self.assertEquals(6, tax_line.getSourceCredit())
+
+    income_line = [l for l in accounting_line_list if
+                        l.getSourceValue() == self.income_account][0]
+    self.assertEquals(self.expense_account,
+                      income_line.getDestinationValue())
+    self.assertEquals(30, income_line.getSourceCredit())
+
+    # Of course, this invoice does not generate simulation again
+    self.assertEquals([], related_invoice.getCausalityRelatedValueList(
+                                portal_type='Applied Rule'))
+    
+    # and there's no other invoices
+    self.assertEquals(1, len(self.portal.accounting_module.contentValues()))
+
 
   def test_tax_line_merged_build(self):
     # an order with 2 lines and 1 tax line will later be built in an invoice
@@ -1337,6 +1422,12 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
     self.assertEquals(self.refundable_tax_account,
                       tax_line.getDestinationValue())
     self.assertEquals(20, tax_line.getSourceCredit())
+
+    income_line = [l for l in accounting_line_list if
+                        l.getSourceValue() == self.income_account][0]
+    self.assertEquals(self.expense_account,
+                      income_line.getDestinationValue())
+    self.assertEquals(100, income_line.getSourceCredit())
 
     self.assertEquals('solved', invoice.getCausalityState())
 
