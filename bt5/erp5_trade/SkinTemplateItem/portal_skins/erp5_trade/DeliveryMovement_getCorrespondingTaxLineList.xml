@@ -86,8 +86,10 @@ for base_amount in context.getBaseContributionList():\n
       if tax_line not in contributed_tax_line_list:\n
         contributed_tax_line_list.append(tax_line)\n
 \n
+non_tax_movement_type_list = [t for t in context.getPortalMovementTypeList()\n
+                              if t not in context.getPortalTaxMovementTypeList()]\n
 other_movement_list = [m for m in context.getExplanationValue().getMovementList(\n
-                        portal_type=context.getPortalMovementTypeList())]\n
+                         portal_type=non_tax_movement_type_list)]\n
 # 2 for each tax line, calculate the corresponding ratio\n
 for tax_line in contributed_tax_line_list:\n
   base_total_price = 0\n
@@ -182,6 +184,8 @@ return adjusted_tax_line_list\n
                             <string>tax_line</string>
                             <string>append</string>
                             <string>$append0</string>
+                            <string>t</string>
+                            <string>non_tax_movement_type_list</string>
                             <string>m</string>
                             <string>other_movement_list</string>
                             <string>base_total_price</string>
