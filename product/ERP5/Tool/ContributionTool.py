@@ -214,7 +214,7 @@ class ContributionTool(BaseTool):
     if portal_type is None:
       registry = getToolByName(self, 'portal_contribution_registry', None)
       if registry is not None:
-        portal_type = registry.findPortalTypeName(file_name, None, None)
+        portal_type = registry.findPortalTypeName(file_name, None, data)
         property_dict = self.getMatchedFileNamePatternDict(file_name)
         reference = property_dict.get('reference', None)
         version  = property_dict.get('version', None)
