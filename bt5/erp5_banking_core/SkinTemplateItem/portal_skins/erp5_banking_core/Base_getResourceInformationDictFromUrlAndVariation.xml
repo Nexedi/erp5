@@ -67,17 +67,33 @@
             <key> <string>_body</string> </key>
             <value> <string>resource_dict = {}\n
 resource_dict = {\'resource_relative_url\':resource, \'variation_text\':variation_text}\n
-portal = context.getPortalObject()\n
+\n
+if cache_dict is None:\n
+  cache_dict = {}\n
+cache_title_category_url = cache_dict.setdefault(\'cache_title_category_url\',{})\n
+cache_translated_title_category_url = cache_dict.setdefault(\'cache_translated_title_category_url\',{})\n
+cache_resource_portal_type = cache_dict.setdefault(\'cache_resource_portal_type\', {})\n
+cache_resource = cache_dict.setdefault(\'cache_resource\', {})\n
+cache_translated_portal_type = cache_dict.setdefault(\'cache_translated_portal_type\', {})\n
+cache_translated_simulation_state = cache_dict.setdefault(\'cache_translated_simulation_state\', {})\n
 \n
 \n
-def getVariationTitleList(variation_text):\n
-  return [getTitleFromCategoryUrl(x) for x in variation_text.split(\'\\n\')]\n
+#def getVariationTitleList(variation_text):\n
+#  return [getTitleFromCategoryUrl(x) for x in variation_text.split(\'\\n\')]\n
 \n
 def getTitleFromCategoryUrl(category):\n
-  return context.portal_categories.getCategoryValue(category).getTitle()\n
+  result = cache_title_category_url.get(category, None)\n
+  if result is None:\n
+    result = context.portal_categories.getCategoryValue(category).getTitle()\n
+    cache_title_category_url[category] = result\n
+  return result\n
 \n
 def getTranslatedTitleFromCategoryUrl(category):\n
-  return context.portal_categories.getCategoryValue(category).getTranslatedTitle()\n
+  result = cache_translated_title_category_url.get(category, None)\n
+  if result is None:\n
+    result = context.portal_categories.getCategoryValue(category).getTranslatedTitle()\n
+    cache_translated_title_category_url[category] = result\n
+  return result\n
 \n
 \n
 for variation in variation_text.split(\'\\n\'):\n
@@ -94,37 +110,71 @@ for variation in variation_text.split(\'\\n\'):\n
     resource_dict[\'variation_title\'] = getTitleFromCategoryUrl(variation)\n
     resource_dict[\'variation_translated_title\'] = getTranslatedTitleFromCategoryUrl(variation)\n
 \n
-resource_dict[\'variation_text_title\'] = \' \'.join(getVariationTitleList(resource))\n
+#resource_dict[\'variation_text_title\'] = \' \'.join(getVariationTitleList(resource))\n
 \n
-resource_value = portal.restrictedTraverse(resource)\n
-current_resource_portal_type = resource_value.getPortalType()\n
+\n
+current_resource_portal_type = cache_resource_portal_type.get(resource, None)\n
+if current_resource_portal_type is None:\n
+  portal = context.getPortalObject()\n
+  resource_value = portal.restrictedTraverse(resource)\n
+  current_resource_portal_type = resource_value.getPortalType()\n
+  cache_resource_portal_type[resource] = current_resource_portal_type\n
+  resource_info_dict = {}\n
+  resource_info_dict[\'base_price\'] = resource_value.getBasePrice()\n
+  resource_info_dict[\'resource_title\'] = resource_value.getTitle()\n
+  resource_info_dict[\'resource_id\'] = resource_value.getId()\n
+  #context.log(\'resource_value\',resource_value.getRelativeUrl())\n
+  try:\n
+    resource_info_dict[\'resource_translated_title\'] = resource_value.getTranslatedTitle()\n
+  except KeyError:\n
+    resource_info_dict[\'resource_translated_title\'] = resource_value.getTitle()\n
+  resource_info_dict[\'price_currency_title\'] = resource_value.getPriceCurrencyTitle()\n
+  resource_info_dict[\'price_currency_id\'] = resource_value.getPriceCurrencyId()\n
+  resource_info_dict[\'price_currency\'] = resource_value.getPriceCurrency()\n
+  resource_info_dict[\'resource_portal_type\'] = current_resource_portal_type\n
+  cache_resource[resource] = resource_info_dict\n
+\n
+# Should not be None\n
+resource_dict.update(cache_resource.get(resource))\n
+  \n
+##############\n
+#movement =None\n
+#resource_dict[\'explanation_translated_relative_url\'] = \'xx\'\n
+###########\n
 if movement is not None: # case of history\n
-  #context.log(\'movement uid before error\',resource[2])\n
-  #movement = context.portal_catalog.getObject(resource[2])\n
-  movement = portal.restrictedTraverse(movement)\n
-  #context.log(\'CounterModule_getVaultTransactionList\', \'movement = %s\' %movement)\n
-  explanation_value = movement\n
-  if getattr(movement,\'getExplanationValue\',None) is not None:\n
-    explanation_value = movement.getExplanationValue()\n
-  resource_dict[\'explanation_relative_url\'] = explanation_value.getRelativeUrl()\n
-  source_reference = explanation_value.getSourceReference() or \'\'\n
-  resource_dict[\'source_reference\'] = source_reference\n
+#  movement = portal.restrictedTraverse(movement)\n
+#  explanation_value = movement\n
+#  if getattr(movement,\'getExplanationValue\',None) is not None:\n
+#    explanation_value = movement.getExplanationValue()\n
+#  resource_dict[\'explanation_relative_url\'] = explanation_value.getRelativeUrl()\n
+#  source_reference = explanation_value.getSourceReference() or \'\'\n
+#  resource_dict[\'source_reference\'] = source_reference\n
+#  if display_simulation_state:\n
+#    resource_dict[\'simulation_state_title\'] = movement.getTranslatedSimulationStateTitle()\n
+#  resource_dict[\'explanation_translated_relative_url\'] = "%s/%s" % \\\n
+#        (explanation_value.getTranslatedPortalType(),source_reference)\n
+#  context.log("explanation_uid", explanation_uid)\n
+  catalog_explanation = cache_dict[\'cache_explanation\'][explanation_uid]\n
+#  context.log("explanation_uid url", catalog_explanation.relative_url)\n
+  resource_dict[\'explanation_relative_url\'] = catalog_explanation.relative_url\n
+  source_reference = catalog_explanation.source_reference\n
+  resource_dict[\'source_reference\'] = catalog_explanation.source_reference\n
+  explanation_portal_type = catalog_explanation.portal_type\n
   if display_simulation_state:\n
-    resource_dict[\'simulation_state_title\'] = movement.getTranslatedSimulationStateTitle()\n
-  resource_dict[\'explanation_translated_relative_url\'] = "%s/%s" % \\\n
-        (explanation_value.getTranslatedPortalType(),source_reference)\n
-resource_dict[\'base_price\'] = resource_value.getBasePrice()\n
-resource_dict[\'resource_title\'] = resource_value.getTitle()\n
-resource_dict[\'resource_id\'] = resource_value.getId()\n
-#context.log(\'resource_value\',resource_value.getRelativeUrl())\n
-try:\n
-  resource_dict[\'resource_translated_title\'] = resource_value.getTranslatedTitle()\n
-except KeyError:\n
-  resource_dict[\'resource_translated_title\'] = resource_value.getTitle()\n
-resource_dict[\'price_currency_title\'] = resource_value.getPriceCurrencyTitle()\n
-resource_dict[\'price_currency_id\'] = resource_value.getPriceCurrencyId()\n
-resource_dict[\'price_currency\'] = resource_value.getPriceCurrency()\n
-resource_dict[\'resource_portal_type\'] = current_resource_portal_type\n
+    simulation_state = catalog_explanation.simulation_state\n
+    simulation_state_title = cache_translated_simulation_state.get((explanation_portal_type,simulation_state), None)\n
+    if simulation_state_title is None:\n
+      portal = context.getPortalObject()\n
+      movement = portal.restrictedTraverse(movement)\n
+      simulation_state_title = movement.getTranslatedSimulationStateTitle()\n
+      cache_translated_simulation_state[(explanation_portal_type,simulation_state)] = simulation_state_title\n
+    resource_dict[\'simulation_state_title\'] = simulation_state_title\n
+  translated_portal_type = cache_translated_portal_type.get(explanation_portal_type, None)\n
+  if translated_portal_type is None:\n
+    translated_portal_type = context.Base_translateString(explanation_portal_type)\n
+    cache_translated_portal_type[explanation_portal_type] = translated_portal_type\n
+  resource_dict[\'explanation_translated_relative_url\'] = \'%s/%s\' % \\\n
+      (translated_portal_type, source_reference)\n
 \n
 \n
 \n
@@ -151,7 +201,7 @@ return resource_dict\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resource, variation_text, movement=None, display_simulation_state=0</string> </value>
+            <value> <string>resource, variation_text, movement=None, display_simulation_state=0, explanation_uid=None, cache_dict=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -179,7 +229,7 @@ return resource_dict\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -189,23 +239,35 @@ return resource_dict\n
                             <string>variation_text</string>
                             <string>movement</string>
                             <string>display_simulation_state</string>
+                            <string>explanation_uid</string>
+                            <string>cache_dict</string>
                             <string>resource_dict</string>
+                            <string>None</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
+                            <string>cache_title_category_url</string>
+                            <string>cache_translated_title_category_url</string>
+                            <string>cache_resource_portal_type</string>
+                            <string>cache_resource</string>
+                            <string>cache_translated_portal_type</string>
+                            <string>cache_translated_simulation_state</string>
                             <string>getTitleFromCategoryUrl</string>
-                            <string>getVariationTitleList</string>
                             <string>getTranslatedTitleFromCategoryUrl</string>
                             <string>_getiter_</string>
                             <string>variation</string>
                             <string>_write_</string>
-                            <string>resource_value</string>
                             <string>current_resource_portal_type</string>
-                            <string>None</string>
-                            <string>explanation_value</string>
-                            <string>getattr</string>
-                            <string>source_reference</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>resource_value</string>
+                            <string>resource_info_dict</string>
                             <string>KeyError</string>
+                            <string>_getitem_</string>
+                            <string>catalog_explanation</string>
+                            <string>source_reference</string>
+                            <string>explanation_portal_type</string>
+                            <string>simulation_state</string>
+                            <string>simulation_state_title</string>
+                            <string>translated_portal_type</string>
                           </tuple>
                         </value>
                     </item>
@@ -220,6 +282,8 @@ return resource_dict\n
               <tuple>
                 <none/>
                 <int>0</int>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>

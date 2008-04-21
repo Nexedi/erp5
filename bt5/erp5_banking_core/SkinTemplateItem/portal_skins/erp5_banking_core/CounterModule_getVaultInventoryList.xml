@@ -82,7 +82,7 @@
       return result\n
 \n
     # Last, compare the variations (such as the years 1994 and 2003).\n
-    result = cmp(a.variation_text_title, b.variation_text_title)\n
+    result = cmp(a.cash_status_title, b.cash_status_title)\n
     if result != 0:\n
       return result\n
 \n

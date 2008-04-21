@@ -72,7 +72,8 @@ from Products.ERP5Type.Document import newTempBase\n
 if reference is None:\n
   account_list = [context]\n
 else:\n
-  account_list = context.BankAccount_getReportInformationList(reference=reference)\n
+  account_list = context.BankAccount_getReportInformationList(reference=reference, \n
+                              force_one_account=force_one_account)\n
 \n
 # Build the common inventory dict\n
 params = {}\n
@@ -225,7 +226,7 @@ return inv_account_dict.values()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_date=None, at_date=None, reference=None, current_inventory=0, available_inventory=0, future_inventory=0, transaction_list=0</string> </value>
+            <value> <string>from_date=None, at_date=None, reference=None, current_inventory=0, available_inventory=0, future_inventory=0, transaction_list=0, force_one_account=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -253,7 +254,7 @@ return inv_account_dict.values()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -266,6 +267,7 @@ return inv_account_dict.values()\n
                             <string>available_inventory</string>
                             <string>future_inventory</string>
                             <string>transaction_list</string>
+                            <string>force_one_account</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>None</string>
@@ -319,6 +321,7 @@ return inv_account_dict.values()\n
                 <none/>
                 <none/>
                 <none/>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
                 <int>0</int>

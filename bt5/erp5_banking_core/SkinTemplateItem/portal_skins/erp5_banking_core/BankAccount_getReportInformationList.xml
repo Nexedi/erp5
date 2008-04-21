@@ -85,6 +85,9 @@ if len(account_list) == 0:\n
 if len(account_list) == 0:\n
   message = Message(domain="ui", message="No bank account have this reference")\n
   raise ValueError, message\n
+if force_one_account and len(account_list) != 1:\n
+  message = Message(domain="ui", message="More than one account match this research")\n
+  raise ValueError, message\n
 \n
 account_list = [x.getObject() for x in account_list]\n
 \n
@@ -121,7 +124,7 @@ return account_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None, total_price=0</string> </value>
+            <value> <string>reference=None, total_price=0, force_one_account=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -149,7 +152,7 @@ return account_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -157,6 +160,7 @@ return account_list\n
                           <tuple>
                             <string>reference</string>
                             <string>total_price</string>
+                            <string>force_one_account</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
                             <string>None</string>
@@ -192,6 +196,7 @@ return account_list\n
             <value>
               <tuple>
                 <none/>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>
