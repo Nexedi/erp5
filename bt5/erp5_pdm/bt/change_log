@@ -1,3 +1,6 @@
+2008-04-21 jerome
+* Fix default images on Product and Component (for virtual hosting)
+
 2008-04-19 yo
 * Bump to 5.0.
 
