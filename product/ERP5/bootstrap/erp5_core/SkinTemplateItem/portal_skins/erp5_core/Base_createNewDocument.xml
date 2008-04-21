@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,27 +65,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>REQUEST=context.REQUEST\n
-\n
-# Add an object of the same type as self\n
+            <value> <string>"""Add an object of the same type as self in the container, unless\n
+this type cannot be added in the container.\n
+"""\n
+N_ = context.getPortalObject().Base_translateString\n
+REQUEST=context.REQUEST\n
 parent = context.getParentValue()\n
-# XXX May be this need to be changed in order to get something else than\n
-# the permission "Add portal content"\n
-new_id = parent.generateNewId()\n
-context.portal_types.constructContent(type_name=context.portal_type,\n
-                        container=parent,\n
-                        id=str(new_id),\n
-                        RESPONSE=REQUEST.RESPONSE)\n
-# parent[new_id].flushActivity(invoke=1)\n
-# parent.invokeFactory(type_name=context.portal_type,\n
-#       id=str(parent.generateNewId()),\n
-#        RESPONSE=REQUEST.RESPONSE)\n
-#parent.portal_types.constructContent(type_name=context.portal_type,\n
-#     container=context,\n
-#     id=str(parent.generateNewId()),\n
-#      RESPONSE=REQUEST.RESPONSE)\n
+allowed_type_list = parent.getVisibleAllowedContentTypeList()\n
 \n
-return REQUEST.RESPONSE\n
+if not allowed_type_list:\n
+  return context.ERP5Site_redirect(\'%s/%s\' % (context.absolute_url(), form_id),\n
+        keep_items={\'portal_status_message\':\n
+           N_("You are not allowed to add new content in this context.")})\n
+\n
+if context.getPortalType() not in allowed_type_list:\n
+  return context.ERP5Site_redirect(\'%s/%s\' % (context.absolute_url(), form_id),\n
+        keep_items={\'portal_status_message\':\n
+           N_("You are not allowed to add ${portal_type} in this context.",\n
+              mapping=dict(portal_type=context.getTranslatedPortalType()))})\n
+  \n
+new_content = parent.newContent(portal_type=context.getPortalType())\n
+return context.ERP5Site_redirect(\'%s/%s\' % (new_content.absolute_url(), form_id),\n
+              keep_items={\'portal_status_message\': N_("Object Created.")})\n
 </string> </value>
         </item>
         <item>
@@ -102,6 +100,16 @@ return REQUEST.RESPONSE\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,18 +129,21 @@ return REQUEST.RESPONSE\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>N_</string>
                             <string>REQUEST</string>
                             <string>parent</string>
-                            <string>new_id</string>
-                            <string>str</string>
+                            <string>allowed_type_list</string>
+                            <string>dict</string>
+                            <string>new_content</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,7 +155,9 @@ return REQUEST.RESPONSE\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
