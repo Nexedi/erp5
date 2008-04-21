@@ -1,0 +1,35 @@
+<base_category_list>
+ <portal_type id="Discount Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Internal Packing List Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Inventory Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Purchase Order Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Purchase Packing List Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Purchase Trade Condition Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Returned Sale Packing List Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Sale Order Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Sale Packing List Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Sale Trade Condition Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Tax Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>
