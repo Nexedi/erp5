@@ -155,6 +155,12 @@ def getSubLineList(obj):\n
     sub_list.extend(getSubLineList(x))\n
   return sub_list\n
 \n
+def unicodeDict(d):\n
+  for k, v in d.items():\n
+    if isinstance(v, str):\n
+      d.update({k:unicode(v, \'utf8\')})\n
+  return d\n
+\n
 for line in getSubLineList(context):\n
   prod_desc = line.getResource() is not None and line.getResourceValue().getDescription() or \'\'\n
   desc = getProductAndLineDesc(prod_desc, line.getDescription())\n
@@ -174,7 +180,7 @@ for line in getSubLineList(context):\n
     \'total_price\': line.getTotalPrice() or \'\',\n
   }\n
   total_price += line.getTotalPrice() or 0.0\n
-  line_list.append(line_dict.copy())\n
+  line_list.append(unicodeDict(line_dict.copy()))\n
 \n
 data_dict = {\n
   \'source_section_title\': context.getSourceSectionTitle() or \'\',\n
@@ -183,8 +189,8 @@ data_dict = {\n
       context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressRegionTitle() or \'\'),\n
   \'source_section_telfax\': getPhoneAndFax(context.getSourceSection() and context.getSourceSectionValue().getTelephoneText() or \'\',\n
       context.getSourceSection() and context.getSourceSectionValue().getFaxText() or \'\'),\n
-  \'source_section_email\': unicode(getEmail(context.getSourceSection() and context.getSourceSectionValue().getEmailText() or \'\'), \'utf8\'),\n
-  \'source_section_vatid\': unicode(getVatId(context.getSourceSection() and context.getSourceSectionValue().getVatCode() or \'\'), \'utf8\'),\n
+  \'source_section_email\': getEmail(context.getSourceSection() and context.getSourceSectionValue().getEmailText() or \'\'),\n
+  \'source_section_vatid\': getVatId(context.getSourceSection() and context.getSourceSectionValue().getVatCode() or \'\'),\n
 \n
   \'source_decision_title\': context.getSourceDecisionTitle() or \'\',\n
   \'source_decision_address\': unicode(getOneLineAddress(\n
@@ -193,7 +199,7 @@ data_dict = {\n
   \'source_decision_telfax\': getPhoneAndFax(context.getSourceDecision() and context.getSourceDecisionValue().getTelephoneText() or \'\',\n
       context.getSourceDecision() and context.getSourceDecisionValue().getFaxText() or \'\'),\n
   \'source_decision_email\': getEmail(context.getSourceDecision() and context.getSourceDecisionValue().getEmailText() or \'\'),\n
-  \'source_decision_vatid\': unicode(getVatId(context.getSourceDecision() and context.getSourceDecisionValue().getVatCode() or \'\'), \'utf8\'),\n
+  \'source_decision_vatid\': getVatId(context.getSourceDecision() and context.getSourceDecisionValue().getVatCode() or \'\'),\n
 \n
   \'destination_title\': context.getDestinationTitle() or \'\',\n
   \'destination_address\': getOneLineAddress(\n
@@ -203,16 +209,16 @@ data_dict = {\n
       context.getDestination() and context.getDestinationValue().getFaxText() or \'\'),\n
   \'destination_email\': getEmail(context.getDestination() and context.getDestinationValue().getEmailText() or \'\'),\n
 \n
-  \'destination_section_title\': unicode(context.getDestinationSectionTitle() or \'\', \'utf8\'),\n
+  \'destination_section_title\': context.getDestinationSectionTitle() or \'\',\n
   \'destination_section_image_path\': context.getDestinationSectionValue() is not None and  context.getDestinationSectionValue().getDefaultImagePath() or \'\',\n
   \'destination_section_address\': unicode(getOneLineAddress(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressText() or \'\',\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressRegionTitle() or \'\'), \'utf8\'),\n
-  \'destination_section_telfax\': unicode(getPhoneAndFax(\n
+  \'destination_section_telfax\': getPhoneAndFax(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\',\n
-      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'), \'utf8\'),\n
-  \'destination_section_email\': unicode(getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'), \'utf8\'),\n
-  \'destination_section_vatid\': unicode(getVatId(context.getDestinationSection() and context.getDestinationSectionValue().getVatCode() or \'\'), \'utf8\'),\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'),\n
+  \'destination_section_email\': getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'),\n
+  \'destination_section_vatid\': getVatId(context.getDestinationSection() and context.getDestinationSectionValue().getVatCode() or \'\'),\n
 \n
   \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
   \'destination_decision_telfax\': getPhoneAndFax(context.getDestinationDecision() and context.getDestinationDecisionValue().getTelephoneText() or \'\',\n
@@ -233,7 +239,7 @@ data_dict = {\n
 \n
   \'line_list\': line_list,\n
 }\n
-\n
+unicodeDict(data_dict)\n
 #from pprint import pformat\n
 #context.log(pformat(data_dict))\n
 return data_dict\n
@@ -304,6 +310,7 @@ return data_dict\n
                             <string>total_vat</string>
                             <string>excluded_portal_type_list</string>
                             <string>getSubLineList</string>
+                            <string>unicodeDict</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>None</string>
