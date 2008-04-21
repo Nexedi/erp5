@@ -1,1 +1,0 @@
-return context.TranslatedTitle_or_id()
