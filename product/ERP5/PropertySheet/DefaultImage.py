@@ -38,7 +38,7 @@ class DefaultImage:
       'description' : 'The default image',
       'type'        : 'content',
       'portal_type' : ('Image',),
-      'acquired_property_id'      : ('file', 'path'),
+      'acquired_property_id'      : ('file', 'path', 'absolute_url'),
       'acquisition_base_category' : (),
       'acquisition_portal_type'   : (),
       'acquisition_copy_value'    : 0,
