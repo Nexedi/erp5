@@ -1,3 +1,6 @@
+2008-04-21 jerome
+* Fix default images on Person and Organisation (for virtual hosting)
+
 2008-04-17 yusei
 * Revise version to 5.0.
 
