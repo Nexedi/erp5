@@ -131,7 +131,8 @@ for check_reference in reference_list:\n
     raise ValidationFailed, (msg,)\n
   result = context.portal_catalog(portal_type = \'Check\', reference = check_reference, \n
                                   destination_payment_uid = bank_account.getUid(),\n
-                                  default_resource_relative_url = resource)\n
+                                  default_resource_relative_url = resource,\n
+                                  simulation_state=\'!=deleted\')\n
   result_len = len(result)\n
   if result_len == 0:\n
     if not context.Base_isAutomaticCheckCreationAllowed():\n

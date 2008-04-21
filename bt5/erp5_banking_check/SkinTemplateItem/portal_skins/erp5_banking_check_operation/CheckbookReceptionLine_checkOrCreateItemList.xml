@@ -146,9 +146,10 @@ def checkReferenceListUniqueness(reference_list, model, destination_payment_uid)
     Check each given reference not to already exist.\n
   """\n
   if destination_payment_uid is None:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_url=model)\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_url=model, simulation_state=\'!=deleted\')\n
   else:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model)\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model,\n
+                                       simulation_state=\'!=deleted\')\n
   assertReferenceMatchListEmpty(match_list, destination_payment_uid)\n
   for reference in reference_list:\n
     tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n
@@ -204,7 +205,7 @@ if resource.getAccountNumberEnabled():\n
   destination_payment_value = line.getDestinationPaymentValue()\n
   # Not required any more to serialize the bank account\n
   #destination_payment_value.serialize()\n
-#  context.log(\'context.getRelativeUrl() before getUid of destination payment\', context.getRelativeUrl())\n
+  context.log(\'context.getRelativeUrl() before getUid of destination payment\', context.getRelativeUrl())\n
   if destination_payment_value is None:\n
     message = Message(domain=\'ui\', message=\'There is not destination payment on line with id: $id\', mapping={\'id\': context.getId()})\n
     raise ValueError, (message,)\n
@@ -218,6 +219,7 @@ aggregate_list = []\n
 for i in xrange(quantity):\n
   if create == 1:\n
     item = module.newContent(activate_kw={\'tag\': tag, \'priority\':4})\n
+    context.log(\'New Item created with Id\', item.getId())\n
     item.setDestination(destination)\n
     if destination_payment_value is not None:\n
       item.setDestinationPaymentValue(destination_payment_value)\n
@@ -242,6 +244,7 @@ for i in xrange(quantity):\n
         #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, j)\n
         #encountered_check_identifiers_dict[tag] = None\n
         check = item.newContent(portal_type=\'Check\', title=j, activate_kw={\'tag\': tag, \'priority\':4})\n
+        context.log(\'New Sub Item created with Id\', check.getId())\n
         check.setDestination(destination_section)\n
         check.setStartDate(start_date)\n
         check.setReference(j)\n
