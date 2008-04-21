@@ -22,6 +22,11 @@ Options:
   -s, --stdout               prints the results on stdout instead of sending
                              results by email (unless email_to_address is also
                              passed explictly)
+  --host                     the hostname of this ERP5 instance
+  --port                     the port of this ERP5 instance
+  --portal_name              the ID of the ERP5 site
+                             URLs will start with:
+                                 http://${host}:${port}/${portal_name}/
                              
 """
 
@@ -60,10 +65,13 @@ def parseArgs():
   global send_mail
   global stdout
   global email_to_address
+  global host
+  global port
+  global portal_name
   try:
     opts, args = getopt.getopt(sys.argv[1:],
           "hs", ["help", "stdout",
-                "email_to_address="] )
+                 "email_to_address=", "host=", "port=", "portal_name="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -77,6 +85,13 @@ def parseArgs():
     elif opt in ('-h', '--help'):
       usage(sys.stdout)
       sys.exit()
+    elif opt == "--host":
+      host = arg
+    elif opt == "--port":
+      port = int(arg)
+    elif opt == "--portal_name":
+      portal_name = arg
+
   if not stdout:
     send_mail = 1
 
