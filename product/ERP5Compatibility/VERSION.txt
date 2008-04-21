@@ -1,1 +1,0 @@
-ERP5Compatibility 0.1
