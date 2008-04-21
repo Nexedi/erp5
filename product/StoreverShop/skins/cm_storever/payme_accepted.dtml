@@ -1,9 +1,0 @@
-<dtml-var standard_html_header>
-
-<div class="Desktop">
-
-<h1><dtml-gettext>Your payment has been accepted. Thank you.</dtml-gettext></h1>
-
-</div>
-
-<dtml-var standard_html_footer>
