@@ -1820,6 +1820,14 @@ class Base( CopyContainer,
     """
     return self.portal_url.getRelativeUrl(self)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAbsoluteUrl')
+  def getAbsoluteUrl(self):
+    """
+      Returns the absolute url of an object.
+    """
+    return self.absolute_url()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalObject')
   def getPortalObject(self):
     """
