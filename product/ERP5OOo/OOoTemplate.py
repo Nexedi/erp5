@@ -461,11 +461,16 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       raise ValueError, 'Can not render a template without a parent acquisition context'
     # Retrieve master document
     ooo_document = getattr(here, self.ooo_stylesheet)
-    # If style is dynamic, call it
+    format = request.get('format')
     try:
-      ooo_document = ooo_document()
-    except AttributeError:
-      pass
+      # If style is dynamic, call it
+      try:
+        request.set('format', None)
+        ooo_document = ooo_document()
+      except AttributeError:
+        pass
+    finally:
+        request.set('format', format)
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
     # Pass builder instance as extra_context
