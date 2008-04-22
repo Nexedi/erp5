@@ -300,73 +300,8 @@ AAA=</string> </value>
                       <!--This PageTemplate is Used For Sale Order and Purchase Order-->\n
                       <tal:block tal:define="orig_string string:Supplier;\n
                                  en_string python:here.Base_translateString(orig_string, lang=\'en\');\n
-                                 my_string python:here.Base_translateString(orig_string);\n
-                                 ds_title python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_title\'] or data_dict[\'source_decision_title\'];\n
-                                 ds_address python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_address\'] or data_dict[\'source_decision_address\'];\n
-                                 ds_telfax python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_telfax\'] or data_dict[\'source_decision_telfax\'];\n
-                                 ds_email python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_email\'] or data_dict[\'source_decision_email\'];\n
-                                 ds_vatid python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_vatid\'] or data_dict[\'source_decision_vatid\'];\n
-                                 orig_title python: here.getPortalType();\n
-                                 en_title python: unicode(here.Base_translateString(orig_title, lang=\'en\'), \'utf-8\');\n
-                                 my_title python: unicode(here.Base_translateString(orig_title), \'utf-8\');\n
-                                 orig_page string:Page; en_page python: unicode(here.Base_translateString(orig_page, lang=\'en\'), \'utf-8\');\n
-                                 my_page python: unicode(here.Base_translateString(orig_page), \'utf-8\');\n
-                                 orig_of string:of;\n
-                                 en_of python: unicode(here.Base_translateString(orig_of, lang=\'en\'), \'utf-8\');\n
-                                 my_of python: unicode(here.Base_translateString(orig_of), \'utf-8\')">\n
+                                 my_string python:here.Base_translateString(orig_string);">\n
                         <text:p text:style-name=\'Table_20_Heading\'>\n
-                          <text:variable-set text:formula=\'ooow:title\'\n
-                                             text:name=\'ds_title\'\n
-                                             text:display=\'none\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value ds_title\'/>\n
-                          <text:variable-set text:formula=\'ooow:address\'\n
-                                             text:name=\'ds_address\'\n
-                                             text:display=\'none\'\n
-                                             office:string-value=\'address\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value ds_address\'/>\n
-                          <text:variable-set text:formula=\'ooow:telfax\'\n
-                                             text:name=\'ds_telfax\'\n
-                                             text:display=\'none\'\n
-                                             office:string-value=\'telfax\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value ds_telfax\'/>\n
-                          <text:variable-set text:formula=\'ooow:email\'\n
-                                             text:name=\'ds_email\'\n
-                                             text:display=\'none\'\n
-                                             office:string-value=\'email\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value ds_email\'/>\n
-                          <text:variable-set text:formula=\'ooow:vatid\'\n
-                                             text:name=\'ds_vatid\'\n
-                                             text:display=\'none\'\n
-                                             office:string-value=\'vatid\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value ds_vatid\'/>\n
-                          <text:variable-set text:formula=\'ooow:purchase_order\'\n
-                                             text:name=\'purchase_order\'\n
-                                             text:display=\'none\'\n
-                                             office:string-value=\'purchase_order\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value en_title\'/>\n
-                          <text:variable-set text:formula=\'ooow:purchase_order_tr\'\n
-                                             text:name=\'purchase_order_tr\'\n
-                                             text:display=\'none\'\n
-                                             office:string-value=\'purchase_order_tr\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:condition=\'python:my_title != en_title\'\n
-                                             tal:attributes=\'office:string-value my_title\'/>\n
-                          <text:variable-set text:formula=\'ooow:page\'\n
-                                             text:name=\'page\' text:display=\'none\'\n
-                                             office:string-value=\'page\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value my_page\'/>\n
-                          <text:variable-set text:formula=\'ooow:of\'\n
-                                             text:name=\'of\' text:display=\'none\'\n
-                                             office:string-value=\'of\'\n
-                                             office:value-type=\'string\'\n
-                                             tal:attributes=\'office:string-value my_of\'/>\n
                           <tal:block tal:replace=\'en_string\'/>:</text:p>\n
                         <text:p text:style-name=\'Table_20_Heading\'\n
                                 tal:condition=\'python:my_string!=en_string\'><span tal:replace=\'my_string\'/>:</text:p>\n
@@ -762,7 +697,11 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>Order_getODTStyleSheet</string> </value>
+            <value> <string>Order_viewAsODTStyles</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>content.xml</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
