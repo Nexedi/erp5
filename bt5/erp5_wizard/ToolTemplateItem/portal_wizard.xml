@@ -10,9 +10,9 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Use_mailhost_services_Permission</string> </key>
+            <key> <string>_View_Permission</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -20,13 +20,7 @@
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple/>
+              </tuple>
             </value>
         </item>
         <item>
