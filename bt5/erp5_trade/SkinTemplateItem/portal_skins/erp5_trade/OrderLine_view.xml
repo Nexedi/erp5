@@ -115,6 +115,7 @@
                         <string>listbox_reference</string>
                         <string>listbox_quantity</string>
                         <string>listbox_quantity_unit</string>
+                        <string>listbox_price</string>
                       </list>
                     </value>
                 </item>
@@ -130,7 +131,6 @@
                         <string>my_amortisation_method</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_base_contribution_list</string>
-                        <string>listbox_price</string>
                       </list>
                     </value>
                 </item>

@@ -114,6 +114,7 @@
                         <string>listbox_quantity_unit</string>
                         <string>listbox_reference</string>
                         <string>listbox_stop_date</string>
+                        <string>listbox_price</string>
                       </list>
                     </value>
                 </item>
@@ -131,7 +132,6 @@
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_specialise_title</string>
-                        <string>listbox_price</string>
                       </list>
                     </value>
                 </item>
