@@ -20,7 +20,6 @@
             <value>
               <list>
                 <string>enabled</string>
-                <string>editable</string>
               </list>
             </value>
         </item>
@@ -63,14 +62,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
+                    <key>                 <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>extra_context</string> </key>
@@ -95,10 +90,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
@@ -134,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/isMovement</string> </value>
+            <value> <string>python: cell.isMovement() and not cell.getVariationCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -17,18 +17,16 @@
                 <string>columns</string>
                 <string>all_columns</string>
                 <string>sort</string>
-                <string>list_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
-                <string>report_root_list</string>
                 <string>enabled</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_order_cells_listbox</string> </value>
+            <value> <string>my_order_sub_lines_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -102,7 +100,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -118,12 +116,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>resource_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Total Quantity</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit</string>
@@ -134,22 +136,22 @@
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>total_price</string>
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -165,8 +167,51 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>resource_title</string>
                           <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Total Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -181,53 +226,18 @@
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
+                    <key>                 <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -239,43 +249,22 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>parent</string>
-                          <string>Document Tree</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>order_line_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>project_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>int_index</string>
-                          <string>int_index</string>
-                        </tuple>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>
@@ -285,7 +274,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Order Lines</string> </value>
                 </item>
               </dictionary>
@@ -338,22 +327,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python:\'order_line_selection_%s\' % len(here.getPhysicalPath())</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

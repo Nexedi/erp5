@@ -112,7 +112,6 @@
                         <string>listbox_int_index</string>
                         <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
-                        <string>listbox_title</string>
                         <string>listbox_reference</string>
                         <string>listbox_quantity</string>
                         <string>listbox_quantity_unit</string>
@@ -131,6 +130,7 @@
                         <string>my_amortisation_method</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_base_contribution_list</string>
+                        <string>listbox_price</string>
                       </list>
                     </value>
                 </item>
