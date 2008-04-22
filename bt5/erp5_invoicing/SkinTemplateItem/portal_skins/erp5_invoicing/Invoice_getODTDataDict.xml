@@ -184,6 +184,7 @@ for line in getSubLineList(context):\n
 \n
 data_dict = {\n
   \'source_section_title\': context.getSourceSectionTitle() or \'\',\n
+  \'source_section_image_path\': context.getSourceSectionValue() is not None and context.getSourceSectionValue().getDefaultImagePath() or \'\',\n
   \'source_section_address\': getOneLineAddress(\n
       context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressText() or \'\',\n
       context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressRegionTitle() or \'\'),\n
