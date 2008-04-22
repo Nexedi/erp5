@@ -27,6 +27,8 @@
 ##############################################################################
 """
   Tests VAT for invoices.
+  
+Warning: this tests an obsolete API; the test is disabled.
 """
 
 import unittest
@@ -507,6 +509,6 @@ class TestInvoiceVAT(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInvoiceVAT))
+  #suite.addTest(unittest.makeSuite(TestInvoiceVAT))
   return suite
 
