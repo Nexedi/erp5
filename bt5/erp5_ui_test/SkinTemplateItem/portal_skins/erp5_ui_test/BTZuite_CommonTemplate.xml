@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -59,7 +56,7 @@
   <tal:block metal:define-macro="init">\n
     <tr>\n
       <td>store</td>\n
-      <td tal:content="python: \'/\' + here.getPortalObject().getId()">erp5</td>\n
+      <td tal:content="python: \'/\' + here.getPortalObject().getProperty(\'erp5_ui_test_base_url\',  here.getPortalObject().getId())">erp5</td>\n
       <td>base_url</td>\n
     </tr>\n
     <tr>\n

@@ -1,3 +1,6 @@
+2008-02-22 jerome
+* Add Zuite_setBaseUrl script which will be called before tests by test runner to set the erp5_ui_test_base_url property, and uses this in templates instead of portal ID.
+
 2008-02-21 kazuhiko
 * Add lines_field_zuite.
 
