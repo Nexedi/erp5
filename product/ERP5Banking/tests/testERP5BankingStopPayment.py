@@ -140,7 +140,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     self.assertEqual(self.stop_payment.getPortalType(), 'Stop Payment')
     # check source
     self.assertEqual(self.stop_payment.getBaobabSource(), 
-               'site/testsite/paris')
+                     None)
     # check destination
     self.assertEqual(self.stop_payment.getBaobabDestination(), None)
 
