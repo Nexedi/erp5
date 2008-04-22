@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>default</string>
               </list>
             </value>
         </item>
@@ -76,10 +75,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string>128</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_integer_value</string> </value>
                 </item>
@@ -92,7 +87,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Thumbnail Image Width</string> </value>
                 </item>
               </dictionary>
