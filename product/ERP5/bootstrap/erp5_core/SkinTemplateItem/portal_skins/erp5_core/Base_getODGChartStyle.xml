@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">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
+dCAxUEsFBgAAAAAGAAYAhwEAAL8SAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:smil="urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:metal="http://xml.zope.org/namespaces/metal" office:version="1.0" tal:attributes="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
+  <office:styles>\n
+    <draw:marker draw:name="Arrow" svg:viewBox="0 0 20 30" svg:d="m10 0-10 30h20z"/>\n
+    <style:default-style style:family="graphic">\n
+      <style:paragraph-properties style:text-autospace="ideograph-alpha" style:punctuation-wrap="simple" style:line-break="strict" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">\n
+        <style:tab-stops/>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:use-window-font-color="true" fo:font-family="\'DejaVu Sans\'" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="24pt" fo:language="fr" fo:country="FR" style:font-family-asian="\'DejaVu Sans\'" style:font-family-generic-asian="system" style:font-pitch-asian="variable" style:font-size-asian="24pt" style:language-asian="zxx" style:country-asian="none" style:font-family-complex="Tahoma" style:font-family-generic-complex="system" style:font-pitch-complex="variable" style:font-size-complex="24pt" style:language-complex="zxx" style:country-complex="none"/>\n
+    </style:default-style>\n
+    <style:style style:name="standard" style:family="graphic">\n
+      <style:graphic-properties draw:stroke="solid" svg:stroke-width="0cm" svg:stroke-color="#000000" draw:marker-start-width="0.3cm" draw:marker-start-center="false" draw:marker-end-width="0.3cm" draw:marker-end-center="false" draw:fill="solid" draw:fill-color="#99ccff" fo:padding-top="0.125cm" fo:padding-bottom="0.125cm" fo:padding-left="0.25cm" fo:padding-right="0.25cm" draw:shadow="hidden" draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:shadow-color="#808080">\n
+        <text:list-style style:name="standard">\n
+          <text:list-level-style-bullet text:level="1" text:bullet-char="\xe2\x97\x8f">\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="2" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="0.6cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="3" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="1.2cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="4" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="1.8cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="5" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="2.4cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="6" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="3cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="7" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="3.6cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="8" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="4.2cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="9" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="4.8cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="10" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="5.4cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+        </text:list-style>\n
+      </style:graphic-properties>\n
+      <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:line-height="100%" text:enable-numbering="false" fo:text-indent="0cm"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" fo:font-family="\'DejaVu Sans\'" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="18pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-family-asian="\'DejaVu Sans\'" style:font-family-generic-asian="system" style:font-pitch-asian="variable" style:font-size-asian="18pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-family-complex="Tahoma" style:font-family-generic-complex="system" style:font-pitch-complex="variable" style:font-size-complex="18pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none"/>\n
+    </style:style>\n
+    <style:style style:name="objectwitharrow" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.15cm" svg:stroke-color="#000000" draw:marker-start="Arrow" draw:marker-start-width="0.7cm" draw:marker-start-center="true" draw:marker-end-width="0.3cm"/>\n
+    </style:style>\n
+    <style:style style:name="objectwithshadow" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:shadow="visible" draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:shadow-color="#808080"/>\n
+    </style:style>\n
+    <style:style style:name="objectwithoutfill" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:fill="none"/>\n
+    </style:style>\n
+    <style:style style:name="text" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+    </style:style>\n
+    <style:style style:name="textbody" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:text-properties fo:font-size="16pt"/>\n
+    </style:style>\n
+    <style:style style:name="textbodyjustfied" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:paragraph-properties fo:text-align="justify"/>\n
+    </style:style>\n
+    <style:style style:name="textbodyindent" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none">\n
+        <text:list-style style:name="textbodyindent">\n
+          <text:list-level-style-bullet text:level="1" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="2" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="0.6cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="3" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="1.2cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="4" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="1.8cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="5" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="2.4cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="6" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="3cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="7" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="3.6cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="8" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="4.2cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="9" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="4.8cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="10" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="5.4cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+        </text:list-style>\n
+      </style:graphic-properties>\n
+      <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0cm" fo:text-indent="0.6cm"/>\n
+    </style:style>\n
+    <style:style style:name="title" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:text-properties fo:font-size="44pt"/>\n
+    </style:style>\n
+    <style:style style:name="title1" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="solid" draw:fill-color="#008080" draw:shadow="visible" draw:shadow-offset-x="0.2cm" draw:shadow-offset-y="0.2cm" draw:shadow-color="#808080"/>\n
+      <style:paragraph-properties fo:text-align="center"/>\n
+      <style:text-properties fo:font-size="24pt"/>\n
+    </style:style>\n
+    <style:style style:name="title2" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties svg:stroke-width="0.05cm" draw:fill-color="#ffcc99" draw:shadow="visible" draw:shadow-offset-x="0.2cm" draw:shadow-offset-y="0.2cm" draw:shadow-color="#808080">\n
+        <text:list-style style:name="title2">\n
+          <text:list-level-style-bullet text:level="1" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="0.2cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="2" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="0.6cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="3" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="1.2cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="4" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="1.8cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="5" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="2.4cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="6" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="3cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="7" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="3.6cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="8" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="4.2cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="9" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="4.8cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+          <text:list-level-style-bullet text:level="10" text:bullet-char="\xe2\x97\x8f">\n
+            <style:list-level-properties text:space-before="5.4cm" text:min-label-width="0.6cm"/>\n
+            <style:text-properties fo:font-family="StarSymbol" style:use-window-font-color="true" fo:font-size="45%"/>\n
+          </text:list-level-style-bullet>\n
+        </text:list-style>\n
+      </style:graphic-properties>\n
+      <style:paragraph-properties fo:margin-left="0.2cm" fo:margin-right="0.2cm" fo:margin-top="0.1cm" fo:margin-bottom="0.1cm" fo:text-align="center" fo:text-indent="0cm"/>\n
+      <style:text-properties fo:font-size="36pt"/>\n
+    </style:style>\n
+    <style:style style:name="headline" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>\n
+      <style:text-properties fo:font-size="24pt"/>\n
+    </style:style>\n
+    <style:style style:name="headline1" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>\n
+      <style:text-properties fo:font-size="18pt" fo:font-weight="bold"/>\n
+    </style:style>\n
+    <style:style style:name="headline2" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="none" draw:fill="none"/>\n
+      <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>\n
+      <style:text-properties fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold"/>\n
+    </style:style>\n
+    <style:style style:name="measure" style:family="graphic" style:parent-style-name="standard">\n
+      <style:graphic-properties draw:stroke="solid" draw:marker-start="Arrow" draw:marker-start-width="0.2cm" draw:marker-end="Arrow" draw:marker-end-width="0.2cm" draw:fill="none"/>\n
+      <style:text-properties fo:font-size="12pt"/>\n
+    </style:style>\n
+  </office:styles>\n
+  <office:automatic-styles>\n
+    <style:page-layout style:name="PM0">\n
+      <tal:block tal:define="display request/display | nothing;">\n
+        <tal:block tal:condition="display">\n
+          <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
+                     preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
+                     % (display.capitalize());\n
+                     global ratio python:int(0.025) ">\n
+            <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.025) ;\n
+                       global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.025 );"/>\n
+          </tal:block>\n
+        </tal:block>\n
+        <style:page-layout-properties fo:margin-top="0cm"\n
+                                      fo:margin-bottom="0cm"\n
+                                      fo:margin-left="0cm"\n
+                                      fo:margin-right="0cm"\n
+                                      tal:attributes="fo:page-width width ;\n
+                                      fo:page-height height "\n
+                                      style:print-orientation="portrait"/>\n
+      </tal:block>\n
+    </style:page-layout>\n
+    <style:style style:name="dp1" style:family="drawing-page">\n
+      <style:drawing-page-properties draw:background-size="border" draw:fill="none"/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:master-styles>\n
+    <draw:layer-set>\n
+      <draw:layer draw:name="layout"/>\n
+      <draw:layer draw:name="background"/>\n
+      <draw:layer draw:name="backgroundobjects"/>\n
+      <draw:layer draw:name="controls"/>\n
+      <draw:layer draw:name="measurelines"/>\n
+    </draw:layer-set>\n
+    <style:master-page style:name="Standard" style:page-layout-name="PM0" draw:style-name="dp1"/>\n
+  </office:master-styles>\n
+</office:document-styles>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.graphics</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getODGChartStyle</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>styles.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

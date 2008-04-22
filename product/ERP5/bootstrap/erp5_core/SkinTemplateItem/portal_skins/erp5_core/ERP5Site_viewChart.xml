@@ -219,7 +219,11 @@ bFBLBQYAAAAABAAEAA8BAAAYEgAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>Base_getODGChartStyle.dynamic</string> </value>
+            <value> <string>Base_getODGChartStyle</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>content.xml</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
