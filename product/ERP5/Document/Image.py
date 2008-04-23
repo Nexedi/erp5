@@ -41,7 +41,6 @@ from Acquisition import aq_base
 from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
 
@@ -473,21 +472,15 @@ class Image(File, OFSImage):
     """Retuns the size for this image display, or None if this image display name
     is not known.
     """
-    def getDefaultDisplayAsDict():
-      preference_tool = self.getPortalObject().portal_preferences
-      defaultdisplays = dict()
-      for id in default_displays_id_list:
-        height_preference = 'preferred_%s_image_height' % (id)
-        width_preferece = 'preferred_%s_image_width' % (id)
-        size_list = (preference_tool.getPreference(height_preference),
-                     preference_tool.getPreference(width_preferece))
-        defaultdisplays.setdefault(id, size_list)
-      return defaultdisplays
-    Cached_getDefaultDisplayAsDict = CachingMethod(getDefaultDisplayAsDict,
-                                                    id='Image_getDefaultDisplayAsDict',
-                                                    cache_factory='erp5_ui_long')
-    defaultdisplays = Cached_getDefaultDisplayAsDict()
-    return defaultdisplays.get(image_display)
+    preference_tool = self.getPortalObject().portal_preferences
+    default_displays = dict()
+    for id in default_displays_id_list:
+      height_preference = 'preferred_%s_image_height' % (id)
+      width_preferece = 'preferred_%s_image_width' % (id)
+      image_size = (preference_tool.getPreference(height_preference),
+                    preference_tool.getPreference(width_preferece))
+      default_displays.setdefault(id, image_size)
+    return default_displays.get(image_display, None)
 
   #
   # FTP/WebDAV support
