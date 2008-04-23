@@ -100,6 +100,8 @@
                         <string>listbox_reference</string>
                         <string>listbox_stop_date</string>
                         <string>listbox_quantity_unit</string>
+                        <string>listbox_price</string>
+                        <string>listbox_variation_category_item_list</string>
                       </list>
                     </value>
                 </item>

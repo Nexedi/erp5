@@ -102,6 +102,10 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
@@ -110,11 +114,11 @@
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>getPrice</string>
+                          <string>price</string>
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>total_price</string>
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
@@ -145,6 +149,10 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
@@ -153,11 +161,11 @@
                           <string>Unit</string>
                         </tuple>
                         <tuple>
-                          <string>getPrice</string>
+                          <string>price</string>
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalPrice</string>
+                          <string>total_price</string>
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
@@ -176,12 +184,20 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit</string>
                           <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Price</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
