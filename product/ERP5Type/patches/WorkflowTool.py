@@ -477,6 +477,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         catalog_brain_result = search_result(select_expression=select_expression,
                                              group_by_expression=group_by_expression,
                                              query=query,
+                                             limit=None,
                                              src__=src__)
         if src__:
           action_list.append(catalog_brain_result)
@@ -560,7 +561,8 @@ def WorkflowTool_refreshWorklistCache(self):
                                                     group_by_expression)
         search_result_kw = {'select_expression': select_expression,
                             'group_by_expression': group_by_expression,
-                            'query': query}
+                            'query': query,
+                            'limit': None}
         #LOG('refreshWorklistCache', WARNING, 'Using query: %s' % \
         #    (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
