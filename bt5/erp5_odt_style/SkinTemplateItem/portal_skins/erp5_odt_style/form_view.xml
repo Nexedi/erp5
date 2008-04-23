@@ -228,8 +228,9 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
       </text:sequence-decls>\n
       <tal:block metal:define-macro="form_layout"\n
-             tal:define="dummy python: request.set(\'here\',here); ">\n
-      <!-- standard groups -->\n
+                 tal:define="dummy python: request.set(\'here\', here);\n
+                             preference_tool python:here.getPortalObject().portal_preferences">\n
+        <!-- standard groups -->\n
         <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'center\', \'hidden\')]">\n
           <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
             <tal:block tal:condition="field_list">\n
@@ -250,61 +251,52 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                         <table:table-cell table:style-name=\'field-table.B1\' \n
                                       office:value-type=\'string\'\n
                                       tal:define="value python: field.get_value(\'default\')">\n
-\n
-                          <tal:block tal:condition="python: field_type not in (\'ImageField\', \'OOoChart\',)">\n
-                            <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
-                              <tal:block tal:repeat="item value">\n
-                                <text:p text:style-name=\'field-content\'\n
-                                     tal:content="python: str(item)"\n
-                                     tal:condition="not:item_list"/>\n
-                                <text:p text:style-name=\'field-content\'\n
-                                     tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
-                                     tal:condition="item_list" />\n
-                              </tal:block>\n
-                            </tal:block>\n
-                            <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
+                          <tal:block tal:condition="python: field_type not in (\'ImageField\',\'OOoChart\' )">\n
+                            <text:p tal:condition="python: not(same_type(value,[]) or same_type(value,()))"\n
+                                    text:style-name=\'field-content-center\'\n
+                                    tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                            <tal:block tal:condition="python:same_type(value,[]) or same_type(value,())"\n
+                                        tal:repeat="item value">\n
                               <text:p text:style-name=\'field-content\'\n
-                                     tal:content="python: field.render_pdf(value)"/>\n
-                            </tal:block>\n
-                            <tal:block tal:condition="python: value is None">\n
-                              <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
+                                      tal:content="python: str(item)"\n
+                                      tal:condition="not:item_list"/>\n
+                              <text:p text:style-name=\'field-content\'\n
+                                      tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
+                                      tal:condition="item_list" />\n
                             </tal:block>\n
                           </tal:block>\n
                           <!-- With this max_size, pictures and graph stay in a table cell-->\n
                           <tal:block tal:define="global max_size python:9;"/>\n
                           <tal:block tal:condition="python: field_type == \'ImageField\'">\n
                             <text:p text:style-name=\'field-content\'\n
-                  tal:define="size python:modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'));\n
-                  width python:(((size and size[0] ) / 20.) &lt; max_size and (size and size[0] ) / 20.) or max_size">\n
+                                    tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')));\n
+                                    width python:(preferred_width  / 20.) &lt; max_size and (preferred_width / 20.) or max_size">\n
                               <tal:block>\n
                                 <office:include_img tal:attributes="width width;\n
-                                path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
+                                path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"\n
+                                style="inline-graphic"/>\n
                               </tal:block>\n
                             </text:p>\n
                           </tal:block>\n
                           <tal:block tal:condition="python: field_type == \'OOoChart\'">\n
-                            <tal:block tal:define="display python: field.get_value(\'image_display\') "\n
-                                       tal:condition="display">\n
-                              <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
-                                         preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
-                                         % (display.capitalize());\n
-                                         " >\n
-                                <tal:block tal:define="\n
-                                       width python:int((getattr(here.portal_preferences, preferred_method_width_id)()));\n
-                                       height python:int((getattr(here.portal_preferences, preferred_method_height_id)()));\n
-                                       width_graph python:(width *0.02  &lt; max_size and width*0.02  ) or max_size;\n
-                                       height_graph python:(height*0.02  &lt; max_size and height*0.02  ) or max_size">\n
-                                  <text:p text:style-name=\'field-content\'>\n
-                                    <draw:frame draw:style-name=\'gr1\'\n
-                                          draw:layer=\'layout\'\n
-                                          text:anchor-type="paragraph"\n
-                                          tal:attributes="svg:height python:str(height_graph)+\'cm\';\n
-                                          svg:width python:str(width_graph)+\'cm\'">\n
-                                      <tal:block tal:replace="structure python: field.render_odf()"/>\n
-                                    </draw:frame>\n
-                                  </text:p>\n
-                                </tal:block>\n
-                              </tal:block>\n
+                            <tal:block tal:define="display python: field.get_value(\'image_display\');\n
+                            preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
+                            preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
+                                          % (display.capitalize());\n
+                            width python:int((getattr(preference_tool, preferred_method_width_id)()));\n
+                            height python:int((getattr(preference_tool, preferred_method_height_id)()));\n
+                            width_graph python:(width *0.02  &lt; max_size and width*0.02  ) or max_size;\n
+                            height_graph python:(height*0.02  &lt; max_size and height*0.02  ) or max_size;"\n
+                            tal:condition="display">\n
+                              <text:p text:style-name=\'field-content\'>\n
+                                <draw:frame draw:style-name=\'gr1\'\n
+                                      draw:layer=\'layout\'\n
+                                      text:anchor-type="paragraph"\n
+                                      tal:attributes="svg:height python:str(height_graph)+\'cm\';\n
+                                      svg:width python:str(width_graph)+\'cm\'"\n
+                                      tal:content="structure python: field.render_odf()">\n
+                                </draw:frame>\n
+                              </text:p>\n
                             </tal:block>\n
                           </tal:block>\n
                         </table:table-cell>\n
@@ -324,20 +316,23 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <tal:block tal:repeat="field field_list">\n
           <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
             <tal:block tal:condition="python: field_type not in (\'ImageField\',\'OOoChart\' )">\n
-              <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
-                  tal:content="python: field.get_value(\'title\')"/>\n
+              <text:p text:style-name=\'field-label-center\' i18n:domain="ui"\n
+                      i18n:translate=""\n
+                      tal:content="python: field.get_value(\'title\')"/>\n
               <text:p text:style-name=\'field-content-center\'\n
             tal:content="structure python: field.get_value(\'default\').replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'ImageField\'">\n
-              <text:p text:style-name=\'field-label-center\' i18n:domain="ui" i18n:translate=""\n
-                  tal:content="python: field.get_value(\'title\')"/>\n
+              <text:p text:style-name=\'field-label-center\' i18n:domain="ui"\n
+                      i18n:translate=""\n
+                      tal:content="python: field.get_value(\'title\')"/>\n
 \n
               <text:p text:style-name=\'field-content-center\'\n
-                      tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
+                      tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')));\n
+                      any python:here.log(preferred_width)">\n
                 <office:include_img style="inline-graphic"\n
-                            tal:attributes="width python: (size and size[0] or 100) / 20.;\n
-                                            path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
+                                    tal:attributes="width python: (preferred_width or 100) / 20.;\n
+                                    path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
               </text:p>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'OOoChart\'">\n
@@ -350,8 +345,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                    preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
                    % (display.capitalize());\n
                    " >\n
-                  <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.020) ;\n
-                     global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.020 );"/>\n
+                  <tal:block tal:define="global height python:\'%scm\' % (int((getattr(preference_tool, preferred_method_height_id)())) * 0.020);\n
+                             global width  python: \'%scm\' % (int((getattr(preference_tool, preferred_method_width_id)())) * 0.020 );"/>\n
                   </tal:block>\n
                 </tal:block>\n
                 <text:p text:style-name=\'field-content-center\'>\n
@@ -407,9 +402,9 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
               </tal:block>\n
               <tal:block tal:condition="python: field_type == \'ImageField\'">\n
                 <text:p text:style-name=\'field-content-center\'\n
-                        tal:define="size python: modules[\'Products.ERP5.Document.Image\'].getSizeFromImageDisplay(field.get_value(\'image_display\'))">\n
+                        tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')))">\n
                   <office:include_img style="inline-graphic"\n
-                                      tal:attributes="width python: (size and size[0] or 100) / 20.;\n
+                                      tal:attributes="width python: preferred_width or (100 / 20.);\n
                                       path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
               </text:p>\n
             </tal:block>\n
@@ -420,8 +415,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                         preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
                         % (display.capitalize());\n
                         " >\n
-                    <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.020) ;\n
-                          global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.020 );"/>\n
+                    <tal:block tal:define="global height python:\'%scm\' % (int((getattr(preference_tool, preferred_method_height_id)())) * 0.020) ;\n
+                               global width  python: \'%scm\' % (int((getattr(preference_tool, preferred_method_width_id)())) * 0.020 );"/>\n
                   </tal:block>\n
                 </tal:block>\n
                 <text:p text:style-name=\'field-content-center\'>\n
