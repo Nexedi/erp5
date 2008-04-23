@@ -193,17 +193,19 @@ class Image(File, OFSImage):
           display = self.REQUEST.cookies.get('display', None)
 
       # display may be set from a cookie.
+      image_size = self.getSizeFromImageDisplay(display)
       if (display is not None or resolution is not None or quality!=75 or format != ''\
-                              or frame is not None) and self.getSizeFromImageDisplay(display):
+                              or frame is not None) and image_size:
           if not self.hasConversion(display=display, format=format,
                                     quality=quality, resolution=resolution,
-                                    frame=frame):
+                                    frame=frame, image_size=image_size):
               # Generate photo on-the-fly
               self._makeDisplayPhoto(display, format=format, quality=quality,
-                                     resolution=resolution, frame=frame)
+                                     resolution=resolution, frame=frame,
+                                     image_size=image_size)
           mime, image = self.getConversion(display=display, format=format,
-                                     quality=quality ,resolution=resolution,
-                                     frame=frame)
+                                           quality=quality, resolution=resolution,
+                                           frame=frame, image_size=image_size)
           width, height = (image.width, image.height)
           # Set cookie for chosen size
           if cookie:
@@ -273,7 +275,7 @@ class Image(File, OFSImage):
       """Return list of displays with size info."""
       displays = []
       for id in self.displayIds(exclude):
-          if self._isGenerated(id, format=format, quality=quality,resolution=resolution):
+          if self._isGenerated(id, format=format, quality=quality, resolution=resolution):
               photo_width = self._photos[(id,format)].width
               photo_height = self._photos[(id,format)].height
               bytes = self._photos[(id,format)]._size()
@@ -299,18 +301,20 @@ class Image(File, OFSImage):
     """
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
       return None, None
+    image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
-                            or frame is not None) and self.getSizeFromImageDisplay(display):
+                            or frame is not None) and image_size:
         if not self.hasConversion(display=display, format=format,
                                   quality=quality, resolution=resolution,
-                                  frame=frame):
+                                  frame=frame, image_size=image_size):
             # Generate photo on-the-fly
             self._makeDisplayPhoto(display, format=format, quality=quality,
-                                   resolution=resolution, frame=frame)
+                                   resolution=resolution, frame=frame,
+                                   image_size=image_size)
         # Return resized image
         mime, image = self.getConversion(display=display, format=format,
                                          quality=quality ,resolution=resolution,
-                                         frame=frame)
+                                         frame=frame, image_size=image_size)
         return mime, image.data
     return self.getContentType(), self.getData()
 
@@ -325,18 +329,20 @@ class Image(File, OFSImage):
           format=format, quality=quality, resolution=resolution, frame=frame))
 
       # display may be set from a cookie (?)
+      image_size = self.getSizeFromImageDisplay(display)
       if (display is not None or resolution is not None or quality != 75 or format != ''\
-                              or frame is not None) and self.getSizeFromImageDisplay(display):
+                              or frame is not None) and image_size:
           if not self.hasConversion(display=display, format=format,
                                     quality=quality, resolution=resolution,
-                                    frame=frame):
+                                    frame=frame, image_size=image_size):
               # Generate photo on-the-fly
               self._makeDisplayPhoto(display, format=format, quality=quality,
-                                     resolution=resolution, frame=frame)
+                                     resolution=resolution, frame=frame,
+                                     image_size=image_size)
           # Return resized image
           mime, image = self.getConversion(display=display, format=format,
                                      quality=quality ,resolution=resolution,
-                                     frame=frame)
+                                     frame=frame, image_size=image_size)
           RESPONSE.setHeader('Content-Type', mime)
           return image.index_html(REQUEST, RESPONSE)
 
@@ -404,21 +410,25 @@ class Image(File, OFSImage):
       newimg.seek(0)
       return newimg
 
-  def _getDisplayData(self, display, format='', quality=75, resolution=None, frame=None):
+  def _getDisplayData(self, display, format='', quality=75, resolution=None, frame=None,
+                      image_size=None):
       """Return raw photo data for given display."""
       if display is None:
-          (width, height) = (self.getWidth(), self.getHeight())
+        (width, height) = (self.getWidth(), self.getHeight())
+      elif image_size is None:
+        (width, height) = self.getSizeFromImageDisplay(display)
       else:
-          (width, height) = self.getSizeFromImageDisplay(display)
+        (width, height) = image_size
       if width == 0 and height == 0:
-          width = self.getWidth()
-          height = self.getHeight()
+        width = self.getWidth()
+        height = self.getHeight()
       (width, height) = self._getAspectRatioSize(width, height)
       if (width, height) == (0, 0):return self.getData()
       return self._resize(display, width, height, quality, format=format,
                           resolution=resolution, frame=frame)
 
-  def _getDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None):
+  def _getDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
+                       image_size=None):
       """Return photo object for given display."""
       try:
           base, ext = string.split(self.id, '.')
@@ -426,19 +436,22 @@ class Image(File, OFSImage):
       except ValueError:
           id = self.id +'_'+ display
       image = OFSImage(id, self.getTitle(), self._getDisplayData(display, format=format,
-                           quality=quality, resolution=resolution, frame=frame))
+                           quality=quality, resolution=resolution, frame=frame,
+                           image_size=image_size))
       return image
 
-  def _makeDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None):
+  def _makeDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
+                        image_size=None):
       """Create given display."""
       if not self.hasConversion(display=display, format=format, quality=quality,
-                                resolution=resolution, frame=frame):
+                                resolution=resolution, frame=frame, image_size=image_size):
           image = self._getDisplayPhoto(display, format=format, quality=quality,
-                                        resolution=resolution, frame=frame)
+                                                 resolution=resolution, frame=frame,
+                                                 image_size=image_size)
           self.setConversion(image, mime=image.content_type,
                                     display=display, format=format,
                                     quality=quality, resolution=resolution,
-                                    frame=frame)
+                                    frame=frame, image_size=image_size)
 
   def _getAspectRatioSize(self, width, height):
       """Return proportional dimensions within desired size."""
