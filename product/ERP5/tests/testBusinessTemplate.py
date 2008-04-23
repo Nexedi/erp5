@@ -368,6 +368,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
+  def stepRemoveViewAction(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove PortalType
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    module_id = sequence.get('module_ptype_id')
+    object_type = pt._getOb(object_id, None)
+    object_type.deleteActions([0])
+
   def stepCheckPortalTypeExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check presence of portal type
@@ -2079,6 +2089,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Install importzed business template
     """
     import_bt = sequence.get('import_bt')
+    import_bt.install(force=1)
+
+  def stepReinstallBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    import_bt = sequence.get('current_bt')
+    diff_list = import_bt.BusinessTemplate_getModifiedObject()
+    self.assertTrue('portal_types/Geek Object/view' in [line.object_id for line in diff_list])
+    import_bt.reinstall()
+
+  def stepInstallCurrentBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    import_bt = sequence.get('current_bt')
     import_bt.install(force=1)
 
   def stepInstallWithoutForceBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
@@ -4969,6 +4995,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFirstActionExists \
                        CheckSecondActionExists \
                        CheckPortalTypeRoleExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_38_CheckReinstallation(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Reinstallation'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateFirstAction \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       InstallCurrentBusinessTemplate Tic \
+                       Tic \
+                       RemoveViewAction \
+                       ReinstallBusinessTemplate Tic \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
