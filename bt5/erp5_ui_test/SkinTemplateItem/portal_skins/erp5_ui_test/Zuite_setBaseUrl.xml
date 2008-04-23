@@ -70,6 +70,8 @@ if portal.hasProperty(\'erp5_ui_test_base_url\'):\n
   portal.manage_changeProperties(erp5_ui_test_base_url=base_url)\n
 else:\n
   portal.manage_addProperty(\'erp5_ui_test_base_url\', base_url, type=\'string\')\n
+\n
+return \'Ok\'\n
 </string> </value>
         </item>
         <item>
