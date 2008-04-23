@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -110,7 +107,7 @@ keeps `form_id`. This test doesn\'t test problems from #217</td></tr>\n
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td>${base_url}/foo_module/0/Base_viewHistory</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/Base_viewHistory*"/>\n
   <td></td>\n
 </tr>\n
 \n
