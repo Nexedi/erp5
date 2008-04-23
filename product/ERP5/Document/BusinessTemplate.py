@@ -349,7 +349,9 @@ class BusinessTemplateMissingDependency(Exception): pass
 class BaseTemplateItem(Implicit, Persistent):
   """
     This class is the base class for all template items.
+    is_bt_for_diff means This BT is used to compare self temporary BT with installed BT
   """
+  is_bt_for_diff = None
 
   def __init__(self, id_list, **kw):
     self.__dict__.update(kw)
@@ -1509,14 +1511,15 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           workflow_name = workflow
         if workflow[0] != '-' and \
             workflow_name not in chain_dict['chain_%s' % portal_type]:
-          raise NotFound, 'workflow %s not found in chain for portal_type %s'\
+          if not self.is_bt_for_diff:
+            raise NotFound, 'workflow %s not found in chain for portal_type %s'\
                 % (workflow, portal_type)
         if self._objects.has_key(portal_type):
           # other workflow id already defined for this portal type
           self._objects[portal_type].append(workflow)
         else:
           self._objects[portal_type] = [workflow,]
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'portal type %s not found in workflow chain'\
                                                     % portal_type
 
@@ -2214,7 +2217,8 @@ class ActionTemplateItem(ObjectTemplateItem):
           self._objects[key].wl_clearLocks()
           break
       else:
-        raise NotFound, 'Action %r not found' %(id,)
+        if not self.is_bt_for_diff:
+          raise NotFound, 'Action %r not found' %(id,)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -2471,7 +2475,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
           break
       else:
         obj = None
-      if obj is None:
+      if obj is None and not self.is_bt_for_diff:
         raise NotFound, 'the property %s is not found' % id
       self._objects[id] = (prop_type, obj)
 
@@ -2966,7 +2970,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_search_result_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Result key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'result_key_list'] = key_list
@@ -3057,7 +3061,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_search_related_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Related key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'related_key_list'] = key_list
@@ -3151,7 +3155,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_search_result_tables:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Result table "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'result_table_list'] = key_list
@@ -3243,7 +3247,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_keyword_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Keyword key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'keyword_key_list'] = key_list
@@ -3335,7 +3339,7 @@ class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_datetime_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'DateTime key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'datetime_key_list'] = key_list
@@ -3427,7 +3431,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_full_text_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Fulltext key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'full_text_key_list'] = key_list
@@ -3520,7 +3524,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_request_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Request key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'request_key_list'] = key_list
@@ -3612,7 +3616,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_multivalue_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Multivalue key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'multivalue_key_list'] = key_list
@@ -3703,7 +3707,7 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_catalog_topic_search_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Topic key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'topic_key_list'] = key_list
@@ -3794,7 +3798,7 @@ class CatalogScriptableKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_catalog_scriptable_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Scriptable key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'scriptable_key_list'] = key_list
@@ -3887,7 +3891,7 @@ class CatalogRoleKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_catalog_role_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'Role key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'role_key_list'] = key_list
@@ -3980,7 +3984,7 @@ class CatalogLocalRoleKeyTemplateItem(BaseTemplateItem):
     for key in self._archive.keys():
       if key in sql_catalog_local_role_keys:
         key_list.append(key)
-      else:
+      elif not self.is_bt_for_diff:
         raise NotFound, 'LocalRole key "%r" not found in catalog' %(key,)
     if len(key_list) > 0:
       self._objects[self.__class__.__name__+'/'+'local_role_key_list'] = key_list
@@ -4569,7 +4573,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Build each part
       for item_name in self._item_name_list:
-        getattr(self, item_name).build(self)
+        item = getattr(self, item_name)
+        if self.getBtForDiff():
+          item.is_bt_for_diff = 1
+        item.build(self)
 
     build = WorkflowMethod(build)
 
@@ -4638,7 +4645,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
         # update portal types properties to get last modifications
         bt2.getPortalTypesProperties()
-        bt2.edit(description='tmp bt generated for diff')
+        bt2.edit(description='tmp bt generated for diff', bt_for_diff=1)
         bt2.build()
         installed_bt = bt2
 
