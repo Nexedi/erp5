@@ -41,6 +41,7 @@ from Acquisition import aq_base
 from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
 
@@ -50,23 +51,10 @@ from OFS.content_types import guess_content_type
 
 from zLOG import LOG
 
-# XXX This should be move to preferences
-defaultdisplays = {'nano'      : (25,25),
-                   'micro'     : (64,64),
-                   'thumbnail' : (128,128),
-                   'xsmall'    : (200,200),
-                   'small'     : (320,320),
-                   'medium'    : (480,480),
-                   'large'     : (768,768),
-                   'xlarge'    : (1024,1024)
-                  }
 
-def getSizeFromImageDisplay(image_display):
-  """Retuns the size for this image display, or None if this image display name
-  is not known.
-  """
-  return defaultdisplays.get(image_display)
-
+default_displays_id_list = ('nano', 'micro', 'thumbnail',
+                            'xsmall', 'small', 'medium',
+                            'large', 'large', 'xlarge',)
 
 default_formats = ['jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm']
 
@@ -206,7 +194,7 @@ class Image(File, OFSImage):
 
       # display may be set from a cookie.
       if (display is not None or resolution is not None or quality!=75 or format != ''\
-                              or frame is not None) and defaultdisplays.has_key(display):
+                              or frame is not None) and self.getSizeFromImageDisplay(display):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality, resolution=resolution,
                                     frame=frame):
@@ -262,15 +250,15 @@ class Image(File, OFSImage):
   security.declareProtected('Access contents information', 'displayIds')
   def displayIds(self, exclude=('thumbnail',)):
       """Return list of display Ids."""
-      ids = defaultdisplays.keys()
+      id_list = list(default_displays_id_list)
       # Exclude specified displays
       if exclude:
-          for id in exclude:
-              if id in ids:
-                  ids.remove(id)
+        for id in exclude:
+          if id in id_list:
+            id_list.remove(id)
       # Sort by desired photo surface area
-      ids.sort(lambda x,y,d=defaultdisplays: cmp(d[x][0]*d[x][1], d[y][0]*d[y][1]))
-      return ids
+      id_list.sort(lambda x,y,d=self.getSizeFromImageDisplay: cmp(d(x)[0]*d(x)[1], d(y)[0]*d(y)[1]))
+      return id_list
 
   security.declareProtected('Access contents information', 'displayLinks')
   def displayLinks(self, exclude=('thumbnail',)):
@@ -293,8 +281,8 @@ class Image(File, OFSImage):
           else:
               (photo_width, photo_height, bytes, age) = (None, None, None, None)
           displays.append({'id': id,
-                            'width': defaultdisplays[id][0],
-                            'height': defaultdisplays[id][1],
+                            'width': self.getSizeFromImageDisplay(id)[0],
+                            'height': self.getSizeFromImageDisplay(id)[1],
                             'photo_width': photo_width,
                             'photo_height': photo_height,
                             'bytes': bytes,
@@ -312,7 +300,7 @@ class Image(File, OFSImage):
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
       return None, None
     if (display is not None or resolution is not None or quality != 75 or format != ''\
-                            or frame is not None) and defaultdisplays.has_key(display):
+                            or frame is not None) and self.getSizeFromImageDisplay(display):
         if not self.hasConversion(display=display, format=format,
                                   quality=quality, resolution=resolution,
                                   frame=frame):
@@ -338,7 +326,7 @@ class Image(File, OFSImage):
 
       # display may be set from a cookie (?)
       if (display is not None or resolution is not None or quality != 75 or format != ''\
-                              or frame is not None) and defaultdisplays.has_key(display):
+                              or frame is not None) and self.getSizeFromImageDisplay(display):
           if not self.hasConversion(display=display, format=format,
                                     quality=quality, resolution=resolution,
                                     frame=frame):
@@ -421,7 +409,7 @@ class Image(File, OFSImage):
       if display is None:
           (width, height) = (self.getWidth(), self.getHeight())
       else:
-          (width, height) = defaultdisplays[display]
+          (width, height) = self.getSizeFromImageDisplay(display)
       if width == 0 and height == 0:
           width = self.getWidth()
           height = self.getHeight()
@@ -467,6 +455,26 @@ class Image(File, OFSImage):
       """At least see if it *might* be valid."""
       return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
+  security.declareProtected('View', 'getSizeFromImageDisplay')
+  def getSizeFromImageDisplay(self, image_display):
+    """Retuns the size for this image display, or None if this image display name
+    is not known.
+    """
+    def getDefaultDisplayAsDict():
+      preference_tool = self.getPortalObject().portal_preferences
+      defaultdisplays = dict()
+      for id in default_displays_id_list:
+        height_preference = 'preferred_%s_image_height' % (id)
+        width_preferece = 'preferred_%s_image_width' % (id)
+        size_list = (preference_tool.getPreference(height_preference),
+                     preference_tool.getPreference(width_preferece))
+        defaultdisplays.setdefault(id, size_list)
+      return defaultdisplays
+    Cached_getDefaultDisplayAsDict = CachingMethod(getDefaultDisplayAsDict,
+                                                    id='Image_getDefaultDisplayAsDict',
+                                                    cache_factory='erp5_ui_long')
+    defaultdisplays = Cached_getDefaultDisplayAsDict()
+    return defaultdisplays.get(image_display)
 
   #
   # FTP/WebDAV support
