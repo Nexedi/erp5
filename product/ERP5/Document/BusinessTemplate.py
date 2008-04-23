@@ -1707,7 +1707,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         raise ValueError, "Portal Type %s not found in site" %(portal_type,)
       ob = types_tool._getOb(portal_type)
       prop_value = getattr(ob, self.class_property, ())
-      if not allowed_type in prop_value:
+      if not allowed_type in prop_value and not self.is_bt_for_diff:
         raise ValueError, "%s  %s not found in portal type %s" % (
                              getattr(self, 'name', self.__class__.__name__),
                              allowed_type, portal_type)
@@ -4642,12 +4642,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       reinstall = 0
       if installed_bt == self:
         reinstall = 1
-        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
-        # update portal types properties to get last modifications
-        bt2.getPortalTypesProperties()
-        bt2.edit(description='tmp bt generated for diff', bt_for_diff=1)
-        bt2.build()
-        installed_bt = bt2
+        if self.portal_templates._getOb(INSTALLED_BT_FOR_DIFF, None) is None:
+          bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
+          # update portal types properties to get last modifications
+          bt2.getPortalTypesProperties()
+          bt2.edit(description='tmp bt generated for diff', bt_for_diff=1)
+          bt2.build()
+          installed_bt = bt2
+        else:
+          installed_bt = self.portal_templates._getOb(INSTALLED_BT_FOR_DIFF)
 
       new_bt_format = self.getTemplateFormatVersion()
       if installed_bt_format == 0 and new_bt_format == 0:
