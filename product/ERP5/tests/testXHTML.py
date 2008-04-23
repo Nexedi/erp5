@@ -184,7 +184,7 @@ class W3Validator(object):
 
 class TidyValidator(object):
 
-  def __init__(self, validator_path):
+  def __init__(self, validator_path, show_warnings):
     self.validator_path = validator_path
     self.show_warnings = show_warnings
     self.name = 'tidy'
@@ -261,13 +261,13 @@ def validate_xhtml(validator, source, view_name, bt_name):
 def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
 
   def createSubContent(content, portal_type_list):
-    if len(portal_type_list):
-      new_portal_type = portal_type_list[0]
-      new_portal_type_list = portal_type_list[1:]
-      new_content = content.newContent(portal_type=new_portal_type)
-      return createSubContent(new_content, new_portal_type_list)
-    else:
+    if not portal_type_list:
       return content
+    if portal_type_list == [content.getPortalType()]:
+      return content
+    return createSubContent(
+               content.newContent(portal_type=portal_type_list[0]),
+               portal_type_list[1:])
 
   def testMethod(self):
     module = getattr(self.portal, module_id)
@@ -288,7 +288,6 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
   This function go on all portal_type recursivly if the portal_type could 
   contain other portal_types and make a test for all view that have action
   '''
-
   # iteration over all allowed portal_types inside the module/portal_type
   for portal_type in portal_type_list:
     portal_path = portal_type_path_dict[portal_type]
@@ -312,7 +311,7 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
         module_id = 'portal_trash'
 
       for action_information in business_template_info.actions[portal_type]:
-        if (action_information['category']=='object_view' and
+        if (action_information['category'] in ('object_view', 'object_list') and
             action_information['visible']==1 and
             action_information['text'].startswith('string:${object_url}/') and
             len(action_information['text'].split('/'))==2):
@@ -394,9 +393,10 @@ def addTestMethodDynamically(validator):
   tested_portal_type_list = []
   for business_template_info in business_template_info_list:
     for module_id, module_portal_type in business_template_info.modules.items():
-      portal_type_list = business_template_info.allowed_content_types.get(module_portal_type, ())
+      portal_type_list = [module_portal_type, ] + \
+            business_template_info.allowed_content_types.get(module_portal_type, ())
       portal_type_path_dict = {}
-      portal_type_path_dict=dict(map(None,portal_type_list,portal_type_list))
+      portal_type_path_dict = dict(map(None,portal_type_list,portal_type_list))
       testPortalTypeViewRecursivly(validator=validator,
                        module_id=module_id, 
                        business_template_info=business_template_info, 
@@ -424,7 +424,7 @@ if validator_to_use == 'w3c':
   else:
     validator = W3Validator(validator_path, show_warnings)
 
-elif validator_to_use == 'tidy': 
+elif validator_to_use == 'tidy':
   error = False
   warning = False
   validator_path = '/usr/bin/tidy'
