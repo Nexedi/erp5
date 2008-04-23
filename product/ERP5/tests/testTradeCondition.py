@@ -719,8 +719,8 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     self.assertEquals(self.tax, tax_line.getResourceValue())
     self.assertEquals(0.2, tax_line.getPrice())
     
-    # TODO: discuss this behaviour, and what about getTotalNetPrice ?
-    #self.assertEquals(120, self.order.getTotalPrice(fast=0))
+    self.assertEquals(100, self.order.getTotalPrice(fast=0))
+    self.assertEquals(120, self.order.getTotalNetPrice(fast=0))
 
 
   def test_hierarchical_order_line_and_tax_line(self):

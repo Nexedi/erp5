@@ -130,6 +130,16 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       aggregate = self.Delivery_zGetTotal(**kw)[0]
       return aggregate.total_price or 0
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTotalNetPrice')
+    def getTotalNetPrice(self, fast=0, src__=0, **kw):
+      """
+        Same as getTotalPrice, but including Tax and Discount.
+      """
+      total_price = self.getTotalPrice(fast=fast, src__=src__, **kw)
+      kw['portal_type'] = self.getPortalTaxMovementTypeList()
+      return total_price + self.getTotalPrice(fast=fast, src__=src__, **kw)
+
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getTotalQuantity')
     def getTotalQuantity(self, fast=0, src__=0, **kw):
