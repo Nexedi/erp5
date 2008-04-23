@@ -275,6 +275,11 @@ class BusinessTemplate:
       'type'        : 'boolean',
       'mode'        : 'w',
       'default'     : 0 },
+    { 'id'          : 'bt_for_diff',
+      'description' : 'A flag indicating if bt is temporary',
+      'type'        : 'boolean',
+      'mode'        : 'w',
+      'default'     : 0 },
  )
 
   _categories = ( )
