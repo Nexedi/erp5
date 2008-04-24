@@ -27,12 +27,14 @@
 ##############################################################################
 
 
+import os
 import unittest
 
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
 
 
@@ -82,6 +84,11 @@ class TestERP5Base(ERP5TypeTestCase):
   ##################################
   ##  Usefull methods
   ##################################
+
+  def makeImageFileUpload(self, filename):
+    return FileUpload(
+            os.path.join(os.path.dirname(__file__),
+            'test_data', 'images', filename), 'rb')
 
   def login(self):
     """Create a new manager user and login.
@@ -957,6 +964,15 @@ class TestERP5Base(ERP5TypeTestCase):
       image = entity.newContent(portal_type='Image')
       self.assertEquals([], image.checkConsistency())
       image.view() # viewing the image does not cause error
+
+  def test_ConvertImage(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    image_type, image_data = image.convert('jpg', display='thumbnail')
+    self.assertEquals('image/jpeg', image_type)
+    # magic
+    self.assertEquals('\xff', image_data[0])
+    self.assertEquals('\xd8', image_data[1])
 
   def test_Person_getCareerStartDate(self):
     # Person_getCareerStartDate scripts returns the date when an employee
