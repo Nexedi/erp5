@@ -33,7 +33,6 @@ from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
 from ZPublisher.HTTPRequest import FileUpload
-from xml.dom.ext.reader import PyExpat
 from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, get_request
@@ -49,6 +48,15 @@ from zLOG import LOG
 from zLOG import PROBLEM
 
 from OFS.Image import Pdata
+
+try:
+  from Ft.Xml import Parse
+except ImportError:
+  LOG('XMLSyncUtils', INFO, "Can't import Parse")
+  class Parse:
+    def __init__(self, *args, **kw):
+      raise ImportError, "Sorry, it was not possible to import Ft library"
+
 
 class CorruptedOOoFile(Exception): pass
 
@@ -162,8 +170,7 @@ class OOoBuilder(Implicit):
       stylesheet_doc.freeDoc(); content_doc.freeDoc(); result_doc.freeDoc()
       return output.getvalue()
     except ImportError:
-      reader = PyExpat.Reader()
-      document = reader.fromString(content_xml)
+      document = Parse(content_xml)
       document_element = document.documentElement
       tal = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:tal')
       tal.value = u'http://xml.zope.org/namespaces/tal'
@@ -236,8 +243,6 @@ class OOoParser(Implicit):
   """
   __allow_access_to_unprotected_subobjects__ = 1 
   def __init__(self):
-    # Create the PyExpat reader
-    self.reader = PyExpat.Reader()
     self.oo_content_dom = None
     self.oo_styles_dom  = None
     self.oo_files = {}
@@ -271,12 +276,13 @@ class OOoParser(Implicit):
     oo_unzipped.close()
 
     # Get the main content and style definitions
-    self.oo_content_dom = self.reader.fromString(self.oo_files["content.xml"])
-    self.oo_styles_dom  = self.reader.fromString(self.oo_files["styles.xml"])
+    self.oo_content_dom = Parse(self.oo_files["content.xml"])
+    self.oo_styles_dom  = Parse(self.oo_files["styles.xml"])
 
     # Create a namespace table
-    doc_ns = self.oo_styles_dom.getElementsByTagName("office:document-styles")
-    for i in range(doc_ns[0].attributes.length):
+    xpath = './/*[name() = "office:document-styles"]'
+    doc_ns = self.oo_styles_dom.xpath(xpath)
+    for i in range(doc_ns[0].attributes.length)[1:]:
         if doc_ns[0].attributes.item(i).nodeType == Node.ATTRIBUTE_NODE:
             name = doc_ns[0].attributes.item(i).name
             if name[:5] == "xmlns":
@@ -333,7 +339,7 @@ class OOoParser(Implicit):
     """
     spreadsheets = []
     # List all spreadsheets
-    for table in self.oo_content_dom.getElementsByTagName("table:table"):
+    for table in self.oo_content_dom.xpath('.//*[name() = "table:table"]'):
       spreadsheets.append(table)
     return spreadsheets
 
@@ -354,13 +360,15 @@ class OOoParser(Implicit):
     """
     spreadsheets = []
     # List all embedded spreadsheets
-    emb_objects = self.oo_content_dom.getElementsByTagName("draw:object")
+    emb_objects = self.oo_content_dom.xpath('.//*[name() = "draw:object"]')
     for embedded in emb_objects:
         document = embedded.getAttributeNS(self.ns["xlink"], "href")
         if document:
             try:
-                object_content = self.reader.fromString(self.oo_files[document[3:] + '/content.xml'])
-                tables = object_content.getElementsByTagName("table:table")
+                
+                object_content = Parse(self.oo_files[document[3:] + '/content.xml'])
+                xpath = './/*[name() = "table:table"]'
+                tables = self.oo_content_dom.xpath(xpath)
                 if tables:
                     for table in tables:
                         spreadsheets.append(table)
@@ -395,7 +403,7 @@ class OOoParser(Implicit):
     table_name = spreadsheet.getAttributeNS(self.ns["table"], "name")
 
     # Scan table and store usable informations
-    for line in spreadsheet.getElementsByTagName("table:table-row"):
+    for line in spreadsheet.xpath('.//*[name() = "table:table-row"]'):
 
       # TODO : to the same as cell about abusive repeated lines
 
@@ -409,7 +417,7 @@ class OOoParser(Implicit):
         table_line = []
 
         # Get all cells
-        cells = line.getElementsByTagName("table:table-cell")
+        cells = line.xpath('.//*[name() = "table:table-cell"]')
         cell_index_range = range(len(cells))
 
         for cell_index in cell_index_range:
@@ -423,7 +431,7 @@ class OOoParser(Implicit):
           #   can be found in OOo documents : <table:table-cell table:number-columns-repeated='246'/>
           # This is bad because it create too much irrevelent content that slow down the process
           # So it's a good idea to break the loop in this case
-          if cell.childNodes.length == 0 and cell_index == cell_index_range[-1]:
+          if len(cell.childNodes) == 0 and cell_index == cell_index_range[-1]:
             break
 
           # Handle cells group
@@ -437,9 +445,9 @@ class OOoParser(Implicit):
           for j in range(cells_to_repeat):
             # Get the cell content
             cell_text = None
-            text_tags = cell.getElementsByTagName("text:p")
+            text_tags = cell.xpath('.//*[name() = "text:p"]')
             for text in text_tags:
-              for k in range(text.childNodes.length):
+              for k in range(len(text.childNodes)):
                 child = text.childNodes[k]
                 if child.nodeType == Node.TEXT_NODE:
                   if cell_text == None:
