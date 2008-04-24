@@ -18,6 +18,7 @@ This page show the active selections for the current user.
 <table cellspacing="0" cellpadding="2" border="1">
   <tr>
     <th> Action </th>
+    <th> Action </th>
     <th> Selection Name </th>
     <th> Selection Parameters </th>
   </tr>
