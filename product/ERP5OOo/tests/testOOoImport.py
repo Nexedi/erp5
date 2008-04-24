@@ -230,6 +230,39 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
 
+  def test_CategoryTool_importCategoryFile_PathStars(self):
+    # tests CategoryTool_importCategoryFile with * in the paths columns
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category_path_stars.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+    
+  def test_CategoryTool_importCategoryFile_DuplicateIds(self):
+    # tests CategoryTool_importCategoryFile when a document contain same
+    # categories ID at different level (a good candidate for an acquisition
+    # bug)
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category_duplicate_ids.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(1, len(region))
+    self.assertEquals(['europe'], list(region.objectIds()))
+    self.assertEquals(['france'], list(region.europe.objectIds()))
+    self.assertEquals(['europe'], list(region.europe.france.objectIds()))
+    self.assertEquals(['france'], list(region.europe.france.europe.objectIds()))
+    self.assertEquals([], list(region.europe.france.europe.france.objectIds()))
+
   # simple OOoParser tests
   def test_getSpreadSheetMapping(self):
     parser = OOoParser()
