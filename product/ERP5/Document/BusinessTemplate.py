@@ -1048,7 +1048,6 @@ class PreferenceTemplateItem(PathTemplateItem):
         portal.portal_workflow.doActionFor(
                       pref,
                       'enable_action',
-                      wf_id='preference_workflow',
                       comment="Initialized during Business Template " \
                               "installation.")
 
