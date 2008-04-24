@@ -252,7 +252,7 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
         format_data = TemplateDict()
         format_data._push(info)
         format_data._push({'portal_type': ' OR '.join(variable_match['portal_type']),
-                           'local_roles': ';'.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
+                           'local_roles': '%3B'.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
         variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,
