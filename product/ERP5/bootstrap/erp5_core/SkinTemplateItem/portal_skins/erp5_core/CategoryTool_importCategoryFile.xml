@@ -155,7 +155,7 @@ else:\n
 \n
 # Extract tables from the speadsheet file\n
 filename = OOoParser.getFilename()\n
-spreadsheets = OOoParser.getSpreadsheetsMapping()\n
+spreadsheets = OOoParser.getSpreadsheetsMapping(no_empty_lines=True)\n
 \n
 # Some statistics\n
 new_category_counter = 0\n
@@ -166,7 +166,6 @@ deleted_category_counter = 0\n
 kept_category_counter = 0\n
 \n
 for table_name in spreadsheets.keys():\n
-\n
   # Get the header of the table\n
   columns_header = spreadsheets[table_name][0]\n
   # Get the mapping to help us know the property according a cell index\n
@@ -476,6 +475,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>import_file_content</string>
                             <string>str</string>
                             <string>filename</string>
+                            <string>True</string>
                             <string>spreadsheets</string>
                             <string>new_category_counter</string>
                             <string>updated_category_counter</string>
@@ -521,7 +521,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>is_new_category</string>
                             <string>keys</string>
                             <string>base_path_obj</string>
-                            <string>True</string>
                             <string>is_base_category</string>
                             <string>is_valid_category</string>
                             <string>category_id</string>
