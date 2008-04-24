@@ -42,15 +42,23 @@ class TestSearchKeyLexer(unittest.TestCase):
   """
   run_all_test = 1
   quiet = 0
-  
+
+  def assertSameSet(self, a, b, msg=""):
+    if not msg:
+      msg='%r != %r' % (a, b)
+    for i in a:
+      self.failUnless(i in b, msg)
+    for i in b:
+      self.failUnless(i in a, msg)
+    self.assertEquals(len(a), len(b), msg)
+
   def compare(self, search_key_class, search_value, expected_token_types):
     """ """
     key = getSearchKeyInstance(search_key_class)
-    tokens = key.tokenize(search_value)  
+    tokens = key.tokenize(search_value)
     token_types = [x.type for x in tokens]
-    self.assertEquals(set(token_types), set(expected_token_types))
+    self.assertSameSet(token_types, expected_token_types)
 
-  
   def test_01ProperPoolInitialization(self, quiet=quiet, run=run_all_test):
     """ Check that search key pool is properly initialized """
     if not run: return
@@ -102,31 +110,34 @@ size/Child/34"""
     self.compare(KeyWordKey, '<=John% and >="JOHN John"', 
                             ('LESSTHANEQUAL', 'KEYWORD', 'AND', 
                              'GREATERTHANEQUAL', 'WORDSET',))                             
-    self.compare(KeyWordKey, '=John% and >="JOHN John"', 
-                            ('EXPLICITEQUALLITYWORD', 'AND', 
+    self.compare(KeyWordKey, '=John% and >="JOHN John"',
+                            ('EXPLICITEQUALLITYWORD', 'AND',
                              'GREATERTHANEQUAL', 'WORDSET',))
     self.compare(KeyWordKey, '.', ('WORD',))
                              
   def test_04DateTimeKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for DateTimeKey."""
     if not run: return
-    self.compare(DateTimeKey, '2007.12.23', ('DATE',))     
-    self.compare(DateTimeKey, 
+    self.compare(DateTimeKey, '2007.12.23', ('DATE',))
+    self.compare(DateTimeKey,
                  '=2007.12.23 22:00:00 Universal or =23/12/2007 10:10 and !=2009-12-12',
                  ('EQUAL', 'DATE', 'OR', 'EQUAL', 'DATE', 'AND', 'NOT', 'DATE',))   
-    self.compare(DateTimeKey, 
+    self.compare(DateTimeKey,
                  '>=2007.12.23 22:00:00 GMT+02 or <=23/12/2007 and >2009/12/12 and <2009-11-11',
                  ('GREATERTHANEQUAL', 'DATE', 'OR', 'LESSTHANEQUAL', 'DATE', 
                    'AND', 'GREATERTHAN', 'DATE', 'AND', 'LESSTHAN', 'DATE'))
-                     
+
   def test_05FullTextKey(self, quiet=quiet, run=run_all_test):
-    """ Check lexer for FullTextKey."""  
+    """ Check lexer for FullTextKey."""
     if not run: return
-    self.compare(FullTextKey, 'John Doe', 
-                 ('WORD', 'WORD',)) 
-    self.compare(FullTextKey, '+John -Doe', 
-                 ('PLUS', 'WORD', 'MINUS', 'WORD',)) 
+    self.compare(FullTextKey, 'John Doe', ('WORD', 'WORD',))
+    self.compare(FullTextKey, '+John -Doe',
+                 ('PLUS', 'WORD', 'MINUS', 'WORD',))
     self.compare(FullTextKey, '.', ('WORD',))
+    self.compare(FullTextKey, 'John*', ('WORD', 'ASTERISK'))
+    self.compare(FullTextKey, '+apple +(>turnover <strudel)',
+                 ('PLUS', 'WORD', 'PLUS', 'LEFTPARENTHES', 'GREATERTHAN', 'WORD',
+                  'LESSTHAN', 'WORD', 'RIGHTPARENTHES',))
 
   def test_06ScriptableKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for ScriptableKey."""  
@@ -387,6 +398,13 @@ class TestSearchKeyQuery(unittest.TestCase):
                 "MATCH full_text.SearchableText AGAINST ('.' )",
                 ["MATCH full_text.SearchableText AGAINST ('.' ) AS full_text_SearchableText_relevance",
                 "MATCH full_text.SearchableText AGAINST ('.' ) AS SearchableText_relevance"])
+    #Boolean Mode
+    self.compare(FullTextKey,
+                'full_text.SearchableText',
+                'John*',
+                "MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE)",
+                ["MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE) AS full_text_SearchableText_relevance",
+                "MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE) AS SearchableText_relevance"])
     
   def test_07ScriptableKey(self, quiet=quiet, run=run_all_test):
     """ Check ScriptableKey query generation"""
