@@ -52,10 +52,10 @@ from OFS.Image import Pdata
 try:
   from Ft.Xml import Parse
 except ImportError:
-  LOG('XMLSyncUtils', INFO, "Can't import Parse")
+  LOG('OOoUtils', INFO, "Can't import Parse")
   class Parse:
     def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library"
+      raise ImportError, "Sorry, it was not possible to import Ft library, python2.4-4Suite-XML is not installed"
 
 
 class CorruptedOOoFile(Exception): pass
