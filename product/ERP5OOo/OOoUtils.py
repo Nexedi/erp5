@@ -469,6 +469,10 @@ class OOoParser(Implicit):
         # Add the line to the table
         if table_line != None:
           table.append(table_line)
+        else:
+          # If the line is empty here, the repeated line will also be empty, so
+          # no need to loop.
+          break
 
     # Reduce the table to the minimum
     new_table = self._getReducedTable(table)
