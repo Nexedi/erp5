@@ -5069,7 +5069,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         prop_type = prop['type']
         id = prop['id']
         if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id',
-                  'install_object_list_list', 'id_generator'):
+                  'install_object_list_list', 'id_generator', 'bt_for_diff'):
           continue
         value = self.getProperty(id)
         if prop_type in ('text', 'string', 'int', 'boolean'):
