@@ -71,17 +71,9 @@ orga_id = "site_%3s" %(site.getCodification())\n
 organisation = context.organisation_module[orga_id]\n
 \n
 account_list = [x for x in organisation.objectValues(portal_type=\'Bank Account\') if x.getValidationState() == \'valid\']\n
-if len(account_list)==0:\n
+if len(account_list)!=1:\n
   raise ValueError, \'Must not get %d account for the organisation %s\' %(len(account_list),organisation.getTitle())\n
-for acc in account_list:\n
-  acc = acc.getObject()\n
-  if acc.getBicCode() is not None:\n
-    return acc\n
-\n
-\n
-raise ValueError, "No account with bic code found"\n
-\n
-#return account_list[0]\n
+return account_list[0]\n
 </string> </value>
         </item>
         <item>
@@ -145,8 +137,6 @@ raise ValueError, "No account with bic code found"\n
                             <string>account_list</string>
                             <string>len</string>
                             <string>ValueError</string>
-                            <string>acc</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
