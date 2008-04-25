@@ -8,4 +8,4 @@ class_name:
 class_file:
 </dtml-comment>
 <params></params>
-DROP TABLE message
+DROP TABLE IF EXISTS message
