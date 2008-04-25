@@ -43,21 +43,12 @@ class TestSearchKeyLexer(unittest.TestCase):
   run_all_test = 1
   quiet = 0
 
-  def assertSameSet(self, a, b, msg=""):
-    if not msg:
-      msg='%r != %r' % (a, b)
-    for i in a:
-      self.failUnless(i in b, msg)
-    for i in b:
-      self.failUnless(i in a, msg)
-    self.assertEquals(len(a), len(b), msg)
-
   def compare(self, search_key_class, search_value, expected_token_types):
     """ """
     key = getSearchKeyInstance(search_key_class)
     tokens = key.tokenize(search_value)
     token_types = [x.type for x in tokens]
-    self.assertSameSet(token_types, expected_token_types)
+    self.assertEqual(token_types, list(expected_token_types))
 
   def test_01ProperPoolInitialization(self, quiet=quiet, run=run_all_test):
     """ Check that search key pool is properly initialized """
