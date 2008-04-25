@@ -17,7 +17,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Started state is a state where the user can modify the transaction, then go back to Stopped state, which will check transaction validity.</string> </value>
+            <value> <string>Journalised State is use for accounting transaction that have been recorded in\r\n
+a journal as a debit and a credit.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -31,7 +32,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Started</string> </value>
+            <value> <string>Journalised</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

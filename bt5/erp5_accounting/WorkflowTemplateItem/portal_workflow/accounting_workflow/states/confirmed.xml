@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Confirmed State is used for accounting transactions that have to be turned into real accounting transactions</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

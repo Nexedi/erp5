@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Closed State is used for accounting transactions that belong to "closed" accounting periods</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

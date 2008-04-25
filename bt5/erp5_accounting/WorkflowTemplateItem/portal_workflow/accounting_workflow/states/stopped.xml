@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Stopped state is a state where the transaction can no longer be modified, but the user can still go back to start state to modify again.</string> </value>
+            <value> <string>Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Stopped</string> </value>
+            <value> <string>Posted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
