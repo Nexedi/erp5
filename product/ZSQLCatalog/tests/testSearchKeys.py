@@ -134,6 +134,7 @@ size/Child/34"""
     self.compare(FullTextKey, '+John -Doe',
                  ('PLUS', 'WORD', 'MINUS', 'WORD',))
     self.compare(FullTextKey, '.', ('WORD',))
+    self.compare(FullTextKey, '"John Doe"', ('DOUBLEQUOTE', 'WORD', 'WORD', 'DOUBLEQUOTE'))
     self.compare(FullTextKey, 'John*', ('WORD', 'ASTERISK'))
     self.compare(FullTextKey, '+apple +(>turnover <strudel)',
                  ('PLUS', 'WORD', 'PLUS', 'LEFTPARENTHES', 'GREATERTHAN', 'WORD',

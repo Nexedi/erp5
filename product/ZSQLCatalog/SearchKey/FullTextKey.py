@@ -58,7 +58,7 @@ class FullTextKey(SearchKey):
   t_DOUBLEQUOTE = r'(\")'
 
   def t_WORD(self, t):
-    r'[^\+\-<>\(\)\~\*\"\s]$|[^\+\-<>\(\)\~\*\s]+[^\*\s\)]'
+    r'[^\+\-<>\(\)\~\*\"\s]$|[^\+\-<>\(\)\~\*\"\s]+[^\*\"\s\)]'
     #r'[^\+\-<>\(\)\~\*\"\s]\S*'
     #r'[\x7F-\xFF\w\d][\x7F-\xFF\w\d]*'
     # WORD may contain arbitrary letters and numbers without white space
