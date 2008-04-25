@@ -90,6 +90,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
   business_field = term.getBusinessField()\n
 \n
   english_term = catalog.getResultValue(portal_type=\'Glossary Term\',\n
+                                        validation_state=\'validated\',\n
                                         language=\'en\',\n
                                         reference=reference,\n
                                         business_field=business_field)\n
