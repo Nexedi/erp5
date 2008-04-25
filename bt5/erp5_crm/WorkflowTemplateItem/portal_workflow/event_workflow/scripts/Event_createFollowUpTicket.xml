@@ -71,6 +71,8 @@
 \n
 event = state_change[\'object\']\n
 \n
+follow_up_ticket_title = \'\'\n
+\n
 if not(len(event.getFollowUpValueList())):\n
   history = event.portal_workflow.getInfoFor(event, \'history\', wf_id=\'event_workflow\')\n
 \n
@@ -132,13 +134,13 @@ if not(len(event.getFollowUpValueList())):\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>event</string>
+                            <string>follow_up_ticket_title</string>
                             <string>len</string>
                             <string>_getattr_</string>
                             <string>history</string>
                             <string>_getiter_</string>
                             <string>history_item</string>
                             <string>follow_up_ticket_type</string>
-                            <string>follow_up_ticket_title</string>
                           </tuple>
                         </value>
                     </item>
