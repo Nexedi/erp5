@@ -70,7 +70,7 @@ glossary_module = context\n
 \n
 for i in catalog(portal_type=\'Glossary Term\',\n
                  validation_state=\'validated\',\n
-                 language=\'en\'):\n
+                 language_id=\'en\'):\n
 \n
   english_term = i.getObject()\n
   \n
@@ -80,7 +80,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
   if catalog.getResultValue(portal_type=\'Glossary Term\',\n
                             reference=reference,\n
                             business_field=business_field,\n
-                            language=language) is not None:\n
+                            language_id=language) is not None:\n
     continue\n
 \n
   new_term = glossary_module.newContent(portal_type=\'Glossary Term\',\n
