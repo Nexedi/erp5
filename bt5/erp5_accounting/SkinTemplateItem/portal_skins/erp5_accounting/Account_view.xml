@@ -80,6 +80,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_credit_account</string>
                         <string>my_gap_list</string>
                         <string>my_account_type</string>
