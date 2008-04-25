@@ -41,8 +41,6 @@ from BTrees.Length import Length
 class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
-
-    TODO - XXX: please use base tool
   """
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
