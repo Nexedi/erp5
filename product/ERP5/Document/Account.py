@@ -81,5 +81,6 @@ class Account(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Account
                       , PropertySheet.Arrow
+                      , PropertySheet.Reference
                       )
 
