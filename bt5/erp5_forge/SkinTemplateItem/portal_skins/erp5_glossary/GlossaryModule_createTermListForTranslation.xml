@@ -79,7 +79,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
 \n
   if catalog.getResultValue(portal_type=\'Glossary Term\',\n
                             reference=reference,\n
-                            business_field=business_field,\n
+                            business_field_title=business_field,\n
                             language_id=language) is not None:\n
     continue\n
 \n

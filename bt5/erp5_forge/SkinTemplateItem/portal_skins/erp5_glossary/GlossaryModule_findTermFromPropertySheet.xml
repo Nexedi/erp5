@@ -80,7 +80,7 @@ else:\n
   for i in result:\n
     item_list = portal_catalog(portal_type=\'Glossary Term\',\n
                                reference=i[\'reference\'], language=i[\'language\'],\n
-                               business_field=i[\'business_field\'],\n
+                               business_field_title=i[\'business_field\'],\n
                                validation_state="!=deleted")\n
     if len(item_list)>0:\n
       continue\n

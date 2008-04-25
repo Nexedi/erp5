@@ -83,7 +83,7 @@ catalog = context.portal_catalog\n
 \n
 for i in catalog(portal_type=\'Glossary Term\',\n
                  validation_state=\'validated\',\n
-                 business_field=business_field_list,\n
+                 business_field_title=business_field_list,\n
                  language=language):\n
   term = i.getObject()\n
   reference = term.getReference()\n
@@ -93,7 +93,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
                                         validation_state=\'validated\',\n
                                         language=\'en\',\n
                                         reference=reference,\n
-                                        business_field=business_field)\n
+                                        business_field_title=business_field)\n
   if english_term is None:\n
     raise ValueError, \'Corresponding English term to "%s" does not exist in glossary.\' % term.Title()\n
 \n
@@ -102,17 +102,18 @@ for i in catalog(portal_type=\'Glossary Term\',\n
 \n
   english_title = english_term.getTitle()\n
   english_description = english_term.getDescription()\n
+  english_relative_url = english_term.getRelativeUrl()\n
 \n
   if translated_title:\n
     if not english_title:\n
-      raise ValueError, \'Title of corresponding English term to "%s" is empty.\' % translated_title\n
+      raise ValueError, \'Title of corresponding English term(%s) to "%s" is empty.\' % (english_relative_url, translated_title)\n
     if translated_title!=english_title:\n
       print MESSAGE_TEMPLATE % {\'english\':format(english_title),\n
                                 \'translation\':format(translated_title)}\n
 \n
   if translated_description:\n
     if not english_description:\n
-      raise ValueError, \'Description of corresponding English term to "%s" is empty.\' % translated_description\n
+      raise ValueError, \'Description of corresponding English term(%s) to "%s" is empty.\' % (english_relative_url, translated_description)\n
 \n
     if translated_description!=english_description:\n
       print MESSAGE_TEMPLATE % {\'english\':format(english_description),\n
@@ -187,6 +188,7 @@ return printed\n
                             <string>translated_description</string>
                             <string>english_title</string>
                             <string>english_description</string>
+                            <string>english_relative_url</string>
                             <string>RESPONSE</string>
                           </tuple>
                         </value>

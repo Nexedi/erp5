@@ -76,7 +76,7 @@ def get_term_list(business_field, reference):\n
   term_list = portal_catalog(portal_type=\'Glossary Term\',\n
                              validation_state=\'validated\',\n
                              language=\'en\',\n
-                             business_field=business_field,\n
+                             business_field_title=business_field,\n
                              reference=reference)\n
   return [i.getObject() for i in term_list]\n
 \n
