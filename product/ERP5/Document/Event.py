@@ -96,6 +96,23 @@ class Event(EmailDocument, Movement):
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getExplanationValue')
     def getExplanationValue(self):
-      """An event is it's own explanation
+      """
+        An event is it's own explanation
       """
       return self
+
+    security.declareProtected(Permissions.UseMailhostServices, 'send')
+    def send(self, *args, **kw):
+      """
+        Make the send method overridable by typed based script
+        so that special kinds of events can use a different gateway
+        to send messages. This is useful for example to send
+        faxes through fax server or to send letters by printing
+        them to the printer or to send SMS through a custom 
+        gateway. In the most usual case, sending will only consist
+        in changing the destination.
+      """
+      send_script = self._getTypeBasedMethod('send')
+      if send_script is None:
+        return self.send(*args, **kw)
+      return send_script(*args, **kw)

@@ -143,7 +143,9 @@ class NotificationTool(BaseTool):
 
   security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
   def sendMessage(self, sender=None, recipient=None, subject=None, 
-                  message=None, attachment_list=None):
+                        message=None, attachment_list=None,
+                        notifier_list=None, priority_level=None,
+                        is_persistent=False):
     """
       This method provides a common API to send messages to users
       from object actions of worflow scripts.
@@ -158,6 +160,16 @@ class NotificationTool(BaseTool):
       message -- the text of the message (already translated)
 
       attachment_list -- attached documents (optional)
+
+      priority_level -- a priority level which is used to
+                        lookup user preferences and decide
+                        which notifier to use
+
+      notifier_list -- a list of portal type names to use
+                       to send the event
+
+      is_persistent -- whenever CRM is available, store
+                       notifications as events
 
     TODO: support default notification email
     """
@@ -216,8 +228,60 @@ class NotificationTool(BaseTool):
         raise AttributeError, \
             "Can not contact the person %s" % person.getReference()
 
+    return
     # Future implemetation could consist in implementing
     # policies such as grouped notification (per hour, per day,
     # per week, etc.) depending on user preferences. It
-    # also add some urgency and selection of notification
+    # also add some priority and selection of notification
     # tool (ex SMS vs. email)
+
+    # Here is a sample code of how this implementation could look like
+    # (pseudo code)
+    # NOTE: this implementation should also make sure that the current
+    # buildEmailMessage method defined here and the Event.send method
+    # are merged once for all
+
+    if self.getNotifierList():
+      # CRM is installed - so we can lookup notification preferences
+      if notifier_list is None:
+        # Find which notifier to use on preferences
+        if priority_level not in ('low', 'medium', 'high'): # XXX Better naming required here
+          priority_level = 'high'
+        notifier_list = self.preferences.getPreference(
+              'preferred_%s_priority_nofitier_list' % priority_level)
+      event_list = []
+      for notifier in notifier_list:
+        event_module = self.getDefaultModule(notifier)
+        new_event = event_module.newContent(portal_type=notifier, temp_object=is_persistent)
+        event_list.append(new_event)
+    else:
+      # CRM is not installed - only notification by email is possible
+      # So create a temp object directly
+      from Products.ERP5Type.Document import newTempEvent
+      new_event = newTempEvent(context, '_')
+      event_list = [new_event]
+
+    if event in event_list:
+      # We try to build events using the same parameters as the one
+      # we were provided for notification.
+      # The handling of attachment is still an open question:
+      # either use relation (to prevent duplication) or keep
+      # a copy inside. It is probably a good idea to
+      # make attachment_list polymorphic in order to be able
+      # to provide different kinds of attachments can be provided
+      # Either document references or binary data.
+      event.build(sender=sender, recipient=recipient, subject=subject, 
+                  message=message, attachment_list=attachment_list,) # Rename here and add whatever
+                                                                     # parameter makes sense such
+                                                                     # as text format
+      event.send() # Make sure workflow transition is invoked if this is
+                   # a persistent notification
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getNotifierList')
+  def getNotifierList(self):
+    """
+      Returns the list of available notifiers. For now
+      we consider that any event is a potential notifier.
+      This could change though.
+    """
+    return self.getPortalEventTypeList()
