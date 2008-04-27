@@ -277,6 +277,13 @@ class NotificationTool(BaseTool):
       event.send() # Make sure workflow transition is invoked if this is
                    # a persistent notification
 
+      # Aggregation could be handled by appending the notification
+      # to an existing message rather than creating a new one.
+      # Sending the message should be handled by the alarm based
+      # on a date value stored on the event. This probably required
+      # a new workflow state to represent events which are waiting
+      # for being sent automatically. (ie. scheduled sending)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getNotifierList')
   def getNotifierList(self):
     """
