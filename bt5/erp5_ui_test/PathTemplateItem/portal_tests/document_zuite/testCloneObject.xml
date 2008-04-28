@@ -78,7 +78,7 @@
 <!-- as the init macro create 1 Foo, we assume that our newly created foo will\n
 have id "2". This is probably a bit too stupid. -->\n
 <tr>\n
-  <td>assertLocation</td>\n
+  <td>assertAbsoluteLocation</td>\n
   <td tal:content="string:glob:${here/portal_url}/foo_module/2/view*"/>\n
   <td></td>\n
 </tr>\n
@@ -99,7 +99,7 @@ have id "2". This is probably a bit too stupid. -->\n
   <td>Add Foo Line</td>\n
 </tr>\n
 <tr>\n
-  <td>assertLocation</td>\n
+  <td>assertAbsoluteLocation</td>\n
   <td tal:content="string:glob:${here/portal_url}/foo_module/2/1/view*"/>\n
   <td></td>\n
 </tr>\n
@@ -121,7 +121,7 @@ another object of the same type. -->\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertLocation</td>\n
+  <td>assertAbsoluteLocation</td>\n
   <td tal:content="string:glob:${here/portal_url}/foo_module/2/2/FooLine_view*"/>\n
   <td></td>\n
 </tr>\n
@@ -146,7 +146,7 @@ another object of the same type. -->\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertLocation</td>\n
+  <td>assertAbsoluteLocation</td>\n
   <td tal:content="string:glob:${here/portal_url}/foo_module/3/view*"/>\n
   <td></td>\n
 </tr>\n
