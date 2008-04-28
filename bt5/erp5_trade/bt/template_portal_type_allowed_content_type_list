@@ -27,6 +27,7 @@ Purchase Packing List | Purchase Packing List Line
 Purchase Trade Condition Module | Purchase Trade Condition
 Purchase Trade Condition | Discount Model Line
 Purchase Trade Condition | Payment Condition
+Purchase Trade Condition | Purchase Supply Line
 Purchase Trade Condition | Tax Model Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
@@ -48,5 +49,6 @@ Sale Packing List | Sale Packing List Line
 Sale Trade Condition Module | Sale Trade Condition
 Sale Trade Condition | Discount Model Line
 Sale Trade Condition | Payment Condition
+Sale Trade Condition | Sale Supply Line
 Sale Trade Condition | Tax Model Line
 Tax Module | Tax

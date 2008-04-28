@@ -63,6 +63,7 @@
   <item>Tax Model Line</item>
   <item>Discount Model Line</item>
   <item>Payment Condition</item>
+  <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition Module">
   <item>Purchase Trade Condition</item>
@@ -107,6 +108,7 @@
  <portal_type id="Sale Trade Condition">
   <item>Tax Model Line</item>
   <item>Payment Condition</item>
+  <item>Sale Supply Line</item>
   <item>Discount Model Line</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
