@@ -10,15 +10,13 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+              </list>
             </value>
         </item>
         <item>
@@ -87,8 +85,31 @@
                     <value> <string>PurchaseSupply_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Supply Line</string>
+                          <string>Supply Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>Sale Supply Line</string>
+                          <string>Sale Supply Line</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>sale_supply_line_selection</string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Sale Supply Lines</string> </value>
                 </item>
               </dictionary>
             </value>
