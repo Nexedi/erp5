@@ -84,6 +84,15 @@ task_line_list = []\n
 for task in task_list:\n
   task_line_list.extend(task.objectValues(portal_type=(\'Task Line\', \'Task Report Line\')))\n
 \n
+\n
+def sortTaskLine(a, b):\n
+  result = cmp(a.getStartDate(), b.getStartDate())\n
+  if result == 0:\n
+    result = cmp(a.getTitle(), b.getTitle())\n
+  return result\n
+\n
+task_line_list.sort(sortTaskLine)\n
+\n
 return task_line_list\n
 </string> </value>
         </item>
@@ -140,6 +149,7 @@ return task_line_list\n
                             <string>task_list</string>
                             <string>task_line_list</string>
                             <string>task</string>
+                            <string>sortTaskLine</string>
                           </tuple>
                         </value>
                     </item>

@@ -68,17 +68,15 @@
             <value> <string>request = context.REQUEST\n
 \n
 project_line_portal_type = \'Project Line\'\n
-domain_list = []\n
-\n
-object_path = request.get(\'object_path\')\n
-if object_path is None:\n
-  # Sometimes the object_path not comes with the request, when you edit for example.\n
-  object_path = context.REQUEST.get(\'URL1\').split(\'/\')[-1]\n
 \n
 domain_list = []\n
+\n
+here = context.REQUEST[\'here\']\n
+\n
+\n
 \n
 if depth == 0:\n
-  category_list = [context.project_module.restrictedTraverse(object_path)]\n
+  category_list = here.contentValues(portal_type=project_line_portal_type)\n
   \n
 else:\n
   category_list = []\n
@@ -87,15 +85,16 @@ else:\n
     parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
     category_list.extend(context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type))\n
 \n
-i=0\n
+i = 0\n
 for category in category_list:\n
   domain = parent.generateTempDomain(id = \'%s_%s\' % (depth, i))\n
   domain.edit(title = category.getTitle(),\n
               membership_criterion_base_category = (\'source_project\', ), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
+              membership_criterion_category = (\'source_project/\' + category.getRelativeUrl(),),\n
               domain_generator_method_id = script.id,\n
               uid = category.getUid())\n
   i += 1\n
+                \n
   domain_list.append(domain)\n
 \n
 return domain_list\n
@@ -149,9 +148,8 @@ return domain_list\n
                             <string>request</string>
                             <string>project_line_portal_type</string>
                             <string>domain_list</string>
-                            <string>object_path</string>
-                            <string>None</string>
                             <string>_getitem_</string>
+                            <string>here</string>
                             <string>category_list</string>
                             <string>parent_category_list</string>
                             <string>_getiter_</string>
