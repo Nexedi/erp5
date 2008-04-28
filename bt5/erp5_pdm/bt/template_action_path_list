@@ -15,7 +15,7 @@ Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
 Purchase Supply Line | discount_ratio
 Purchase Supply Line | exclusive_discount_ratio
-Purchase Supply Line | non_discountable__additional_price
+Purchase Supply Line | non_discountable_additional_price
 Purchase Supply Line | surcharge_ratio
 Purchase Supply Line | variable_additional_price
 Purchase Supply Line | view
@@ -25,7 +25,7 @@ Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio
 Sale Supply Line | exclusive_discount_ratio
-Sale Supply Line | non_discountable__additional_price
+Sale Supply Line | non_discountable_additional_price
 Sale Supply Line | surcharge_ratio
 Sale Supply Line | variable_additional_price
 Sale Supply Line | view
@@ -40,7 +40,7 @@ Supply Line | additional_price
 Supply Line | base_price
 Supply Line | discount_ratio
 Supply Line | exclusive_discount_ratio
-Supply Line | non_discountable__additional_price
+Supply Line | non_discountable_additional_price
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
 Supply Line | view

@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>non_discountable__additional_price</string> </value>
+            <value> <string>non_discountable_additional_price</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
