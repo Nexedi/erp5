@@ -83,9 +83,7 @@ PurchaseTradeCondition<-PurchaseOrder<-PurchasePackingList
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>my_source_decision_destination_reference</string>
                         <string>my_order</string>
-                        <string>my_received_date</string>
                         <string>my_origin</string>
                         <string>my_errand_ratio</string>
                         <string>my_segmentation</string>
