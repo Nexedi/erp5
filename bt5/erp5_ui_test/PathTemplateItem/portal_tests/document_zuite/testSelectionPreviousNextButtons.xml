@@ -143,7 +143,7 @@
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td tal:replace="string:glob:${here/portal_url}/foo_module/FooModule_viewFooList*"/>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/FooModule_viewFooList*"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
