@@ -12,6 +12,8 @@ Cash Movement New Not Emitted Line
 Cash Movement New Not Emitted Module
 Cash Sorting
 Cash Sorting Module
+Cash Sorting Statistic
+Cash Sorting Statistic Module
 Cash To Currency Purchase
 Cash To Currency Purchase Module
 Cash To Currency Sale
@@ -27,6 +29,8 @@ Destruction Survey Module
 Exchanged Mutilated Banknote Line
 Foreign Cash Reception
 Foreign Cash Reception Module
+Historical Operation
+Historical Operation Module
 Incoming Cash Balance Regulation Line
 Incoming Cash Exchange Line
 Incoming Cash Sorting Line

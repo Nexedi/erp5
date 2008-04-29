@@ -7,6 +7,8 @@ Cash Movement New Not Emitted | cash_movement_new_not_emitted_workflow
 Cash Movement New Not Emitted | edit_workflow
 Cash Movement | cash_movement_workflow
 Cash Movement | edit_workflow
+Cash Sorting Statistic | cash_sorting_statistic_workflow
+Cash Sorting Statistic | edit_workflow
 Cash Sorting | cash_sorting_workflow
 Cash Sorting | edit_workflow
 Cash To Currency Purchase | cash_to_currency_purchase_workflow
@@ -26,6 +28,8 @@ Destruction Survey | destruction_survey_workflow
 Destruction Survey | edit_workflow
 Foreign Cash Reception | edit_workflow
 Foreign Cash Reception | foreign_cash_reception_workflow
+Historical Operation | edit_workflow
+Historical Operation | historical_operation_workflow
 Internal Money Deposit | edit_workflow
 Internal Money Deposit | internal_money_deposit_workflow
 Internal Money Payment | edit_workflow

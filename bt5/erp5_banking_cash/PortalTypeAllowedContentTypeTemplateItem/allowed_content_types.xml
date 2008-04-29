@@ -45,6 +45,12 @@
  <portal_type id="Cash Sorting Module">
   <item>Cash Sorting</item>
  </portal_type>
+ <portal_type id="Cash Sorting Statistic">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Cash Sorting Statistic Module">
+  <item>Cash Sorting Statistic</item>
+ </portal_type>
  <portal_type id="Cash To Currency Purchase">
   <item>Incoming Cash To Currency Purchase Line</item>
   <item>Outgoing Cash To Currency Purchase Line</item>
@@ -89,6 +95,12 @@
  </portal_type>
  <portal_type id="Foreign Cash Reception Module">
   <item>Foreign Cash Reception</item>
+ </portal_type>
+ <portal_type id="Historical Operation">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Historical Operation Module">
+  <item>Historical Operation</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>Cash Delivery Cell</item>

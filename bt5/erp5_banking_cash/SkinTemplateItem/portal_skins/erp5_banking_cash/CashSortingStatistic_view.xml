@@ -108,6 +108,7 @@
                       <list>
                         <string>my_source_reference</string>
                         <string>my_site</string>
+                        <string>my_statistic_type</string>
                       </list>
                     </value>
                 </item>

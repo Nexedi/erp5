@@ -14,6 +14,8 @@ Cash Movement New Not Emitted | Cash Movement New Not Emitted Container
 Cash Movement New Not Emitted | Cash Movement New Not Emitted Line
 Cash Movement | Cash Delivery Line
 Cash Sorting Module | Cash Sorting
+Cash Sorting Statistic Module | Cash Sorting Statistic
+Cash Sorting Statistic | Cash Delivery Line
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
 Cash To Currency Purchase Module | Cash To Currency Purchase
@@ -33,6 +35,8 @@ Destruction Survey | Cash Delivery Line
 Exchanged Mutilated Banknote Line | Cash Delivery Cell
 Foreign Cash Reception Module | Foreign Cash Reception
 Foreign Cash Reception | Cash Delivery Line
+Historical Operation Module | Historical Operation
+Historical Operation | Cash Delivery Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
 Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell

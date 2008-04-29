@@ -20,6 +20,10 @@
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Cash Sorting Statistic</type>
+  <workflow>cash_sorting_statistic_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Cash To Currency Purchase</type>
   <workflow>cash_to_currency_purchase_workflow, edit_workflow</workflow>
  </chain>
@@ -50,6 +54,10 @@
  <chain>
   <type>Foreign Cash Reception</type>
   <workflow>foreign_cash_reception_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Historical Operation</type>
+  <workflow>edit_workflow, historical_operation_workflow</workflow>
  </chain>
  <chain>
   <type>Internal Money Deposit</type>

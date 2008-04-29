@@ -8,6 +8,7 @@ Cash Movement New Not Emitted Container | Container Line
 Cash Movement New Not Emitted | Cash Movement New Not Emitted Container
 Cash Movement New Not Emitted | Cash Movement New Not Emitted Line
 Cash Movement | Cash Delivery Line
+Cash Sorting Statistic | Cash Delivery Line
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
 Cash To Currency Purchase | Incoming Cash To Currency Purchase Line
@@ -20,6 +21,7 @@ Container Line | Container Cell
 Counter Rendering | Cash Delivery Line
 Destruction Survey | Cash Delivery Line
 Foreign Cash Reception | Cash Delivery Line
+Historical Operation | Cash Delivery Line
 Incoming Cash Balance Regulation Line | Cash Delivery Cell
 Incoming Cash Exchange Line | Cash Delivery Cell
 Incoming Cash Sorting Line | Cash Delivery Cell

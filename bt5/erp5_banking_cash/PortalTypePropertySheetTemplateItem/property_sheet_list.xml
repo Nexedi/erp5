@@ -24,6 +24,9 @@
  <portal_type id="Cash Sorting">
   <item>Price</item>
  </portal_type>
+ <portal_type id="Cash Sorting Statistic">
+  <item>Price</item>
+ </portal_type>
  <portal_type id="Cash To Currency Purchase">
   <item>Price</item>
   <item>Resource</item>
@@ -55,6 +58,9 @@
  </portal_type>
  <portal_type id="Exchanged Mutilated Banknote Line">
   <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Historical Operation">
+  <item>Price</item>
  </portal_type>
  <portal_type id="Incoming Cash Balance Regulation Line">
   <item>CashDeliveryLine</item>

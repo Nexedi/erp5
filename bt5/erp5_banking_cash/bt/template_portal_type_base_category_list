@@ -1,5 +1,7 @@
 Bank Account | site
 Cash Container Item | aggregate
+Cash Sorting Statistic | site
+Cash Sorting Statistic | statistic_type
 Cash To Currency Purchase | currency_exchange_type
 Cash To Currency Sale | currency_exchange_type
 Container Cell | cash_status
@@ -9,6 +11,8 @@ Container Line | cash_status
 Container Line | emission_letter
 Container Line | variation
 Foreign Cash Reception | currency_exchange_type
+Historical Operation | historical_operation_type
+Historical Operation | site
 Internal Money Payment | payment_type
 Monetary Destruction Cell | variation
 Monetary Recall Cell | variation

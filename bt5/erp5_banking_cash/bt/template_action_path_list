@@ -30,6 +30,11 @@ Cash Movement | fastinput
 Cash Movement | print_pdf
 Cash Movement | view
 Cash Sorting Module | view
+Cash Sorting Statistic Module | print
+Cash Sorting Statistic Module | view
+Cash Sorting Statistic | fastInput
+Cash Sorting Statistic | print
+Cash Sorting Statistic | view
 Cash Sorting | incoming_fastinput
 Cash Sorting | incoming_line_view
 Cash Sorting | outgoing_fastinput
@@ -77,6 +82,13 @@ Foreign Cash Reception Module | view
 Foreign Cash Reception | fastinput
 Foreign Cash Reception | print_pdf
 Foreign Cash Reception | view
+Historical Operation Module | print
+Historical Operation Module | view
+Historical Operation | accounting_view
+Historical Operation | fastInput
+Historical Operation | print
+Historical Operation | related_agents
+Historical Operation | view
 Incoming Cash Balance Regulation Line | view
 Incoming Cash Exchange Line | print
 Incoming Cash Exchange Line | view

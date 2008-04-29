@@ -10,6 +10,7 @@ Cash Movement New Not Emitted | CashMovementNewNotEmmitedCoinBag
 Cash Movement New Not Emitted | Price
 Cash Movement | CashMovement
 Cash Movement | Price
+Cash Sorting Statistic | Price
 Cash Sorting | Price
 Cash To Currency Purchase | Amount
 Cash To Currency Purchase | CurrencyExchangeRate
@@ -29,6 +30,7 @@ Counter Rendering | Price
 Destruction Survey | Amount
 Destruction Survey | Task
 Exchanged Mutilated Banknote Line | CashDeliveryLine
+Historical Operation | Price
 Incoming Cash Balance Regulation Line | CashDeliveryLine
 Incoming Cash Exchange Line | CashDeliveryLine
 Incoming Cash Sorting Line | CashDeliveryLine
