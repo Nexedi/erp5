@@ -2209,9 +2209,70 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
-
-
     sequence_list.play(self)
+
+  
+  def test_order_cell_getTotalPrice(self):
+    # test getTotalPrice and getTotalQuantity on a line with cells
+    # More precisely, it tests a previous bug where creating a line with
+    # quantity X and then adding a cell with quantity, cell.edit where
+    # comparing quantities (X and X) and didn't really edit the quantity.
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',
+                    variation_base_category_list=['size'])
+
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Order')
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    self.assertEquals(10, line.getTotalQuantity())
+    self.assertEquals(10 * 3, line.getTotalPrice())
+    self.assertEquals(10, order.getTotalQuantity())
+    self.assertEquals(10 * 3, order.getTotalPrice())
+
+    line.setVariationCategoryList(['size/Baby', 'size/Child/32'])
+    self.assertEquals(0, line.getTotalQuantity())
+    self.assertEquals(0, line.getTotalPrice())
+    self.assertEquals(0, order.getTotalQuantity())
+    self.assertEquals(0, order.getTotalPrice())
+    
+    self.assertTrue(line.hasInRange('size/Baby', base_id='movement'))
+    cell_baby = line.newCell('size/Baby', base_id='movement',
+                             portal_type=self.order_cell_portal_type)
+    self.assertEquals(0, cell_baby.getProperty("quantity"))
+    self.assertEquals(0, cell_baby.getQuantity())
+    self.assertFalse(cell_baby.hasProperty('quantity'))
+    cell_baby.edit(quantity=10,
+                   price=4,
+                   variation_category_list=['size/Baby'],
+                   mapped_value_property_list=['quantity', 'price'],
+                   edit_order=[])
+    self.assertEquals(10, cell_baby.getQuantity())
+    self.assertEquals(4, cell_baby.getPrice())
+
+    self.assertTrue(line.hasInRange('size/Child/32', base_id='movement'))
+    cell_child_32 = line.newCell('size/Child/32', base_id='movement',
+                                 portal_type=self.order_cell_portal_type)
+    self.assertEquals(0, cell_child_32.getQuantity())
+    cell_child_32.edit(quantity=20,
+                       price=5,
+                       variation_category_list=['size/Child/32'],
+                       mapped_value_property_list=['quantity', 'price'],
+                       edit_order=[])
+    self.assertEquals(20, cell_child_32.getQuantity())
+    self.assertEquals(5, cell_child_32.getPrice())
+
+    self.assertEquals(10 + 20, line.getTotalQuantity())
+    self.assertEquals(10*4 + 20*5, line.getTotalPrice())
+
+    self.assertEquals(10 + 20, order.getTotalQuantity())
+    self.assertEquals(10*4 + 20*5, order.getTotalPrice())
+
 
 def test_suite():
   suite = unittest.TestSuite()
