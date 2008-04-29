@@ -25,20 +25,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
-import time
-import threading
-
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import newSecurityManager
-from Globals import InitializeClass, DTMLFile, PersistentMapping
+from Globals import DTMLFile
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 
-from cStringIO import StringIO
 from mimetypes import guess_type
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -46,7 +39,6 @@ from email.MIMEBase import MIMEBase
 from email.Header import make_header
 from email import Encoders
 
-from zLOG import LOG, INFO
 
 def buildEmailMessage(from_url, to_url, msg=None,
                       subject=None, attachment_list=None,
