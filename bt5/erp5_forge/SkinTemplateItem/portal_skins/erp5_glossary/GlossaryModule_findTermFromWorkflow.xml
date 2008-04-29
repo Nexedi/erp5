@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+result = context.GlossaryModule_getTermDictListFromWorkflow(template_list)\n
+\n
+if export_tsv:\n
+  for i in result:\n
+    print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'],\n
+                                            i[\'business_field\'],\n
+                                            i[\'title\'], i[\'description\'],)))\n
+  return printed\n
+else:\n
+  portal_catalog = context.portal_catalog\n
+  for i in result:\n
+    item_list = portal_catalog(portal_type=\'Glossary Term\',\n
+                               reference=i[\'reference\'], language=i[\'language\'],\n
+                               business_field_title=i[\'business_field\'],\n
+                               validation_state="!=deleted")\n
+    if len(item_list)>0:\n
+      continue\n
+\n
+    new_id = context.generateNewId()\n
+    context.newContent(id=new_id, portal_type=\'Glossary Term\',\n
+                       container=context,\n
+                       reference=i[\'reference\'], language=i[\'language\'],\n
+                       business_field=i[\'business_field\'],\n
+                       title=i[\'title\'], description=i[\'description\'])\n
+\n
+\n
+portal_status_message = context.Base_translateString(\'Terms created.\')\n
+context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>template_list, export_tsv=False, REQUEST=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>template_list</string>
+                            <string>export_tsv</string>
+                            <string>REQUEST</string>
+                            <string>kw</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>result</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>map</string>
+                            <string>_getitem_</string>
+                            <string>portal_catalog</string>
+                            <string>item_list</string>
+                            <string>len</string>
+                            <string>new_id</string>
+                            <string>portal_status_message</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>GlossaryModule_findTermFromWorkflow</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>marker = []\n
+prefix = \'erp5_\'\n
+language = \'en\'\n
+\n
+term_dict = {}\n
+result = []\n
+\n
+for bt_id in template_list:\n
+  bt = context.portal_templates.getInstalledBusinessTemplate(bt_id)\n
+  if bt_id.startswith(prefix):\n
+    bt_id = bt_id[len(prefix):]\n
+\n
+  for wf_id in bt.getTemplateWorkflowIdList():\n
+    wf = getattr(context.portal_workflow, wf_id)\n
+    if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?\n
+      term_dict[(wf_id, bt_id, wf.title, wf.description)] = 1\n
+      for state_id, state in wf.states.items():\n
+        term_dict[(state_id, bt_id, state.title, state.description)] = 1\n
+      for trans_id, trans in wf.transitions.items():\n
+        term_dict[(trans_id, bt_id, trans.title, trans.description)] = 1\n
+        if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION\n
+          term_dict[(\'%s_actbox_name\' % trans_id, bt_id, trans.actbox_name, \'\')] = 1\n
+\n
+for (reference, business_field, title, description) in term_dict.iterkeys():\n
+  result.append({\'reference\': reference,\n
+                 \'language\': language,\n
+                 \'business_field\': business_field,\n
+                 \'title\': title,\n
+                 \'description\': description})\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>template_list</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Authenticated</string>
+                <string>Manager</string>
+                <string>Member</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>template_list</string>
+                            <string>marker</string>
+                            <string>prefix</string>
+                            <string>language</string>
+                            <string>term_dict</string>
+                            <string>result</string>
+                            <string>_getiter_</string>
+                            <string>bt_id</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>bt</string>
+                            <string>_getitem_</string>
+                            <string>len</string>
+                            <string>wf_id</string>
+                            <string>getattr</string>
+                            <string>wf</string>
+                            <string>_write_</string>
+                            <string>state_id</string>
+                            <string>state</string>
+                            <string>trans_id</string>
+                            <string>trans</string>
+                            <string>reference</string>
+                            <string>business_field</string>
+                            <string>title</string>
+                            <string>description</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>GlossaryModule_getTermDictListFromWorkflow</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
