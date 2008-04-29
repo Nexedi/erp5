@@ -88,11 +88,17 @@ if vault.endswith(\'encaisse_des_externes\'):\n
 \n
 # check resource between line and document\n
 doc_resource = transaction.getResource()\n
+resource_type = None\n
 for line in transaction.contentValues(portal_type=[\'Outgoing Cash Balance Regulation Line\',\n
                                                    \'Incoming Cash Balance Regulation Line\']):\n
-  if line.getResourceValue().getPriceCurrency() != doc_resource:\n
-    msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
-    raise ValidationFailed, (msg,)\n
+   res = line.getResourceValue()\n
+   if res.getPriceCurrency() != doc_resource:\n
+      msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
+      raise ValidationFailed, (msg,)\n
+   if resource_type is not None and res.getPortalType() != resource_type:\n
+      msg = Message(domain="ui", message="You can\'t use both banknote and coin on same document.")\n
+      raise ValidationFailed, (msg,)\n
+   resource_type = res.getPortalType()\n
 \n
 # check again that we are in the good accounting date\n
 transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
@@ -191,6 +197,9 @@ if incoming_total != outgoing_total:\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>doc_resource</string>
+                            <string>None</string>
+                            <string>resource_type</string>
+                            <string>res</string>
                             <string>resource_one</string>
                             <string>resource_two</string>
                             <string>amount</string>
