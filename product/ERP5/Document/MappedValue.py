@@ -89,14 +89,3 @@ class MappedValue(Predicate, Amount):
       self._setProperty('mapped_value_property_set', kw['mapped_value_property_set'])
     Predicate._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
 
-  # Compatibility method
-  def getMappedValuePropertyList(self, *args):
-    """
-      Return property list managed by this mapped value
-      Coramy Compatibility Layer - XXX not for Standard Version
-    """
-    if hasattr(self, 'mapped_value_attribute_list'):
-      # Update Attribute - Coramy Compatibility
-      self._baseSetMappedValuePropertyList(self.mapped_value_attribute_list)
-      delattr (self, 'mapped_value_attribute_list')
-    return self._baseGetMappedValuePropertyList(*args)
