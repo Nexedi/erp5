@@ -89,48 +89,6 @@ class MappedValue(Predicate, Amount):
       self._setProperty('mapped_value_property_set', kw['mapped_value_property_set'])
     Predicate._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  def getProperty(self, key, d=None, evaluate=1):
-    """
-      Generic accessor. First we check if the value
-      exists. Else we call the real accessor
-    """
-    #try:
-    if 1:
-      # If mapped_value_property_list is not set
-      # then it creates an exception
-      if key in self.getMappedValuePropertyList([]):
-        if hasattr(self, key):
-          return getattr(self, key)
-    #except:
-    #  LOG("WARNING: ERP5", 0, 'Could not access mapped value property %s' % key)
-    #  return None
-    # Standard accessor
-    try:
-      result = Predicate.getProperty(self, key, d=d)
-    except AttributeError:
-      result = None
-    return result
-
-#  security.declareProtected( Permissions.ModifyPortalContent, '_setProperty' )
-#  def _setProperty(self, key, value, type='string', **kw):
-#    """
-#      Generic accessor. Calls the real accessor
-#      
-#      **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
-#    """
-#    #try:
-#    if 1:
-#      # If mapped_value_attribute_list is not set
-#      # then it creates an exception
-#      if key in self.getMappedValuePropertyList([]):
-#        return setattr(self, key, value)
-#    #except:
-#    #  LOG("WARNING: ERP5", 0, 'Could not set mapped value property %s' % key)
-#    #  return
-#
-#    return Predicate._setProperty(self, key, value, type=type, **kw)
-
   # Compatibility method
   def getMappedValuePropertyList(self, *args):
     """
