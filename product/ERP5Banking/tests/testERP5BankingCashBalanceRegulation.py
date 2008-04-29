@@ -298,7 +298,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
         portal_type='Cash Balance Regulation', 
         source_value=source_value, 
         resource_value=self.currency_1,
-        destination_value=None, source_total_asset_price=52400.0)
+        destination_value=None, source_total_asset_price=50000.0)
     self.stepTic()
     self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
     self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
@@ -357,57 +357,57 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
-    self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_incoming_line_2', 'Incoming Cash Balance Regulation Line', self.piece_200,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
-            self.quantity_200)
-    # execute tic
-    self.stepTic()
-    # check there is only one line created
-    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
-    # get the cash balance regulation line
-    self.valid_incoming_line = getattr(self.cash_balance_regulation, 'valid_incoming_line_2')
-    # check its portal type
-    self.assertEqual(self.valid_incoming_line.getPortalType(), 'Incoming Cash Balance Regulation Line')
-    # check the resource is banknotes of 10000
-    self.assertEqual(self.valid_incoming_line.getResourceValue(), self.piece_200)
-    # chek the value of the banknote
-    self.assertEqual(self.valid_incoming_line.getPrice(), 200.0)
-    # check the unit of banknote
-    self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
-    self.assertEqual(len(self.valid_incoming_line.objectValues()), 2)
-    # now check for each variation (years 1992 and 2003)
-    for variation in self.variation_list:
-      # get the delivery cell
-      cell = self.valid_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/valid')
-      # chek portal types
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      # check the banknote of the cell is banknote of 10000
-      self.assertEqual(cell.getResourceValue(), self.piece_200)
-      # check the source vault is encaisse_paris
-      ####if check_source:
-        ####self.assertEqual(cell.getSourceValue(), self.guichet_1)
-      # check the destination vault is guichet_1
-      self.assertEqual(cell.getDestinationValue(), self.cash_balance_regulation.getBaobabDestination())
-      if cell.getId() == 'movement_0_0_0':
-        # check the quantity of banknote for year 1992 is 2
-        self.assertEqual(cell.getQuantity(), 5.0)
-      elif cell.getId() == 'movement_0_1_0':
-        # check the quantity of banknote for year 2003 is 3
-        self.assertEqual(cell.getQuantity(), 7.0)
-      else:
-        self.fail('Wrong cell created : %s' % cell.getId())
+#     self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_incoming_line_2', 'Incoming Cash Balance Regulation Line', self.piece_200,
+#             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
+#             self.quantity_200)
+#     # execute tic
+#     self.stepTic()
+#     # check there is only one line created
+#     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
+#     # get the cash balance regulation line
+#     self.valid_incoming_line = getattr(self.cash_balance_regulation, 'valid_incoming_line_2')
+#     # check its portal type
+#     self.assertEqual(self.valid_incoming_line.getPortalType(), 'Incoming Cash Balance Regulation Line')
+#     # check the resource is banknotes of 10000
+#     self.assertEqual(self.valid_incoming_line.getResourceValue(), self.piece_200)
+#     # chek the value of the banknote
+#     self.assertEqual(self.valid_incoming_line.getPrice(), 200.0)
+#     # check the unit of banknote
+#     self.assertEqual(self.valid_incoming_line.getQuantityUnit(), 'unit')
+#     # check we have two delivery cells: (one for year 1992 and one for 2003)
+#     self.assertEqual(len(self.valid_incoming_line.objectValues()), 2)
+#     # now check for each variation (years 1992 and 2003)
+#     for variation in self.variation_list:
+#       # get the delivery cell
+#       cell = self.valid_incoming_line.getCell('emission_letter/not_defined', variation, 'cash_status/valid')
+#       # chek portal types
+#       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+#       # check the banknote of the cell is banknote of 10000
+#       self.assertEqual(cell.getResourceValue(), self.piece_200)
+#       # check the source vault is encaisse_paris
+#       ####if check_source:
+#         ####self.assertEqual(cell.getSourceValue(), self.guichet_1)
+#       # check the destination vault is guichet_1
+#       self.assertEqual(cell.getDestinationValue(), self.cash_balance_regulation.getBaobabDestination())
+#       if cell.getId() == 'movement_0_0_0':
+#         # check the quantity of banknote for year 1992 is 2
+#         self.assertEqual(cell.getQuantity(), 5.0)
+#       elif cell.getId() == 'movement_0_1_0':
+#         # check the quantity of banknote for year 2003 is 3
+#         self.assertEqual(cell.getQuantity(), 7.0)
+#       else:
+#         self.fail('Wrong cell created : %s' % cell.getId())
 
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the amount after the creation of cash balance regulation line 1
     """
     # Check number of lines
-    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
+    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 1)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, portal_type="Incoming Cash Balance Regulation Line"), 17.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, portal_type="Incoming Cash Balance Regulation Line"), 5.0)
     # Check the total price
-    self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, portal_type="Incoming Cash Balance Regulation Line"), 10000 * 5.0 + 200 * 12.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, portal_type="Incoming Cash Balance Regulation Line"), 10000 * 5.0) # + 200 * 12.0)
 
   def stepCreateValidOutgoingLineExternes(self, sequence=None, sequence_list=None, **kwd):
     self.stepCreateValidOutgoingLine(emission_letter='s')
@@ -427,7 +427,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
     # execute tic
     self.stepTic()
     # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 3)
+    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
     # get the second cash balance regulation line
     self.valid_outgoing_line = getattr(self.cash_balance_regulation, 'valid_outgoing_line_1')
     # check portal types
@@ -455,53 +455,53 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
         self.fail('Wrong cell created : %s' % cell.getId())
 
     # create the line for coins
-    current_emission_letter = 'p'
-    if emission_letter is not None:
-      current_emission_letter = emission_letter
-    self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_outgoing_line_2', 'Outgoing Cash Balance Regulation Line', self.piece_100,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter, 
-              'cash_status/valid') + self.variation_list,
-            self.outgoing_quantity_100)
-    # execute tic
-    self.stepTic()
-    # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 4)
-    # get the second cash balance regulation line
-    self.valid_outgoing_line = getattr(self.cash_balance_regulation, 'valid_outgoing_line_2')
-    # check portal types
-    self.assertEqual(self.valid_outgoing_line.getPortalType(), 'Outgoing Cash Balance Regulation Line')
-    # check the resource is coin of 200
-    self.assertEqual(self.valid_outgoing_line.getResourceValue(), self.piece_100)
-    # check the value of coin
-    self.assertEqual(self.valid_outgoing_line.getPrice(), 100.0)
-    # check the unit of coin
-    self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'unit')
-    # check we have two delivery cells: (one for year 1992 and one for 2003)
-    self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
-    for variation in self.variation_list:
-      # get the delivery  cell
-      cell = self.valid_outgoing_line.getCell('emission_letter/%s' %  current_emission_letter, variation, 'cash_status/valid')
-      # check the portal type
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      if cell.getId() == 'movement_0_0_0':
-        # check the quantity for coin for year 1992 is 5
-        self.assertEqual(cell.getQuantity(), 24.0)
-      elif cell.getId() == 'movement_0_1_0':
-        # check the quantity for coin for year 2003 is 7
-        self.assertEqual(cell.getQuantity(), 0.0)
-      else:
-        self.fail('Wrong cell created : %s' % cell.getId())
+#     current_emission_letter = 'p'
+#     if emission_letter is not None:
+#       current_emission_letter = emission_letter
+#     self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_outgoing_line_2', 'Outgoing Cash Balance Regulation Line', self.piece_100,
+#             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter, 
+#               'cash_status/valid') + self.variation_list,
+#             self.outgoing_quantity_100)
+#     # execute tic
+#     self.stepTic()
+#     # check the number of lines (line1 + line2)
+#     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 4)
+#     # get the second cash balance regulation line
+#     self.valid_outgoing_line = getattr(self.cash_balance_regulation, 'valid_outgoing_line_2')
+#     # check portal types
+#     self.assertEqual(self.valid_outgoing_line.getPortalType(), 'Outgoing Cash Balance Regulation Line')
+#     # check the resource is coin of 200
+#     self.assertEqual(self.valid_outgoing_line.getResourceValue(), self.piece_100)
+#     # check the value of coin
+#     self.assertEqual(self.valid_outgoing_line.getPrice(), 100.0)
+#     # check the unit of coin
+#     self.assertEqual(self.valid_outgoing_line.getQuantityUnit(), 'unit')
+#     # check we have two delivery cells: (one for year 1992 and one for 2003)
+#     self.assertEqual(len(self.valid_outgoing_line.objectValues()), 2)
+#     for variation in self.variation_list:
+#       # get the delivery  cell
+#       cell = self.valid_outgoing_line.getCell('emission_letter/%s' %  current_emission_letter, variation, 'cash_status/valid')
+#       # check the portal type
+#       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+#       if cell.getId() == 'movement_0_0_0':
+#         # check the quantity for coin for year 1992 is 5
+#         self.assertEqual(cell.getQuantity(), 24.0)
+#       elif cell.getId() == 'movement_0_1_0':
+#         # check the quantity for coin for year 2003 is 7
+#         self.assertEqual(cell.getQuantity(), 0.0)
+#       else:
+#         self.fail('Wrong cell created : %s' % cell.getId())
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash balance regulation lines
     """
     # Check number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 4)
+    self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, portal_type="Outgoing Cash Balance Regulation Line"), 34.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalQuantity(fast=0, portal_type="Outgoing Cash Balance Regulation Line"), 10.0)
     # check the total price
-    self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, portal_type="Outgoing Cash Balance Regulation Line"), 5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
+    self.assertEqual(self.cash_balance_regulation.getTotalPrice(fast=0, portal_type="Outgoing Cash Balance Regulation Line"), 5000 * 10) #.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 24.0)
 
   def stepConfirmCashBalanceRegulation(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -642,13 +642,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       # check we have 0 coin of 200
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       # check we have 12 coins of 100
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
   def stepCheckFinalInventoryCaveau(self, sequence=None, sequence_list=None, check_source=1,**kwd):
@@ -660,13 +660,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       # check we have 0 coin of 200
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       # check we have 12 coins of 100
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
   def stepCheckFinalInventorySalleTri(self, sequence=None, sequence_list=None, check_source=1,**kwd):
@@ -678,13 +678,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       # check we have 0 coin of 200
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       # check we have 12 coins of 100
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
   def stepCheckFinalInventorySurface(self, sequence=None, sequence_list=None, check_source=1,**kwd):
@@ -696,13 +696,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       # check we have 0 coin of 200
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       # check we have 12 coins of 100
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
   def stepCheckFinalInventoryExternes(self, sequence=None, sequence_list=None, check_source=1,**kwd):
     """
@@ -713,13 +713,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
       # check we have 0 coin of 200
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 34.0)
       # check we have 12 coins of 100
-      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
-      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=self.externes.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
 
