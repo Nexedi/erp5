@@ -88,21 +88,10 @@ class OrderLine(DeliveryLine):
       else: return quantity * price
       if fast is argument true, then a SQL method will be used.
       """
-      base_id = 'movement'
       if self.hasLineContent():
-        return sum(l.getTotalPrice() for l in
-            self.contentValues(meta_type=self.meta_type))
-      elif self.hasCellContent(base_id=base_id):
-        if fast : # Use MySQL
-          aggregate = self.DeliveryLine_zGetTotal()[0]
-          return aggregate.total_price or 0.0
-        return sum([ ( (cell.getQuantity() or 0) *
-                       (cell.getPrice(context=context) or 0))
-                        for cell in self.getCellValueList()])
-      else:
-        quantity = self.getQuantity() or 0.0
-        price = self.getPrice(context=context) or 0.0
-        return quantity * price
+        return sum(l.getTotalPrice(context=context)
+                   for l in self.contentValues(meta_type=self.meta_type))
+      return DeliveryLine._getTotalPrice(self, context=context, fast=fast)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalQuantity')

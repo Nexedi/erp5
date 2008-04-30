@@ -91,11 +91,18 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       return self.getParentValue().getParentValue().isAccountable()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-    def getPrice(self, context=None, REQUEST=None, **kw):
+    def getPrice(self, *args, **kw):
       """
       call Movement.getPrice
       """
-      return Movement.getPrice(self, context=context, REQUEST=REQUEST, **kw)
+      return Movement.getPrice(self, *args, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
+    def getTotalPrice(self, *args, **kw):
+      """
+      call Movement.getTotalPrice
+      """
+      return Movement.getTotalPrice(self, *args, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getRootDeliveryValue')
