@@ -84,14 +84,14 @@ catalog = context.portal_catalog\n
 for i in catalog(portal_type=\'Glossary Term\',\n
                  validation_state=\'validated\',\n
                  business_field_title=business_field_list,\n
-                 language=language):\n
+                 language_id=language):\n
   term = i.getObject()\n
   reference = term.getReference()\n
   business_field = term.getBusinessField()\n
 \n
   english_term = catalog.getResultValue(portal_type=\'Glossary Term\',\n
                                         validation_state=\'validated\',\n
-                                        language=\'en\',\n
+                                        language_id=\'en\',\n
                                         reference=reference,\n
                                         business_field_title=business_field)\n
   if english_term is None:\n
@@ -134,6 +134,12 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

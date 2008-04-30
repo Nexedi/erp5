@@ -79,7 +79,7 @@ else:\n
   portal_catalog = context.portal_catalog\n
   for i in result:\n
     item_list = portal_catalog(portal_type=\'Glossary Term\',\n
-                               reference=i[\'reference\'], language=i[\'language\'],\n
+                               reference=i[\'reference\'], language_id=i[\'language\'],\n
                                business_field_title=i[\'business_field\'],\n
                                validation_state="!=deleted")\n
     if len(item_list)>0:\n
@@ -107,6 +107,12 @@ context.Base_redirect(keep_items={\'portal_status_message\':portal_status_messag
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

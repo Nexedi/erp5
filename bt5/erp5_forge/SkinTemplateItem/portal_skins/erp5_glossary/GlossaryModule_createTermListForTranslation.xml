@@ -108,6 +108,12 @@ context.Base_redirect(keep_items={\'portal_status_message\':portal_status_messag
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>language</string> </value>
         </item>
