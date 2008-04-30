@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+marker = []\n
+\n
+result = []\n
+\n
+portal_catalog = context.portal_catalog\n
+portal_workflow = context.portal_workflow\n
+portal_templates = context.portal_templates\n
+\n
+def get_term_list(business_field, reference):\n
+  term_list = portal_catalog(portal_type=\'Glossary Term\',\n
+                             validation_state=\'validated\',\n
+                             language_id=\'en\',\n
+                             business_field_title=business_field,\n
+                             reference=reference)\n
+  return [i.getObject() for i in term_list]\n
+\n
+def get_obj_and_reference_list(business_field):\n
+  result = []\n
+  bt = portal_templates.getInstalledBusinessTemplate("erp5_%s" % business_field)\n
+  for wf_id in bt.getTemplateWorkflowIdList():\n
+    wf = getattr(portal_workflow, wf_id)\n
+    if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?\n
+      result.append((wf, wf_id, \'workflow\'))\n
+      for state_id, state in wf.states.items():\n
+        result.append((state, state_id, \'state\'))\n
+      for trans_id, trans in wf.transitions.items():\n
+        result.append((trans, trans_id, \'transition\'))\n
+        if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION\n
+          result.append((trans, "%s_actbox_name" % trans_id, \'action\'))\n
+  return result\n
+\n
+business_field_list = [i for i in business_field_list if i]\n
+\n
+line_list = []\n
+c = 0\n
+for business_field in business_field_list:\n
+  for wf_item, reference, type in get_obj_and_reference_list(business_field):\n
+    term_list = get_term_list(business_field, reference)\n
+    if not term_list:\n
+      continue\n
+\n
+    line = newTempBase(context, \'tmp_glossary_wf_item_%s\' %  c)\n
+    c += 1\n
+    if type == \'workflow\':\n
+      wf_item_path = wf_item.id\n
+      wf_item_title = wf_item.title\n
+    elif type == \'state\':\n
+      wf_item_path = \'%s/states/%s\' % (wf_item.aq_parent.aq_parent.id, wf_item.id)\n
+      wf_item_title = wf_item.title\n
+    elif type == \'transition\':\n
+      wf_item_path = \'%s/transitions/%s\' % (wf_item.aq_parent.aq_parent.id, wf_item.id)\n
+      wf_item_title = wf_item.title\n
+    else: # type == \'action\'\n
+      wf_item_path = \'%s/transitions/%s_actbox_name\' % (wf_item.aq_parent.aq_parent.id, wf_item.id)\n
+      wf_item_title = wf_item.actbox_name\n
+    \n
+\n
+    line.edit(wf_item_path=wf_item_path,\n
+              wf_item_type=type,\n
+              wf_item_title=wf_item_title,\n
+              wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),\n
+              reference=reference,\n
+              term_list=term_list\n
+              )\n
+    line.setUid(wf_item_path)\n
+    line_list.append(line)\n
+\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>business_field_list, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>business_field_list</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>marker</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_catalog</string>
+                            <string>portal_workflow</string>
+                            <string>portal_templates</string>
+                            <string>get_term_list</string>
+                            <string>get_obj_and_reference_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>line_list</string>
+                            <string>c</string>
+                            <string>business_field</string>
+                            <string>wf_item</string>
+                            <string>reference</string>
+                            <string>type</string>
+                            <string>term_list</string>
+                            <string>line</string>
+                            <string>_inplacevar_</string>
+                            <string>wf_item_path</string>
+                            <string>wf_item_title</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>GlossaryModule_getBusinessFieldWorkflowList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

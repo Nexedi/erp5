@@ -39,23 +39,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>create_term_for_translation</string> </value>
+            <value> <string>update_workflows_by_english_glossary</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Add portal content</string>
+                <string>Modify portal content</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>28.0</float> </value>
+            <value> <float>27.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create Terms from English Ones for Translation</string> </value>
+            <value> <string>Update Workflows by English Glossary</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/GlossaryModule_viewTermListCreationDialog</string> </value>
+            <value> <string>string:${object_url}/GlossaryModule_viewWorkflowUpdateDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
