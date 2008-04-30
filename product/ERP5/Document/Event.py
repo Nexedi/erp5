@@ -28,10 +28,9 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.EmailDocument import EmailDocument
-from Products.CMFCore.utils import getToolByName
 
 class Event(EmailDocument, Movement):
     """
@@ -102,7 +101,8 @@ class Event(EmailDocument, Movement):
       return self
 
     security.declareProtected(Permissions.UseMailhostServices, 'send')
-    def send(self, *args, **kw):
+    def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
+             body=None, attachment_format=None, download=False, **kw):
       """
         Make the send method overridable by typed based script
         so that special kinds of events can use a different gateway
@@ -114,5 +114,9 @@ class Event(EmailDocument, Movement):
       """
       send_script = self._getTypeBasedMethod('send')
       if send_script is None:
-        return EmailDocument.send(self, *args, **kw)
-      return send_script(*args, **kw)
+        return Event.inheritedAttribute('send')(
+            self, from_url, to_url, reply_url, subject, body, attachment_format, download
+            )
+      return send_script(
+          from_url, to_url, reply_url, subject, body, attachment_format, download, **kw
+          )
