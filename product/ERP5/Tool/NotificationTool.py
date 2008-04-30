@@ -139,19 +139,23 @@ class NotificationTool(BaseTool):
                         notifier_list=None, priority_level=None,
                         is_persistent=False):
     """
-      This method provides a common API to send messages to users
+      This method provides a common API to send messages to erp5 users
       from object actions of worflow scripts.
 
-      sender -- a string or a Person object
+      Note that you can't send message to person who don't have his own Person document.
 
-      recipient -- a string or a Person object
+      sender -- a login name(reference of Person document) or a Person document
+
+      recipient -- a login name(reference of Person document) or a Person document,
                    a list of thereof
 
       subject -- the subject of the message
 
       message -- the text of the message (already translated)
 
-      attachment_list -- attached documents (optional)
+      attachment_list -- list of dictionary (optional)
+                         keys are: name, content, mime_type
+                         See buildEmailMessage function above.
 
       priority_level -- a priority level which is used to
                         lookup user preferences and decide
@@ -165,60 +169,59 @@ class NotificationTool(BaseTool):
 
     TODO: support default notification email
     """
-    catalog_tool = getToolByName(self, 'portal_catalog')
-
-    # Default Values
     portal = self.getPortalObject()
+    catalog_tool = getToolByName(self, 'portal_catalog')
+    mailhost = getattr(portal, 'MailHost', None)
+    if mailhost is None:
+      raise ValueError, "Can't find MailHost."
+
+    # Find Default Values
     default_from_email = portal.email_from_address
     default_to_email = getattr(portal, 'email_to_address',
                                default_from_email)
 
-    # Change all strings to object values
+    # Find "From" address
+    from_address = None
     if isinstance(sender, basestring):
-      sender = catalog_tool(portal_type='Person', reference=sender)[0]
-
-    email_from_address = None
+      sender = catalog_tool.getResultValue(portal_type='Person', reference=sender)
     if sender is not None:
       email_value = sender.getDefaultEmailValue()
       if email_value is not None:
-        email_from_address = email_value.asText()
-    if not email_from_address:
+        from_address = email_value.asText()
+    if not from_address:
       # If we can not find a from address then
       # we fallback to default values
-      email_from_address = default_from_email
+      from_address = default_from_email
 
-    # If no recipient is defined, just send an email to the
-    # default mail address defined at the CMF site root.
-    if recipient is None:
-      mailhost = getattr(self.getPortalObject(), 'MailHost', None)
-      if mailhost is None:
-        raise AttributeError, "Cannot find a MailHost object"
-      mail_message = buildEmailMessage(email_from_address, default_to_email, 
-                                       msg=message, subject=subject,
-                                       attachment_list=attachment_list)
-      return mailhost.send(mail_message.as_string(), default_to_email, email_from_address)
+    # Find "To" addresses
+    to_address_list = []
+    if not recipient:
+      to_address_list.append(default_to_email)
+    else:
+      if not isinstance(recipient, (list, tuple)):
+        recipient = (recipient,)
+      for person in recipient:
+        if isinstance(person, basestring):
+          person = catalog_tool.getResultValue(portal_type='Person', reference=person)
+          if person is None:
+            # For backward compatibility. I recommend to use ValueError.(yusei)
+            raise IndexError, "Can't find person document which reference is '%s'" % person
+        email_value = person.getDefaultEmailValue()
+        if email_value is None:
+          # For backward compatibility. I recommend to use ValueError.(yusei)
+          raise AttributeError, "Can't find default email address of %s" % person.getRelativeUrl()
+        to_address_list.append(email_value.asText())
 
-    elif not isinstance(recipient, (list, tuple)):
-      # To is a list - let us find all members
-      recipient = (recipient, )
+    # Build and Send Messages
+    for to_address in to_address_list:
+      mail_message = buildEmailMessage(from_url=from_address,
+                                       to_url=to_address,
+                                       msg=message,
+                                       subject=subject,
+                                       attachment_list=attachment_list
+                                       )
+      mailhost.send(mail_message.as_string(), to_address, from_address)
 
-    # Default implementation is to send an active message to everyone
-    for person in recipient:
-      if isinstance(person, basestring):
-        person = catalog_tool(portal_type='Person', reference=person)[0]
-      email_value = person.getDefaultEmailValue()
-      if email_value is not None:
-        # Activity can not handle attachment
-        # Queuing messages has to be managed by the MTA
-        email_value.send(
-                          from_url=email_from_address,
-                          to_url=email_value.asText(),
-                          subject=subject,
-                          msg=message,
-                          attachment_list=attachment_list)
-      else:
-        raise AttributeError, \
-            "Can not contact the person %s" % person.getReference()
 
     return
     # Future implemetation could consist in implementing
