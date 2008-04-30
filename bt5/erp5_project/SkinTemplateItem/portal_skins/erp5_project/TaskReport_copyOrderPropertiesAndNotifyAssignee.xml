@@ -108,7 +108,7 @@ A new task has been assigned to you by %(assignor)s.\n
 This task is named: %(title)s\n
 \n
 Description: \n
-%(comment)s\n
+%(description)s\n
 \n
 Start Date: %(start_date)s\n
 Stop Date: %(stop_date)s\n
@@ -119,11 +119,12 @@ Please wisit ERP5: %(url)s\n
        \'title\'   : packing_list.getTitle(),\n
        \'url\'     : \'%s/%s/view\' % (packing_list.ERP5Site_getAbsoluteUrl(),\n
                               packing_list.getRelativeUrl()),\n
-       \'comment\' : packing_list.getComment(),\n
+       \'description\' : packing_list.getDescription(),\n
        \'start_date\': packing_list.getStartDate().Date(),\n
        \'stop_date\': packing_list.getStopDate().Date(),\n
       }\n
-    email.activate().send(from_url = from_email, subject="New Task Assigned to You", msg = msg)\n
+    email.activate().send(from_url = from_email,\n
+                          subject="[ERP5 Task] %s" % packing_list.getTitle(), msg = msg)\n
 \n
 # Then, modify state\n
 confirm_tag = \'%s_confirm\' % packing_list.getPath()\n
