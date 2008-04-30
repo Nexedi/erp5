@@ -122,6 +122,7 @@
                         <string>listbox_total_quantity</string>
                         <string>listbox_quantity_unit</string>
                         <string>my_specialise_title</string>
+                        <string>my_total_net_price</string>
                       </list>
                     </value>
                 </item>
