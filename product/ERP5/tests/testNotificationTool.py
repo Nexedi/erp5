@@ -441,7 +441,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     """
     Check that notification is send when recipient is a Person
     """
-    person = self.portal.portal_catalog(reference='userA')[0]
+    person = self.portal.portal_catalog(reference='userA', portal_type='Person')[0]
     self.portal.portal_notifications.sendMessage(
         recipient=person.getObject(), subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
