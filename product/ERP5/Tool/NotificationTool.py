@@ -36,13 +36,16 @@ from mimetypes import guess_type
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
+from email.MIMEAudio import MIMEAudio
+from email.MIMEImage import MIMEImage
 from email.Header import make_header
 from email import Encoders
 
 
 def buildEmailMessage(from_url, to_url, msg=None,
                       subject=None, attachment_list=None,
-                      extra_headers=None):
+                      extra_headers=None,
+                      additional_headers=None):
   """
     Builds a mail message which is ready to be
     sent by Zope MailHost.
@@ -53,6 +56,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
      - mime_type: mime-type corresponding to the attachment
     * extra_headers is a dictionnary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
+    * additional_headers is similar to extra_headers, but no prefix is added.
   """
 
   if attachment_list == None:
@@ -67,8 +71,12 @@ def buildEmailMessage(from_url, to_url, msg=None,
     message.attach(MIMEText(msg, _charset='utf-8'))
 
   if extra_headers:
-    for k, v in extra_headers.items():
-      message.add_header('X-%s' % k, v)
+    for key, value in extra_headers.items():
+      message.add_header('X-%s' % key, value)
+
+  if additional_headers:
+    for key, value in additional_headers.items():
+      message.add_header(key, value)
 
   message.add_header('Subject',
                       make_header([(subject, 'utf-8')]).encode())
@@ -92,10 +100,18 @@ def buildEmailMessage(from_url, to_url, msg=None,
     if attachment['mime_type'] == 'text/plain':
       part = MIMEText(attachment['content'], _charset='utf-8')
     else:
-      #  encode non-plaintext attachment in base64
-      part = MIMEBase(*attachment['mime_type'].split('/', 1))
-      part.set_payload(attachment['content'])
-      Encoders.encode_base64(part)
+      major, minor = attachment['mime_type'].split('/', 1)
+      if major == 'text':
+        part = MIMEText(attachment['content'], _subtype=minor)
+      elif major == 'image':
+        part = MIMEImage(attachment['content'], _subtype=minor)
+      elif major == 'audio':
+        part = MIMEAudio(attachment['content'], _subtype=minor)
+      else:
+        #  encode non-plaintext attachment in base64      
+        part = MIMEBase(major, minor)
+        part.set_payload(attachment['content'])
+        Encoders.encode_base64(part)
 
     part.add_header('Content-Disposition',
                     'attachment; filename=%s' % attachment_name)
@@ -132,6 +148,24 @@ class NotificationTool(BaseTool):
 
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainNotificationTool', _dtmldir )
+
+  # XXX Bad Name...Any Idea?
+  security.declareProtected(Permissions.UseMailhostServices, 'sendMessageLowLevel')
+  def sendMessageLowLevel(self, from_url, to_url, body=None, subject=None,
+                          attachment_list=None, extra_headers=None, additional_headers=None,
+                          debug=False):
+    portal = self.getPortalObject()
+    mailhost = getattr(portal, 'MailHost', None)
+    if mailhost is None:
+      raise ValueError, "Can't find MailHost."
+    message = buildEmailMessage(from_url, to_url, msg=body, subject=subject,
+                                attachment_list=attachment_list, extra_headers=extra_headers,
+                                additional_headers=additional_headers)
+
+    if debug:
+      return message.as_string()
+
+    mailhost.send(messageText=message.as_string(), mto=to_url, mfrom=from_url)
 
   security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
   def sendMessage(self, sender=None, recipient=None, subject=None, 
@@ -171,9 +205,6 @@ class NotificationTool(BaseTool):
     """
     portal = self.getPortalObject()
     catalog_tool = getToolByName(self, 'portal_catalog')
-    mailhost = getattr(portal, 'MailHost', None)
-    if mailhost is None:
-      raise ValueError, "Can't find MailHost."
 
     # Find Default Values
     default_from_email = portal.email_from_address
@@ -214,14 +245,12 @@ class NotificationTool(BaseTool):
 
     # Build and Send Messages
     for to_address in to_address_list:
-      mail_message = buildEmailMessage(from_url=from_address,
-                                       to_url=to_address,
-                                       msg=message,
-                                       subject=subject,
-                                       attachment_list=attachment_list
-                                       )
-      mailhost.send(mail_message.as_string(), to_address, from_address)
-
+      self.sendMessageLowLevel(from_url=from_address,
+                               to_url=to_address,
+                               body=message,
+                               subject=subject,
+                               attachment_list=attachment_list
+                               )
 
     return
     # Future implemetation could consist in implementing

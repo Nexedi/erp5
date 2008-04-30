@@ -28,6 +28,7 @@
 import unittest
 import os
 import email
+import email.Header
 
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -515,7 +516,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     
     message = email.message_from_string(messageText)
 
-    self.assertEquals('A Mail', message['Subject'])
+    self.assertEquals('A Mail',
+                      email.Header.decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -598,7 +600,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     
     message = email.message_from_string(messageText)
 
-    self.assertEquals('Héhé', message['Subject'])
+    self.assertEquals('Héhé',
+                      email.Header.decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':

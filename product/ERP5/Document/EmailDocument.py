@@ -48,18 +48,11 @@ except ImportError:
     A dummy exception class which is used when MimetypesRegistry product is
     not installed yet.
     """
-  
+
 
 from email import message_from_string
 from email.Header import decode_header
 from email.Utils import parsedate
-from email import Encoders
-from email.Message import Message
-from email.MIMEAudio import MIMEAudio
-from email.MIMEBase import MIMEBase
-from email.MIMEImage import MIMEImage
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
@@ -400,9 +393,6 @@ class EmailDocument(File, TextDocument):
       download - if set to True returns, the message online
                 rather than sending it.
 
-      This method is based on the examples provided by
-      http://docs.python.org/lib/node162.html
-
       TODO: support conversion to base format and use
       base format rather than original format
 
@@ -412,11 +402,17 @@ class EmailDocument(File, TextDocument):
     if not _checkPermission(Permissions.View, self):
       raise Unauthorized
 
+    #
     # Prepare header data
+    #
     if body is None:
       body = self.asText()
+
+    # Subject
     if subject is None:
       subject = self.getTitle()
+
+    # From
     if from_url is None:
       sender = self.getSourceValue()
       if sender.getTitle():
@@ -424,101 +420,100 @@ class EmailDocument(File, TextDocument):
                                 sender.getDefaultEmailText())
       else:
         from_url = sender.getDefaultEmailText()
+
+    # Return-Path
     if reply_url is None:
       reply_url = self.portal_preferences.getPreferredEventSenderEmail()
+    additional_headers = None
+    if reply_url:
+      additional_headers = {'Return-Path':reply_url}
+
+    # To (multiple)
+    to_url_list = []
     if to_url is None:
-      to_url = []
       for recipient in self.getDestinationValueList():
         email = recipient.getDefaultEmailText()
         if email:
           if recipient.getTitle():
-            to_url.append('"%s" <%s>' % (recipient.getTitle(), email))
+            to_url_list.append('"%s" <%s>' % (recipient.getTitle(), email))
           else:
-            to_url.append(email)
+            to_url_list.append(email)
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
     elif type(to_url) in types.StringTypes:
-      to_url = [to_url]
+      to_url_list.append(to_url)
 
-    # Not efficient but clean
-    for recipient in to_url:
-      # Create the container (outer) email message.
-      message = MIMEMultipart()
-      message['Subject'] = subject
-      message['From'] = from_url
-      message['To'] = recipient
-      message['Return-Path'] = reply_url
-      message.preamble = 'You will not see this in a MIME-aware mail reader.\n'
-  
-      # Add the body of the message
-      attached_message = MIMEText(str(body), _charset='UTF-8')
-      message.attach(attached_message)
-  
-      # Attach files
-      document_type_list = self.getPortalDocumentTypeList()
-      for attachment in self.getAggregateValueList():
-        mime_type = None
-        attached_data = None
-        if attachment.getPortalType() in document_type_list:
-          # If this is a document, use
+    # Attachments
+    attachment_list = []
+    document_type_list = self.getPortalDocumentTypeList()
+    for attachment in self.getAggregateValueList():
+      mime_type = None
+      content = None
+      name = None
+      if not attachment.getPortalType() in document_type_list:
+        mime_type = 'application/pdf'
+        content = attachment.asPDF() # XXX - Not implemented yet
+      else:
+        #
+        # Document type attachment
+        #
 
-          # WARNING - this could fail since getContentType
-          # is not (yet) part of Document API
-          if getattr(attachment, 'getContentType', None) is not None:
-            mime_type = attachment.getContentType()
-          elif getattr(attachment, 'getTextFormat', None) is not None:
-            mime_type = attachment.getTextFormat()
-          else:
-            raise ValueError, "Cannot find mimetype of the document."
-
-          if mime_type is not None:
-            try:
-              mime_type, attached_data = attachment.convert(mime_type)
-            except ConversionError:
-              mime_type = attachment.getBaseContentType()
-              attached_data = attachment.getBaseData()
-            except (NotImplementedError, MimeTypeException):
-              pass
-
-          if attached_data is None:
-            if getattr(attachment, 'getTextContent', None) is not None:
-              attached_data = attachment.getTextContent()
-            elif getattr(attachment, 'getData', None) is not None:
-              attached_data = attachment.getData()
-            elif getattr(attachment, 'getBaseData', None) is not None:
-              attached_data = attachment.getBaseData()
+        # WARNING - this could fail since getContentType
+        # is not (yet) part of Document API
+        if getattr(attachment, 'getContentType', None) is not None:
+          mime_type = attachment.getContentType()
+        elif getattr(attachment, 'getTextFormat', None) is not None:
+          mime_type = attachment.getTextFormat()
         else:
-          mime_type = 'application/pdf'
-          attached_data = attachment.asPDF() # XXX - Not implemented yet
-                                                # should provide a default printout
+          raise ValueError, "Cannot find mimetype of the document."
 
-        if not isinstance(attached_data, str):
-          attached_data = str(attached_data)
+        if mime_type is not None:
+          try:
+            mime_type, content = attachment.convert(mime_type)
+          except ConversionError:
+            mime_type = attachment.getBaseContentType()
+            content = attachment.getBaseData()
+          except (NotImplementedError, MimeTypeException):
+            pass
 
-        if not mime_type:
-          mime_type = 'application/octet-stream'
-        # Use appropriate class based on mime_type
-        maintype, subtype = mime_type.split('/', 1)
-        if maintype == 'text':
-          attached_message = MIMEText(attached_data, _subtype=subtype)
-        elif maintype == 'image':
-          attached_message = MIMEImage(attached_data, _subtype=subtype)
-        elif maintype == 'audio':
-          attached_message = MIMEAudio(attached_data, _subtype=subtype)
-        else:
-          attached_message = MIMEBase(maintype, subtype)
-          attached_message.set_payload(attached_data)
-          Encoders.encode_base64(attached_message)
-        attached_message.add_header('Content-Disposition', 'attachment', filename=attachment.getReference())
-        message.attach(attached_message)
+        if content is None:
+          if getattr(attachment, 'getTextContent', None) is not None:
+            content = attachment.getTextContent()
+          elif getattr(attachment, 'getData', None) is not None:
+            content = attachment.getData()
+          elif getattr(attachment, 'getBaseData', None) is not None:
+            content = attachment.getBaseData()
 
-      # Send the message
-      if download:
-        return message.as_string() # Only for debugging purpose
+      if not isinstance(content, str):
+        content = str(content)
 
-      # Use activities
-      self.activate(activity="SQLQueue").sendMailHostMessage(message.as_string())
+      attachment_list.append({'mime_type':mime_type,
+                              'content':content,
+                              'name':attachment.getReference()}
+                             )
 
+    portal_notifications = getToolByName(self, 'portal_notifications')
+    kw = {}
+
+    # Only for debugging purpose
+    if download:
+      kw = {'debug':True}
+    else:
+      portal_notifications = portal_notifications.activate(activity="SQLQueue")
+
+    for to_url in to_url_list:
+      result = portal_notifications.sendMessageLowLevel(
+        from_url=from_url, to_url=to_url, body=body, subject=subject,
+        attachment_list=attachment_list,
+        additional_headers=additional_headers,
+        **kw
+        )
+
+    # Send the message
+    if download:
+      return result # Only for debugging purpose
+
+  # XXX Obsolete method, Use portal_notifications instead.
   security.declareProtected(Permissions.UseMailhostServices, 'sendMailHostMessage')
   def sendMailHostMessage(self, message):
     """

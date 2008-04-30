@@ -146,10 +146,6 @@ class Url(Coordinate, Base, UrlMixIn):
     * extra_headers is a dictionnary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
     """
-    # get the mailhost object
-    mailhost = getattr(self.getPortalObject(), 'MailHost', None)
-    if mailhost is None:
-      raise AttributeError, "Cannot find a MailHost object"
     if from_url is None:
       from_url = self.getUrlString(None)
     if to_url is None:
@@ -157,9 +153,9 @@ class Url(Coordinate, Base, UrlMixIn):
     if from_url is None or to_url is None:
       raise AttributeError, "No mail defined"
 
-    message = buildEmailMessage(from_url, to_url, msg=msg,
-                                subject=subject, attachment_list=attachment_list,
-                                extra_headers=extra_headers)
+    portal_notifications = getToolByName(self, 'portal_notifications')
 
-    # send mail to user
-    mailhost.send(message.as_string(), to_url, from_url)
+    portal_notifications.sendMessageLowLevel(from_url=from_url, to_url=to_url,
+                                             body=msg, subject=subject,
+                                             attachment_list=attachment_list,
+                                             extra_headers=extra_headers)
