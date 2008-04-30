@@ -114,5 +114,5 @@ class Event(EmailDocument, Movement):
       """
       send_script = self._getTypeBasedMethod('send')
       if send_script is None:
-        return self.send(*args, **kw)
+        return EmailDocument.send(self, *args, **kw)
       return send_script(*args, **kw)
