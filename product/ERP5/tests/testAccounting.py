@@ -168,7 +168,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     self.organisation_module = self.portal.organisation_module
     self.person_module = self.portal.person_module
     self.currency_module = self.portal.currency_module
-    self.section = self.organisation_module.my_organisation
+    if not hasattr(self, 'section'):
+      self.section = getattr(self.organisation_module, 'my_organisation', None)
     
     # make sure documents are validated
     for module in (self.account_module, self.organisation_module,
@@ -177,12 +178,14 @@ class AccountingTestCase(ERP5TypeTestCase):
         doc.validate()
 
     # and the preference enabled
-    pref = self.portal.portal_preferences.accounting_zuite_preference
-    pref.manage_addLocalRoles(self.username, ('Auditor', ))
-    # Make sure _aq_dynamic is called before calling the workflow method
-    # otherwise .enable might not been wrapped yet. This happen in --load
-    pref._aq_dynamic('hack')
-    pref.enable()
+    pref = self.portal.portal_preferences._getOb(
+                  'accounting_zuite_preference', None)
+    if pref is not None:
+      pref.manage_addLocalRoles(self.username, ('Auditor', ))
+      # Make sure _aq_dynamic is called before calling the workflow method
+      # otherwise .enable might not been wrapped yet. This happen in --load
+      pref._aq_dynamic('hack')
+      pref.enable()
     
     # and all this available to catalog
     get_transaction().commit()
@@ -201,8 +204,9 @@ class AccountingTestCase(ERP5TypeTestCase):
     self.organisation_module.manage_delObjects([x for x in 
           self.accounting_module.objectIds() if x not in organisation_list])
     for organisation_id in organisation_list:
-      organisation = self.organisation_module._getOb(organisation_id)
-      organisation.manage_delObjects([x.getId() for x in
+      organisation = self.organisation_module._getOb(organisation_id, None)
+      if organisation is not None:
+        organisation.manage_delObjects([x.getId() for x in
                 organisation.objectValues(
                   portal_type=('Accounting Period', 'Bank Account'))])
     self.person_module.manage_delObjects([x for x in 
