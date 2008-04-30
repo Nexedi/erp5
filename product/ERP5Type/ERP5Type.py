@@ -423,6 +423,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
       # get all properties from the property sheet list
       current_list = []
       current_list += cat_list
+      current_list += ["%s_free_text" % cat for cat in cat_list]
       for base in ps_list:
         ps_property = getattr(base, '_properties', None)
         if type(ps_property) in (type(()), type([])):
@@ -442,6 +443,7 @@ class ERP5TypeInformation( FactoryTypeInformation,
           for category in ps_property:
             if category not in current_list:
               current_list.append(category)
+              current_list.append('%s_free_text' % category)
       return current_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
