@@ -73,7 +73,9 @@ term_dict = {}\n
 result = []\n
 \n
 for bt_id in template_list:\n
+  # XXX this might be too simple: some business template include more than one skin folder\n
   bt = context.portal_templates.getInstalledBusinessTemplate(bt_id)\n
+  if bt is None: continue\n
   if bt_id.startswith(prefix):\n
     bt_id = bt_id[len(prefix):]\n
 \n
@@ -165,6 +167,7 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>bt</string>
+                            <string>None</string>
                             <string>_getitem_</string>
                             <string>len</string>
                             <string>wf_id</string>
