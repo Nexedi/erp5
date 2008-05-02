@@ -103,6 +103,7 @@
                     <value>
                       <list>
                         <string>your_business_field_list</string>
+                        <string>your_auto_select</string>
                       </list>
                     </value>
                 </item>
