@@ -1,0 +1,19 @@
+Content-Type: text/plain; charset="iso-8859-15"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Date:
+From: webmaster@example.com
+Subject: This is a test!
+To: user@example.com
+
+Dear user@example.com,
+
+Test User would like to thank you for
+your interest in:
+http://foo
+
+This is a test!
+
+cheers,
+
+The Web Team

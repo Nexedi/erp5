@@ -1,0 +1,11 @@
+Content-Type: text/notplain; charset="iso-8859-15"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Bcc: bcc@example.com
+Cc: cc@example.com
+Date:
+From: from@example.com
+Subject: Hello out there
+To: to@example.com, to2@example.com
+
+Test Body

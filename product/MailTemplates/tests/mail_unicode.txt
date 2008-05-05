@@ -1,0 +1,9 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Date:
+From: from@example.com
+Subject: Test Subject
+To: to@example.com
+
+VGVzdCDCo8KjwqMK

@@ -1,0 +1,6 @@
+[default]
+mailhost = MailHost
+subject = Hello %s there
+mfrom = from@example.com
+charset = latin-1
+content_type = text/notplain

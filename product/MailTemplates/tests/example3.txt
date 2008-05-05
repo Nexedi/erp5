@@ -1,0 +1,31 @@
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="111"; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Date:
+From: from@example.com
+Subject: Your requested file
+To: to1@example.com
+
+--111
+Content-Type: text/plain; charset="iso-8859-15"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+Dear to1@example.com,
+ =
+
+Please find attached the file you requested.
+ =
+
+cheers,
+
+The Web Team
+
+--111
+Content-Type: application/octet-stream
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="myfile.bin"
+
+VGhpcyBpcyB0aGUgZmlsZSBhdHRhY2htZW50
+--111--

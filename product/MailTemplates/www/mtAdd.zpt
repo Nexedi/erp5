@@ -1,0 +1,63 @@
+<h1 tal:replace="structure here/manage_page_header">Header</h1>
+
+<h2 tal:define="form_title string:Add Mail Template"
+    tal:replace="structure here/manage_form_title">Form Title</h2>
+
+<p class="form-help">
+Mail Templates allow you to use TALES, METAL and other ZPT functionality
+to generate and send emails.
+</p>
+
+<form action="addMailTemplate" method="post" 
+ enctype="multipart/form-data">
+<table cellspacing="0" cellpadding="2" border="0">
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Id
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="id" size="40" />
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    MailHost
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <select name="mailhost">
+      <option tal:repeat="mh python:here.superValues(('Mail Host','Maildrop Host'))"
+              tal:content="mh/title_and_id"
+              tal:attributes="value mh/getId"/>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-optional">
+    File
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="file" name="file" size="25" value="" />
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-element">
+    <input class="form-element" type="submit" name="submit" 
+     value=" Add " /> 
+    <input class="form-element" type="submit" name="submit" 
+     value=" Add and Edit " />
+    </div>
+    </td>
+  </tr>
+</table>
+</form>
+
+<h1 tal:replace="structure here/manage_page_footer">Footer</h1>

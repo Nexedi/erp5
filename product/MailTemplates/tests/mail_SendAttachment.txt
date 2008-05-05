@@ -1,0 +1,25 @@
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="111"; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Bcc: bcc@example.com
+Cc: cc@example.com
+Date:
+From: from@example.com
+Subject: Hello out there
+To: to@example.com, to2@example.com
+
+--111
+Content-Type: text/plain; charset="iso-8859-15"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+Test Body
+
+--111
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="test.txt"
+
+A Test Attachment
+--111--

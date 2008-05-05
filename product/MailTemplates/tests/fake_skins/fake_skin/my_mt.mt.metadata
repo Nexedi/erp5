@@ -1,0 +1,4 @@
+[default]
+mailhost=MailHost
+mfrom=webmaster@example.com
+subject=Thankyou for your interest!
