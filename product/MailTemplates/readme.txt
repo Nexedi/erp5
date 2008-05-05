@@ -1,5 +1,8 @@
 Mail Templates
 
+  Note: This is a Nexedi version of MailTemplates, but not the official
+  one.
+
   Mail Templates provide full access to Python's email package and
   allow the body of messages to be generated using Zope's Page
   Template technology. They work in both a Zope environment and a CMF
