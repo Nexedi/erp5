@@ -37,9 +37,16 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>cancel</string>
                 <string>open</string>
                 <string>open_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
