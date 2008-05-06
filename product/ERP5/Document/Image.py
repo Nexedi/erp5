@@ -469,18 +469,18 @@ class Image(File, OFSImage):
 
   security.declareProtected('View', 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
-    """Retuns the size for this image display, or None if this image display name
-    is not known.
     """
-    preference_tool = self.getPortalObject().portal_preferences
-    default_displays = dict()
-    for id in default_displays_id_list:
-      height_preference = 'preferred_%s_image_height' % (id)
-      width_preferece = 'preferred_%s_image_width' % (id)
-      image_size = (preference_tool.getPreference(height_preference),
-                    preference_tool.getPreference(width_preferece))
-      default_displays.setdefault(id, image_size)
-    return default_displays.get(image_display, None)
+    Return the size for this image display, or None if this image display name
+    is not known. If the preference is not set, (0, 0) is returned.
+    """
+    if image_display in default_displays_id_list:
+      preference_tool = self.getPortalObject().portal_preferences
+      height_preference = 'preferred_%s_image_height' % (image_display,)
+      width_preferece = 'preferred_%s_image_width' % (image_display,)
+      height = preference_tool.getPreference(height_preference, 0)
+      width = preference_tool.getPreference(width_preferece, 0)
+      return (height, width)
+    return None
 
   #
   # FTP/WebDAV support
