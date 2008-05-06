@@ -33,90 +33,90 @@ from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.EmailDocument import EmailDocument
 
 class Event(EmailDocument, Movement):
+  """
+    Event is the base class for all events in ERP5.
+
+    Event objects include emails, phone calls,
+
+    The purpose of an Event object is to keep track
+    of the interface between the ERP and third parties.
+
+    Events have a start and stop date.
+
+    Events may contain files and local role definitions.
+  """
+
+  meta_type = 'ERP5 Event'
+  portal_type = 'Event'
+  isPortalContent = 1
+  isRADContent = 1
+  isDelivery = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Document
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Snapshot
+                    , PropertySheet.Task
+                    , PropertySheet.Url
+                    , PropertySheet.TextDocument
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Event
+                    , PropertySheet.Delivery
+                    , PropertySheet.ItemAggregation
+                   )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self):
     """
-      Event is the base class for all events in ERP5.
-
-      Event objects include emails, phone calls,
-
-      The purpose of an Event object is to keep track
-      of the interface between the ERP and third parties.
-
-      Events have a start and stop date.
-
-      Events may contain files and local role definitions.
+      Returns 1 if this needs to be accounted
+      Only account movements which are not associated to a delivery
+      Whenever delivery is there, delivery has priority
     """
+    return 1
 
-    meta_type = 'ERP5 Event'
-    portal_type = 'Event'
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
-    
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getQuantity')
+  def getQuantity(self):
+    """
+      Quantity is set automatically on Events.
+    """
+    # Provide opportunity to script this
+    return 1.
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Document
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Snapshot
-                      , PropertySheet.Task
-                      , PropertySheet.Url
-                      , PropertySheet.TextDocument
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Event
-                      , PropertySheet.Delivery
-                      , PropertySheet.ItemAggregation
-                     )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                             'getExplanationValue')
+  def getExplanationValue(self):
+    """
+      An event is it's own explanation
+    """
+    return self
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'isAccountable')
-    def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
-      """
-      return 1
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getQuantity')
-    def getQuantity(self):
-      """
-        Quantity is set automatically on Events.
-      """
-      # Provide opportunity to script this
-      return 1.
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                               'getExplanationValue')
-    def getExplanationValue(self):
-      """
-        An event is it's own explanation
-      """
-      return self
-
-    security.declareProtected(Permissions.UseMailhostServices, 'send')
-    def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
-             body=None, attachment_format=None, download=False, **kw):
-      """
-        Make the send method overridable by typed based script
-        so that special kinds of events can use a different gateway
-        to send messages. This is useful for example to send
-        faxes through fax server or to send letters by printing
-        them to the printer or to send SMS through a custom 
-        gateway. In the most usual case, sending will only consist
-        in changing the destination.
-      """
-      send_script = self._getTypeBasedMethod('send')
-      if send_script is None:
-        return Event.inheritedAttribute('send')(
-            self, from_url, to_url, reply_url, subject, body, attachment_format, download
-            )
-      return send_script(
-          from_url, to_url, reply_url, subject, body, attachment_format, download, **kw
+  security.declareProtected(Permissions.UseMailhostServices, 'send')
+  def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
+           body=None, attachment_format=None, download=False, **kw):
+    """
+      Make the send method overridable by typed based script
+      so that special kinds of events can use a different gateway
+      to send messages. This is useful for example to send
+      faxes through fax server or to send letters by printing
+      them to the printer or to send SMS through a custom 
+      gateway. In the most usual case, sending will only consist
+      in changing the destination.
+    """
+    send_script = self._getTypeBasedMethod('send')
+    if send_script is None:
+      return Event.inheritedAttribute('send')(
+          self, from_url, to_url, reply_url, subject, body, attachment_format, download
           )
+    return send_script(
+        from_url, to_url, reply_url, subject, body, attachment_format, download, **kw
+        )
