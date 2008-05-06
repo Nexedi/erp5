@@ -280,9 +280,11 @@ class Movement(XMLObject, Amount):
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalPrice')
-  def getTotalPrice(self, default=None, context=None, REQUEST=None, **kw):
-    """
-      Get the Total Price in the context.
+  def getTotalPrice(self, default=None, context=None, REQUEST=None, fast=None,
+                    **kw):
+    """Return the total price in the context.
+
+    The optional parameter "fast" is for compatibility, and will be ignored.
     """
     # see getPrice
     if isinstance(default, Base) and context is None:
@@ -293,8 +295,9 @@ class Movement(XMLObject, Amount):
       LOG('ERP5', WARNING, msg)
       context = default
       default = None
-    return self._getTotalPrice(context=self.asContext(context=context,
-                                REQUEST=REQUEST, **kw),**kw)
+    
+    tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
+    return self._getTotalPrice(context=tmp_context, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalQuantity')
