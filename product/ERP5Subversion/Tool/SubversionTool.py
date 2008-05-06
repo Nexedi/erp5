@@ -1164,8 +1164,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
      Necessary before recursively commit removals
     """
     res = path_list
-    for file_path in path_list:
-      res = [x for x in res if file_path == x or file_path not in x]
+    for path in path_list:
+      path = path + '/'
+      res = [x for x in res if not x.startswith(path)]
     return res
 
   # return a set with directories present in the directory
