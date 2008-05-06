@@ -359,7 +359,8 @@ class TempDocumentConstructor(DocumentConstructor):
       # Make some methods public.
       for method_id in ('reindexObject', 'recursiveReindexObject',
                         'activate', 'setUid', 'setTitle', 'getTitle',
-                        'edit', 'setProperty', 'getUid'):
+                        'edit', 'setProperty', 'getUid', 'setCriterion',
+                        'setCriterionPropertyList'):
         setattr(TempDocument, '%s__roles__' % method_id, None)
 
       self.klass = TempDocument
