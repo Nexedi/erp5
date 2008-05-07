@@ -526,10 +526,10 @@ def initializeClassDynamicProperties(self, klass):
       # Mark as generated
       Base.aq_method_generated[klass] = 1
 
-def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key):
+def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
   ## Init CachingMethod which implements caching for ERP5
   from Products.ERP5Type.Cache import initializePortalCachingProperties
-  initializePortalCachingProperties(self)
+  initializePortalCachingProperties(portal)
 
   id = ''
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
@@ -544,9 +544,10 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key):
        (ptype != parent_type or klass != parent_klass) and \
        not Base.aq_portal_type.has_key(parent_type):
       initializePortalTypeDynamicProperties(parent_object, parent_klass,
-                                            parent_type, parent_object._aq_key())
+                                            parent_type, 
+                                            parent_object._aq_key(), portal)
     # Initiatise portal_type properties (XXX)
-    ptype_object = getattr(aq_base(self.portal_types), ptype, None)
+    ptype_object = getattr(aq_base(portal.portal_types), ptype, None)
     prop_list = list(getattr(klass, '_properties', []))
     cat_list = list(getattr(klass, '_categories', []))
     constraint_list = list(getattr(klass, '_constraints', []))
@@ -588,10 +589,10 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key):
     prop_holder._constraints = constraint_list
     from Utils import setDefaultClassProperties, setDefaultProperties
     setDefaultClassProperties(prop_holder)
-    setDefaultProperties(prop_holder, object=self)
+    setDefaultProperties(prop_holder, object=self, portal=portal)
     #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-#     initializePortalTypeDynamicWorkflowMethods(self,
-    initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder)
+    initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
+                                               portal)
     # We can now associate it after initialising security
     InitializeClass(prop_holder)
     prop_holder.__propholder__ = prop_holder
@@ -600,7 +601,8 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key):
     #klass.__ac_permissions__ = prop_holder.__ac_permissions__
     Base.aq_portal_type[aq_key] = prop_holder
 
-def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
+def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
+                                               portal):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
   # aq_inner is required to prevent extra name lookups from happening
@@ -608,7 +610,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder):
   # wrapper contains an object with _aq_dynamic defined, the workflow id
   # is looked up with _aq_dynamic, thus causes infinite recursions.
 
-  portal_workflow = aq_inner(getToolByName(self, 'portal_workflow'))
+  portal_workflow = aq_inner(getToolByName(portal, 'portal_workflow'))
   for wf in portal_workflow.getWorkflowsFor(self):
     if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
       wf_id = wf.id
@@ -877,22 +879,27 @@ class Base( CopyContainer,
       initializeClassDynamicProperties(self, klass)
       generated = 1
 
+    # Iterate until an ERP5 Site is obtained.
+    portal = self.getPortalObject()
+    while portal.portal_type != 'ERP5 Site':
+      portal = portal.aq_parent.aq_inner.getPortalObject()
+
     # Generate portal_type methods
     if not Base.aq_portal_type.has_key(aq_key):
       if ptype == 'Preference':
         # XXX-JPS this should be moved to Preference class
         from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
         updatePreferenceClassPropertySheetList()
-      initializePortalTypeDynamicProperties(self, klass, ptype, aq_key)
+      initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
       generated = 1
 
     # Generate Related Accessors
     if not Base.aq_related_generated:
       from Utils import createRelatedValueAccessors
       generated = 1
-      portal_types = getToolByName(self, 'portal_types', None)
+      portal_types = getToolByName(portal, 'portal_types', None)
       generated_bid = {}
-      econtext = createExpressionContext(self.getPortalObject())
+      econtext = createExpressionContext(object=self, portal=portal)
       for pid, ps in PropertySheet.__dict__.items():
         if pid[0] != '_':
           base_category_list = []
@@ -925,7 +932,7 @@ class Base( CopyContainer,
         from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
         from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
         updatePreferenceClassPropertySheetList()
-        createPreferenceToolAccessorList(self.getPortalObject())
+        createPreferenceToolAccessorList(portal)
       except ImportError, e :
         LOG('Base._aq_dynamic', WARNING,
             'unable to create methods for PreferenceTool', e)

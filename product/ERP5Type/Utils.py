@@ -999,16 +999,11 @@ def setDefaultConstructor(klass):
       document_constructor.__name__ = document_constructor_name
 
 
-def createExpressionContext(object):
+def createExpressionContext(object, portal):
   """
     Return a context used for evaluating a TALES expression.
   """
-  if object is not None:
-    portal = object.getPortalObject()
-  else:
-    portal = None
-
-  if object is None or not hasattr(object, 'aq_base'):
+  if object is None or getattr(object, 'aq_base', None) is None:
     folder = portal
   else:
     folder = object
@@ -1059,7 +1054,7 @@ def createExpressionContext(object):
       }
   return getEngine().getContext(data)
 
-def setDefaultProperties(property_holder, object=None):
+def setDefaultProperties(property_holder, object=None, portal=None):
     """
       This methods sets default accessors for this object as well
       as consistency checkers, based on the definition
@@ -1083,7 +1078,7 @@ def setDefaultProperties(property_holder, object=None):
 
     Set default attributes in current object for all properties in '_properties'
     """
-    econtext = createExpressionContext(object)
+    econtext = createExpressionContext(object, portal)
     legalTypes = type_definition.keys()
     # First build the property list from the property sheet
     # and the class properties
@@ -1236,8 +1231,8 @@ def setDefaultProperties(property_holder, object=None):
                         write_permission=Permissions.ModifyPortalContent)
 
       # Get read and write permission
-      if object is not None:
-        cat_object = object.getPortalObject().portal_categories.get(cat, None)
+      if portal is not None:
+        cat_object = portal.portal_categories.get(cat, None)
       else:
         cat_object = None
       if cat_object is not None:
@@ -1273,8 +1268,8 @@ def setDefaultProperties(property_holder, object=None):
           base_category_list.append(cat)
       for cat in base_category_list:
         # Get read and write permission
-        if object is not None:
-          cat_object = object.getPortalObject().portal_categories.get(cat, None)
+        if portal is not None:
+          cat_object = portal.portal_categories.get(cat, None)
         else:
           cat_object = None
         if cat_object is not None:
