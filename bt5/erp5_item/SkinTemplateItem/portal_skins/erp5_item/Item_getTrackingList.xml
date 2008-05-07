@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
 catalog = context.portal_catalog.getResultValue\n
-method = context.portal_simulation.getTrackingList\n
+method = context.portal_simulation.getCurrentTrackingList\n
 uid = context.getUid()\n
 \n
 history_list = []\n
