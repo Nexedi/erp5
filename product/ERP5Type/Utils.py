@@ -999,10 +999,13 @@ def setDefaultConstructor(klass):
       document_constructor.__name__ = document_constructor_name
 
 
-def createExpressionContext(object, portal):
+def createExpressionContext(object, portal=None):
   """
     Return a context used for evaluating a TALES expression.
   """
+  if portal is None and object is not None:
+    portal = object.getPortalObject()
+
   if object is None or getattr(object, 'aq_base', None) is None:
     folder = portal
   else:
