@@ -284,12 +284,11 @@
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>\n
         </a>\n
-        <a tal:condition="report_actions" class="report" title="Report"\n
-           tal:attributes="href python: portal.ERP5Site_renderCustomLink(report_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_report\')"\n
-           i18n:attributes="title" i18n:domain="ui">\n
+        <button tal:condition="report_actions" class="report" type="submit" name="Base_doReport:method" title="Report"\n
+                i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Report</span>\n
-        </a>\n
+        </button>\n
         <a tal:condition="fast_input_actions" class="fast_input" title="Fast Input"\n
            tal:attributes="href python: portal.ERP5Site_renderCustomLink(fast_input_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_fast_input\')"\n
            i18n:attributes="title" i18n:domain="ui">\n
