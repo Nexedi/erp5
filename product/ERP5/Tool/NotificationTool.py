@@ -149,11 +149,9 @@ class NotificationTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainNotificationTool', _dtmldir )
 
-  # XXX Bad Name...Any Idea?
-  security.declareProtected(Permissions.UseMailhostServices, 'sendMessageLowLevel')
-  def sendMessageLowLevel(self, from_url, to_url, body=None, subject=None,
-                          attachment_list=None, extra_headers=None, additional_headers=None,
-                          debug=False):
+  def _sendEmailMessage(self, from_url, to_url, body=None, subject=None,
+                        attachment_list=None, extra_headers=None, additional_headers=None,
+                        debug=False):
     portal = self.getPortalObject()
     mailhost = getattr(portal, 'MailHost', None)
     if mailhost is None:
@@ -245,13 +243,12 @@ class NotificationTool(BaseTool):
 
     # Build and Send Messages
     for to_address in to_address_list:
-      self.sendMessageLowLevel(from_url=from_address,
-                               to_url=to_address,
-                               body=message,
-                               subject=subject,
-                               attachment_list=attachment_list
-                               )
-
+      self._sendEmailMessage(from_url=from_address,
+                             to_url=to_address,
+                             body=message,
+                             subject=subject,
+                             attachment_list=attachment_list
+                             )
     return
     # Future implemetation could consist in implementing
     # policies such as grouped notification (per hour, per day,

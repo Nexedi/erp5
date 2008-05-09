@@ -502,7 +502,7 @@ class EmailDocument(File, TextDocument):
       portal_notifications = portal_notifications.activate(activity="SQLQueue")
 
     for to_url in to_url_list:
-      result = portal_notifications.sendMessageLowLevel(
+      result = portal_notifications._sendEmailMessage(
         from_url=from_url, to_url=to_url, body=body, subject=subject,
         attachment_list=attachment_list,
         additional_headers=additional_headers,

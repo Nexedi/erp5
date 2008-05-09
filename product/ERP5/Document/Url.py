@@ -155,7 +155,7 @@ class Url(Coordinate, Base, UrlMixIn):
 
     portal_notifications = getToolByName(self, 'portal_notifications')
 
-    portal_notifications.sendMessageLowLevel(from_url=from_url, to_url=to_url,
-                                             body=msg, subject=subject,
-                                             attachment_list=attachment_list,
-                                             extra_headers=extra_headers)
+    portal_notifications._sendEmailMessage(from_url=from_url, to_url=to_url,
+                                           body=msg, subject=subject,
+                                           attachment_list=attachment_list,
+                                           extra_headers=extra_headers)
