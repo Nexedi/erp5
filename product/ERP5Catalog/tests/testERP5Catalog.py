@@ -2630,6 +2630,22 @@ VALUES
     compareSet('foo ', [])
     compareSet(' foo ', [])
 
+  def test_WildcardMatchesUnsetValue(self, quiet=quiet, run=run_all_test):
+    """
+      Check that the "%" wildcard matches unset values.
+    """
+    if not run:
+      return
+    
+    portal_type = 'Organisation'
+    folder = self.getOrganisationModule()
+    first_doc = folder.newContent(portal_type=portal_type, reference="doc 1")
+    second_doc = folder.newContent(portal_type=portal_type, reference="doc 2", description="test")
+    get_transaction().commit()
+    self.tic()
+    result = folder.portal_catalog(portal_type=portal_type, reference='doc %', description='%')
+    self.assertEqual(len(result), 2)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
