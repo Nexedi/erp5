@@ -155,6 +155,21 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserExists('the_user', 'secret')
     self._assertUserDoesNotExists('the_User', 'secret')
   
+  def test_PersonLoginIsNotStripped(self):
+    """Make sure 'foo ', ' foo' and ' foo ' do not match user 'foo'. """
+    p = self._makePerson(reference='foo', password='secret',)
+    self._assertUserExists('foo', 'secret')
+    self._assertUserDoesNotExists('foo ', 'secret')
+    self._assertUserDoesNotExists(' foo', 'secret')
+    self._assertUserDoesNotExists(' foo ', 'secret')
+
+  def test_PersonLoginCannotBeComposed(self):
+    """Make sure ZSQLCatalog keywords cannot be used at login time"""
+    p = self._makePerson(reference='foo', password='secret',)
+    self._assertUserExists('foo', 'secret')
+    self._assertUserDoesNotExists('bar', 'secret')
+    self._assertUserDoesNotExists('bar OR foo', 'secret')
+
   def test_PersonLoginNonAscii(self):
     """Login can contain non ascii chars."""
     p = self._makePerson(reference='j\xc3\xa9', password='secret',)
