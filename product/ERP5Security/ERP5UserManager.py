@@ -199,6 +199,7 @@ class ERP5UserManager(BasePlugin):
           try:
             try:
               result = portal.portal_catalog.unrestrictedSearchResults(
+                                      select_expression='reference',
                                       portal_type="Person", reference=login)
             except ConflictError:
               raise
@@ -213,7 +214,34 @@ class ERP5UserManager(BasePlugin):
               raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
           finally:
             setSecurityManager(sm)
-          return [x.path for x in result]
+          # XXX: Here, we filter catalog result list ALTHOUGH we did pass
+          # parameters to unrestrictedSearchResults to restrict result set.
+          # This is done because the following values can match person with
+          # reference "foo":
+          # "foo " because of MySQL (feature, PADSPACE collation):
+          #  mysql> SELECT reference as r FROM catalog
+          #      -> WHERE reference="foo      ";
+          #  +-----+
+          #  | r   |
+          #  +-----+
+          #  | foo |
+          #  +-----+
+          #  1 row in set (0.01 sec)
+          # " foo", "foo " and other padding variations because of
+          # ZSQLCatalog (feature ?):
+          #  (Pdb) print portal.portal_catalog.unrestrictedSearchResults(\
+          #              portal_type="Person", reference='  foo  ', src__=1)
+          #  SELECT DISTINCT
+          #     catalog.path,   catalog.uid
+          #  FROM
+          #     catalog AS catalog
+          #  WHERE
+          #    1 = 1
+          #    AND (((((catalog.portal_type = 'Person'))))) AND (((((catalog.reference = 'foo')))))
+          #  LIMIT 1000
+          # "bar OR foo" because of ZSQLCatalog tokenizing searched sgtrings
+          # by default (feature).
+          return [x.path for x in result if x['reference'] == login]
         _getUserByLogin = CachingMethod(_getUserByLogin,
                                         id='ERP5UserManager_getUserByLogin',
                                         cache_factory='erp5_content_short')
