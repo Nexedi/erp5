@@ -57,6 +57,8 @@ from zLOG import LOG, PROBLEM, WARNING, INFO
 import sets
 
 SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
+ACQUIRE_PERMISSION_VALUE = []
+
 try:
   from Products.PluggableAuthService import PluggableAuthService
   PAS_meta_type = PluggableAuthService.PluggableAuthService.meta_type
@@ -713,36 +715,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           vars = {}
         #LOG('catalog_object vars', 0, str(vars))
 
-        # This functions tells which portal_types should acquire 
-        # from their parent. The behaviour is the same as
-        # in previous implementations but is capable of covering
-        # more cases. Only those portal types which View permission
-        # is not managed by a workflow and which acquire local
-        # roles acquire their permission
-        types_tool = getToolByName(self, 'portal_types')
-        def isViewPermissionAcquired(portal_type):
-          type_definition = types_tool.getTypeInfo(portal_type)
-          if getattr(aq_base(type_definition), 'acquire_local_roles', 0):
-            for workflow in wf.getWorkflowsFor(portal_type):
-              if 'View' in getattr(aq_base(workflow), 'permissions', ()):
-                return 0
-            # No workflow manages View and roles are acquired
-            return 1
-          return 0
-
-        # This below is commented out, because caching has tremendous
-        # side effect, and the performance seems to be not so different. -yo
-        # 
-        # isViewPermissionAcquired = CachingMethod(isViewPermissionAcquired, 
-        #                                          id='CatalogTool_isViewPermissionAcquired',
-        #                                          cache_factory='erp5_content_long')
-
         # Find the parent definition for security
         document_object = aq_inner(object)
         is_acquired = 0
         w = IndexableObjectWrapper(vars, document_object)
         while getattr(document_object, 'isRADContent', 0):
-          if isViewPermissionAcquired(getattr(aq_base(document_object), 'portal_type', None)):
+          # This condition tells which object should acquire 
+          # from their parent.
+          # XXX Hardcode _View_Permission for a performance point of view
+          if getattr(aq_base(document_object), '_View_Permission', ACQUIRE_PERMISSION_VALUE) == ACQUIRE_PERMISSION_VALUE:
             document_object = document_object.aq_parent
             is_acquired = 1
           else:
