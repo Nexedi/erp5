@@ -74,11 +74,16 @@
               <div class="content editable">\n
 <div id="container" style="margin: 1em">\n
                 <metal:block define-slot="content" />\n
-</div>\n
+              </div>\n
                 <p class="clear" />\n
               </div>\n
+              <tal:block tal:condition="python: getattr(here,\'portal_gadgets\', None)">\n
+                  <link href="erp5_knowledge_box_top_newpage.css" rel="stylesheet" type="text/css" />\n
+                  <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"\n
+                            tal:replace="structure here/ERP5Site_viewHomeAreaRenderer" />\n
+            </tal:block>\n
             </div>\n
-</div>\n
+            </div>\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n

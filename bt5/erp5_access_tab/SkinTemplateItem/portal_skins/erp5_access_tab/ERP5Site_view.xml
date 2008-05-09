@@ -68,12 +68,6 @@
   <tal:block tal:condition="python:tab is None">\n
     <tal:block tal:replace="structure here/ERP5Site_viewClassicFrontPage" />\n
   </tal:block>\n
-  <!-- Gadgets -->\n
-  <tal:block tal:condition="python: getattr(here,\'portal_gadgets\', None)">\n
-    <link href="erp5_knowledge_box_top_newpage.css" rel="stylesheet" type="text/css" />\n
-    <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"\n
-             tal:replace="structure here/ERP5Site_viewHomeAreaRenderer" />\n
-  </tal:block>\n
 </tal:block>\n
 \n
 \n
