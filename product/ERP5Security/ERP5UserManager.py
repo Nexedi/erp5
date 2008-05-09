@@ -88,7 +88,7 @@ class ERP5UserManager(BasePlugin):
             if not login or not password:
                 return None
 
-            user_list = self.getUserByLogin(login)
+            user_list = self.getUserByLogin((login,))
 
             if not user_list:
                 return None
@@ -156,7 +156,7 @@ class ERP5UserManager(BasePlugin):
                   id_list.append('%%%s%%' % id)
 
             if id_list:
-              for user in self.getUserByLogin(tuple(id_list)):
+              for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
                   info = { 'id' : user.getReference()
                          , 'login' : user.getReference()
                          , 'pluginid' : plugin_id
@@ -172,15 +172,15 @@ class ERP5UserManager(BasePlugin):
 
         if id is None:
           id = login
-        if isinstance(id, str):
-          id = (id,)
         if isinstance(id, list):
           id = tuple(id)
+        elif not isinstance(id, tuple):
+          id = (id,)
         return _enumerateUsers(id_tuple=id,
                                exact_match=exact_match,
                                path=self.getPhysicalPath())
 
-    def getUserByLogin(self, login):
+    def getUserByLogin(self, login, exact_match=True):
         # Search the Catalog for login and return a list of person objects
         # login can be a string or a list of strings
         # (no docstring to prevent publishing)
@@ -189,7 +189,7 @@ class ERP5UserManager(BasePlugin):
 
         portal = self.getPortalObject()
 
-        def _getUserByLogin(login):
+        def _getUserByLogin(login, exact_match):
           # because we aren't logged in, we have to create our own
           # SecurityManager to be able to access the Catalog
           sm = getSecurityManager()
@@ -241,11 +241,12 @@ class ERP5UserManager(BasePlugin):
           #  LIMIT 1000
           # "bar OR foo" because of ZSQLCatalog tokenizing searched sgtrings
           # by default (feature).
-          return [x.path for x in result if x['reference'] == login]
+          assert isinstance(login, tuple), repr(login.__class__)
+          return [x.path for x in result if (not exact_match) or x['reference'] in login]
         _getUserByLogin = CachingMethod(_getUserByLogin,
                                         id='ERP5UserManager_getUserByLogin',
                                         cache_factory='erp5_content_short')
-        result = _getUserByLogin(login)
+        result = _getUserByLogin(login, exact_match)
         return [portal.unrestrictedTraverse(x) for x in result]
 
 classImplements( ERP5UserManager
