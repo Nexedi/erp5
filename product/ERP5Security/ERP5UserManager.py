@@ -241,7 +241,6 @@ class ERP5UserManager(BasePlugin):
           #  LIMIT 1000
           # "bar OR foo" because of ZSQLCatalog tokenizing searched sgtrings
           # by default (feature).
-          assert isinstance(login, tuple), repr(login.__class__)
           return [x.path for x in result if (not exact_match) or x['reference'] in login]
         _getUserByLogin = CachingMethod(_getUserByLogin,
                                         id='ERP5UserManager_getUserByLogin',
