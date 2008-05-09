@@ -152,6 +152,7 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_PersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
     p = self._makePerson(reference='the_user', password='secret',)
+    self._assertUserExists('the_user', 'secret')
     self._assertUserDoesNotExists('the_User', 'secret')
   
   def test_PersonLoginNonAscii(self):
@@ -173,8 +174,8 @@ class TestUserManagement(ERP5TypeTestCase):
   
   def test_PersonWithLoginWithNotAssignmentAreNotUsers(self):
     """Tests a person with a login & password and no assignment open is not a valid user."""
-    self._makePerson(reference='the_user', open_assignment=0)
-    self._assertUserDoesNotExists('the_user', None)
+    self._makePerson(reference='the_user', password='secret', open_assignment=0)
+    self._assertUserDoesNotExists('the_user', 'secret')
 
   def test_PersonWithSuperUserLoginCannotBeCreated(self):
     """Tests one cannot create person with the "super user" special login."""
