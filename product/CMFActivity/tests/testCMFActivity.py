@@ -2914,6 +2914,64 @@ class TestCMFActivity(ERP5TypeTestCase):
     # The message excuted on "organisation_2" must have succeeded.
     self.assertEqual(len(activity_tool.getMessageList()), 1)
 
+  def CheckLocalizerWorks(self, activity):
+    FROM_STRING = 'Foo'
+    TO_STRING = 'Bar'
+    LANGUAGE = 'xx'
+    def translationTest(context):
+      context.setTitle(context.Base_translateString(FROM_STRING))
+    portal = self.getPortalObject()
+    portal.Localizer.erp5_ui.manage_addLanguage(LANGUAGE)
+    #portal.Localizer.changeLanguage(LANGUAGE)
+    # Add FROM_STRING to the message catalog
+    portal.Localizer.erp5_ui.gettext(FROM_STRING)
+    # ...and translate it.
+    portal.Localizer.erp5_ui.message_edit(message=FROM_STRING,
+      language=LANGUAGE, translation=TO_STRING, note='')
+    organisation = portal.organisation_module.newContent(
+      portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    # XXX: Dirty replacement for what happens in reality thanks to
+    # itools/iHotfix.
+    REQUEST = portal.REQUEST
+    # Add missing request properties
+    REQUEST.environ['PATH_INFO'] = organisation.getPath()
+    REQUEST['HTTP_ACCEPT_LANGUAGE'] = LANGUAGE
+    # Simulate iHotfix new_publish method
+    from Products.iHotfix import contexts, Context, get_ident
+    contexts[get_ident()] = Context(REQUEST)
+    # Simulate iHotfix new_processInputs method
+    from Products.iHotfix import AcceptLanguage
+    REQUEST.other['USER_PREF_LANGUAGES'] = REQUEST.other['AcceptLanguage'] = \
+      AcceptLanguage(REQUEST['HTTP_ACCEPT_LANGUAGE'])
+    # End of dirty replacement.
+    Organisation.translationTest = translationTest
+    try:
+      organisation.activate(activity=activity).translationTest()
+      get_transaction().commit()
+      self.tic()
+    finally:
+      delattr(Organisation, 'translationTest')
+    self.assertEqual(TO_STRING, organisation.getTitle())
+
+  def test_112_checkLocalizerWorksSQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck Localizer works (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckLocalizerWorks('SQLQueue')
+
+  def test_113_checkLocalizerWorksSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck Localizer works (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckLocalizerWorks('SQLDict')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
