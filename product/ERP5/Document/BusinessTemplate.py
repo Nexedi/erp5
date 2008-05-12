@@ -2126,17 +2126,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.uninstall(self, context, **kw)
 
   def _importFile(self, file_name, file):
-    if not '.catalog_keys' in file_name:
-      # just import xml object
-      obj = self
-      connection = None
-      while connection is None:
-        obj=obj.aq_parent
-        connection=obj._p_jar
-      obj = connection.importFile(file, customImporters=customImporters)
-      self.removeProperties(obj)
-      self._objects[file_name[:-4]] = obj
-    else:
+    if file_name.endswith('.catalog_keys.xml'):
       # recreate data mapping specific to catalog method
       name = os.path.basename(file_name)
       id = name.split('.', 1)[0]
@@ -2168,6 +2158,18 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         else:
           # new style key
           self._method_properties.setdefault(id, PersistentMapping())[key] = 1
+    elif file_name.endswith('.xml'):
+      # just import xml object
+      obj = self
+      connection = None
+      while connection is None:
+        obj=obj.aq_parent
+        connection=obj._p_jar
+      obj = connection.importFile(file, customImporters=customImporters)
+      self.removeProperties(obj)
+      self._objects[file_name[:-4]] = obj
+    else:
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
 
 class ActionTemplateItem(ObjectTemplateItem):
 
