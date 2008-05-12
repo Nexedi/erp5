@@ -790,6 +790,16 @@ class Base( CopyContainer,
     self._setTitle(value)
     self.reindexObject()
 
+  security.declareProtected( Permissions.ModifyPortalContent, 'setDescription' )
+  def setDescription(self, value):
+    """
+      Set the description and reindex.
+      Overrides CMFCore/PortalFolder.py implementation, which does not reindex
+      and is guarded by inappropriate security check.
+    """
+    self._setDescription(value)
+    self.reindexObject()
+
   security.declareProtected( Permissions.AccessContentsInformation, 'test_dyn' )
   def test_dyn(self):
     """
