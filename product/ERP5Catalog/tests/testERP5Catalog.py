@@ -2646,6 +2646,23 @@ VALUES
     result = folder.portal_catalog(portal_type=portal_type, reference='doc %', description='%')
     self.assertEqual(len(result), 2)
 
+  def test_sortOnRelatedKeyWithUnsetRelation(self, quiet=quiet, run=run_all_test):
+    """
+      Check that sorting on a related key does not filter out objects for
+      which the relation is not set.
+    """
+    portal = self.getPortalObject()
+    organisation = portal.organisation_module.\
+                   newContent(portal_type="Organisation")
+    person_module = portal.person_module
+    person_1 = person_module.newContent(portal_type="Person")
+    person_2 = person_module.newContent(portal_type="Person",
+                 career_subordination_value=organisation)
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(len(person_module.searchFolder()),
+                     len(person_module.searchFolder(sort_on=[('subordination_title', 'ascending')])))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
