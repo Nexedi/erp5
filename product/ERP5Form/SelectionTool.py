@@ -309,12 +309,12 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       return []
 
     security.declareProtected(ERP5Permissions.View, 'checkAll')
-    def checkAll(self, selection_name, listbox_uid=[], REQUEST=None,
+    def checkAll(self, list_selection_name, listbox_uid=[], REQUEST=None,
                  query_string=None, form_id=None):
       """
-        Check uids in a given listbox_uid list for a given selection_name
+        Check uids in a given listbox_uid list for a given list_selection_name
       """
-      selection_object = self.getSelectionFor(selection_name, REQUEST)
+      selection_object = self.getSelectionFor(list_selection_name, REQUEST)
       if selection_object:
         selection_uid_dict = {}
         for uid in selection_object.checked_uids:
@@ -324,18 +324,18 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
             selection_uid_dict[int(uid)] = 1
           except ValueError:
             selection_uid_dict[uid] = 1
-        self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
 
     security.declareProtected(ERP5Permissions.View, 'uncheckAll')
-    def uncheckAll(self, selection_name, listbox_uid=[], REQUEST=None,
+    def uncheckAll(self, list_selection_name, listbox_uid=[], REQUEST=None,
                    query_string=None, form_id=None):
       """
-        Uncheck uids in a given listbox_uid list for a given selection_name
+        Uncheck uids in a given listbox_uid list for a given list_selection_name
       """
-      selection_object = self.getSelectionFor(selection_name, REQUEST)
+      selection_object = self.getSelectionFor(list_selection_name, REQUEST)
       if selection_object:
         selection_uid_dict = {}
         for uid in selection_object.checked_uids:
@@ -345,7 +345,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
             if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
           except ValueError:
             if selection_uid_dict.has_key(uid): del selection_uid_dict[uid]
-        self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
