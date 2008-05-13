@@ -49,6 +49,7 @@ from Acquisition import aq_inner
 from ActivityBuffer import ActivityBuffer
 from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
+from Products import iHotfix
 
 from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
@@ -144,6 +145,7 @@ class Message:
       self.request_info = dict(
         SERVER_URL=request.other['SERVER_URL'],
         VirtualRootPhysicalPath=request.other.get('VirtualRootPhysicalPath'),
+        HTTP_ACCEPT_LANGUAGE=request.environ.get('HTTP_ACCEPT_LANGUAGE'),
         _script=list(request._script))
 
   def getObject(self, activity_tool):
@@ -830,7 +832,19 @@ class ActivityTool (Folder, UniqueObject):
           virtual_root_path = request_info.get('VirtualRootPhysicalPath')
           if virtual_root_path:
             new_request.other['VirtualRootPhysicalPath'] = virtual_root_path
+          new_request.environ['HTTP_ACCEPT_LANGUAGE'] = request_info['HTTP_ACCEPT_LANGUAGE']
           new_request._script = request_info['_script']
+        # Replace iHotfix Context, saving existing one
+        ihotfix_context = iHotfix.Context(new_request)
+        id = get_ident()
+        iHotfix._the_lock.acquire()
+        try:
+          old_ihotfix_context = iHotfix.contexts.get(id)
+          iHotfix.contexts[id] = ihotfix_context
+        finally:
+          iHotfix._the_lock.release()
+        # Execute iHotfix "patch 2"
+        new_request.processInputs()
 
         new_request_container = request_container.__class__(REQUEST=new_request)
         # Recreate acquisition chain.
@@ -839,9 +853,18 @@ class ActivityTool (Folder, UniqueObject):
         for item in base_chain:
           my_self = item.__of__(my_self)
       else:
+        old_ihotfix_context = None
         my_self = self
         LOG('CMFActivity.ActivityTool.invoke', INFO, 'Strange: invoke is called outside of acquisition context.')
       message(my_self)
+      if old_ihotfix_context is not None:
+        # Restore iHotfix context
+        id = get_ident()
+        iHotfix._the_lock.acquire()
+        try:
+          iHotfix.contexts[id] = old_ihotfix_context
+        finally:
+          iHotfix._the_lock.release()
       if logging:
         LOG('Activity Tracking', INFO, 'invoked message')
       if my_self is not self: # We rewrapped self
