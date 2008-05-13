@@ -202,7 +202,13 @@ class TestOrderMixin:
       order.edit(source_value=organisation,
                  source_section_value=organisation,
                  destination_value=organisation,
-                 destination_section_value=organisation)
+                 destination_section_value=organisation,
+		 # Added for test Packing List Copy
+                 source_decision_value=organisation,
+                 destination_decision_value=organisation,
+                 source_administration_value=organisation,
+                 destination_administration_value=organisation,		 
+                 )
     sequence.edit( order = order )
 
   def stepCheckOrder(self, sequence=None, sequence_list=None, **kw):
@@ -217,6 +223,7 @@ class TestOrderMixin:
     self.assertEquals(organisation, order.getDestinationValue())
     self.assertEquals(organisation, order.getSourceSectionValue())
     self.assertEquals(organisation, order.getDestinationSectionValue())
+
 
   def stepCreateOrderLine(self,sequence=None, sequence_list=None, **kw):
     """

@@ -58,7 +58,8 @@ class TestPackingListMixin(TestOrderMixin):
                       stepTic \
                       stepCheckOrderSimulation \
                       stepCheckDeliveryBuilding \
-                      stepCheckPackingListIsNotDivergent '
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckOrderPackingList '
 
   default_sequence_with_two_lines = '\
                       stepCreateOrganisation1 \
@@ -82,7 +83,8 @@ class TestPackingListMixin(TestOrderMixin):
                       stepTic \
                       stepCheckOrderSimulation \
                       stepCheckDeliveryBuilding \
-                      stepCheckPackingListIsNotDivergent '
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckOrderPackingList'
 
   variated_default_sequence = '\
                       stepCreateOrganisation1 \
@@ -103,7 +105,8 @@ class TestPackingListMixin(TestOrderMixin):
                       stepTic \
                       stepCheckOrderSimulation \
                       stepCheckDeliveryBuilding \
-                      stepCheckPackingListIsNotDivergent '
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckOrderPackingList'
 
   def getTitle(self):
     return "Packing List"
@@ -121,6 +124,26 @@ class TestPackingListMixin(TestOrderMixin):
     Return if we should create (1) or not (0) an activity tool.
     """
     return 1
+
+  def stepCheckOrderPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is matching order
+    """
+    packing_list = sequence.get('packing_list')
+    order = sequence.get('order')
+    self.assertEquals(packing_list.getCausalityValue(), order)
+    self.assertEquals(packing_list.getSource(), order.getSource())
+    self.assertEquals(packing_list.getDestination(), order.getDestination())
+    self.assertEquals(packing_list.getDestinationSection(), \
+		                       order.getDestinationSection())
+    self.assertEquals(packing_list.getSourceSection(), \
+                                       order.getSourceSection())
+    self.assertEquals(packing_list.getSourceDecision(), \
+                                       order.getSourceDecision())
+    self.assertEquals(packing_list.getDestinationAdministration(), \
+                                       order.getDestinationAdministration())
+    self.assertEquals(packing_list.getSourceAdministration(), \
+                                       order.getSourceAdministration())
 
   def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None, 
                                       packing_list=None,**kw):
