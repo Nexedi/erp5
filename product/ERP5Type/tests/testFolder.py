@@ -34,7 +34,7 @@ from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Cache import clearCache
-from AccessControl.ZopeGuards import guarded_apply, guarded_getattr
+from AccessControl.ZopeGuards import guarded_getattr
 from zExceptions import Unauthorized
 
 class TestFolder(ERP5TypeTestCase, LogInterceptor):
@@ -174,8 +174,6 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
 
     def test_editWithoutModifyPortalContent(self):
       edit = guarded_getattr(self.folder, 'edit')
-      guarded_apply(edit, title='foo')
-      self.assertEqual(self.folder.title, 'foo')
       original_permission_list = self.folder.permission_settings('Modify portal content')
       assert len(original_permission_list) == 1
       self.folder.manage_permission('Modify portal content', [], 0)
