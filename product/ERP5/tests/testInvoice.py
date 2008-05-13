@@ -179,8 +179,7 @@ class TestInvoice(TestPackingListMixin,
         account = account_module.newContent(id=account_id)
         account.setGap(account_gap)
         account.setAccountType(account_type)
-        portal.portal_workflow.doActionFor(account,
-            'validate_action', wf_id='account_workflow')
+        portal.portal_workflow.doActionFor(account, 'validate_action')
     invoice_rule = self.getPortal().portal_rules\
                           .default_invoice_transaction_rule
     
@@ -225,8 +224,7 @@ class TestInvoice(TestPackingListMixin,
     """ calls the workflow for the packing list """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    packing_list.portal_workflow.doActionFor(packing_list,
-          transition_name, wf_id='packing_list_workflow')
+    packing_list.portal_workflow.doActionFor(packing_list, transition_name)
 
   def stepSetReadyPackingList(self, sequence=None, sequence_list=None, **kw):
     """ set the Packing List as Ready. This must build the invoice. """
@@ -273,8 +271,7 @@ class TestInvoice(TestPackingListMixin,
     """ calls the workflow for the invoice """
     if invoice is None:
       invoice = sequence.get('invoice')
-    invoice.portal_workflow.doActionFor(invoice,
-          transition_name, wf_id='accounting_workflow')
+    invoice.portal_workflow.doActionFor(invoice, transition_name)
 
   def stepStartInvoice(self, sequence=None, sequence_list=None, **kw):
     self.modifyInvoiceState('start_action', sequence=sequence)
@@ -623,10 +620,8 @@ class TestInvoice(TestPackingListMixin,
     portal = self.getPortal()
     invoice = sequence.get('invoice')
     new_invoice = sequence.get('new_invoice')
-    portal.portal_workflow.doActionFor(invoice,
-        'start_action',wf_id='accounting_workflow')
-    portal.portal_workflow.doActionFor(new_invoice,
-        'start_action',wf_id='accounting_workflow')
+    portal.portal_workflow.doActionFor(invoice, 'start_action')
+    portal.portal_workflow.doActionFor(new_invoice, 'start_action')
 
   def stepCheckTwoInvoicesTransactionLines(self,sequence=None,
                                            sequence_list=None, **kw):
@@ -842,8 +837,7 @@ class TestInvoice(TestPackingListMixin,
     """
     invoice = sequence.get('invoice')
     invoice.portal_workflow.doActionFor(invoice,'split_prevision_action',
-        wf_id='invoice_causality_workflow', start_date=self.datetime +
-        15, stop_date=self.datetime + 25)
+        start_date=self.datetime + 15, stop_date=self.datetime + 25)
 
   def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
       **kw):

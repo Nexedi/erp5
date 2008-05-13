@@ -906,7 +906,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
                text_content='This is an advertisement mail.')
     first_event_id = event.getId()
     self.getWorkflowTool().doActionFor(event, 'respond_action', 
-                                       wf_id='event_workflow',
                                        respond_event_quotation = 1,
                                        respond_event_portal_type = "Mail Message",
                                        respond_event_title = "Answer",

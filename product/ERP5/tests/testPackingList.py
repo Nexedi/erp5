@@ -236,7 +236,6 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     packing_list.portal_workflow.doActionFor(packing_list,'split_prevision_action',
-                                             wf_id='packing_list_causality_workflow',
                                              start_date=self.datetime + 15,
                                              stop_date=self.datetime + 25)
 
