@@ -532,6 +532,30 @@ class TestInvoice(TestPackingListMixin,
           self.assertEquals(round(line.getQuantity(), resource_precision),
               round(expected_price * line_ratio, resource_precision))
 
+  def stepCheckPackingListInvoice(
+                      self, sequence=None, sequence_list=None, **kw):
+    """ Checks if the delivery builder is working as expected, 
+        coping the atributes from packing list to invoice."""
+    packing_list = sequence.get('packing_list') 
+    related_invoice_list = packing_list.getCausalityRelatedValueList(
+                     portal_type=self.sale_invoice_transaction_portal_type)
+    self.assertEquals(len(related_invoice_list), 1)
+    invoice = related_invoice_list[0]
+    self.assertEquals(packing_list.getSource(), invoice.getSource())
+    self.assertEquals(packing_list.getDestination(), invoice.getDestination())
+    self.assertEquals(packing_list.getDestinationSection(), \
+                                       invoice.getDestinationSection())
+    self.assertEquals(packing_list.getSourceSection(), \
+                                       invoice.getSourceSection())
+    self.assertEquals(packing_list.getSourceDecision(), \
+                                       invoice.getSourceDecision())
+    self.assertEquals(packing_list.getDestinationAdministration(), \
+                                       invoice.getDestinationAdministration())
+    self.assertEquals(packing_list.getSourceAdministration(), \
+                                       invoice.getSourceAdministration())
+
+
+
   def stepCheckDeliveryRuleForDeferred(
                       self, sequence=None, sequence_list=None, **kw):
     """ Checks that a delivery rule has been created when we took 'split
@@ -1912,6 +1936,29 @@ class TestInvoice(TestPackingListMixin,
           stepCheckStartInvoiceFail
           stepCheckSimulationTrees
           """)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_18_compareInvoiceAndPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
+    """
+    Checks that a Simple Invoice is created from a Packing List
+    """
+    if not run: return
+    if not quiet:
+      self.logMessage('Simple Invoice')
+    sequence_list = SequenceList()
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      sequence_list.addSequenceString(
+        base_sequence +
+      """
+        stepSetReadyPackingList
+        stepTic
+        stepStartPackingList
+        stepCheckInvoicingRule
+        stepTic
+        stepCheckInvoiceBuilding
+        stepCheckInvoicesConsistency
+        stepCheckPackingListInvoice
+      """)
     sequence_list.play(self, quiet=quiet)
 
   def test_invoice_transaction_line_resource(self):
