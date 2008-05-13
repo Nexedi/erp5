@@ -73,6 +73,8 @@
                 <string>PathMovementGroup</string>
                 <string>SectionPathMovementGroup</string>
                 <string>PriceCurrencyMovementGroup</string>
+                <string>DecisionPathMovementGroup</string>
+                <string>AdministrationPathMovementGroup</string>
               </tuple>
             </value>
         </item>
