@@ -2922,7 +2922,6 @@ class TestCMFActivity(ERP5TypeTestCase):
       context.setTitle(context.Base_translateString(FROM_STRING))
     portal = self.getPortalObject()
     portal.Localizer.erp5_ui.manage_addLanguage(LANGUAGE)
-    #portal.Localizer.changeLanguage(LANGUAGE)
     # Add FROM_STRING to the message catalog
     portal.Localizer.erp5_ui.gettext(FROM_STRING)
     # ...and translate it.
@@ -2932,24 +2931,18 @@ class TestCMFActivity(ERP5TypeTestCase):
       portal_type='Organisation')
     get_transaction().commit()
     self.tic()
-    # XXX: Dirty replacement for what happens in reality thanks to
-    # itools/iHotfix.
-    REQUEST = portal.REQUEST
-    # Add missing request properties
-    REQUEST.environ['PATH_INFO'] = organisation.getPath()
-    REQUEST['HTTP_ACCEPT_LANGUAGE'] = LANGUAGE
-    # Simulate iHotfix new_publish method
-    from Products.iHotfix import contexts, Context, get_ident
-    contexts[get_ident()] = Context(REQUEST)
-    # Simulate iHotfix new_processInputs method
-    from Products.iHotfix import AcceptLanguage
-    REQUEST.other['USER_PREF_LANGUAGES'] = REQUEST.other['AcceptLanguage'] = \
-      AcceptLanguage(REQUEST['HTTP_ACCEPT_LANGUAGE'])
-    # End of dirty replacement.
     Organisation.translationTest = translationTest
     try:
+      REQUEST = organisation.REQUEST
+      # PATH_INFO is only missing in unit tests
+      REQUEST.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
+      # Simulate what a browser would have sent to Zope
+      REQUEST.environ['HTTP_ACCEPT_LANGUAGE'] = LANGUAGE
       organisation.activate(activity=activity).translationTest()
       get_transaction().commit()
+      # Remove request parameter to check that it was saved at activate call
+      # and restored at message execution.
+      del REQUEST.environ['HTTP_ACCEPT_LANGUAGE']
       self.tic()
     finally:
       delattr(Organisation, 'translationTest')
