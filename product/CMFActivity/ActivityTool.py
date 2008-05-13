@@ -853,16 +853,19 @@ class ActivityTool (Folder, UniqueObject):
         for item in base_chain:
           my_self = item.__of__(my_self)
       else:
-        old_ihotfix_context = None
+        old_ihotfix_context = False
         my_self = self
         LOG('CMFActivity.ActivityTool.invoke', INFO, 'Strange: invoke is called outside of acquisition context.')
       message(my_self)
-      if old_ihotfix_context is not None:
+      if old_ihotfix_context is not False:
         # Restore iHotfix context
         id = get_ident()
         iHotfix._the_lock.acquire()
         try:
-          iHotfix.contexts[id] = old_ihotfix_context
+          if old_ihotfix_context is None:
+            del iHotfix.contexts[id]
+          else:
+            iHotfix.contexts[id] = old_ihotfix_context
         finally:
           iHotfix._the_lock.release()
       if logging:
