@@ -99,7 +99,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -111,7 +111,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -126,7 +126,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Items</string> </value>
                 </item>
               </dictionary>
@@ -146,7 +146,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()</string> </value>
+            <value> <string>python: (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or here.getAggregate()</string> </value>
         </item>
       </dictionary>
     </pickle>

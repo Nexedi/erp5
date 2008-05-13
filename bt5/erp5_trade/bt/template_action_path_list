@@ -34,6 +34,7 @@ Person | jump_to_purchase_packing_list
 Person | jump_to_sale_order
 Person | jump_to_sale_packing_list
 Purchase Order Cell | view
+Purchase Order Line | item_creation
 Purchase Order Line | price_view
 Purchase Order Line | quantity_view
 Purchase Order Line | view
@@ -50,6 +51,7 @@ Purchase Order | view_tax
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Cell | view
 Purchase Packing List Line | apparel_fabric_item_fast_input
+Purchase Packing List Line | item_creation
 Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
 Purchase Packing List Line | view_price
@@ -77,6 +79,7 @@ Returned Sale Packing List | choose_solve_actions
 Returned Sale Packing List | jump_related_sale_invoice
 Returned Sale Packing List | view
 Sale Order Cell | view
+Sale Order Line | item_creation
 Sale Order Line | price_view
 Sale Order Line | quantity_view
 Sale Order Line | view
@@ -95,6 +98,7 @@ Sale Order | view_discount
 Sale Order | view_stock
 Sale Order | view_tax
 Sale Packing List Cell | view
+Sale Packing List Line | item_creation
 Sale Packing List Line | price_view
 Sale Packing List Line | quantity_view
 Sale Packing List Line | view
