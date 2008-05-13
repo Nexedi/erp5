@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test MatrixBox Cell Creation</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test MatrixBox Cell Creation</td></tr>\n
+</thead><tbody>\n
+\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>1.0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>1.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_0_0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_1_0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
+  <td>Foo Line</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>2.0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>1.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>2.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_0_0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_1_0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testCreateCell</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
