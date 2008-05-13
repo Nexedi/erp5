@@ -110,9 +110,9 @@
                 <string>PathMovementGroup</string>
                 <string>SectionPathMovementGroup</string>
                 <string>CausalityMovementGroup</string>
-                <string>PriceCurrencyMovementGroup</string>
                 <string>DecisionPathMovementGroup</string>
                 <string>AdministrationPathMovementGroup</string>
+                <string>PriceCurrencyMovementGroup</string>
               </tuple>
             </value>
         </item>
