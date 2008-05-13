@@ -474,6 +474,31 @@ class AdministrationPathMovementGroup(RootMovementGroup):
     return source_administration_list == self.source_administration_list and \
         destination_administration_list == self.destination_administration_list
 
+class DecisionPathMovementGroup(RootMovementGroup):
+  """ Groups movement that have the same source_decision and
+  destination_decision."""
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    source_decision_list = movement.getSourceDecisionList()
+    destination_decision_list = movement.getDestinationDecisionList()
+    source_decision_list.sort() ; destination_decision_list.sort()
+
+    self.source_decision_list = source_decision_list
+    self.destination_decision_list = destination_decision_list
+
+    self.setGroupEdit(
+        source_decision_list=source_decision_list,
+        destination_decision_list=destination_decision_list
+    )
+
+  def test(self, movement):
+    source_decision_list = movement.getSourceDecisionList()
+    destination_decision_list = movement.getDestinationDecisionList()
+    source_decision_list.sort() ; destination_decision_list.sort()
+    return source_decision_list == self.source_decision_list and \
+        destination_decision_list == self.destination_decision_list
+
+
 class TradePathMovementGroup(RootMovementGroup):
   """
   Group movements that have the same source_trade and the same
