@@ -235,8 +235,11 @@ class ERP5TypeInformation( FactoryTypeInformation,
                 # validate() can either raise Unauthorized or return 0 to
                 # mean unauthorized.
                 permission = self.permission
-                if permission and _checkPermission(permission, container):
-                  return m
+                if permission:
+                  if _checkPermission(permission, container):
+                    return m
+                  else:
+                    return default
                 elif getSecurityManager().validate(p, p, self.factory, m):
                   return m
             except zExceptions_Unauthorized:  # Catch *all* Unauths!
