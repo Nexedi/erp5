@@ -127,7 +127,7 @@
                         <string>my_reference</string>
                         <string>my_int_index</string>
                         <string>my_resource_title</string>
-                        <string>my_aggregate_title</string>
+                        <string>my_aggregate_title_list</string>
                         <string>my_variation_category_list</string>
                         <string>my_amortisation_method</string>
                         <string>my_source_trade_title_list</string>

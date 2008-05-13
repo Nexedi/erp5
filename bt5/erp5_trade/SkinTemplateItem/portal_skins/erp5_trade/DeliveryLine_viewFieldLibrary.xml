@@ -98,6 +98,7 @@
                         <string>my_resource_title</string>
                         <string>my_variation_category_list</string>
                         <string>my_amortisation_method</string>
+                        <string>my_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>
