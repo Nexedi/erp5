@@ -111,6 +111,8 @@
                 <string>SectionPathMovementGroup</string>
                 <string>CausalityMovementGroup</string>
                 <string>PriceCurrencyMovementGroup</string>
+                <string>DecisionPathMovementGroup</string>
+                <string>AdministrationPathMovementGroup</string>
               </tuple>
             </value>
         </item>
