@@ -76,7 +76,13 @@ if related_simulation_movement_path_list is None:\n
   raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
 \n
 sale_invoice = context\n
-\n
+packing_list = sale_invoice.getCausalityValue()\n
+if packing_list is not None:\n
+  sale_invoice.setDeliveryMode(packing_list.getDeliveryMode())\n
+  order = packing_list.getCausalityValue()\n
+  if order is not None:\n
+    sale_invoice.setSpecialise(order.getSpecialise())\n
+  \n
 sale_invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
   (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).InvoiceTransaction_postGenerationActivity(related_simulation_movement_path_list=related_simulation_movement_path_list, **kw)\n
 </string> </value>
@@ -133,8 +139,10 @@ sale_invoice.activate(after_path_and_method_id=(related_simulation_movement_path
                             <string>RuntimeError</string>
                             <string>context</string>
                             <string>sale_invoice</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
+                            <string>packing_list</string>
+                            <string>order</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
