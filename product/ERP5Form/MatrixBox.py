@@ -297,6 +297,7 @@ class MatrixBoxWidget(Widget.Widget):
               kwd = {}
               kwd['base_id'] = cell_base_id
               cell = cell_getter_method(*kw, **kwd)
+              REQUEST['cell'] = cell
 
               cell_body = ''
 
@@ -308,9 +309,8 @@ class MatrixBoxWidget(Widget.Widget):
                   if cell != None:
                     attribute_value = my_field.get_value('default',
                            cell=cell, cell_index=kw, cell_position = (i,j,k))
-                  
+
                     if render_format=='html':
-                      REQUEST['cell'] = cell
                       display_value = attribute_value
 
                       if field_errors.has_key(key):
@@ -338,7 +338,6 @@ class MatrixBoxWidget(Widget.Widget):
                     attribute_value = my_field.get_value('default', cell=None,
                         cell_index=kw, cell_position=(i,j,k))
                     if render_format == 'html':
-                      REQUEST['cell'] = None
                       cell_body += str(my_field.render(value=attribute_value,
                                       REQUEST=REQUEST, key=key))
                     elif render_format == 'list':
