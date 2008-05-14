@@ -28,7 +28,7 @@ def traverse(ob, r, result, command_line_arguments):
         context = text_lines[i-command_line_arguments['B'] :
                              i+1+command_line_arguments['A']]
         path = '/'.join(ob.getPhysicalPath())
-        result.append((path, "\n".join(context)))
+        result.append((ob.absolute_url(), path, "\n".join(context)))
         break
 
 def grep(self, pattern, A=0, B=0, r=1, i=0):
@@ -42,13 +42,13 @@ def grep(self, pattern, A=0, B=0, r=1, i=0):
   result = []
   traverse(self, re.compile(pattern, re_flags), result, command_line_arguments)
   html_element_list = ['<html>', '<body>']
-  for path, line in result:
+  for url, path, line in result:
     path = cgi.escape(path)
     line = cgi.escape(line)
     if ExternalEditor is None:
       html_element_list.append(
           '<a href="%s/manage_workspace">%s</a>: %s<br/>' %
-          (path, path, line.replace('\n', '<br/>')))
+          (url, path, line.replace('\n', '<br/>')))
     else:
       # if we have ExternalEditor installed, add the "external edit" link
       path_element_list = path.split('/')
@@ -56,9 +56,9 @@ def grep(self, pattern, A=0, B=0, r=1, i=0):
          '/'.join(path_element_list[:-1]), path_element_list[-1])
       html_element_list.append(
         '<a href="%s/manage_workspace">%s</a>&nbsp;<a href="%s">'
-        '<img border="0" src="/misc_/ExternalEditor/edit_icon" '\
+        '<img border="0" src="misc_/ExternalEditor/edit_icon" '\
             'alt="externalEditor Icon"/></a> %s<br/>'
-         % (path, path, external_editor_link, line.replace('\n', '<br/>')))
+         % (url, path, external_editor_link, line.replace('\n', '<br/>')))
 
   html_element_list.extend(['</body>', '</html>'])
   self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
