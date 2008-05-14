@@ -2934,8 +2934,6 @@ class TestCMFActivity(ERP5TypeTestCase):
     Organisation.translationTest = translationTest
     try:
       REQUEST = organisation.REQUEST
-      # PATH_INFO is only missing in unit tests
-      REQUEST.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
       # Simulate what a browser would have sent to Zope
       REQUEST.environ['HTTP_ACCEPT_LANGUAGE'] = LANGUAGE
       organisation.activate(activity=activity).translationTest()
