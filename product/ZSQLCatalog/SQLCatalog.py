@@ -86,12 +86,6 @@ RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'so
 
 valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)') # Nicer
 
-full_text_search_modes = { 'natural': '',                                   # XXX-JPS probably not right place
-                           'in_boolean_mode': 'IN BOOLEAN MODE',            # full_text_search_modes wrong naming
-                           'with_query_expansion': 'WITH QUERY EXPANSION' } # according to ERP5 conventions
-                                                                            # we really need a good grammar
-                                                                            # and some cleanup
-
 manage_addSQLCatalogForm = DTMLFile('dtml/addSQLCatalog',globals())
 
 # Here go uid buffers
