@@ -32,8 +32,10 @@ Note | create_related_event
 Note | preview
 Note | related_events
 Note | view
+Organisation | add_event
 Organisation | view_event_list
 Person Module | create_event_list
+Person | add_event
 Person | view_event_list
 Phone Call | assessment
 Phone Call | create_related_event

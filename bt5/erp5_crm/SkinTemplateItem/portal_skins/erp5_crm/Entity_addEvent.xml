@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from DateTime import DateTime\n
+from AccessControl import getSecurityManager\n
+\n
+# Search current user ID\n
+user_id = getSecurityManager().getUser().getId()\n
+source = None\n
+for person in context.portal_catalog(reference=user_id, portal_type=\'Person\'):\n
+  source = person.getRelativeUrl()\n
+  break\n
+\n
+follow_up_url = None\n
+start_date = DateTime()\n
+stop_date = None\n
+causality = None\n
+destination = context.getRelativeUrl()\n
+\n
+if direction == \'out\':\n
+  source_url = source\n
+  destination_url = destination\n
+elif direction == \'in\':\n
+  source_url = destination\n
+  destination_url = source\n
+else:\n
+  raise KeyError, \'Direction Specified not handling: %s\' % direction\n
+\n
+event_kw = {}\n
+event_kw[\'portal_type\'] = portal_type\n
+event_kw[\'title\'] = title\n
+event_kw[\'resource\'] = resource\n
+event_kw[\'source\'] = source_url\n
+event_kw[\'destination\'] = destination_url\n
+event_kw[\'follow_up\'] = follow_up_url\n
+event_kw[\'start_date\'] = start_date\n
+event_kw[\'stop_date\'] = stop_date\n
+event_kw[\'causality\'] = causality\n
+\n
+# Create event\n
+module = context.getDefaultModule(portal_type=portal_type)\n
+event = module.newContent(**event_kw)\n
+\n
+\n
+N_ = context.Base_translateString\n
+message = N_(\'New Event Created\')\n
+\n
+event.Base_redirect(keep_items={\'portal_status_message\': message})\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>title, direction, portal_type, resource, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>title</string>
+                            <string>direction</string>
+                            <string>portal_type</string>
+                            <string>resource</string>
+                            <string>kw</string>
+                            <string>DateTime</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>_getattr_</string>
+                            <string>user_id</string>
+                            <string>None</string>
+                            <string>source</string>
+                            <string>_getiter_</string>
+                            <string>context</string>
+                            <string>person</string>
+                            <string>follow_up_url</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>causality</string>
+                            <string>destination</string>
+                            <string>source_url</string>
+                            <string>destination_url</string>
+                            <string>KeyError</string>
+                            <string>event_kw</string>
+                            <string>_write_</string>
+                            <string>module</string>
+                            <string>_apply_</string>
+                            <string>event</string>
+                            <string>N_</string>
+                            <string>message</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Entity_addEvent</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
