@@ -811,6 +811,7 @@ class ActivityTool (Folder, UniqueObject):
     def invoke(self, message):
       if logging:
         LOG('Activity Tracking', INFO, 'invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
+      old_ihotfix_context = False
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
         base_chain = [aq_base(x) for x in self.aq_chain]
@@ -857,7 +858,6 @@ class ActivityTool (Folder, UniqueObject):
         for item in base_chain:
           my_self = item.__of__(my_self)
       else:
-        old_ihotfix_context = False
         my_self = self
         LOG('CMFActivity.ActivityTool.invoke', INFO, 'Strange: invoke is called outside of acquisition context.')
       try:
