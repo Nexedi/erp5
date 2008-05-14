@@ -315,19 +315,26 @@ class Rule(Predicate, XMLObject):
           else:
             prevision['quantity'] = q_diff
             add_list.append(prevision)
+
         # Check the date
         for movement in p_matched_list:
           if movement in (mutable_movement_list \
               + deletable_movement_list):
+            prop_dict = modify_dict.setdefault(movement.getId(), {})
             for prop in ('start_date', 'stop_date'):
               #XXX should be >= 15
               if prevision.get(prop) != movement.getProperty(prop):
-                prop_dict = modify_dict.setdefault(movement.getId(), {})
                 prop_dict[prop] = prevision.get(prop)
                 break
+
+            for k, v in prevision.items():
+              if v != movement.getProperty(k):
+                prop_dict.setdefault(k, v)
+
         # update movement lists
         for movement in p_matched_list:
           non_matched_list.remove(movement)
+
       # No movement matched, we need to create one
       else:
         add_list.append(prevision)

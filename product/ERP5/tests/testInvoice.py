@@ -1998,6 +1998,352 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(order_price_currency,
           delivery_movement.getPriceCurrency())
 
+  def test_modify_planned_order_invoicing_rule(self):
+    # tests that modifying a planned order affects movements from invoicing
+    # rule
+    sequence_list = SequenceList()
+    sequence = sequence_list.addSequenceString('''
+      stepCreateEntities
+      stepCreateCurrency
+      stepCreateSaleInvoiceTransactionRule
+      stepCreateOrder
+      stepSetOrderProfile
+      stepSetOrderPriceCurrency
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepOrderOrder
+      stepTic
+    ''')
+    sequence_list.play(self, quiet=1)
+    order = sequence.get('order')
+    order_line = sequence.get('order_line')
+    
+    other_entity = self.portal.organisation_module.newContent(
+                                      portal_type='Organisation',
+                                      title='Other Entity')
+    
+
+    related_applied_rule = order.getCausalityRelatedValue(
+                             portal_type='Applied Rule')
+    delivery_movement = related_applied_rule.contentValues()[0]
+    invoice_applied_rule = delivery_movement.contentValues()[0]
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    
+    order_line.setSourceValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                      invoice_movement.getSourceValue())
+
+    order_line.setDestinationValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                      invoice_movement.getDestinationValue())
+
+    order_line.setSourceSectionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                      invoice_movement.getSourceSectionValue())
+
+    # make sure destination_section != source_section, this might be needed by
+    # some rules
+    order_line.setSourceSectionValue(order_line.getDestinationSectionValue())
+
+    order_line.setDestinationSectionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                 invoice_movement.getDestinationSectionValue())
+
+    order_line.setSourceAdministrationValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                 invoice_movement.getSourceAdministrationValue())
+
+    order_line.setDestinationAdministrationValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+            invoice_movement.getDestinationAdministrationValue())
+
+    order_line.setSourceDecisionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                 invoice_movement.getSourceDecisionValue())
+
+    order_line.setDestinationDecisionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+            invoice_movement.getDestinationDecisionValue())
+
+    order_line.setSourceProjectValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                 invoice_movement.getSourceProjectValue())
+
+    order_line.setDestinationProjectValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+            invoice_movement.getDestinationProjectValue())
+
+    order_line.setSourcePaymentValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                 invoice_movement.getSourcePaymentValue())
+
+    order_line.setDestinationPaymentValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+            invoice_movement.getDestinationPaymentValue())
+
+    order_line.setSourceFunctionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+                 invoice_movement.getSourceFunctionValue())
+
+    order_line.setDestinationFunctionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_entity,
+            invoice_movement.getDestinationFunctionValue())
+
+    self.assertNotEquals(123, order_line.getPrice())
+    order_line.setPrice(123)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(123,
+            invoice_movement.getPrice())
+
+    self.assertNotEquals(456, order_line.getQuantity())
+    order_line.setQuantity(456)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(456,
+            invoice_movement.getQuantity())
+
+    other_resource = self.portal.product_module.newContent(
+                                        portal_type='Product',
+                                        title='Other Resource')
+    order_line.setResourceValue(other_resource)
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(other_resource,
+            invoice_movement.getResourceValue())
+
+    order_line.setStartDate(DateTime(2001, 02, 03))
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(DateTime(2001, 02, 03),
+                 invoice_movement.getStartDate())
+
+    order_line.setStopDate(DateTime(2002, 03, 04))
+    get_transaction().commit()
+    self.tic()
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    self.assertEquals(DateTime(2002, 03, 04),
+                 invoice_movement.getStopDate())
+
+  def test_modify_planned_order_invoice_transaction_rule(self):
+    # tests that modifying a planned order affects movements from invoice
+    # transaction rule
+    sequence_list = SequenceList()
+    sequence = sequence_list.addSequenceString('''
+      stepCreateEntities
+      stepCreateCurrency
+      stepCreateSaleInvoiceTransactionRule
+      stepCreateOrder
+      stepSetOrderProfile
+      stepSetOrderPriceCurrency
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepOrderOrder
+      stepTic
+    ''')
+    sequence_list.play(self, quiet=1)
+    order = sequence.get('order')
+    order_line = sequence.get('order_line')
+    
+    other_entity = self.portal.organisation_module.newContent(
+                                      portal_type='Organisation',
+                                      title='Other Entity')
+
+    related_applied_rule = order.getCausalityRelatedValue(
+                             portal_type='Applied Rule')
+    delivery_movement = related_applied_rule.contentValues()[0]
+    invoice_applied_rule = delivery_movement.contentValues()[0]
+    invoice_movement = invoice_applied_rule.contentValues()[0]
+    invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    
+    order_line.setSourceSectionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(other_entity,
+                      invoice_transaction_movement.getSourceSectionValue())
+
+    # make sure destination_section != source_section, this might be needed by
+    # some rules
+    order_line.setSourceSectionValue(order_line.getDestinationSectionValue())
+
+    order_line.setDestinationSectionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+                 invoice_transaction_movement.getDestinationSectionValue())
+
+    order_line.setSourceAdministrationValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+                 invoice_transaction_movement.getSourceAdministrationValue())
+
+    order_line.setDestinationAdministrationValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+            invoice_transaction_movement.getDestinationAdministrationValue())
+
+    order_line.setSourceDecisionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+                 invoice_transaction_movement.getSourceDecisionValue())
+
+    order_line.setDestinationDecisionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+            invoice_transaction_movement.getDestinationDecisionValue())
+
+    order_line.setSourceProjectValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+                 invoice_transaction_movement.getSourceProjectValue())
+
+    order_line.setDestinationProjectValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+            invoice_transaction_movement.getDestinationProjectValue())
+
+    order_line.setSourceFunctionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+                 invoice_transaction_movement.getSourceFunctionValue())
+
+    order_line.setDestinationFunctionValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+            invoice_transaction_movement.getDestinationFunctionValue())
+
+    order_line.setSourcePaymentValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+                 invoice_transaction_movement.getSourcePaymentValue())
+
+    order_line.setDestinationPaymentValue(other_entity)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(other_entity,
+            invoice_transaction_movement.getDestinationPaymentValue())
+
+    order_line.setQuantity(1)
+    order_line.setPrice(123)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(123,
+            invoice_transaction_movement.getQuantity())
+
+    order_line.setQuantity(456)
+    order_line.setPrice(1)
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(456,
+            invoice_transaction_movement.getQuantity())
+
+    order_line.setStartDate(DateTime(2001, 02, 03))
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(DateTime(2001, 02, 03),
+                 invoice_transaction_movement.getStartDate())
+
+    order_line.setStopDate(DateTime(2002, 03, 04))
+    get_transaction().commit()
+    self.tic()
+    invoice_transaction_movement =\
+         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(DateTime(2002, 03, 04),
+                 invoice_transaction_movement.getStopDate())
+
+
+
 #class TestPurchaseInvoice(TestInvoice):
 #  order_portal_type = 'Purchase Order'
 #  order_line_portal_type = 'Purchase Order Line'
