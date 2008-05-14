@@ -251,12 +251,15 @@ class EmailDocument(File, TextDocument):
     
     TODO: add support for legacy objects
     """
-    if not self.hasFile():
+    if not self.hasFile() or self._baseGetTextContent() is not None:
       # Return the standard text content if no file was provided
+      # Or standard text content is not empty.
       if default is _MARKER:
         return self._baseGetTextContent()
       else:
         return self._baseGetTextContent(default)
+
+    # find from mail message
     text_result = None
     html_result = None
     for part in self._getMessage().walk():
@@ -405,6 +408,7 @@ class EmailDocument(File, TextDocument):
 
     #
     # Build mail message
+    # This part will be replaced with MailTemplate soon.
     #
     if body is None:
       body = self.asText()
@@ -501,6 +505,9 @@ class EmailDocument(File, TextDocument):
       mail_message = mime_message.as_string()
       self.activate().sendMailHostMessage(mail_message)
 
+    # Save one of mail messages.
+    self.setData(mail_message)
+
     # Only for debugging purpose
     if download:
       return mail_message
@@ -515,4 +522,3 @@ class EmailDocument(File, TextDocument):
 ## Compatibility layer
 #from Products.ERP5Type import Document
 #Document.MailMessage = EmailDocument
-
