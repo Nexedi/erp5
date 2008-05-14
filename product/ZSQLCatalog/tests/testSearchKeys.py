@@ -121,12 +121,14 @@ size/Child/34"""
   def test_05FullTextKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for FullTextKey."""
     if not run: return
+    self.compare(FullTextKey, 'John', ('WORD',))
     self.compare(FullTextKey, 'John Doe', ('WORD', 'WORD',))
     self.compare(FullTextKey, '+John -Doe',
                  ('PLUS', 'WORD', 'MINUS', 'WORD',))
+    self.compare(FullTextKey, 'John*', ('WORD', 'ASTERISK'))
+    self.compare(FullTextKey, '+John*', ('PLUS', 'WORD', 'ASTERISK'))
     self.compare(FullTextKey, '.', ('WORD',))
     self.compare(FullTextKey, '"John Doe"', ('DOUBLEQUOTE', 'WORD', 'WORD', 'DOUBLEQUOTE'))
-    self.compare(FullTextKey, 'John*', ('WORD', 'ASTERISK'))
     self.compare(FullTextKey, '+apple +(>turnover <strudel)',
                  ('PLUS', 'WORD', 'PLUS', 'LEFTPARENTHES', 'GREATERTHAN', 'WORD',
                   'LESSTHAN', 'WORD', 'RIGHTPARENTHES',))

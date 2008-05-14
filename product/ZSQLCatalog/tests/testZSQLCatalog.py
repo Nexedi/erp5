@@ -223,6 +223,14 @@ class TestQuery(unittest.TestCase):
                             datetime_search_keys = [],
                             full_text_search_keys=['title']))
   
+  def testSimpleQueryFullAutomaticTextSearchMode(self):
+    q = Query(title='Foo*',)
+    self.assertEquals(dict(
+      where_expression="MATCH title AGAINST ('Foo*' IN BOOLEAN MODE)",
+      select_expression_list=
+        ["MATCH title AGAINST ('Foo*' IN BOOLEAN MODE) AS title_relevance"]),
+          q.asSQLExpression(full_text_search_keys=['title']))
+
   def testSimpleQueryFullTextStat__(self):
     # stat__ is an internal implementation artifact to prevent adding
     # select_expression for countFolder
