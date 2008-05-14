@@ -140,13 +140,18 @@ class Message:
     self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info
+    self.request_info = {}
     request = getattr(obj, 'REQUEST', None)
     if request is not None:
-      self.request_info = dict(
-        SERVER_URL=request.other['SERVER_URL'],
-        VirtualRootPhysicalPath=request.other.get('VirtualRootPhysicalPath'),
-        HTTP_ACCEPT_LANGUAGE=request.environ.get('HTTP_ACCEPT_LANGUAGE'),
-        _script=list(request._script))
+      if 'SERVER_URL' in request.other:
+        self.request_info['SERVER_URL'] = request.other['SERVER_URL']
+      if 'VirtualRootPhysicalPath' in request.other:
+        self.request_info['VirtualRootPhysicalPath'] = \
+          request.other['VirtualRootPhysicalPath']
+      if 'HTTP_ACCEPT_LANGUAGE' in request.environ:
+        self.request_info['HTTP_ACCEPT_LANGUAGE'] = \
+          request.environ['HTTP_ACCEPT_LANGUAGE']
+      self.request_info['_script'] = list(request._script)
 
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
@@ -831,25 +836,25 @@ class ActivityTool (Folder, UniqueObject):
         
         # restore request information
         new_request = request.clone()
-        request_info = getattr(message, 'request_info', None)
-        if request_info is not None:
+        request_info = message.request_info
+        new_request._script = request_info['_script']
+        if 'SERVER_URL' in request_info:
           new_request.other['SERVER_URL'] = request_info['SERVER_URL']
-          virtual_root_path = request_info.get('VirtualRootPhysicalPath')
-          if virtual_root_path:
-            new_request.other['VirtualRootPhysicalPath'] = virtual_root_path
+        if 'VirtualRootPhysicalPath' in request_info:
+          new_request.other['VirtualRootPhysicalPath'] = request_info['VirtualRootPhysicalPath']
+        if 'HTTP_ACCEPT_LANGUAGE' in request_info:
           new_request.environ['HTTP_ACCEPT_LANGUAGE'] = request_info['HTTP_ACCEPT_LANGUAGE']
-          new_request._script = request_info['_script']
-        # Replace iHotfix Context, saving existing one
-        ihotfix_context = iHotfix.Context(new_request)
-        id = get_ident()
-        iHotfix._the_lock.acquire()
-        try:
-          old_ihotfix_context = iHotfix.contexts.get(id)
-          iHotfix.contexts[id] = ihotfix_context
-        finally:
-          iHotfix._the_lock.release()
-        # Execute iHotfix "patch 2"
-        new_request.processInputs()
+          # Replace iHotfix Context, saving existing one
+          ihotfix_context = iHotfix.Context(new_request)
+          id = get_ident()
+          iHotfix._the_lock.acquire()
+          try:
+            old_ihotfix_context = iHotfix.contexts.get(id)
+            iHotfix.contexts[id] = ihotfix_context
+          finally:
+            iHotfix._the_lock.release()
+          # Execute iHotfix "patch 2"
+          new_request.processInputs()
 
         new_request_container = request_container.__class__(REQUEST=new_request)
         # Recreate acquisition chain.
