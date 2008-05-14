@@ -220,7 +220,7 @@ class NotificationTool(BaseTool):
 
   # high-level interface
   security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
-  def sendMessage(self, sender=None, recipient=None, subject=None, 
+  def sendMessage(self, sender=None, recipient=None, subject=None,
                   message=None, attachment_document_list=None,
                   notifier_list=None, priority_level=None,
                   store_as_event=False,
@@ -264,11 +264,6 @@ class NotificationTool(BaseTool):
     """
     portal = self.getPortalObject()
     catalog_tool = getToolByName(self, 'portal_catalog')
-
-    # Find Default Values
-    default_from_email = portal.email_from_address
-    default_to_email = getattr(portal, 'email_to_address',
-                               default_from_email)
 
     # Find "From" Person
     from_person = None
