@@ -49,6 +49,11 @@ class HtmlStylePreference:
       'type'        : 'boolean',
       'preference'  : 1,
       'mode'        : 'w' },
+    { 'id'          : 'preferred_html_style_access_tab',
+      'description' : 'When true, access tab will used in front page.',
+      'type'        : 'boolean',
+      'preference'  : 1,
+      'mode'        : 'w' },
     { 'id'          : 'preferred_html_style_documentation_base_url',
       'description' : 'Defines the base URL where portal type action '\
                       'documentation will be searched for.',
