@@ -51,7 +51,7 @@ def grep(self, pattern, A=0, B=0, r=1, i=0):
           (url, path, line.replace('\n', '<br/>')))
     else:
       # if we have ExternalEditor installed, add the "external edit" link
-      path_element_list = path.split('/')
+      path_element_list = url.split('/')
       external_editor_link = '%s/externalEdit_/%s' % (
          '/'.join(path_element_list[:-1]), path_element_list[-1])
       html_element_list.append(
