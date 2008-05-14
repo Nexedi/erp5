@@ -826,7 +826,7 @@ class ActivityTool (Folder, UniqueObject):
         # XXX: itools (used by iHotfix) requires PATH_INFO to be set, and it's
         # not when runing unit tests. Recreate it if it does not exist.
         if request.environ.get('PATH_INFO') is None:
-          request['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
+          request.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
         
         # restore request information
         new_request = request.clone()
