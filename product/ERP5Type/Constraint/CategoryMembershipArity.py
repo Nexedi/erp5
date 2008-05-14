@@ -95,7 +95,7 @@ class CategoryMembershipArity(Constraint):
     if not (max_arity is None and (min_arity <= arity)
         or (min_arity <= arity <= max_arity)):
       mapping = dict(base_category=base_category,
-                     portal_type=portal_type,
+                     portal_type=str(portal_type),
                      current_arity=arity,
                      min_arity=min_arity,
                      max_arity=max_arity,)
