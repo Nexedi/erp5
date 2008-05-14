@@ -2919,7 +2919,9 @@ class TestCMFActivity(ERP5TypeTestCase):
     TO_STRING = 'Bar'
     LANGUAGE = 'xx'
     def translationTest(context):
+      from Products.ERP5Type.Message import Message
       context.setTitle(context.Base_translateString(FROM_STRING))
+      context.setDescription(str(Message('erp5_ui', FROM_STRING)))
     portal = self.getPortalObject()
     portal.Localizer.erp5_ui.manage_addLanguage(LANGUAGE)
     # Add FROM_STRING to the message catalog
@@ -2945,6 +2947,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'translationTest')
     self.assertEqual(TO_STRING, organisation.getTitle())
+    self.assertEqual(TO_STRING, organisation.getDescription())
 
   def test_112_checkLocalizerWorksSQLQueue(self, quiet=0, run=run_all_test):
     if not run: return
