@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+           tal:define="info_dict here/ERP5Site_getCategorizedModuleActionInformationDict;\n
+                       module_category_list info_dict/exchange">\n
+  <tal:block tal:repeat="module_category module_category_list">\n
+    <div style="width:25%; min-width:150px; float:left;"\n
+         class="tabbertabcont"\n
+         tal:define="module_list python:module_category[1]">\n
+      <ul style="list-style-type:none; padding-left:10px;"\n
+          tal:condition="python:module_list">\n
+        <li style="font-weight:bold; color:#002e3f;"\n
+            tal:content="python:module_category[0]" />\n
+        <ul style="list-style-type:none; padding-left:0;">\n
+          <tal:block tal:repeat="module module_list">\n
+            <tal:block tal:define="action_list python:module[1];\n
+                                   default_action python:test(len(action_list) > 1, None, action_list[0])"\n
+                       tal:condition="python:action_list">\n
+              <li style="color:#002e3f;">\n
+                <span style="color:#002e3f;"\n
+                      tal:condition="not:default_action"\n
+                      tal:content="python:module[0]"></span>\n
+                <a tal:condition="default_action"\n
+                   tal:content="python:module[0]"\n
+                   tal:attributes="href python:default_action[1]"></a>\n
+              </li>\n
+              <ul tal:condition="not:default_action"\n
+                  style="list-style-type:none; padding-left:15px;">\n
+                <li tal:repeat="action action_list">\n
+                  <a style="color:#3d7474"\n
+                     tal:content="python:action[0]"\n
+                     tal:attributes="href python:action[1]"></a>\n
+                </li>\n
+              </ul>\n
+            </tal:block>\n
+          </tal:block>\n
+        </ul>\n
+      </ul>\n
+    </div>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_renderExchangeActionList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <div class="fieldset hidden_label">\n
+    \n
+    <div>\n
+      <input type="file" name="contribute_file" size="30" />\n
+    </div>\n
+    <tal:block tal:define="contribute_prefix string:contribute_">\n
+      <div>\n
+        <label for="classification" value="" i18n:translate="" i18n:domain="ui">Classification</label>\n
+        <select size="1" name="classification" id="classification"\n
+                tal:attributes="name string:${contribute_prefix}classification">\n
+          <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Classification --</option>\n
+          <option tal:repeat="item python:[c for c in here.portal_categories.classification.getCategoryChildLogicalPathItemList()[1:] if len(c[1].split(\'/\'))>1]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+            Agricultural Development\n
+          </option>\n
+        </select>\n
+      </div>\n
+      <div>\n
+        <label for="source_project" value="" i18n:translate="" i18n:domain="ui">Programme</label>\n
+        <select size="1" id="source_project" name="source_project"\n
+                tal:attributes="name string:${contribute_prefix}source_project"\n
+                tal:define="ticket_module nocall:here/ticket_module|nothing;\n
+                project_module nocall:here/project_module|nothing;">\n
+          <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Programme --</option>\n
+          <option tal:condition="project_module"\n
+                  tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in project_module.searchFolder()]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+            Project Name\n
+          </option>\n
+          <option tal:condition="ticket_module"\n
+                  tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in ticket_module.searchFolder()]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+            Ticket Name\n
+          </option>\n
+        </select>\n
+      </div>\n
+    </tal:block>\n
+    \n
+    <p class="clear" />\n
+    <div style="float:none; margin-top:10px;">\n
+      <input type="submit" name="ERP5Site_uploadContributeContent:method" value="Contribute"/>\n
+    </div>\n
+  </div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_renderContributionDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
