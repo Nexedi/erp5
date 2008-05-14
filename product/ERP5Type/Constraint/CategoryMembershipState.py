@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Constraint.Constraint import Constraint
-from Products.ERP5Type.Utils import convertToUpperCase
+# from Products.ERP5Type.Utils import convertToUpperCase
 
 class CategoryMembershipState(Constraint):
   """
@@ -44,6 +44,11 @@ class CategoryMembershipState(Constraint):
       'validation_state': ('validated', ),
     },
   """
+  _message_id_list = ['message_different_state']
+
+  message_different_state = \
+      "${workflow_variable} for object ${membership_url} is ${current_state}" \
+      "which is not in ${valid_state_list}"
 
   def checkConsistency(self, obj, fixit=0):
     """
@@ -53,7 +58,9 @@ class CategoryMembershipState(Constraint):
       are defined the minimum and the maximum arity, and the
       list of objects we wants to check the arity.
     """
-    errors = []
+    if not self._checkConstraintCondition(obj):
+      return []
+    error_list = []
     # Retrieve values inside de PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']
     portal_type = self.constraint_definition['portal_type']
@@ -65,14 +72,16 @@ class CategoryMembershipState(Constraint):
 
     for workflow_variable, valid_state_list in state_var_list.items():
       for membership in membership_list:
-        method = getattr(membership, 
-                         'get%s' % convertToUpperCase(workflow_variable))
-        current_state = method()
+        current_state = membership.getProperty(workflow_variable)
         if current_state not in valid_state_list:
-          # Generate error message
-          error_message = "'%s' for object '%s' is '%s' which is not in " \
-              "'%s'" % (workflow_variable, membership.getRelativeUrl(),
-                        current_state, str(valid_state_list))
+          mapping = dict(workflow_variable=workflow_variable,
+                         membership_url=membership.getRelativeUrl(),
+                         current_state=current_state,
+                         valid_state_list=str(valid_state_list),)
+          message_id = 'message_different_state'
+
           # Add error
-          errors.append(self._generateError(obj, error_message))
-      return errors
+          error_list.append(self._generateError(obj,
+                                  self._getMessage(message_id), mapping))
+
+    return error_list

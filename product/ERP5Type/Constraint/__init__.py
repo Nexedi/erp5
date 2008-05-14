@@ -11,3 +11,4 @@ from CategoryAcquiredMembershipArity import CategoryAcquiredMembershipArity
 from TALESConstraint import TALESConstraint
 from ContentExistence import ContentExistence
 from StringAttributeMatch import StringAttributeMatch
+from CategoryMembershipState import CategoryMembershipState
