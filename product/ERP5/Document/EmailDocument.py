@@ -30,16 +30,17 @@ import re, types
 from DateTime import DateTime
 from time import mktime
 from Globals import get_request
-
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
+from Products.CMFDefault.utils import isHTMLSafe
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
-from Products.CMFDefault.utils import isHTMLSafe
+from Products.ERP5.Tool.NotificationTool import buildEmailMessage
+
 try:
   from Products.MimetypesRegistry.common import MimeTypeException
 except ImportError:
@@ -403,7 +404,7 @@ class EmailDocument(File, TextDocument):
       raise Unauthorized
 
     #
-    # Prepare header data
+    # Build mail message
     #
     if body is None:
       body = self.asText()
@@ -492,28 +493,18 @@ class EmailDocument(File, TextDocument):
                               'name':attachment.getReference()}
                              )
 
-    portal_notifications = getToolByName(self, 'portal_notifications')
-    kw = {}
+    for to_url in to_url_list:
+      mime_message = buildEmailMessage(from_url=from_url, to_url=to_url,
+                                       msg=body, subject=subject,
+                                       attachment_list=attachment_list,
+                                       additional_headers=additional_headers)
+      mail_message = mime_message.as_string()
+      self.activate().sendMailHostMessage(mail_message)
 
     # Only for debugging purpose
     if download:
-      kw = {'debug':True}
-    else:
-      portal_notifications = portal_notifications.activate(activity="SQLQueue")
+      return mail_message
 
-    for to_url in to_url_list:
-      result = portal_notifications._sendEmailMessage(
-        from_url=from_url, to_url=to_url, body=body, subject=subject,
-        attachment_list=attachment_list,
-        additional_headers=additional_headers,
-        **kw
-        )
-
-    # Send the message
-    if download:
-      return result # Only for debugging purpose
-
-  # XXX Obsolete method, Use portal_notifications instead.
   security.declareProtected(Permissions.UseMailhostServices, 'sendMailHostMessage')
   def sendMailHostMessage(self, message):
     """

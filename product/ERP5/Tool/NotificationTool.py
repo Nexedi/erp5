@@ -42,6 +42,57 @@ from email.Header import make_header
 from email import Encoders
 
 
+def buildAttachmentDictList(document_list, document_type_list=()):
+  """return a list of dictionary which will be used by buildEmailMessage"""
+  attachment_list = []
+  for attachment in document_list:
+    mime_type = None
+    content = None
+    name = None
+    if not attachment.getPortalType() in document_type_list:
+      mime_type = 'application/pdf'
+      content = attachment.asPDF() # XXX - Not implemented yet
+    else:
+      #
+      # Document type attachment
+      #
+
+      # WARNING - this could fail since getContentType
+      # is not (yet) part of Document API
+      if getattr(attachment, 'getContentType', None) is not None:
+        mime_type = attachment.getContentType()
+      elif getattr(attachment, 'getTextFormat', None) is not None:
+        mime_type = attachment.getTextFormat()
+      else:
+        raise ValueError, "Cannot find mimetype of the document."
+
+      if mime_type is not None:
+        try:
+          mime_type, content = attachment.convert(mime_type)
+        except ConversionError:
+          mime_type = attachment.getBaseContentType()
+          content = attachment.getBaseData()
+        except (NotImplementedError, MimeTypeException):
+          pass
+
+      if content is None:
+        if getattr(attachment, 'getTextContent', None) is not None:
+          content = attachment.getTextContent()
+        elif getattr(attachment, 'getData', None) is not None:
+          content = attachment.getData()
+        elif getattr(attachment, 'getBaseData', None) is not None:
+          content = attachment.getBaseData()
+
+    if not isinstance(content, str):
+      content = str(content)
+
+    attachment_list.append({'mime_type':mime_type,
+                            'content':content,
+                            'name':attachment.getReference()}
+                           )
+  return attachment_list
+
+
 def buildEmailMessage(from_url, to_url, msg=None,
                       subject=None, attachment_list=None,
                       extra_headers=None,
@@ -119,6 +170,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
 
   return message
 
+
 class NotificationTool(BaseTool):
   """
     This tool manages notifications.
@@ -149,9 +201,10 @@ class NotificationTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainNotificationTool', _dtmldir )
 
+  # low-level interface
   def _sendEmailMessage(self, from_url, to_url, body=None, subject=None,
-                        attachment_list=None, extra_headers=None, additional_headers=None,
-                        debug=False):
+                        attachment_list=None, extra_headers=None,
+                        additional_headers=None, debug=False):
     portal = self.getPortalObject()
     mailhost = getattr(portal, 'MailHost', None)
     if mailhost is None:
@@ -165,16 +218,21 @@ class NotificationTool(BaseTool):
 
     mailhost.send(messageText=message.as_string(), mto=to_url, mfrom=from_url)
 
+  # high-level interface
   security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
   def sendMessage(self, sender=None, recipient=None, subject=None, 
-                        message=None, attachment_list=None,
-                        notifier_list=None, priority_level=None,
-                        is_persistent=False):
+                  message=None, attachment_document_list=None,
+                  notifier_list=None, priority_level=None,
+                  store_as_event=False,
+                  message_text_format='text/plain',
+                  event_keyword_argument_dict=None):
     """
       This method provides a common API to send messages to erp5 users
       from object actions of worflow scripts.
 
       Note that you can't send message to person who don't have his own Person document.
+      This method provides only high-level functionality so that you can't use email address
+      for sender and recipient, or raw data for attachments.
 
       sender -- a login name(reference of Person document) or a Person document
 
@@ -185,19 +243,22 @@ class NotificationTool(BaseTool):
 
       message -- the text of the message (already translated)
 
-      attachment_list -- list of dictionary (optional)
-                         keys are: name, content, mime_type
-                         See buildEmailMessage function above.
+      attachment_document_list -- list of document (optional)
+                                  which will be attachment.
 
       priority_level -- a priority level which is used to
                         lookup user preferences and decide
                         which notifier to use
+                        XXX Not implemented yet!!
 
       notifier_list -- a list of portal type names to use
                        to send the event
 
-      is_persistent -- whenever CRM is available, store
-                       notifications as events
+      store_as_event -- whenever CRM is available, store
+                        notifications as events
+
+      event_keyword_argument_dict -- additional keyword arguments which is used for
+                                     constructor of event document.
 
     TODO: support default notification email
     """
@@ -209,24 +270,21 @@ class NotificationTool(BaseTool):
     default_to_email = getattr(portal, 'email_to_address',
                                default_from_email)
 
-    # Find "From" address
-    from_address = None
+    # Find "From" Person
+    from_person = None
     if isinstance(sender, basestring):
       sender = catalog_tool.getResultValue(portal_type='Person', reference=sender)
     if sender is not None:
       email_value = sender.getDefaultEmailValue()
-      if email_value is not None:
-        from_address = email_value.asText()
-    if not from_address:
-      # If we can not find a from address then
-      # we fallback to default values
-      from_address = default_from_email
+      if email_value is not None and email_value.asText():
+        from_person = sender
 
-    # Find "To" addresses
-    to_address_list = []
-    if not recipient:
-      to_address_list.append(default_to_email)
-    else:
+    if from_person is None:
+      raise ValueError, 'the argument sender is not an appropriate value.'
+
+    # Find "To" Person list
+    to_person_list = []
+    if recipient:
       if not isinstance(recipient, (list, tuple)):
         recipient = (recipient,)
       for person in recipient:
@@ -239,16 +297,43 @@ class NotificationTool(BaseTool):
         if email_value is None:
           # For backward compatibility. I recommend to use ValueError.(yusei)
           raise AttributeError, "Can't find default email address of %s" % person.getRelativeUrl()
-        to_address_list.append(email_value.asText())
+        if not email_value.asText():
+          raise AttributeError, "Default email address of %s is empty" % person.getRelativeUrl()
+        to_person_list.append(person)
 
-    # Build and Send Messages
-    for to_address in to_address_list:
-      self._sendEmailMessage(from_url=from_address,
-                             to_url=to_address,
-                             body=message,
-                             subject=subject,
-                             attachment_list=attachment_list
-                             )
+    if not to_person_list:
+      raise ValueError, 'the argument recipient is not an appropriate value.'
+
+    # Make event
+    available_notifier_list = self.getNotifierList()
+    event_list = []
+    if notifier_list is None:
+      # XXX TODO: Use priority_level. Need to implement default notifier query system.
+      # XXX       For now, we use 'Mail Meessage'.
+      notifier_list = ['Mail Message']
+    if event_keyword_argument_dict is None:
+      event_keyword_argument_dict = {}
+    for notifier in notifier_list:
+      if notifier in available_notifier_list and store_as_event:
+        event = self.getDefaultModule(notifier).newContent(portal_type=notifier,
+                                                           **event_keyword_argument_dict)
+      else:
+        from Products.ERP5Type.Document import newTempEvent
+        event = newTempEvent(context, '_',
+                             **event_keyword_argument_dict)
+      event.setSourceValue(from_person)
+      event.setDestinationValueList(to_person_list)
+      event.setTitle(subject)
+      event.setTextFormat(message_text_format)
+      event.setTextContent(message)
+      event.setAggregateValueList(attachment_document_list)
+      event_list.append(event)
+    for event in event_list:
+      event.plan()
+      event.order()
+      event.start()
+      event.send()
+
     return
     # Future implemetation could consist in implementing
     # policies such as grouped notification (per hour, per day,
@@ -273,7 +358,7 @@ class NotificationTool(BaseTool):
       event_list = []
       for notifier in notifier_list:
         event_module = self.getDefaultModule(notifier)
-        new_event = event_module.newContent(portal_type=notifier, temp_object=is_persistent)
+        new_event = event_module.newContent(portal_type=notifier, temp_object=store_as_event)
         event_list.append(new_event)
     else:
       # CRM is not installed - only notification by email is possible
