@@ -823,12 +823,18 @@ class ActivityTool (Folder, UniqueObject):
         # Grab existig request (last chain item) and create a copy.
         request_container = base_chain.pop()
         request = request_container.REQUEST
+        # Generate PARENTS value. Sadly, we cannot reuse base_chain since
+        # PARENTS items must be wrapped in acquisition
+        parents = []
+        application = self.getPhysicalRoot().aq_base
+        for parent in self.aq_chain:
+          if parent.aq_base is application:
+            break
+          parents.append(parent)
         # XXX: REQUEST.clone() requires PARENTS to be set, and it's not when
         # runing unit tests. Recreate it if it does not exist.
-        parents = getattr(request, 'PARENTS', None)
-        if parents is None:
-          warn('CMFActivity.ActivityTool.invoke: PARENTS is not defined in REQUEST. It should only happen in unit tests.')
-          request['PARENTS'] = self.aq_chain[:]
+        if getattr(request.other, 'PARENTS', None) is None:
+          request.other['PARENTS'] = parents
         # XXX: itools (used by iHotfix) requires PATH_INFO to be set, and it's
         # not when runing unit tests. Recreate it if it does not exist.
         if request.environ.get('PATH_INFO') is None:
@@ -837,6 +843,8 @@ class ActivityTool (Folder, UniqueObject):
         # restore request information
         new_request = request.clone()
         request_info = message.request_info
+        # PARENTS is truncated by clone
+        new_request.other['PARENTS'] = parents
         new_request._script = request_info['_script']
         if 'SERVER_URL' in request_info:
           new_request.other['SERVER_URL'] = request_info['SERVER_URL']
