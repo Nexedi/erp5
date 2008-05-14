@@ -70,7 +70,7 @@
 \n
   status_dict = context.ERP5Site_getConfiguredStatusDict()\n
   basic_mode = status_dict[\'basic_mode\']\n
-  dms_mode = status_dict[\'dms_mode\'] or 1\n
+  dms_mode = status_dict[\'dms_mode\']\n
   express_mode = status_dict[\'express_mode\']\n
 \n
   info_dict = context.ERP5Site_getCategorizedModuleActionInformationDict()\n
