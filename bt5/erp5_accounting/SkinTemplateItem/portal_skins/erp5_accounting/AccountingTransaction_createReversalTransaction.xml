@@ -138,7 +138,7 @@ for line in line_list:\n
       new_line.setProperty(prop, line.getProperty(prop))\n
 \n
 return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
-              (reversal.getPath(),\n
+              (reversal.absolute_url(),\n
                N_("Reversal Transaction for ${specific_reference} created.",\n
              mapping={\'specific_reference\': specific_reference})))\n
 </string> </value>

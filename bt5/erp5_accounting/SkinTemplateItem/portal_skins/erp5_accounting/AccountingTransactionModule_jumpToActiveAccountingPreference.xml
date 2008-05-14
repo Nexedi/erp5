@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 return request.RESPONSE.redirect( "%s/Preference_viewAccounting" %\n
-  context.portal_preferences.getActivePreference().getPath())\n
+  context.portal_preferences.getActivePreference().absolute_url())\n
 \n
 # vim: syntax=python\n
 </string> </value>

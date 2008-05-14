@@ -66,27 +66,26 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Jump to a bank account of the current organisation\n
-\n
+N_ = context.Base_translateString\n
 request=context.REQUEST\n
-organisation = context.restrictedTraverse(\n
-          context.getPortalObject().portal_preferences.\\\n
-          getPreferredAccountingTransactionSourceSection())\n
+portal = context.getPortalObject()\n
+organisation = portal.restrictedTraverse(\n
+          portal.portal_preferences.getPreferredAccountingTransactionSourceSection())\n
 \n
 if organisation is not None :\n
   selection_uid_list = [ bank_account.getUid() for bank_account \\\n
-     in organisation.searchFolder(portal_type = [\'Bank Account\', \'Cash Register\', \'Credit Card\']) ]\n
+     in organisation.searchFolder(portal_type=portal.getPortalPaymentNodeTypeList()) ]\n
   if len(selection_uid_list) != 0 : \n
     kw = {\'uid\': selection_uid_list}\n
-    context.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
+    portal.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
     request.set(\'object_uid\', context.getUid())\n
     request.set(\'uids\', selection_uid_list)\n
     return context.Base_jumpToRelatedObjectList(\n
           uids=selection_uid_list, REQUEST=request)\n
 \n
-redirect_url = \'%s/view?%s\' % (context.getPath(),\n
-            \'portal_status_message=No+Bank+Account+For+Current+Organisation\')\n
-return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
-# vim: syntax=python\n
+return context.Base_redirect(form_id,\n
+          keep_items=dict(portal_status_message=\n
+                             N_(\'No Bank Account For Current Organisation\')))\n
 </string> </value>
         </item>
         <item>
@@ -103,7 +102,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,15 +122,18 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>N_</string>
                             <string>request</string>
+                            <string>portal</string>
                             <string>organisation</string>
                             <string>None</string>
                             <string>append</string>
@@ -141,8 +143,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>selection_uid_list</string>
                             <string>len</string>
                             <string>kw</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,7 +155,9 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>

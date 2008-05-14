@@ -1,3 +1,6 @@
+2008-05-14 jerome
+* Use absolute_url when necessary to produce URLs compatible with virtual hosting.
+
 2008-04-19 yo
 * Bump to 5.0.
 
