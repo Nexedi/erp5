@@ -1,3 +1,6 @@
+2008-05-15 yo
+* Clean up BusinessTemplate_doSvnUpdate, since it redirected to a strange URL.
+
 2008-2-11 Jerome
 * Add utility skin to check for dead proxyfields.
 

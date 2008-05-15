@@ -69,17 +69,21 @@
 
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
-try:\n
-  new_bt = context.getPortalObject()["portal_subversion"].update(context)\n
-except SubversionSSLTrustError, error:\n
-  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), caller=\'update\').BusinessTemplate_viewSvnSSLTrust()\n
-except SubversionLoginError, error1 :\n
-  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'update\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+REQUEST = context.REQUEST\n
+portal = context.getPortalObject()\n
+portal_subversion = portal.portal_subversion\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully.\')\n
-return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.getId()+\'/\'+\'BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=\'+new_bt.getId())\n
+try:\n
+  new_bt = portal_subversion.update(context)\n
+except SubversionSSLTrustError, error:\n
+  REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
+  return context.asContext(trust_dict=error.getTrustDict(), caller=\'update\').BusinessTemplate_viewSvnSSLTrust()\n
+except SubversionLoginError, error1:\n
+  REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
+  return context.asContext(caller=\'update\', realm=error1.getRealm(), username=portal.portal_preferences.getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+\n
+REQUEST.set(\'portal_status_message\', \'Working copy updated successfully.\')\n
+return REQUEST.RESPONSE.redirect(\'%s/BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=%s\' % (new_bt.absolute_url(), form_id))\n
 
 
 ]]></string> </value>
@@ -98,7 +102,7 @@ return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.g
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,18 +122,21 @@ return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.g
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>REQUEST</string>
+                            <string>portal</string>
+                            <string>portal_subversion</string>
                             <string>new_bt</string>
                             <string>error</string>
                             <string>error1</string>
