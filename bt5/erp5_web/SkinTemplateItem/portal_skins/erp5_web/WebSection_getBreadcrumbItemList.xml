@@ -133,10 +133,7 @@ while crumb is not None:\n
     crumb = None   # Don\'t go higher than the first Web Site found\n
   else:\n
     # try accessing parent object (which might not always be possible)\n
-    try:\n
-      crumb = crumb.aq_parent\n
-    except:\n
-      crumb = None\n
+    crumb = context.restrictedTraverse(\'/\'.join(crumb.getPhysicalPath()[:-1]), None)\n
     \n
 crumb_list.reverse()\n
 return crumb_list\n
@@ -193,6 +190,8 @@ return crumb_list\n
                             <string>crumb_list</string>
                             <string>None</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
