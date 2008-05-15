@@ -328,7 +328,8 @@ class Rule(Predicate, XMLObject):
                 break
 
             for k, v in prevision.items():
-              if v != movement.getProperty(k):
+              if k not in ('quantity', 'start_date', 'stop_date') and\
+                      v != movement.getProperty(k):
                 prop_dict.setdefault(k, v)
 
         # update movement lists
