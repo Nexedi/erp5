@@ -1,3 +1,6 @@
+2008-05-15 yusei
+* Add portal_transforms and mimetypes_registry. portal_notifications needs them.
+
 2008-04-17 yusei
 * Revise version to 5.0.
 

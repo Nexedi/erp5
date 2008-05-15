@@ -1,0 +1,543 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Transform" module="Products.PortalTransforms.Transform"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_config</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="UserDict" module="UserDict"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__allow_access_to_unprotected_subobjects__</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>disable_transform</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>inputs</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>nasty_tags</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>output</string> </key>
+                                <value> <string>text/x-html-safe</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>remove_javascript</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>valid_tags</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_config_metadata</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>disable_transform</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>inputs</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>nasty_tags</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>remove_javascript</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>valid_tags</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>safe_html</string> </value>
+        </item>
+        <item>
+            <key> <string>inputs</string> </key>
+            <value>
+              <tuple>
+                <string>text/html</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>module</string> </key>
+            <value> <string>Products.PortalTransforms.transforms.safe_html</string> </value>
+        </item>
+        <item>
+            <key> <string>output</string> </key>
+            <value> <string>text/x-html-safe</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>text/html</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>applet</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>embed</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>object</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>script</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>a</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>area</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>b</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>base</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>big</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>blockquote</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>body</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>br</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>caption</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>cite</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>code</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>dd</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>del</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>div</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>dl</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>dt</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>em</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>h1</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>h2</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>h3</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>h4</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>h5</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>h6</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>head</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>hr</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>html</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>i</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>img</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>ins</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>kbd</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>li</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>map</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>meta</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>ol</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>p</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>pre</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>q</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>small</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>span</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>strong</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>sub</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>sup</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>table</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>tbody</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>td</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>th</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>tr</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>tt</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>u</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ul</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>int</string>
+                <string>disable_transform</string>
+                <string>If 1, nothing is done.</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>list</string>
+                <string>Inputs</string>
+                <string>Input(s) MIME type. Change with care.</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>dict</string>
+                <string>nasty_tags</string>
+                <string>Dynamic Tags that are striped with everything they contain (like applet, object). They are only deleted if they are not marked as valid_tags.</string>
+                <tuple>
+                  <string>tag</string>
+                  <string>value</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>int</string>
+                <string>remove_javascript</string>
+                <string encoding="cdata"><![CDATA[
+
+1 to remove javascript attributes that begin with on (e.g. onClick) and attributes where the value starts with "javascript:" (e.g. <a href="javascript:function()". This does not effect <script> tags. 0 to leave the attributes.
+
+]]></string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>dict</string>
+                <string>valid_tags</string>
+                <string encoding="cdata"><![CDATA[
+
+List of valid html-tags, value is 1 if they have a closing part (e.g. <p>...</p>) and 0 for empty tags (like <br />). Be carefull!
+
+]]></string>
+                <tuple>
+                  <string>tag</string>
+                  <string>value</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
