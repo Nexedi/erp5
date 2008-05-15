@@ -366,8 +366,7 @@ class EmailDocument(File, TextDocument):
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
   def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
-                 body=None,
-                 attachment_format=None, download=False):
+           body=None, attachment_format=None, attachment_list=None, download=False):
     """
       Sends the current event content by email. If documents are
       attached through the aggregate category, enclose them.
@@ -390,6 +389,10 @@ class EmailDocument(File, TextDocument):
       body     - a body message If not provided, we will
                  use the text representation of the event
                  as body (UTF-8)
+
+      attachment_list -- list of dictionary which contains raw data and
+                         name and mimetype for attachment.
+                         See NotificationTool.buildEmailMessage.
 
       attachment_format - defines an option format
                  to convet attachments to (ex. application/pdf)
@@ -449,7 +452,8 @@ class EmailDocument(File, TextDocument):
       to_url_list.append(to_url)
 
     # Attachments
-    attachment_list = []
+    if attachment_list is None:
+      attachment_list = []
     document_type_list = self.getPortalDocumentTypeList()
     for attachment in self.getAggregateValueList():
       mime_type = None

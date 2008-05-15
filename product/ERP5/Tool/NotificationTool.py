@@ -221,7 +221,8 @@ class NotificationTool(BaseTool):
   # high-level interface
   security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
   def sendMessage(self, sender=None, recipient=None, subject=None,
-                  message=None, attachment_document_list=None,
+                  message=None,
+                  attachment_list=None, attachment_document_list=None,
                   notifier_list=None, priority_level=None,
                   store_as_event=False,
                   message_text_format='text/plain',
@@ -242,6 +243,10 @@ class NotificationTool(BaseTool):
       subject -- the subject of the message
 
       message -- the text of the message (already translated)
+
+      attachment_list -- list of dictionary which contains raw data and
+                         name and mimetype for attachment.
+                         See buildEmailMessage.
 
       attachment_document_list -- list of document (optional)
                                   which will be attachment.
@@ -302,6 +307,8 @@ class NotificationTool(BaseTool):
       low_level_kw['from_url'] = default_from_email
     if not to_person_list:
       low_level_kw['to_url'] = default_to_email
+    if attachment_list is not None:
+      low_level_kw['attachment_list'] = attachment_list
 
     # Make event
     available_notifier_list = self.getNotifierList()

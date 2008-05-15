@@ -102,7 +102,8 @@ class Event(EmailDocument, Movement):
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
   def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
-           body=None, attachment_format=None, download=False, **kw):
+           body=None, attachment_format=None, attachment_list=None,
+           download=False, **kw):
     """
       Make the send method overridable by typed based script
       so that special kinds of events can use a different gateway
@@ -115,8 +116,10 @@ class Event(EmailDocument, Movement):
     send_script = self._getTypeBasedMethod('send')
     if send_script is None:
       return Event.inheritedAttribute('send')(
-          self, from_url, to_url, reply_url, subject, body, attachment_format, download
+          self, from_url, to_url, reply_url, subject, body, attachment_format,
+          attachment_list, download
           )
     return send_script(
-        from_url, to_url, reply_url, subject, body, attachment_format, download, **kw
+        from_url, to_url, reply_url, subject, body, attachment_format, attachment_list,
+        download, **kw
         )
