@@ -59,11 +59,18 @@ class RelationStringFieldWidget(
 
   def _generateRenderValueList(self, field, key, value, REQUEST):
 #     value = value or NO_VALUE
-    relation_field_id = field.generate_subfield_key(SUB_FIELD_ID, key=key)
-    relation_item_key = field.generate_subfield_key(ITEM_ID, key=key)
-    relation_item_list = REQUEST.get(relation_item_key, [])
-    return [(Widget.TextWidgetInstance, relation_field_id, 
-             relation_item_list, value, None)]
+
+    if REQUEST.get(
+        'read_only_%s' % REQUEST.get(
+           'field__proxyfield_%s_%s_default' % (field.id, field._p_oid), 
+           field).getId()[3:], 0):
+      return []
+    else:
+      relation_field_id = field.generate_subfield_key(SUB_FIELD_ID, key=key)
+      relation_item_key = field.generate_subfield_key(ITEM_ID, key=key)
+      relation_item_list = REQUEST.get(relation_item_key, [])
+      return [(Widget.TextWidgetInstance, relation_field_id, 
+               relation_item_list, value, None)]
 
 class RelationEditor(MultiRelationField.MultiRelationEditor):
   """

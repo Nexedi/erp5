@@ -193,13 +193,19 @@ class DefaultValue(StaticValue):
       form = field.aq_parent
       ob = getattr(form, 'aq_parent', None)
       value = self.value
-      if value not in (None, ''):
-        # If a default value is defined on the field, it has precedence
-        value = ob.getProperty(self.key, d=value)
-      else:
-        # else we should give a chance to the accessor to provide
-        # a default value (including None)
-        value = ob.getProperty(self.key)
+      try:
+        if value not in (None, ''):
+          # If a default value is defined on the field, it has precedence
+          value = ob.getProperty(self.key, d=value)
+        else:
+          # else we should give a chance to the accessor to provide
+          # a default value (including None)
+          value = ob.getProperty(self.key)
+      except Unauthorized:
+        value = ob.getProperty(self.key, d=value, checked_permission='View')
+        REQUEST = get_request()
+        if REQUEST is not None:
+          REQUEST.set('read_only_%s' % self.key, 1)
     except (KeyError, AttributeError):
       value = None
     return self.returnValue(field, id, value)
