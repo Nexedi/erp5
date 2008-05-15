@@ -274,9 +274,6 @@ class NotificationTool(BaseTool):
       if email_value is not None and email_value.asText():
         from_person = sender
 
-    if from_person is None:
-      raise ValueError, 'the argument sender is not an appropriate value.'
-
     # Find "To" Person list
     to_person_list = []
     if recipient:
@@ -296,8 +293,15 @@ class NotificationTool(BaseTool):
           raise AttributeError, "Default email address of %s is empty" % person.getRelativeUrl()
         to_person_list.append(person)
 
+    # prepare low-level arguments if needed.
+    low_level_kw = {}
+    default_from_email = portal.email_from_address
+    default_to_email = getattr(portal, 'email_to_address',
+                               default_from_email)
+    if from_person is None:
+      low_level_kw['from_url'] = default_from_email
     if not to_person_list:
-      raise ValueError, 'the argument recipient is not an appropriate value.'
+      low_level_kw['to_url'] = default_to_email
 
     # Make event
     available_notifier_list = self.getNotifierList()
@@ -323,11 +327,16 @@ class NotificationTool(BaseTool):
       event.setTextContent(message)
       event.setAggregateValueList(attachment_document_list)
       event_list.append(event)
+
+    portal_workflow = getToolByName(self, 'portal_workflow')
     for event in event_list:
-      event.plan()
-      event.order()
-      event.start()
-      event.send()
+      # transit workflow if event_workflow is available.
+      if ('event_workflow' in portal_workflow.getChainFor(event) and
+          callable(getattr(event, 'plan', None))):
+        event.plan()
+        event.order()
+        event.start()
+      event.send(**low_level_kw)
 
     return
     # Future implemetation could consist in implementing
