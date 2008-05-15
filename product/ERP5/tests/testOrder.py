@@ -2296,8 +2296,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               title='Order',
                               source_value=vendor,
                               source_section_value=vendor,
-                              destination_value=vendor,
-                              destination_section_value=vendor)
+                              destination_value=client,
+                              destination_section_value=client)
     line = order.newContent(portal_type=self.order_line_portal_type,
                             resource_value=resource,
                             quantity=10,
