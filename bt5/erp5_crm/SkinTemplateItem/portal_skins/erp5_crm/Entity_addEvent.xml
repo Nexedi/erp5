@@ -83,10 +83,14 @@ destination = context.getRelativeUrl()\n
 \n
 if direction == \'out\':\n
   source_url = source\n
+  source_section_url = person.getSubordination()\n
   destination_url = destination\n
+  destination_section_url = context.getSubordination()\n
 elif direction == \'in\':\n
   source_url = destination\n
+  source_section_url = context.getSubordination()\n
   destination_url = source\n
+  destination_section_url = person.getSubordination()\n
 else:\n
   raise KeyError, \'Direction Specified not handling: %s\' % direction\n
 \n
@@ -95,7 +99,9 @@ event_kw[\'portal_type\'] = portal_type\n
 event_kw[\'title\'] = title\n
 event_kw[\'resource\'] = resource\n
 event_kw[\'source\'] = source_url\n
+event_kw[\'source_section\'] = source_section_url\n
 event_kw[\'destination\'] = destination_url\n
+event_kw[\'destination_section\'] = destination_section_url\n
 event_kw[\'follow_up\'] = follow_up_url\n
 event_kw[\'start_date\'] = start_date\n
 event_kw[\'stop_date\'] = stop_date\n
@@ -104,7 +110,6 @@ event_kw[\'causality\'] = causality\n
 # Create event\n
 module = context.getDefaultModule(portal_type=portal_type)\n
 event = module.newContent(**event_kw)\n
-\n
 \n
 N_ = context.Base_translateString\n
 message = N_(\'New Event Created\')\n
@@ -179,7 +184,9 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
                             <string>causality</string>
                             <string>destination</string>
                             <string>source_url</string>
+                            <string>source_section_url</string>
                             <string>destination_url</string>
+                            <string>destination_section_url</string>
                             <string>KeyError</string>
                             <string>event_kw</string>
                             <string>_write_</string>
