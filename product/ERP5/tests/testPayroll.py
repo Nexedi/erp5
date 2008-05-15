@@ -1293,9 +1293,6 @@ class TestPayroll(TestPayrollMixin):
     # model hierarchy
     other_model = self.portal.paysheet_model_module.newContent(
                       portal_type='Pay Sheet Model',
-                      source_section_value=employee,
-                      destination_section_value=employer,
-                      price_currency_value=eur,
                       specialise_value=model)
     paysheet = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
