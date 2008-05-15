@@ -314,7 +314,7 @@ class NotificationTool(BaseTool):
                                                            **event_keyword_argument_dict)
       else:
         from Products.ERP5Type.Document import newTempEvent
-        event = newTempEvent(context, '_',
+        event = newTempEvent(self, '_',
                              **event_keyword_argument_dict)
       event.setSourceValue(from_person)
       event.setDestinationValueList(to_person_list)
