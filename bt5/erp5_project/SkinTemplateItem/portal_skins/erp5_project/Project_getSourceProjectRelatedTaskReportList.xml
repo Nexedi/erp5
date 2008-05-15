@@ -77,9 +77,7 @@ task_list = [x.getObject() for x in \\\n
 task_list.extend([x.getObject() for x in \\\n
   context.portal_catalog(selection=selection, selection_report=selection_report, \n
                          portal_type=\'Task Report\',\n
-                         source_project_uid = source_project_uid_list,\n
-                         simulation_state=context.getPortalReservedInventoryStateList()+\n
-                                          context.getPortalCurrentInventoryStateList())])\n
+                         source_project_uid = source_project_uid_list)])\n
 task_line_list = []\n
 for task in task_list:\n
   task_line_list.extend(task.objectValues(portal_type=(\'Task Line\', \'Task Report Line\')))\n
