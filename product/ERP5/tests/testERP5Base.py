@@ -361,9 +361,9 @@ class TestERP5Base(ERP5TypeTestCase):
       skill_title_list.append(skill_title)
       skill_object_list.append(skill_object)
     organisation.setSkillList(skill_path_list)
-    self.failIfDifferentSet(organisation.getSkillList()     , skill_path_list)
-    self.failIfDifferentSet(organisation.getSkillTitleList(), skill_title_list)
-    self.failIfDifferentSet(organisation.getSkillValueList(), skill_object_list)
+    self.assertEquals(organisation.getSkillList()     , skill_path_list)
+    self.assertEquals(organisation.getSkillTitleList(), skill_title_list)
+    self.assertEquals(organisation.getSkillValueList(), skill_object_list)
 
 
   def stepResetOrganisationCategories(self, sequence=None,
@@ -385,21 +385,21 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(organisation.getGroup()          , None)
     self.assertEquals(organisation.getRole()           , None)
     self.assertEquals(organisation.getSite()           , None)
-    self.failIfDifferentSet(organisation.getSkillList(), [])
+    self.assertEquals(organisation.getSkillList(), [])
 
     self.assertEquals(organisation.getFunctionTitle()       , None)
     self.assertEquals(organisation.getActivityTitle()       , None)
     self.assertEquals(organisation.getGroupTitle()          , None)
     self.assertEquals(organisation.getRoleTitle()           , None)
     self.assertEquals(organisation.getSiteTitle()           , None)
-    self.failIfDifferentSet(organisation.getSkillTitleList(), [])
+    self.assertEquals(organisation.getSkillTitleList(), [])
 
     self.assertEquals(organisation.getFunctionValue()       , None)
     self.assertEquals(organisation.getActivityValue()       , None)
     self.assertEquals(organisation.getGroupValue()          , None)
     self.assertEquals(organisation.getRoleValue()           , None)
     self.assertEquals(organisation.getSiteValue()           , None)
-    self.failIfDifferentSet(organisation.getSkillValueList(), [])
+    self.assertEquals(organisation.getSkillValueList(), [])
 
 
   def stepSetOrganisationAddress(self, sequence=None, sequence_list=None, **kw):
@@ -582,9 +582,9 @@ class TestERP5Base(ERP5TypeTestCase):
       skill_title_list.append(skill_title)
       skill_object_list.append(skill_object)
     person.setCareerSkillList(skill_path_list)
-    self.failIfDifferentSet(person.getCareerSkillList()     , skill_path_list)
-    self.failIfDifferentSet(person.getCareerSkillTitleList(), skill_title_list)
-    self.failIfDifferentSet(person.getCareerSkillValueList(), skill_object_list)
+    self.assertEquals(person.getCareerSkillList()     , skill_path_list)
+    self.assertEquals(person.getCareerSkillTitleList(), skill_title_list)
+    self.assertEquals(person.getCareerSkillValueList(), skill_object_list)
     # skill must be acquired on person 
     person.reindexObject(); get_transaction().commit(); self.tic()
     for skill_object in skill_object_list:
@@ -638,9 +638,9 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerSalaryLevelTitle(), default_career.getSalaryLevelTitle())
     self.assertEquals(person.getCareerSalaryLevelValue(), default_career.getSalaryLevelValue())
 
-    self.failIfDifferentSet(person.getCareerSkillList()     , default_career.getSkillList())
-    self.failIfDifferentSet(person.getCareerSkillTitleList(), default_career.getSkillTitleList())
-    self.failIfDifferentSet(person.getCareerSkillValueList(), default_career.getSkillValueList())
+    self.assertEquals(person.getCareerSkillList()     , default_career.getSkillList())
+    self.assertEquals(person.getCareerSkillTitleList(), default_career.getSkillTitleList())
+    self.assertEquals(person.getCareerSkillValueList(), default_career.getSkillValueList())
 
     self.assertEquals(person.getCareerSubordination(), default_career.getSubordination())
     # Person's subordination is acquired from default career
