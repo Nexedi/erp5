@@ -2097,6 +2097,13 @@ class TestPropertySheet:
 
     def test_DefaultSecurityOnAccessors(self):
       # Test accessors are protected correctly
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
       self._addProperty('Person',
                   ''' { 'id':         'foo_bar',
                         'type':       'string',
@@ -2118,6 +2125,13 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
 
     def test_DefaultSecurityOnListAccessors(self):
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
       # Test list accessors are protected correctly
       self._addProperty('Person',
                   ''' { 'id':         'foo_bar',
@@ -2139,6 +2153,13 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getFooBarList'))
 
     def test_DefaultSecurityOnCategoryAccessors(self):
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
       # Test category accessors are protected correctly
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setRegion'))
@@ -2174,6 +2195,13 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getRegionValueList'))
 
     def test_PropertySheetSecurityOnAccessors(self):
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
       self._addProperty('Person',
