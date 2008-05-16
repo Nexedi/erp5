@@ -35,6 +35,11 @@ class Accessor(Method):
     """
       Generic Accessor - placehold for common methods
     """
+    class __roles__:
+      @staticmethod
+      def rolesForPermissionOn(ob):
+        return getattr(ob.im_self, '%s__roles__' % ob.__name__)
+
     def __getinitargs__(self):
       init = getattr(self, '__init__', None)
       if init is not None:
