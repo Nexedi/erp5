@@ -94,7 +94,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -109,7 +109,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Event Type</string> </value>
                 </item>
               </dictionary>
@@ -129,7 +129,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(here.Base_translateString(x), x) for x in here.getPortalEventTypeList() if context.Base_checkPermission(here.getDefaultModuleId(x), \'Add portal content\')]</string> </value>
+            <value> <string>python: [(here.Base_translateString(x), x) for x in here.getPortalEventTypeList() if here.Base_checkPermission(here.getDefaultModuleId(x), \'Add portal content\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
