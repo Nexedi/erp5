@@ -131,6 +131,7 @@
                     <value>
                       <list>
                         <string>my_social_code</string>
+                        <string>my_career_reference</string>
                         <string>my_career_collective_agreement_title</string>
                         <string>my_career_grade</string>
                         <string>my_career_salary_coefficient</string>

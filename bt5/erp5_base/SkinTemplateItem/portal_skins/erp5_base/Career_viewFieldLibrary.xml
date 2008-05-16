@@ -110,6 +110,7 @@
                         <string>my_salary_coefficient</string>
                         <string>my_salary_level</string>
                         <string>my_activity</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>

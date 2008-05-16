@@ -87,6 +87,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_subordination_title</string>
                         <string>my_role</string>
                         <string>my_function</string>
