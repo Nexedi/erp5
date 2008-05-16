@@ -75,7 +75,7 @@ for err in check_result:\n
     message_list.append(err.getTranslatedMessage())\n
   else:\n
     # backward compatibility:\n
-    message.append(err[3])\n
+    message_list.append(err[3])\n
 \n
 if message_list:\n
   raise ValidationFailed, message_list\n
@@ -137,7 +137,6 @@ if message_list:\n
                             <string>err</string>
                             <string>getattr</string>
                             <string>None</string>
-                            <string>message</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
