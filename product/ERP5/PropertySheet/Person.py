@@ -191,7 +191,8 @@ class Person:
     , 'description'         : 'The default career hold some properties of a Person.'
     , 'type'                : 'content'
     , 'portal_type'         : ( 'Career', )
-    , 'acquired_property_id': ( 'start_date', 'stop_date', 'title', 'description'
+    , 'acquired_property_id': ( 'start_date', 'stop_date', 'title',
+                                'description', 'reference'
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list', 'subordination_uid'
                               , 'collective_agreement_title', 'salary_coefficient'

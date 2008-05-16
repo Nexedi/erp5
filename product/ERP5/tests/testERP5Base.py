@@ -508,11 +508,13 @@ class TestERP5Base(ERP5TypeTestCase):
     person.setCareerSalaryCoefficient(1)
     person.setCareerCollectiveAgreementTitle('SYNTEC convention')
     person.setCareerActivity('software')
+    person.setCareerReference('1234')
     self.assertEquals(person.getCareerStopDate()                , dummy_date2)
     self.assertEquals(person.getCareerStartDate()               , dummy_date1)
     self.assertEquals(person.getCareerSalaryCoefficient()       , 1)
     self.assertEquals(person.getCareerCollectiveAgreementTitle(), 'SYNTEC convention')
     self.assertEquals(person.getCareerActivityTitle(), 'Software')
+    self.assertEquals(person.getCareerReference(), '1234')
 
     # Set & Check function
     function_categories = self.getCategoryList(base_category='function')
@@ -605,6 +607,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # Test getter with 'Career' prefix
     self.assertEquals(person.getCareer()           , default_career.getRelativeUrl())
     self.assertEquals(person.getCareerTitle()      , default_career.getTitle())
+    self.assertEquals(person.getCareerReference(), default_career.getReference())
     self.assertEquals(person.getCareerValue()      , default_career)
     self.assertEquals(person.getCareerDescription(), default_career.getDescription())
 

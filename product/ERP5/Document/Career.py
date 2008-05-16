@@ -57,5 +57,6 @@ class Career(Path):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Path
+                      , PropertySheet.Reference
                       , PropertySheet.Assignment
                       )
