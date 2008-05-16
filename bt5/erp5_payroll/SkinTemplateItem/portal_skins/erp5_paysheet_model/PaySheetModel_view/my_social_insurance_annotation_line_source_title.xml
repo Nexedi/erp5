@@ -18,9 +18,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>allow_jump</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -80,10 +78,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key>                 <string>allow_jump</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_social_insurance_annotation_line_source_title</string> </value>
