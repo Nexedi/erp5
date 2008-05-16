@@ -1089,59 +1089,128 @@ class TestIngestion(ERP5TypeTestCase):
                 ]
     self.playSequence(step_list, quiet)
 
-  def test_05_FormatIngestion(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Ingest various formats (xls, doc, sxi, ppt etc)
-      Verify that they are successfully converted
-      - have ODF data and contain magic word in SearchableText
-      - or have text data and contain magic word in SearchableText
-        TODO:
-      - or were not moved in processing_status_workflow if the don't
-        implement _convertToBase (e.g. Image)
-      Verify that you can not upload file of the wrong format.
-    """
-    if not run: return
-    if not quiet: printAndLog('test_05_FormatIngestion')
+
+
+  #    Ingest various formats (xls, doc, sxi, ppt etc)
+  #    Verify that they are successfully converted
+  #    - have ODF data and contain magic word in SearchableText
+  #    - or have text data and contain magic word in SearchableText
+  #      TODO:
+  #    - or were not moved in processing_status_workflow if the don't
+  #      implement _convertToBase (e.g. Image)
+  #    Verify that you can not upload file of the wrong format.
+
+  def test_05_FormatIngestionText(self, quiet=QUIET, run=RUN_ALL_TEST):
     step_list = ['stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepIngestTextFormats'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_05_FormatIngestionSpreadSheet(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_05_FormatIngestion')
+    step_list = ['stepCleanUp'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepIngestSpreadsheetFormats'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_05_FormatIngestionPresentation(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_05_FormatIngestion')
+    step_list = ['stepCleanUp'
                  ,'stepCreatePresentationDocument'
                  ,'stepIngestPresentationFormats'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_05_FormatIngestionDrawing(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_05_FormatIngestion')
+    step_list = ['stepCleanUp'
                  ,'stepCreateDrawingDocument'
                  ,'stepIngestDrawingFormats'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_05_FormatIngestionPDF(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_05_FormatIngestion')
+    step_list = ['stepCleanUp'
                  ,'stepCreatePDFDocument'
                  ,'stepIngestPDFFormats'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_05_FormatIngestionImage(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_05_FormatIngestion')
+    step_list = ['stepCleanUp'
                  ,'stepCreateImageDocument'
                  ,'stepIngestImageFormats'
                 ]
     self.playSequence(step_list, quiet)
 
-  def test_06_FormatGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Test generation of files in all possible formats
-      which means check if they have correct lists of available formats for export
-      actual generation is tested in oood tests
-      PDF and Image should be tested here
-    """
+
+  # Test generation of files in all possible formats
+  # which means check if they have correct lists of available formats for export
+  # actual generation is tested in oood tests
+  # PDF and Image should be tested here
+  def test_06_FormatGenerationText(self, quiet=QUIET, run=RUN_ALL_TEST):
     if not run: return
     if not quiet: printAndLog('test_06_FormatGeneration')
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepCheckTextDocumentExportList'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_06_FormatGenerationSpreadsheet(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_06_FormatGeneration')
+    step_list = [ 'stepCleanUp'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepCheckSpreadsheetDocumentExportList'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_06_FormatGenerationPresentation(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_06_FormatGeneration')
+    step_list = [ 'stepCleanUp'
                  ,'stepCreatePresentationDocument'
                  ,'stepCheckPresentationDocumentExportList'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_06_FormatGenerationDrawing(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_06_FormatGeneration')
+    step_list = [ 'stepCleanUp'
                  ,'stepCreateDrawingDocument'
                  ,'stepCheckDrawingDocumentExportList'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_06_FormatGenerationPdf(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_06_FormatGeneration')
+    step_list = [ 'stepCleanUp'
                  ,'stepCreatePDFDocument'
                  ,'stepExportPDF'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def test_06_FormatGenerationImage(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_06_FormatGeneration')
+    step_list = [ 'stepCleanUp'
                  ,'stepCreateImageDocument'
                  ,'stepExportImage'
                 ]
     self.playSequence(step_list, quiet)
+
 
   def test_07_SnapshotGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
