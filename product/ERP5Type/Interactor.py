@@ -1,4 +1,4 @@
-from Products.ERP5Type.Accessor.Accessor import Accessor as Method
+from MethodObject import Method
 from Products.ERP5Type.Base import _aq_reset
 """
   Current implementation uses callable objects.
@@ -43,6 +43,7 @@ class InteractorMethod(Method):
     self.method = method
     self.func_code = method.func_code
     self.func_defaults = method.func_defaults
+    self.__name__ = method.__name__
 
   def registerBeforeAction(self, action, args, kw):
     self.before_action_list.append((action, args, kw))
