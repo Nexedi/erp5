@@ -123,7 +123,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     """
     created_by_builder = kw.pop('created_by_builder', lines is not None)
     kw.setdefault('start_date', DateTime())
-    kw.setdefault('resource', 'currency_module/euro')
+    if 'resource_value' not in kw:
+      kw.setdefault('resource', 'currency_module/euro')
     if portal_type in ('Purchase Invoice Transaction',
                        'Balance Transaction'):
       if 'destination_section' not in kw:
