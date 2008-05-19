@@ -348,6 +348,9 @@ class PaySheetTransaction(Invoice):
         continue
 
       service          = model_line.getResourceValue()
+      if service is None:
+        raise ValueError, 'Model Line %s has no resource' % (
+                                        model_line.getRelativeUrl())
       title            = model_line.getTitleOrId()
       int_index        = model_line.getFloatIndex()
       base_amount_list = model_line.getBaseAmountList()
