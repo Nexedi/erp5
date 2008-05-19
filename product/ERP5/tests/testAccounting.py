@@ -1754,6 +1754,8 @@ class TestTransactions(AccountingTestCase):
               stop_date=DateTime(2001, 01, 01))
     accounting_transaction.manage_permission('Modify portal content',
                                              roles=['Manager'], acquire=0)
+    self.assertFalse(_checkPermission('Modify portal content',
+                                      accounting_transaction))
     accounting_transaction.stop()
     self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
 
