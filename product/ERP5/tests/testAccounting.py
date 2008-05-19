@@ -1733,6 +1733,30 @@ class TestTransactions(AccountingTestCase):
     self.assertEquals('code-2002-1', next_year_transaction.getSourceReference())
     self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
 
+  def test_SourceDestinationReferenceSecurity(self):
+    # Check that we don't need specific roles to set source reference and
+    # destination reference, as long as we can pass the workflow transition
+
+    # clear all existing ids in portal ids
+    if hasattr(self.portal.portal_ids, 'dict_ids'):
+      self.portal.portal_ids.dict_ids.clear()
+
+    section_period_2001 = self.section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2001',
+                        start_date=DateTime(2001, 01, 01),
+                        stop_date=DateTime(2001, 12, 31))
+    section_period_2001.start()
+
+    accounting_transaction = self._makeOne(
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2001, 01, 01),
+              stop_date=DateTime(2001, 01, 01))
+    accounting_transaction.manage_permission('Modify portal content',
+                                             roles=['Manager'], acquire=0)
+    accounting_transaction.stop()
+    self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
+
   def test_SearchableText(self):
     transaction = self._makeOne(title='A new Transaction',
                                 description="A description",
