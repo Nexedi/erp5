@@ -27,35 +27,32 @@ import ERP5RoleManager
 import ERP5UserFactory
 
 def mergedLocalRoles(object):
-    """Returns a merging of object and its ancestors'
-    __ac_local_roles__."""
-    # Modified to take into account _getAcquireLocalRoles
-    merged = {}
-    object = getattr(object, 'aq_inner', object)
-    while 1:
-        if hasattr(object, '__ac_local_roles__'):
-            roles = object.__ac_local_roles__ or {}
-            if callable(roles): roles = roles()
-            for k, v in roles.items():
-                if merged.has_key(k):
-                    merged[k] = merged[k] + v
-                else:
-                    merged[k] = v
-        # block acquisition
-        if hasattr(object, '_getAcquireLocalRoles'):
-            if not object._getAcquireLocalRoles():
-                break
-        if hasattr(object, 'aq_parent'):
-            object=object.aq_parent
-            object=getattr(object, 'aq_inner', object)
-            continue
-        if hasattr(object, 'im_self'):
-            object=object.im_self
-            object=getattr(object, 'aq_inner', object)
-            continue
+  """Returns a merging of object and its ancestors'
+  __ac_local_roles__."""
+  # Modified to take into account _getAcquireLocalRoles
+  merged = {}
+  object = getattr(object, 'aq_inner', object)
+  while 1:
+    if getattr(object, '__ac_local_roles__', None) is not None:
+      roles = object.__ac_local_roles__ or {}
+      if callable(roles): roles = roles()
+      for k, v in roles.iteritems():
+        merged.setdefault(k, []).extend(v)
+    # block acquisition
+    if getattr(object, '_getAcquireLocalRoles', None) is not None:
+      if not object._getAcquireLocalRoles() is not None:
         break
+    if getattr(object, 'aq_parent', None) is not None:
+      object = object.aq_parent
+      object = getattr(object, 'aq_inner', object)
+      continue
+    if getattr(object, 'im_self', None) is not None:
+      object = object.im_self
+      object = getattr(object, 'aq_inner', object)
+      continue
+    break
 
-    return deepcopy(merged)
+  return deepcopy(merged)
 
 registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
 registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
