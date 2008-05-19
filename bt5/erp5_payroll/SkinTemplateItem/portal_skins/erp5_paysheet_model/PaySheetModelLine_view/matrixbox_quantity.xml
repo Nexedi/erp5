@@ -20,6 +20,7 @@
             <value>
               <list>
                 <string>default</string>
+                <string>precision</string>
               </list>
             </value>
         </item>
@@ -62,7 +63,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key>                 <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -76,6 +77,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>precision</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -87,7 +94,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -97,6 +104,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>PaySheetTransaction_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>precision</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -120,6 +131,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: cell.getProperty(\'quantity\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getQuantityPrecisionFromResource(here.getPriceCurrency())</string> </value>
         </item>
       </dictionary>
     </pickle>
