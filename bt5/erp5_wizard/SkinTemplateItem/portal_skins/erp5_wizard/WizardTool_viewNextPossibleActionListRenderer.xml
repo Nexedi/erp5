@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -49,13 +55,12 @@
     tal:define="isAllowedExpress python: here.portal_wizard.getExpressConfigurationPreference(\'preferred_express_user_id\', None) is not None and\n
                                          here.portal_wizard.getExpressConfigurationPreference(\'preferred_express_password\', None) is not None">\n
 \n
-<h5 tal:condition="isAllowedExpress">\n
-  Please click <a href="next">HERE</a> to access ERP5 Express Configuration service.\n
-</h5>\n
+<h5 id="wizard_message" style="visibility:hidden;" tal:content="python:test(isAllowedExpress, \'true\', \'false\')"></h5>\n
 \n
-<h5 tal:condition="not: isAllowedExpress">\n
-  You can not access ERP5 Express Configuration service.\n
-</h5>\n
+<script type="text/javascript" src="wizard_helper.js"></script>\n
+<noscript>\n
+Please enable JavaScript in your web browser, otherwise the configuration server does not work properly.\n
+</noscript>\n
 \n
 </tal:block>
 
