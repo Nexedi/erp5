@@ -786,13 +786,13 @@ class ZCatalog(Folder, Persistent, Implicit):
           # wrap object only when sure it will be reindex now
           # thus security uid is also reindex
           wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+          wrapped_object_list.append(wrap_obj)
         except ConflictError:
           raise
         except:
           LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
           failed_object_list.append(obj)
-        wrapped_object_list.append(wrap_obj)
-      
+
     # run activity or execute for each archive depending on priority
     if len(catalog_dict):
       for catalog_id in catalog_dict.keys():
