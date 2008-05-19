@@ -451,8 +451,8 @@ class PaySheetTransaction(Invoice):
         calculation_script = getattr(paysheet, script_name, None)
         quantity=0
         price=0
-        cell_dict = calculation_script(base_amount_dict=base_amount_dict, 
-                                        cell=cell,)
+        cell_dict = calculation_script(base_amount_dict=base_amount_dict,
+                                       cell=cell,)
         cell_dict.update({'category_list': cell_coordinates})
 
         if cell_dict.has_key('categories'):
@@ -480,7 +480,7 @@ class PaySheetTransaction(Invoice):
                 base_amount_dict[base_participation]={}
 
               if price:
-                new_val = round((old_val + quantity*price), precision) 
+                new_val = round((old_val + quantity*price), precision)
               base_amount_dict[base_participation][share] = new_val
 
       if cell_list:
