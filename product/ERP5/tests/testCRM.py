@@ -524,6 +524,31 @@ class TestCRMMailSend(ERP5TypeTestCase):
         part = i
     self.assertEqual('Mail Content', part.get_payload(decode=True))
 
+    #
+    # Test multiple recipients.
+    #
+    event = self.portal.event_module.newContent(portal_type='Mail Message')
+    event.setSource('person_module/me')
+    # multiple recipients.
+    event.setDestinationList(['person_module/recipient', 'person_module/me'])
+    event.setTitle('A Mail')
+    event.setTextContent('Mail Content')
+    self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                            send_mail=1)
+    get_transaction().commit()
+    self.tic()
+    last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
+    self.assertNotEquals((), last_message_1)
+    self.assertNotEquals((), last_message_2)
+    # check last message 1
+    mfrom, mto, messageText = last_message_1
+    self.assertEquals('"Me" <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    # check last message 2
+    mfrom, mto, messageText = last_message_2
+    self.assertEquals('"Me" <me@erp5.org>', mfrom)
+    self.assertEquals(['"Me" <me@erp5.org>'], mto)
+
   def test_MailFromMailMessageEventNoSendMail(self):
     # passing start_action transition on event workflow will send an email to the
     # person as destination, unless you don't check "send_mail" box in the
