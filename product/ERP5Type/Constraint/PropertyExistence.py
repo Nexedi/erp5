@@ -44,9 +44,9 @@ class PropertyExistence(Constraint):
     },
   """
 
-  _message_id_list = ['message_no_such_propery',
+  _message_id_list = ['message_no_such_property',
                       'message_property_not_set']
-  message_no_such_propery =  "Property existence error for property "\
+  message_no_such_property =  "Property existence error for property "\
             "${property_id}, this document has no such property"
   message_property_not_set = "Property existence error for property "\
             "${property_id}, this property is not defined"
@@ -64,7 +64,7 @@ class PropertyExistence(Constraint):
       # Check existence of property
       mapping = dict(property_id=property_id)
       if not obj.hasProperty(property_id):
-        error_message_id = "message_no_such_propery"
+        error_message_id = "message_no_such_property"
       elif obj.getProperty(property_id) is None:
         # If value is '', attribute is considered a defined
         # XXX is this the default API ?
