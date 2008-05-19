@@ -2170,6 +2170,7 @@ class TestPropertySheet:
       self.assertTrue(guarded_hasattr(obj, 'getRegionValue'))
       self.assertTrue(guarded_hasattr(obj, 'getRegionList'))
       self.assertTrue(guarded_hasattr(obj, 'getRegionValueList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionRelatedValueList'))
       
       # setter is protected by default with modify portal content
       obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
@@ -2181,6 +2182,7 @@ class TestPropertySheet:
       self.assertTrue(guarded_hasattr(obj, 'getRegionValue'))
       self.assertTrue(guarded_hasattr(obj, 'getRegionList'))
       self.assertTrue(guarded_hasattr(obj, 'getRegionValueList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionRelatedValueList'))
       
       # getter is protected with Access content information
       obj.manage_permission(Permissions.ModifyPortalContent, ['Manager'], 1)
@@ -2193,6 +2195,7 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getRegionValue'))
       self.assertFalse(guarded_hasattr(obj, 'getRegionList'))
       self.assertFalse(guarded_hasattr(obj, 'getRegionValueList'))
+      self.assertFalse(guarded_hasattr(obj, 'getRegionRelatedValueList'))
 
     def test_PropertySheetSecurityOnAccessors(self):
       try:
