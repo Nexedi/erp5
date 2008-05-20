@@ -203,7 +203,7 @@ class Category(Folder):
       logical_title_list = []
 
       if path_len >= 2:
-        logical_title_list.append('&nbsp;' * 4 * (path_len - 1))
+        logical_title_list.append(' ' * 4 * (path_len - 1))
       
       logical_title = getattr(self, item_method)()
       if logical_title in [None, '']:
@@ -236,7 +236,7 @@ class Category(Folder):
       logical_title_list = []
 
       if path_len >= 2:
-        logical_title_list.append('&nbsp;' * 4 * (path_len - 1))
+        logical_title_list.append(' ' * 4 * (path_len - 1))
       logical_title = getattr(self, item_method)()
       if logical_title in [None, '']:
         logical_title = self.getId()
