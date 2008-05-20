@@ -101,6 +101,7 @@
                         <string>my_aggregate_title_list</string>
                         <string>my_int_index</string>
                         <string>my_visible</string>
+                        <string>my_authorization_forced</string>
                       </list>
                     </value>
                 </item>
