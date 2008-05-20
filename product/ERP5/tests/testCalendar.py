@@ -62,20 +62,6 @@ class TestCalendar(ERP5TypeTestCase):
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   def createCategories(self):
     """
       Light install create only base categories, so we create
