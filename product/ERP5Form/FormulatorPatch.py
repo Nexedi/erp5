@@ -611,14 +611,16 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
 
       if item_value == value and not selected_found:
-          rendered_item = self.render_selected_item(escape(str(item_text)),
+          rendered_item = self.render_selected_item(escape(str(item_text))\
+                                                    .replace(' ', '&nbsp;'),
                                                     item_value,
                                                     key,
                                                     css_class,
                                                     extra_item)
           selected_found = 1
       else:
-          rendered_item = self.render_item(escape(str(item_text)),
+          rendered_item = self.render_item(escape(str(item_text))\
+                                            .replace(' ', '&nbsp;'),
                                             item_value,
                                             key,
                                             css_class,
