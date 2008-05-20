@@ -3049,7 +3049,7 @@ class Base( CopyContainer,
   def _temp_recursiveReindexObject(self, *args, **kw):
     pass
 
-  def _temp_activate(self):
+  def _temp_activate(self, *args, **kw):
     return self
 
   def _temp_setUid(self, value):
@@ -3628,7 +3628,7 @@ class TempBase(Base):
   def recursiveReindexObject(self, *args, **kw):
     pass
 
-  def activate(self):
+  def activate(self, *args, **kw):
     return self
 
   def setUid(self, value):
