@@ -298,31 +298,7 @@ class EmailDocument(File, TextDocument):
 
   index_html = TextDocument.index_html
 
-  security.declareProtected(Permissions.View, 'convert')
-  def convert(self, format, **kw):
-    """
-      Convert text using portal_transforms
-    """
-    # Accelerate rendering in Web mode
-    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
-    # Return the raw content
-    if format == 'raw':
-      return 'text/plain', self.getTextContent()
-    mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
-    src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
-    if not src_mimetype.startswith('text/'):
-      src_mimetype = 'text/%s' % src_mimetype
-    # check if document has set text_content and convert if necessary
-    text_content = self.getTextContent()
-    if text_content is not None:
-      portal_transforms = getToolByName(self, 'portal_transforms')
-      return mime_type, portal_transforms.convertTo(mime_type,
-                                                    text_content, 
-                                                    object = self, 
-                                                    mimetype = src_mimetype)
-    else:
-      # text_content is not set, return empty string instead of None
-      return mime_type, ''
+  convert = TextDocument.convert
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
   def hasBaseData(self):

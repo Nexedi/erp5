@@ -147,7 +147,7 @@ class TextDocument(Document, TextContent):
     security.declareProtected(Permissions.View, 'convert')
     def convert(self, format, **kw):
       """
-        Convert text using portal_transforms
+        Convert text using portal_transforms or oood
       """
       # Accelerate rendering in Web mode
       _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
@@ -161,14 +161,61 @@ class TextDocument(Document, TextContent):
       # check if document has set text_content and convert if necessary
       text_content = self.getTextContent()
       if text_content is not None:
-        portal_transforms = getToolByName(self, 'portal_transforms')
-        return mime_type, portal_transforms.convertTo(mime_type,
-                                                      text_content, 
-                                                      object = self, 
-                                                      mimetype = src_mimetype)
+        if src_mimetype == 'text/html':
+          #Works with oood
+          kw['REQUEST'] = self.REQUEST
+          return self._asFormat(text_content, format, src_mimetype, **kw)
+        else:
+          portal_transforms = getToolByName(self, 'portal_transforms')
+          return mime_type, portal_transforms.convertTo(mime_type,
+                                                        text_content,
+                                                        object = self,
+                                                        mimetype = src_mimetype)
       else:
         # text_content is not set, return empty string instead of None
         return mime_type, ''
+
+    def _asFormat(self, ooo, format, src_mimetype, REQUEST=None, batch_mode=0):
+      """
+        Transform text_content into ODF or many output format supported by oood
+      """
+      # Create a temp OOoDocument
+      from Products.ERP5Type.Document import newTempOOoDocument
+      tmp_ooo = newTempOOoDocument(self, self.title_or_id())
+      tmp_ooo.edit(base_data=ooo,
+                   fname=self.title_or_id(),
+                   source_reference=self.title_or_id(),
+                   base_content_type=src_mimetype,)
+      tmp_ooo.oo_data = ooo
+      #Convert it into ODT
+      tmp_ooo.convert('odt')
+      if format == 'pdf' and not batch_mode:
+        # Slightly different implementation
+        # now convert it to pdf
+        tgts = [x[1] for x in tmp_ooo.getTargetFormatItemList()
+                if x[1].endswith('pdf')]
+        if len(tgts) > 1:
+          REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
+          REQUEST.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s.pdf' % self.title_or_id())
+          raise ValueError, 'multiple pdf formats found - this shouldnt happen'
+        if len(tgts) == 0:
+          REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
+          REQUEST.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s.pdf' % self.title_or_id())
+          raise ValueError, 'no pdf format found'
+        fmt = tgts[0]
+        #Apply transformation in output format
+        mime, data = tmp_ooo.convert(fmt)
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
+            REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.pdf' % self.title_or_id())
+        return data
+      #Apply transformation in output format
+      mime, data = tmp_ooo.convert(format)
+      if REQUEST is not None and not batch_mode:
+        REQUEST.RESPONSE.setHeader('Content-type', mime)
+        REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.%s' % (self.title_or_id(),format))
+          # FIXME the above lines should return zip format when html was requested
+      return data
 
     def __call__(self):
       _setCacheHeaders(_ViewEmulator().__of__(self), {})
