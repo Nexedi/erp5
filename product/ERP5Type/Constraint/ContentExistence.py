@@ -30,8 +30,9 @@ from Products.ERP5Type.Constraint import Constraint
 
 class ContentExistence(Constraint):
   """
-    This constraint class allows to check / fix
-    that object contains one subobject.
+    This constraint class allows to check that an object contains at least one
+    subobject.
+
     Configuration example:
     { 'id'            : 'line',
       'description'   : 'Object have to contain a Line',
@@ -48,10 +49,7 @@ class ContentExistence(Constraint):
                    " subobject of portal portal type ${portal_type}"
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
-      We are checking that object contains a subobject.
+    """Checks that object contains a subobject.
     """
     from Products.ERP5Type.Message import Message
     error_list = []
