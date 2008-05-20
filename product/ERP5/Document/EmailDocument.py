@@ -483,11 +483,7 @@ class EmailDocument(File, TextDocument):
                                        attachment_list=attachment_list,
                                        additional_headers=additional_headers)
       mail_message = mime_message.as_string()
-      try:
-        self.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
-      except TypeError:
-        # temporary document does not support activation.
-        self.MailHost.send(mail_message)
+      self.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
 
     # Save one of mail messages.
     self.setData(mail_message)
