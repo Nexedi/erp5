@@ -316,11 +316,12 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       z.close()
       return 'text/plain', s
     server_proxy = self._mkProxy()
-
+    orig_format = self.getBaseContentType()
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(_unpackData(self.getBaseData())),
                                        None,
-                                       format)
+                                       format,
+                                       orig_format)
     try:
       response_code, response_dict, response_message = generate_result
     except ValueError:
