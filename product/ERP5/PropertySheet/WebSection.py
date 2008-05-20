@@ -74,6 +74,11 @@ class WebSection:
             'acquisition_accessor_id'       : 'getLayoutConfigurationFormId',
             'acquisition_depends'           : None,
             'mode'        : '' },
+          {   'id'          : 'authorization_forced',
+            'description' : 'Force authorization for anonymous user if document can not be found.',
+            'type'        : 'boolean',
+            'default':  0, 
+            'mode'        : 'rw' },
     )
 
     _categories = ('aggregate', )

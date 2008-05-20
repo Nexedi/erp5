@@ -308,6 +308,17 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
                                             original_id=document.getId(),
                                             editable_absolute_url=document.absolute_url()))
       return document.__of__(self)
+    # no document found for current user, still such document may exists
+    # in some cases user (like Anonymous) can not view document according to portal catalog
+    # but we may ask him to login if such a document exists
+    # XXX: make sure document exists
+    if getattr(self,  'isAuthorizationForced',  None) is not None:
+      if self.isAuthorizationForced():
+        # force user to login as specified in Web Section
+        raise Unauthorized
+    else:
+      # force user to login unconditionally of context
+      raise Unauthorized
 
   security.declareProtected(Permissions.View, 'getDocumentValue')
   def getDocumentValue(self, name=None, portal=None, **kw):

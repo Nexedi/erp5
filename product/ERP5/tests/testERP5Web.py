@@ -30,6 +30,7 @@
 import os
 import unittest
 
+from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -314,6 +315,54 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('0.2', default_document.getVersion())
     self.assertEquals('published', default_document.getValidationState())
 
+  def test_06_WebSectionAuthorizationForced(self, quiet=quiet, run=run_all_test):
+    """ Check that when a document is requested within a Web Section we have a chance to 
+        require user to login.
+        Whether or not an user will login is controlled by a property on Web Section (authorization_forced).
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_06_WebSectionAuthorizationForced'
+      ZopeTestCase._print(message)
+    request = self.app.REQUEST    
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    webpage_list  = self.setupWebSitePages(prefix = 'test-web-page')
+    webpage = webpage_list[0]
+    document_reference = 'default-document-reference'
+    document = self.portal.web_page_module.newContent(
+                                      portal_type = 'Web Page', 
+                                      reference = document_reference)
+    website.setAuthorizationForced(0)  
+    websection.setAuthorizationForced(0)                                      
+    get_transaction().commit()
+    self.tic()
+    
+    # make sure that _getExtensibleContent will return the same document
+    # there's not other way to test otherwise URL traversal
+    self.assertEqual(document.getUid(), 
+                           websection._getExtensibleContent(request,  document_reference).getUid())
+                          
+    # Anonymous User should have in the request header for not found when 
+    # viewing non available document in Web Section (with no authorization_forced)
+    self.logout()
+    self.assertEqual(None,  websection._getExtensibleContent(request,  document_reference))
+    self.assertEqual('404 Not Found',  request.RESPONSE.getHeader('status'))
+    
+    # Anonymous user should be prompted to login when viewing non available document
+    # contained in a Web Page (like ..web_page_module/1/<document_reference>)
+    self.assertRaises(Unauthorized,  webpage._getExtensibleContent,  request,  document_reference)
+       
+    # set authorization_forced flag
+    self.login()
+    websection.setAuthorizationForced(1)
+    
+    # check Unauthorized exception is raised for anonymous
+    # this exception is usually caught and user is redirecetd to login form
+    self.logout()
+    self.assertRaises(Unauthorized,  websection._getExtensibleContent,  request,  document_reference)
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
