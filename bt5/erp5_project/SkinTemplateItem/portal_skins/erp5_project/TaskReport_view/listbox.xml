@@ -61,10 +61,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -77,19 +73,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>search_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -98,10 +82,6 @@
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -135,7 +115,7 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Assigned to</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>

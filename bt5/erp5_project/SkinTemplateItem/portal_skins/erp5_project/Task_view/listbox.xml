@@ -101,7 +101,7 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Assigned to</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
