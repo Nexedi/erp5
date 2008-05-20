@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Tasks to start (%(count)s)</string> </value>
+            <value> <string>Task Reports to Start (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
