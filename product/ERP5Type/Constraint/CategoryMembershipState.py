@@ -51,12 +51,7 @@ class CategoryMembershipState(Constraint):
       "which is not in ${valid_state_list}"
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
-      We are looking the definition of the constraing where
-      are defined the minimum and the maximum arity, and the
-      list of objects we wants to check the arity.
+    """Check the object's consistency.
     """
     if not self._checkConstraintCondition(obj):
       return []
@@ -64,7 +59,7 @@ class CategoryMembershipState(Constraint):
     # Retrieve values inside de PropertySheet (_constraints)
     base_category = self.constraint_definition['base_category']
     portal_type = self.constraint_definition['portal_type']
-    membership_list = obj.getValueList(base_category, 
+    membership_list = obj.getValueList(base_category,
                                        portal_type=portal_type)
     state_var_list = self.constraint_definition.copy()
     state_var_list.pop('portal_type')

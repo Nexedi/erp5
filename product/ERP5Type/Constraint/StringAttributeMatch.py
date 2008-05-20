@@ -31,9 +31,9 @@ from Products.ERP5Type.Constraint.PropertyExistence import PropertyExistence
 
 class StringAttributeMatch(PropertyExistence):
   """
-    This constraint class allows to check
-    that a string property match a regular 
-    expression. Configuration example:
+    This constraint class allows to check that a string property matches a
+    regular expression.
+    Configuration example:
     { 'id'            : 'title_not_empty',
       'description'   : 'Title must be defined',
       'type'          : 'StringAttributeMatch',
@@ -48,10 +48,8 @@ class StringAttributeMatch(PropertyExistence):
      "${attribute_value} and does not match ${regular_expression}."
 
   def checkConsistency(self, object, fixit=0):
-    """
-    This is the check method, we return a list of string,
-    each string corresponds to an error.
-    Check that each attribute does not match the RE
+    """Check the object's consistency.
+    Check that each attribute matches the regular expression.
     """
     error_list = PropertyExistence.checkConsistency(
                                   self, object, fixit=fixit)

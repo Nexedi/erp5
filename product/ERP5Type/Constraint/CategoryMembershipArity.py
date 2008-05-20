@@ -31,9 +31,9 @@ from Constraint import Constraint
 
 class CategoryMembershipArity(Constraint):
   """
-    This method check and fix if an object respects the arity.
-    For example we can check if every Order has at
-    least one source.
+    This constraint checks if an object respects the arity.
+
+    For example we can check if every Order has at least one source.
     Configuration exemple:
     { 'id'            : 'source',
       'description'   : '',
@@ -45,6 +45,7 @@ class CategoryMembershipArity(Constraint):
       'condition'     : 'python: object.getPortalType() == 'Foo',
     },
   """
+
   _message_id_list = ['message_arity_too_small',
                    'message_arity_not_in_range',
                    'message_arity_with_portal_type_to_small',
@@ -73,9 +74,7 @@ class CategoryMembershipArity(Constraint):
                                               portal_type=portal_type))
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
+    """Check the object's consistency.
       We are looking the definition of the constraing where
       are defined the minimum and the maximum arity, and the
       list of objects we wants to check the arity.

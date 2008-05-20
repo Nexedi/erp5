@@ -31,8 +31,8 @@ from Constraint import Constraint
 
 class PropertyExistence(Constraint):
   """
-    This method check and fix if an object respects the existence of a
-    property.
+    This method checks if an object respects the existence of a property.
+
     For example we can check if every invoice line has a price defined
     on it.
     Configuration example:
@@ -52,9 +52,7 @@ class PropertyExistence(Constraint):
             "${property_id}, this property is not defined"
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
+    """Check the object's consistency.
     """
     if not self._checkConstraintCondition(obj):
       return []

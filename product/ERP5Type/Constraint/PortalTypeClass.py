@@ -61,9 +61,7 @@ class PortalTypeClass(Constraint):
       " document class is ${document_class}"
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
+    """Check the object's consistency.
     """
     if not self._checkConstraintCondition(obj):
       return []

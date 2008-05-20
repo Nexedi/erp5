@@ -56,9 +56,7 @@ class CategoryExistence(Constraint):
                                              portal_type=portal_type))
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
+    """Check the object's consistency.
     """
     if not self._checkConstraintCondition(obj):
       return []
@@ -85,8 +83,8 @@ class CategoryExistence(Constraint):
 
 
 class CategoryAcquiredExistence(CategoryExistence):
-  """This constraint check an object respects the existence of a category, with
-  acquisition.
+  """This constraint checks if an object respects the existence of a category,
+  with acquisition.
 
     Configuration example:
     { 'id'            : 'category_existence',

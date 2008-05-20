@@ -33,10 +33,10 @@ from Products.ERP5Type.Constraint.CategoryMembershipArity \
 
 class CategoryAcquiredMembershipArity(CategoryMembershipArity):
   """
-    This method check and fix if an object respects the arity.
-    For example we can check if every Order has at
-    least one source.
-    Configuration exemple:
+    This method checks if an object respects the arity.
+
+    For example we can check if every Order has at least one source.
+    Configuration example:
     { 'id'            : 'source',
       'description'   : '',
       'type'          : 'CategoryAcquiredMembershipArity',

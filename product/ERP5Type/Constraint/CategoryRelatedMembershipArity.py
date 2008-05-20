@@ -33,8 +33,9 @@ from Products.ERP5Type.Constraint.CategoryMembershipArity \
 
 class CategoryRelatedMembershipArity(CategoryMembershipArity):
   """
-    This method check and fix if an object respects the arity
-    from a category reverse membership point of view.
+    This method checks if an object respects the arity from a category reverse
+    membership point of view.
+
     For example we can check if every Order has at
     most one Order Applied Rule.
     Configuration example: 

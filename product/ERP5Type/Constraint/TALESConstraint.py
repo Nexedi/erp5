@@ -59,7 +59,8 @@ class TALESConstraint(Constraint):
       "Error while evaluating expression: ${error_text}"
 
   def checkConsistency(self, obj, fixit=0):
-    """See Interface """
+    """Check the object's consistency.
+    """
     # import this later to prevent circular import
     from Products.ERP5Type.Utils import createExpressionContext
     if not self._checkConstraintCondition(obj):

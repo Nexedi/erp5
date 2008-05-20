@@ -79,9 +79,7 @@ class PropertyTypeValidity(Constraint):
   
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
+    """Check the object's consistency.
     """
     error_list = []
     # For each attribute name, we check type

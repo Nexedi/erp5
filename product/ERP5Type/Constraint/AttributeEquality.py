@@ -51,9 +51,7 @@ class AttributeEquality(PropertyExistence):
        "value is ${current_value} but should be ${expected_value} (Fixed)"
 
   def checkConsistency(self, obj, fixit=0):
-    """
-      This is the check method, we return a list of string,
-      each string corresponds to an error.
+    """Check the object's consistency.
       We will make sure that each non None constraint_definition is 
       satisfied (equality)
     """
