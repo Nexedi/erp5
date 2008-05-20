@@ -952,7 +952,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       # shares the same coordinates
       document_list = list(document_list)
       document_list.sort(lambda x,y: cmp(x.getId(), y.getId() ))
-      LOG('[DMS] Existing documents for %s' %self.getSourceReference(), INFO, len(document_list))
+      #LOG('[DMS] Existing documents for %s' %self.getSourceReference(), INFO, len(document_list))
       for o in document_list:
         if o.getRelativeUrl() != self.getRelativeUrl() and\
            o.getVersion() == self.getVersion() and\
