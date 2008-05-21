@@ -1,3 +1,6 @@
+2008-05-21 jerome
+Move PropertySheets defining constraints in ERP5 products. Property sheet names also changed a bit.
+
 2008-04-01 jerome
 Integrate romain's planning box for person and person module.
 
