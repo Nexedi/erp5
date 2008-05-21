@@ -386,9 +386,11 @@ class WizardTool(BaseTool):
     if use_super_manager:
       # set current security manager to owner of site
       _setSuperSecurityManager(self.getPortalObject())
+
+    portal = self.getPortalObject()
     bt5_files = server_response.get("filedata", [])
     bt5_filenames = server_response["server_buffer"].get("filenames", [])
-    portal_templates = getToolByName(self.getPortalObject(), 'portal_templates')
+    portal_templates = getToolByName(portal, 'portal_templates')
     counter = 0
     LOG("Wizard", INFO, 
               "Starting installation for %s" %' '.join(bt5_filenames))
@@ -431,6 +433,8 @@ class WizardTool(BaseTool):
                                            1)
     self.setExpressConfigurationPreference('preferred_express_after_setup_script_id', 
                                            bt5_after_setup_script_id)
+    # Make sure that the site status is reloaded.
+    portal.portal_caches.clearAllCache()
     LOG("Wizard", INFO, 
               "Completed installation for %s" %' '.join(bt5_filenames))  
     if use_super_manager:
