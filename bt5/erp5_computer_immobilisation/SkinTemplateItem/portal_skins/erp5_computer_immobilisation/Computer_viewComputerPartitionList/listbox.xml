@@ -14,10 +14,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>default_params</string>
+                <string>search_columns</string>
+                <string>sort_columns</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>default_params</string>
                 <string>anchor</string>
               </list>
             </value>
@@ -99,6 +101,10 @@
                           <string>default_network_address_ip_address</string>
                           <string>IP Address</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -128,8 +134,38 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key>                 <string>selection_name</string> </key>
                     <value> <string>computer_computer_partition_list_selection</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

@@ -1,3 +1,7 @@
+2008-5-21 yusei
+* Show validation state title in view form.
+* Added sortable, searchable columns in list view.
+
 2008-4-18 yusei
 * Add workflow chain.
 * Add default view for Internet Protocol Address. (forgot to commit it before)
