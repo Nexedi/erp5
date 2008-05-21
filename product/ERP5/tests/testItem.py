@@ -31,54 +31,31 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from testInvoice import TestInvoiceMixin
 
-class TestItemMixin(TestPackingListMixin):
+class TestItemMixin(TestInvoiceMixin):
   """
     Test business template erp5_trade 
   """
   item_portal_type = 'Item'
 
-  default_sequence = 'stepCreateOrganisation1 \
-                      stepCreateOrganisation2 \
-                      stepCreateOrganisation3 \
-                      stepCreateItemList \
-                      stepCreateOrder \
-                      stepSetOrderProfile \
-                      stepCreateNotVariatedResource \
-                      stepTic \
-                      stepCreateOrderLine \
-                      stepSetOrderLineResource \
-                      stepSetOrderLineDefaultValues \
-                      stepOrderLineSetAggregationList \
-                      stepOrderOrder \
-                      stepTic \
-                      stepCheckOrderLineAggregate \
-                      stepConfirmOrder \
-                      stepTic \
-                      stepCheckOrderSimulation \
-                      stepCheckDeliveryBuilding \
-                      stepCheckPackingListIsNotDivergent \
-                      stepCheckOrderPackingList '
-
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel','erp5_item')
+    return TestInvoiceMixin.getBusinessTemplateList(self) + ('erp5_item',)
   
   def stepCreateItemList(self, sequence=None, sequence_list=None, **kw):
     """ Create some items """
     item_module = self.getPortal().item_module
     resource = sequence.get('resource')
-    item = item_module.newContent(id='item', reference='0',
-                                   portal_type=self.item_portal_type)
+    item = item_module.newContent(portal_type=self.item_portal_type)
 
     item.setResourceValue(resource)
     sequence.edit(item_list=[item]) 
 
   def stepOrderLineSetAggregationList(self, sequence=None,
                                           sequence_list=None, **kw):
-    """  items """
+    """  Aggregate Items """
     order_line = sequence.get('order_line')
     item_list = sequence.get('item_list')
     order_line.setAggregateValueList(item_list)  
@@ -87,10 +64,35 @@ class TestItemMixin(TestPackingListMixin):
                                           sequence_list=None, **kw):
     """ Check items """
     order_line = sequence.get('order_line')
-    item_list = sequence.get('item_list')
-    self.assertEquals(len(order_line.getAggregateList()),1)
-    self.failUnless(item_list[0] in order_line.getAggregateValueList())
+    self.checkAggregate(line=order_line, sequence=sequence)
 
+  def stepCheckSimulationAggregate(self, sequence=None,
+                                          sequence_list=None, **kw):
+    """ Check items """
+    order_line = sequence.get('order_line')
+    simulation_movement = order_line.getOrderRelatedValue()
+    self.checkAggregate(line=simulation_movement, sequence=sequence)
+
+  def stepCheckPackingListLineAggregate(self, sequence=None,
+                                          sequence_list=None, **kw):
+    """ Check items """
+    packing_list_line = sequence.get('packing_list_line')
+    self.checkAggregate(line=packing_list_line, sequence=sequence)
+
+  def stepCheckInvoiceLineAggregate(self, sequence=None,
+                                          sequence_list=None, **kw):
+    """ Check items """
+    invoice = sequence.get('invoice')
+    invoice_line_list = invoice.contentValues(
+                         portal_type=self.invoice_line_portal_type)
+    self.checkAggregate(line=invoice_line_list[0], sequence=sequence)
+
+  def checkAggregate(self, line=None, sequence=None):
+    """ Check items """
+    item_list = sequence.get('item_list')
+    self.assertEquals(len(line.getAggregateList()),1)
+    self.failUnless(item_list[0] in line.getAggregateValueList())    
+    
 
 class TestItem(TestItemMixin, ERP5TypeTestCase) :
 
@@ -104,11 +106,77 @@ class TestItem(TestItemMixin, ERP5TypeTestCase) :
     sequence_list = SequenceList()
 
     # Test with a simply order without cell
-    sequence_string = self.default_sequence
+    sequence_string = 'stepCreateOrganisation1 \
+                       stepCreateOrganisation2 \
+                       stepCreateOrganisation3 \
+                       stepCreateItemList \
+                       stepCreateOrder \
+                       stepSetOrderProfile \
+                       stepCreateNotVariatedResource \
+                       stepTic \
+                       stepCreateOrderLine \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineDefaultValues \
+                       stepOrderLineSetAggregationList \
+                       stepConfirmOrder \
+                       stepTic \
+                       stepCheckOrderLineAggregate \
+                       stepCheckOrderSimulation \
+                       stepCheckSimulationAggregate \
+                       stepCheckDeliveryBuilding \
+                       stepCheckPackingListLineAggregate \
+                       stepCheckPackingListIsNotDivergent '
 
     sequence_list.addSequenceString(sequence_string)
-
     sequence_list.play(self, quiet=quiet)
+
+
+  def test_02_ItemWithInvoice(self, quiet=quiet, run=run_all_test):
+    """
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateEntities \
+                       stepCreateCurrency \
+                       stepCreateItemList \
+                       stepCreateSaleInvoiceTransactionRule \
+                       stepCreateOrder \
+                       stepSetOrderProfile \
+                       stepSetOrderPriceCurrency \
+                       stepCreateNotVariatedResource \
+                       stepTic \
+                       stepCreateOrderLine \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineDefaultValues \
+                       stepOrderLineSetAggregationList \
+                       stepConfirmOrder \
+                       stepTic \
+                       stepCheckOrderRule \
+                       stepCheckOrderLineAggregate \
+                       stepCheckOrderSimulation \
+                       stepCheckSimulationAggregate \
+                       stepCheckDeliveryBuilding \
+                       stepCheckPackingListLineAggregate \
+                       stepAddPackingListContainer \
+                       stepAddPackingListContainerLine \
+                       stepSetContainerLineFullQuantity \
+                       stepTic \
+                       stepCheckPackingListIsPacked \
+                       stepSetReadyPackingList \
+                       stepTic \
+                       stepStartPackingList \
+                       stepCheckInvoicingRule \
+                       stepTic \
+                       stepCheckInvoiceBuilding \
+                       stepRebuildAndCheckNothingIsCreated \
+                       stepCheckInvoicesConsistency \
+                       stepCheckInvoiceLineAggregate \
+                      ' 
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
    
 def test_suite():
