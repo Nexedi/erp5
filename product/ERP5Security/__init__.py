@@ -40,7 +40,7 @@ def mergedLocalRoles(object):
         merged.setdefault(k, []).extend(v)
     # block acquisition
     if getattr(object, '_getAcquireLocalRoles', None) is not None:
-      if not object._getAcquireLocalRoles() is not None:
+      if not object._getAcquireLocalRoles():
         break
     if getattr(object, 'aq_parent', None) is not None:
       object = object.aq_parent
