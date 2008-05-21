@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: CONTEXTS.get(\'cell\', context).getObject().AccountingTransactionLine_getNodeItemList(mirror=1)</string> </value>
+            <value> <string>python: (cell,context)[cell is None].getObject().AccountingTransactionLine_getNodeItemList(mirror=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
