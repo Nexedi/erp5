@@ -90,7 +90,7 @@ def getOrganisationForSectionCategory(section_category):\n
 \n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
-xgetOrganisationForSectionCategory = CachingMethod(getOrganisationForSectionCategory,\n
+getOrganisationForSectionCategory = CachingMethod(getOrganisationForSectionCategory,\n
                                                   id=script.getId())\n
 organisation_url = getOrganisationForSectionCategory(section_category)\n
 if organisation_url:\n
@@ -151,7 +151,6 @@ if organisation_url:\n
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>script</string>
-                            <string>xgetOrganisationForSectionCategory</string>
                             <string>organisation_url</string>
                             <string>None</string>
                           </tuple>
