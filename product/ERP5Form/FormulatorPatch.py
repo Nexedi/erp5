@@ -71,7 +71,7 @@ def Field_render(self, value=None, REQUEST=None, key=None):
 def Field_render_view(self, value=None, REQUEST=None):
     """Render value to be viewed.
     """
-    return self.widget.render_view(self, value, REQUEST)
+    return self.widget.render_view(self, value, REQUEST=REQUEST)
 
 def Field_render_sub_field(self, id, value=None, REQUEST=None, key=None):
     """Render a sub field, as part of complete rendering of widget in
@@ -103,7 +103,7 @@ def Field_render_helper(self, key, value, REQUEST):
     if self.get_value('hidden', REQUEST=REQUEST):
         return self.widget.render_hidden(self, key, value, REQUEST)
     elif (not self.get_value('editable', REQUEST=REQUEST)):
-        return self.widget.render_view(self, value, REQUEST)
+        return self.widget.render_view(self, value, REQUEST=REQUEST)
     else:
         return self.widget.render(self, key, value, REQUEST)
 
@@ -417,7 +417,7 @@ class IntegerWidget(TextWidget) :
       """Render a non-editable interger."""
       if isinstance(value, float):
           value = int(value)
-      return TextWidget.render_view(self, field, value, REQUEST)
+      return TextWidget.render_view(self, field, value, REQUEST=REQUEST)
 
 
 from Products.Formulator.StandardFields import IntegerField

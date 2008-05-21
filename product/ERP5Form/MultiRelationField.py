@@ -294,7 +294,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     XXX Improved rendering required
     """
     html_string = self.default_widget_rendering_instance.render_view(
-                                                      field, value, REQUEST)
+                                                 field, value, REQUEST=REQUEST)
     if REQUEST is None:
       REQUEST = get_request()
     relation_html_string = self.render_relation_link(field, value, REQUEST)

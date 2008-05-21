@@ -69,7 +69,7 @@ class ImageFieldWidget(Widget.TextWidget):
     def render(self, field, key, value, REQUEST):
         """Render image field as a link to the image
         """
-        return self.render_view(field, value, REQUEST)
+        return self.render_view(field, value, REQUEST=REQUEST)
 
     def render_view(self, field, value, REQUEST=None):
         """Render image field as a link to the image

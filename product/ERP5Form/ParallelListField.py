@@ -140,7 +140,7 @@ class ParallelListWidget(Widget.MultiListWidget,
                 field.generate_subfield_key(sub_field_property_dict['key'],
                                             key=key),
                 sub_field_property_dict['value'],
-                REQUEST)
+                REQUEST=REQUEST)
       else:
         result = self.sub_widget[sub_field_property_dict['field_type']].render_view(
                 field,
