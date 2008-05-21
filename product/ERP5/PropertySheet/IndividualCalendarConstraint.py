@@ -35,11 +35,8 @@ class IndividualCalendarConstraint:
 
     { 'id': 'destination_existance',
       'description': 'Person must be defined',
-      'message_category_not_set':
-           'Person must be defined',
+      'message_category_not_set': 'Person must be defined',
       'portal_type': ('Person',),
-      'condition' : 'python: object.getSimulationState() not'
-                     ' in ("cancelled", "deleted")',
       'type': 'CategoryExistence',
       'destination' : 1,
     },

@@ -37,8 +37,6 @@ class CalendarPeriodConstraint:
       'description': 'Date must be defined',
       'message_property_not_set': 'Start date must be defined',
       'message_no_such_property': 'Start date must be defined',
-      'condition' : 'python: object.getSimulationState() not'
-                     ' in ("cancelled", "deleted")',
       'type': 'PropertyExistence',
       'start_date' : 1,
     },
@@ -47,19 +45,14 @@ class CalendarPeriodConstraint:
       'description': 'Date must be defined',
       'message_property_not_set': 'Stop date must be defined',
       'message_no_such_property': 'Stop date must be defined',
-      'condition' : 'python: object.getSimulationState() not'
-                     ' in ("cancelled", "deleted")',
       'type': 'PropertyExistence',
       'stop_date' : 1,
     },
 
     { 'id': 'resource_existence',
       'description': 'Type must be defined',
-      'message_category_not_set':
-           'Type must be defined',
+      'message_category_not_set': 'Type must be defined',
       'portal_type': (),
-      'condition' : 'python: object.getSimulationState() not'
-                     ' in ("cancelled", "deleted")',
       'type': 'CategoryExistence',
       'resource' : 1,
     },

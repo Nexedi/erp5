@@ -37,27 +37,21 @@ class CalendarConstraint:
       'type'          : 'ContentExistence',
       'portal_type'   : ('Presence Request Period', ),
       'description'   : 'No Presence Request Period created yet',
-      'condition' :   'python: object.getPortalType() == "Presence Request"'
-                      ' and object.getSimulationState() not'
-                      ' in ("cancelled", "deleted")',
+      'condition' :   'python: object.getPortalType() == "Presence Request"',
     },
     { 'id'            : 'leave_request_line',
       'description'   : 'Must contain at least one period',
       'type'          : 'ContentExistence',
       'portal_type'   : ('Leave Request Period', ),
       'description'   : 'No Leave Request Period created yet',
-      'condition' :   'python: object.getPortalType() == "Leave Request"'
-                      ' and object.getSimulationState() not'
-                      ' in ("cancelled", "deleted")',
+      'condition' :   'python: object.getPortalType() == "Leave Request"',
     },
     { 'id'            : 'group_request_line',
       'description'   : 'Must contain at least one period',
       'type'          : 'ContentExistence',
       'portal_type'   : ('Group Leave Period', 'Group Presence Period', ),
-      'description'   : 'No Group Presence Period created yet',
-      'condition' :   'python: object.getPortalType() == "Group Calendar"'
-                      ' and object.getSimulationState() not'
-                      ' in ("cancelled", "deleted")',
+      'description'   : 'No Calendar Line created yet',
+      'condition' :   'python: object.getPortalType() == "Group Calendar"',
     },
 
  )
