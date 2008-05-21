@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   Returns a group category based on career\n
   and or assignments in such way that the returned\n
   value describes the most accurately the default group\n
@@ -79,11 +81,24 @@
   (to be implemented).\n
 """\n
 \n
-try:\n
-  return context.default_career.getGroup()\n
-except AttributeError:\n
-  return None\n
-</string> </value>
+from DateTime import DateTime\n
+now = DateTime()\n
+\n
+for assignment in context.contentValues(portal_type=\'Assignment\',\n
+                     checked_permission=\'Access contents information\'):\n
+  \n
+  if assignment.getGroup() \\\n
+      and assignment.getValidationState() == \'open\' \\\n
+      and ( assignment.getStartDate() is None or\n
+            assignment.getStartDate() <= now <= assignment.getStopDate()):\n
+   return assignment.getGroup()\n
+\n
+# no group found on open assignments, returns the default group\n
+# (on a person document this is acquired on the default career\'s subordination)\n
+return context.getGroup()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -131,9 +146,12 @@ except AttributeError:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>DateTime</string>
+                            <string>now</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>AttributeError</string>
+                            <string>assignment</string>
                             <string>None</string>
                           </tuple>
                         </value>
