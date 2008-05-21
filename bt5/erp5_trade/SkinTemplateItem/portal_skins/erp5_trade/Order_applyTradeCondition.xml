@@ -118,7 +118,7 @@ if len(order.contentIds(filter=filter_dict)) == 0:\n
 def initialiseDiscountLineList(order, trade_condition):\n
   for discount_model_line in trade_condition.contentValues(\n
                                              portal_type=\'Discount Model Line\'):\n
-    discount_model_line_reference = tax_model_line.getReference()\n
+    discount_model_line_reference = discount_model_line.getReference()\n
     if not discount_model_line_reference or discount_model_line_reference not in [\n
             x.getProperty(\'reference\') for x in\n
             order.contentValues(portal_type=\'Discount Line\')]:\n
