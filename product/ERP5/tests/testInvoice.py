@@ -44,13 +44,10 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
 from testAccountingRules import TestAccountingRulesMixin
 
-class TestInvoice(TestPackingListMixin,
+class TestInvoiceMixin(TestPackingListMixin,
                   TestAccountingRulesMixin,
                   ERP5TypeTestCase):
   """Test invoice are created from orders then packing lists. """
-
-  RUN_ALL_TESTS = 1
-  quiet = 1
 
   default_region = "europe/west/france"
   vat_gap = 'fr/pcg/4/44/445/4457/44571'
@@ -1044,6 +1041,14 @@ class TestInvoice(TestPackingListMixin,
     for applied_rule in applied_rule_set:
       checkTree(applied_rule)
 
+class TestInvoice(TestInvoiceMixin):
+  """
+    Tests for Invoice
+  """
+
+  RUN_ALL_TESTS = 1
+  quiet = 1
+
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateEntities
@@ -1961,10 +1966,13 @@ class TestInvoice(TestPackingListMixin,
       """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_invoice_transaction_line_resource(self):
-    # tests that simulation movements corresponding to accounting line have a
-    # good resource in the simulation
-    
+  def test_19_invoice_transaction_line_resource(self, quiet=quiet, 
+                                                      run=RUN_ALL_TESTS):
+    """
+    tests that simulation movements corresponding to accounting line have a
+    good resource in the simulation
+    """
+    if not run: return
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString('''
       stepCreateEntities
@@ -1981,7 +1989,7 @@ class TestInvoice(TestPackingListMixin,
       stepOrderOrder
       stepTic
     ''')
-    sequence_list.play(self, quiet=1)
+    sequence_list.play(self, quiet=quiet)
     order = sequence.get('order')
     order_price_currency = order.getPriceCurrency()
     self.assertNotEquals(None, order_price_currency)
@@ -1998,9 +2006,12 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(order_price_currency,
           delivery_movement.getPriceCurrency())
 
-  def test_modify_planned_order_invoicing_rule(self):
-    # tests that modifying a planned order affects movements from invoicing
-    # rule
+  def test_20_modify_planned_order_invoicing_rule(self, quiet=quiet, 
+                                                            run=RUN_ALL_TESTS):
+    """
+    tests that modifying a planned order affects movements from invoicing
+    rule
+    """
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString('''
       stepCreateEntities
@@ -2017,7 +2028,7 @@ class TestInvoice(TestPackingListMixin,
       stepOrderOrder
       stepTic
     ''')
-    sequence_list.play(self, quiet=1)
+    sequence_list.play(self, quiet=quiet)
     order = sequence.get('order')
     order_line = sequence.get('order_line')
     
@@ -2025,7 +2036,6 @@ class TestInvoice(TestPackingListMixin,
                                       portal_type='Organisation',
                                       title='Other Entity')
     
-
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
     delivery_movement = related_applied_rule.contentValues()[0]
@@ -2174,9 +2184,13 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(DateTime(2002, 03, 04),
                  invoice_movement.getStopDate())
 
-  def test_modify_planned_order_invoice_transaction_rule(self):
-    # tests that modifying a planned order affects movements from invoice
-    # transaction rule
+  def test_21_modify_planned_order_invoice_transaction_rule(self, quiet=quiet, 
+                                                          run=RUN_ALL_TESTS):
+    """
+    tests that modifying a planned order affects movements from invoice
+    transaction rule
+    """
+    if not run: return
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString('''
       stepCreateEntities
@@ -2193,7 +2207,7 @@ class TestInvoice(TestPackingListMixin,
       stepOrderOrder
       stepTic
     ''')
-    sequence_list.play(self, quiet=1)
+    sequence_list.play(self, quiet=quiet)
     order = sequence.get('order')
     order_line = sequence.get('order_line')
     
