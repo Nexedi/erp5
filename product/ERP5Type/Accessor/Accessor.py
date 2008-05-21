@@ -65,16 +65,3 @@ class Accessor(Method):
       # Returns a reindexing alias
       from Alias import ReindexAlias
       return ReindexAlias(id, self.__name__)
-
-try:
-    from ZODB.Transaction import Transaction
-    # Zope 2.7 do not patch
-except ImportError:
-    # Zope 2.8, patch
-    class __roles__:
-      @staticmethod
-      def rolesForPermissionOn(ob):
-        return getattr(ob.im_self, '%s__roles__' % ob.__name__)
-
-    Accessor.__roles__ = __roles__
-    
