@@ -63,7 +63,9 @@ class TestTaskMixin:
                        stepCreateProject \
                        stepCreateRequirement \
                        stepCreateSimpleTask \
+                       stepCreateCurrency \
                        stepFillTaskWithData \
+                       stepSetTaskPriceCurrency \
                        stepConfirmTask \
                        stepTic \
                        stepSetTaskReport '
@@ -76,7 +78,9 @@ class TestTaskMixin:
                        stepCreateResource \
                        stepCreateProject \
                        stepCreateSimpleTask \
+                       stepCreateCurrency \
                        stepFillTaskWithData \
+                       stepSetTaskPriceCurrency \
                        stepCreateTaskLine \
                        stepFillTaskLineWithData \
                        stepConfirmTask \
@@ -89,7 +93,9 @@ class TestTaskMixin:
                        stepCreateOrganisation \
                        stepCreateResource \
                        stepCreateSimpleTaskReport \
+                       stepCreateCurrency \
                        stepFillTaskReportWithData \
+                       stepSetTaskReportPriceCurrency \
                        stepCreateTaskReportLine '
 
   login = PortalTestCase.login
@@ -99,49 +105,57 @@ class TestTaskMixin:
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',)
 
-  def stepLogin(self, **kw):
-    portal = self.getPortal()
-    uf = portal.acl_users
-    if not uf.getUser('dummy'):
-      uf._doAddUser('manager', '', ['Manager'], [])
-      self.login('manager')
-      person_module = portal.getDefaultModule(self.person_portal_type)
-      person = person_module.newContent(id='dummy', title='dummy',
-                                        reference='dummy')
-      portal.portal_categories.group.newContent(id='dummy',
-                                                codification='DUMMY')
-      assignment = person.newContent(title='dummy', group='dummy',
-                                     portal_type='Assignment',
-                                     start_date='1980-01-01',
-                                     stop_date='2099-12-31')
-      assignment.open()
-      get_transaction().commit()
-      self.tic()
-      module_list = []
-      portal_type_list = []
-      for portal_type in (self.resource_portal_type,
-                          self.project_portal_type,
-                          self.requirement_document_portal_type,
-                          self.organisation_portal_type,
-                          self.task_portal_type,
-                          self.task_report_portal_type,):
-        module = portal.getDefaultModule(portal_type)
-        module_list.append(module)
-        portal_type_list.append(portal_type)
-        portal_type_list.append(module.getPortalType())
-
-      for portal_type in portal_type_list:
-        ti = portal.portal_types[portal_type]
-        ti.addRole('Auditor;Author;Assignee;Assignor', '', 'Dummy',
-                   '', 'group/dummy', 'ERP5Type_getSecurityCategoryFromAssignment',
-                   '')
-        ti.updateRoleMapping()
-
-      get_transaction().commit()
-      self.tic()
-      portal.portal_caches.clearAllCache()
-
-    self.login('dummy')
+#  def stepLogin(self, **kw):
+#    portal = self.getPortal()
+#    uf = portal.acl_users
+#    if not uf.getUser('dummy'):
+#      uf._doAddUser('manager', '', ['Manager'], [])
+#      self.login('manager')
+#      person_module = portal.getDefaultModule(self.person_portal_type)
+#      person = person_module.newContent(id='dummy', title='dummy',
+#                                        reference='dummy')
+#      portal.portal_categories.group.newContent(id='dummy',
+#                                                codification='DUMMY')
+#      
+#      assignment = person.newContent(title='dummy', group='dummy',
+#                                     portal_type='Assignment',
+#                                     start_date='1980-01-01',
+#                                     stop_date='2099-12-31')
+#      assignment.open()
+#      get_transaction().commit()
+#      self.tic()
+#      module_list = []
+#      portal_type_list = []
+#      for portal_type in (self.resource_portal_type,
+#                          self.project_portal_type,
+#                          self.requirement_document_portal_type,
+#                          self.organisation_portal_type,
+#                          self.task_portal_type,
+#                          self.task_report_portal_type,
+#                          self.category_portal_type,):
+#        module = portal.getDefaultModule(portal_type)
+#        module_list.append(module)
+#        portal_type_list.append(portal_type)
+#        portal_type_list.append(module.getPortalType())
+#
+#      for portal_type in portal_type_list:
+#        ti = portal.portal_types[portal_type]
+#        ti.addRole('Auditor;Author;Assignee;Assignor', '', 'Dummy',
+#                   '', 'group/dummy', 'ERP5Type_getSecurityCategoryFromAssignment',
+#                   '')
+#        ti.updateRoleMapping()
+#
+#      get_transaction().commit()
+#      self.tic()
+#      portal.portal_caches.clearAllCache()
+#
+#    self.login('dummy')
+  def stepLogin(self, quiet=0, run=1, **kw):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
+                               'Associate', 'Auditor', 'Author'], [])
+    user = uf.getUserById('alex').__of__(uf)
+    newSecurityManager(None, user)
 
   def stepTic(self, **kw):
     self.tic()
@@ -220,6 +234,30 @@ class TestTaskMixin:
     )
     sequence.edit(task=task)
 
+  def stepCreateCurrency(self, sequence, **kw) :
+    """Create a default currency. """
+    currency_module = self.getCurrencyModule()
+    if len(currency_module.objectValues(id='EUR'))==0:
+      currency = self.getCurrencyModule().newContent(
+          portal_type='Currency',
+          id="EUR",
+          base_unit_quantity=0.01,
+          )
+    else:
+      currency = currency_module.objectValues(id='EUR')[0]
+    sequence.edit(currency=currency)
+ 
+  def stepSetTaskPriceCurrency(self, sequence, **kw) :
+    """Set the price currency of the task.
+
+    This step is not necessary.
+    TODO : - include a test without this step.
+           - include a test with this step late.
+    """
+    currency = sequence.get('currency')
+    task = sequence.get('task')
+    task.setPriceCurrency(currency.getRelativeUrl())
+
   def stepSetTaskValues(self, sequence=None, sequence_list=None, **kw):
     """
     Fill created task with some necessary data.
@@ -287,6 +325,17 @@ class TestTaskMixin:
                  stop_date = self.datetime + 20,)
     sequence.edit( task_report = task_report)
 
+  def stepSetTaskReportPriceCurrency(self, sequence, **kw) :
+    """Set the price currency of the task.
+
+    This step is not necessary.
+    TODO : - include a test without this step.
+           - include a test with this step late.
+    """
+    currency = sequence.get('currency')
+    task_report = sequence.get('task_report')
+    task_report.setPriceCurrency(currency.getRelativeUrl())
+
   def stepCreateTaskReportLine(self, sequence=None, sequence_list=None, **kw):
     """
       Create task report line and fill with dummy data.
@@ -324,6 +373,7 @@ class TestTaskMixin:
                       task_report.getDescription())
     self.assertEquals(task.getPredecessor(), task_report.getPredecessor())
     self.assertEquals(task.getDescription(), task_report.getDescription())
+    self.assertEquals(task.getPriceCurrency(), task_report.getPriceCurrency())
     self.assertEquals(len(task_report.contentValues()), 1)
     task_report_line = task_report.contentValues()[0]
     self.assertEquals(task.getTaskLineResource(), task_report_line.getResource())
@@ -331,6 +381,7 @@ class TestTaskMixin:
     self.assertEquals(task.getTaskLinePrice(), task_report_line.getPrice())
     self.assertEquals(task.getTaskLineRequirement(), 
                       task_report_line.getRequirement())
+
 
   def stepCreateTaskLine(self, sequence=None, sequence_list=None, **kw):
     """
@@ -409,6 +460,9 @@ class TestTaskMixin:
 
   def stepCloseTaskReport(self, sequence=None, sequence_list=None, **kw):
     self.modifyState('task_report', 'deliver', sequence=sequence)
+
+  def stepRestartTaskReport(self, sequence=None, sequence_list=None, **kw):
+    self.modifyState('task_report', 'restart', sequence=sequence)
   
   def stepSetTaskReport(self, sequence=None, sequence_list=None, **kw):
     """
