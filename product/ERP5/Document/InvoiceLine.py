@@ -64,6 +64,7 @@ class InvoiceLine(DeliveryLine):
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
                       , PropertySheet.Task
+                      , PropertySheet.ItemAggregation
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Price

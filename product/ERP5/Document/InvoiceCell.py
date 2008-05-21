@@ -60,6 +60,7 @@ class InvoiceCell(DeliveryCell):
                       , PropertySheet.CategoryCore
                       , PropertySheet.Arrow
                       , PropertySheet.Amount
+                      , PropertySheet.ItemAggregation
                       , PropertySheet.Task
                       , PropertySheet.Movement
                       , PropertySheet.Price
