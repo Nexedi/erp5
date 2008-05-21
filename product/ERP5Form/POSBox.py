@@ -259,7 +259,7 @@ class POSBoxWidget(Widget.Widget):
         resource_category_fastResourceEntry = field.get_value('resource_category_fastResourceEntry')
         ) 
 
-  def render_view(self, field, value):
+  def render_view(self, field, value, REQUEST=None):
     """ 
       Render point of sales widget
     """

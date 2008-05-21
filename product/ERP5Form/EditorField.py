@@ -87,7 +87,7 @@ class EditorWidget(Widget.TextAreaWidget):
                           'inputname'  : key
                         })
 
-  def render_view(self, field, value):
+  def render_view(self, field, value, REQUEST=None):
     """ 
       Render form in view only mode.
     """

@@ -51,6 +51,7 @@ from Testing import ZopeTestCase
 ZopeTestCase.installProduct('ERP5Form')
 
 from Acquisition import aq_base
+from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
 from Products.Formulator.StandardFields import DateTimeField
@@ -63,6 +64,23 @@ from Products.ERP5Form.Form import purgeFieldValueCache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import Form
 from Products.ERP5Form import ProxyField
+
+
+class TestRenderViewAPI(unittest.TestCase):
+  """For all fields and widgets, tests the signature of the render_view method.
+  In particular, render_view must accept a 'REQUEST' parameter after 'value'.
+  """
+
+  def getTitle(self):
+    return "{Field,Widget}.render_view"
+
+  def test_signature(self):
+    for field in FieldRegistry.get_field_classes().itervalues():
+      self.assertEquals(('self', 'value', 'REQUEST'),
+                        field.render_view.im_func.func_code.co_varnames)
+      if field is not ProxyField.ProxyField:
+        self.assertEquals(('self', 'field', 'value', 'REQUEST'),
+          field.widget.render_view.im_func.func_code.co_varnames[:4])
 
 
 class TestFloatField(unittest.TestCase):
@@ -515,6 +533,7 @@ def makeDummyOid():
 
 def test_suite():
   suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestRenderViewAPI))
   suite.addTest(unittest.makeSuite(TestFloatField))
   suite.addTest(unittest.makeSuite(TestStringField))
   suite.addTest(unittest.makeSuite(TestProxyField))

@@ -287,15 +287,16 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     REQUEST.set('_v_relation_field_index', relation_field_index + 1) 
     return html_string
 
-  def render_view(self, field, value):
+  def render_view(self, field, value, REQUEST=None):
     """
     Render read only field.
 
     XXX Improved rendering required
     """
     html_string = self.default_widget_rendering_instance.render_view(
-                                                      field, value)
-    REQUEST = get_request()
+                                                      field, value, REQUEST)
+    if REQUEST is None:
+      REQUEST = get_request()
     relation_html_string = self.render_relation_link(field, value, REQUEST)
     if relation_html_string != '':
       html_string += '&nbsp;&nbsp;%s' % relation_html_string

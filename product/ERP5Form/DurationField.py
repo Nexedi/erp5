@@ -64,7 +64,7 @@ class DurationWidget(FormulatorPatch.IntegerWidget):
                              default="",
                              required=1)
 
-  def render_view(self, field, value):
+  def render_view(self, field, value, REQUEST=None):
     sub_field_render_list = []
     for title, sub_key, convertion in (('Hour', 'hour', HOUR_IN_SECOND),
                                 ('Minute', 'minute', MINUTE_IN_SECOND)):
@@ -74,10 +74,10 @@ class DurationWidget(FormulatorPatch.IntegerWidget):
         sub_value, value = divmod(value, convertion)
       
       sub_field_render_list.append(self.render_sub_field_view(
-                                        field,sub_value))
+                                        field,sub_value, REQUEST))
     # Render second
     sub_field_render_list.append(self.render_sub_field_view(
-                                      field, value))
+                                      field, value, REQUEST))
     return ':'.join(sub_field_render_list)
 
   def render(self, field, key, value, REQUEST):
@@ -97,12 +97,12 @@ class DurationWidget(FormulatorPatch.IntegerWidget):
                       value, REQUEST, 'second'))
     return ':'.join(sub_field_render_list)
 
-  def render_sub_field_view(self, field, value):
+  def render_sub_field_view(self, field, value, REQUEST=None):
     """
     Render dynamically a subfield
     """
-    return FormulatorPatch.IntegerFieldWidgetInstance.render_view(field,
-                                                                  value)
+    return FormulatorPatch.IntegerFieldWidgetInstance.render_view(field, value,
+                                                                  REQUEST)
 
   def render_sub_field(self, field, key, value, REQUEST, keyword):
     """

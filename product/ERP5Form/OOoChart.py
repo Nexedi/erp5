@@ -378,7 +378,7 @@ class OOoChartWidget(Widget.Widget):
     return extra_argument_dict
 
 
-  def render_view(self, field, value, key=None, REQUEST=None, render_format='html'):
+  def render_view(self, field, value, REQUEST=None, key=None, render_format='html'):
     """
       Render a Chart in read-only.
     """

@@ -145,7 +145,7 @@ class ParallelListWidget(Widget.MultiListWidget,
         result = self.sub_widget[sub_field_property_dict['field_type']].render_view(
                 field,
                 sub_field_property_dict['value'],
-                )
+                REQUEST)
       for parameter in ('title', 'required', 'size', 'default', 'first_item',
                         'items'):
         # As it doesn't seem possible to delete value in the REQUEST,

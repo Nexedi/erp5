@@ -68,6 +68,11 @@ def Field_render(self, value=None, REQUEST=None, key=None):
     """
     return self._render_helper(self.generate_field_key(key=key), value, REQUEST)
 
+def Field_render_view(self, value=None, REQUEST=None):
+    """Render value to be viewed.
+    """
+    return self.widget.render_view(self, value, REQUEST)
+
 def Field_render_sub_field(self, id, value=None, REQUEST=None, key=None):
     """Render a sub field, as part of complete rendering of widget in
     a form. Works like render() but for sub field.
@@ -98,7 +103,7 @@ def Field_render_helper(self, key, value, REQUEST):
     if self.get_value('hidden', REQUEST=REQUEST):
         return self.widget.render_hidden(self, key, value, REQUEST)
     elif (not self.get_value('editable', REQUEST=REQUEST)):
-        return self.widget.render_view(self, value)
+        return self.widget.render_view(self, value, REQUEST)
     else:
         return self.widget.render(self, key, value, REQUEST)
 
@@ -113,6 +118,7 @@ def Field_render_odf(self, field=None, key=None, value=None, REQUEST=None, rende
 
 Field.generate_field_key = Field_generate_field_key
 Field.render = Field_render
+Field.render_view = Field_render_view
 Field.render_sub_field = Field_render_sub_field
 Field.generate_subfield_key = Field_generate_subfield_key
 Field.validate_sub_field = Field_validate_sub_field
@@ -307,7 +313,7 @@ def CheckBoxWidget_render(self, field, key, value, REQUEST):
 
 CheckBoxWidget.render = CheckBoxWidget_render
 
-def CheckBoxWidget_render_view(self, field, value):
+def CheckBoxWidget_render_view(self, field, value, REQUEST=None):
   """Render checkbox in view mode.
   """
   if value:
@@ -332,26 +338,28 @@ from Products.Formulator.StandardFields import LinkField
 from Globals import get_request
 from urlparse import urljoin
 
-class PatchedLinkWidget(TextWidget) :
-  def render_view(self, field, value) :
+class PatchedLinkWidget(TextWidget):
+  def render_view(self, field, value, REQUEST=None):
     """Render link.
     """
-    REQUEST = get_request()
-    link_type = field.get_value('link_type')
+    link_type = field.get_value('link_type', REQUEST=REQUEST)
+    if REQUEST is None:
+      REQUEST = get_request()
 
     if link_type == 'internal':
       value = urljoin(REQUEST['BASE0'], value)
     elif link_type == 'relative':
       value = urljoin(REQUEST['URL1'], value)
 
-    return '<a href="%s">%s</a>' % (value, field.get_value('title', cell=REQUEST.get('cell')))
+    return '<a href="%s">%s</a>' % (value,
+        field.get_value('title', cell=getattr(REQUEST,'cell',None)))
 
 PatchedLinkWidgetInstance = PatchedLinkWidget()
 LinkField.widget = PatchedLinkWidgetInstance
 
 
 # Patch the render_view of TextField to enclose the value within <span> html tags if css class defined
-def TextWidget_patched_render_view(self, field, value):
+def TextWidget_patched_render_view(self, field, value, REQUEST=None):
   """Render text as non-editable.
      This renderer is designed to be type error resistant.
      in we get a non string value. It does escape the result
@@ -405,11 +413,11 @@ class IntegerWidget(TextWidget) :
                               size=field.get_value('display_width'),
                               extra=field.get_value('extra'))
 
-  def render_view(self, field, value):
+  def render_view(self, field, value, REQUEST=None):
       """Render a non-editable interger."""
       if isinstance(value, float):
           value = int(value)
-      return TextWidget.render_view(self, field, value)
+      return TextWidget.render_view(self, field, value, REQUEST)
 
 
 from Products.Formulator.StandardFields import IntegerField
@@ -487,9 +495,17 @@ def Widget_render_hidden(self, field, key, value, REQUEST):
                           extra=extra)
     return result
 
+def Widget_render_view(self, field, value, REQUEST=None):
+    """Renders this widget for public viewing.
+    """
+    # default implementation
+    if value is None:
+        return ''
+    return value
+
 Widget.render_hidden = Widget_render_hidden
 # default render_pdf for a Widget
-Widget.render_pdf = Widget.render_view
+Widget.render_pdf = Widget.render_view = Widget_render_view
 
 def Widget_render_css(self, field, REQUEST):
   """
@@ -517,6 +533,17 @@ def Widget_get_javascript_list(self, field, REQUEST):
   """
   return []
 Widget.get_javascript_list = Widget_get_javascript_list
+
+
+from Products.Formulator import Widget as WidgetModule
+
+for widget_name in ('MultiItemsWidget', 'LabelWidget',
+                    'FileWidget', 'PasswordWidget', 'RadioWidget'):
+  widget = getattr(WidgetModule, widget_name)
+  widget._old_render_view = widget.render_view
+  widget.render_view = lambda self, field, value, REQUEST=None: \
+    self._old_render_view(field, value)
+
 
 from Products.Formulator.Validator import LinesValidator
 
@@ -747,14 +774,14 @@ def ListWidget_render(self, field, key, value, REQUEST):
 
   return "\n".join([list_widget, input_hidden])
   
-def ListWidget_render_view(self, field, value):
+def ListWidget_render_view(self, field, value, REQUEST=None):
   """
   This method is not as efficient as using a StringField in read only.
   Always consider to change the field in your Form.
   """
   if value is None:
       return ''
-  title_list = [x[0] for x in field.get_value("items") if x[1]==value]
+  title_list = [x[0] for x in field.get_value("items", REQUEST=REQUEST) if x[1]==value]
   if len(title_list) == 0:
     return "??? (%s)" % value
   else:
@@ -986,7 +1013,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
         else:
             return date_result
     
-    def render_view(self, field, value):
+    def render_view(self, field, value, REQUEST=None):
         return self.format_value(field, value, mode='html')
     
     def render_pdf(self, field, value):
@@ -1324,7 +1351,7 @@ class FloatWidget(TextWidget):
                                 **extra_keys)
 
 
-    def render_view(self, field, value):
+    def render_view(self, field, value, REQUEST=None):
         """
           Render Float display field.
           This patch add:
@@ -1497,12 +1524,12 @@ Field.get_javascript_list = Field_get_javascript_list
 
 
 from Products.Formulator.TALESField import TALESWidget
-def TALESWidget_render_view(self, field, value):
+def TALESWidget_render_view(self, field, value, REQUEST=None):
   """
   Render TALES as read only
   """
   if value == None:
-    text = field.get_value('default')
+    text = field.get_value('default', REQUEST=REQUEST)
   else:
     if value != "":
       text = value._text
@@ -1559,7 +1586,7 @@ def LinesTextAreaWidget_render(self, field, key, value, REQUEST):
 LinesTextAreaWidget.render = LinesTextAreaWidget_render
 
 original_LinesTextAreaWidget_render_view = LinesTextAreaWidget.render_view
-def LinesTextAreaWidget_render_view(self, field, value):
+def LinesTextAreaWidget_render_view(self, field, value, REQUEST=None):
   if isinstance(value, (str, unicode)):
     value = [value]
   return original_LinesTextAreaWidget_render_view(self, field, value)
