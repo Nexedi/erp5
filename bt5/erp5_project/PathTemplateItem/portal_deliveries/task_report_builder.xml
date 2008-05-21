@@ -73,6 +73,7 @@
                 <string>SectionPathMovementGroup</string>
                 <string>PathMovementGroup</string>
                 <string>SourceProjectMovementGroup</string>
+                <string>PriceCurrencyMovementGroup</string>
               </tuple>
             </value>
         </item>
