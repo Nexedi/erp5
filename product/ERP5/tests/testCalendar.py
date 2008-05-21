@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              noSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
@@ -83,6 +84,25 @@ class TestCalendar(ERP5TypeTestCase):
     """
     self.category_tool = self.getCategoryTool()
     self.createCategories()
+    # activate constraints
+    self._addPropertySheet('Group Calendar', 'CalendarConstraint')
+    self._addPropertySheet('Presence Request', 'CalendarConstraint')
+    self._addPropertySheet('Leave Request', 'CalendarConstraint')
+
+    self._addPropertySheet('Presence Request', 'IndividualCalendarConstraint')
+    self._addPropertySheet('Leave Request', 'IndividualCalendarConstraint')
+
+    self._addPropertySheet('Leave Request Period', 'CalendarPeriodConstraint')
+    self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
+    self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
+
+
+  def _addPropertySheet(self, type_info_name, property_sheet_name):
+    ti = self.portal.portal_types.getTypeInfo(type_info_name)
+    if property_sheet_name not in ti.property_sheet_list:
+      ti.property_sheet_list = tuple(ti.property_sheet_list)\
+                                      + (property_sheet_name,)
+      _aq_reset()
 
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
     """
@@ -715,6 +735,61 @@ class TestCalendar(ERP5TypeTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_GroupCalendarConstraint(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    # no lines
+    self.assertEquals(1, len(group_calendar.checkConsistency()))
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    # invalid line (no dates, no resource)
+    self.assertEquals(3, len(group_calendar.checkConsistency()))
+    group_calendar_period.setStartDate(self.start_date)
+    group_calendar_period.setStopDate(self.stop_date)
+    self.assertEquals(1, len(group_calendar.checkConsistency()))
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    self.assertEquals(0, len(group_calendar.checkConsistency()))
+
+  def test_LeaveRequestCalendarConstraint(self):
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    # no lines, no person
+    self.assertEquals(2, len(leave_request.checkConsistency()))
+    leave_request_period = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    # no person, invalid line (no dates, no resource)
+    self.assertEquals(4, len(leave_request.checkConsistency()))
+    leave_request_period.setStartDate(self.start_date)
+    leave_request_period.setStopDate(self.stop_date)
+    self.assertEquals(2, len(leave_request.checkConsistency()))
+    leave_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    self.assertEquals(1, len(leave_request.checkConsistency()))
+    person = self.portal.person_module.newContent(portal_type='Person')
+    leave_request.setDestinationValue(person)
+    self.assertEquals(0, len(leave_request.checkConsistency()))
+
+  def test_PresenceRequestCalendarConstraint(self):
+    presence_request = self.portal.presence_request_module.newContent(
+                                  portal_type='Presence Request')
+    # no lines, no person
+    self.assertEquals(2, len(presence_request.checkConsistency()))
+    presence_request_period = presence_request.newContent(
+                                  portal_type='Presence Request Period')
+    # no person, invalid line (no dates, no resource)
+    self.assertEquals(4, len(presence_request.checkConsistency()))
+    presence_request_period.setStartDate(self.start_date)
+    presence_request_period.setStopDate(self.stop_date)
+    self.assertEquals(2, len(presence_request.checkConsistency()))
+    presence_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    self.assertEquals(1, len(presence_request.checkConsistency()))
+    person = self.portal.person_module.newContent(portal_type='Person')
+    presence_request.setDestinationValue(person)
+    self.assertEquals(0, len(presence_request.checkConsistency()))
+
 
 import unittest
 def test_suite():
