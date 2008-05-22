@@ -70,6 +70,7 @@ from warnings import warn
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
+from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
 import tarfile
 from urllib import quote, unquote
@@ -2510,20 +2511,28 @@ class SitePropertyTemplateItem(BaseTemplateItem):
             if action == 'nothing':
               continue
           dir, id = posixpath.split(path)
-          if p.hasProperty(id):
-            continue
           prop_type, property = self._objects[path]
-          p._setProperty(id, property, type=prop_type)
+          if p.hasProperty(id):
+            if p.getPropertyType(id) != prop_type:
+              p._delProperty(id)
+              p._setProperty(id, property, type=prop_type)
+            else:
+              p._updateProperty(id, property)
+          else:
+            p._setProperty(id, property, type=prop_type)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
-      for id,property in self._archive.keys():
+      for id, property in self._archive.keys():
         property = self._archive[id]
         if p.hasProperty(id):
-          continue
-          # Too much???
-          #raise TemplateConflictError, 'the property %s already exists' % id
-        p._setProperty(id, property['value'], type=property['type'])
+          if p.getPropertyType(id) != property['type']:
+            p._delProperty(id)
+            p._setProperty(id, property['value'], type=property['type'])
+          else:
+            p._updateProperty(id, property['value'])
+        else:
+          p._setProperty(id, property['value'], type=property['type'])
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -2542,16 +2551,16 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     xml_data = ''
     prop_type, obj = self._objects[path]
     xml_data += '\n <property>'
-    xml_data += '\n  <id>%s</id>' %(path,)
-    xml_data += '\n  <type>%s</type>' %(prop_type,)
+    xml_data += '\n  <id>%s</id>' % escape(str(path))
+    xml_data += '\n  <type>%s</type>' % escape(str(prop_type))
     if prop_type in ('lines', 'tokens'):
       xml_data += '\n  <value>'
       for item in obj:
         if item != '':
-          xml_data += '\n   <item>%s</item>' %(item,)
+          xml_data += '\n   <item>%s</item>' % escape(str(item))
       xml_data += '\n  </value>'
     else:
-      xml_data += '\n  <value>%r</value>' %(('\n').join(obj),)
+      xml_data += '\n  <value>%s</value>' % escape(str(obj))
     xml_data += '\n </property>'
     return xml_data
 

@@ -5024,6 +5024,86 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def stepSetOldSitePropertyValue(self, sequence=None, sequence_list=None, **kw):
+    """Set the old value to a site property."""
+    sequence.set('site_property_value', 'old')
+
+  def stepSetNewSitePropertyValue(self, sequence=None, sequence_list=None, **kw):
+    """Set the new value to a site property."""
+    sequence.set('site_property_value', 'new')
+
+  def stepCreateSiteProperty(self, sequence=None, sequence_list=None, **kw):
+    """Create a site property."""
+    portal = self.getPortal()
+    portal._setProperty('a_property', sequence.get('site_property_value'))
+
+  def stepModifySiteProperty(self, sequence=None, sequence_list=None, **kw):
+    """Modify a site property."""
+    portal = self.getPortal()
+    portal._updateProperty('a_property', sequence.get('site_property_value'))
+
+  def stepCheckSiteProperty(self, sequence=None, sequence_list=None, **kw):
+    """Check a site property."""
+    portal = self.getPortal()
+    self.assertEquals(portal.getProperty('a_property'),
+                      sequence.get('site_property_value'))
+
+  def stepCheckSitePropertyRemoved(self, sequence=None, sequence_list=None, **kw):
+    """Check if a site property is removed."""
+    portal = self.getPortal()
+    self.failIf(portal.hasProperty('a_property'))
+
+  def stepAddSitePropertyToBusinessTemplate(self, sequence=None, sequence_list=None,
+                                            **kw):
+    """Add a site property into a business template."""
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_site_property_id_list=('a_property',))
+
+  def test_39_CheckSiteProperties(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Site Properties'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       SetOldSitePropertyValue \
+                       CreateSiteProperty \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddSitePropertyToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       SetNewSitePropertyValue \
+                       ModifySiteProperty \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       SetOldSitePropertyValue \
+                       CheckSiteProperty \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       SetOldSitePropertyValue \
+                       CheckSitePropertyRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBusinessTemplate))
