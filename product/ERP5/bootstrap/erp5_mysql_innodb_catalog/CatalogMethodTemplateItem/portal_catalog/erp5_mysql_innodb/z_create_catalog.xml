@@ -43,6 +43,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -95,8 +101,8 @@
 CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
-  `owner` varchar(32) NOT NULL default \'\',\n
-  `viewable_owner` varchar(32) NOT NULL default \'\',\n
+  `owner` varbinary(255) NOT NULL default \'\',\n
+  `viewable_owner` varbinary(255) NOT NULL default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
   `relative_url` varchar(255) NOT NULL default \'\',\n
   `parent_uid` BIGINT UNSIGNED default \'0\',\n
@@ -187,8 +193,8 @@ CREATE TABLE `catalog` (\n
 CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
-  `owner` varchar(32) NOT NULL default \'\',\n
-  `viewable_owner` varchar(32) NOT NULL default \'\',\n
+  `owner` varbinary(255) NOT NULL default \'\',\n
+  `viewable_owner` varbinary(255) NOT NULL default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
   `relative_url` varchar(255) NOT NULL default \'\',\n
   `parent_uid` BIGINT UNSIGNED default \'0\',\n
