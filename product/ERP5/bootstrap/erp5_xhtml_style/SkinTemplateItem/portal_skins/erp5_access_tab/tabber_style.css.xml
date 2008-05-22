@@ -48,6 +48,7 @@
 }\n
 .document .actions li a span img {\n
   margin: -2px;\n
+  padding-right: 3px;\n
 }\n
 \n
 /* $Id: example.css,v 1.5 2006/03/27 02:44:36 pat Exp $ */\n
