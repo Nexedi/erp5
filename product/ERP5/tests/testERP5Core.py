@@ -257,6 +257,31 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         module_portal_type,
         self.portal.getDefaultModule(module_portal_type).getPortalType())
 
+  def test_catalog_with_very_long_login_name(self, quiet=quiet, run=run_all_test):
+    """Make sure that user with very long login name can find his document by catalog"""
+    portal = self.getPortal()
+    # Create user account with very long login name
+    login_name = 'very_very_looooooooooooooooong_login_name'
+    password = 'password'
+    acl_users = portal.acl_users
+    acl_users._doAddUser(login_name, password, ['Member'], [])
+    user = acl_users.getUserById(login_name).__of__(acl_users)
+    # Login as the above user
+    newSecurityManager(None, user)
+
+    get_transaction().commit()
+
+    # Create preference
+    portal.portal_preferences.newContent('Preference', title='My Test Preference')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(
+      len(portal.portal_catalog(portal_type='Preference',
+                                title='My Test Preference')),
+      1)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Core))
