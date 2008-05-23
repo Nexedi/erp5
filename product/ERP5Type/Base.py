@@ -35,6 +35,8 @@ from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 import OFS.History
 
@@ -1379,7 +1381,6 @@ class Base( CopyContainer,
     self._setProperty(key,value, type=type, **kw)
     self.reindexObject()
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setProperty' )
   def _setProperty(self, key, value, type='string', **kw):
     """
       Previous Name: _setValue
@@ -1537,9 +1538,8 @@ class Base( CopyContainer,
   ping = WorkflowMethod(ping)
 
   # Object attributes update method
-  security.declarePrivate( '_edit' )
   def _edit(self, REQUEST=None, force_update=0, reindex_object=0, 
-            keep_existing=0, activate_kw=None, edit_order=[], **kw):
+            keep_existing=0, activate_kw=None, edit_order=[], restricted=0, **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -1561,6 +1561,21 @@ class Base( CopyContainer,
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
     second_try_key_list = []
+    restricted_method = []    
+    if restricted:
+      # retrieve list of accessors which doesn't use default permissions
+      aq_key = self._aq_key()
+      aq_portal_type = Base.aq_portal_type
+      if aq_key not in aq_portal_type:
+        try:
+          self._aq_dynamic("")
+        except AttributeError:
+          pass
+      prop_holder = aq_portal_type[aq_key]
+      for permissions in prop_holder.__ac_permissions__:
+        if permissions[0] not in ('Access contents information', 'Modify portal content'):
+          for method in permissions[1]:
+            restricted_method.append(method)
 
     def setChangedPropertyList(key_list):
       not_modified_list = []
@@ -1581,6 +1596,11 @@ class Base( CopyContainer,
           # edit itself, this is useless as the dict will be overwritten
           # If the keep_existing flag is set to 1, we do not update properties which are defined
           if not keep_existing or not self.hasProperty(key):
+            if restricted:
+              accessor_name = 'set' + UpperCase(key)
+              if accessor_name in restricted_method:
+                # will raise Unauthorized when not allowed
+                guarded_getattr(self, accessor_name)
             modified_property_dict[key] = old_value
             if key != 'id':
               self._setProperty(key, kw[key])
@@ -1624,7 +1644,7 @@ class Base( CopyContainer,
       Generic edit Method for all ERP5 object
     """
     return self._edit(REQUEST=REQUEST, force_update=force_update,
-                      reindex_object=reindex_object, **kw)
+                      reindex_object=reindex_object, restricted=1, **kw)
 
   # XXX Is this useful ? (Romain)
   edit = WorkflowMethod(edit)
@@ -1906,7 +1926,6 @@ class Base( CopyContainer,
 
   # Private accessors for the implementation of relations based on
   # categories
-  security.declareProtected( Permissions.ModifyPortalContent, '_setValue' )
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
                                   checked_permission=None):
     start_string = "%s/" % id
@@ -1949,7 +1968,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueList' )
   setValueList = setValue
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValue' )
   def _setDefaultValue(self, id, target, spec=(), filter=None, portal_type=(), checked_permission=None):
     start_string = "%s/" % id
     start_string_len = len(start_string)
@@ -1974,8 +1992,6 @@ class Base( CopyContainer,
                               checked_permission=None)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                            '_getDefaultValue')
   def _getDefaultValue(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     path = self._getDefaultCategoryMembership(id, spec=spec, filter=filter,
                                       portal_type=portal_type,base=1,
@@ -1988,8 +2004,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'getDefaultValue' )
   getDefaultValue = _getDefaultValue
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                            '_getValueList')
   def _getValueList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     ref_list = []
     for path in self._getCategoryMembershipList(id, spec=spec, filter=filter,
@@ -2009,8 +2023,6 @@ class Base( CopyContainer,
                             'getValueList')
   getValueList = _getValueList
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                            '_getDefaultAcquiredValue')
   def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
                                evaluate=1, checked_permission=None):
     path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
@@ -2026,8 +2038,6 @@ class Base( CopyContainer,
                             'getDefaultAcquiredValue')
   getDefaultAcquiredValue = _getDefaultAcquiredValue
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                            '_getAcquiredValueList' )
   def _getAcquiredValueList(self, id, spec=(), filter=None, **kw):
     ref_list = []
     for path in self._getAcquiredCategoryMembershipList(id, base=1,
@@ -2041,7 +2051,6 @@ class Base( CopyContainer,
                             'getAcquiredValueList')
   getAcquiredValueList = _getAcquiredValueList
 
-  security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
   def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(),
                               strict_membership=0, strict="deprecated",
                               checked_permission=None):
@@ -2061,7 +2070,6 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.View, 'getDefaultRelatedValue')
   getDefaultRelatedValue = _getDefaultRelatedValue
 
-  security.declareProtected( Permissions.View, '_getRelatedValueList' )
   def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(),
                            strict_membership=0, strict="deprecated", 
                            checked_permission=None):
@@ -2077,8 +2085,6 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.View, 'getRelatedValueList')
   getRelatedValueList = _getRelatedValueList
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            '_getDefaultRelatedProperty')
   def _getDefaultRelatedProperty(self, id, property_name, spec=(), filter=None,
                                  portal_type=(), strict_membership=0,
                                  checked_permission=None):
@@ -2098,8 +2104,6 @@ class Base( CopyContainer,
   getDefaultRelatedProperty = _getDefaultRelatedProperty
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            '_getRelatedPropertyList')
   def _getRelatedPropertyList(self, id, property_name, spec=(), filter=None,
                               portal_type=(), strict_membership=0,
                               checked_permission=None):
@@ -2125,7 +2129,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'getValueUids' )
   getValueUids = getValueUidList # DEPRECATED
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
   def _setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1,
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
@@ -2150,7 +2153,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
   setValueUids = setValueUidList # DEPRECATED
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultValueUid' )
   def _setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=(),
                                          checked_permission=None):
     # We must do an ordered list so we can not use the previous method
@@ -2166,7 +2168,6 @@ class Base( CopyContainer,
     self.reindexObject()
 
   # Private accessors for the implementation of categories
-  security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryMembership' )
   def _setCategoryMembership(self, category, node_list, spec=(),
                                              filter=None, portal_type=(), base=0, keep_default=1,
                                              checked_permission=None):
@@ -2183,7 +2184,6 @@ class Base( CopyContainer,
                       node_list, spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default, checked_permission=checked_permission)
     self.reindexObject()
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setDefaultCategoryMembership' )
   def _setDefaultCategoryMembership(self, category, node_list,
                                     spec=(), filter=None, portal_type=(), base=0,
                                     checked_permission=None):
@@ -2200,7 +2200,6 @@ class Base( CopyContainer,
                                        checked_permission=checked_permission)
     self.reindexObject()
 
-  security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipList' )
   def _getCategoryMembershipList(self, category, spec=(), filter=None, portal_type=(), base=0, 
                                                  keep_default=1, checked_permission=None):
     """
@@ -2213,8 +2212,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMembershipList' )
   getCategoryMembershipList = _getCategoryMembershipList
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                                               '_getAcquiredCategoryMembershipList' )
   def _getAcquiredCategoryMembershipList(self, category, base=0 , spec=(),
                                               filter=None, **kw ):
     """
@@ -2227,7 +2224,6 @@ class Base( CopyContainer,
                                            'getAcquiredCategoryMembershipList' )
   getAcquiredCategoryMembershipList = _getAcquiredCategoryMembershipList
 
-  security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipItemList' )
   def _getCategoryMembershipItemList(self, category, spec=(), filter=None, portal_type=(), base=0,
                                                      checked_permission=None):
     membership_list = self._getCategoryMembershipList(category,
@@ -2235,8 +2231,6 @@ class Base( CopyContainer,
                             checked_permission=checked_permission)
     return [(x, x) for x in membership_list]
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                                          '_getAcquiredCategoryMembershipItemList' )
   def _getAcquiredCategoryMembershipItemList(self, category, spec=(),
              filter=None, portal_type=(), base=0, method_id=None, sort_id='default',
              checked_permission=None):
@@ -2263,7 +2257,6 @@ class Base( CopyContainer,
       return [(x, x) for x in membership_list]
     return [(x,getattr(x, method_id)()) for x in membership_list]
 
-  security.declareProtected( Permissions.View, '_getDefaultCategoryMembership' )
   def _getDefaultCategoryMembership(self, category, spec=(), filter=None, portal_type=(), base=0,
                                                     checked_permission=None ):
     membership = self._getCategoryTool().getCategoryMembershipList(self,
@@ -2274,7 +2267,6 @@ class Base( CopyContainer,
     else:
       return None
 
-  security.declareProtected( Permissions.View, '_getDefaultAcquiredCategoryMembership' )
   def _getDefaultAcquiredCategoryMembership(self, category,
                                         spec=(), filter=None, portal_type=(), base=0, default=None,
                                         checked_permission=None):
@@ -2296,7 +2288,6 @@ class Base( CopyContainer,
     """
     return self._getCategoryTool().getCategoryList(self)
 
-  security.declareProtected( Permissions.View, '_getCategoryList' )
   def _getCategoryList(self):
     return self._getCategoryTool()._getCategoryList(self)
 
@@ -2307,7 +2298,6 @@ class Base( CopyContainer,
     """
     return self._getCategoryTool().getAcquiredCategoryList(self)
 
-  security.declareProtected( Permissions.View, '_getAcquiredCategoryList' )
   def _getAcquiredCategoryList(self):
     return self._getCategoryTool()._getAcquiredCategoryList(self)
 
@@ -2315,7 +2305,6 @@ class Base( CopyContainer,
   def setCategoryList(self, path_list):
     self.portal_categories.setCategoryList(self, path_list)
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
   def _setCategoryList(self, path_list):
     self.portal_categories._setCategoryList(self, path_list)
 
@@ -2336,7 +2325,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'getBaseCategoryValues' )
   getBaseCategoryValues = getBaseCategoryValueList
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_cleanupCategories' )
   def _cleanupCategories(self):
     self._getCategoryTool()._cleanupCategories()
 
@@ -2625,7 +2613,6 @@ class Base( CopyContainer,
 #     return self._recursiveApply(f)
 
   # Content consistency implementation
-  security.declarePrivate('_checkConsistency')
   def _checkConsistency(self, fixit=0):
     """
     Check the constitency of objects.
@@ -2634,7 +2621,6 @@ class Base( CopyContainer,
     """
     return []
 
-  security.declarePrivate('_fixConsistency')
   def _fixConsistency(self):
     """
     Fix the constitency of objects.
@@ -2911,7 +2897,6 @@ class Base( CopyContainer,
     return getattr(self,'guid',None)
 
   # Type Casting
-  security.declarePrivate( '_getTypeBasedMethod' )
   def _getTypeBasedMethod(self, method_id, fallback_script_id=None,
                                 script_id=None,**kw):
     """
