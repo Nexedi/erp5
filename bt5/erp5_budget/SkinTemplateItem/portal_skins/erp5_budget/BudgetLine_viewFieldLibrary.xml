@@ -99,7 +99,6 @@
                     <value>
                       <list>
                         <string>matrixbox_membership_criterion_category_list</string>
-                        <string>matrixbox_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -109,15 +108,14 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
+                        <string>matrixbox_quantity</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_group_title_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -125,7 +123,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BudgetLine_view</string> </value>
+            <value> <string>BudgetLine_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
