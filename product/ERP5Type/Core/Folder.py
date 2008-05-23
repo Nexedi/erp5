@@ -45,7 +45,6 @@ from Products.ERP5Type.WebDAVSupport import Folder as WebDAVFolder
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
-  from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 
