@@ -2223,6 +2223,26 @@ class TestPropertySheet:
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
 
+    def test_edit(self):
+
+      self._addProperty('Person',
+                        ''' { 'id':         'foo_bar',
+                        'write_permission' : 'Set own password',
+                        'read_permission'  : 'Manage users',
+                        'type':       'string',
+                        'mode':       'w', }''')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj.edit(foo_bar="v1")
+      self.assertEqual(obj.getFooBar(), "v1")
+
+      obj.manage_permission('Set own password', [], 0)
+      self.assertRaises(Unauthorized, obj.edit, foo_bar="v2")
+      self.assertEqual(obj.getFooBar(), "v1")
+
+      obj._edit(foo_bar="v3")
+      self.assertEqual(obj.getFooBar(), "v3")
+      
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
