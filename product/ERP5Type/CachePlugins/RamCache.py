@@ -83,9 +83,9 @@ class RamCache(BaseCache):
 
   def expireOldCacheEntries(self, forceCheck = False):
     now = time.time()
-    if forceCheck or (now > (self._last_cache_expire_check_at + self.cache_expire_check_interval)):
+    if forceCheck or (now > self._next_cache_expire_check_at):
       ## time to check for expired cache items
-      self._last_cache_expire_check_at = now
+      self._next_cache_expire_check_at = now + self.cache_expire_check_interval
       cache = self.getCacheStorage()        
       for key, value in cache.items():
         if value.isExpired():

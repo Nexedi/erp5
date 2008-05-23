@@ -201,9 +201,9 @@ class SQLCache(BaseCache):
             
   def expireOldCacheEntries(self, forceCheck = False):
     now = time.time()
-    if forceCheck or (now > (self._last_cache_expire_check_at + self.cache_expire_check_interval)):
+    if forceCheck or (now > self._next_cache_expire_check_at):
       ## time to check for expired cache items
-      self._last_cache_expire_check_at = now
+      self._next_cache_expire_check_at = now + self.cache_expire_check_interval
       my_query = self.delete_expired_keys_sql %(self._db_cache_table_name, now)
       self.execSQLQuery(my_query)
 

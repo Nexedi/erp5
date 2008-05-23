@@ -38,8 +38,7 @@ class CachedMethodError(Exception):
 class CacheEntry(object):
   """ Cachable entry.  Used as a wrapper around real values stored in cache.
   value
-  cache_duration
-  stored_at
+  expires_at
   cache_hits
   calculation_time
   TODO: Based on above data we can have a different invalidation policy
@@ -47,22 +46,16 @@ class CacheEntry(object):
     
   def __init__(self, value, cache_duration=None, calculation_time=0):
     self.value = value
-    self.cache_duration = cache_duration
-    self.stored_at = int(time.time())
+    if cache_duration in (None, 0):
+      self.expires_at = None
+    else:
+      self.expires_at = time.time() + cache_duration
     self.cache_hits = 0
     self.calculation_time = calculation_time
 
-       
   def isExpired(self):
     """ check cache entry for expiration """
-    if self.cache_duration is None or self.cache_duration==0:
-      ## cache entry can stay in cache forever until zope restarts
-      return False
-    now = int(time.time())
-    if now > (self.stored_at + int(self.cache_duration)):
-      return True
-    else:
-      return False
+    return self.expires_at < time.time() or self.expires_at is None
     
   def markCacheHit(self, delta=1):
     """ mark a read to this cache entry """
@@ -81,7 +74,7 @@ class BaseCache(object):
   cache_expire_check_interval = 60
     
   def __init__(self, params={}):
-    self._last_cache_expire_check_at = time.time()
+    self._next_cache_expire_check_at = time.time()
     self._cache_hits = 0
     self._cache_misses = 0
         
