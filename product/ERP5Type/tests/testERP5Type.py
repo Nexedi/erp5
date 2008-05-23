@@ -2095,6 +2095,133 @@ class TestPropertySheet:
       finally:
         removeZODBPythonScript(script_container, script_id)
 
+    def test_DefaultSecurityOnAccessors(self):
+      # Test accessors are protected correctly
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'string',
+                        'mode':       'w', }''')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+
+      self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
+      self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
+      
+      # setter is protected by default with modify portal content
+      obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
+      self.assertFalse(guarded_hasattr(obj, 'setFooBar'))
+      self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
+      
+      # getter is protected with Access content information
+      obj.manage_permission(Permissions.ModifyPortalContent, ['Manager'], 1)
+      obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
+      self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
+      self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
+
+    def test_DefaultSecurityOnListAccessors(self):
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
+      # Test list accessors are protected correctly
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'lines',
+                        'mode':       'w', }''')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      self.assertTrue(guarded_hasattr(obj, 'setFooBarList'))
+      self.assertTrue(guarded_hasattr(obj, 'getFooBarList'))
+      
+      # setter is protected by default with modify portal content
+      obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
+      self.assertFalse(guarded_hasattr(obj, 'setFooBarList'))
+      self.assertTrue(guarded_hasattr(obj, 'getFooBarList'))
+      
+      # getter is protected with Access content information
+      obj.manage_permission(Permissions.ModifyPortalContent, ['Manager'], 1)
+      obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
+      self.assertTrue(guarded_hasattr(obj, 'setFooBarList'))
+      self.assertFalse(guarded_hasattr(obj, 'getFooBarList'))
+
+    def test_DefaultSecurityOnCategoryAccessors(self):
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+      # Test category accessors are protected correctly
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      self.assertTrue(guarded_hasattr(obj, 'setRegion'))
+      self.assertTrue(guarded_hasattr(obj, 'setRegionValue'))
+      self.assertTrue(guarded_hasattr(obj, 'setRegionList'))
+      self.assertTrue(guarded_hasattr(obj, 'setRegionValueList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegion'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionValue'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionValueList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionRelatedValueList'))
+      # setter is protected by default with modify portal content
+      obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
+      self.assertFalse(guarded_hasattr(obj, 'setRegion'))
+      self.assertFalse(guarded_hasattr(obj, 'setRegionValue'))
+      self.assertFalse(guarded_hasattr(obj, 'setRegionList'))
+      self.assertFalse(guarded_hasattr(obj, 'setRegionValueList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegion'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionValue'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionValueList'))
+      self.assertTrue(guarded_hasattr(obj, 'getRegionRelatedValueList'))
+      # getter is protected with Access content information
+      obj.manage_permission(Permissions.ModifyPortalContent, ['Manager'], 1)
+      obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
+      self.assertTrue(guarded_hasattr(obj, 'setRegion'))
+      self.assertTrue(guarded_hasattr(obj, 'setRegionValue'))
+      self.assertTrue(guarded_hasattr(obj, 'setRegionList'))
+      self.assertTrue(guarded_hasattr(obj, 'setRegionValueList'))
+      self.assertFalse(guarded_hasattr(obj, 'getRegion'))
+      self.assertFalse(guarded_hasattr(obj, 'getRegionValue'))
+      self.assertFalse(guarded_hasattr(obj, 'getRegionList'))
+      self.assertFalse(guarded_hasattr(obj, 'getRegionValueList'))
+      self.assertFalse(guarded_hasattr(obj, 'getRegionRelatedValueList'))
+
+    def test_PropertySheetSecurityOnAccessors(self):
+      try:
+        from ZODB.Transaction import Transaction
+        return
+        # Zope 2.7 do not test
+      except ImportError:
+        pass
+
+      # Test accessors are protected correctly when you specify the permission
+      # in the property sheet.
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'write_permission' : 'Set own password',
+                        'read_permission'  : 'Manage users',
+                        'type':       'string',
+                        'mode':       'w', }''')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
+      self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
+      
+      obj.manage_permission('Set own password', [], 0)
+      self.assertFalse(guarded_hasattr(obj, 'setFooBar'))
+      self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
+      
+      obj.manage_permission('Set own password', ['Manager'], 1)
+      obj.manage_permission('Manage users', [], 0)
+      self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
+      self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
 
 def test_suite():
   suite = unittest.TestSuite()
