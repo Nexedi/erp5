@@ -90,6 +90,7 @@
             <value>
               <tuple>
                 <string>resource</string>
+                <string>product</string>
               </tuple>
             </value>
         </item>
