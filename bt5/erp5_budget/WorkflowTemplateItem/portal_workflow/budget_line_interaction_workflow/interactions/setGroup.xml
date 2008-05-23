@@ -59,16 +59,13 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>setGroup</string>
-                <string>_setGroup</string>
-                <string>setGroupValue</string>
-                <string>_setGroupValue</string>
-                <string>setGroupList</string>
-                <string>_setGroupList</string>
-                <string>setGroupValueList</string>
-                <string>_setGroupValueList</string>
+                <string>_set.*</string>
               </list>
             </value>
+        </item>
+        <item>
+            <key> <string>once_per_transaction</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
