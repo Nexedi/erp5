@@ -36,6 +36,7 @@ from zLOG import LOG
 
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.PsycoWrapper import psyco
+from AccessControl.ImplPython import rolesForPermissionOn
 
 # Creation of default constructor
 class func_code: pass
@@ -193,3 +194,30 @@ class Tester(Method):
 
     def __call__(self, instance, *args, **kw):
       return getattr(aq_base(instance), self._storage_id, None) not in self._null
+
+try:
+    from ZODB.Transaction import Transaction
+    # Zope 2.7 do not patch
+except ImportError:
+    # Zope 2.8, patch
+    class __roles__:
+      @staticmethod
+      def rolesForPermissionOn(ob):
+        roles = getattr(ob.im_self, '%s__roles__' % ob.__name__, None)
+        if roles is None:
+            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
+                                        '_Modify_portal_content_Permission')
+        else:
+            return roles        
+    Setter.__roles__ = __roles__
+
+    class __roles__:
+      @staticmethod
+      def rolesForPermissionOn(ob):
+        roles = getattr(ob.im_self, '%s__roles__' % ob.__name__, None)
+        if roles is None:
+            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
+                                        '_Access_contents_information_Permission')
+        else:
+            return roles        
+    Getter.__roles__ = __roles__
