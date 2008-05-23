@@ -723,7 +723,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           # This condition tells which object should acquire 
           # from their parent.
           # XXX Hardcode _View_Permission for a performance point of view
-          if getattr(aq_base(document_object), '_View_Permission', ACQUIRE_PERMISSION_VALUE) == ACQUIRE_PERMISSION_VALUE:
+          if getattr(aq_base(document_object), '_View_Permission', ACQUIRE_PERMISSION_VALUE) == ACQUIRE_PERMISSION_VALUE\
+             and document_object._getAcquireLocalRoles():
             document_object = document_object.aq_parent
             is_acquired = 1
           else:
