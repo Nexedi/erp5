@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This script is a sample script skeleton (part of erp5_web)\n
   which can be used to create user (Person object) \n
 \n
@@ -98,7 +100,11 @@ person_module = context.getPortalObject().person_module\n
 person = person_module.newContent(portal_type = \'Person\', \n
                                   **kw)\n
 person.validate()\n
-person.immediateReindexObject()\n
+# do not immediate reindex object\n
+# this means that when creating an account the new one will *NOT*\n
+# be available immediately and we should consider sending two email to user\n
+# that 1) his account will be created and when created 2)-> send account info\n
+#person.immediateReindexObject()\n
 \n
 # Create default career\n
 career = person.newContent(portal_type = \'Career\',\n
@@ -119,7 +125,9 @@ website = context.getWebSiteValue()\n
 return website.Base_redirect(\'view\', \n
                              keep_items = dict(portal_status_message = msg,\n
                                                editable_mode = 0))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
