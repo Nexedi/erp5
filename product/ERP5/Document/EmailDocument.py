@@ -264,8 +264,15 @@ class EmailDocument(File, TextDocument):
     html_result = None
     for part in self._getMessage().walk():
       if part.get_content_type() == 'text/plain' and not text_result and not part.is_multipart():
-        text_result = part.get_payload(decode=1)
+        part_encoding = part.get_content_charset()
+        if part_encoding != 'utf-8':
+          text_result = part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
+        else:
+          text_result = part.get_payload(decode=1)
       elif part.get_content_type() == 'text/html' and not html_result and not part.is_multipart():
+        part_encoding = part.get_content_charset()
+        if part_encoding != 'utf-8':
+          return part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
         return part.get_payload(decode=1)
     return text_result
 
