@@ -41,10 +41,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>AccessContentsInformation</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
   </permission>
@@ -348,6 +344,9 @@
    <name>Add portal topics</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Approve draft changes</name>
+  </permission>
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
@@ -454,10 +453,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change user folder</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignee</role>
    <role>Assignor</role>
@@ -544,6 +539,9 @@
    <name>Manage Access Rules</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage Five local sites</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage Groups</name>
    <role>Manager</role>
@@ -574,10 +572,6 @@
   </permission>
   <permission type='tuple'>
    <name>Manage ZCatalogIndex Entries</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Manage extensions</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
