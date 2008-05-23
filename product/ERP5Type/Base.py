@@ -334,6 +334,7 @@ class PropertyHolder:
         else:
           accessor.registerTransitionAlways(ptype, wf_id, tr_id)
     setattr(self, id, accessor)
+    return accessor
 
   def registerAccessor(self, id, key, accessor_class, accessor_args):
     """
@@ -864,10 +865,8 @@ class Base( CopyContainer,
     try:
       property_holder = Base.aq_portal_type[aq_key]
       accessor = getattr(property_holder, id, None)
-      if type(accessor) is tuple:
-        if id not in RESERVED_TUPLE_PROPERTY:
-          property_holder.createAccessor(id)
-          accessor = getattr(property_holder, id, None)
+      if type(accessor) is tuple and id not in RESERVED_TUPLE_PROPERTY:
+        accessor = property_holder.createAccessor(id)
       return accessor
     except KeyError:
       pass
