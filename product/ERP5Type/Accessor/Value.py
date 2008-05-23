@@ -28,11 +28,11 @@
 
 import warnings
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 
-class SetSetter(Method):
+class SetSetter(BaseSetter):
     """
       Sets a category value through a provided value (List mode)
     """
@@ -114,7 +114,7 @@ class DefaultSetter(SetSetter):
 
     psyco.bind(__call__)
 
-class DefaultGetter(Method):
+class DefaultGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -142,7 +142,7 @@ class DefaultGetter(Method):
 
 Getter = DefaultGetter
 
-class ListGetter(Method):
+class ListGetter(BaseGetter):
     """
       Gets a list of reference objects
     """
@@ -181,7 +181,7 @@ class SetGetter(ListGetter):
       return result_set
 
 
-class DefaultTitleGetter(Method):
+class DefaultTitleGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -207,7 +207,7 @@ class DefaultTitleGetter(Method):
 
     psyco.bind(__call__)
 
-class TitleListGetter(Method):
+class TitleListGetter(BaseGetter):
     """
       Gets a list of reference objects
     """
@@ -240,7 +240,7 @@ class TitleSetGetter(TitleListGetter):
       return result_set
 
 
-class DefaultTranslatedTitleGetter(Method):
+class DefaultTranslatedTitleGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -270,7 +270,7 @@ class DefaultTranslatedTitleGetter(Method):
 
     psyco.bind(__call__)
 
-class TranslatedTitleListGetter(Method):
+class TranslatedTitleListGetter(BaseGetter):
     """
       Gets a list of reference objects
     """
@@ -309,7 +309,7 @@ class TranslatedTitleSetGetter(TranslatedTitleListGetter):
       return result_set
 
 
-class DefaultReferenceGetter(Method):
+class DefaultReferenceGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -339,7 +339,7 @@ class DefaultReferenceGetter(Method):
 
     psyco.bind(__call__)
 
-class ReferenceListGetter(Method):
+class ReferenceListGetter(BaseGetter):
     """
       Gets a list of reference objects
     """
@@ -378,7 +378,7 @@ class ReferenceSetGetter(ReferenceListGetter):
       return result_set
 
 
-class DefaultUidGetter(Method):
+class DefaultUidGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -411,7 +411,7 @@ class DefaultUidGetter(Method):
 
 UidGetter = DefaultUidGetter
 
-class UidListGetter(Method):
+class UidListGetter(BaseGetter):
     """
       Gets a list of reference objects uid
     """
@@ -450,7 +450,7 @@ class UidSetGetter(UidListGetter):
       return result_set
 
 
-class UidSetSetter(Method):
+class UidSetSetter(BaseSetter):
     """
       Sets a category from the uid of the object
     """
@@ -525,7 +525,7 @@ class UidDefaultSetter(UidSetSetter):
         instance.reindexObject()
       return (instance, )
 
-class DefaultIdGetter(Method):
+class DefaultIdGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -557,7 +557,7 @@ class DefaultIdGetter(Method):
 
 IdGetter = DefaultIdGetter
 
-class DefaultTitleOrIdGetter(Method):
+class DefaultTitleOrIdGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -589,7 +589,7 @@ class DefaultTitleOrIdGetter(Method):
 
 TitleOrIdGetter = DefaultTitleOrIdGetter
 
-class DefaultLogicalPathGetter(Method):
+class DefaultLogicalPathGetter(BaseGetter):
     """
       Gets a default logical path object
     """
@@ -621,7 +621,7 @@ class DefaultLogicalPathGetter(Method):
 
 LogicalPathGetter = DefaultLogicalPathGetter
 
-class IdListGetter(Method):
+class IdListGetter(BaseGetter):
     """
       Gets a list of reference objects uid
     """
@@ -660,7 +660,7 @@ class IdSetGetter(IdListGetter):
       return result_set
 
 
-class LogicalPathListGetter(Method):
+class LogicalPathListGetter(BaseGetter):
     """
       Gets a list of logical path
     """
@@ -697,7 +697,7 @@ class LogicalPathSetGetter(LogicalPathListGetter):
       return result_set
 
 
-class DefaultPropertyGetter(Method):
+class DefaultPropertyGetter(BaseGetter):
     """
       Gets a default reference object
     """
@@ -730,7 +730,7 @@ class DefaultPropertyGetter(Method):
 
 PropertyGetter = DefaultPropertyGetter
 
-class PropertyListGetter(Method):
+class PropertyListGetter(BaseGetter):
     """
       Gets a list of reference objects uid
     """

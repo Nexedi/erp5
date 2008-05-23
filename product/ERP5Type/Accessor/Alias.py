@@ -26,12 +26,12 @@
 #
 ##############################################################################
 
-from Accessor import Accessor as Method
+from Base import Setter
 
 # Creation of default constructor
 class func_code: pass
 
-class Reindex(Method):
+class Reindex(Setter):
     """
       Calls a given accessor and reindexes the object.
 

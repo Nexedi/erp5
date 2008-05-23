@@ -27,12 +27,12 @@
 ##############################################################################
 
 from Base import func_code, type_definition, list_types, \
-                 ATTRIBUTE_PREFIX, Method
+                 ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
 from zLOG import WARNING
 
-class DefaultGetter(Method):
+class DefaultGetter(BaseGetter):
   """
   Gets a default reference object
   """
@@ -72,7 +72,7 @@ class DefaultGetter(Method):
 
 Getter = DefaultGetter
 
-class ListGetter(Method):
+class ListGetter(BaseGetter):
   """
   Gets a list of reference objects
   """
@@ -119,7 +119,7 @@ class SetGetter(ListGetter):
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
-class DefaultIdGetter(Method):
+class DefaultIdGetter(BaseGetter):
   """
   Gets a default reference object
   """
@@ -155,7 +155,7 @@ class DefaultIdGetter(Method):
 
 IdGetter = DefaultIdGetter
 
-class IdListGetter(Method):
+class IdListGetter(BaseGetter):
     """
     Gets a list of reference objects
     """
@@ -198,7 +198,7 @@ class IdSetGetter(IdListGetter):
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
-class DefaultTitleGetter(Method):
+class DefaultTitleGetter(BaseGetter):
   """
   Gets a default reference object
   """
@@ -234,7 +234,7 @@ class DefaultTitleGetter(Method):
 
 TitleGetter = DefaultTitleGetter
 
-class TitleListGetter(Method):
+class TitleListGetter(BaseGetter):
   """
   Gets a list of reference objects
   """
@@ -277,7 +277,7 @@ class TitleSetGetter(TitleListGetter):
     result_set = dict([(x, 0) for x in result_list]).keys()
     return result_set
 
-class DefaultPropertyGetter(Method):
+class DefaultPropertyGetter(BaseGetter):
   """
   Gets a default reference object
   """
@@ -312,7 +312,7 @@ class DefaultPropertyGetter(Method):
 
 PropertyGetter = DefaultPropertyGetter
 
-class PropertyListGetter(Method):
+class PropertyListGetter(BaseGetter):
   """
   Gets a list of reference objects
   """

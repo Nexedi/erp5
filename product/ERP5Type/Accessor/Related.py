@@ -26,13 +26,13 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
 from zLOG import WARNING
 
 
-class DefaultGetter(Method):
+class DefaultGetter(BaseGetter):
   """
   Gets a default reference object
   """
@@ -65,7 +65,7 @@ class DefaultGetter(Method):
 
 Getter = DefaultGetter
 
-class ListGetter(Method):
+class ListGetter(BaseGetter):
   """
   Gets a list of reference objects
   """

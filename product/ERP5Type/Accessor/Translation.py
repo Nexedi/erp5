@@ -26,13 +26,13 @@
 #
 ##############################################################################
 
-from Base import func_code, ATTRIBUTE_PREFIX, Method, evaluateTales
+from Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 
-class TranslatedPropertyGetter(Method):
+class TranslatedPropertyGetter(BaseGetter):
   """
   Get the translated property
   """
@@ -65,7 +65,7 @@ class TranslatedPropertyGetter(Method):
   psyco.bind(__call__)
 
 
-class PropertyTranslationDomainGetter(Method):
+class PropertyTranslationDomainGetter(BaseGetter):
   """
   Get the translation domain
   """

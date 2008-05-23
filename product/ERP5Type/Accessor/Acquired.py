@@ -26,10 +26,10 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter
 from Products.ERP5Type.PsycoWrapper import psyco
 
-class DefaultGetter(Method):
+class DefaultGetter(BaseGetter):
     """
       Gets the default reference of a relation
     """
@@ -106,7 +106,7 @@ class DefaultGetter(Method):
 
 Getter = DefaultGetter
 
-class ListGetter(Method):
+class ListGetter(BaseGetter):
     """
       Gets an attribute value
     """

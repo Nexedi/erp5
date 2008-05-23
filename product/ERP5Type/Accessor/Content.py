@@ -37,7 +37,7 @@ DefaultValueSetter = Base.Setter
 
 from zLOG import LOG
 
-class ValueGetter(Method):
+class ValueGetter(Base.Getter):
     """
       Gets an attribute value. A default value can be
       provided if needed
@@ -87,7 +87,7 @@ class ValueGetter(Method):
 
     psyco.bind(__call__)
 
-class ValueListGetter(Method):
+class ValueListGetter(Base.Getter):
     """
       Gets an attribute value. A default value can be
       provided if needed
@@ -123,7 +123,7 @@ class ValueListGetter(Method):
 
 DefaultValueGetter = ValueGetter
 
-class Getter(Method):
+class Getter(Base.Getter):
     """
       Gets an attribute value. A default value can be
       provided if needed
@@ -169,7 +169,7 @@ class Getter(Method):
 
     psyco.bind(__call__)
 
-class ListGetter(Method):
+class ListGetter(Base.Getter):
     """
       Gets an attribute value. A default value can be
       provided if needed

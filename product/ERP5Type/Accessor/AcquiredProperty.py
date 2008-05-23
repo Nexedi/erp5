@@ -28,11 +28,11 @@
 
 import warnings
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
 
-class Getter(Method):
+class Getter(BaseGetter):
     """
       Gets the default reference of a relation
     """
@@ -108,7 +108,7 @@ class Getter(Method):
 
 DefaultGetter = Getter
 
-class Setter(Method):
+class Setter(BaseSetter):
     """
       Sets a value of a property wich can be acquired.
       Since we set here the property, we must not call acquisition.

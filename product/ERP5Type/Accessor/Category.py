@@ -28,11 +28,11 @@
 
 import warnings
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 
-class ListSetter(Method):
+class ListSetter(BaseSetter):
     """
       Sets a category
     """
@@ -68,7 +68,7 @@ class ListSetter(Method):
 
 Setter = ListSetter
 
-class DefaultSetter(Method):
+class DefaultSetter(BaseSetter):
     """
       Sets a category
     """
@@ -101,7 +101,7 @@ class DefaultSetter(Method):
         instance.reindexObject()
       return (instance, )
 
-class SetSetter(Method):
+class SetSetter(BaseSetter):
     """
       Sets a set of category
     """
@@ -147,7 +147,7 @@ class SetSetter(Method):
       return (instance, )
 
 
-class DefaultGetter(Method):
+class DefaultGetter(BaseGetter):
     """
       Gets a default category value
     """
@@ -178,7 +178,7 @@ class DefaultGetter(Method):
                                                       checked_permission=kw.get('checked_permission', None))
     psyco.bind(__call__)
 
-class ListGetter(Method):
+class ListGetter(BaseGetter):
     """
       Gets a category value list
     """
@@ -214,7 +214,7 @@ class SetGetter(ListGetter):
 
 # ItemList is outdated XXX -> ItemList
 
-class ItemListGetter(Method):
+class ItemListGetter(BaseGetter):
     """
       Gets a category value list
     """

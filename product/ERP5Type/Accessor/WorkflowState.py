@@ -26,14 +26,13 @@
 #
 ##############################################################################
 
-from Accessor import Accessor as Method
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.PsycoWrapper import psyco
-
+from Base import Getter as BaseGetter, Setter as BaseSetter
 # Creation of default constructor
 class func_code: pass
 
-class Getter(Method):
+class Getter(BaseGetter):
     """
       Gets an attribute value. A default value can be
       provided if needed
@@ -59,7 +58,7 @@ class Getter(Method):
 
     psyco.bind(__call__)
 
-class TitleGetter(Method):
+class TitleGetter(BaseGetter):
     """
       Gets the title of the current state
     """

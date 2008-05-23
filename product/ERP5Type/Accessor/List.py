@@ -38,7 +38,7 @@ from types import ListType, TupleType
 
 from zLOG import LOG
 
-class DefaultSetter(Method):
+class DefaultSetter(Base.Setter):
     """
       Sets the default attribute in a list
     """
@@ -126,7 +126,7 @@ class ListSetter(DefaultSetter):
 
 Setter = ListSetter
 
-class SetSetter(Method):
+class SetSetter(Base.Setter):
     """
       Sets the default attribute in a list
     """
@@ -198,7 +198,7 @@ class SetSetter(Method):
         method(*args, **kw)
         instance.reindexObject()
 
-class DefaultGetter(Method):
+class DefaultGetter(Base.Getter):
     """
       Gets the first item of a list
     """
@@ -250,7 +250,7 @@ class DefaultGetter(Method):
 
 Getter = DefaultGetter
 
-class ListGetter(Method):
+class ListGetter(Base.Getter):
     """
       Gets an attribute value. A default value can be
       provided if needed
