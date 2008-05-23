@@ -398,7 +398,7 @@ class PropertyHolder:
       dangerous if classes use another default
       security.
     """
-    if permission != Permissions.AccessContentsInformation:
+    if permission not in (Permissions.AccessContentsInformation, Permissions.ModifyPortalContent):
       self.security.declareProtected(permission, accessor_name)
 
   # Inspection methods
