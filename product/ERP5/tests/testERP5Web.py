@@ -213,6 +213,9 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     website = portal.web_site_module[self.website_id]
     website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
     
+    get_transaction().commit()
+    self.tic()
+    
     # find person object by reference
     person = website.ERP5Site_getAuthenticatedMemberPersonValue(kw['reference'])
     self.assertEquals(person.getReference(), kw['reference'])
