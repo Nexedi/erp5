@@ -72,10 +72,7 @@
 # Set Web Site layout to default one\n
 context.setContainerLayout(\'erp5_web_layout\')\n
 context.setContentLayout(\'erp5_web_content_layout\')\n
-\n
-# Set default webmaster to current user\n
-# user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
-# context.setWebmaster(user_id)\n
+context.setLayoutConfigurationFormId(\'WebSection_viewDefaultThemeConfiguration\')\n
 </string> </value>
         </item>
         <item>

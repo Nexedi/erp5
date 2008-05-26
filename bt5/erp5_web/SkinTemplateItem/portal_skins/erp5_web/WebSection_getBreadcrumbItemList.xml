@@ -119,7 +119,7 @@
  folder. The later is recommended for hosting\n
  multiple sites on a single ERP5Site instance.\n
 """\n
-from ZODB.POSException import ConflictError\n
+from zExceptions import Unauthorized\n
 if document is None: document = context\n
 crumb_list = []\n
 \n
@@ -133,9 +133,7 @@ for i in range(0, len(chain_list)):\n
                      crumb.title\n
                    , crumb\n
                    ))\n
-  except ConflictError:\n
-    raise\n
-  except:\n
+  except Unauthorized:\n
     # We should ignore any item in the chain which raises \n
     # a security exception. We use a catchall except here\n
     # because there is no way to import Unauthorized permission\n
@@ -198,8 +196,8 @@ return crumb_list\n
                         <value>
                           <tuple>
                             <string>document</string>
-                            <string>ZODB.POSException</string>
-                            <string>ConflictError</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
                             <string>None</string>
                             <string>context</string>
                             <string>crumb_list</string>
