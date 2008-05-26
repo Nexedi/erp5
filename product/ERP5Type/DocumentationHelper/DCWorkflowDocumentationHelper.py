@@ -254,7 +254,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     variable_list = []
     for variable in  self.getInstance().variables.objectValues():
-      variable_list.append((variable.getId(), variable.title, variable.__dict__["description"]))
+      variable_list.append((variable.getId(), variable.title, variable.__dict__.get("description",'')))
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
