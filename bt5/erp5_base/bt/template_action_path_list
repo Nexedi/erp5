@@ -41,6 +41,7 @@ Person | person_detailed_report
 Person | report
 Person | terminate_career
 Person | view
+Preference | base_preference
 Query Module | view
 Query | view
 Role Definition | view
