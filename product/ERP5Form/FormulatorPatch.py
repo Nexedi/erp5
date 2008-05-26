@@ -29,6 +29,7 @@ from Products.Formulator import TALESField
 from Products.Formulator import MethodField
 from ProxyField import ProxyField
 from AccessControl import ClassSecurityInfo
+from DocumentTemplate.ustr import ustr
 from cgi import escape
 import types
 from zLOG import LOG
@@ -638,7 +639,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
 
       if item_value == value and not selected_found:
-          rendered_item = self.render_selected_item(escape(str(item_text))\
+          rendered_item = self.render_selected_item(escape(ustr(item_text))\
                                                     .replace(' ', '&nbsp;'),
                                                     item_value,
                                                     key,
@@ -646,7 +647,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
                                                     extra_item)
           selected_found = 1
       else:
-          rendered_item = self.render_item(escape(str(item_text))\
+          rendered_item = self.render_item(escape(ustr(item_text))\
                                             .replace(' ', '&nbsp;'),
                                             item_value,
                                             key,
@@ -695,8 +696,8 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
 
       if item_value in value:
           rendered_item = self.render_selected_item(
-              escape(str(item_text)).replace(' ', '&nbsp;'),
-              escape(str(item_value)),
+              escape(ustr(item_text)).replace(' ', '&nbsp;'),
+              escape(ustr(item_value)),
               key,
               css_class,
               extra_item)
@@ -705,8 +706,8 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
           selected_found[index] = 1
       else:
           rendered_item = self.render_item(
-               escape(str(item_text)).replace(' ', '&nbsp;'),
-               escape(str(item_value)),
+               escape(ustr(item_text)).replace(' ', '&nbsp;'),
+               escape(ustr(item_value)),
                key,
                css_class,
                extra_item)
