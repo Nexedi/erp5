@@ -68,14 +68,14 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
     """
     Returns the source code the property sheet
     """
+    from zLOG import LOG, INFO
     source_code = ""
     property_sheet_file = self.getDocumentedObject()
     if property_sheet_file is not None:
       property_sheet_file.seek(0)	    
       source_code = property_sheet_file.read()
-      if hasattr(self.erp5, 'portal_transforms'):	
-        portal_transforms = self.erp5.portal_transforms
-      else:
+      portal_transforms = getattr(self, 'portal_transforms', None)
+      if portal_transforms is not None:
         LOG('DCWorkflowScriptDocumentationHelper', INFO, 
 	  'Transformation Tool is not installed. No convertion of python script to html')	    
         return source_code

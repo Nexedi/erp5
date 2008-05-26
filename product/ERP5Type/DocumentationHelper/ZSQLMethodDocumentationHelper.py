@@ -68,10 +68,10 @@ class ZSQLMethodDocumentationHelper(DocumentationHelper):
     """
     Returns the source code of the documentation helper
     """
+    from zLOG import LOG, INFO
     source_code = self.getDocumentedObject().src
-    if hasattr(self.erp5, 'portal_transforms'):
-      portal_transforms = self.erp5.portal_transforms
-    else:
+    portal_transforms = getattr(self, 'portal_transforms', None)
+    if portal_transforms is None:
       LOG('DCWorkflowScriptDocumentationHelper', INFO,
           'Transformation Tool is not installed. No convertion of text to html')
       return source_code

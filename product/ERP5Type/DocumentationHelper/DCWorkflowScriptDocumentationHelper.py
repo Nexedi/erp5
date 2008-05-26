@@ -84,13 +84,16 @@ class DCWorkflowScriptDocumentationHelper(DocumentationHelper):
     """
     Returns the source code the workflow script
     """
+    from zLOG import LOG, INFO
     source_code = ""
     wf_script = self.getDocumentedObject()
-    if hasattr(wf_script, '__dict__'):
-      if '_body' in wf_script.__dict__.keys():
-        source_code = wf_script.__dict__['_body']
-    if hasattr(self.erp5, 'portal_transforms'):	
-      portal_transforms = self.erp5.portal_transforms
+    source_code = wf_script.document_src()
+    portal_transforms = getattr(self, 'portal_transforms', None)
+    if portal_transforms is not None:
+      REQUEST = getattr(self, 'REQUEST', None)
+      if REQUEST is not None:
+        if REQUEST.get('portal_skin', 'View' ) != 'View':
+	  return source_code	
     else:
       LOG('DCWorkflowScriptDocumentationHelper', INFO, 
 	  'Transformation Tool is not installed. No convertion of python script to html')	    

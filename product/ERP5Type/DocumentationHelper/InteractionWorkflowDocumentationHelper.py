@@ -90,14 +90,14 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getInstance().__dict__["title"]
+    return self.getInstance().title
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
   def getDescription(self):
     """
     Returns the description of the documentation helper
     """
-    return self.getInstance().__dict__["description"]
+    return self.getInstance().description
 
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )

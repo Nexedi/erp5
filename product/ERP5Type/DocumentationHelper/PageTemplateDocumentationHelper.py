@@ -68,10 +68,10 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the source code the script python
     """
+    from zLOG import LOG, INFO
     source_code = self.getDocumentedObject()._text
-    if hasattr(self.erp5, 'portal_transforms'):	
-      portal_transforms = self.erp5.portal_transforms
-    else:
+    portal_transforms = getattr(self, 'portal_transforms', None)
+    if portal_transforms is None:
       LOG('DCWorkflowScriptDocumentationHelper', INFO, 
 	  'Transformation Tool is not installed. No convertion of python script to html')	    
       return source_code

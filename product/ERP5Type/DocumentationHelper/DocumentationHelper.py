@@ -58,8 +58,8 @@ class DocumentationHelper(Implicit):
 
   def getDocumentedObject(self):
     if self.uri.startswith('portal_classes/temp_instance'):
-      url, method = self.uri.split('#')	   
-      portal_type = url.split('/')[-1] 	  
+      url, method = self.uri.split('#')           
+      portal_type = url.split('/')[-1]           
       temp_folder = self.getPortalObject().portal_classes.newContent(id='temp_instance', portal_type='Folder', temp_object=1)
       temp_object = temp_folder.newContent(id=portal_type, portal_type=portal_type, temp_object=1)
       if '/' not in method:
@@ -76,11 +76,11 @@ class DocumentationHelper(Implicit):
       zope_property_sheet = instance_home + '/PropertySheet' 
       list_propertysheets = [zope_property_sheet,]
       for path in list_path:
-	full_path = instance_home+'/Products/'+path      
+        full_path = instance_home+'/Products/'+path      
         if os.path.isdir(full_path) and os.path.exists(full_path+'/PropertySheet'): 
           list_propertysheets.append(full_path+'/PropertySheet')
       for propertysheet_directory in list_propertysheets:
-	if os.path.exists(propertysheet_directory+'/'+file_name):	      
+        if os.path.exists(propertysheet_directory+'/'+file_name):              
           file_url = propertysheet_directory+'/'+file_name
       documented_object = open(file_url)
     elif '/' in self.uri and '#' not in self.uri:
@@ -89,20 +89,20 @@ class DocumentationHelper(Implicit):
       try:
         documented_object = self.getPortalObject().portal_categories.resolveCategory(self.uri)
       except:
-	documented_object = None      
+        documented_object = None      
       if documented_object is None:
- 	documented_object = self.getPortalObject().unrestrictedTraverse(self.uri)
+         documented_object = self.getPortalObject().unrestrictedTraverse(self.uri)
     elif '/' in self.uri and '#' in self.uri:
       if '?' in self.uri:
-	base_url, url = self.uri.split('?')
-	type, name = url.split('#')
-	parent_object = self.getPortalObject().unrestrictedTraverse(base_url)
-	object_list = getattr(parent_object, type, None)
-	documented_object = None
-	if object_list is not None:
+        base_url, url = self.uri.split('?')
+        type, name = url.split('#')
+        parent_object = self.getPortalObject().unrestrictedTraverse(base_url)
+        object_list = getattr(parent_object, type, None)
+        documented_object = None
+        if object_list is not None:
           for obj in object_list:
-	    if obj.__name__ == name:
-	      documented_object = obj    
+            if obj.__name__ == name:
+              documented_object = obj    
       else:
         url, method = self.uri.split('#')
         documented_object = self.getPortalObject().unrestrictedTraverse(url)
