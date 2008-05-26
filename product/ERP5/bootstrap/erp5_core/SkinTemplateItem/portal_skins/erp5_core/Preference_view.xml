@@ -89,7 +89,6 @@
                         <string>my_priority</string>
                         <string>my_preferred_section_category</string>
                         <string>my_preferred_section</string>
-                        <string>my_preferred_time_zone</string>
                         <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
