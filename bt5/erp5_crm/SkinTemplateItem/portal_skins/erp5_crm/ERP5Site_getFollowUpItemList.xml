@@ -115,7 +115,7 @@ return map(lambda x:(x.getTitle(), x.getRelativeUrl()), node_list)\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>type_list</string>
                             <string>node_list</string>
                             <string>map</string>

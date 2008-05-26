@@ -6931,7 +6931,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/h323</string>
+                <string>text/h323</string>
               </tuple>
             </value>
         </item>
@@ -7175,7 +7175,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-alchemy</string>
+                <string>chemical/x-alchemy</string>
               </tuple>
             </value>
         </item>
@@ -7219,7 +7219,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-jg</string>
+                <string>image/x-jg</string>
               </tuple>
             </value>
         </item>
@@ -7355,7 +7355,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-ncbi-asn1-spec</string>
+                <string>chemical/x-ncbi-asn1-spec</string>
               </tuple>
             </value>
         </item>
@@ -7400,7 +7400,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-ncbi-asn1-binary</string>
+                <string>chemical/x-ncbi-asn1-binary</string>
               </tuple>
             </value>
         </item>
@@ -7550,7 +7550,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-molconn-Z</string>
+                <string>chemical/x-molconn-Z</string>
               </tuple>
             </value>
         </item>
@@ -7597,7 +7597,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-msdos-program</string>
+                <string>application/x-msdos-program</string>
               </tuple>
             </value>
         </item>
@@ -7745,7 +7745,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-ms-bmp</string>
+                <string>image/x-ms-bmp</string>
               </tuple>
             </value>
         </item>
@@ -7795,7 +7795,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-maker</string>
+                <string>application/x-maker</string>
               </tuple>
             </value>
         </item>
@@ -7839,7 +7839,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-crossfire</string>
+                <string>chemical/x-crossfire</string>
               </tuple>
             </value>
         </item>
@@ -7994,7 +7994,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-chem3d</string>
+                <string>chemical/x-chem3d</string>
               </tuple>
             </value>
         </item>
@@ -8039,7 +8039,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cache</string>
+                <string>chemical/x-cache</string>
               </tuple>
             </value>
         </item>
@@ -8085,7 +8085,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cactvs-binary</string>
+                <string>chemical/x-cactvs-binary</string>
               </tuple>
             </value>
         </item>
@@ -8129,7 +8129,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.ms-pki.seccat</string>
+                <string>application/vnd.ms-pki.seccat</string>
               </tuple>
             </value>
         </item>
@@ -8173,7 +8173,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-cdf</string>
+                <string>application/x-cdf</string>
               </tuple>
             </value>
         </item>
@@ -8217,7 +8217,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-coreldraw</string>
+                <string>image/x-coreldraw</string>
               </tuple>
             </value>
         </item>
@@ -8261,7 +8261,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-coreldrawtemplate</string>
+                <string>image/x-coreldrawtemplate</string>
               </tuple>
             </value>
         </item>
@@ -8305,7 +8305,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cdx</string>
+                <string>chemical/x-cdx</string>
               </tuple>
             </value>
         </item>
@@ -8349,7 +8349,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.cinderella</string>
+                <string>application/vnd.cinderella</string>
               </tuple>
             </value>
         </item>
@@ -8394,7 +8394,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cxf</string>
+                <string>chemical/x-cxf</string>
               </tuple>
             </value>
         </item>
@@ -8438,7 +8438,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cerius</string>
+                <string>chemical/x-cerius</string>
               </tuple>
             </value>
         </item>
@@ -8482,7 +8482,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-chemdraw</string>
+                <string>chemical/x-chemdraw</string>
               </tuple>
             </value>
         </item>
@@ -8578,7 +8578,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cif</string>
+                <string>chemical/x-cif</string>
               </tuple>
             </value>
         </item>
@@ -8622,7 +8622,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/java-vm</string>
+                <string>application/java-vm</string>
               </tuple>
             </value>
         </item>
@@ -8724,7 +8724,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cmdf</string>
+                <string>chemical/x-cmdf</string>
               </tuple>
             </value>
         </item>
@@ -8768,7 +8768,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cml</string>
+                <string>chemical/x-cml</string>
               </tuple>
             </value>
         </item>
@@ -8812,7 +8812,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.rim.cod</string>
+                <string>application/vnd.rim.cod</string>
               </tuple>
             </value>
         </item>
@@ -8856,7 +8856,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-compass</string>
+                <string>chemical/x-compass</string>
               </tuple>
             </value>
         </item>
@@ -8952,7 +8952,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-corelphotopaint</string>
+                <string>image/x-corelphotopaint</string>
               </tuple>
             </value>
         </item>
@@ -8996,7 +8996,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-pkcs7-crl</string>
+                <string>application/x-pkcs7-crl</string>
               </tuple>
             </value>
         </item>
@@ -9096,7 +9096,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-cache-csf</string>
+                <string>chemical/x-cache-csf</string>
               </tuple>
             </value>
         </item>
@@ -9140,7 +9140,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-csh</string>
+                <string>text/x-csh</string>
               </tuple>
             </value>
         </item>
@@ -9185,7 +9185,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-csml</string>
+                <string>chemical/x-csml</string>
               </tuple>
             </value>
         </item>
@@ -9282,7 +9282,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/comma-separated-values</string>
+                <string>text/comma-separated-values</string>
               </tuple>
             </value>
         </item>
@@ -9326,7 +9326,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-ctx</string>
+                <string>chemical/x-ctx</string>
               </tuple>
             </value>
         </item>
@@ -9370,7 +9370,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/cu-seeme</string>
+                <string>application/cu-seeme</string>
               </tuple>
             </value>
         </item>
@@ -9414,7 +9414,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-gaussian-cube</string>
+                <string>chemical/x-gaussian-cube</string>
               </tuple>
             </value>
         </item>
@@ -9514,7 +9514,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mopac-input</string>
+                <string>chemical/x-mopac-input</string>
               </tuple>
             </value>
         </item>
@@ -9560,7 +9560,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-director</string>
+                <string>application/x-director</string>
               </tuple>
             </value>
         </item>
@@ -9605,7 +9605,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-debian-package</string>
+                <string>application/x-debian-package</string>
               </tuple>
             </value>
         </item>
@@ -9650,7 +9650,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/dv</string>
+                <string>video/dv</string>
               </tuple>
             </value>
         </item>
@@ -9749,7 +9749,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/dl</string>
+                <string>video/dl</string>
               </tuple>
             </value>
         </item>
@@ -9793,7 +9793,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-apple-diskimage</string>
+                <string>application/x-apple-diskimage</string>
               </tuple>
             </value>
         </item>
@@ -9837,7 +9837,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-dms</string>
+                <string>application/x-dms</string>
               </tuple>
             </value>
         </item>
@@ -9977,7 +9977,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-jcamp-dx</string>
+                <string>chemical/x-jcamp-dx</string>
               </tuple>
             </value>
         </item>
@@ -10022,7 +10022,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-embl-dl-nucleotide</string>
+                <string>chemical/x-embl-dl-nucleotide</string>
               </tuple>
             </value>
         </item>
@@ -10120,7 +10120,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-pdb</string>
+                <string>chemical/x-pdb</string>
               </tuple>
             </value>
         </item>
@@ -10269,7 +10269,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-gaussian-checkpoint</string>
+                <string>chemical/x-gaussian-checkpoint</string>
               </tuple>
             </value>
         </item>
@@ -10313,7 +10313,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-xfig</string>
+                <string>application/x-xfig</string>
               </tuple>
             </value>
         </item>
@@ -10357,7 +10357,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-flac</string>
+                <string>application/x-flac</string>
               </tuple>
             </value>
         </item>
@@ -10401,7 +10401,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/fli</string>
+                <string>video/fli</string>
               </tuple>
             </value>
         </item>
@@ -10445,7 +10445,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-gaussian-log</string>
+                <string>chemical/x-gaussian-log</string>
               </tuple>
             </value>
         </item>
@@ -10491,7 +10491,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-gamess-input</string>
+                <string>chemical/x-gamess-input</string>
               </tuple>
             </value>
         </item>
@@ -10537,7 +10537,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-gaussian-input</string>
+                <string>chemical/x-gaussian-input</string>
               </tuple>
             </value>
         </item>
@@ -10581,7 +10581,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-pcs-gcd</string>
+                <string>text/x-pcs-gcd</string>
               </tuple>
             </value>
         </item>
@@ -10625,7 +10625,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-graphing-calculator</string>
+                <string>application/x-graphing-calculator</string>
               </tuple>
             </value>
         </item>
@@ -10669,7 +10669,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-gcg8-sequence</string>
+                <string>chemical/x-gcg8-sequence</string>
               </tuple>
             </value>
         </item>
@@ -10713,7 +10713,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-genbank</string>
+                <string>chemical/x-genbank</string>
               </tuple>
             </value>
         </item>
@@ -10861,7 +10861,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/gl</string>
+                <string>video/gl</string>
               </tuple>
             </value>
         </item>
@@ -10957,7 +10957,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mopac-graph</string>
+                <string>chemical/x-mopac-graph</string>
               </tuple>
             </value>
         </item>
@@ -11005,7 +11005,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-font</string>
+                <string>application/x-font</string>
               </tuple>
             </value>
         </item>
@@ -11049,7 +11049,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>audio/x-gsm</string>
+                <string>audio/x-gsm</string>
               </tuple>
             </value>
         </item>
@@ -11309,7 +11309,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-hin</string>
+                <string>chemical/x-hin</string>
               </tuple>
             </value>
         </item>
@@ -11455,7 +11455,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/hta</string>
+                <string>application/hta</string>
               </tuple>
             </value>
         </item>
@@ -11534,7 +11534,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-ica</string>
+                <string>application/x-ica</string>
               </tuple>
             </value>
         </item>
@@ -11578,7 +11578,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>x-conference/x-cooltalk</string>
+                <string>x-conference/x-cooltalk</string>
               </tuple>
             </value>
         </item>
@@ -11622,7 +11622,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-icon</string>
+                <string>image/x-icon</string>
               </tuple>
             </value>
         </item>
@@ -11775,7 +11775,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>model/iges</string>
+                <string>model/iges</string>
               </tuple>
             </value>
         </item>
@@ -11819,7 +11819,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-iphone</string>
+                <string>application/x-iphone</string>
               </tuple>
             </value>
         </item>
@@ -11864,7 +11864,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-internet-signup</string>
+                <string>application/x-internet-signup</string>
               </tuple>
             </value>
         </item>
@@ -11908,7 +11908,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-iso9660-image</string>
+                <string>application/x-iso9660-image</string>
               </tuple>
             </value>
         </item>
@@ -11953,7 +11953,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-isostar</string>
+                <string>chemical/x-isostar</string>
               </tuple>
             </value>
         </item>
@@ -11997,7 +11997,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/vnd.sun.j2me.app-descriptor</string>
+                <string>text/vnd.sun.j2me.app-descriptor</string>
               </tuple>
             </value>
         </item>
@@ -12041,7 +12041,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/java-archive</string>
+                <string>application/java-archive</string>
               </tuple>
             </value>
         </item>
@@ -12137,7 +12137,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-jmol</string>
+                <string>application/x-jmol</string>
               </tuple>
             </value>
         </item>
@@ -12551,7 +12551,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-kinemage</string>
+                <string>chemical/x-kinemage</string>
               </tuple>
             </value>
         </item>
@@ -12755,7 +12755,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-latex</string>
+                <string>application/x-latex</string>
               </tuple>
             </value>
         </item>
@@ -12905,7 +12905,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/x-la-asf</string>
+                <string>video/x-la-asf</string>
               </tuple>
             </value>
         </item>
@@ -12949,7 +12949,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-lzh</string>
+                <string>application/x-lzh</string>
               </tuple>
             </value>
         </item>
@@ -12993,7 +12993,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-lzx</string>
+                <string>application/x-lzx</string>
               </tuple>
             </value>
         </item>
@@ -13259,7 +13259,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mmcif</string>
+                <string>chemical/x-mmcif</string>
               </tuple>
             </value>
         </item>
@@ -13303,7 +13303,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-macmolecule</string>
+                <string>chemical/x-macmolecule</string>
               </tuple>
             </value>
         </item>
@@ -13347,7 +13347,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/msaccess</string>
+                <string>application/msaccess</string>
               </tuple>
             </value>
         </item>
@@ -13391,7 +13391,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-troff-me</string>
+                <string>application/x-troff-me</string>
               </tuple>
             </value>
         </item>
@@ -13437,7 +13437,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>model/mesh</string>
+                <string>model/mesh</string>
               </tuple>
             </value>
         </item>
@@ -13533,7 +13533,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-freemind</string>
+                <string>application/x-freemind</string>
               </tuple>
             </value>
         </item>
@@ -13578,7 +13578,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-macromodel-input</string>
+                <string>chemical/x-macromodel-input</string>
               </tuple>
             </value>
         </item>
@@ -13622,7 +13622,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.smaf</string>
+                <string>application/vnd.smaf</string>
               </tuple>
             </value>
         </item>
@@ -13770,7 +13770,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-mo</string>
+                <string>application/x-mo</string>
               </tuple>
             </value>
         </item>
@@ -13866,7 +13866,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mdl-molfile</string>
+                <string>chemical/x-mdl-molfile</string>
               </tuple>
             </value>
         </item>
@@ -13910,7 +13910,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mol2</string>
+                <string>chemical/x-mol2</string>
               </tuple>
             </value>
         </item>
@@ -13954,7 +13954,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mopac-out</string>
+                <string>chemical/x-mopac-out</string>
               </tuple>
             </value>
         </item>
@@ -14158,7 +14158,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-troff-ms</string>
+                <string>application/x-troff-ms</string>
               </tuple>
             </value>
         </item>
@@ -14202,7 +14202,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-msi</string>
+                <string>application/x-msi</string>
               </tuple>
             </value>
         </item>
@@ -14246,7 +14246,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mopac-vib</string>
+                <string>chemical/x-mopac-vib</string>
               </tuple>
             </value>
         </item>
@@ -14290,7 +14290,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/vnd.mpegurl</string>
+                <string>video/vnd.mpegurl</string>
               </tuple>
             </value>
         </item>
@@ -14439,7 +14439,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-nwc</string>
+                <string>application/x-nwc</string>
               </tuple>
             </value>
         </item>
@@ -15367,7 +15367,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-oz-application</string>
+                <string>application/x-oz-application</string>
               </tuple>
             </value>
         </item>
@@ -15569,7 +15569,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-pkcs7-certreqresp</string>
+                <string>application/x-pkcs7-certreqresp</string>
               </tuple>
             </value>
         </item>
@@ -15613,7 +15613,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-ns-proxy-autoconfig</string>
+                <string>application/x-ns-proxy-autoconfig</string>
               </tuple>
             </value>
         </item>
@@ -15657,7 +15657,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-coreldrawpattern</string>
+                <string>image/x-coreldrawpattern</string>
               </tuple>
             </value>
         </item>
@@ -15755,7 +15755,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/pict</string>
+                <string>image/pict</string>
               </tuple>
             </value>
         </item>
@@ -15799,7 +15799,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/pcx</string>
+                <string>image/pcx</string>
               </tuple>
             </value>
         </item>
@@ -16052,7 +16052,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-httpd-php</string>
+                <string>application/x-httpd-php</string>
               </tuple>
             </value>
         </item>
@@ -16096,7 +16096,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-httpd-php3</string>
+                <string>application/x-httpd-php3</string>
               </tuple>
             </value>
         </item>
@@ -16140,7 +16140,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-httpd-php3-preprocessed</string>
+                <string>application/x-httpd-php3-preprocessed</string>
               </tuple>
             </value>
         </item>
@@ -16184,7 +16184,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-httpd-php4</string>
+                <string>application/x-httpd-php4</string>
               </tuple>
             </value>
         </item>
@@ -16228,7 +16228,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-httpd-php-source</string>
+                <string>application/x-httpd-php-source</string>
               </tuple>
             </value>
         </item>
@@ -16272,7 +16272,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/pjpeg</string>
+                <string>image/pjpeg</string>
               </tuple>
             </value>
         </item>
@@ -16369,7 +16369,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-perl</string>
+                <string>text/x-perl</string>
               </tuple>
             </value>
         </item>
@@ -16569,7 +16569,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-po</string>
+                <string>text/x-po</string>
               </tuple>
             </value>
         </item>
@@ -16723,7 +16723,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/pics-rules</string>
+                <string>application/pics-rules</string>
               </tuple>
             </value>
         </item>
@@ -16767,7 +16767,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-ncbi-asn1-ascii</string>
+                <string>chemical/x-ncbi-asn1-ascii</string>
               </tuple>
             </value>
         </item>
@@ -16811,7 +16811,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-photoshop</string>
+                <string>image/x-photoshop</string>
               </tuple>
             </value>
         </item>
@@ -16880,7 +16880,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-python-code</string>
+                <string>application/x-python-code</string>
               </tuple>
             </value>
         </item>
@@ -16924,7 +16924,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-quicktimeplayer</string>
+                <string>application/x-quicktimeplayer</string>
               </tuple>
             </value>
         </item>
@@ -16968,7 +16968,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>audio/x-realaudio</string>
+                <string>audio/x-realaudio</string>
               </tuple>
             </value>
         </item>
@@ -17069,7 +17069,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/rar</string>
+                <string>application/rar</string>
               </tuple>
             </value>
         </item>
@@ -17165,7 +17165,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mdl-rdfile</string>
+                <string>chemical/x-mdl-rdfile</string>
               </tuple>
             </value>
         </item>
@@ -17209,7 +17209,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/rdf+xml</string>
+                <string>application/rdf+xml</string>
               </tuple>
             </value>
         </item>
@@ -17377,7 +17377,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-rosdal</string>
+                <string>chemical/x-rosdal</string>
               </tuple>
             </value>
         </item>
@@ -17421,7 +17421,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-redhat-package-manager</string>
+                <string>application/x-redhat-package-manager</string>
               </tuple>
             </value>
         </item>
@@ -17465,7 +17465,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/rss+xml</string>
+                <string>application/rss+xml</string>
               </tuple>
             </value>
         </item>
@@ -17585,7 +17585,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mdl-rxnfile</string>
+                <string>chemical/x-mdl-rxnfile</string>
               </tuple>
             </value>
         </item>
@@ -17630,7 +17630,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/scriptlet</string>
+                <string>text/scriptlet</string>
               </tuple>
             </value>
         </item>
@@ -17675,7 +17675,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mdl-sdfile</string>
+                <string>chemical/x-mdl-sdfile</string>
               </tuple>
             </value>
         </item>
@@ -17719,7 +17719,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>audio/x-sd2</string>
+                <string>audio/x-sd2</string>
               </tuple>
             </value>
         </item>
@@ -18028,7 +18028,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/java-serialized-object</string>
+                <string>application/java-serialized-object</string>
               </tuple>
             </value>
         </item>
@@ -18072,7 +18072,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-go-sgf</string>
+                <string>application/x-go-sgf</string>
               </tuple>
             </value>
         </item>
@@ -18116,7 +18116,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.stardivision.writer-global</string>
+                <string>application/vnd.stardivision.writer-global</string>
               </tuple>
             </value>
         </item>
@@ -18161,7 +18161,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-sgml</string>
+                <string>text/x-sgml</string>
               </tuple>
             </value>
         </item>
@@ -18205,7 +18205,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-sh</string>
+                <string>text/x-sh</string>
               </tuple>
             </value>
         </item>
@@ -18354,7 +18354,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.symbian.install</string>
+                <string>application/vnd.symbian.install</string>
               </tuple>
             </value>
         </item>
@@ -18455,7 +18455,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-koan</string>
+                <string>application/x-koan</string>
               </tuple>
             </value>
         </item>
@@ -18606,7 +18606,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-galactic-spc</string>
+                <string>chemical/x-galactic-spc</string>
               </tuple>
             </value>
         </item>
@@ -18650,7 +18650,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-futuresplash</string>
+                <string>application/x-futuresplash</string>
               </tuple>
             </value>
         </item>
@@ -18902,7 +18902,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.ms-pki.stl</string>
+                <string>application/vnd.ms-pki.stl</string>
               </tuple>
             </value>
         </item>
@@ -19171,7 +19171,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-swissprot</string>
+                <string>chemical/x-swissprot</string>
               </tuple>
             </value>
         </item>
@@ -19687,7 +19687,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-texinfo</string>
+                <string>application/x-texinfo</string>
               </tuple>
             </value>
         </item>
@@ -19731,7 +19731,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-mdl-tgf</string>
+                <string>chemical/x-mdl-tgf</string>
               </tuple>
             </value>
         </item>
@@ -19830,7 +19830,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/texmacs</string>
+                <string>text/texmacs</string>
               </tuple>
             </value>
         </item>
@@ -19926,7 +19926,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/dsptype</string>
+                <string>application/dsptype</string>
               </tuple>
             </value>
         </item>
@@ -20022,7 +20022,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/iuls</string>
+                <string>text/iuls</string>
               </tuple>
             </value>
         </item>
@@ -20118,7 +20118,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-cdlink</string>
+                <string>application/x-cdlink</string>
               </tuple>
             </value>
         </item>
@@ -20217,7 +20217,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-vmd</string>
+                <string>chemical/x-vmd</string>
               </tuple>
             </value>
         </item>
@@ -20261,7 +20261,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-vamas-iso14976</string>
+                <string>chemical/x-vamas-iso14976</string>
               </tuple>
             </value>
         </item>
@@ -20307,7 +20307,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>x-world/x-vrml</string>
+                <string>x-world/x-vrml</string>
               </tuple>
             </value>
         </item>
@@ -20351,7 +20351,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.visio</string>
+                <string>application/vnd.visio</string>
               </tuple>
             </value>
         </item>
@@ -20395,7 +20395,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-doom</string>
+                <string>application/x-doom</string>
               </tuple>
             </value>
         </item>
@@ -20493,7 +20493,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>audio/x-ms-wax</string>
+                <string>audio/x-ms-wax</string>
               </tuple>
             </value>
         </item>
@@ -20537,7 +20537,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/vnd.wap.wbmp</string>
+                <string>image/vnd.wap.wbmp</string>
               </tuple>
             </value>
         </item>
@@ -20581,7 +20581,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.wap.wbxml</string>
+                <string>application/vnd.wap.wbxml</string>
               </tuple>
             </value>
         </item>
@@ -20625,7 +20625,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-123</string>
+                <string>application/x-123</string>
               </tuple>
             </value>
         </item>
@@ -20669,7 +20669,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/x-ms-wm</string>
+                <string>video/x-ms-wm</string>
               </tuple>
             </value>
         </item>
@@ -20713,7 +20713,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>audio/x-ms-wma</string>
+                <string>audio/x-ms-wma</string>
               </tuple>
             </value>
         </item>
@@ -20757,7 +20757,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-ms-wmd</string>
+                <string>application/x-ms-wmd</string>
               </tuple>
             </value>
         </item>
@@ -20853,7 +20853,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.wap.wmlc</string>
+                <string>application/vnd.wap.wmlc</string>
               </tuple>
             </value>
         </item>
@@ -20897,7 +20897,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/vnd.wap.wmlscript</string>
+                <string>text/vnd.wap.wmlscript</string>
               </tuple>
             </value>
         </item>
@@ -20941,7 +20941,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/vnd.wap.wmlscriptc</string>
+                <string>application/vnd.wap.wmlscriptc</string>
               </tuple>
             </value>
         </item>
@@ -21037,7 +21037,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/x-ms-wmx</string>
+                <string>video/x-ms-wmx</string>
               </tuple>
             </value>
         </item>
@@ -21081,7 +21081,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-ms-wmz</string>
+                <string>application/x-ms-wmz</string>
               </tuple>
             </value>
         </item>
@@ -21125,7 +21125,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/wordperfect5.1</string>
+                <string>application/wordperfect5.1</string>
               </tuple>
             </value>
         </item>
@@ -21223,7 +21223,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>video/x-ms-wvx</string>
+                <string>video/x-ms-wvx</string>
               </tuple>
             </value>
         </item>
@@ -21267,7 +21267,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-wingz</string>
+                <string>application/x-wingz</string>
               </tuple>
             </value>
         </item>
@@ -21363,7 +21363,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-xcf</string>
+                <string>application/x-xcf</string>
               </tuple>
             </value>
         </item>
@@ -21546,7 +21546,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-xpinstall</string>
+                <string>application/x-xpinstall</string>
               </tuple>
             </value>
         </item>
@@ -21642,7 +21642,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/xml</string>
+                <string>application/xml</string>
               </tuple>
             </value>
         </item>
@@ -21686,7 +21686,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-xtel</string>
+                <string>chemical/x-xtel</string>
               </tuple>
             </value>
         </item>
@@ -21834,7 +21834,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>chemical/x-xyz</string>
+                <string>chemical/x-xyz</string>
               </tuple>
             </value>
         </item>
@@ -27901,7 +27901,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-arc</string>
+                <string>application/x-arc</string>
               </tuple>
             </value>
         </item>
@@ -28736,7 +28736,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-dbm</string>
+                <string>application/x-dbm</string>
               </tuple>
             </value>
         </item>
@@ -29779,7 +29779,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-frame</string>
+                <string>application/x-frame</string>
               </tuple>
             </value>
         </item>
@@ -29865,7 +29865,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-gdbm</string>
+                <string>application/x-gdbm</string>
               </tuple>
             </value>
         </item>
@@ -30828,7 +30828,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-ksysv-package</string>
+                <string>application/x-ksysv-package</string>
               </tuple>
             </value>
         </item>
@@ -31346,7 +31346,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-mswinurl</string>
+                <string>application/x-mswinurl</string>
               </tuple>
             </value>
         </item>
@@ -32355,7 +32355,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>application/x-sc</string>
+                <string>application/x-sc</string>
               </tuple>
             </value>
         </item>
@@ -34933,7 +34933,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-niff</string>
+                <string>image/x-niff</string>
               </tuple>
             </value>
         </item>
@@ -34975,7 +34975,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>image/x-pcx</string>
+                <string>image/x-pcx</string>
               </tuple>
             </value>
         </item>
@@ -37487,7 +37487,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/x-ksysv-log</string>
+                <string>text/x-ksysv-log</string>
               </tuple>
             </value>
         </item>
@@ -38236,7 +38236,7 @@
             <key> <string>mimetypes</string> </key>
             <value>
               <tuple>
-<string>text/xmcd</string>
+                <string>text/xmcd</string>
               </tuple>
             </value>
         </item>

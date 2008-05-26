@@ -125,7 +125,7 @@ return result\n
                           <tuple>
                             <string>text</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>getResultValue</string>
                             <string>result</string>
                             <string>_getiter_</string>

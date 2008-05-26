@@ -112,7 +112,7 @@
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
