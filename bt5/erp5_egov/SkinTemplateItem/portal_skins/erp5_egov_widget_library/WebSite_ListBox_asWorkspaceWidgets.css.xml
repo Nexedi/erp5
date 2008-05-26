@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -53,12 +59,12 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 /*========================================================================================\n
-  DeclarationDeTVA_ListBox_asAttachedFile CSS.\n
+  DeclarationTVA_ListBox_asAttachedFile CSS.\n
 \n
 ========================================================================================*/\n
 \n
 .workspace_widget_ListContent,\n
-.no_prending_request_explanation{\n
+.no_prending_application_explanation{\n
   margin-top:1.7em;\n
 }\n
 \n
@@ -67,33 +73,35 @@
 }\n
 \n
 .workspace_widget_ListContent li{\n
+  margin: 0 1em 0 1em;\n
   line-height: 1em;\n
-  float:left;\n
+  padding: 0.3em 0.3em 1.3em 0.3em;\n
+  /*float:left;*/\n
+  /*width:90%;*/\n
+}\n
+\n
+.workspace_widget_ListContent li.DataA{\n
+  background: #FFFFFF;\n
+}\n
+\n
+.workspace_widget_ListContent li.DataB{\n
+  background: #EEEEEE;\n
 }\n
  \n
-.workspace_widget_ListContent li .workspace_widget_portal_type{\n
-  float: left;\n
-}\n
-\n
-.workspace_widget_ListContent li .workspace_widget_translated_validation_state_title{\n
-  float: right;\n
-}\n
-\n
+.workspace_widget_ListContent li .workspace_widget_translated_portal_type,\n
+.workspace_widget_ListContent li .workspace_widget_id,\n
 .workspace_widget_ListContent li .modification_date{\n
   float: left;\n
 }\n
 \n
+.workspace_widget_ListContent .workspace_widget_translated_validation_state_title,\n
 .workspace_widget_ListContent .workspace_widget_modification_date{\n
   float: right;\n
 }\n
  \n
-.workspace_widget_ListContent li{\n
-  margin-bottom: 1em;\n
-  width:90%;\n
-}\n
-\n
 .workspace_widget_ListContent ul{\n
-  list-style-type:disk;\n
+  padding: 1em 1em 0 1em;\n
+  list-style-type:none;\n
   list-style-position:outside;\n
 }\n
 \n
@@ -117,6 +125,13 @@
   padding-top:0.2em;\n
   padding-bottom:0.4em;\n
   margin-bottom:20px;\n
+}\n
+\n
+.full_listbox{\n
+  margin-right: 1em;\n
+  margin-top: 0.5em;\n
+  margin-bottom: 0.5em;\n
+  float:right; \n
 }\n
 
 

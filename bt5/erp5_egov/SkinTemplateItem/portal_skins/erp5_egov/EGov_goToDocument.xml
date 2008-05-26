@@ -68,8 +68,8 @@
             <value> <string>portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-if request_number is not None:\n
-  document = context.portal_catalog.getResultValue(uid=request_number)\n
+if application_number is not None:\n
+  document = context.portal_catalog.getResultValue(id=application_number)\n
   if document is not None:\n
     if document.getValidationState() == \'draft\':\n
       return document.Base_redirect(form_id=\'view\')\n
@@ -84,7 +84,7 @@ else:\n
 \n
 # Prepare message\n
 msg = N_(\'Sorry, this document is not available\')\n
-return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg})\n
+return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg, \'editable_mode\' : False})\n
 </string> </value>
         </item>
         <item>
@@ -100,8 +100,22 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>request_number=None, id=None, **kw</string> </value>
+            <value> <string>application_number=None, id=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -127,7 +141,7 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>request_number</string>
+                            <string>application_number</string>
                             <string>id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
@@ -137,6 +151,7 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                             <string>None</string>
                             <string>document</string>
                             <string>msg</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>

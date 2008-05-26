@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -49,7 +55,7 @@
   <div class="clear">\n
   </div>\n
   <div class="wizard_title" i18n:domain="ui" i18n:translate="">\n
-    Request Steps\n
+    Application Steps\n
   </div>\n
     <tal:bloc tal:define="current_action request/current_action;\n
                           actions request/actions;\n
@@ -61,7 +67,10 @@
                                                \'Payment\' : \'Pay\'};\n
                           state_dict python: {\'View\' : (\'draft\',),\n
                                               \'Attachments\' : (\'draft\',),\n
-                                              \'History\' : (\'submitted\', \'open\', \'archive\'),\n
+                                              \'History\' : (\'submitted\',\n
+                                              \'requested\', \'incomplete\',\n
+                                              \'completed\', \'signed\',\n
+                                              \'validated\', \'assigned\', \'open\', \'archive\'),\n
                                               \'Payment\' : (\'submitted\',) };\n
                           global action_not_in_dict_count python:0        \n
                                ">\n

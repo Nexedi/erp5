@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>In open state, an agent is processing the application.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -37,15 +37,14 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>allocate_action</string>
-                <string>archive</string>
-                <string>archive_action</string>
-                <string>assign_action</string>
-                <string>cancel</string>
-                <string>cancel_action</string>
-                <string>child_procedure_action</string>
-                <string>process</string>
-                <string>progress_action</string>
+                <string>complete</string>
+                <string>complete_action</string>
+                <string>request</string>
+                <string>request_action</string>
+                <string>sign</string>
+                <string>sign_action</string>
+                <string>suspend</string>
+                <string>suspend_action</string>
               </tuple>
             </value>
         </item>
@@ -74,39 +73,52 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <list>
+                        <string>Assignee</string>
+                        <string>Manager</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple/>
+                      <list>
+                        <string>Assignee</string>
+                        <string>Manager</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <list>
+                        <string>Assignee</string>
+                        <string>Manager</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

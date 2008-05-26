@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!-- ============================================================== -->\n
+<!--\n
+Description:\n
+  This macro render a invitation to becom vip member panel.\n
+-->\n
+\n
+<tal:block metal:define-macro="main">\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+\n
+  <div class="become_vip_member">\n
+    <div class="title" i18n:domain="ui" i18n:translate="">\n
+      Become a VIP Member\n
+    </div>\n
+    <div class="become_vip_explanations">\n
+      <tal:block i18n:domain="ui" i18n:translate="">\n
+      Safi is a major Internet portal for performing administrative formalities\n
+      online. It is a quick and easy way to make a statement, or a application for\n
+      jutificatif,... without having to move or to queue. For more\n
+      information, please click\n
+      </tal:block>\n
+      <a href="#more_information"  i18n:domain="ui" i18n:translate="">here</a>.\n
+    </div>\n
+    <div id="register_button">\n
+      <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+      name="search_area/WebSite_viewQuickSearchResultList:method"\n
+      value="Register >>"/>\n
+    </div>\n
+  </div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewPendingApplicationRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

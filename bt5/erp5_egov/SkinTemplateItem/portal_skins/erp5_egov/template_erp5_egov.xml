@@ -92,8 +92,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                               \'%s/WebSite_viewToolsRenderer.css\' % portal_path,\n
                               \'%s/WebSite_viewWorkspaceWidgets.css\' % portal_path,\n
                               \'%s/WebSite_ListBox_asWorkspaceWidgets.css\' % portal_path,\n
-                              \'%s/DeclarationDeTVA_ListBox_asAttachedFile.css\' % portal_path];\n
-                        global js_list python:[\'%s/tabber.js\' % portal_path,]">\n
+                              \'%s/WebSite_viewAgentWorklistRenderer.css\' % portal_path,\n
+                              \'%s/DeclarationTVA_ListBox_asAttachedFile.css\' % portal_path];\n
+                        global js_list python:[\'%s/tabber.js\' % portal_path,\n
+                                               \'%s/erp5_xhtml_appearance.js\' % portal_path,]">\n
 <!-- \'%s/tabber-cookie.js\' % portal_path,  must be added to js_list to use cookies to rembeber las tab used-->\n
 \n
   <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n

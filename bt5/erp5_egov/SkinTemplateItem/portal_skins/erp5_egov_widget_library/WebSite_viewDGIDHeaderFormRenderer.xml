@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div>\n
+  <a name="top"></a>\n
+  <div style="background-image: url(img/flag_of_senegal.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 95px; margin-left: 5px;">\n
+    <ul class="onleft">\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block> : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationState"/></span></li>\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Type</tal:block> : <span class="value"><tal:block tal:replace="here/getPortalType"></tal:block></span></li>\n
+    </ul>\n
+    <span class="onright">\n
+      <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" href="./home" \n
+        i18n:translate="" i18n:domain="ui">Home</a>\n
+      <a class="print" href="DeclarationTVA_viewDeclarationTVAAsPdf" i18n:translate="" i18n:domain="ui">Print</a>\n
+      <a class="help" href="./help" i18n:translate="" i18n:domain="ui">Help</a>\n
+    </span>\n
+    <div class="clear">\n
+    <div>  \n
+  </div>\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewDGIDHeaderFormRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -49,15 +55,16 @@
   <a name="top"></a>\n
   <div style="background-image: url(img/erp5-website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
     <ul class="onleft">\n
-      <li><tal:block i18n:translate="" i18n:domain="ui">Reference</tal:block> : <span class="value"><tal:block tal:replace="here/getUid"></tal:block></span></li>\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block> : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationStateTitle"/></span></li>\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Type</tal:block> : <span class="value"><tal:block tal:replace="here/getPortalType"></tal:block></span></li>\n
     </ul>\n
     <span class="onright">\n
-      <a class="home" tal:attributes="href python:context.getPortalObject().web_site_module.egov_portal.absolute_url()" href="./home" \n
+      <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" href="./home" \n
         i18n:translate="" i18n:domain="ui">Home</a>\n
-      <a class="print" href="DeclarationDeTVA_viewDeclarationDeTVAAsPdf" i18n:translate="" i18n:domain="ui">Print</a>\n
-      <a class="help" href="./help" i18n:translate="" i18n:domain="ui">Help</a>\n
+      <a class="print" href="DeclarationTVA_viewDeclarationTVAAsPdf" i18n:translate="" i18n:domain="ui">Print</a>\n
+      <!--<a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" i18n:translate="" i18n:domain="ui">Help</a>-->\n
+      <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
     </span>\n
     <div class="clear">\n
     <div>  \n

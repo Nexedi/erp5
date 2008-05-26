@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -54,7 +60,7 @@ Description:\n
 <tal:block metal:define-macro="main">\n
   <div id="register_button">\n
     <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
-    name="search_area/WebSite_viewQuickSearchResultList:method"\n
+    name="EGov_register:method"\n
     value="Register >>"/>\n
   </div>\n
 </tal:block>\n

@@ -90,7 +90,6 @@ html {\n
   margin-bottom: 2em;\n
 }\n
 \n
-\n
 body {\n
   min-width: <tal:block  replace="python: (\'%s%s\') % (min_width +2, unit)"/>;\n
 }\n
@@ -222,8 +221,11 @@ form#main_form div#wrapper_footer div.field {\n
   /*padding-top: 3px;*/\n
   padding-bottom: 0px;\n
   /*background: #999;*/\n
-  border-color: #999;\n
-  border-width: 0 0 1px;\n
+}\n
+\n
+form#main_form div#wrapper_footer div.field .submission_wizard {\n
+  border-color: #777;\n
+  border-width: 1px 0 0;\n
   border-style: solid;\n
 }\n
 \n
@@ -292,11 +294,13 @@ form#main_form div#wrapper_header fieldset.widget .onright a{\n
   padding-bottom: 20px;\n
 }\n
 \n
-.draft_state{\n
+.draft_state,\n
+.assigned_state{\n
   color: #AAA; \n
 }\n
  \n
-.open_state{\n
+.open_state,\n
+.validated_state{\n
   color: green; \n
 }\n
 \n
@@ -485,7 +489,6 @@ div.bottom_actions button.saveView span.image {\n
   background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save-preview.png\');\n
 }\n
 \n
-\n
 .input .attachment_missing{\n
   color:red;\n
   font-weight: bold;\n
@@ -496,7 +499,6 @@ div.section_explanation{\n
   padding-top:1em;\n
   padding-bottom:2em;\n
   font-size: 1.3em;\n
-  text-align: justify ;\n
 }\n
 \n
 .member_explanation_picture,\n
@@ -525,14 +527,14 @@ div.section_title{\n
   font-weight: bold;\n
 }\n
 \n
-div.work_in_progress{\n
-  margin-top:1em;\n
-  margin-left:2em;\n
+.work_in_progress{\n
+  /*margin-top:1em;\n
+  margin-left:2em;*/\n
   font-style: italic;\n
   font-weight: bold;\n
   color:orange;\n
   background-repeat:no-repeat;\n
-  height: 40px;\n
+  min-height: 40px;\n
   padding-top: 10px;\n
   padding-left: 60px;\n
   padding-right: 20px;\n
@@ -541,6 +543,10 @@ div.work_in_progress{\n
 \n
 .bottom_border{\n
   width:100%;\n
+}\n
+\n
+.content .widget_space > .field > label{\n
+  display: none !important;\n
 }\n
 \n
 div#main_content fieldset {\n
@@ -612,7 +618,13 @@ fieldset.register_informations{\n
 .field .input .title{\n
   margin-top: 1em;\n
   margin-bottom:0.5em;\n
-  font-size: 2em;\n
+  font-size: 1.8em;\n
+}\n
+\n
+.field .input .title .reference{\n
+  padding: 0.5em;\n
+  text-align: center;\n
+  font-weight: bold;\n
 }\n
 \n
 .field .input .explanation{\n
@@ -645,6 +657,22 @@ fieldset.register_informations{\n
 .white_background .big_button .input{\n
   margin:0 !important;\n
   padding: 0 !important;\n
+}\n
+\n
+\n
+#main_form #main_content #fieldset_bottom .input .ListSummary{\n
+  margin-top: 100px;\n
+}\n
+\n
+#main_form #main_content #fieldset_bottom .input .ListSummary,\n
+#main_form #main_content #fieldset_bottom .input .ListContent{\n
+  margin-right: 10%;\n
+  margin-left: 10%;\n
+}\n
+\n
+\n
+.become_member_body  ul{\n
+  list-style-image: url(\'img/puce1.png\')\n
 }\n
 
 

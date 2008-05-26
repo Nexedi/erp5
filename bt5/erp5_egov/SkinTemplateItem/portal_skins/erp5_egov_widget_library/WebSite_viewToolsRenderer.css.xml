@@ -72,6 +72,11 @@
 .tabberlive{\n
   margin-bottom:20px;\n
 }\n
+\n
+.tabbertab .work_in_progress,\n
+.tabbertab img{\n
+  float:left;\n
+}\n
 
 
 ]]></string> </value>

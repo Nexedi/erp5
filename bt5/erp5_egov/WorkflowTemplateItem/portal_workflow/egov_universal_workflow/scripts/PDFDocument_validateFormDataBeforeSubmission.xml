@@ -71,6 +71,7 @@ portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
 document = state_change[\'object\']\n
+portal_type = document.getPortalType()\n
 \n
 # dict of required documents\n
 attachement_type_dict = {\'Carte ID\':\'Required\',\n
@@ -143,6 +144,7 @@ if len(missing_document_list):\n
                             <string>N_</string>
                             <string>_getitem_</string>
                             <string>document</string>
+                            <string>portal_type</string>
                             <string>attachement_type_dict</string>
                             <string>append</string>
                             <string>$append0</string>

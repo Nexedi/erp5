@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Draft forms can be modified by the person who created them initially. Once all data is defined, they should be submitted.</string> </value>
+            <value> <string>Applications in draf state are application just created by user. They could be view and edit by user before to be submitted.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -37,10 +37,6 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>open</string>
-                <string>open_action</string>
                 <string>submit</string>
                 <string>submit_action</string>
               </tuple>
@@ -71,53 +67,55 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

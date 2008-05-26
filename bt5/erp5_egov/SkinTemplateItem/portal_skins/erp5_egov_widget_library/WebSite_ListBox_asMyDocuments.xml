@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -68,8 +74,9 @@
               show_search_line here/showSearchLine;\n
               ">\n
   <!-- ListBox starts here.  -->\n
-  <div class = "workspace_widget_listbox_title" tal:content="python:context.field.get_value(\'title\')" i18n:translate="" i18n:domain="ui">\n
-    listbox title\n
+  <div class = "workspace_widget_listbox_title">\n
+    <tal:block tal:content="python:context.field.get_value(\'title\')" i18n:translate="" i18n:domain="ui"></tal:block>\n
+    <tal:block tal:content="python:\' (%s)\' % here.total_size"></tal:block>\n
   </div>\n
   <tal:block tal:condition="python:len(line_list)">\n
     <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -102,7 +109,7 @@
               <tal:block tal:repeat="line line_list"\n
                 tal:define="checked_uid_set here/getCheckedUidSet">\n
                 <tal:block tal:define="object python: line.getObject()">\n
-                  <li>\n
+                  <li class=\'ClassA\' tal:attributes="class python:(repeat[\'line\'].index % 2) and \'DataB\' or \'DataA\'">\n
                     <tal:block tal:repeat="value line/render">\n
                       <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'modification_date\'">\n
                         <br/>\n
@@ -117,10 +124,11 @@
                                       error python: value[2];\n
                                       editable_field python: value[3];"\n
                                       tal:attributes="class python: \'workspace_widget_%s\' % (line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0])">\n
-                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'title\'">\n
+                        <tal:block\n
+                        tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'translated_title\'">\n
                           <tal:block tal:content="structure python:value[0]" />\n
                         </tal:block>\n
-                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] != \'title\'">\n
+                        <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] != \'translated_title\'">\n
                           <input tal:condition="not: repeat/value/index"\n
                             type="hidden" value="1" name="listbox_uid:list"\n
                             tal:attributes="value python: line.getUid() or \'\';\n
@@ -138,10 +146,13 @@
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
+    <div class="full_listbox">\n
+      <a href="EGov_viewMyDocumentList"  i18n:translate="" i18n:domain="ui" tal:content="python:\'All Documents\'">link text</a>\n
+    </div>\n
     <!-- ListBox ends here.  -->\n
   </tal:block>\n
   <tal:block tal:condition="python:not len(line_list)">\n
-    <div class="no_prending_request_explanation" i18n:translate="" i18n:domain="ui">\n
+    <div class="no_prending_application_explanation" i18n:translate="" i18n:domain="ui">\n
       You have no documents.\n
     </div>\n
   </tal:block>\n

@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>for_status</string> </key>

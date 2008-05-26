@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -64,7 +70,7 @@ Description:\n
     <div class="become_vip_explanations">\n
       <tal:block i18n:domain="ui" i18n:translate="">\n
       Safi is a major Internet portal for performing administrative formalities\n
-      online. It is a quick and easy way to make a statement, or a request for\n
+      online. It is a quick and easy way to make a statement, or a application for\n
       jutificatif,... without having to move or to queue. For more\n
       information, please click\n
       </tal:block>\n

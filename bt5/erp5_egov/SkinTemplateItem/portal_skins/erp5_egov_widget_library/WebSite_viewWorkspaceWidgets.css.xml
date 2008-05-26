@@ -68,36 +68,32 @@
   min-width: 400px;\n
   margin-left:25% !important;\n
   margin-right:25% !important;\n
-  /*padding: 0px !important;*/\n
 }\n
 \n
 \n
 .widget_space div.field{\n
   clear:none !important;\n
   min-width:185px;\n
-  width:47%;\n
-  /*height:200px;*/\n
+  /*width:47%;*/\n
 }\n
 \n
-.widget_space .pending_requests{\n
-  /*margin-right:6% !important;*/\n
+.widget_space .my_documents,\n
+.widget_space .pending_applications{\n
   float:left;\n
+  width: 100%;\n
+  margin-bottom: 2em !important;\n
 }\n
 \n
-.widget_space .my_documents{\n
-  float:right;\n
-}\n
-\n
-.widget_space .pending_requests,\n
+.widget_space .pending_applications,\n
 .widget_space .my_documents{\n
   border:1px solid #AAA;\n
   background:white;\n
 }\n
 \n
-.widget_space .input{\n
+/*.widget_space .input{\n
   margin:0 !important;\n
   padding:1em;\n
-}\n
+}*/\n
 \n
 
 

@@ -93,6 +93,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <dictionary/>
@@ -106,7 +112,7 @@
         </item>
         <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>erp5_egov_workspace_layout</string> </value>
+            <value> <string>erp5_egov_citizen_workspace_layout</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
@@ -114,7 +120,7 @@
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_renderEGovPortal</string> </value>
+            <value> <string>WebSection_citizen_renderEGovPortal</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -126,7 +132,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div>\n
+  <input type="text" \n
+         class="input_field" \n
+         size="18" \n
+         name="new_advanced_search_text"/>\n
+\n
+  <select size="1" \n
+          class="input" \n
+          name="new_advanced_search_portal_type" \n
+          style="width: 8em;">\n
+\n
+    <tal:block metal:define-macro="search_type_option_list">\n
+      <option value="" selected value="" i18n:translate="" i18n:domain="ui">Everything</option>\n
+      <option value="all" selected value="" i18n:translate="" i18n:domain="ui">All Documents</option>\n
+      <tal:block tal:repeat="ptype here/getPortalDocumentTypeList">\n
+        <option tal:attributes="value ptype"  \n
+                tal:content="python:ptype"\n
+                i18n:translate="" \n
+                i18n:domain="ui">Standard Type</option>\n
+      </tal:block>\n
+      <option value="" i18n:translate="" i18n:domain="ui">-- Directory --</option>\n
+      <option value="Person" i18n:translate="" i18n:domain="ui">Person</option>\n
+      <option value="Organisation" i18n:translate="" i18n:domain="ui">Organisation</option>\n
+      <option value="" i18n:translate="" i18n:domain="ui">-- Quick Search --</option>\n
+      <option tal:repeat="ptype here/ERP5Site_getQuickSearchableTypeList | nothing"\n
+              tal:attributes="value ptype"  \n
+              tal:content="python:ptype"\n
+              i18n:translate="" \n
+              i18n:domain="ui">Standard Type</option>\n
+    </tal:block>\n
+  </select>\n
+\n
+  <input title="Search"\n
+         alt="Search" \n
+         name="search_area/WebSite_viewQuickSearchResultList:method" \n
+         type="image"\n
+         style="vertical-align: bottom;"\n
+         src="km_img/search.gif" border="0" />\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewSearchBoxRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -68,6 +68,7 @@
   define="unit          python: \'px\';\n
           HEIGHT_button python: 40;\n
           MARGIN        python: 20;\n
+          CAPTCHA       python: 60;\n
 ">\n
 \n
 \n
@@ -83,11 +84,22 @@ div.next_step_action button.nextStep {\n
   border: 1px solid black;\n
   vertical-align: middle;\n
   text-align: center;\n
+  display:inline;\n
 }\n
 \n
 div.next_step_action{  \n
-  height: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button+2*MARGIN, unit)"/>;\n
+  height: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button+MARGIN+(here.portal_membership.isAnonymousUser() and CAPTCHA or 0), unit)"/>;\n
   z-index:300;\n
+}\n
+\n
+div.next_step_action .erp5_captcha{\n
+  margin-bottom: 10px;\n
+}\n
+\n
+div.next_step_action img,\n
+div.next_step_action .captcha_text{\n
+  font-size: 250%;\n
+  vertical-align:middle;\n
 }\n
 \n
 form#main_form div .next_step_action .onleft button{\n
@@ -104,7 +116,7 @@ form#main_form div .next_step_action .onleft{\n
   margin-left:auto;\n
   margin-right:auto;\n
   position:relative;\n
-  margin: <tal:block  replace="python: (\'%s%s\') % (MARGIN, unit)"/>;\n
+  margin-right: <tal:block  replace="python: (\'%s%s\') % (MARGIN, unit)"/>;\n
 }\n
 \n
 </tal:block>\n

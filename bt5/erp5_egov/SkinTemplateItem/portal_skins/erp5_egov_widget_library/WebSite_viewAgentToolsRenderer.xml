@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!-- ============================================================== -->\n
+<!--\n
+Description:\n
+  This macro render a tabbed search panel.\n
+-->\n
+\n
+<tal:block metal:define-macro="main">\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+  <tal:block tal:define="global input_size python:20"/>\n
+  \n
+  <div class="tabber">\n
+    <div class="tabbertab search_tab">\n
+      <h2 i18n:translate="" i18n:domain="ui">Search Application</h2>\n
+      <img alt="Search Files Logo" src="img/search_files.png"/>\n
+      <tal:block tal:repeat="portal_type here/ERP5Site_getQuickSearchableTypeList">\n
+        <a class="application_folder" tal:content="portal_type" i18n:translate="" i18n:domain="ui" href="link"\n
+          tal:attributes="href python: here.getPortalObject().getDefaultModule(portal_type=portal_type).getId()">\n
+            Portal Type\n
+        </a>\n
+        <span class="clear"></span>\n
+      </tal:block>\n
+      <div id="search">\n
+        <input type="text" name="new_advanced_search_text" />\n
+\n
+        <select size="1" \n
+                class="input" \n
+                name="new_advanced_search_portal_type" \n
+                id="searchtype"\n
+                style="width: 15em;">\n
+\n
+          <tal:block metal:define-macro="search_type_option_list">\n
+            <option value="all" selected="selected" i18n:translate="" i18n:domain="ui">Everything</option>\n
+            <option tal:repeat="ptype here/ERP5Site_getQuickSearchableTypeList | nothing"\n
+                    tal:attributes="value ptype"  \n
+                    tal:content="python:ptype"\n
+                    i18n:translate="" \n
+                    i18n:domain="ui">Standard Type</option>\n
+          </tal:block>\n
+        </select>\n
+\n
+        <button type="submit" name="WebSite_viewQuickSearchResultList:method" title="Search"\n
+                i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description"\n
+                i18n:translate="" i18n:domain="ui">Search</span>\n
+        </button>\n
+      </div> \n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+      <div class="clear"></div>\n
+    </div>\n
+    <div class="tabbertab">\n
+      <h2 i18n:translate="" i18n:domain="ui">Advanced Search</h2>\n
+      <div tal:condition="here/portal_membership/isAnonymousUser">\n
+        <div id="logo_track_application">\n
+          <img alt="Track Application Logo" src="img/track_application.png"/>\n
+        </div>\n
+        <div class="fields">\n
+          <div>\n
+            <p><tal:block i18n:translate="" i18n:domain="ui">Email</tal:block></p>\n
+            <p\n
+            tal:condition="here/portal_membership/isAnonymousUser"><tal:block\n
+            i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
+          </div>\n
+          <div>\n
+            <p><input type="text" size="20" id="__ac_name" name="__ac_name"/></p>\n
+            <p tal:condition="here/portal_membership/isAnonymousUser"><input\n
+            type="password" size="20" id="password" name="__ac_password"/></p>\n
+          </div>\n
+        </div>\n
+        <div class="clear"></div>\n
+        <div id="track_button">\n
+          <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+          name="WebSite_login:method"\n
+          value="Login"/>\n
+        </div>\n
+      </div>\n
+      <div class="clear"></div>\n
+      <div class="advanced_search_fields" tal:condition="not:here/portal_membership/isAnonymousUser">\n
+        <input type="hidden" name="form_id" value="view" />\n
+        <input type="hidden" name="dialog_id" value="eGov_viewAdvancedSearchDialog" />\n
+        <input type="hidden" name="dialog_method" value="Base_processAdvancedSearch" />\n
+        <input type="hidden" name="dialog_category" value="None" />\n
+        <tal:block tal:define="layout_id request/layout_form_id | nothing;\n
+                               dummy python:request.set(\'layout_form_id\', \'form_in_pt_layout\')"/>\n
+        <div tal:content="structure python:here.eGov_viewAdvancedSearchDialog()">\n
+          <tal:block tal:condition="layout_id">\n
+           <tal:block tal:define="dummy python:request.set(\'layout_form_id\', layout_id)"/>\n
+          </tal:block>\n
+        </div>\n
+      </div>\n
+    </div>\n
+  </div>\n
+<div class="clear">\n
+</div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewAgentToolsRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

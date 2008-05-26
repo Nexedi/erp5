@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -59,10 +65,10 @@
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
   <input type="hidden" name="view_document_url" value=""\n
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
-  <input type="hidden" name="actions" value=""\n
+<!--  <input type="hidden" name="actions" value=""\n
          tal:attributes="value request/actions" />\n
   <input type="hidden" name="current_action" value=""\n
-         tal:attributes="value request/current_action" />\n
+         tal:attributes="value request/current_action" />-->\n
   <span class="onleft">\n
     <button type="submit" class="save" title="Save" name="EGov_Base_edit:method"  \n
       i18n:attributes="title" i18n:domain="ui">\n
@@ -71,13 +77,20 @@
     </button>\n
 \n
   </span>\n
-  <span class="onright">\n
+  <div class="onright">\n
+    <div class="erp5_captcha" tal:condition="python: here.portal_membership.isAnonymousUser()">\n
+      <div class="explanation">\n
+        Type the characters you see in the picture below.\n
+      </div>\n
+      <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
+      <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
+    </div>\n
     <button type="submit" class="nextStep" title="Next Step >>" name="EGov_Base_editAndNextStep:method"  \n
       i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description"> <tal:block i18n:translate="" i18n:domain="ui">Next Step</tal:block>>></span>\n
     </button>\n
-  </span>\n
+  </div>\n
   <div class="clear">\n
   </div>\n
 </div>\n

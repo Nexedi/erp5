@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The last generic transition (ex. submit, process)</string> </value>
+            <value> <string>The last transition</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>

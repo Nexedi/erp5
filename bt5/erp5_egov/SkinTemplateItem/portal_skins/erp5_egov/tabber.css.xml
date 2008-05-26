@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -60,8 +66,8 @@
   position:relative;\n
 }\n
 \n
-.content .tools .field{\n
-  padding-top: 50px;\n
+.content fieldset.tools{\n
+  padding-top: 50px !important;\n
 }\n
 \n
 .document .tools .tabberlive,\n
@@ -185,13 +191,12 @@ ul.tabbernav li.tabberactive a:hover\n
 /*-------------------------------------------------\n
   The folowing, is the css style of the tab contents\n
   ------------------------------------------------*/\n
-div#logo_track_request,\n
-div.fields,\n
-div.fields div{\n
+div#logo_track_application,\n
+.fields{\n
   float: left;\n
 }\n
 \n
-div#logo_track_request,\n
+div#logo_track_application,\n
 div.fields{\n
   margin-left: 10px;\n
 }\n
@@ -205,14 +210,15 @@ div.fields div{\n
 \n
 \n
 .tabberlive .tabbertab #track_button,\n
-.tabberlive .tabbertab #new_request_button{\n
+.tabberlive .tabbertab #new_application_button{\n
   float: right;\n
-  margin-top: 10px;\n
+/*  margin-top: 10px;*/ \n
+  margin: 0 !important;\n
 }\n
 \n
 \n
 .tabberlive .tabbertab #track_button input,\n
-.tabberlive .tabbertab #new_request_button input{\n
+.tabberlive .tabbertab #new_application_button input{\n
   font-size: 120%;\n
 }\n
 \n
@@ -246,6 +252,27 @@ div.fields div{\n
   text-decoration:underline;\n
   /*color: #637dc1;*/\n
   color: white;\n
+}\n
+\n
+\n
+\n
+/*-------------------------------------------------\n
+ advanced search CSS !\n
+ -------------------------------------------------*/\n
+.tabbertab .advanced_search_fields .advanced_search_text{\n
+display:block;\n
+float: left;\n
+width: 20em;\n
+text-align: right;\n
+margin-right: 1em;\n
+\n
+}\n
+\n
+.tabbertab .advanced_search_fields div{\n
+  padding: 1px;\n
+}\n
+\n
+.tabbertab .advanced_search_fields input{\n
 }\n
 
 

@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Submit Request</string> </value>
+            <value> <string>Submit</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>PDFDocument_validateFormDataBeforeSubmission</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

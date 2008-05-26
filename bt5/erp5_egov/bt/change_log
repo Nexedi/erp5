@@ -1,3 +1,9 @@
+2008-05-26 fabien
+bt refactoring :
+* change portal_types names
+* add functionality (captcha, contextual help,...)
+* enhance security, ...
+
 2008-03-11 fabien
 * hide Preference button on the workspace for annonymous users
 * add a login_form sript to override the existing one and permit to redirect on the appropriate page

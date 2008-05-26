@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -86,10 +92,10 @@ body{\n
   clear:both;\n
   line-height:0.8em ;\n
   margin-top:-1.6em ;\n
-  padding: 2px;\n
+  padding: 3px 2px 0px 2px;\n
   height:1em;\n
   color:black;\n
-  background: #777;\n
+  background: #999;\n
   border-top:1px solid #333;\n
 }\n
 \n

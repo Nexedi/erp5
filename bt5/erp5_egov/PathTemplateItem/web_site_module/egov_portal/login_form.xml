@@ -94,6 +94,12 @@ return context.Base_redirect(\'%s/%s\' % (module_url, form_id), keep_items = {\'
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

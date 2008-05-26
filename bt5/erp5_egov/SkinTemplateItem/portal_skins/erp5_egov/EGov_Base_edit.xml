@@ -73,7 +73,7 @@
 """\n
 \n
 next_url_dict = {\n
-    \'DeclarationDeTVA_view\' : \'DeclarationTVA_viewAttachmentList\',\n
+    \'DeclarationTVA_view\' : \'DeclarationTVA_viewAttachmentList\',\n
     \'DeclarationTVA_viewAttachmentList\' : \'PDFDocument_viewLoginInformation\'\n
 }\n
 \n
@@ -98,6 +98,12 @@ return context.Base_edit(form_id=form_id, \n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

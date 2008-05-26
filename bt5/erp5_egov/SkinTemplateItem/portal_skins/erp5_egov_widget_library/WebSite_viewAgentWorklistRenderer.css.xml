@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/*========================================================================================\n
+  WebSite_viewAgentWorklistRenderer CSS.\n
+\n
+========================================================================================*/\n
+.tabbertab a.action_number{\n
+  text-decoration: underline;\n
+  font-weight: bold;\n
+  font-size: 1.2em;\n
+}\n
+\n
+.tabbertab ul{\n
+  list-style: none;\n
+}\n
+\n
+.search_tab img{\n
+  margin-right: 25px;\n
+}\n
+\n
+#search {\n
+  float:left;\n
+  vertical-align:middle;\n
+  margin:0px !important;\n
+}\n
+\n
+#search button {\n
+background-color:inherit;\n
+border:0pt none;\n
+color:inherit;\n
+cursor:pointer;\n
+margin-left:0pt;\n
+margin-right:2px;\n
+margin-top:1px;\n
+padding:0pt;\n
+position:relative;\n
+vertical-align:middle;\n
+  display:inline;\n
+\n
+/*  margin:0 !important;\n
+  padding:0 !important;\n
+  background-color:inherit;\n
+  border:0pt none;\n
+  color:inherit;\n
+  cursor:pointer;\n
+  display:inline;\n
+  height: 28px;*/\n
+}\n
+\n
+#search button .image {\n
+  background-repeat:no-repeat;\n
+  display:block;\n
+  height:22px;\n
+  width:22px;\n
+  background-image: url(\'img/search.png\');\n
+/*  width: 22px;\n
+  height: 22px;\n
+  padding-bottom: 9px;\n
+  padding-left:22px;\n
+  background-repeat: no-repeat;*/\n
+}\n
+\n
+#search button .description {\n
+  display:none;\n
+}\n
+\n
+\n
+.application_folder{\n
+  float: left;\n
+  margin-right: 20px;\n
+  background-image: url(img/folder2.png);\n
+  height: 30px;\n
+  padding-left: 30px;\n
+  padding-top: 15px;\n
+  background-repeat:no-repeat;\n
+  vertical-align:middle;\n
+  text-decoration: underline;\n
+\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewAgentWorklistRenderer.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

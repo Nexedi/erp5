@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -57,79 +63,50 @@ Description:\n
     <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
   </tal:block>\n
   \n
-  <div class="tabber" id="mytabber1">\n
+  <div class="tabber">\n
   \n
     <div class="tabbertab">\n
-      <h2 i18n:translate="" i18n:domain="ui">Track Request</h2>\n
-      <div tal:condition="here/portal_membership/isAnonymousUser">\n
-        <div id="logo_track_request">\n
-          <img alt="Track Request Logo" src="img/track_request.png"/>\n
+      <h2 i18n:translate="" i18n:domain="ui">Track Application</h2>\n
+      <div>\n
+        <img alt="Track Application Logo" src="img/track_application.png"/>\n
+        <div class="fields">\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block></p>\n
         </div>\n
         <div class="fields">\n
-          <div>\n
-            <p><tal:block i18n:translate="" i18n:domain="ui">Email</tal:block></p>\n
-            <p\n
-            tal:condition="here/portal_membership/isAnonymousUser"><tal:block\n
-            i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
-          </div>\n
-          <div>\n
-            <p><input type="text" size="20" id="__ac_name" name="__ac_name"\n
-            class="autofocus"/></p>\n
-            <p tal:condition="here/portal_membership/isAnonymousUser"><input\n
-            type="password" size="20" id="password" name="__ac_password"\n
-            class="autofocus"/></p>\n
-          </div>\n
-        </div>\n
-        <div class="clear"></div>\n
-        <div id="track_button">\n
-          <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
-          name="WebSite_login:method"\n
-          value="Login"/>\n
-        </div>\n
-      </div>\n
-      <div class="fields" tal:condition="not:here/portal_membership/isAnonymousUser">\n
-        <div>\n
-          <p><tal:block i18n:translate="" i18n:domain="ui">Request Number</tal:block></p>\n
-          <p><tal:block i18n:translate="" i18n:domain="ui">PIN</tal:block></p>\n
-        </div>\n
-        <div>\n
-          <p><input type="text" size="20" name="request_number" class="autofocus"/></p>\n
-          <p><input type="password" size="20" id="pin" name="password" class="autofocus"/></p>\n
+          <p><input type="text" size="20" name="application_number"/></p>\n
         </div>\n
         <div class="clear"></div>\n
         <div id="track_button">\n
           <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
           value="Track" name="EGov_goToDocument:method"/>\n
         </div>\n
+        <div class="clear"></div>\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n
   \n
     <div class="tabbertab">\n
-      <h2 i18n:translate="" i18n:domain="ui">New Request</h2>\n
-      <div class="fields">\n
-        <div>\n
+      <h2 i18n:translate="" i18n:domain="ui">New Application</h2>\n
+      <div>\n
+        <div class="fields">\n
           <p><tal:block i18n:translate="" i18n:domain="ui">Procedure</tal:block> : </p>\n
           <p><tal:block i18n:translate="" i18n:domain="ui">Recipient</tal:block> : </p>\n
         </div>\n
 \n
-        <div>\n
+        <div class="fields">\n
           <p>\n
-            <select size="1" class="input" name="new_request_procedure">\n
+            <select size="1" class="input" name="new_application_procedure">\n
+              <option value="" selected="selected"></option>\n
               <tal:block metal:define-macro="procedure_type_option_list">\n
-                <option value="" selected="selected" i18n:translate="" i18n:domain="ui">VAT Request</option>\n
-                <option value="" i18n:translate="" i18n:domain="ui">B2345 - Quaterly Revenu Declaration</option>\n
-                <option value="" i18n:translate="" i18n:domain="ui">Other Request</option>\n
-                <tal:block  tal:condition="exists:here/getProcedureList" \n
-                            tal:repeat="ptype here/getProcedureList">\n
-                  <option tal:attributes="value ptype"  tal:content="python:ptype"\n
+                <tal:block  tal:repeat="portal_type python: here.EGov_getAllowedFormTypeList()">\n
+                  <option tal:attributes="value portal_type" tal:content="portal_type"\n
                           i18n:translate="" i18n:domain="ui">Standard Type</option>\n
                 </tal:block>\n
               </tal:block>\n
             </select>\n
           </p>\n
           <p>\n
-            <select size="1" class="input" name="new_request_recipient">\n
+            <select size="1" class="input" name="new_application_recipient">\n
               <tal:block metal:define-macro="recipient_type_option_list">\n
                 <option value="" selected="selected" i18n:translate="" i18n:domain="ui">DGID</option>\n
                 <option value="" i18n:translate="" i18n:domain="ui">DTAMP - Uitegem</option>\n
@@ -145,24 +122,27 @@ Description:\n
         </div>\n
       </div>\n
       <div class="clear"></div>\n
-      <div id="new_request_button">\n
+      <div id="new_application_button">\n
         <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
-        name="DeclarationTVA_createNewDeclaration:method"\n
-        value="New Request"/>\n
+        name="EGov_createNewProcedure:method"\n
+        value="New Application"/>\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n
   \n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Authenticate</h2>\n
-      <div>\n
-        <tal:block i18n:translate="" i18n:domain="ui">Work in progress</tal:block>....\n
+      <div class="work_in_progress">\n
+      Cette section\n
+      permettra dans un proche avenir de v\xc3\xa9rifier l\'authenticit\xc3\xa9 des actes num\xc3\xa9riques\n
+      produits par les administrations et garantir le plus haut niveau de s\xc3\xa9curit\xc3\xa9 de\n
+      la gestion des t\xc3\xa9l\xc3\xa9proc\xc3\xa9dures.\n
       </div>\n
+      <div class="clear"></div>\n
     </div>\n
   \n
   </div>\n
-<div class="clear">\n
-</div>\n
+<div class="clear"></div>\n
 </tal:block>\n
 
 

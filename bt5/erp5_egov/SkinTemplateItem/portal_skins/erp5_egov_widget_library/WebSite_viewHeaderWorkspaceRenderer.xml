@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -51,15 +57,21 @@
   <div style="background-image: url(img/erp5-website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
     <span class="onright">\n
       <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-        <a class="login" href="" i18n:translate="" i18n:domain="ui">Login</a>\n
+        <a class="login" href="EGov_viewLoginForm" i18n:translate="" i18n:domain="ui">Login</a>\n
       </tal:block>\n
-      <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
+      <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser() and request[\'current_form_id\'] == \'view\'">\n
         <a class="logout" href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a>\n
+      </tal:block>\n
+      <tal:block tal:condition="python:request[\'current_form_id\'] != \'view\'">\n
+        <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" \n
+          href="./home" i18n:translate="" i18n:domain="ui">Home</a>\n
       </tal:block>\n
       <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
         <a class="preferences" href="./preferences" i18n:translate="" i18n:domain="ui">Preferences</a>\n
       </tal:block>\n
-      <a class="help" href="./help" i18n:translate="" i18n:domain="ui">Help</a>\n
+      <!--<a class="help" href="EGov_helpWithContext" tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" i18n:translate="" i18n:domain="ui">Help</a>-->\n
+      <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()"  onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
+\n
     </span>\n
     <hr/>\n
   \n
