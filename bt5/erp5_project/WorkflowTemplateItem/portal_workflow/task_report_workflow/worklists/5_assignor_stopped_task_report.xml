@@ -33,7 +33,7 @@ task_report_module?simulation_state=stopped&local_roles=%(local_roles)s&reset=1
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tasks assigned by a manager which need to be closed</string> </value>
+            <value> <string>Task Reports assigned by a manager which need to be closed</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ task_report_module?simulation_state=stopped&local_roles=%(local_roles)s&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>5_assignor_stopped_task</string> </value>
+            <value> <string>5_assignor_stopped_task_report</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>

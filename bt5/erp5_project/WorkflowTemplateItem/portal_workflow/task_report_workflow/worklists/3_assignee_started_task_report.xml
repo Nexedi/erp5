@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Task Reports to Start (%(count)s)</string> </value>
+            <value> <string>Task Reports to Finish (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-task_report_module?simulation_state=confirmed&local_roles=%(local_roles)s&reset=1
+task_report_module?simulation_state=started&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tasks assigned to a user or group which are waiting to be processed</string> </value>
+            <value> <string>Task Reports assigned to a user or group which are being processed</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ task_report_module?simulation_state=confirmed&local_roles=%(local_roles)s&reset=
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2_assignee_confirmed_task</string> </value>
+            <value> <string>3_assignee_started_task_report</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -91,7 +91,7 @@ task_report_module?simulation_state=confirmed&local_roles=%(local_roles)s&reset=
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>started</string>
                       </tuple>
                     </value>
                 </item>

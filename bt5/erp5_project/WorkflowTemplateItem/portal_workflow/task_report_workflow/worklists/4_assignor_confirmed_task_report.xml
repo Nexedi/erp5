@@ -33,7 +33,7 @@ task_report_module?simulation_state:list=confirmed&simulation_state:list=started
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tasks assigned by a manager which are waiting to be processed</string> </value>
+            <value> <string>Task Reports assigned by a manager which are waiting to be processed</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ task_report_module?simulation_state:list=confirmed&simulation_state:list=started
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>4_assignor_confirmed_task</string> </value>
+            <value> <string>4_assignor_confirmed_task_report</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
