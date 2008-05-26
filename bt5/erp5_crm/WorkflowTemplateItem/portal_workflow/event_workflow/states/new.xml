@@ -37,6 +37,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>acknowledge</string>
+                <string>acknowledge_action</string>
                 <string>assign</string>
                 <string>assign_action</string>
                 <string>cancel</string>

@@ -65,27 +65,40 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this script allows to create a new follow up ticket for\n
-# the current event if the event isn\'t already linked with\n
-# an existing ticket\n
+            <value> <string># this script allows to create a new respond event for\n
+# the current acknowledged event\n
 \n
-event = state_change[\'object\']\n
 portal = state_change.getPortal()\n
 portal_workflow = portal.portal_workflow\n
+event = state_change[\'object\']\n
 \n
-follow_up_ticket_title = \'\'\n
+follow_up_ticket_type = portal_workflow.getInfoFor(event,\n
+                                                   \'follow_up_ticket_type\',\n
+                                                   wf_id=\'event_workflow\')\n
 \n
-if not(len(event.getFollowUpValueList())):\n
+follow_up_ticket_title = portal_workflow.getInfoFor(event,\n
+                                                    \'follow_up_ticket_title\',\n
+                                                    wf_id=\'event_workflow\')\n
 \n
-  follow_up_ticket_type = portal_workflow.getInfoFor(event,\n
-                                                     \'follow_up_ticket_type\',\n
-                                                     wf_id=\'event_workflow\')\n
+create_event = portal.portal_workflow.getInfoFor(event, \'create_event\',\n
+                                                 wf_id=\'event_workflow\')\n
 \n
-  follow_up_ticket_title = portal_workflow.getInfoFor(event,\n
-                                                      \'follow_up_ticket_title\',\n
-                                                      wf_id=\'event_workflow\')\n
+follow_up = event.getFollowUp()\n
 \n
-  event.Event_createFollowUpTicket(follow_up_ticket_title, follow_up_ticket_type)\n
+if follow_up is None:\n
+  if not (follow_up_ticket_type and follow_up_ticket_title):\n
+    raise ValueError, \'Follow up must not empty when assign or acknowledge.\'\n
+\n
+if follow_up is None and follow_up_ticket_type and follow_up_ticket_title:\n
+  event.Event_createFollowUpTicket(follow_up_ticket_title,\n
+                                   follow_up_ticket_type)\n
+\n
+if create_event:\n
+  portal.event_module.newContent(portal_type=event.portal_type,\n
+                                 destination=event.getSource(),\n
+                                 follow_up=event.getFollowUp(),\n
+                                 causality=event.getRelativeUrl(),\n
+                                 start_date=DateTime())\n
 </string> </value>
         </item>
         <item>
@@ -96,12 +109,6 @@ if not(len(event.getFollowUpValueList())):\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -135,14 +142,18 @@ if not(len(event.getFollowUpValueList())):\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>event</string>
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>portal_workflow</string>
-                            <string>follow_up_ticket_title</string>
-                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>event</string>
                             <string>follow_up_ticket_type</string>
+                            <string>follow_up_ticket_title</string>
+                            <string>create_event</string>
+                            <string>follow_up</string>
+                            <string>None</string>
+                            <string>ValueError</string>
+                            <string>DateTime</string>
                           </tuple>
                         </value>
                     </item>
@@ -159,13 +170,7 @@ if not(len(event.getFollowUpValueList())):\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_createFollowUpTicket</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Event_createEventForAcknowledge</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

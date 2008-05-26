@@ -1,3 +1,7 @@
+2008-5-26 yusei
+* Added An option which create new event in acknowledge workflow dialog.
+* In event_workflow, variables named follow_up_ticket_title and follow_up_ticket_type are updated only when transition or new  state specify a new value.
+
 2008-4-17 yusei
 * Revise version to 5.0.
 
