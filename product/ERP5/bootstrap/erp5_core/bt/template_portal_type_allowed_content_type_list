@@ -17,6 +17,7 @@ Domain | Domain Generator
 Order Builder | Predicate
 Order Tool | Order Builder
 Preference Tool | Preference
+Preference Tool | System Preference
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template

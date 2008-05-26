@@ -39,4 +39,8 @@
   <type>Simulation Movement</type>
   <workflow>simulation_movement_causality_interaction_workflow</workflow>
  </chain>
+ <chain>
+  <type>System Preference</type>
+  <workflow>preference_workflow</workflow>
+ </chain>
 </workflow_chain>

@@ -48,6 +48,7 @@
   <item>Order Builder</item>
  </portal_type>
  <portal_type id="Preference Tool">
+  <item>System Preference</item>
   <item>Preference</item>
  </portal_type>
  <portal_type id="Simulation Movement">
