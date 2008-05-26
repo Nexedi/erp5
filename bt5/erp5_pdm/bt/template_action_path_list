@@ -44,6 +44,7 @@ Supply Line | non_discountable_additional_price
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
 Supply Line | view
+System Preference | pdm_preference
 Transformation Module | view
 Transformation Operation | complete_quantity_matrix
 Transformation Operation | view
