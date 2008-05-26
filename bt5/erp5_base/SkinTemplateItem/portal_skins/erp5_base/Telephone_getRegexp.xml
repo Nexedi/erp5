@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
+\n
+#The notation always need to have:\n
+#<country> or <area> or <number> or <ext>\n
+#If uses a different tag it will be ignored.\n
+regexdict={\n
+  \'default\':{\n
+    "input" : "((\\+|)(?P<country>[\\d]*))(0)?(( |)(\\(0\\)|)(\\(|)(?P<area>[\\d]*))?((\\)|)(-|)(?P<number>[\\d^ ^-]*))((\\/|)(?P<ext>[\\d]*))", \n
+    "notation" : "+<country>(0)<area>-<number>/<ext>"\n
+  },\n
+  \'france\':{\n
+    "input" : "((\\+|)(?P<country>[\\d]*))(0)?(( |)(\\(0\\)|)(\\(|)(?P<area>[\\d]*))?((\\)|)(-|)(?P<number>[\\d^ ^-]*))((\\/|)(?P<ext>[\\d]*))", \n
+    "notation" : "+<country>(0)<area>-<number>/<ext>"\n
+  },\n
+  \'brazil\':{\n
+    "input" : "((\\+|)(?P<country>[\\d]*))(0)?(( |)(\\(0\\)|)(\\(|)(?P<area>[\\d]*))?((\\)|)(-|)(?P<number>[\\d^ ^-]*))((\\/|)(?P<ext>[\\d]*))", \n
+    "notation" : "+<country>(<area>)<number>/<ext>",\n
+  },\n
+  \'dakar\':{\n
+    "input" : "((\\+|)(\\(|)(?P<country>[\\d]*))?((\\)|)(-|)(?P<number>[\\d^ ^-]*))((\\/|)(?P<ext>[\\d]*))", \n
+    "notation" : "+<country> <number>/<ext>",\n
+  },\n
+  \'tokio\':{\n
+    "input" : "((\\+|)(?P<country>[\\d]*))(0)?(( |)(\\(0\\)|)(\\(|)(?P<area>[\\d]*))?((\\)|)(-|)(?P<number>[\\d^ ^-]*))((\\/|)(?P<ext>[\\d]*))", \n
+    "notation" : "+<country>(<area>)<number>/<ext>",\n
+  }\n
+}\n
+\n
+# In case of index is a number\n
+# should return a region from dict or from form field\n
+if index not in [None,\'\']:\n
+  countrydict={\n
+    \'33\':\'france\',\n
+    \'55\':\'brazil\',\n
+    \'221\':\'dakar\',\n
+    \'64\':\'tokio\'\n
+  }\n
+  #If index is not in country list\n
+  #the possible country can be found at region field\n
+  if index not in countrydict.keys():\n
+    region=context.getRegion() or context.getPortalObject().portal_preferences.getPreferredTelephoneDefaultRegion()\n
+  else:\n
+    region=countrydict.get(index,\'\')\n
+else:\n
+  region=context.getRegion() or context.getPortalObject().portal_preferences.getPreferredTelephoneDefaultRegion()\n
+\n
+# Find the region in regexdict\n
+if region is not None:\n
+  regionlist=region.split(\'/\')\n
+  for i in regionlist:\n
+    if regexdict.get(i) is not None:\n
+      region = i\n
+\n
+# If region doesn\'t exist the script should to return a default regex.\n
+if region not in regexdict.keys() or region is None:\n
+  region = \'default\'\n
+\n
+temp_object = newTempBase(context.getPortalObject(), id=\'1234\', uid=\'new_%s\' % zfill(\'year\',4))\n
+temp_object.setProperty(\'input\',regexdict.get(region).get(\'input\',\'\'))\n
+temp_object.setProperty(\'notation\',regexdict.get(region).get(\'notation\',\'\'))\n
+return temp_object\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>index=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>index</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>regexdict</string>
+                            <string>None</string>
+                            <string>countrydict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>region</string>
+                            <string>regionlist</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>temp_object</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Telephone_getRegexp</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
