@@ -453,7 +453,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(['this_is_system'],
                       preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
-    # create a user pref and check it outranks the system one if
+    # create a user pref and check it doesn't outranks the system one if
     # they both defined same pref
     user_pref = preference_tool.newContent(
                           portal_type='Preference',
@@ -465,6 +465,8 @@ class TestPreferences(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(['this_is_user'],
+                      user_pref.getPreferredAccountingTransactionSimulationStateList())
+    self.assertEquals(['this_is_system'],
                       preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
     # check a user can't edit preference which are marked for manager
