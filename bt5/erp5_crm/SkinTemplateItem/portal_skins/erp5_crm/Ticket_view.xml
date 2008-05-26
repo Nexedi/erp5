@@ -102,6 +102,7 @@
                       <list>
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_destination_title</string>
+                        <string>listbox_content</string>
                       </list>
                     </value>
                 </item>
