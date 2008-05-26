@@ -37,7 +37,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
 
-
 class TestERP5Base(ERP5TypeTestCase):
   """ERP5 Base tests.
 
@@ -76,6 +75,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.portal            = self.getPortal()
     self.portal_categories = self.getCategoryTool()
     self.portal_catalog    = self.getCatalogTool()
+    self.portal_preferences = self.getPreferenceTool()
     self.createCategories()
     # self.login_as_member()
 
@@ -863,15 +863,50 @@ class TestERP5Base(ERP5TypeTestCase):
                         getattr(org.getCreationDate(), slot)(),
                         'Wrong creation date %s' % org.getCreationDate())
 
-
   def test_TelephoneAsText(self):
     # Test asText method
     pers = self.getPersonModule().newContent(portal_type='Person')
     tel = pers.newContent(portal_type='Telephone')
     tel.setTelephoneCountry(33)
-    tel.setTelephoneNumber(123456789)
-    self.assertEquals('+33(0)-123456789', tel.asText())
+    tel.setTelephoneArea(2)
+    tel.setTelephoneNumber(12345678)
+    tel.setTelephoneExtension(999)
+    self.assertEquals('+33(0)2-12345678/999', tel.asText())
 
+  def test_TelephoneInputList(self):
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    tel = pers.newContent(portal_type='Telephone')
+    pref = self.portal_preferences.default_site_preference
+    pref.setPreferredTelephoneDefaultCountryNumber('33')
+    pref.setPreferredTelephoneDefaultAreaNumber('2')
+    pref.enable()
+    inputdict=[
+      ['+33(0)2-27224896/999','+33(0)2-27224896/999'],
+      ['+33(0)2-27224896/','+33(0)2-27224896/'],
+      ['+33(629)02 44 25/222','+33(0)629-024425/222'],
+      ['(22)27224897','+33(0)22-27224897/'],
+      ['12345678','+33(0)2-12345678/'],
+      ['(22) 12345678','+33(0)22-12345678/'],
+      ['66187654321','+33(0)2-66187654321/'],
+      ['(22)-12345678','+33(0)22-12345678/'],
+      ['33 2 098765432/1','+33(0)2-098765432/1']
+    ]
+
+    for i in inputdict:
+      tel.fromText(coordinate_text=i[0])
+      self.assertEquals(i[1],tel.asText())
+   
+  def test_TelephoneWhenTheDefaultCountryAndAreaPreferenceIsBlank(self):
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    tel = pers.newContent(portal_type='Telephone')
+    tel.fromText(coordinate_text='12345678')
+    self.assertEquals('+(0)-12345678/',tel.asText())
+
+  def test_TelephoneAsTextBlankNumber(self):
+    # Test asText method with blank number
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    tel = pers.newContent(portal_type='Telephone')
+    self.assertEquals('', tel.asText())
 
   def test_TelephoneUrl(self):
     # http://www.rfc-editor.org/rfc/rfc3966.txt
