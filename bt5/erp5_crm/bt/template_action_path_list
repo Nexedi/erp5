@@ -53,6 +53,7 @@ Support Request Module | support_request_status
 Support Request Module | view
 Support Request | new_event
 Support Request | view
+System Preference | crm_preference
 Visit | assessment
 Visit | create_related_event
 Visit | preview
