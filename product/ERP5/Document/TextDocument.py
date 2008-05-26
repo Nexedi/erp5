@@ -163,14 +163,14 @@ class TextDocument(Document, TextContent):
       text_content = self.getTextContent()
       if text_content is not None:
         portal_transforms = getToolByName(self, 'portal_transforms')
-        result = portal_transforms.convertTo(mime_type,
-                                             text_content,
-                                             object=self,
-                                             mimetype=src_mimetype)
+        result = portal_transforms.convertToData(mime_type, text_content,
+                                                 object=self, context=self,
+                                                 filename=self.title_or_id(),
+                                                 mimetype=src_mimetype)
         if result is None:
             # portal_transforms fails to convert.
             LOG('TextDocument.convert', WARNING,
-                'portal_transforms failed to convert to text: %r' % self)
+                'portal_transforms failed to convert to %s: %r' % (mime_type, self))
             result = ''
         return mime_type, result
       else:
