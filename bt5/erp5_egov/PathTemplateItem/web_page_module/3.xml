@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="TextDocument" module="Products.ERP5Type.Document.TextDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_mime</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_size</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_cached_time</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>HelpOn_egov_portal</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>3</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>fr</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Utilisation</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Donec sed pede ac dui aliquam mattis. Vivamus vitae dui id sem porttitor commodo! Nunc elit turpis, dictum in, auctor non, rutrum in; massa! Vivamus tristique vulputate ante? Pellentesque imperdiet enim vitae nibh. Nunc faucibus, nunc ut fringilla volutpat, lacus nibh varius neque, in rhoncus lectus felis eget lacus. Nullam id neque eu libero tincidunt blandit. Praesent pretium, purus vitae suscipit mollis, felis dui viverra turpis, ac dignissim nisi nisi sed nibh. Pellentesque accumsan. Etiam sem tellus, ullamcorper ac, hendrerit non, semper id, nunc. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas sollicitudin, neque a pellentesque accumsan, ante ante egestas ipsum, et sodales ipsum sapien sed sapien. Vivamus ligula sapien, fringilla non, sollicitudin ut, vestibulum eget, nunc. Nulla varius. Curabitur tellus neque, posuere ac, sodales ut, iaculis facilisis, eros. Nam ac elit et ligula accumsan accumsan. Sed urna.<br /><br />Vivamus turpis pede, eleifend quis, fermentum quis, ultrices et, lorem. Praesent pulvinar. Integer consectetuer lobortis sem. Aliquam fringilla. Suspendisse vulputate eleifend leo! Morbi at enim eget erat rutrum lobortis. Morbi sit amet turpis. Maecenas ac mi molestie nibh placerat imperdiet. Sed aliquet, pede eu ornare blandit, massa dolor tincidunt dolor, vitae vestibulum est pede eget lorem. Sed augue.<br /><br />Duis vulputate, metus vitae interdum aliquam, metus sem dictum metus, vitae sagittis orci lectus eu quam. Maecenas et eros ac nunc blandit placerat! Proin at neque! Phasellus commodo. Mauris vitae augue nec sapien dignissim semper. Morbi sagittis, elit ac semper sodales, lacus nunc ullamcorper mi, ac bibendum nisi tellus ac odio. Etiam vulputate felis ac leo! Donec urna. Nullam eros dolor; sollicitudin et, porta posuere, varius in, tellus. Morbi sed metus! Aliquam dictum odio non nulla. Nulla id orci. Pellentesque malesuada. Nam nibh mi, vulputate at, semper ac, varius eget, enim? Etiam dapibus eleifend erat? Suspendisse vel sapien.<br /><br />Duis sollicitudin quam in lacus. Duis facilisis, lorem sit amet luctus vehicula, dolor ipsum lobortis nulla, et pulvinar lorem leo id erat. Sed sodales? Vestibulum eleifend molestie felis. Donec posuere. Aliquam feugiat ante non nisi. Duis tristique. Quisque turpis. Donec venenatis, enim eget sollicitudin pulvinar, ligula sapien consectetuer magna; non tempus massa nibh nec odio. Integer auctor varius risus. Cras fringilla neque a elit!<br /><br />Pellentesque interdum? Aenean molestie ligula non turpis. Vivamus tincidunt tincidunt lectus. Donec non est. Proin sem risus, volutpat eget, commodo a, fermentum et, urna. Proin augue ante, pretium a, dignissim quis, placerat at; risus. Nam elit. Cras tincidunt lorem non arcu! Curabitur auctor. Proin nec dui. Maecenas ultrices luctus nisl. Mauris et justo. Curabitur porta tortor ut sapien. Etiam venenatis vehicula massa. Ut lacinia posuere neque. Suspendisse commodo rutrum odio. Etiam feugiat leo sit amet risus facilisis vehicula. Curabitur erat lorem, commodo eget, vestibulum ut, consectetuer a, risus. Maecenas ultricies; sem ut ultricies sollicitudin, pede magna tristique mauris; ac vulputate mauris tortor vel leo. Sed adipiscing nunc a enim.<br /><br />Aliquam sed ligula. Aliquam suscipit, leo ut tempor porta, dolor tortor vulputate lorem, sodales pharetra felis tortor eget velit. Pellentesque bibendum, ipsum at gravida ultricies, felis enim viverra nisi, nec pellentesque purus sapien sed leo. Duis sapien. Vivamus elementum eros et neque. Pellentesque odio. Etiam mi. Ut vel ante. Donec urna magna, gravida vel, porta eu, sagittis sit amet, purus. Aenean eget neque sed dui pharetra interdum. Praesent id ante in ante dapibus elementum. Nullam eros arcu, pellentesque eu, porttitor sit amet, pharetra hendrerit, urna. Sed urna. Nam tincidunt. Integer laoreet tortor at ante. Proin sollicitudin. Nunc vel nibh!<br /><br />Donec pellentesque lacinia diam. Nulla gravida laoreet sem. Sed faucibus erat at ante. Suspendisse pretium. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibu
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>text_format</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Utilisation du portail SAFI</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
