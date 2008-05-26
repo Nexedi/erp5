@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>description</string>
+                <string>default</string>
               </list>
             </value>
         </item>
@@ -57,6 +58,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key>                 <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -84,7 +91,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key>                 <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
                     <value> <string>Hostname of the oood server.</string> </value>
                 </item>
                 <item>
@@ -100,11 +111,27 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Conversion Server Address</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getPreferredOoodocServerAddress() or preferences.getPreferredOoodocServerAddress()</string> </value>
         </item>
       </dictionary>
     </pickle>
