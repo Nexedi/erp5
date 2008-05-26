@@ -27,6 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from zLOG import LOG, WARNING
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
@@ -162,10 +163,16 @@ class TextDocument(Document, TextContent):
       text_content = self.getTextContent()
       if text_content is not None:
         portal_transforms = getToolByName(self, 'portal_transforms')
-        return mime_type, portal_transforms.convertTo(mime_type,
-                                                      text_content,
-                                                      object = self,
-                                                      mimetype = src_mimetype)
+        result = portal_transforms.convertTo(mime_type,
+                                             text_content,
+                                             object=self,
+                                             mimetype=src_mimetype)
+        if result is None:
+            # portal_transforms fails to convert.
+            LOG('TextDocument.convert', WARNING,
+                'portal_transforms failed to convert to text: %r' % self)
+            result = ''
+        return mime_type, result
       else:
         # text_content is not set, return empty string instead of None
         return mime_type, ''
