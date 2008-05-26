@@ -42,7 +42,6 @@ Phone Call | create_related_event
 Phone Call | preview
 Phone Call | related_events
 Phone Call | view
-Preference | crm_preference
 Sale Opportunity Module | sale_opportunity_detailed_report
 Sale Opportunity Module | sale_opportunity_status
 Sale Opportunity Module | view
