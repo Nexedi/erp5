@@ -657,6 +657,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
   # XXX We want to make sure that we always have the current value in items. -yo
   if not selected_found and value:
+      value = escape(value)
       rendered_item = self.render_selected_item('??? (%s)' % value,
                                                 value,
                                                 key,
@@ -693,20 +694,22 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
           item_value = item
 
       if item_value in value:
-          rendered_item = self.render_selected_item(item_text,
-                                                    item_value,
-                                                    key,
-                                                    css_class,
-                                                    extra_item)
+          rendered_item = self.render_selected_item(
+              escape(str(item_text)).replace(' ', '&nbsp;'),
+              escape(str(item_value)),
+              key,
+              css_class,
+              extra_item)
           # XXX -yo
           index = value.index(item_value)
           selected_found[index] = 1
       else:
-          rendered_item = self.render_item(item_text,
-                                           item_value,
-                                           key,
-                                           css_class,
-                                           extra_item)
+          rendered_item = self.render_item(
+               escape(str(item_text)).replace(' ', '&nbsp;'),
+               escape(str(item_value)),
+               key,
+               css_class,
+               extra_item)
 
       rendered_items.append(rendered_item)
 
@@ -714,6 +717,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
   for index in range(len(value)):
     v = value[index]
     if index not in selected_found and v:
+      v = escape(v)
       rendered_item = self.render_selected_item('??? (%s)' % v,
                                                 v,
                                                 key,
@@ -783,7 +787,7 @@ def ListWidget_render_view(self, field, value, REQUEST=None):
       return ''
   title_list = [x[0] for x in field.get_value("items", REQUEST=REQUEST) if x[1]==value]
   if len(title_list) == 0:
-    return "??? (%s)" % value
+    return "??? (%s)" % escape(value)
   else:
     return title_list[0]
   return value
