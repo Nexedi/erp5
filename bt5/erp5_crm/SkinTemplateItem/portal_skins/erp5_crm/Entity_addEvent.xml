@@ -71,8 +71,10 @@ from AccessControl import getSecurityManager\n
 # Search current user ID\n
 user_id = getSecurityManager().getUser().getId()\n
 source = None\n
+person_subordination = None\n
 for person in context.portal_catalog(reference=user_id, portal_type=\'Person\'):\n
   source = person.getRelativeUrl()\n
+  person_subordination = person.getSubordination()\n
   break\n
 \n
 follow_up_url = None\n
@@ -83,14 +85,14 @@ destination = context.getRelativeUrl()\n
 \n
 if direction == \'out\':\n
   source_url = source\n
-  source_section_url = person.getSubordination()\n
+  source_section_url = person_subordination\n
   destination_url = destination\n
   destination_section_url = context.getSubordination()\n
 elif direction == \'in\':\n
   source_url = destination\n
   source_section_url = context.getSubordination()\n
   destination_url = source\n
-  destination_section_url = person.getSubordination()\n
+  destination_section_url = person_subordination\n
 else:\n
   raise KeyError, \'Direction Specified not handling: %s\' % direction\n
 \n
@@ -175,6 +177,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
                             <string>user_id</string>
                             <string>None</string>
                             <string>source</string>
+                            <string>person_subordination</string>
                             <string>_getiter_</string>
                             <string>context</string>
                             <string>person</string>
