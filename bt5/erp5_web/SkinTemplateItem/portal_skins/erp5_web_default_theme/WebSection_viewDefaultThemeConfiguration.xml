@@ -44,11 +44,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>This form provides access to the configuration properties of the Default Web Layout.</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -68,16 +68,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left column transparent (Logo)</string>
-                <string>left column (Navigation)</string>
-                <string>left column (Sections)</string>
-                <string>left column (Contents)</string>
-                <string>left column (Search)</string>
-                <string>left column (Debug)</string>
-                <string>right column (News)</string>
-                <string>right column (Toolbox)</string>
-                <string>right column (Highlight)</string>
-                <string>footer</string>
+                <string>left (Style)</string>
+                <string>right (Widgets)</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -86,84 +81,50 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>footer</string> </key>
+                    <key>                 <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>left (Style)</string> </key>
                     <value>
                       <list>
-                        <string>website_footer</string>
+                        <string>my_layout_body_background</string>
+                        <string>my_layout_content_background</string>
+                        <string>my_layout_content_border_color</string>
+                        <string>my_layout_content_h1_color</string>
+                        <string>my_layout_content_text_color</string>
+                        <string>my_layout_header_title_color</string>
+                        <string>my_layout_footer_background</string>
+                        <string>my_layout_widget_background</string>
+                        <string>my_layout_widget_legend_background</string>
+                        <string>my_layout_widget_legend_color</string>
+                        <string>my_layout_widget_border_color</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left column (Contents)</string> </key>
+                    <key>                 <string>right (Widgets)</string> </key>
                     <value>
                       <list>
-                        <string>section_content_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column (Debug)</string> </key>
-                    <value>
-                      <list>
-                        <string>applicable_layout</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column (Navigation)</string> </key>
-                    <value>
-                      <list>
-                        <string>language_selector</string>
-                        <string>breadcrumb</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column (Search)</string> </key>
-                    <value>
-                      <list>
-                        <string>your_search_text</string>
-                        <string>search_action</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>left column (Sections)</string> </key>
-                    <value>
-                      <list>
-                        <string>subsection_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left column transparent (Logo)</string> </key>
-                    <value>
-                      <list>
-                        <string>website_logo</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>right column (Highlight)</string> </key>
-                    <value>
-                      <list>
-                        <string>website_highlight</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>right column (News)</string> </key>
-                    <value>
-                      <list>
-                        <string>website_news</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right column (Toolbox)</string> </key>
-                    <value>
-                      <list>
-                        <string>admin_toolbox</string>
+                        <string>my_layout_footer_reference</string>
+                        <string>my_layout_logo_reference</string>
+                        <string>my_layout_news_reference</string>
+                        <string>my_layout_highlight_reference</string>
+                        <string>my_layout_display_content_widget</string>
                       </list>
                     </value>
                 </item>
@@ -172,7 +133,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_content_layout</string> </value>
+            <value> <string>WebSection_viewDefaultThemeConfiguration</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -180,15 +141,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>erp5_web_default_layout</string> </value>
+            <value> <string>WebSection_viewDefaultThemeConfiguration</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>template_erp5_web</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>5</int> </value>
+            <value> <int>4</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
@@ -196,7 +157,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Section Layout</string> </value>
+            <value> <string>Default Theme Configuration</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

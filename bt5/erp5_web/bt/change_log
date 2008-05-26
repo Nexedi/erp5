@@ -1,5 +1,7 @@
-2008-05-21 yo
-* Try an English version if no document is found for a given language.
+2008-5-26 jps
+* Revise version to 5.0.1.
+* Configuration is now more generic
+* Improved breadcrumbs
 
 2008-4-17 yusei
 * Revise version to 5.0.

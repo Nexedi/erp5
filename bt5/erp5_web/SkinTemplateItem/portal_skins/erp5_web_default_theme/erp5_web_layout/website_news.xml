@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
-        </tuple>
-        <none/>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>about_box</string> </value>
+            <value> <string>website_news</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -136,7 +133,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -148,7 +147,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -183,6 +184,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -211,15 +216,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-This is a <b>demo</b> html box that displays a some text on the <i>right column</i> of the site.
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -266,8 +267,12 @@ This is a <b>demo</b> html box that displays a some text on the <i>right column<
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Demo</string> </value>
+                    <value> <string>ERP5 WebSite News</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -283,6 +288,38 @@ This is a <b>demo</b> html box that displays a some text on the <i>right column<
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.WebSection_viewInlinePageRenderer(here.getLayoutProperty(\'layout_news_reference\'))</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.getLayoutProperty(\'layout_news_reference\')</string> </value>
         </item>
       </dictionary>
     </pickle>

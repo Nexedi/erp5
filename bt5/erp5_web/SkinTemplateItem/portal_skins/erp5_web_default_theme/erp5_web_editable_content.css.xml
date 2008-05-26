@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -64,6 +61,10 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block \n
+  define="header_title_color python:here.getLayoutProperty(\'layout_header_title_color\', \'#999\');\n
+                   ">\n
+\n
 \n
 /*========================================================================================\n
 **  FORMs & INPUTs\n
@@ -84,6 +85,10 @@ div#main_content input, textarea {\n
   padding: 1px;\n
 }\n
 \n
+div#main_content fieldset.bottom textarea {\n
+  width: 100%;\n
+}\n
+\n
 div#main_content input.button, input[type="submit"] {\n
   /* XXX Is this case happend in current web implementation ? */\n
   background: #fff url(erp5-website-button.png) bottom repeat-x;\n
@@ -98,6 +103,22 @@ div#main_content input[type="image"] {\n
 div#main_content button {\n
   margin: .8em .5em;\n
   padding: .3em;\n
+}\n
+\n
+div#main_content button.sort_button {\n
+  background-color:inherit;\n
+  border-width:0pt;\n
+  color:inherit;\n
+  cursor:pointer;\n
+  padding:0em;\n
+  margin:0em;\n
+  float:left;\n
+}\n
+\n
+div#main_content button.sort_button span {\n
+  color:inherit;\n
+  font-size:90%;\n
+  text-decoration:underline;\n
 }\n
 \n
 \n
@@ -269,6 +290,16 @@ div#main_content fieldset {\n
   border-color: #ccc;\n
   border-width: 1px 0 0;\n
   border-style: dotted none none;\n
+}\n
+\n
+div#main_content.list_mode fieldset {\n
+  border-style: none none;\n
+  margin: 0;\n
+  padding: 0em 0.5em;\n
+}\n
+\n
+div#main_content fieldset.header {\n
+  border-style: none none;\n
 }\n
 \n
 div#main_content fieldset > div {\n
@@ -464,7 +495,7 @@ div#main_content > fieldset.webcontent span.headline {\n
   margin: 1em 0;\n
   padding: 0 1em;\n
   font-size: 200%;\n
-  color: #999;\n
+  color: <tal:block tal:replace="header_title_color"/>;\n
   font-weight: bold;\n
   text-shadow: .1em .1em .1em #eee;\n
   line-height: 140%;\n
@@ -480,15 +511,17 @@ div#main_content > fieldset.webcontent span.summary {\n
 \n
 div#main_content fieldset.webcontent span.headline {\n
   margin: 1em 0;\n
-  padding: 0 1em;\n
+  /*padding: 0 1em;*/\n
+  padding: 0em;\n
   font-size: 250%;\n
-  color: #999;\n
+  color: <tal:block tal:replace="header_title_color"/>;\n
   font-weight: bold;\n
   text-shadow: .1em .1em .1em #eee;\n
   line-height: 140%;\n
   text-align: left;\n
 }\n
-
+\n
+</tal:block>
 
 ]]></string> </value>
         </item>

@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
-        </tuple>
-        <none/>
+        <global name="RadioField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>about_box</string> </value>
+            <value> <string>my_layout_display_content_widget</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,20 +22,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>You entered too many characters.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -76,11 +65,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,15 +77,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
+                    <key> <string>orientation</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -113,10 +98,6 @@
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -155,11 +136,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -167,15 +148,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
+                    <key> <string>orientation</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -192,10 +169,6 @@
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -211,15 +184,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-This is a <b>demo</b> html box that displays a some text on the <i>right column</i> of the site.
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -227,7 +196,7 @@ This is a <b>demo</b> html box that displays a some text on the <i>right column<
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -238,28 +207,39 @@ This is a <b>demo</b> html box that displays a some text on the <i>right column<
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Acquire</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>Display</string>
+                          <string>display</string>
+                        </tuple>
+                        <tuple>
+                          <string>Hide</string>
+                          <string>hide</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>horizontal</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -267,7 +247,7 @@ This is a <b>demo</b> html box that displays a some text on the <i>right column<
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Demo</string> </value>
+                    <value> <string>Content Widget</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -276,10 +256,6 @@ This is a <b>demo</b> html box that displays a some text on the <i>right column<
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>

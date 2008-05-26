@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -58,6 +55,19 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block \n
+  define="content_background python:here.getLayoutProperty(\'layout_content_background\', \'#fff\');\n
+          content_border_color python:here.getLayoutProperty(\'layout_content_border_color\', \'#ccc\');\n
+          widget_legend_background python:here.getLayoutProperty(\'layout_widget_legend_background\', \'#eee\');\n
+          widget_border_color python:here.getLayoutProperty(\'layout_widget_border_color\', \'#ccc\');\n
+          widget_background python:here.getLayoutProperty(\'layout_widget_background\',\n
+                                  \'#fff url(erp5-website-field.png) top repeat-x\');\n
+          widget_legend_color python:here.getLayoutProperty(\'layout_widget_legend_color\', \'#666\');\n
+          footer_background python:here.getLayoutProperty(\'layout_footer_background\',\n
+                                  \'#ccc url(erp5-website-micro-gray-shadow.png) top repeat-x\');\n
+\n
+\n
+                   ">\n
 \n
 \n
 html {\n
@@ -72,8 +82,13 @@ html {\n
 **========================================================================================*/\n
 \n
 .document div.content {\n
-  background: #fff;\n
-  border: .1em solid #ccc;\n
+  background: <tal:block tal:replace="content_background"/>;\n
+  border: .1em solid <tal:block tal:replace="content_border_color"/>;\n
+  padding: 0em 0.7em;\n
+}\n
+\n
+.document div.content.editable {\n
+  padding: 0em 0em;\n
 }\n
 \n
 /* Define some constant to make the css flexible without pain */\n
@@ -101,7 +116,7 @@ form#main_form div#wrapper_footer,\n
 form#main_form div#wrapper_header   /* Customisation of template_erp5_web is required to make header work */\n
 {\n
   margin-left: <tal:block  replace="python: (\'-%s%s\') % (LC_fullwidth, unit)"/>;\n
-  margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
+  margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_width - RC_padding, unit)"/>;\n
 }\n
 \n
 form#main_form div#main_content,\n
@@ -160,19 +175,19 @@ form#main_form div#wrapper_footer {\n
 /* Standard wrapper */\n
 \n
 form#main_form div.wrapper div.column fieldset.widget {\n
-  background: #fff url(erp5-website-field.png) top repeat-x;\n
-  border: 1px solid #ccc;\n
+  background:  <tal:block tal:replace="widget_background"/>;\n
+  border: 1px solid <tal:block tal:replace="widget_border_color"/>;\n
   color: #666;\n
   padding: 2px;\n
-  margin: 0.5em 0;\n
+  margin: 1em 0;\n
 }\n
 \n
 form#main_form div.wrapper div.column fieldset.widget legend {\n
   padding: 0.2em .5em;\n
   font-weight: bold;\n
-  color: #666;\n
+  color: <tal:block tal:replace="widget_legend_color"/>;\n
   text-transform: capitalize;\n
-  background: #EEE;\n
+  background: <tal:block tal:replace="widget_legend_background"/>;\n
 }\n
 \n
 form#main_form div.wrapper div.column fieldset.widget div.field label:after {content: ":"}\n
@@ -199,6 +214,7 @@ form#main_form div.wrapper div.transparent fieldset.widget label {\n
 /* Special layout for logo widget */\n
 form#main_form div.column fieldset.widget div.field.logo {\n
   padding: 2em 0 0;\n
+  margin-bottom: 1.5em;\n
   border: 0;\n
   background: transparent;\n
 }\n
@@ -211,7 +227,7 @@ form#main_form div.wrapper div.field.logo label {\n
 form#main_form div#wrapper_footer div.field {\n
   margin: 0;\n
   padding: .7em;\n
-  background: #ccc url(erp5-website-micro-gray-shadow.png) top repeat-x;\n
+  background: <tal:block tal:replace="footer_background"/>;\n
   border-color: #999;\n
   border-width: 0 0 1px;\n
   border-style: solid;\n
@@ -253,7 +269,9 @@ form#main_form div.searchInput input, textarea, select { /* This should be commo
 /* Special layout for language widget */\n
 form#main_form div.languageSelector {\n
   float: right;\n
-}
+}\n
+\n
+</tal:block>
 
 ]]></string> </value>
         </item>

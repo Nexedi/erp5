@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -66,15 +63,19 @@
   </ul>\n
 </tal:block>\n
 \n
-<!-- Initialize the recursive loop starting from context or from web section -->\n
-<div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(here)"\n
-                        tal:condition="not:request/is_web_section_default_document">\n
-  <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
-</div>\n
-<div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(request.current_web_section)"\n
-                        tal:condition="request/is_web_section_default_document">\n
-  <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
-</div>\n
+<tal:block tal:define="is_web_section_default_document request/is_web_section_default_document|nothing;\n
+                       current_web_section python:request.get(\'current_web_section\', None)\n
+                                                  or here.getWebSectionValue()">\n
+  <!-- Initialize the recursive loop starting from context or from web section -->\n
+  <div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(here)"\n
+                          tal:condition="not:is_web_section_default_document">\n
+    <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
+  </div>\n
+  <div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(current_web_section)"\n
+                          tal:condition="is_web_section_default_document">\n
+    <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n
+  </div>\n
+</tal:block>\n
 \n
 <span style="float:right;" tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
 Logged in as: <a style="color:blue;" tal:define="user here/portal_membership/getAuthenticatedMember"\n

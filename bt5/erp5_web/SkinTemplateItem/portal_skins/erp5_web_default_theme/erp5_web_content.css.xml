@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,7 +72,7 @@
 \n
 ========================================================================================*/\n
 \n
-<tal:block tal:replace="structure python:here.getPortalObject()[\'erp5_web_editable_content.css\']()"/>
+<tal:block tal:replace="structure python:here.restrictedTraverse(\'erp5_web_editable_content.css\')()"/>
 
 ]]></string> </value>
         </item>

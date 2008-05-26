@@ -108,18 +108,18 @@
         <span id="clone_document_title"><tal:block tal:replace="python: \'Clone %s %s\' % ((portal_type in [\'Web Site\', \'Web Section\'] and \'Default\') or \'Current\', portal_type)"/></span>\n
       </h3>\n
 \n
-      <fieldset style="display:block;float:left">\n
+      <fieldset style="display:block;">\n
         <!--legend class="group_title">left</legend-->\n
 \n
           <div class="field">\n
             <label>Title</label>\n
-            <div class="input"><input class="input" size="15" type="text" name="clone_title"\n
+            <div class="input"><input class="input" size="12" type="text" name="clone_title"\n
                                       tal:attributes="value here/getTitle | nothing"/></div>\n
           </div>\n
 \n
           <div class="field">\n
             <label>Reference</label>\n
-            <div class="input"><input class="input" size="15" type="text" name="clone_reference"\n
+            <div class="input"><input class="input" size="12" type="text" name="clone_reference"\n
                                       tal:attributes="value here/getReference | nothing"/></div>\n
           </div>\n
 \n

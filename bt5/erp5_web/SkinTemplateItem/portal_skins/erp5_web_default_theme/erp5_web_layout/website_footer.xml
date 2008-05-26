@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>website_logo</string> </value>
+            <value> <string>website_footer</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -147,9 +147,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -216,7 +214,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>centered logo</string> </value>
+                    <value> <string>centered footer</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -272,7 +270,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>ERP5 WebSite Logo</string> </value>
+                    <value> <string>ERP5 WebSite Footer</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -303,23 +301,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.WebSection_viewInlinePageRenderer(here.getLayoutProperty(\'layout_logo_reference\'))</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.getLayoutProperty(\'layout_logo_reference\')</string> </value>
+            <value> <string>python: here.WebSection_viewInlinePageRenderer(here.getLayoutProperty(\'layout_footer_reference\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

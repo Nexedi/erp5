@@ -61,6 +61,13 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block \n
+  define="body_background python:here.getLayoutProperty(\'layout_body_background\',\n
+                   \'#e6e6e6 url(erp5-website-background.png) top left no-repeat\');\n
+          content_background python:here.getLayoutProperty(\'layout_content_background\', \'#fff\');\n
+          content_text_color python:here.getLayoutProperty(\'layout_content_text_color\', \'#000\');\n
+          content_h1_color python:here.getLayoutProperty(\'layout_content_h1_color\', \'#000\');\n
+                   ">\n
 \n
 /*========================================================================================\n
   Default ERP5 Web CSS.\n
@@ -114,9 +121,11 @@ ul {list-style-position: inside}\n
 li {margin-left: 1em}\n
 \n
 fieldset#hidden_fieldset,\n
-.doNotDisplay {display: none}\n
+.doNotDisplay {display: none} /* For compatibility */\n
+.do_not_display {display: none}\n
 \n
-.hiddenLabel label {display: none}\n
+.hiddenLabel label {display: none} /* For compatibility */\n
+.hidden_label label {display: none}\n
 \n
 table {\n
   border-collapse: collapse;\n
@@ -126,6 +135,10 @@ table {\n
 p {\n
   margin: .6em 0;\n
   text-align: justify;\n
+}\n
+\n
+.document div.content {\n
+  color: <tal:block tal:replace="content_text_color"/>;\n
 }\n
 \n
 /* Workflow states\n
@@ -162,7 +175,7 @@ span.cancelled   {color: #ccc}\n
    Typography & colors (fonts, color, background).\n
 ------------------------------------------------------------------ */\n
 \n
-body {background: #e6e6e6 url(erp5-website-background.png) top left no-repeat}\n
+body {background: <tal:block tal:replace="body_background"/>}\n
 \n
 body, input, textarea, select, table {\n
   color: #333;\n
@@ -183,7 +196,13 @@ body, input, textarea, select, table {\n
   font-weight: bold;\n
 }\n
 \n
-h1 {margin: 1.3em 0}\n
+h1 {\n
+  margin-top: 1.3em;\n
+  margin-left: 0;\n
+  margin-right: 0;\n
+  margin-bottom: 0.7em;\n
+  color: <tal:block tal:replace="content_h1_color"/>;\n
+}\n
 \n
 blockquote {\n
   margin: .5em;\n
@@ -214,7 +233,9 @@ div.breadcrumb li a.selected {\n
   text-decoration: none;\n
 }\n
 \n
-div.breadcrumb li a.selected:hover {border-bottom-color: #39f} /* same as "a:hover" rule */
+div.breadcrumb li a.selected:hover {border-bottom-color: #39f} /* same as "a:hover" rule */\n
+\n
+</tal:block>
 
 ]]></string> </value>
         </item>

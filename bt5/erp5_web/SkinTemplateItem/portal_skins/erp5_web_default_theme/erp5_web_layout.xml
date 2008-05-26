@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Form</string>
-          <string>ERP5Form</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -50,6 +47,16 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -63,11 +70,13 @@
               <list>
                 <string>left column transparent (Logo)</string>
                 <string>left column (Navigation)</string>
+                <string>left column (Sections)</string>
                 <string>left column (Contents)</string>
                 <string>left column (Search)</string>
                 <string>left column (Debug)</string>
-                <string>right column (Demo)</string>
+                <string>right column (News)</string>
                 <string>right column (Toolbox)</string>
+                <string>right column (Highlight)</string>
                 <string>footer</string>
               </list>
             </value>
@@ -79,14 +88,15 @@
                 <item>
                     <key> <string>footer</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>website_footer</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left column (Contents)</string> </key>
                     <value>
                       <list>
-                        <string>subsection_list</string>
                         <string>section_content_list</string>
                       </list>
                     </value>
@@ -118,6 +128,14 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>left column (Sections)</string> </key>
+                    <value>
+                      <list>
+                        <string>subsection_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left column transparent (Logo)</string> </key>
                     <value>
                       <list>
@@ -126,10 +144,18 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>right column (Demo)</string> </key>
+                    <key>                 <string>right column (Highlight)</string> </key>
                     <value>
                       <list>
-                        <string>about_box</string>
+                        <string>website_highlight</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right column (News)</string> </key>
+                    <value>
+                      <list>
+                        <string>website_news</string>
                       </list>
                     </value>
                 </item>
@@ -162,7 +188,7 @@
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>6</int> </value>
+            <value> <int>5</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
