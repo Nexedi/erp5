@@ -31,7 +31,7 @@ class OdtToPdf:
     doc.convert()
     pdf = doc.convertTo('pdf')
     if cache is not None:
-      cache.setData(msword)
+      cache.setData(pdf)
       return cache
     else:
       stream = OOoDocumentDataStream()
