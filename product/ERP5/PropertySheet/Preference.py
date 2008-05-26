@@ -87,6 +87,7 @@ class Preference:
       'description'     : 'Preferred timezone',
       'type'            : 'string',
       'default'         : '',
+      'write_permission': 'Manage properties',
       'mode'            : 'w'},
   )
 
