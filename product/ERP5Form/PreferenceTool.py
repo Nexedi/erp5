@@ -207,7 +207,6 @@ class PreferenceTool(BaseTool):
     """ set the preference on the active Preference object"""
     self.getActivePreference()._edit(**{pref_name:value})
 
-  security.declarePrivate('_getSortedPreferenceList')
   def _getSortedPreferenceList(self, *args, **kw) :
     """ return the most appropriate preferences objects,
         sorted so that the first in the list should be applied first
@@ -230,7 +229,10 @@ class PreferenceTool(BaseTool):
         else :
           prefs.append(pref)
     prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
-    return prefs
+    # add system preferences after user preferences
+    sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', **kw)]
+    sys_prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
+    return prefs + sys_prefs
 
   security.declareProtected(Permissions.View, 'getActivePreference')
   def getActivePreference(self) :
