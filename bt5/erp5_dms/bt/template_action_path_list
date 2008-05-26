@@ -112,6 +112,7 @@ Spreadsheet | print
 Spreadsheet | related_document
 Spreadsheet | view
 Spreadsheet | web_view
+System Preference | dms_preference
 Text | create_snapshot
 Text | download
 Text | download_ooo
