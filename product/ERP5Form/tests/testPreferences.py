@@ -31,6 +31,7 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
+from zExceptions import Unauthorized
 from zLOG import LOG
 from DateTime import DateTime
 from Testing import ZopeTestCase
@@ -426,6 +427,49 @@ class TestPreferences(ERP5TypeTestCase):
     # otherwise the "Metadata" tab is shown
     self.assertFalse(member.has_permission(
                          'Manage properties', user_pref))
+
+  
+  def test_SystemPreference(self):
+    preference_tool = self.portal.portal_preferences
+    site_pref = preference_tool.newContent(
+                          portal_type='System Preference',
+                          priority=Priority.SITE)
+    self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
+    self.assertEquals(site_pref.getPreferenceState(), 'global')
+    
+    # Members can't add new system preferences
+    uf = self.getPortal().acl_users
+    uf._doAddUser('member', '', ['Member', ], [])
+    member = uf.getUserById('member').__of__(uf)
+    newSecurityManager(None, member)
+    self.assertRaises(Unauthorized, preference_tool.newContent, portal_type='System Preference')
+    # But they can see others
+    site_pref.view()
+    # check accessors works
+    site_pref.setPreferredAccountingTransactionSimulationStateList(
+      ['this_is_system'])
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(['this_is_system'],
+                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
+
+    # create a user pref and check it outranks the system one if
+    # they both defined same pref
+    user_pref = preference_tool.newContent(
+                          portal_type='Preference',
+                          priority=Priority.USER)
+    user_pref.setPreferredAccountingTransactionSimulationStateList(
+      ['this_is_user'])
+    self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
+    self.assertEquals(user_pref.getPreferenceState(), 'enabled')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(['this_is_user'],
+                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
+
+    # check a user can't edit preference which are marked for manager
+    self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
+
     
 
 def test_suite():
