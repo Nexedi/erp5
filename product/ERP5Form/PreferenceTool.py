@@ -232,7 +232,7 @@ class PreferenceTool(BaseTool):
     # add system preferences after user preferences
     sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', **kw)]
     sys_prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
-    return prefs + sys_prefs
+    return sys_prefs + prefs
 
   security.declareProtected(Permissions.View, 'getActivePreference')
   def getActivePreference(self) :
