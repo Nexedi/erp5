@@ -53,17 +53,6 @@ MAX_TIC=0.0355
 LISTBOX_COEF=0.02472
 DO_TEST = 1
 
-# Prevent GC from happening.
-# We don't want cpu time to be spent outside of python code if possible.
-# It would increase the "crosstalk" between using more ram and using more cpu.
-# Another problem is that it makes result even less reproductible on another
-# machine where memory use does not evolve identicaly (ie. x86_64 arch,
-# because of 64bits pointers).
-gc.disable()
-# XXX: Maybe it would be usefull to explicitely collect garbage in some places
-# to keep memory usage low. But it is generaly bad to apply the cure before
-# even knowing if the symptoms will show up.
-
 class TestPerformance(ERP5TypeTestCase, LogInterceptor):
 
     # Some helper methods
@@ -90,6 +79,16 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
         Executed before each test_*.
       """
+      # Prevent GC from happening.
+      # We don't want cpu time to be spent outside of python code if possible.
+      # It would increase the "crosstalk" between using more ram and using more cpu.
+      # Another problem is that it makes result even less reproductible on another
+      # machine where memory use does not evolve identicaly (ie. x86_64 arch,
+      # because of 64bits pointers).
+      gc.disable()
+      # XXX: Maybe it would be usefull to explicitely collect garbage in some places
+      # to keep memory usage low. But it is generaly bad to apply the cure before
+      # even knowing if the symptoms will show up.
       self.login()
       self.bar_module = self.getBarModule()
       self.foo_module = self.portal.foo_module
