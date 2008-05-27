@@ -1063,6 +1063,22 @@ class TestERP5Base(ERP5TypeTestCase):
     age_as_text = person.Person_getAge(at_date=DateTime(2002, 2, 4))
     self.assertEquals(age_as_text, "1 Years Old")
 
+  def test_AssignmentWorkflow(self):
+    person = self.getPersonModule().newContent(portal_type='Person',)
+    assignment = person.newContent(portal_type='Assignment')
+    self.assertEquals('draft', assignment.getValidationState())
+    self.portal.portal_workflow.doActionFor(assignment, 'open_action')
+    self.assertEquals('open', assignment.getValidationState())
+    self.portal.portal_workflow.doActionFor(assignment, 'update_action')
+    self.assertEquals('updated', assignment.getValidationState())
+    self.portal.portal_workflow.doActionFor(assignment, 'open_action')
+    self.assertEquals('open', assignment.getValidationState())
+    # date is set automatically when closing
+    self.assertEquals(None, assignment.getStopDate())
+    self.portal.portal_workflow.doActionFor(assignment, 'close_action')
+    self.assertEquals('closed', assignment.getValidationState())
+    self.assertNotEquals(None, assignment.getStopDate())
+    self.assertEquals(DateTime().day(), assignment.getStopDate().day())
 
 
 def test_suite():
