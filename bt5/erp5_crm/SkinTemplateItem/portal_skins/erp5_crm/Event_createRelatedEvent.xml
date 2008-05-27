@@ -68,13 +68,13 @@
             <value> <string># this script allows to create a new related event by causality for\n
 # the current event\n
 from DateTime import DateTime\n
+from Products.CMFCore.WorkflowCore import WorkflowException\n
 N_ = context.Base_translateString\n
 date = DateTime()\n
 portal = context.getPortalObject()\n
 \n
 if portal_type not in portal.event_module.getVisibleAllowedContentTypeList():\n
-  return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=N_("You Don\'t Have Permission to Add New Event")))\n
+  raise WorkflowException, "You Don\'t Have Permission to Add New Event"\n
 \n
 # Create the draft Event\n
 related_event = portal.event_module.newContent(\n
@@ -85,10 +85,7 @@ related_event = portal.event_module.newContent(\n
                        source=context.getDefaultDestination(),\n
                        destination=context.getDefaultSource(),\n
                        causality=context.getRelativeUrl(),\n
-)\n
-\n
-return related_event.Base_redirect(\'view\', keep_items=dict(\n
-                            portal_status_message=N_(\'Related Event Created\')))\n
+                       )\n
 </string> </value>
         </item>
         <item>
@@ -111,7 +108,7 @@ return related_event.Base_redirect(\'view\', keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, title, description, form_id=\'view\', **kw</string> </value>
+            <value> <string>portal_type, title, description</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,7 +128,7 @@ return related_event.Base_redirect(\'view\', keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -140,15 +137,14 @@ return related_event.Base_redirect(\'view\', keep_items=dict(\n
                             <string>portal_type</string>
                             <string>title</string>
                             <string>description</string>
-                            <string>form_id</string>
-                            <string>kw</string>
                             <string>DateTime</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>N_</string>
                             <string>date</string>
                             <string>portal</string>
-                            <string>dict</string>
                             <string>related_event</string>
                           </tuple>
                         </value>
@@ -161,9 +157,7 @@ return related_event.Base_redirect(\'view\', keep_items=dict(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string>view</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

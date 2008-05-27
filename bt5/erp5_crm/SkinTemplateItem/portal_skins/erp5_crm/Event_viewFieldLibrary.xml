@@ -63,6 +63,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -107,6 +108,14 @@
                         <string>my_causality_title</string>
                         <string>my_translated_portal_type</string>
                         <string>your_portal_type</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>not_assigned</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

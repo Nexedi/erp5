@@ -36,7 +36,10 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>create_related_event</string>
+                <string>create_related_event_action</string>
+              </tuple>
             </value>
         </item>
         <item>

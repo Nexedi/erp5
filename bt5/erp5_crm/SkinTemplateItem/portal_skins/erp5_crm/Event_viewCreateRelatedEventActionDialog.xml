@@ -43,18 +43,18 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
-            <value> <string>Event_createRelatedEvent</string> </value>
+            <value> <string>Workflow_statusModify</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -69,7 +69,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
               </list>
             </value>
         </item>
@@ -81,16 +80,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
-                        <string>your_title</string>
-                        <string>your_description</string>
+                        <string>your_related_event_portal_type</string>
+                        <string>your_related_event_title</string>
+                        <string>your_related_event_description</string>
+                        <string>your_comment</string>
+                        <string>your_workflow_action</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -98,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_viewCreateRelatedEventDialog</string> </value>
+            <value> <string>Event_viewCreateRelatedEventActionDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -106,11 +101,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Event_viewCreateRelatedEventDialog</string> </value>
+            <value> <string>Base_viewWorkflowActionDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -122,7 +117,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create Related Event</string> </value>
+            <value> <string>Validate Workflow Action</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
