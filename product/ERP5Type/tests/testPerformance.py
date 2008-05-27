@@ -53,6 +53,17 @@ MAX_TIC=0.0355
 LISTBOX_COEF=0.02472
 DO_TEST = 1
 
+# Prevent GC from happening.
+# We don't want cpu time to be spent outside of python code if possible.
+# It would increase the "crosstalk" between using more ram and using more cpu.
+# Another problem is that it makes result even less reproductible on another
+# machine where memory use does not evolve identicaly (ie. x86_64 arch,
+# because of 64bits pointers).
+gc.disable()
+# XXX: Maybe it would be usefull to explicitely collect garbage in some places
+# to keep memory usage low. But it is generaly bad to apply the cure before
+# even knowing if the symptoms will show up.
+
 class TestPerformance(ERP5TypeTestCase, LogInterceptor):
 
     # Some helper methods
@@ -157,7 +168,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       view_result = {}
       tic_result = {}
       add_result = {}
-      gc.collect()
       # add object in bar module
       for i in xrange(10):
           before_add = time()
@@ -170,12 +180,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           before_tic = time()
           self.tic()
           after_tic = time()
-
-          # Explicit collect of the garbage collector,
-          # So no garbage collection will happen while reindexing,
-          # like this we prevent random garbage collection wich 
-          # was making the test failing randomly
-          gc.collect()
 
           before_form = time()
           for x in xrange(100):
