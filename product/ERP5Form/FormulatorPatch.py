@@ -542,7 +542,7 @@ Widget.get_javascript_list = Widget_get_javascript_list
 from Products.Formulator import Widget as WidgetModule
 
 for widget_name in ('MultiItemsWidget', 'LabelWidget',
-                    'FileWidget', 'PasswordWidget', 'RadioWidget'):
+                    'FileWidget', 'PasswordWidget',):
   widget = getattr(WidgetModule, widget_name)
   widget._old_render_view = widget.render_view
   widget.render_view = lambda self, field, value, REQUEST=None: \
