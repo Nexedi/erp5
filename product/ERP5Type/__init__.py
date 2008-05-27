@@ -99,5 +99,5 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
 
 allow_module('Products.ERP5Type.Message')
 allow_module('Products.ERP5Type.Error')
+allow_module('Products.ERP5Type.JSONEncoder')
 allow_module('Products.ERP5Type.Log')
-
