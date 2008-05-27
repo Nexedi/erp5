@@ -658,7 +658,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
   # XXX We want to make sure that we always have the current value in items. -yo
   if not selected_found and value:
-      value = escape(value)
+      value = escape(ustr(value))
       rendered_item = self.render_selected_item('??? (%s)' % value,
                                                 value,
                                                 key,
