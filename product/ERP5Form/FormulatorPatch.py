@@ -27,6 +27,9 @@ from Products.Formulator.Widget import render_element
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import TALESField
 from Products.Formulator import MethodField
+from Products.Formulator.Widget import ListWidget
+from Products.Formulator.Widget import RadioWidget
+from Products.Formulator.Widget import MultiItemsWidget
 from ProxyField import ProxyField
 from AccessControl import ClassSecurityInfo
 from DocumentTemplate.ustr import ustr
@@ -670,7 +673,24 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
 SingleItemsWidget.render_items = SingleItemsWidget_render_items
 
-from Products.Formulator.Widget import MultiItemsWidget
+def SingleItemsWidget_render_view(self, field, value, REQUEST=None):
+  """
+  This method is not as efficient as using a StringField in read only.
+  Always consider to change the field in your Form.
+  """
+  if value is None:
+      return ''
+  title_list = [x[0] for x in field.get_value("items", REQUEST=REQUEST) if x[1]==value]
+  if len(title_list) == 0:
+    return "??? (%s)" % escape(value)
+  else:
+    return title_list[0]
+  return value
+    
+ListWidget.render_view = SingleItemsWidget_render_view
+ListWidget.render_pdf = SingleItemsWidget_render_view
+RadioWidget.render_view = SingleItemsWidget_render_view
+RadioWidget.render_pdf = SingleItemsWidget_render_view
 
 def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
   # list is needed, not a tuple
@@ -763,8 +783,6 @@ def MultiCheckBoxWidget_render(self, field, key, value, REQUEST):
                                                                     
 MultiCheckBoxWidget.render = MultiCheckBoxWidget_render
 
-from Products.Formulator.Widget import ListWidget
-
 def ListWidget_render(self, field, key, value, REQUEST):
   rendered_items = self.render_items(field, key, value, REQUEST)
   input_hidden = render_element('input', type='hidden', 
@@ -779,23 +797,7 @@ def ListWidget_render(self, field, key, value, REQUEST):
 
   return "\n".join([list_widget, input_hidden])
   
-def ListWidget_render_view(self, field, value, REQUEST=None):
-  """
-  This method is not as efficient as using a StringField in read only.
-  Always consider to change the field in your Form.
-  """
-  if value is None:
-      return ''
-  title_list = [x[0] for x in field.get_value("items", REQUEST=REQUEST) if x[1]==value]
-  if len(title_list) == 0:
-    return "??? (%s)" % escape(value)
-  else:
-    return title_list[0]
-  return value
-    
 ListWidget.render = ListWidget_render
-ListWidget.render_view = ListWidget_render_view
-ListWidget.render_pdf = ListWidget_render_view
 
 # JPS - Subfield handling with listbox requires extension
 from Products.Formulator.StandardFields import DateTimeField
