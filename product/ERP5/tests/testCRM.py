@@ -51,7 +51,6 @@ class TestCRM(ERP5TypeTestCase):
   def test_Event_CreateRelatedEvent(self):
     # test workflow to create a related event from responded event
     event_module = self.portal.event_module
-    event_module_url = event_module.absolute_url()
     portal_workflow = self.portal.portal_workflow
     for ptype in self.portal.getPortalEventTypeList():
       event = event_module.newContent(portal_type=ptype)
@@ -243,6 +242,46 @@ class TestCRM(ERP5TypeTestCase):
     self.assertEquals('contacted', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'expire_action')
     self.assertEquals('expired', so.getSimulationState())
+
+  def test_Event_AcknowledgeAndCreateEvent(self):
+    """
+    Make sure that when acknowledge event, we can create a new event.
+    """
+    portal_workflow = self.portal.portal_workflow
+
+    # if create_event option is false, it does not create a new event.
+    for portal_type in self.portal.getPortalEventTypeList():
+      ticket = self.portal.meeting_module.newContent(portal_type='Meeting',
+                                                     title='Meeting1')
+      ticket_url = ticket.getRelativeUrl()
+      event = self.portal.event_module.newContent(portal_type=portal_type,
+                                                  follow_up=ticket_url)
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
+      event.receive()
+      portal_workflow.doActionFor(event, 'acknowledge_action', create_event=0)
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
+      
+    # if create_event option is true, it create a new event.
+    for portal_type in self.portal.getPortalEventTypeList():
+      ticket = self.portal.meeting_module.newContent(portal_type='Meeting',
+                                                     title='Meeting1')
+      ticket_url = ticket.getRelativeUrl()
+      event = self.portal.event_module.newContent(portal_type=portal_type,
+                                                  follow_up=ticket_url)
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
+      event.receive()
+      portal_workflow.doActionFor(event, 'acknowledge_action', create_event=1)
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
+      new_event = event.getCausalityRelatedValue()
+      self.assertEqual(new_event.getFollowUp(), ticket_url)
 
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
