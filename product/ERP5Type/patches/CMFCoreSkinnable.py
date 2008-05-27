@@ -69,7 +69,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
       try:
         return resolve[name]
       except KeyError:
-        if not ignore.has_key(name):
+        if name not in ignore:
           try:
             portal_skins = aq_base(self.portal_skins)
           except AttributeError:
