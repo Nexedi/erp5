@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -32,7 +29,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>Assignment_updateUserSecurityGroup</string> </value>
+            <value> <string>Assignment_setStopDate</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -54,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Assignment_updateUserSecurityGroup</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
