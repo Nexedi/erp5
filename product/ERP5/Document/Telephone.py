@@ -66,28 +66,37 @@ class Telephone(Coordinate, Base):
                       , PropertySheet.SimpleItem
                       , PropertySheet.Telephone
                       )
+    
+    # The country_dict is used by getRegexDict mapping 
+    # the country number to country name
+    country_dict = {
+      '33' : 'france',
+      '55' : 'brazil',
+      '221' : 'dakar',
+      '64' : 'tokio'
+     }
 
-    #The notation always need to have:
-    #<country> or <area> or <number> or <ext>
-    #If uses a different tag it will be ignored.
-    standard_dict={
-      'default':{
+    # The notation always need to have:
+    # <country> or <area> or <number> or <ext>
+    # If uses a different tag it will be ignored.
+    standard_dict = {
+      'default' : {
         "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
         "notation" : "+<country>(0)<area>-<number>/<ext>"
       },
-      'france':{
+      'france' : {
         "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
         "notation" : "+<country>(0)<area>-<number>/<ext>"
       },
-      'brazil':{
+      'brazil' : {
         "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
         "notation" : "+<country>(<area>)<number>/<ext>",
       },
-      'dakar':{
+      'dakar' : {
         "input" : "((\+|)(\(|)(?P<country>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*)",
         "notation" : "+<country> <number>/<ext>",
       },
-      'tokio':{
+      'tokio' : {
         "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
         "notation" : "+<country>(<area>)<number>/<ext>",
       }
@@ -109,16 +118,16 @@ class Telephone(Coordinate, Base):
       #Test if coordinate_text has or not markups.
       if len(coordinate_text) > len(onlynumber):
         #trying to get a possible contry number to be used by script
-        country=re.match('((\+|)(?P<country>\d*))', \
+        country = re.match('((\+|)(?P<country>\d*))', \
                          coordinate_text).groupdict().get('country','')
         regexdict = self.getRegexDict(index=country)
-        input_parser = regexdict['input']
+        input_parser = regexdict.get('input')
         number_match = re.match(input_parser, coordinate_text)
         if not number_match:
           return
         number_dict = number_match.groupdict()
       else:
-        number_dict={'number':coordinate_text}
+        number_dict = {'number' : coordinate_text}
       
       country=number_dict.get('country','')
       area=number_dict.get('area','')
@@ -131,8 +140,8 @@ class Telephone(Coordinate, Base):
           (ext in ['', None])):
         country = area = number = extension=''
       else:
-        #The country and area is trying to get from dict, 
-        #but if it fails must be get from preference
+        # The country and area is trying to get from dict, 
+        # but if it fails must be get from preference
         country = (number_dict.get('country') or \
                    self.portal_preferences.getPreferredTelephoneDefaultCountryNumber() or \
                    '').strip()
@@ -164,8 +173,8 @@ class Telephone(Coordinate, Base):
       telephone_number = self.getTelephoneNumber() or ''
       telephone_extension = self.getTelephoneExtension() or ''
      
-      # If country, area, number, extension are blank the method
-      # should to return blank.
+      # If country, area, number, extension are blank 
+      # the method should to return blank.
       if ((telephone_country == '') and \
           (telephone_area == '') and \
           (telephone_number == '') and \
@@ -173,7 +182,7 @@ class Telephone(Coordinate, Base):
         return ''
       
       regexdict = self.getRegexDict(index=telephone_country)
-      notation = regexdict['notation']
+      notation = regexdict.get('notation')
 
       if notation not in [None, '']:
         notation=notation.replace('<country>',telephone_country)
@@ -225,34 +234,29 @@ class Telephone(Coordinate, Base):
       # In case of index is a number
       # should return a region from dict or from form field
       if index not in [None,'']:
-        countrydict = {
-          '33':'france',
-          '55':'brazil',
-          '221':'dakar',
-          '64':'tokio'
-        }
-        #If index is not in country list
-        #the possible country can be found at region field
-        if index not in countrydict.keys():
+        # If index is not in country_dict
+        # the possible country can be found at region field
+        # in context or in preferences
+        if index not in self.country_dict.keys():
           region = self.getRegion() or \
              self.portal_preferences.getPreferredTelephoneDefaultRegion()
         else:
-          region = countrydict.get(index,'')
+          region = self.country_dict.get(index,'')
       else:
         region = self.getRegion() or \
           self.portal_preferences.getPreferredTelephoneDefaultRegion()
       
-      # Find the region in regexdict
+      # Find the region in standard_dict
       if region is not None:
-        regionlist=region.split('/')
-        for i in regionlist:
+        region_list=region.split('/')
+        for i in region_list:
           if self.standard_dict.get(i) is not None:
             region = i
       
-      # If region doesn't exist the script should to return a default regex.
+      # If region doesn't exist this method 
+      # should to return a default regex.
       if region not in self.standard_dict.keys() or region is None:
         region = 'default'
       
       dict = self.standard_dict.get(region)
       return dict
-
