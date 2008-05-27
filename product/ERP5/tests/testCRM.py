@@ -30,6 +30,7 @@ import os
 import email
 import email.Header
 
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testIngestion import conversion_server_host
@@ -48,30 +49,48 @@ class TestCRM(ERP5TypeTestCase):
             'erp5_crm',)
 
   def test_Event_CreateRelatedEvent(self):
-    # test action to create a related event from an event
+    # test workflow to create a related event from responded event
     event_module = self.portal.event_module
     event_module_url = event_module.absolute_url()
+    portal_workflow = self.portal.portal_workflow
     for ptype in self.portal.getPortalEventTypeList():
       event = event_module.newContent(portal_type=ptype)
-      redirect = event.Event_createRelatedEvent(
-                                     portal_type=ptype,
-                                     title='New Title',
-                                     description='New Desc')
-      self.assert_(redirect.startswith(event_module_url), redirect)
-      # event_module_url does not contain trailing slash, so add +1 to its len
-      new_id = redirect[len(event_module_url)+1:].split('/', 1)[0]
-      new_event = self.portal.event_module._getOb(new_id)
-      self.assertEquals(event, new_event.getCausalityValue())
+
+      event.receive()
+      event.respond()
+
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
+
+      get_transaction().commit()
+      self.tic()
+
+      portal_workflow.doActionFor(event, 'create_related_event_action',
+                                  related_event_portal_type=ptype,
+                                  related_event_title='New Title',
+                                  related_event_description='New Desc')
+
+      get_transaction().commit()
+      self.tic()
+
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
+
+      related_event = event.getCausalityRelatedValue()
+
+      self.assertEqual(related_event.getPortalType(), ptype)
+      self.assertEqual(related_event.getTitle(), 'New Title')
+      self.assertEqual(related_event.getDescription(), 'New Desc')
  
   def test_Event_CreateRelatedEventUnauthorized(self):
     # test that we don't get Unauthorized error when invoking the "Create
-    # Related Event" without add permission on the module
+    # Related Event" without add permission on the module,
+    # but will get WorkflowException error.
     event = self.portal.event_module.newContent(portal_type='Letter')
     self.portal.event_module.manage_permission('Add portal content', [], 0)
-    redirect = event.Event_createRelatedEvent(
-                                     portal_type='Letter',
-                                     title='New Title',
-                                     description='New Desc')
+    self.assertRaises(WorkflowException,
+                      event.Event_createRelatedEvent,
+                      portal_type='Letter',
+                      title='New Title',
+                      description='New Desc')
     
   def test_Ticket_CreateRelatedEvent(self):
     # test action to create a related event from a ticket
