@@ -223,10 +223,20 @@ class TestCalendar(ERP5TypeTestCase):
     Confirm group calendar
     """
     group_calendar = sequence.get('group_calendar')
+    group_calendar.confirm()
+    self.assertEquals('confirmed', group_calendar.getSimulationState())
+
+  def stepConfirmActionGroupCalendar(self, sequence=None, 
+                               sequence_list=None, **kw):
+    """
+    Confirm group calendar with user interface transition
+    """
+    group_calendar = sequence.get('group_calendar')
     self.portal.portal_workflow.doActionFor(
                           group_calendar,
                           'confirm_action',
                           'group_calendar_workflow')
+    self.assertEquals('confirmed', group_calendar.getSimulationState())
 
 
   def stepCreateLeaveRequest(self, sequence=None, 
@@ -306,10 +316,8 @@ class TestCalendar(ERP5TypeTestCase):
     Plan personal calendar
     """
     leave_request = sequence.get('leave_request')
-    self.portal.portal_workflow.doActionFor(
-                          leave_request,
-                          'plan_action',
-                          'leave_request_workflow')
+    leave_request.plan()
+    self.assertEquals('planned', leave_request.getSimulationState())
 
   def stepConfirmLeaveRequest(self, sequence=None, 
                                sequence_list=None, **kw):
@@ -317,10 +325,8 @@ class TestCalendar(ERP5TypeTestCase):
     Confirm personal calendar
     """
     leave_request = sequence.get('leave_request')
-    self.portal.portal_workflow.doActionFor(
-                          leave_request,
-                          'confirm_action',
-                          'leave_request_workflow')
+    leave_request.confirm()
+    self.assertEquals('confirmed', leave_request.getSimulationState())
 
   def getSqlUidList(self):
     """
@@ -569,9 +575,9 @@ class TestCalendar(ERP5TypeTestCase):
               SetGroupPresencePeriodValues \
               Tic \
               SetGroupPresencePeriodToCheck \
-              ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
+              ConfirmActionGroupCalendar \
               Tic \
               CheckCatalogued \
               CheckGetTimeAvailability \
@@ -588,9 +594,9 @@ class TestCalendar(ERP5TypeTestCase):
               SetGroupPresencePeriodValues \
               Tic \
               SetGroupPresencePeriodToCheck \
-              ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
+              ConfirmActionGroupCalendar \
               Tic \
               CheckCatalogued \
               CheckGetTimeAvailability \
@@ -609,9 +615,9 @@ class TestCalendar(ERP5TypeTestCase):
               Tic \
               SetGroupPresencePeriodToCheck \
               PlanGroupCalendar \
-              ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
+              ConfirmActionGroupCalendar \
               Tic \
               CheckCatalogued \
               CheckDoubleGetTimeAvailability \
@@ -648,9 +654,9 @@ class TestCalendar(ERP5TypeTestCase):
               SetGroupPresencePeriodValues \
               Tic \
               SetGroupPresencePeriodToCheck \
-              ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
+              ConfirmActionGroupCalendar \
               Tic \
               CheckCatalogued \
               CheckGetTimeAvailability \
