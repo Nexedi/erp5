@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>MESSAGE_TEMPLATE = \'\'\'\\\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from DateTime import DateTime\n
+MESSAGE_TEMPLATE = \'\'\'\\\n
 msgid %(english)s\n
 msgstr %(translation)s\n
 \'\'\'\n
@@ -78,7 +81,19 @@ def format(string):\n
   else:\n
     return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
 \n
-\n
+# po header\n
+now = DateTime().toZone(\'UTC\').strftime("%Y-%m-%d %H:%M+0000")\n
+print MESSAGE_TEMPLATE % (dict(english=\'""\',\n
+                               translation=\n
+r\'\'\'"Project-Id-Version: ERP5 Localized Interface\\n"\n
+"POT-Creation-Date: %s\\n"\n
+"PO-Revision-Date: %s\\n"\n
+"Last-Translator:  <>\\n"\n
+"Language-Team: %s <>\\n"\n
+"MIME-Version: 1.0\\n"\n
+"Content-Type: text/plain; charset=UTF-8\\n"\n
+"Content-Transfer-Encoding: 8bit\\n"\n
+\'\'\' % (now, now, language)))\n
 catalog = context.portal_catalog\n
 \n
 for i in catalog(portal_type=\'Glossary Term\',\n
@@ -124,7 +139,9 @@ RESPONSE.setHeader(\'Content-disposition\', \'attachment;filename=translation.po
 RESPONSE.setHeader(\'Content-Type\', \'text/x-gettext-translation;charset=utf-8\')\n
 \n
 return printed\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -177,9 +194,12 @@ return printed\n
                             <string>kw</string>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>DateTime</string>
                             <string>MESSAGE_TEMPLATE</string>
                             <string>format</string>
                             <string>_getattr_</string>
+                            <string>now</string>
+                            <string>dict</string>
                             <string>context</string>
                             <string>catalog</string>
                             <string>_getiter_</string>
