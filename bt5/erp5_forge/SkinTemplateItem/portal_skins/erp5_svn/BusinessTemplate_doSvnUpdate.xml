@@ -80,7 +80,7 @@ except SubversionSSLTrustError, error:\n
   return context.asContext(trust_dict=error.getTrustDict(), caller=\'update\').BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1:\n
   REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'update\', realm=error1.getRealm(), username=portal.portal_preferences.getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(caller=\'update\', realm=error1.getRealm(), username=portal.portal_preferences.getPreferredSubversionUserName()).BusinessTemplate_viewSvnLogin()\n
 \n
 REQUEST.set(\'portal_status_message\', \'Working copy updated successfully.\')\n
 return REQUEST.RESPONSE.redirect(\'%s/BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=%s\' % (new_bt.absolute_url(), form_id))\n
@@ -102,7 +102,7 @@ return REQUEST.RESPONSE.redirect(\'%s/BusinessTemplate_viewInstallationDialog?wo
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id</string> </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -151,7 +151,9 @@ return REQUEST.RESPONSE.redirect(\'%s/BusinessTemplate_viewInstallationDialog?wo
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
