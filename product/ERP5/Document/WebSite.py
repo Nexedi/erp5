@@ -60,7 +60,9 @@ class WebSiteTraversalHook(Persistent):
     # Every Web Section acts as a mini site though layout for document editing is the root layout
     #website_path = self._v_request.get(WEBSECTION_KEY, self._v_request.get(WEBSITE_KEY, None))
     # Only consider Web Site for absolute_url
-    website_path = self._v_request.get(WEBSITE_KEY, None) 
+    request = getattr(self, '_v_request', None)
+    if request is None: request = self._v_request = get_request()
+    website_path = request.get(WEBSITE_KEY, None) 
     if website_path:
       website_path = tuple(website_path)    # Make sure all path are tuples
       path = tuple(path)                    # Make sure all path are tuples
@@ -80,7 +82,7 @@ class WebSiteTraversalHook(Persistent):
       # Insert the web site path after the common part of the path
       if path_len > common_index + 1:
         path = website_path + path[common_index + 1:]
-    rpp = self._v_request.other.get('VirtualRootPhysicalPath', ('', ))
+    rpp = request.other.get('VirtualRootPhysicalPath', ('', ))
     i = 0
     for name in rpp[:len(path)]:
       if path[i] == name:
