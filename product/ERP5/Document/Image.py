@@ -457,6 +457,13 @@ class Image(File, OFSImage):
       img_width, img_height = (self.getWidth(), self.getHeight())
       if img_width == 0:
         return (0, 0)
+
+      #XXX This is a temporary dirty fix!!!
+      width = int(width)
+      height = int(height)
+      img_width = int(img_width)
+      img_height = int(img_height)
+
       if height > img_height * width / img_width:
           height = img_height * width / img_width
       else:
