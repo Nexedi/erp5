@@ -301,11 +301,11 @@ class Movement(XMLObject, Amount):
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalQuantity')
-  def getTotalQuantity(self):
+  def getTotalQuantity(self, default=0.0):
     """
       Returns the quantity if no cell or the total quantity if cells
     """
-    return self.getQuantity()
+    return self.getQuantity(default=default)
 
   # Industrial price API
   security.declareProtected( Permissions.AccessContentsInformation,
