@@ -868,7 +868,7 @@ msgid "Configure Categories"
 msgstr ""
 
 msgid "Confirm"
-msgstr "Envoyer en validation"
+msgstr "Confirmer"
 
 msgid "Confirm Transaction"
 msgstr "Confirmer la transaction"
