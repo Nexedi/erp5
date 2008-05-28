@@ -82,20 +82,21 @@ for bt_id in template_list:\n
   for wf_id in bt.getTemplateWorkflowIdList():\n
     wf = getattr(context.portal_workflow, wf_id)\n
     if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?\n
-      term_dict[(wf_id, bt_id, wf.title, wf.description)] = 1\n
+      term_dict[(wf_id, bt_id, wf.title, wf.description)] = wf_id\n
       for state_id, state in wf.states.items():\n
-        term_dict[(state_id, bt_id, state.title, state.description)] = 1\n
+        term_dict[(state_id, bt_id, state.title, state.description)] = wf_id\n
       for trans_id, trans in wf.transitions.items():\n
-        term_dict[(trans_id, bt_id, trans.title, trans.description)] = 1\n
+        term_dict[(trans_id, bt_id, trans.title, trans.description)] = wf_id\n
         if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION\n
-          term_dict[(\'%s_actbox_name\' % trans_id, bt_id, trans.actbox_name, \'\')] = 1\n
+          term_dict[(\'%s_actbox_name\' % trans_id, bt_id, trans.actbox_name, \'\')] = wf_id\n
 \n
-for (reference, business_field, title, description) in term_dict.iterkeys():\n
+for (reference, business_field, title, description), workflow_id in term_dict.items():\n
   result.append({\'reference\': reference,\n
                  \'language\': language,\n
                  \'business_field\': business_field,\n
                  \'title\': title,\n
-                 \'description\': description})\n
+                 \'description\': description,\n
+                 \'workflow_id\':workflow_id})\n
 \n
 return result\n
 </string> </value>
@@ -182,6 +183,7 @@ return result\n
                             <string>business_field</string>
                             <string>title</string>
                             <string>description</string>
+                            <string>workflow_id</string>
                           </tuple>
                         </value>
                     </item>

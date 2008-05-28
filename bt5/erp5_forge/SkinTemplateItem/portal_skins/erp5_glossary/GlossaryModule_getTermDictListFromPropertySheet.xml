@@ -106,11 +106,16 @@ for (reference, business_field, title) in dic.keys():\n
   language = \'en\'\n
   field = dic[(reference, business_field, title)]\n
   description = field.get_value(\'description\')\n
+  field_path = \'%s/%s/%s\' % (field.aq_parent.aq_parent.getId(),\n
+                            field.aq_parent.getId(),\n
+                            field.getId())\n
   result.append({\'reference\':reference,\n
                  \'language\':language,\n
                  \'business_field\':business_field,\n
                  \'title\':title,\n
-                 \'description\':description})\n
+                 \'description\':description,\n
+                 \'field_path\':field_path\n
+                 })\n
 \n
 return result\n
 </string> </value>
@@ -196,6 +201,7 @@ return result\n
                             <string>language</string>
                             <string>field</string>
                             <string>description</string>
+                            <string>field_path</string>
                           </tuple>
                         </value>
                     </item>

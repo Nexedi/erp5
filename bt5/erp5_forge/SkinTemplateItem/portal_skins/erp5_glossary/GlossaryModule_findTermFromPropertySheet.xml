@@ -73,7 +73,8 @@ if export_tsv:\n
   for i in result:\n
     print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'],\n
                                             i[\'business_field\'],\n
-                                            i[\'title\'], i[\'description\'],)))\n
+                                            i[\'title\'], i[\'description\'],\n
+                                            i[\'field_path\'])))\n
   return printed\n
 else:\n
   portal_catalog = context.portal_catalog\n
@@ -90,7 +91,8 @@ else:\n
                        container=context,\n
                        reference=i[\'reference\'], language=i[\'language\'],\n
                        business_field=i[\'business_field\'],\n
-                       title=i[\'title\'], description=i[\'description\'])\n
+                       title=i[\'title\'], description=i[\'description\'],\n
+                       comment=i[\'field_path\'])\n
 \n
 \n
 portal_status_message = context.Base_translateString(\'Terms created.\')\n

@@ -1,3 +1,6 @@
+2008-05-28 yusei
+* Add comment field in GlossaryTerm_view and original location where correspnding field  or workflow id was found will be stored in the comment field.
+
 2008-05-15 yo
 * Clean up BusinessTemplate_doSvnUpdate, since it redirected to a strange URL.
 

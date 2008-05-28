@@ -90,7 +90,8 @@ else:\n
                        container=context,\n
                        reference=i[\'reference\'], language=i[\'language\'],\n
                        business_field=i[\'business_field\'],\n
-                       title=i[\'title\'], description=i[\'description\'])\n
+                       title=i[\'title\'], description=i[\'description\'],\n
+                       comment=i[\'workflow_id\'])\n
 \n
 \n
 portal_status_message = context.Base_translateString(\'Terms created.\')\n
