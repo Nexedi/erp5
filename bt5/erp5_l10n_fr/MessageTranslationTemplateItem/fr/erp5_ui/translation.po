@@ -2508,12 +2508,6 @@ msgstr "Stock par variante"
 msgid "Stop Date"
 msgstr "Date de fin"
 
-msgid "Stopped"
-msgstr "Brouillard"
-
-msgid "Stopped (Accounting)"
-msgstr "Brouillard"
-
 msgid "Street Address"
 msgstr "Adresse"
 
@@ -2907,9 +2901,6 @@ msgstr "Collection"
 msgid "comment"
 msgstr "Commentaire"
 
-msgid "confirmed"
-msgstr "Confirmé"
-
 msgid "edit_workflow"
 msgstr "Workflow d'édition"
 
@@ -2937,9 +2928,6 @@ msgstr "Page de Connexion"
 msgid "numberLineToAdd"
 msgstr "Lignes à ajouter"
 
-msgid "planned"
-msgstr "Plannifié"
-
 msgid "quantity"
 msgstr "Quantité"
 
@@ -2951,9 +2939,6 @@ msgstr "État"
 
 msgid "status"
 msgstr "Etat"
-
-msgid "stopped"
-msgstr "Brouillard"
 
 msgid "time"
 msgstr "Date"
