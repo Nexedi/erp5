@@ -80,7 +80,7 @@ kw = { \'selection_index\': str(index),\n
        \'reset\' : \'1\', \n
      }\n
 \n
-return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
+return \'%s/%s?%s\' % (object.absolute_url(), method, make_query(kw))\n
 </string> </value>
         </item>
         <item>
@@ -91,6 +91,12 @@ return object.getPath() + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
