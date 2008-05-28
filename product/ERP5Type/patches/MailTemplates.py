@@ -15,6 +15,8 @@ try:
 except ImportError:
   BaseMailTemplate = None
 
+from email.Header import make_header
+
 if BaseMailTemplate is not None:
   def _process_utf8(self,kw):
       # sort out what encoding we're going to use
@@ -22,6 +24,10 @@ if BaseMailTemplate is not None:
                         self.getProperty('encoding',
                                          BaseMailTemplate.default_encoding))
       text = self.__class__.__bases__[1].__call__(self,**kw)
+      # ZPT adds newline at the end, but it breaks backward compatibility.
+      # So I remove it.
+      if text and text[-1]=='\n':
+        text = text[:-1]
       if not self.html() and isinstance(text, unicode):
           text = text.encode(encoding,'replace')
       # now turn the result into a MIMEText object
@@ -59,6 +65,8 @@ if BaseMailTemplate is not None:
               # make sure we have no unicode headers
               if isinstance(value,unicode):
                   value = value.encode(encoding)
+              if key=='subject':
+                  value = make_header([(value, 'utf-8')]).encode()
               headers[header]=value
       # check required values have been supplied
       errors = []
