@@ -120,8 +120,8 @@ class WebSection(Domain, PermanentURLMixIn):
     security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
     def getLayoutProperty(self, key, d=MARKER):
       """
-        A simple method to get a property of the current by 
-        acquiring it from the current section or its parents
+        A simple method to get a property of the current by
+        acquiring it from the current section or its parents.
       """
       section = aq_inner(self)
       while section.getPortalType() in ('Web Section', 'Web Site'):
