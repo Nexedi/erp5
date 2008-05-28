@@ -799,16 +799,16 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     sub_sub_person2 = sub_person1_c._getOb(self.id2)
     # remove ('','portal...','person_server')
     len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
-    self.failUnless(len_path==3)
+    self.assertEquals(len_path, 3)
     len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
-    self.failUnless(len_path==3)
-    self.failUnless(sub_sub_person1.getDescription()==self.description1)
-    self.failUnless(sub_sub_person1.getFirstName()==self.first_name1)
-    self.failUnless(sub_sub_person1.getLastName()==self.last_name1)
-    self.failUnless(sub_sub_person1.getDefaultTelephoneText()=='+(0)-0689778308')
-    self.failUnless(sub_sub_person2.getDescription()==self.description2)
-    self.failUnless(sub_sub_person2.getFirstName()==self.first_name2)
-    self.failUnless(sub_sub_person2.getLastName()==self.last_name2)
+    self.assertEquals(len_path, 3)
+    self.assertEquals(sub_sub_person1.getDescription(), self.description1)
+    self.assertEquals(sub_sub_person1.getFirstName(), self.first_name1)
+    self.assertEquals(sub_sub_person1.getLastName(), self.last_name1)
+    self.assertEquals(sub_sub_person1.getDefaultTelephoneText(), '+(0)-0689778308')
+    self.assertEquals(sub_sub_person2.getDescription(), self.description2)
+    self.assertEquals(sub_sub_person2.getFirstName(), self.first_name2)
+    self.assertEquals(sub_sub_person2.getLastName(), self.last_name2)
 
   def test_18_UpdateSubObject(self, quiet=0, run=run_all_test):
     """
