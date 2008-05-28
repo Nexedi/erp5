@@ -80,7 +80,7 @@ class OrderLine(DeliveryLine):
         transactional_variable[call_method_key] = result
       return result
 
-    def _getTotalPrice(self, context, fast=0):
+    def _getTotalPrice(self, default=0.0, context=None, fast=0):
       """Returns the total price for this order line.
 
       if hasLineContent: return sum of lines total price
@@ -91,7 +91,10 @@ class OrderLine(DeliveryLine):
       if self.hasLineContent():
         return sum(l.getTotalPrice(context=context)
                    for l in self.contentValues(meta_type=self.meta_type))
-      return DeliveryLine._getTotalPrice(self, context=context, fast=fast)
+      return DeliveryLine._getTotalPrice(self,
+                                         default=default,
+                                         context=context,
+                                         fast=fast)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalQuantity')

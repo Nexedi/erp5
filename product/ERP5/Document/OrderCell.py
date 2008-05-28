@@ -84,10 +84,11 @@ class OrderCell(DeliveryCell):
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getTotalPrice')
-    def getTotalPrice(self, *args, **kw):
+    def getTotalPrice(self, default=0.0, *args, **kw):
       "only return a value if self is a movement"
-      if not self.isMovement(): return 0.0
-      return DeliveryCell.getTotalPrice(self, *args, **kw)
+      if not self.isMovement():
+        return default
+      return DeliveryCell.getTotalPrice(self, default=default, *args, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getTotalQuantity')

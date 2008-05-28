@@ -203,7 +203,7 @@ class Movement(XMLObject, Amount):
     if operand_dict is not None:
       return operand_dict['price']
 
-  def _getTotalPrice(self, default=None, context=None):
+  def _getTotalPrice(self, default=None, context=None, fast=0):
     price = self.getPrice(context=context)
     quantity = self.getQuantity()
     if isinstance(price, (int, float)) and \
@@ -297,7 +297,7 @@ class Movement(XMLObject, Amount):
       default = None
     
     tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
-    return self._getTotalPrice(context=tmp_context, **kw)
+    return self._getTotalPrice(default=default, context=tmp_context, fast=fast, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalQuantity')
