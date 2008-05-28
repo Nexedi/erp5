@@ -35,6 +35,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import LOG, INFO
+from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
@@ -2241,9 +2242,35 @@ class TestPropertySheet:
 
       obj._edit(foo_bar="v3")
       self.assertEqual(obj.getFooBar(), "v3")
-      
+
+
+class TestAccessControl(ERP5TypeTestCase):
+  # Isolate test in a dedicaced class in order not to break other tests
+  # when this one fails.
+  expression = 'python: here.getPortalType() or 1'
+
+  def getBusinessTemplateList(self):
+    return 'erp5_base',
+
+  def afterSetUp(self):
+    self.login()
+
+    self.getCatalogTool().getSQLCatalog().filter_dict['z_catalog_object_list'] \
+      = dict(filtered=1, type=[], expression=self.expression,
+             expression_instance=Expression(self.expression))
+
+    createZODBPythonScript(self.getSkinsTool().custom,
+                           'Base_immediateReindexObject',
+                           '',
+                           'context.immediateReindexObject()'
+                          ).manage_proxy(('Manager',))
+
+  def test(self):
+    self.getPortal().person_module.newContent().Base_immediateReindexObject()
+
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
+  suite.addTest(unittest.makeSuite(TestAccessControl))
   return suite
