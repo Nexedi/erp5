@@ -2018,6 +2018,33 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(cell.getTotalQuantity(), 4)
     self.assertEquals(cell.getTotalPrice(), 12)
 
+    # if cell has no price, the total price is None, but a default value can be
+    # provided
+    cell.setPrice(None)
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(order_line.isMovement(), False)
+    self.assertEquals(cell.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 4)
+    self.assertEquals(order.getTotalQuantity(fast=1), 4)
+    self.assertEquals(order.getTotalPrice(fast=0), 0)
+    self.assertEquals(order.getTotalPrice(fast=1), 0)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 4)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 4)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 0)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 0)
+
+    self.assertEquals(cell.getTotalQuantity(), 4)
+    self.assertEquals(cell.getTotalPrice(), 0)
+
+    # restore the price on the line
+    cell.setPrice(3)
+    get_transaction().commit()
+    self.tic()
+
     # add sub_line to line, cell and line are not movements
     sub_order_line = order_line.newContent(
         portal_type=self.order_line_portal_type,
