@@ -86,14 +86,13 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       # machine where memory use does not evolve identicaly (ie. x86_64 arch,
       # because of 64bits pointers).
       gc.disable()
-      # XXX: Maybe it would be usefull to explicitely collect garbage in some places
-      # to keep memory usage low. But it is generaly bad to apply the cure before
-      # even knowing if the symptoms will show up.
       self.login()
       self.bar_module = self.getBarModule()
       self.foo_module = self.portal.foo_module
 
     def beforeTearDown(self):
+      # Re-enable gc at teardown.
+      gc.enable()
       get_transaction().abort()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
       self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
