@@ -64,41 +64,41 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Owner</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <list/>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Owner</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>
