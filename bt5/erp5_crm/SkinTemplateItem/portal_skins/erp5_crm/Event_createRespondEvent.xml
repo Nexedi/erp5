@@ -67,23 +67,28 @@
             <key> <string>_body</string> </key>
             <value> <string># this script allows to create a new follow up ticket for a given event\n
 event_object = context\n
-event_module = context.getPortalObject().getDefaultModule(\n
-                                          respond_event_portal_type)\n
+event_module = context.getPortalObject().getDefaultModule(respond_event_portal_type)\n
 # Create the outgoing\n
 respond_event = event_module.newContent(\n
-                       portal_type=respond_event_portal_type,\n
-                       title=respond_event_title,\n
-                       description=respond_event_description,\n
-                       start_date=DateTime(),\n
-                       source=context.getDefaultDestination(),\n
-                       destination=context.getDefaultSource(),\n
-                       causality=context.getRelativeUrl(),\n
-)\n
+      portal_type=respond_event_portal_type,\n
+      title=respond_event_title,\n
+      resource=respond_event_resource,\n
+      start_date=DateTime(),\n
+      source=context.getDefaultDestination(),\n
+      destination=context.getDefaultSource(),\n
+      causality=context.getRelativeUrl(),\n
+      follow_up=context.getFollowUp(),\n
+      text_content=respond_event_text_content,\n
+      text_format=\'text/plain\'\n
+      )\n
 \n
-if respond_event_quotation:\n
-  respond_event.edit(text_content=context.getReplyBody())\n
-# Change the state to outgoing\n
-respond_event.plan()\n
+# Change the state to posted\n
+respond_event.start()\n
+\n
+if respond_event.portal_type==\'Mail Message\' and respond_event.getSource():\n
+  respond_event.send()\n
+else:\n
+  respond_event.send(mfrom=object.portal_preferences.getPreferredEventSenderEmail())\n
 </string> </value>
         </item>
         <item>
@@ -106,7 +111,7 @@ respond_event.plan()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>respond_event_portal_type, respond_event_title, respond_event_quotation, respond_event_description=\'\'</string> </value>
+            <value> <string>respond_event_portal_type, respond_event_title, respond_event_resource, respond_event_text_content</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -134,14 +139,15 @@ respond_event.plan()\n
                           <tuple>
                             <string>respond_event_portal_type</string>
                             <string>respond_event_title</string>
-                            <string>respond_event_quotation</string>
-                            <string>respond_event_description</string>
+                            <string>respond_event_resource</string>
+                            <string>respond_event_text_content</string>
                             <string>context</string>
                             <string>event_object</string>
                             <string>_getattr_</string>
                             <string>event_module</string>
                             <string>DateTime</string>
                             <string>respond_event</string>
+                            <string>object</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,9 +159,7 @@ respond_event.plan()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

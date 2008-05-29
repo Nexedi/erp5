@@ -85,6 +85,7 @@ related_event = portal.event_module.newContent(\n
                        source=context.getDefaultDestination(),\n
                        destination=context.getDefaultSource(),\n
                        causality=context.getRelativeUrl(),\n
+                       follow_up=context.getFollowUp(),\n
                        )\n
 </string> </value>
         </item>

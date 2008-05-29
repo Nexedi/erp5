@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Store the boolean which tell if we quote original event or not</string> </value>
+            <value> <string>Stores the nature of the event which is automatically created when the event is responded</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>respond_event_quotation</string> </value>
+            <value> <string>respond_event_resource</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>

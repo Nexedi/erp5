@@ -1,3 +1,6 @@
+2008-5-29 yusei
+* Modifiy response transition in event_workflow, now it create a new event and send it to recepient immediately.
+
 2008-5-27 yusei
 * Replace "Create Related Event" action with a equivalent workflow method.
 * Fixed appearance of content in view and preview.

@@ -80,11 +80,13 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_respond_event_portal_type</string>
+                        <string>my_default_source_title</string>
+                        <string>my_default_destination_title</string>
                         <string>your_respond_event_title</string>
-                        <string>your_respond_event_description</string>
+                        <string>your_respond_event_portal_type</string>
+                        <string>your_respond_event_resource</string>
+                        <string>your_respond_event_text_content</string>
                         <string>your_workflow_action</string>
-                        <string>your_respond_event_quotation</string>
                       </list>
                     </value>
                 </item>

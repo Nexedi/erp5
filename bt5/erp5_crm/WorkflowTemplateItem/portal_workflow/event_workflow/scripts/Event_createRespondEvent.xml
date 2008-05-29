@@ -66,26 +66,25 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># this script allows to create a new respond event for\n
-# the current event\n
-\n
+# the current event and send message immediately.\n
+portal = state_change.getPortal()\n
+portal_workflow = portal.portal_workflow\n
 event = state_change[\'object\']\n
-respond_event_portal_type = None\n
 \n
-history = event.portal_workflow.getInfoFor(event, \'history\', wf_id=\'event_workflow\')\n
+portal_type = portal_workflow.getInfoFor(event,\n
+                                         \'respond_event_portal_type\',\n
+                                         wf_id=\'event_workflow\')\n
+title = portal_workflow.getInfoFor(event,\n
+                                   \'respond_event_title\',\n
+                                   wf_id=\'event_workflow\')\n
+resource = portal_workflow.getInfoFor(event,\n
+                                      \'respond_event_resource\',\n
+                                      wf_id=\'event_workflow\')\n
+text_content = portal_workflow.getInfoFor(event,\n
+                                          \'respond_event_text_content\',\n
+                                          wf_id=\'event_workflow\')\n
 \n
-for history_item in history[::-1]:\n
-  if history_item[\'action\'] == \'respond_action\':\n
-    respond_event_portal_type = history_item[\'respond_event_portal_type\']\n
-    respond_event_title = history_item[\'respond_event_title\']\n
-    respond_event_description = history_item[\'respond_event_description\']\n
-    respond_event_quotation = history_item[\'respond_event_quotation\']\n
-    break\n
-\n
-if respond_event_portal_type is not None:\n
-  event.Event_createRespondEvent(respond_event_portal_type,\n
-                                 respond_event_title,\n
-                                 respond_event_quotation,\n
-                                 respond_event_description,)\n
+event.Event_createRespondEvent(portal_type, title, resource, text_content)\n
 </string> </value>
         </item>
         <item>
@@ -135,17 +134,15 @@ if respond_event_portal_type is not None:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>portal_workflow</string>
                             <string>_getitem_</string>
                             <string>event</string>
-                            <string>None</string>
-                            <string>respond_event_portal_type</string>
-                            <string>_getattr_</string>
-                            <string>history</string>
-                            <string>_getiter_</string>
-                            <string>history_item</string>
-                            <string>respond_event_title</string>
-                            <string>respond_event_description</string>
-                            <string>respond_event_quotation</string>
+                            <string>portal_type</string>
+                            <string>title</string>
+                            <string>resource</string>
+                            <string>text_content</string>
                           </tuple>
                         </value>
                     </item>

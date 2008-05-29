@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>required</string>
+              </list>
             </value>
         </item>
         <item>
@@ -89,6 +91,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Event_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
               </dictionary>
             </value>

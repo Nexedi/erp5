@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Stores the description of the event which is automatically created when the event is responded</string> </value>
+            <value> <string>Stores the text content of the event which is automatically created when the event is responded</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>respond_event_description</string> </value>
+            <value> <string>respond_event_text_content</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
