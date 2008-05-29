@@ -68,10 +68,8 @@
           <tal:block tal:condition="python: here.getPortalTypeName() in portal.portal_types.objectIds() and portal.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Developper Mode --</option>\n
             <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types.getTypeInfo(here).absolute_url(),)"\n
-                    i18n:translate="" i18n:domain="ui">\n
-              Edit Portal Type \'<tal:block tal:content="python: here.getPortalTypeName()"\n
-                                           i18n:name="portal_type" i18n:translate="" i18n:domain="ui" />\'\n
-            </option>\n
+                    i18n:translate="" i18n:domain="ui">Edit Portal Type \'<tal:block tal:content="python: here.getPortalTypeName()"\n
+                                           i18n:name="portal_type" i18n:translate="" i18n:domain="ui" />\'</option>\n
           </tal:block>\n
           <tal:block tal:condition="portal/portal_workflow/Base_getSourceVisibility">\n
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
@@ -99,10 +97,8 @@
         <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[]">\n
           <tal:block tal:repeat="content_id allowed_content_type_list">\n
             <option tal:attributes="value python: \'add %s\' % (content_id, )"\n
-                    i18n:translate="" i18n:domain="ui">\n
-              Add <tal:block tal:content="content_id"\n
-                             i18n:name="portal_type" i18n:translate="" i18n:domain="ui" />\n
-            </option>\n
+                    i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content_id"\n
+                             i18n:name="portal_type" i18n:translate="" i18n:domain="ui" /></option>\n
           </tal:block>\n
         </tal:block>\n
         <tal:block tal:repeat="action actions/object_add | nothing">\n

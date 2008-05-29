@@ -400,6 +400,10 @@ input, textarea, select, button, body, div, span, fieldset {\n
   padding: 0;\n
 }\n
 \n
+option {\n
+  white-space: pre;\n
+}\n
+\n
 div.pre div {\n
  background: #FFF;\n
 }\n
