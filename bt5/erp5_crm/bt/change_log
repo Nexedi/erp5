@@ -1,4 +1,7 @@
 2008-5-29 yusei
+* Add type based method for Event.send and use MailTemplate to build mail message.
+
+2008-5-29 yusei
 * Modifiy response transition in event_workflow, now it create a new event and send it to recepient immediately.
 * Add quotation option in acknowledge dialog.
 
