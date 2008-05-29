@@ -665,6 +665,17 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.portal_catalog(portal_search_text='')
     self.portal.portal_catalog(portal_search_text='a search text')
 
+  def test_PDFTextContent(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('PDF', document.getPortalType())
+    self.assertEquals('I use reference to look up TEST\n',
+                      document._convertToText())
+    self.assert_('I use reference to look up TEST' in
+                 document._convertToHTML())
+    self.assert_('I use reference to look up TEST' in
+                 document.SearchableText())
+
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
