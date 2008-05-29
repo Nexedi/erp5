@@ -2249,6 +2249,9 @@ class TestAccessControl(ERP5TypeTestCase):
   # when this one fails.
   expression = 'python: here.getPortalType() or 1'
 
+  def getTitle(self):
+    return "ERP5Type"
+
   def getBusinessTemplateList(self):
     return 'erp5_base',
 
