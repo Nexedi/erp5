@@ -76,6 +76,10 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """ the apparel fabric module """
     return getattr(self.getPortal(),'apparel_fabric_item_module')
 
+  def getProductModule(self):
+    return getattr(self.getPortal(), 'product',
+        getattr(self.getPortal(), 'product_module'))
+
   def afterSetUp(self):
     """set up """
     self.createCategories()
@@ -98,12 +102,12 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                                   portal_type='Bank Account')
     self.mirror_section = self._makeOrganisation(title='Mirror Section')
     self.mirror_node = self._makeOrganisation(title='Mirror Node')
-    self.resource = self.getCurrencyModule().newContent(
+    self.resource = self.getProductModule().newContent(
                                   title='Resource',
-                                  portal_type='Currency')
-    self.other_resource = self.getCurrencyModule().newContent(
+                                  portal_type='Product')
+    self.other_resource = self.getProductModule().newContent(
                                   title='Other Resource',
-                                  portal_type='Currency')
+                                  portal_type='Product')
     self.item = self.getItemModule().newContent(title='Item')
     self.other_item = self.getItemModule().newContent(title='Other Item')
     # create a dummy Rule, to be able to create simulation movements
@@ -125,7 +129,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self._safeTic()
     for module in [ 'organisation_module',
                     'person_module',
-                    'currency_module',
+                    'product_module',
                     'portal_simulation',
                     'inventory_module',
                     self.folder.getId() ]:
@@ -183,7 +187,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """ erp5_trade is required for transit_simulation_state
         erp5_apparel is required for item
     """
-    return ('erp5_base', 'erp5_dummy_movement', 'erp5_trade', 'erp5_apparel')
+    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade', 'erp5_apparel')
 
   # TODO: move this to a base class {{{
   @reindex
@@ -212,14 +216,14 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     return sit
 
   @reindex
-  def _makeCurrency(self, **kw):
-    """Creates a currency."""
-    currency = self.getCurrencyModule().newContent(
-            portal_type = 'Currency', **kw)
+  def _makeProduct(self, **kw):
+    """Creates a product."""
+    product = self.getProductModule().newContent(
+            portal_type = 'Product', **kw)
     get_transaction().commit()
     self.tic()
-    return currency
-  _makeResource = _makeCurrency
+    return product
+  _makeResource = _makeProduct
   # }}}
 
   @reindex
