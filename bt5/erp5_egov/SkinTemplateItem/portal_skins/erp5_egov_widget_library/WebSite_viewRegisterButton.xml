@@ -63,6 +63,7 @@ Description:\n
     name="EGov_register:method"\n
     value="Register >>"/>\n
   </div>\n
+  <div class="clear"></div>\n
 </tal:block>\n
 
 
