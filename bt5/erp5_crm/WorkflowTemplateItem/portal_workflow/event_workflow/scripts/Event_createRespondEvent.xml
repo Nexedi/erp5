@@ -76,7 +76,7 @@ portal_type = portal_workflow.getInfoFor(event,\n
                                          wf_id=\'event_workflow\')\n
 \n
 # Pass Mark Responded transition.\n
-if portal_type is None:\n
+if not portal_type:\n
   return\n
 \n
 title = portal_workflow.getInfoFor(event,\n
@@ -145,7 +145,6 @@ event.Event_createRespondEvent(portal_type, title, resource, text_content)\n
                             <string>_getitem_</string>
                             <string>event</string>
                             <string>portal_type</string>
-                            <string>None</string>
                             <string>title</string>
                             <string>resource</string>
                             <string>text_content</string>
