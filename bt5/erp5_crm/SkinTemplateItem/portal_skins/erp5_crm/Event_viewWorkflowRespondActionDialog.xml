@@ -80,8 +80,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_default_source_title</string>
                         <string>my_default_destination_title</string>
+                        <string>my_default_source_title</string>
                         <string>your_respond_event_title</string>
                         <string>your_respond_event_portal_type</string>
                         <string>your_respond_event_resource</string>
