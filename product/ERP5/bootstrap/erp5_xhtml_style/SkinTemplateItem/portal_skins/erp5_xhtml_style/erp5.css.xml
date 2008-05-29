@@ -595,6 +595,14 @@ div.index_html table {\n
   min-height: 2.5em;\n
 }\n
 \n
+table.fake {\n
+  width: 100%;\n
+}\n
+\n
+table.fake > tr > fieldset {\n
+  display: table-cell;\n
+}\n
+\n
 .content .field {\n
   position: relative;\n
   clear: left;\n
@@ -613,14 +621,14 @@ div.index_html table {\n
   display: none;\n
 }\n
 \n
-div.top_group,\n
+table.fake,\n
 fieldset.left,\n
 fieldset.center,\n
 fieldset.bottom {\n
   clear: both;\n
 }\n
 \n
-div.top_group,\n
+table.fake,\n
 fieldset.left,\n
 fieldset.right,\n
 fieldset.center,\n
@@ -628,7 +636,7 @@ fieldset.bottom {\n
   margin-bottom: 5px;\n
 }\n
 \n
-div.top_group,\n
+table.fake,\n
 fieldset.left,\n
 fieldset.right,\n
 fieldset.center {\n
@@ -644,6 +652,11 @@ fieldset.center {\n
   padding-bottom: 5px;\n
 }\n
 \n
+.login fieldset {\n
+  width: 50%;\n
+  float: left;\n
+}\n
+\n
 fieldset.left {\n
   width: 50%;\n
   float: left;\n
@@ -656,10 +669,10 @@ fieldset.right {\n
   margin-left: -12px; /* 5px margin *2 + 2px for left & right border width */\n
 }\n
 \n
-div.top_group fieldset.left,\n
-div.top_group fieldset.right {\n
+table.fake fieldset {\n
   border-width: 0;\n
   padding: 0;\n
+  margin: 0;\n
   width: 50%;\n
 }\n
 \n
@@ -677,6 +690,7 @@ fieldset.bottom .field label {\n
 }\n
 \n
 .login fieldset,\n
+.dialog_box table.fake,\n
 .dialog_box .left,\n
 .dialog_box .right,\n
 .dialog_box .center {\n

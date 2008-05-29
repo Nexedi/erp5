@@ -78,18 +78,21 @@
           <input tal:condition="exists: request/came_from"\n
                  type="hidden" name="came_from"\n
                  tal:attributes="value request/came_from" />\n
-          <fieldset id="fieldset_left" class="left">\n
+          <fieldset>\n
             <div class="field">\n
               <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>\n
               <div class="input"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></div>\n
+              <p class="clear"></p>\n
             </div>\n
             <div class="field">\n
               <label for="password" i18n:translate="" i18n:domain="ui">Password</label>\n
               <div class="input"><input type="password" name="__ac_password" id="password" /></div>\n
+              <p class="clear"></p>\n
             </div>\n
             <div class="field">\n
               <label for="cb_remember" i18n:translate="" i18n:domain="ui">Remember my name</label>\n
               <div class="input"><input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember" /></div>\n
+              <p class="clear"></p>\n
             </div>\n
             <div class="field">\n
               <label>&nbsp;</label>\n
@@ -98,6 +101,7 @@
                        tal:attributes="name python: \'%s:method\' % (form_action, )"\n
                        i18n:attributes="value" i18n:domain="ui" />\n
               </div>\n
+              <p class="clear"></p>\n
             </div>\n
             <div class="field">\n
               <label>&nbsp;</label>\n

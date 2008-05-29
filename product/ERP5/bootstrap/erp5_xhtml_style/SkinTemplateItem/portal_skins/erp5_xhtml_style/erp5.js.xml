@@ -94,45 +94,94 @@ function autoFocus() {\n
   }\n
 }\n
 \n
-function fixLeftRightHeight(){\n
-  var lh = 0;\n
-  var lfieldset;\n
-  var rh = 0;\n
-  var rfieldset;\n
-  var list=document.getElementsByTagName(\'fieldset\');\n
-  for(i=0; i<list.length; i=i+1){\n
-    list_parts = list[i].id.split(\'_\');\n
-    for(j=1; j<list_parts.length; j=j+1){\n
-      if(list_parts[j] == "left"){\n
-        lfieldset = list[i];\n
-        lh = lfieldset.offsetHeight;\n
-        break;\n
-      }else{\n
-        if(list_parts[j] == "right"){\n
-          rfieldset = list[i];\n
-          rh = rfieldset.offsetHeight;\n
-          break;\n
+function buildTables(element_list, rowPredicate, columnPredicate,\n
+                    tableClassName) {\n
+  /* Generic code to build a table from elements in element_list.\n
+   * rowPredicate(element) -> bool\n
+   *   When it returns a true value, a new line is started with element.\n
+   *   When is returns a false value, element is skipped.\n
+   * columnPredicate(element, initial_element) -> bitfield\n
+   *   bit 3: end_table (if true, imlies end_row)\n
+   *     End current table.\n
+   *   bit 2: end_row\n
+   *     End current row.\n
+   *   bit 1: use_element\n
+   *     Element passed to columnPredicate will be put in current row.\n
+   * Hardcoded:\n
+   *  - items in a table line must be siblings in existing DOM\n
+   *  - table is put in place of first element of the first row\n
+   */\n
+  var element_index = 0;\n
+  while (element_index < element_list.length) {\n
+    var row_list = [];\n
+    var end_table = false;\n
+    while ((!end_table) && element_index < element_list.length) {\n
+      var row_begin = element_list[element_index];\n
+      if (rowPredicate(row_begin)) {\n
+        var item_list = [row_begin];\n
+        var row_item = row_begin;\n
+        var end_line = false;\n
+        while ((!end_line) && (row_item = row_item.nextSibling) != null) {\n
+          var predicate_result = columnPredicate(row_item, row_begin)\n
+          if ((predicate_result & 1) != 0)\n
+            item_list.push(row_item);\n
+          end_table = ((predicate_result & 4) != 0);\n
+          end_line = ((predicate_result & 6) != 0);\n
         }\n
+        row_list.push(item_list);\n
+      }\n
+      element_index++;\n
+    }\n
+    /* Do not create a table with just one cell. */\n
+    if ((row_list.length > 1) ||\n
+        (row_list.length == 1 && row_list[0].length > 1)) {\n
+      var first_element = row_list[0][0];\n
+      var container = first_element.parentNode;\n
+      var fake_table = document.createElement("table");\n
+      var i;\n
+      var j;\n
+      fake_table.className = tableClassName;\n
+      container.insertBefore(fake_table, first_element);\n
+      for (i = 0; i < row_list.length; i++) {\n
+        var fake_row = document.createElement("tr");\n
+        var row_element_list = row_list[i];\n
+        for (j = 0; j < row_element_list.length; j++)\n
+          fake_row.appendChild(row_element_list[j]);\n
+        fake_table.appendChild(fake_row);\n
       }\n
     }\n
-    if(lh && rh){\n
-      break;\n
+  }\n
+}\n
+\n
+function matchChunk(string, separator, chunk_value) {\n
+  if (string != null) {\n
+    var id_chunks = string.split(separator);\n
+    var i;\n
+    for (i = 0; i < id_chunks.length; i++) {\n
+      if (id_chunks[i] == chunk_value)\n
+        return true;\n
     }\n
   }\n
-  if(lh && rh){\n
-    lfieldset.style.height = (lh>rh)? lh+"px" : rh+"px";\n
-    rfieldset.style.height = (lh>rh)? lh+"px" : rh+"px";\n
-    lfieldset.style.borderRightWidth = 0;\n
-    rfieldset.style.borderLeftWidth = 0;\n
-    /* XXX: hardcoded values required unless there is a way to compute "12px"-"1px" in js */\n
-    lfieldset.style.marginRight = "-11px";\n
-    rfieldset.style.marginLeft = "-11px";\n
-  }\n
+  return false;\n
+}\n
+\n
+function matchLeftFieldset(element) {\n
+  return (element.tagName == "FIELDSET") &&\n
+          matchChunk(element.id, \'_\', "left");\n
+}\n
+\n
+function matchRightFieldset(element, ignored) {\n
+  if ((element.tagName == "FIELDSET") &&\n
+       matchChunk(element.id, \'_\', "right"))\n
+    return 7; /* End row, table and use element */\n
+  return 0;\n
 }\n
 \n
 function fixLeftRightHeightAndFocus(fix_height) {\n
   if (fix_height == 1) {\n
-    fixLeftRightHeight();\n
+    buildTables(document.getElementsByTagName(\'fieldset\'),\n
+                matchLeftFieldset, matchRightFieldset,\n
+                "fake");\n
   }\n
   autoFocus();\n
 }\n
