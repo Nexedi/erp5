@@ -52,8 +52,10 @@ class TestCRM(ERP5TypeTestCase):
     # test workflow to create a related event from responded event
     event_module = self.portal.event_module
     portal_workflow = self.portal.portal_workflow
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',)
     for ptype in self.portal.getPortalEventTypeList():
-      event = event_module.newContent(portal_type=ptype)
+      event = event_module.newContent(portal_type=ptype,
+                                      follow_up_value=ticket)
 
       event.receive()
       event.respond()
@@ -78,6 +80,7 @@ class TestCRM(ERP5TypeTestCase):
       self.assertEqual(related_event.getPortalType(), ptype)
       self.assertEqual(related_event.getTitle(), 'New Title')
       self.assertEqual(related_event.getDescription(), 'New Desc')
+      self.assertEqual(related_event.getFollowUpValue(), ticket)
  
   def test_Event_CreateRelatedEventUnauthorized(self):
     # test that we don't get Unauthorized error when invoking the "Create
@@ -349,9 +352,11 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 
   def test_findTypeByName_MailMessage(self):
     # without this, ingestion will not work
-    registry = self.portal.content_type_registry
-    self.assertEquals('Mail Message',
-        registry.findTypeName('postfix_mail.eml', 'message/rfc822', ''))
+    self.assertEquals(
+      'Mail Message',
+      self.portal.portal_contribution_registry.findPortalTypeName(
+      file_name='postfix_mail.eml', mime_type='message/rfc822', data='Test'
+      ))
 
   def test_document_creation(self):
     # CRM email ingestion creates a Mail Message in event_module
@@ -641,7 +646,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
       self.assertEquals((), self.portal.MailHost._last_message)
 
   def test_MailMessageHTML(self):
-    # test sending a mail message edited as HTML (the default with FCKEditor)
+    # test sending a mail message edited as HTML (the default with FCKEditor),
+    # then the mail should have HTML.
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
@@ -656,13 +662,14 @@ class TestCRMMailSend(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEquals('"Me" <me@erp5.org>', mfrom)
     self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
-    
+
     message = email.message_from_string(messageText)
     part = None
     for i in message.get_payload():
-      if i.get_content_type()=='text/plain':
+      if i.get_content_type()=='text/html':
         part = i
-    self.assertEqual('Hello\nWorld', part.get_payload(decode=True))
+    self.assertNotEqual(part, None)
+    self.assertEqual('<html><body>Hello<br/>World</body></html>', part.get_payload(decode=True))
 
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters
@@ -989,13 +996,13 @@ class TestCRMMailSend(ERP5TypeTestCase):
                text_content='This is an advertisement mail.')
     first_event_id = event.getId()
     self.getWorkflowTool().doActionFor(event, 'respond_action', 
-                                       respond_event_quotation = 1,
                                        respond_event_portal_type = "Mail Message",
                                        respond_event_title = "Answer",
-                                       respond_event_description = "Answer Advertissement Mail",
+                                       respond_event_text_content="> This is an advertisement mail."
                                        )
 
     self.assertEqual(event.getSimulationState(), "responded")
+
     # answer event must have been created
     self.assertEqual(len(self.portal.event_module), 2)
     for ev in self.portal.event_module.objectValues():
@@ -1003,12 +1010,13 @@ class TestCRMMailSend(ERP5TypeTestCase):
         answer_event = ev
 
     # check properties of answer event
-    self.assertEqual(answer_event.getSimulationState(), "planned")
+    self.assertEqual(answer_event.getSimulationState(), "started")
     self.assertEqual(answer_event.getCausality(), event.getRelativeUrl())
     self.assertEqual(answer_event.getDestination(), 'person_module/me')
     self.assertEqual(answer_event.getSource(), 'person_module/recipient')
     self.assertEqual(answer_event.getTextContent(), '> This is an advertisement mail.')
-
+    self.assertEqual(answer_event.getFollowUpValue(), ticket)
+    self.assert_(answer_event.getData() is not None)
 
   def test_MailAttachmentFileWithoutDMS(self):
     """
