@@ -201,3 +201,8 @@ class TextDocument(Document, TextContent):
         is equivalent to having some text_content.
       """
       return self.hasTextContent()
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
+    def getMimeTypeAndContent(self):
+      """This method returns a tuple which contains mimetype and content."""
+      return (self.getTextFormat(), self.getTextContent())
