@@ -280,7 +280,7 @@ class Movement(XMLObject, Amount):
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalPrice')
-  def getTotalPrice(self, default=None, context=None, REQUEST=None, fast=None,
+  def getTotalPrice(self, default=0.0, context=None, REQUEST=None, fast=None,
                     **kw):
     """Return the total price in the context.
 
