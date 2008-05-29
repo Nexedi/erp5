@@ -642,16 +642,14 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
 
       if item_value == value and not selected_found:
-          rendered_item = self.render_selected_item(escape(ustr(item_text))\
-                                                    .replace(' ', '&nbsp;'),
+          rendered_item = self.render_selected_item(escape(ustr(item_text)),
                                                     item_value,
                                                     key,
                                                     css_class,
                                                     extra_item)
           selected_found = 1
       else:
-          rendered_item = self.render_item(escape(ustr(item_text))\
-                                            .replace(' ', '&nbsp;'),
+          rendered_item = self.render_item(escape(ustr(item_text)),
                                             item_value,
                                             key,
                                             css_class,
@@ -716,7 +714,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
 
       if item_value in value:
           rendered_item = self.render_selected_item(
-              escape(ustr(item_text)).replace(' ', '&nbsp;'),
+              escape(ustr(item_text)),
               escape(ustr(item_value)),
               key,
               css_class,
@@ -726,7 +724,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
           selected_found[index] = 1
       else:
           rendered_item = self.render_item(
-               escape(ustr(item_text)).replace(' ', '&nbsp;'),
+               escape(ustr(item_text)),
                escape(ustr(item_value)),
                key,
                css_class,
