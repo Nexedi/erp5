@@ -601,6 +601,7 @@ table.fake {\n
 \n
 table.fake > tr > fieldset {\n
   display: table-cell;\n
+  float: none;\n
 }\n
 \n
 .content .field {\n
