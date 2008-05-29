@@ -80,8 +80,12 @@ follow_up_ticket_title = portal_workflow.getInfoFor(event,\n
                                                     \'follow_up_ticket_title\',\n
                                                     wf_id=\'event_workflow\')\n
 \n
-create_event = portal.portal_workflow.getInfoFor(event, \'create_event\',\n
-                                                 wf_id=\'event_workflow\')\n
+create_event = portal_workflow.getInfoFor(event, \'create_event\',\n
+                                          wf_id=\'event_workflow\')\n
+\n
+quote_original_message = portal_workflow.getInfoFor(event,\n
+                                                    \'quote_original_message\',\n
+                                                    wf_id=\'event_workflow\')\n
 \n
 follow_up = event.getFollowUp()\n
 \n
@@ -94,11 +98,15 @@ if follow_up is None and follow_up_ticket_type and follow_up_ticket_title:\n
                                    follow_up_ticket_type)\n
 \n
 if create_event:\n
-  portal.event_module.newContent(portal_type=event.portal_type,\n
-                                 destination=event.getSource(),\n
-                                 follow_up=event.getFollowUp(),\n
-                                 causality=event.getRelativeUrl(),\n
-                                 start_date=DateTime())\n
+  new_event = portal.event_module.newContent(portal_type=event.portal_type,\n
+                                             destination=event.getSource(),\n
+                                             follow_up=event.getFollowUp(),\n
+                                             causality=event.getRelativeUrl(),\n
+                                             start_date=DateTime())\n
+\n
+  if quote_original_message:\n
+    new_event.edit(text_format=event.getTextFormat(),\n
+                   text_content=event.getReplyBody())\n
 </string> </value>
         </item>
         <item>
@@ -150,10 +158,12 @@ if create_event:\n
                             <string>follow_up_ticket_type</string>
                             <string>follow_up_ticket_title</string>
                             <string>create_event</string>
+                            <string>quote_original_message</string>
                             <string>follow_up</string>
                             <string>None</string>
                             <string>ValueError</string>
                             <string>DateTime</string>
+                            <string>new_event</string>
                           </tuple>
                         </value>
                     </item>

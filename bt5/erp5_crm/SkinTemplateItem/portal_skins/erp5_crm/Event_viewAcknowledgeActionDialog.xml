@@ -83,8 +83,9 @@
                         <string>your_follow_up_ticket_title</string>
                         <string>your_follow_up_ticket_type</string>
                         <string>your_comment</string>
-                        <string>your_workflow_action</string>
                         <string>your_create_event</string>
+                        <string>your_quote_original_message</string>
+                        <string>your_workflow_action</string>
                       </list>
                     </value>
                 </item>
