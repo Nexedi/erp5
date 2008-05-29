@@ -126,6 +126,8 @@ class PDFDocument(Image, ConversionCacheMixin):
     """
       Convert the PDF text content to text with pdftotext
     """
+    if not self.data:
+      return ''
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(_unpackData(self.data))
     tmp.seek(0)
@@ -144,6 +146,8 @@ class PDFDocument(Image, ConversionCacheMixin):
     NOTE: XXX check that command exists and was executed
     successfully
     """
+    if not self.data:
+      return ''
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(_unpackData(self.data))
     tmp.seek(0)
