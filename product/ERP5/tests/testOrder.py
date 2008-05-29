@@ -2075,6 +2075,38 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(sub_order_line.getTotalPrice(fast=0), 20)
     self.assertEquals(sub_order_line.getTotalPrice(fast=1), 20)
 
+    # if this line has no price, getTotalPrice returns 0
+    sub_order_line.setPrice(None)
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(order_line.isMovement(), False)
+    self.assertEquals(cell.isMovement(), False)
+    self.assertEquals(sub_order_line.isMovement(), True)
+
+    self.assertEquals(order.getTotalQuantity(fast=0), 5)
+    self.assertEquals(order.getTotalQuantity(fast=1), 5)
+    self.assertEquals(order.getTotalPrice(fast=0), 0)
+    self.assertEquals(order.getTotalPrice(fast=1), 0)
+
+    self.assertEquals(order_line.getTotalQuantity(fast=0), 5)
+    self.assertEquals(order_line.getTotalQuantity(fast=1), 5)
+    self.assertEquals(order_line.getTotalPrice(fast=0), 0)
+    self.assertEquals(order_line.getTotalPrice(fast=1), 0)
+
+    self.assertEquals(cell.getTotalQuantity(), 0)
+    self.assertEquals(cell.getTotalPrice(), 0)
+
+    self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 5)
+    self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 5)
+    self.assertEquals(sub_order_line.getTotalPrice(fast=0), 0)
+    self.assertEquals(sub_order_line.getTotalPrice(fast=1), 0)
+
+    # restore price on the sub line
+    sub_order_line.setPrice(4)
+    get_transaction().commit()
+    self.tic()
+
+
     # add sub_cell to sub_line, only sub_cell is movement
     sub_order_line.setVariationCategoryList(order_line_vcl)
     sub_cell_key = sub_order_line.getCellKeyList(base_id=base_id)[0]
