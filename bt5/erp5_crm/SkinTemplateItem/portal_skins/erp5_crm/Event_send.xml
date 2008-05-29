@@ -73,7 +73,7 @@ context.order()\n
 context.start()\n
 \n
 if body is None:\n
-  body = context.asText()\n
+  body = context.getTextContent() #XXX This does not support structured text format.\n
 \n
 # Subject\n
 if subject is None:\n
@@ -115,7 +115,7 @@ if attachment_list is None:\n
   attachment_list = []\n
 document_type_list = context.getPortalDocumentTypeList()\n
 for attachment in context.getAggregateValueList():\n
-  mime_type, content = attachment.asMimeTypeAndContent()\n
+  mime_type, content = attachment.getMimeTypeAndContent()\n
   name = attachment.getReference()\n
 \n
   attachment_list.append({\'mime_type\':mime_type,\n
@@ -124,13 +124,17 @@ for attachment in context.getAggregateValueList():\n
 \n
 # Build message per destination\n
 mail_message = None\n
-Event_viewMimeMessage = context.Event_viewMimeMessage\n
+if context.getTextFormat()==\'text/html\':\n
+  mail_template = context.Event_viewHtmlMimeMessage\n
+else:\n
+  mail_template = context.Event_viewMimeMessage\n
+\n
 for to_url in to_url_list:\n
-  multipart = Event_viewMimeMessage.as_message(mfrom=from_url,\n
-                                               mto=to_url,\n
-                                               subject=subject,\n
-                                               body=body,\n
-                                               encoding=\'utf-8\')\n
+  multipart = mail_template.as_message(mfrom=from_url,\n
+                                       mto=to_url,\n
+                                       subject=subject,\n
+                                       body=body,\n
+                                       encoding=\'utf-8\')\n
   for attachment_dict in attachment_list:\n
     multipart.add_file(data=attachment_dict[\'content\'],\n
                        content_type=attachment_dict[\'mime_type\'],\n
@@ -218,7 +222,7 @@ if download:\n
                             <string>content</string>
                             <string>name</string>
                             <string>mail_message</string>
-                            <string>Event_viewMimeMessage</string>
+                            <string>mail_template</string>
                             <string>multipart</string>
                             <string>attachment_dict</string>
                             <string>_getitem_</string>
