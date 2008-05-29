@@ -1,5 +1,4 @@
 ##############################################################################
-# vim: set fileencoding=utf-8
 # 
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
@@ -163,7 +162,7 @@ class TestERP5SyncMLMixin:
           'description':self.description2}
     person2.edit(**kw)
     nb_person = len(person_server.objectValues())
-    self.failUnless(nb_person==2)
+    self.assertEqual(nb_person, 2)
     return nb_person
 
   def synchronize(self, id, run=1):
@@ -239,17 +238,17 @@ class TestERP5SyncMLMixin:
     for person in person_server.objectValues():
       state_list = portal_sync.getSynchronizationState(person)
       for state in state_list:
-        self.failUnless(state[1]==state[0].SYNCHRONIZED)
+        self.assertEqual(state[1], state[0].SYNCHRONIZED)
     person_client1 = self.getPersonClient1()
     for person in person_client1.objectValues():
       state_list = portal_sync.getSynchronizationState(person)
       for state in state_list:
-        self.failUnless(state[1]==state[0].SYNCHRONIZED)
+        self.assertEqual(state[1], state[0].SYNCHRONIZED)
     person_client2 = self.getPersonClient2()
     for person in person_client2.objectValues():
       state_list = portal_sync.getSynchronizationState(person)
       for state in state_list:
-        self.failUnless(state[1]==state[0].SYNCHRONIZED)
+        self.assertEqual(state[1], state[0].SYNCHRONIZED)
     # Check for each signature that the tempXML is None
     for sub in portal_sync.getSubscriptionList():
       for m in sub.getSignatureList():
@@ -265,44 +264,44 @@ class TestERP5SyncMLMixin:
     """
       verify if the first and last name are synchronized
     """
-    self.failUnless(person_server.getFirstName()==first_name)
-    self.failUnless(person_server.getLastName()==last_name)
-    self.failUnless(person_client.getFirstName()==first_name)
-    self.failUnless(person_client.getLastName()==last_name)
+    self.assertEqual(person_server.getFirstName(), first_name)
+    self.assertEqual(person_server.getLastName(), last_name)
+    self.assertEqual(person_client.getFirstName(), first_name)
+    self.assertEqual(person_client.getLastName(), last_name)
   
   def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name, 
       last_name, person_server, person_client):
     """
       verify that the first and last name are NOT synchronized
     """
-    self.failUnless(person_server.getFirstName()!=first_name)
-    self.failUnless(person_server.getLastName()!=last_name)
-    self.failUnless(person_client.getFirstName()==first_name)
-    self.failUnless(person_client.getLastName()==last_name)
+    self.assertNotEqual(person_server.getFirstName(), first_name)
+    self.assertNotEqual(person_server.getLastName(), last_name)
+    self.assertEqual(person_client.getFirstName(), first_name)
+    self.assertEqual(person_client.getLastName(), last_name)
 
   def checkFirstSynchronization(self, id=None, nb_person=0):
 
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
     subscription2 = portal_sync.getSubscription(self.sub_id2)
-    self.failUnless(len(subscription1.getObjectList())==nb_person)
+    self.assertEqual(len(subscription1.getObjectList()), nb_person)
     person_server = self.getPersonServer() # We also check we don't
                                            # modify initial ob
     person1_s = person_server._getOb(self.id1)
-    self.failUnless(person1_s.getId()==self.id1)
-    self.failUnless(person1_s.getFirstName()==self.first_name1)
-    self.failUnless(person1_s.getLastName()==self.last_name1)
+    self.assertEqual(person1_s.getId(), self.id1)
+    self.assertEqual(person1_s.getFirstName(), self.first_name1)
+    self.assertEqual(person1_s.getLastName(), self.last_name1)
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(id)
-    self.failUnless(person1_c.getId()==id)
-    self.failUnless(person1_c.getFirstName()==self.first_name1)
-    self.failUnless(person1_c.getLastName()==self.last_name1)
-    self.failUnless(len(subscription2.getObjectList())==nb_person)
+    self.assertEqual(person1_c.getId(), id)
+    self.assertEqual(person1_c.getFirstName(), self.first_name1)
+    self.assertEqual(person1_c.getLastName(), self.last_name1)
+    self.assertEqual(len(subscription2.getObjectList()), nb_person)
     person_client2 = self.getPersonClient2()
     person2_c = person_client2._getOb(id) 
-    self.failUnless(person2_c.getId()==id)
-    self.failUnless(person2_c.getFirstName()==self.first_name1)
-    self.failUnless(person2_c.getLastName()==self.last_name1)
+    self.assertEqual(person2_c.getId(), id)
+    self.assertEqual(person2_c.getFirstName(), self.first_name1)
+    self.assertEqual(person2_c.getLastName(), self.last_name1)
 
 
 class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
@@ -319,7 +318,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     if not quiet:
       ZopeTestCase._print('\nTest Has Everything ')
       LOG('Testing... ',0,'test_01_HasEverything')
-    self.failUnless(self.getSynchronizationTool()!=None)
+    self.assertNotEqual(self.getSynchronizationTool(), None)
     #self.failUnless(self.getPersonServer()!=None)
     #self.failUnless(self.getPersonClient1()!=None)
     #self.failUnless(self.getPersonClient2()!=None)
@@ -420,7 +419,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.setupPublicationAndSubscription(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     synchronization_list = portal_sync.getSynchronizationList()
-    self.failUnless(len(synchronization_list)==self.nb_synchronization)
+    self.assertEqual(len(synchronization_list), self.nb_synchronization)
 
   def test_06_GetObjectList(self, quiet=0, run=run_all_test):
     """
@@ -439,7 +438,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     publication_list = portal_sync.getPublicationList()
     publication = publication_list[0]
     object_list = publication.getObjectList()
-    self.failUnless(len(object_list)==nb_person)
+    self.assertEqual(len(object_list), nb_person)
     # now try to set a different method for query
     def query(object):
       object_list = object.objectValues()
@@ -450,7 +449,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       return return_list
     publication.setQuery(query)
     object_list = publication.getObjectList()
-    self.failUnless(len(object_list)==1)
+    self.assertEqual(len(object_list), 1)
 
   def test_07_ExportImport(self, quiet=0, run=run_all_test):
     """
@@ -469,12 +468,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     xml_output = person.asXML()
     conduit = ERP5Conduit()
     conduit.addNode(object=person_client1,xml=xml_output)
-    self.failUnless(len(person_client1.objectValues())==1)
+    self.assertEqual(len(person_client1.objectValues()), 1)
     new_object = person_client1._getOb(self.id1)
-    self.failUnless(new_object.getLastName()==self.last_name1)
-    self.failUnless(new_object.getFirstName()==self.first_name1)
+    self.assertEqual(new_object.getLastName(), self.last_name1)
+    self.assertEqual(new_object.getFirstName(), self.first_name1)
     # XXX We should also looks at the workflow history
-    self.failUnless(len(new_object.workflow_history[self.workflow_id])==2)
+    self.assertEqual(len(new_object.workflow_history[self.workflow_id]), 2)
     s_local_role = person_server.get_local_roles()
     c_local_role = person_client1.get_local_roles()
     self.assertEqual(s_local_role,c_local_role)
@@ -499,12 +498,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
         self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
       else:
         self.assertEquals(sub.getSynchronizationType(),SyncCode.SLOW_SYNC)
-    self.failUnless(nb_message1==self.nb_message_first_synchronization)
+    self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     # Synchronize the second client
     nb_message2 = self.synchronize(self.sub_id2)
     for sub in portal_sync.getSubscriptionList():
       self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
-    self.failUnless(nb_message2==self.nb_message_first_synchronization)
+    self.assertEqual(nb_message2, self.nb_message_first_synchronization)
     self.checkFirstSynchronization(id=self.id1, nb_person=nb_person)
 
   def test_09_FirstSynchronizationWithLongLines(self, quiet=0, run=run_all_test):
@@ -524,18 +523,18 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person1_s.edit(**kw)
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
-    self.failUnless(nb_message1==self.nb_message_first_synchronization)
+    self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
-    self.failUnless(len(subscription1.getObjectList())==nb_person)
-    self.failUnless(person1_s.getId()==self.id1)
-    self.failUnless(person1_s.getFirstName()==long_line)
-    self.failUnless(person1_s.getLastName()==self.last_name1)
+    self.assertEqual(len(subscription1.getObjectList()), nb_person)
+    self.assertEqual(person1_s.getId(), self.id1)
+    self.assertEqual(person1_s.getFirstName(), long_line)
+    self.assertEqual(person1_s.getLastName(), self.last_name1)
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
-    self.failUnless(person1_c.getId()==self.id1)
-    self.failUnless(person1_c.getFirstName()==long_line)
-    self.failUnless(person1_c.getLastName()==self.last_name1)
+    self.assertEqual(person1_c.getId(), self.id1)
+    self.assertEqual(person1_c.getFirstName(), long_line)
+    self.assertEqual(person1_c.getLastName(), self.last_name1)
 
   def test_10_GetObjectFromGid(self, quiet=0, run=run_all_test):
     # We will try to get an object from a publication
@@ -552,7 +551,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     publication = portal_sync.getPublication(self.pub_id)
     object = publication.getObjectFromId(self.id1)
     self.failUnless(object is not None)
-    self.failUnless(object.getId()==self.id1)
+    self.assertEqual(object.getId(), self.id1)
 
   def test_11_GetSynchronizationState(self, quiet=0, run=run_all_test):
     # We will try to get the state of objects
@@ -566,12 +565,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
     state_list_s = portal_sync.getSynchronizationState(person1_s)
-    self.failUnless(len(state_list_s)==self.nb_subscription) # one state
+    self.assertEqual(len(state_list_s), self.nb_subscription) # one state
                                                   # for each subscriber
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
     state_list_c = portal_sync.getSynchronizationState(person1_c)
-    self.failUnless(len(state_list_c)==1) # one state
+    self.assertEqual(len(state_list_c), 1) # one state
                                         # for each subscriber
     self.checkSynchronizationStateIsSynchronized()
 
@@ -582,25 +581,25 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       if person.getId()==self.id1:
         state_list = portal_sync.getSynchronizationState(person)
         for state in state_list:
-          self.failUnless(state[1]==state[0].CONFLICT)
+          self.assertEqual(state[1], state[0].CONFLICT)
     person_client1 = self.getPersonClient1()
     for person in person_client1.objectValues():
       if person.getId()==self.id1:
         state_list = portal_sync.getSynchronizationState(person)
         for state in state_list:
-          self.failUnless(state[1]==state[0].CONFLICT)
+          self.assertEqual(state[1], state[0].CONFLICT)
     person_client2 = self.getPersonClient2()
     for person in person_client2.objectValues():
       if person.getId()==self.id1:
         state_list = portal_sync.getSynchronizationState(person)
         for state in state_list:
-          self.failUnless(state[1]==state[0].CONFLICT)
+          self.assertEqual(state[1], state[0].CONFLICT)
     # make sure sub object are also in a conflict mode
     person = person_client1._getOb(self.id1)
     sub_person = person.newContent(id=self.id1,portal_type='Person')
     state_list = portal_sync.getSynchronizationState(sub_person)
     for state in state_list:
-      self.failUnless(state[1]==state[0].CONFLICT)
+      self.assertEqual(state[1], state[0].CONFLICT)
 
   def test_12_UpdateSimpleData(self, quiet=0, run=run_all_test):
     if not run: return
@@ -618,20 +617,20 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.checkSynchronizationStateIsSynchronized()
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
-    self.failUnless(person1_s.getFirstName()==self.first_name3)
-    self.failUnless(person1_s.getLastName()==self.last_name3)
-    self.failUnless(person1_c.getFirstName()==self.first_name3)
-    self.failUnless(person1_c.getLastName()==self.last_name3)
+    self.assertEqual(person1_s.getFirstName(), self.first_name3)
+    self.assertEqual(person1_s.getLastName(), self.last_name3)
+    self.assertEqual(person1_c.getFirstName(), self.first_name3)
+    self.assertEqual(person1_c.getLastName(), self.last_name3)
     # Then we do only modification on a client
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     person1_c.edit(**kw)
     #person1_c.setModificationDate(DateTime()+1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person1_s.getFirstName()==self.first_name1)
-    self.failUnless(person1_s.getLastName()==self.last_name1)
-    self.failUnless(person1_c.getFirstName()==self.first_name1)
-    self.failUnless(person1_c.getLastName()==self.last_name1)
+    self.assertEqual(person1_s.getFirstName(), self.first_name1)
+    self.assertEqual(person1_s.getLastName(), self.last_name1)
+    self.assertEqual(person1_c.getFirstName(), self.first_name1)
+    self.assertEqual(person1_c.getLastName(), self.last_name1)
     # Then we do only modification on both the client and the server
     # and of course, on the same object
     kw = {'first_name':self.first_name3}
@@ -642,10 +641,10 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     #person1_c.setModificationDate(DateTime()+2)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person1_s.getFirstName()==self.first_name3)
-    self.failUnless(person1_s.getDescription()==self.description3)
-    self.failUnless(person1_c.getFirstName()==self.first_name3)
-    self.failUnless(person1_c.getDescription()==self.description3)
+    self.assertEqual(person1_s.getFirstName(), self.first_name3)
+    self.assertEqual(person1_s.getDescription(), self.description3)
+    self.assertEqual(person1_c.getFirstName(), self.first_name3)
+    self.assertEqual(person1_c.getDescription(), self.description3)
 
   def test_13_GetConflictList(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
@@ -665,15 +664,15 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person1_c.setDescription(self.description3)
     self.synchronize(self.sub_id1)
     conflict_list = portal_sync.getConflictList()
-    self.failUnless(len(conflict_list)==1)
+    self.assertEqual(len(conflict_list), 1)
     conflict = conflict_list[0]
-    self.failUnless(person1_c.getDescription()==self.description3)
-    self.failUnless(person1_s.getDescription()==self.description2)
-    self.failUnless(conflict.getPropertyId()=='description')
-    self.failUnless(conflict.getPublisherValue()==self.description2)
-    self.failUnless(conflict.getSubscriberValue()==self.description3)
+    self.assertEqual(person1_c.getDescription(), self.description3)
+    self.assertEqual(person1_s.getDescription(), self.description2)
+    self.assertEqual(conflict.getPropertyId(), 'description')
+    self.assertEqual(conflict.getPublisherValue(), self.description2)
+    self.assertEqual(conflict.getSubscriberValue(), self.description3)
     subscriber = conflict.getSubscriber()
-    self.failUnless(subscriber.getSubscriptionUrl()==self.subscription_url1)
+    self.assertEqual(subscriber.getSubscriptionUrl(), self.subscription_url1)
 
   def test_14_GetPublisherAndSubscriberDocument(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
@@ -692,9 +691,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     conflict_list = portal_sync.getConflictList()
     conflict = conflict_list[0]
     publisher_document = conflict.getPublisherDocument()
-    self.failUnless(publisher_document.getDescription()==self.description2)
+    self.assertEqual(publisher_document.getDescription(), self.description2)
     subscriber_document = conflict.getSubscriberDocument()
-    self.failUnless(subscriber_document.getDescription()==self.description3)
+    self.assertEqual(subscriber_document.getDescription(), self.description3)
 
   def test_15_ApplyPublisherValue(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
@@ -714,10 +713,10 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     conflict.applyPublisherValue()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person1_c.getDescription()==self.description2)
-    self.failUnless(person1_s.getDescription()==self.description2)
+    self.assertEqual(person1_c.getDescription(), self.description2)
+    self.assertEqual(person1_s.getDescription(), self.description2)
     conflict_list = portal_sync.getConflictList()
-    self.failUnless(len(conflict_list)==0)
+    self.assertEqual(len(conflict_list), 0)
 
   def test_16_ApplySubscriberValue(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
@@ -737,10 +736,10 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     conflict.applySubscriberValue()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person1_s.getDescription()==self.description3)
-    self.failUnless(person1_c.getDescription()==self.description3)
+    self.assertEqual(person1_s.getDescription(), self.description3)
+    self.assertEqual(person1_c.getDescription(), self.description3)
     conflict_list = portal_sync.getConflictList()
-    self.failUnless(len(conflict_list)==0)
+    self.assertEqual(len(conflict_list), 0)
 
   def populatePersonServerWithSubObject(self, quiet=0, run=run_all_test):
     """
@@ -773,9 +772,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     sub_sub_person2.edit(**kw)
     # remove ('','portal...','person_server')
     len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
-    self.failUnless(len_path==3)
+    self.assertEqual(len_path, 3)
     len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
-    self.failUnless(len_path==3)
+    self.assertEqual(len_path, 3)
 
   def test_17_AddSubObject(self, quiet=0, run=run_all_test):
     """
@@ -835,10 +834,10 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     sub_sub_person_s.edit(**kw)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(sub_sub_person_c.getDescription()==self.description3)
-    self.failUnless(sub_sub_person_c.getFirstName()==self.first_name3)
-    self.failUnless(sub_sub_person_s.getDescription()==self.description3)
-    self.failUnless(sub_sub_person_s.getFirstName()==self.first_name3)
+    self.assertEqual(sub_sub_person_c.getDescription(), self.description3)
+    self.assertEqual(sub_sub_person_c.getFirstName(), self.first_name3)
+    self.assertEqual(sub_sub_person_s.getDescription(), self.description3)
+    self.assertEqual(sub_sub_person_s.getFirstName(), self.first_name3)
 
   def test_19_DeleteObject(self, quiet=0, run=run_all_test):
     """
@@ -862,9 +861,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     publication = portal_sync.getPublication(self.pub_id)
     subscription1 = portal_sync.getSubscription(self.sub_id1)
     subscription2 = portal_sync.getSubscription(self.sub_id2)
-    self.failUnless(len(publication.getObjectList())==0)
-    self.failUnless(len(subscription1.getObjectList())==0)
-    self.failUnless(len(subscription2.getObjectList())==0)
+    self.assertEqual(len(publication.getObjectList()), 0)
+    self.assertEqual(len(subscription1.getObjectList()), 0)
+    self.assertEqual(len(subscription2.getObjectList()), 0)
 
   def test_20_DeleteSubObject(self, quiet=0, run=run_all_test):
     """
@@ -924,13 +923,13 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     portal_sync = self.getSynchronizationTool()
     conflict_list = portal_sync.getConflictList()
-    self.failUnless(len(conflict_list)==2)
+    self.assertEqual(len(conflict_list), 2)
     conflict_list = portal_sync.getConflictList(sub_object_c1)
-    self.failUnless(len(conflict_list)==0)
+    self.assertEqual(len(conflict_list), 0)
     conflict_list = portal_sync.getConflictList(object_s)
-    self.failUnless(len(conflict_list)==0)
+    self.assertEqual(len(conflict_list), 0)
     conflict_list = portal_sync.getConflictList(sub_object_s)
-    self.failUnless(len(conflict_list)==2)
+    self.assertEqual(len(conflict_list), 2)
 
   def test_22_ApplyPublisherDocumentOnSubObject(self, quiet=0, run=run_all_test):
     """
@@ -955,12 +954,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(sub_object_s.getDescription()==self.description2)
-    self.failUnless(sub_object_s.getLanguage()==self.lang2)
-    self.failUnless(sub_object_c1.getDescription()==self.description2)
-    self.failUnless(sub_object_c1.getLanguage()==self.lang2)
-    self.failUnless(sub_object_c2.getDescription()==self.description2)
-    self.failUnless(sub_object_c2.getLanguage()==self.lang2)
+    self.assertEqual(sub_object_s.getDescription(), self.description2)
+    self.assertEqual(sub_object_s.getLanguage(), self.lang2)
+    self.assertEqual(sub_object_c1.getDescription(), self.description2)
+    self.assertEqual(sub_object_c1.getLanguage(), self.lang2)
+    self.assertEqual(sub_object_c2.getDescription(), self.description2)
+    self.assertEqual(sub_object_c2.getLanguage(), self.lang2)
 
   def test_23_ApplySubscriberDocumentOnSubObject(self, quiet=0, run=run_all_test):
     """
@@ -985,12 +984,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(sub_object_s.getDescription()==self.description3)
-    self.failUnless(sub_object_s.getLanguage()==self.lang3)
-    self.failUnless(sub_object_c1.getDescription()==self.description3)
-    self.failUnless(sub_object_c1.getLanguage()==self.lang3)
-    self.failUnless(sub_object_c2.getDescription()==self.description3)
-    self.failUnless(sub_object_c2.getLanguage()==self.lang3)
+    self.assertEqual(sub_object_s.getDescription(), self.description3)
+    self.assertEqual(sub_object_s.getLanguage(), self.lang3)
+    self.assertEqual(sub_object_c1.getDescription(), self.description3)
+    self.assertEqual(sub_object_c1.getLanguage(), self.lang3)
+    self.assertEqual(sub_object_c2.getDescription(), self.description3)
+    self.assertEqual(sub_object_c2.getLanguage(), self.lang3)
 
   def test_24_SynchronizeWithStrangeGid(self, quiet=0, run=run_all_test):
     """
@@ -1010,9 +1009,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.checkSynchronizationStateIsSynchronized()
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
-    self.failUnless(len(subscription1.getObjectList())==nb_person)
+    self.assertEqual(len(subscription1.getObjectList()), nb_person)
     publication = portal_sync.getPublication(self.pub_id)
-    self.failUnless(len(publication.getObjectList())==nb_person)
+    self.assertEqual(len(publication.getObjectList()), nb_person)
     gid = self.first_name1 +  ' ' + self.last_name1 # ie the title 'Sebastien Robin'
     gid = b16encode(gid)
     person_c1 = subscription1.getObjectFromGid(gid)
@@ -1020,25 +1019,25 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.failUnless(id_c1 in ('1','2')) # id given by the default generateNewId
     person_s = publication.getSubscriber(self.subscription_url1).getObjectFromGid(gid)
     id_s = person_s.getId()
-    self.failUnless(id_s==self.id1)
+    self.assertEqual(id_s, self.id1)
     # This will test updating object
     person_s.setDescription(self.description3)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person_s.getDescription()==self.description3)
-    self.failUnless(person_c1.getDescription()==self.description3)
+    self.assertEqual(person_s.getDescription(), self.description3)
+    self.assertEqual(person_c1.getDescription(), self.description3)
     # This will test deleting object
     person_server = self.getPersonServer()
     person_client1 = self.getPersonClient1()
     person_server.manage_delObjects(self.id2)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(len(subscription1.getObjectList())==(nb_person-1))
-    self.failUnless(len(publication.getObjectList())==(nb_person-1))
+    self.assertEqual(len(subscription1.getObjectList()), (nb_person-1))
+    self.assertEqual(len(publication.getObjectList()), (nb_person-1))
     person_s = publication.getSubscriber(self.subscription_url1).getObjectFromGid(gid)
     person_c1 = subscription1.getObjectFromGid(gid)
-    self.failUnless(person_s.getDescription()==self.description3)
-    self.failUnless(person_c1.getDescription()==self.description3)
+    self.assertEqual(person_s.getDescription(), self.description3)
+    self.assertEqual(person_c1.getDescription(), self.description3)
 
   def test_25_MultiNodeConflict(self, quiet=0, run=run_all_test):
     """
@@ -1069,7 +1068,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     conflict_list = portal_sync.getConflictList()
-    self.failUnless(len(conflict_list)==6)
+    self.assertEqual(len(conflict_list), 6)
     # check if we have the state conflict on all clients
     self.checkSynchronizationStateIsConflict()
 
@@ -1094,15 +1093,15 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person1_s.getDescription()==self.description2)
-    self.failUnless(person1_c1.getDescription()==self.description2)
-    self.failUnless(person1_c2.getDescription()==self.description2)
-    self.failUnless(person1_s.getLanguage()==self.lang3)
-    self.failUnless(person1_c1.getLanguage()==self.lang3)
-    self.failUnless(person1_c2.getLanguage()==self.lang3)
-    self.failUnless(person1_s.getFormat()==self.format4)
-    self.failUnless(person1_c1.getFormat()==self.format4)
-    self.failUnless(person1_c2.getFormat()==self.format4)
+    self.assertEqual(person1_s.getDescription(), self.description2)
+    self.assertEqual(person1_c1.getDescription(), self.description2)
+    self.assertEqual(person1_c2.getDescription(), self.description2)
+    self.assertEqual(person1_s.getLanguage(), self.lang3)
+    self.assertEqual(person1_c1.getLanguage(), self.lang3)
+    self.assertEqual(person1_c2.getLanguage(), self.lang3)
+    self.assertEqual(person1_s.getFormat(), self.format4)
+    self.assertEqual(person1_c1.getFormat(), self.format4)
+    self.assertEqual(person1_c2.getFormat(), self.format4)
         
 
   def test_26_SynchronizeWorkflowHistory(self, quiet=0, run=run_all_test):
@@ -1129,8 +1128,8 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person1_c.edit(**kw1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(len(person1_s.workflow_history[self.workflow_id])==len_wf+4)
-    self.failUnless(len(person1_c.workflow_history[self.workflow_id])==len_wf+4)
+    self.assertEqual(len(person1_s.workflow_history[self.workflow_id]), len_wf+4)
+    self.assertEqual(len(person1_c.workflow_history[self.workflow_id]), len_wf+4)
 
   def test_27_UpdateLocalRole(self, quiet=0, run=run_all_test):
     """
@@ -1189,9 +1188,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     sub_sub_person2 = sub_person1_c._getOb(self.id2)
     # remove ('','portal...','person_server')
     len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
-    self.failUnless(len_path==3)
+    self.assertEqual(len_path, 3)
     len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
-    self.failUnless(len_path==3)
+    self.assertEqual(len_path, 3)
     self.assertEquals(sub_sub_person1.getDescription(),self.description1)
     self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
     self.assertEquals(sub_sub_person1.getLastName(),self.last_name1)
@@ -1222,18 +1221,18 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     #self.failUnless(nb_message1==self.nb_message_first_synchronization)
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
-    self.failUnless(len(subscription1.getObjectList())==nb_person)
+    self.assertEqual(len(subscription1.getObjectList()), nb_person)
     person_server = self.getPersonServer() # We also check we don't
                                            # modify initial ob
     person1_s = person_server._getOb(self.id1)
-    self.failUnless(person1_s.getId()==self.id1)
-    self.failUnless(person1_s.getFirstName()==self.first_name1)
-    self.failUnless(person1_s.getLastName()==self.last_name1)
+    self.assertEqual(person1_s.getId(), self.id1)
+    self.assertEqual(person1_s.getFirstName(), self.first_name1)
+    self.assertEqual(person1_s.getLastName(), self.last_name1)
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
-    self.failUnless(person1_c.getId()==self.id1)
-    self.failUnless(person1_c.getFirstName()==self.first_name1)
-    self.failUnless(person1_c.getLastName()==self.last_name1)
+    self.assertEqual(person1_c.getId(), self.id1)
+    self.assertEqual(person1_c.getFirstName(), self.first_name1)
+    self.assertEqual(person1_c.getLastName(), self.last_name1)
     SyncCode.MAX_LINES = previous_max_lines
 
   def test_30_GetSynchronizationType(self, quiet=0, run=run_all_test):
@@ -1365,14 +1364,14 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person_server = self.getPersonServer() # We also check we don't
                                            # modify initial ob
     person1_s = person_server._getOb(self.id1)
-    self.failUnless(person1_s.getId()==self.id1)
-    self.failUnless(person1_s.getFirstName()==self.first_name1)
-    self.failUnless(person1_s.getLastName()==self.last_name1)
+    self.assertEqual(person1_s.getId(), self.id1)
+    self.assertEqual(person1_s.getFirstName(), self.first_name1)
+    self.assertEqual(person1_s.getLastName(), self.last_name1)
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
-    self.failUnless(person1_c.getId()==self.id1)
-    self.failUnless(person1_c.getFirstName()==self.first_name1)
-    self.failUnless(person1_c.getLastName()==self.last_name1)
+    self.assertEqual(person1_c.getId(), self.id1)
+    self.assertEqual(person1_c.getFirstName(), self.first_name1)
+    self.assertEqual(person1_c.getLastName(), self.last_name1)
     # Then we change things on both sides and we look if there
     # is synchronization from only one way
     person1_c.setFirstName(self.first_name2)
