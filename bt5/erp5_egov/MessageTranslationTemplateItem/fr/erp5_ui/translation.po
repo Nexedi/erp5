@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2008-05-29 12:05+CET\n"
-"PO-Revision-Date: 2008-05-29 12:05+CET\n"
+"POT-Creation-Date: 2008-05-29 14:05+CET\n"
+"PO-Revision-Date: 2008-05-29 14:05+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -4945,7 +4945,7 @@ msgid "Submitted Procedures"
 msgstr ""
 
 msgid "Subscription Form"
-msgstr ""
+msgstr "Formulaire d'inscription"
 
 msgid "Subscription Form Module"
 msgstr ""

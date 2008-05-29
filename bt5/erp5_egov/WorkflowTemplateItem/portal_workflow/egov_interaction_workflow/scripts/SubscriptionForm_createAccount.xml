@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>context.log(\'pouet pouet interaction workflow\')\n
+\n
+portal = context.getPortalObject()\n
+organisation_module = portal.getDefaultModule(portal_type=\'Organisation\')\n
+new_organisation = organisation_module.newContent(portal_type=\'Organisation\')\n
+\n
+changed_object = state_change[\'object\']\n
+new_organisation.setTitle(changed_object.getCompanyName())\n
+new_organisation.setCorporateName(changed_object.getCompanyName())\n
+new_organisation.setAddressStreetAddress(changed_object.getAddressStreetAddress())\n
+new_organisation.setAddressZipCode(changed_object.getAddressZipCode())\n
+new_organisation.setAddressCity(changed_object.getAddressCity())\n
+new_organisation.setAddressRegion(changed_object.getAddressRegion())\n
+new_organisation.setCorporateRegistrationCode(changed_object.getNinea())\n
+\n
+# XXX\n
+new_organisation.setRole(\'registry/entreprise\')\n
+\n
+login = changed_object.getCompanyName().lower()\n
+new_organisation.setReference(login)\n
+password = context.Person_generatePassword()\n
+new_organisation.setPassword(password)\n
+context.log(\'login : %s\' % login)\n
+context.log(\'password : %s\' % password)\n
+\n
+#here, call a method to send credentials by mail\n
+user_email = changed_object.getEmail()\n
+context.sendCrendentialsByEMail(login, password, user_email)\n
+\n
+return \'pouet\'\n
+\n
+#print \'account to be created here\'\n
+#return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>organisation_module</string>
+                            <string>new_organisation</string>
+                            <string>_getitem_</string>
+                            <string>changed_object</string>
+                            <string>login</string>
+                            <string>password</string>
+                            <string>user_email</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SubscriptionForm_createAccount</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
