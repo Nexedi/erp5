@@ -103,19 +103,15 @@
         </tal:block>\n
         <tal:block tal:repeat="action actions/object_add | nothing">\n
           <option tal:attributes="value string:object ${action/url}"\n
-                  i18n:translate="" i18n:domain="ui">\n
-            Add <tal:block tal:content="action/name" i18n:name="portal_type" i18n:translate="" />\n
-          </option>\n
+                  i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="action/name" i18n:name="portal_type" i18n:translate="" /></option>\n
         </tal:block>\n
         <tal:block tal:define="document_template_list here/getDocumentTemplateList | nothing"\n
                    tal:condition="document_template_list">\n
           <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --</option>\n
           <tal:block tal:repeat="document_template document_template_list">\n
             <option tal:attributes="value python:\'template %s\' % (document_template.getRelativeUrl(), )"\n
-                    i18n:translate="" i18n:domain="ui">\n
-              Add <tal:block tal:content="document_template/getTitle"\n
-                             i18n:name="document_template" />\n
-            </option>\n
+                    i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="document_template/getTitle"\n
+                             i18n:name="document_template" /></option>\n
           </tal:block>\n
         </tal:block>\n
         <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --</option>\n
