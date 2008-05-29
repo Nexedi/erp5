@@ -337,12 +337,6 @@ class NotificationTool(BaseTool):
 
     portal_workflow = getToolByName(self, 'portal_workflow')
     for event in event_list:
-      # transit workflow if event_workflow is available.
-      if ('event_workflow' in portal_workflow.getChainFor(event) and
-          callable(getattr(event, 'plan', None))):
-        event.plan()
-        event.order()
-        event.start()
       event.send(**low_level_kw)
 
     return
