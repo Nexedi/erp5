@@ -203,11 +203,11 @@ class TestOrderMixin:
                  source_section_value=organisation,
                  destination_value=organisation,
                  destination_section_value=organisation,
-		 # Added for test Packing List Copy
+                 # Added for test Packing List Copy
                  source_decision_value=organisation,
                  destination_decision_value=organisation,
                  source_administration_value=organisation,
-                 destination_administration_value=organisation,		 
+                 destination_administration_value=organisation,
                  )
     sequence.edit( order = order )
 
