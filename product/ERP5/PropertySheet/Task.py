@@ -70,5 +70,3 @@ class Task:
             'alt_accessor_id'               : ('getStartDate', ),
             'mode'        : 'w' },
     )
-
-    _categories = ( 'requirement', )
