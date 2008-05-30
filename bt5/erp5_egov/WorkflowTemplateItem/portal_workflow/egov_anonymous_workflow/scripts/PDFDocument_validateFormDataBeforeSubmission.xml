@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>\'\'\'This script check that all required files have been uploaded\'\'\'\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-portal = context.getPortalObject()\n
+portal = state_change.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
 document = state_change[\'object\']\n
@@ -139,7 +139,6 @@ if len(missing_document_list):\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
                             <string>_getitem_</string>
