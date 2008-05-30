@@ -88,7 +88,7 @@ class ERP5UserManager(BasePlugin):
             if not login or not password:
                 return None
 
-            user_list = self.getUserByLogin((login,))
+            user_list = self.getUserByLogin(login)
 
             if not user_list:
                 return None
@@ -172,10 +172,10 @@ class ERP5UserManager(BasePlugin):
 
         if id is None:
           id = login
+        if isinstance(id, str):
+          id = (id,)
         if isinstance(id, list):
           id = tuple(id)
-        elif not isinstance(id, tuple):
-          id = (id,)
         return _enumerateUsers(id_tuple=id,
                                exact_match=exact_match,
                                path=self.getPhysicalPath())
