@@ -9,7 +9,10 @@ from email import Encoders
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from Globals import InitializeClass
-from zope.app.content_types import guess_content_type
+try:
+  from zope.app.content_types import guess_content_type
+except ImportError:
+  from OFS.content_types import guess_content_type # Zope 2.7
 from OFS.Image import File
 from ZPublisher.HTTPRequest import FileUpload
 
