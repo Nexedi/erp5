@@ -70,12 +70,12 @@ login = changed_object.getCompanyName().lower()\n
 \n
 # check that no existing organisation have the same RCCM number or login\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-if len(context.portal_catalog(portal_type=\'Organisation\',\n
+if len(changed_object.portal_catalog(portal_type=\'Organisation\',\n
   corporate_registration_code=changed_object.getNinea())):\n
   raise ValidationFailed, "Error : A company with the registration code \'%s\'"\\\n
     " already exists" % changed_object.getNinea()\n
 \n
-if len((context.portal_catalog(portal_type=\'Organisation\',\n
+if len((changed_object.portal_catalog(portal_type=\'Organisation\',\n
     reference=login))):\n
   raise ValidationFailed, "Error : A company with the login \'%s\'"\\\n
     " already exists" % login\n
@@ -129,7 +129,6 @@ if len((context.portal_catalog(portal_type=\'Organisation\',\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>len</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
