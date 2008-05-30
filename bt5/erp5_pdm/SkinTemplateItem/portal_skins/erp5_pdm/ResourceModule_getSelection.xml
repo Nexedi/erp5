@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># JM: a \'preferred_category_display_method_id\' preference would be better\n
+\n
+def getPreferredCategoryChildItemListMethodId():\n
+  return context.getPortalObject().portal_preferences.getPreference(\n
+    \'preferred_category_child_item_list_method_id\',\n
+    \'getCategoryChildCompactLogicalPathItemList\')\n
+\n
+def getPreferredCategoryDisplayMethodId():\n
+  method = \'get\' + getPreferredCategoryChildItemListMethodId() \\\n
+                   [ len(\'getCategoryChild\') : - len(\'ItemList\') ]\n
+  return method == \'getTranslatedCompactTitle\' and \'getCompactTranslatedTitle\' \\\n
+      or method\n
+\n
+# Zope: waiting for __builtin__.set\n
+set = lambda seq: dict((k,None) for k in seq).iterkeys()\n
+\n
+# Zope: waiting for __builtin__.sorted\n
+def sorted(seq):\n
+  l = list(seq)\n
+  l.sort()\n
+  return l\n
+\n
+class ResourceSelection:\n
+  """\n
+  Helper class to handle a selection of resources.\n
+  """\n
+  def getCommonMetricTypeList(self):\n
+    """\n
+    Get the list of metric_type categories\n
+    that are common to all selected resources.\n
+    """\n
+    return [ metric_type[\'relative_url\'].split(\'/\',1)[1]\n
+              for metric_type in self.context.\n
+                ResourceModule_zGetCommonMetricTypeList(\n
+                  resource_uid = self.getUidList()) ]\n
+\n
+  def getCommonBaseQuantityUnitSet(self):\n
+    """\n
+    Get the set of possible quantity_unit categories\n
+    for the list of metric_type returned by getCommonMetricTypeList.\n
+    """\n
+    return set([mt.split(\'/\',1)[0] for mt in self.getCommonMetricTypeList()])\n
+\n
+  def getCommonMetricTypeItemList(self):\n
+    """\n
+    Similar to getCommonMetricTypeList\n
+    but return the categories as a list of tuples (title, id).\n
+    This is mostly useful in ERP5Form instances to generate selection menus.\n
+    """\n
+    traverse = self.portal.portal_categories[\'metric_type\'].restrictedTraverse\n
+    display = getPreferredCategoryDisplayMethodId()\n
+    return sorted((getattr(traverse(metric_type),display)(), metric_type)\n
+      for metric_type in self.getCommonMetricTypeList())\n
+\n
+  def getCommonQuantityUnitItemList(self):\n
+    """\n
+    Similar to getCommonBaseQuantityUnitSet\n
+    but return the categories as a list of tuples (title, id).\n
+    This is mostly useful in ERP5Form instances to generate selection menus.\n
+    """\n
+    traverse = self.portal.portal_categories[\'quantity_unit\'].restrictedTraverse\n
+    display = getPreferredCategoryChildItemListMethodId()\n
+    common_quantity_unit_item_list = []\n
+    for qu in sorted(self.getCommonBaseQuantityUnitSet()):\n
+      common_quantity_unit_item_list.extend(getattr(traverse(qu),display)\n
+        (display_none_category=0, local_sort_id=\'quantity\'))\n
+    return common_quantity_unit_item_list\n
+\n
+self = ResourceSelection()\n
+self.context = context\n
+self.portal = context.getPortalObject()\n
+uid_list = self.portal.portal_selections \\\n
+               .getSelectionCheckedUidsFor(context.REQUEST.selection_name)\n
+if not uid_list:\n
+  raise ValueError(\'No resource selected.\')\n
+self.getUidList = lambda: uid_list\n
+\n
+return self\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>getPreferredCategoryChildItemListMethodId</string>
+                            <string>getPreferredCategoryDisplayMethodId</string>
+                            <string>set</string>
+                            <string>sorted</string>
+                            <string>ResourceSelection</string>
+                            <string>self</string>
+                            <string>context</string>
+                            <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>uid_list</string>
+                            <string>ValueError</string>
+                            <string>getUidList</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ResourceModule_getSelection</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

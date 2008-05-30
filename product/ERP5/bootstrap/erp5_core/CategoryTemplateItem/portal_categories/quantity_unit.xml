@@ -45,9 +45,9 @@
             <value>
               <tuple>
                 <string>delivery</string>
-                <string>resource</string>
                 <string>order</string>
                 <string>parent</string>
+                <string>resource</string>
               </tuple>
             </value>
         </item>

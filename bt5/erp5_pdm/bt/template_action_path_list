@@ -1,14 +1,19 @@
 Component Individual Variation | view
+Component Module | converted_inventory_report
 Component Module | view
 Component | purchase_price_view
 Component | sale_price_view
 Component | view
 Component | view_flow_capacity
+Component | view_measure
+Preference | pdm_preference
 Product Individual Variation | view
+Product Module | converted_inventory_report
 Product Module | view
 Product | purchase_price_view
 Product | sale_price_view
 Product | view
+Product | view_measure
 Product | view_stock
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
@@ -31,10 +36,12 @@ Sale Supply Line | view
 Sale Supply Module | view
 Sale Supply | view
 Service Individual Variation | view
+Service Module | converted_inventory_report
 Service Module | view
 Service | purchase_price_view
 Service | sale_price_view
 Service | view
+Service | view_measure
 Supply Line | additional_price
 Supply Line | base_price
 Supply Line | discount_ratio
@@ -43,7 +50,6 @@ Supply Line | non_discountable_additional_price
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
 Supply Line | view
-System Preference | pdm_preference
 Transformation Module | view
 Transformation Operation | complete_quantity_matrix
 Transformation Operation | view

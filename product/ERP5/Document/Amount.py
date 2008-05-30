@@ -405,17 +405,10 @@ class Amount(Base, Variated):
       Price is defined on 
       
     """
-    result = None
-    efficiency = self.getEfficiency()
-    if efficiency != 0:
-      resource_price = self.getResourcePrice()
-      if resource_price is not None:
-        return resource_price * self.getConvertedQuantity() / efficiency
-    price = self.getPrice()
-    quantity = self.getQuantity()
-    if type(price) in (type(1.0), type(1)) and type(quantity) in (type(1.0), type(1)):
-      result = quantity * price
-    return result
+    price = self.getResourcePrice()
+    quantity = self.getNetConvertedQuantity()
+    if isinstance(price, (int, float)) and isinstance(quantity, (int, float)):
+      return quantity * price
 
   # Conversion to standard unit
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedQuantity')
@@ -426,25 +419,26 @@ class Amount(Base, Variated):
     resource = self.getResourceValue()
     quantity_unit = self.getQuantityUnit()
     quantity = self.getQuantity()
-    converted_quantity = None
-    if resource is not None:
-      resource_quantity_unit = resource.getDefaultQuantityUnit()
-      converted_quantity = resource.convertQuantity(quantity, quantity_unit, resource_quantity_unit)
-    else:
-      #LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
-      pass
-    return converted_quantity
+    if quantity is not None and quantity_unit and resource is not None:
+      converted = resource.convertQuantity(quantity, quantity_unit,
+                                           resource.getDefaultQuantityUnit(),
+                                           self.getVariationCategoryList())
+      # For compatibility, return quantity non-converted if conversion fails.
+      if converted is not None:
+        return converted
+    return quantity
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedQuantity')
   def setConvertedQuantity(self, value):
     resource = self.getResourceValue()
     quantity_unit = self.getQuantityUnit()
-    if resource is not None:
-      resource_quantity_unit = resource.getDefaultQuantityUnit()
-      quantity = resource.convertQuantity(value, resource_quantity_unit, quantity_unit)
-      self.setQuantity(quantity)
-    else:
-      LOG("ERP5 WARNING:", 100, 'could not set converted quantity for %s' % self.getRelativeUrl())
+    if value is not None and quantity_unit and resource is not None:
+      quantity = resource.convertQuantity(value,
+                                          resource.getDefaultQuantityUnit(),
+                                          quantity_unit,
+                                          self.getVariationCategoryList())
+      if quantity is not None:
+        return self.setQuantity(quantity)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetQuantity')
   def getNetQuantity(self):

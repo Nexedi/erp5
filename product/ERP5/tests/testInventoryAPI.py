@@ -58,7 +58,15 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                        'group/test_group/A2/B1/C2',
                        'group/test_group/A2/B2/C1',
                        'group/test_group/A2/B2/C2', )
-  
+
+  VARIATION_CATEGORIES = ( 'colour/red',
+                           'colour/green',
+                           'colour/blue',
+                           'size/big',
+                           'size/small',
+                           'industrial_phase/phase1',
+                           'industrial_phase/phase2', )
+
   def getTitle(self):
     """Title of the test."""
     return 'Inventory API'
@@ -181,7 +189,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'group/anotherlevel',
               'product_line/level1/level2',
            # we create a huge group category for consolidation tests
-           ) + self.GROUP_CATEGORIES
+           ) + self.GROUP_CATEGORIES + self.VARIATION_CATEGORIES
   
   def getBusinessTemplateList(self):
     """ erp5_trade is required for transit_simulation_state
@@ -2085,6 +2093,110 @@ class TestInventoryDocument(InventoryAPITestCase):
       _aq_reset()
 
 
+class TestUnitConversion(InventoryAPITestCase):
+  QUANTITY_UNIT_CATEGORIES = {
+    'unit': {'unit': 1, 'a_few': None},
+    'length': {'m': 1, 'in': .0254},
+    'mass': {'kg': 1, 't': 1000, 'g': .001},
+  }
+  METRIC_TYPE_CATEGORIES = (
+    'unit',
+    'unit/0',
+    'unit/1',
+    'unit/2',
+    'mass/net',
+    'mass/nutr/lipid',
+  )
+
+  def afterSetUp(self):
+    InventoryAPITestCase.afterSetUp(self)
+
+    self.resource.setQuantityUnitList(('unit/unit', 'length/in'))
+    self.other_resource.setQuantityUnit('mass/g')
+
+    keys = ('metric_type', 'quantity_unit', 'quantity', 'default_metric_type')
+    for resource, measure_list in {
+        self.resource: (
+          ('mass/net',        'mass/kg', .123, None),
+          ('mass/nutr/lipid', 'mass/g',  45,   True),
+        ),
+        self.other_resource: (
+          # default measure (only useful to set the metric type)
+          ('mass/net', None,        1,    True),
+          # Bad measures
+          ('unit',    'unit/unit',  123,  None), ## duplicate
+          ('unit',    'unit/unit',  123,  None), #
+          ('unit/0',  'unit/a_few', 123,  None), ## incomplete
+          ('unit/1',  'unit/unit',  None, None), #
+          ('unit/2',  None,         123,  None), #
+          (None,      'mass/kg',    123,  None), #
+          (None,      None,         None, None), ## empty
+        )}.iteritems():
+      for measure in measure_list:
+        kw = dict((keys[i], v) for i, v in enumerate(measure) if v is not None)
+        resource.newContent(portal_type='Measure', **kw)
+
+    self.resource.setOptionalVariationBaseCategory('industrial_phase')
+    self.resource.setVariationBaseCategoryList(('colour', 'size'))
+    self.resource.setVariationCategoryList(self.VARIATION_CATEGORIES)
+    m = self.resource.getDefaultMeasure('mass/t')
+
+    m.setMeasureVariationBaseCategory('colour')
+    for colour, quantity in ('green', 43), ('red', 56):
+      m.newContent(portal_type='Measure Cell', quantity=quantity) \
+       ._setMembershipCriterionCategory('colour/' + colour)
+
+    self._safeTic()
+
+  def getNeededCategoryList(self):
+    category_list = ['metric_type/' + c for c in self.METRIC_TYPE_CATEGORIES]
+    for level1, level2 in self.QUANTITY_UNIT_CATEGORIES.iteritems():
+      quantity = 'quantity_unit/%s/' % level1
+      category_list.extend(quantity + unit for unit in level2)
+    category_list += InventoryAPITestCase.getNeededCategoryList(self)
+    return category_list
+
+  def createCategories(self):
+    InventoryAPITestCase.createCategories(self)
+    quantity_unit = self.getCategoryTool().quantity_unit
+    for quantity_id, unit_dict in self.QUANTITY_UNIT_CATEGORIES.iteritems():
+      quantity_value = quantity_unit[quantity_id]
+      for unit_id, unit_scale in unit_dict.iteritems():
+        if unit_scale is not None:
+          quantity_value[unit_id].setProperty('quantity', unit_scale)
+
+  def testConvertedInventoryList(self):
+    def makeMovement(quantity, resource, *variation, **kw):
+      m = self._makeMovement(quantity=quantity, resource_value=resource,
+        source_value=self.node, destination_value=self.mirror_node, **kw)
+      if variation:
+        m.setVariationCategoryList(variation)
+        self._safeTic()
+
+    makeMovement(2, self.resource, 'colour/green', 'size/big')
+    makeMovement(789, self.other_resource)
+    makeMovement(-13, self.resource, 'colour/red', 'size/small',
+                 'industrial_phase/phase1', 'industrial_phase/phase2')
+
+    def simulation(metric_type, **kw):
+      return self.getSimulationTool().getConvertedInventoryList(
+        metric_type=metric_type, node_uid=self.node.getUid(),
+        ignore_group_by=1, inventory_list=0, **kw)[0].converted_quantity
+
+    for i in range(3):
+      self.assertEquals(None, simulation('unit/%i' % i))
+
+    self.assertEquals(None, simulation('unit', simulation_period='Current'))
+    self.assertEquals(11, simulation('unit'))
+
+    self.assertEquals(11 * 123 - 789,
+                      simulation('mass/net', quantity_unit=.001))
+    self.assertEquals((11 * 123 - 789) / 1e6,
+                      simulation('mass/net', quantity_unit='mass/t'))
+
+    self.assertEquals(13 * .056 - 2 * .043, simulation('mass/nutr/lipid'))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInventory))
@@ -2094,6 +2206,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
   suite.addTest(unittest.makeSuite(TestTrackingList))
   suite.addTest(unittest.makeSuite(TestInventoryDocument))
+  suite.addTest(unittest.makeSuite(TestUnitConversion))
   return suite
 
 # vim: foldmethod=marker

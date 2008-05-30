@@ -199,9 +199,18 @@ class Movement(XMLObject, Amount):
   # _getPrice is defined in the order / delivery
   # Pricing mehod
   def _getPrice(self, context):
+    context = self.asContext(context=context,
+                             quantity=self.getConvertedQuantity())
     operand_dict = self.getPriceCalculationOperandDict(context=context)
     if operand_dict is not None:
-      return operand_dict['price']
+      price = operand_dict['price']
+      resource = self.getResourceValue()
+      quantity_unit = self.getQuantityUnit()
+      if price is not None and quantity_unit and resource is not None:
+        return resource.convertQuantity(price, quantity_unit,
+                                        resource.getDefaultQuantityUnit(),
+                                        self.getVariationCategoryList())
+      return price
 
   def _getTotalPrice(self, default=None, context=None, fast=0):
     price = self.getPrice(context=context)

@@ -49,6 +49,7 @@ from Products.PythonScripts.Utility import allow_class
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, QueryMixin
 
 from Shared.DC.ZRDB.Results import Results
+from Products.ERP5Type.Utils import mergeZRDBResults
 
 class SimulationTool(BaseTool):
     """
@@ -878,7 +879,8 @@ class SimulationTool(BaseTool):
                          default_stock_table='stock',
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1, 
-                         precision=None, connection_id=None, **kw):
+                         precision=None, connection_id=None,
+                         quantity_unit=None, **kw):
       """
         Returns a list of inventories for a single or multiple
         resources on a single or multiple nodes, grouped by resource,
@@ -1058,6 +1060,7 @@ class SimulationTool(BaseTool):
               assert isinstance(where_query, basestring) and len(where_query)
               stock_sql_kw['where_expression'] = '(%s) AND (%s)' % \
                 (where_query, greater_than_date_query)
+              LOG(None, 0, 'optimisation_success = True')
               # Get initial inventory amount
               initial_inventory_line_list = self.Resource_zGetInventoryList(
                 stock_table_id=EQUAL_DATE_TABLE_ID,
@@ -1066,7 +1069,8 @@ class SimulationTool(BaseTool):
                 selection_domain=selection_domain,
                 selection_report=selection_report, precision=precision,
                 inventory_list=inventory_list,
-                statistic=statistic, **inventory_stock_sql_kw)
+                statistic=statistic, quantity_unit=quantity_unit,
+                **inventory_stock_sql_kw)
               # Get delta inventory
               delta_inventory_line_list = self.Resource_zGetInventoryList(
                 stock_table_id=GREATER_THAN_DATE_TABLE_ID,
@@ -1075,7 +1079,8 @@ class SimulationTool(BaseTool):
                 selection_domain=selection_domain,
                 selection_report=selection_report, precision=precision,
                 inventory_list=inventory_list,
-                statistic=statistic, **stock_sql_kw)
+                statistic=statistic, quantity_unit=quantity_unit,
+                **stock_sql_kw)
               # Match & add initial and delta inventories
               if src__:
                 sql_source_list.extend((initial_inventory_line_list,
@@ -1104,6 +1109,8 @@ class SimulationTool(BaseTool):
                 result_column_id_dict['inventory'] = None
                 result_column_id_dict['total_quantity'] = None
                 result_column_id_dict['total_price'] = None
+                if quantity_unit:
+                    result_column_id_dict['converted_quantity'] = None
                 def addLineValues(line_a=None, line_b=None):
                   """
                     Addition columns of 2 lines and return a line with same
@@ -1189,12 +1196,72 @@ class SimulationTool(BaseTool):
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
                     inventory_list=inventory_list, connection_id=connection_id,
-                    statistic=statistic, **stock_sql_kw)
+                    statistic=statistic, quantity_unit=quantity_unit,
+                    **stock_sql_kw)
         if src__:
           sql_source_list.append(result)
       if src__:
         result = ';\n-- NEXT QUERY\n'.join(sql_source_list)
       return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getConvertedInventoryList')
+    def getConvertedInventoryList(self, metric_type, quantity_unit=1,
+                                  simulation_period='', **kw):
+      """
+      Return list of inventory with a 'converted_quantity' additional column,
+      which contains the sum of measurements for the specified metric type,
+      expressed in the 'quantity_unit' unit.
+
+      metric_type   - category relative url
+      quantity_unit - int, float or category relative url
+      """
+      getCategory = self.getPortalObject().portal_categories.getCategoryValue
+
+      kw['metric_type_uid'] = Query(
+        metric_type_uid=getCategory(metric_type, 'metric_type').getUid(),
+        table_alias_list=(("measure", "measure"),))
+
+      if isinstance(quantity_unit, str):
+        quantity_unit = getCategory(quantity_unit,
+                                   'quantity_unit').getProperty('quantity')
+
+      method = getattr(self,'get%sInventoryList' % simulation_period)
+      return method(quantity_unit=quantity_unit, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getAllInventoryList')
+    def getAllInventoryList(self, src__=0, **kw):
+      """
+      Returns list of inventory, for all periods.
+      Performs 1 SQL request for each simulation state, and merge the results.
+      Rename relevant columns with a '${simulation}_' prefix
+      (ex: 'total_price' -> 'current_total_price').
+      """
+      columns = ('total_quantity', 'total_price', 'converted_quantity')
+
+      # Guess the columns to use to identify each row, by looking at the GROUP
+      # clause. Note that the call to 'mergeZRDBResults' will crash if the GROUP
+      # clause contains a column not requested in the SELECT clause.
+      kw.update(self._getDefaultGroupByParameters(**kw), ignore_group_by=1)
+      group_by_list = self._generateKeywordDict(**kw)[1].get('group_by', ())
+
+      results = []
+      edit_result = {}
+      get_false_value = lambda row, column_name: row.get(column_name) or 0
+
+      for simulation in 'current', 'available', 'future':
+        method = getattr(self, 'get%sInventoryList' % simulation.capitalize())
+        rename = {'inventory': None} # inventory column is deprecated
+        for column in columns:
+          rename[column] = new_name = '%s_%s' % (simulation, column)
+          edit_result[new_name] = get_false_value
+        results += (method(src__=src__, **kw), rename),
+
+      if src__:
+        return ';\n-- NEXT QUERY\n'.join(r[0] for r in results)
+      return mergeZRDBResults(results, group_by_list, edit_result)
+
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')
@@ -1268,7 +1335,7 @@ class SimulationTool(BaseTool):
                               'getAvailableInventoryStat')
     def getAvailableInventoryStat(self, **kw):
       """
-      Returns statistics of current inventory grouped by section or site
+      Returns statistics of available inventory grouped by section or site
       """
       return self.getInventoryStat(simulation_period='Available', **kw)
 

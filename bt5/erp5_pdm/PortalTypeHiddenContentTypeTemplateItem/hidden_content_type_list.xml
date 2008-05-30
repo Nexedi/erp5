@@ -5,6 +5,9 @@
   <item>Supply Line</item>
   <item>Image</item>
  </portal_type>
+ <portal_type id="Measure">
+  <item>Measure Cell</item>
+ </portal_type>
  <portal_type id="Product">
   <item>Image</item>
   <item>Sale Supply Line</item>

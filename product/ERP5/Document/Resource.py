@@ -252,11 +252,6 @@ class Resource(XMLMatrix, Variated):
                     omit_individual_variation=omit_individual_variation,**kw)
       return [x[1] for x in vcil]
 
-    # Unit conversion
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-    def convertQuantity(self, quantity, from_unit, to_unit):
-      return quantity
-
 # This patch is temporary and allows to circumvent name conflict in ZSQLCatalog process for Coramy
     security.declareProtected(Permissions.AccessContentsInformation,
                                               'getDefaultDestinationAmountBis')
@@ -783,3 +778,120 @@ class Resource(XMLMatrix, Variated):
       except TypeError:
         return 0
       return 0
+
+
+    def _getConversionRatio(self, quantity_unit, variation_list):
+      """
+      Converts a quantity unit into a ratio in respect to the resource's
+      management unit, for the specified variation.
+      A quantity can be multiplied by the returned value in order to convert it
+      in the management unit.
+
+      'variation_list' parameter may be deprecated:
+      cf Measure.getConvertedQuantity
+      """
+      management_unit = self.getDefaultQuantityUnit()
+      if management_unit == quantity_unit:
+        return 1.0
+      traverse = self.portal_categories['quantity_unit'].unrestrictedTraverse
+      quantity = traverse(quantity_unit).getProperty('quantity')
+      if quantity_unit.split('/', 1)[0] != management_unit.split('/', 1)[0]:
+        measure = self.getDefaultMeasure(quantity_unit)
+        quantity /= measure.getConvertedQuantity(variation_list)
+      else:
+        quantity /= traverse(management_unit).getProperty('quantity')
+      return quantity
+
+    # Unit conversion
+    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
+    def convertQuantity(self, quantity, from_unit, to_unit, variation_list=()):
+      # 'variation_list' parameter may be deprecated:
+      # cf Measure.getConvertedQuantity
+      try:
+        return quantity * self._getConversionRatio(from_unit, variation_list) \
+                        / self._getConversionRatio(to_unit, variation_list)
+      except (ArithmeticError, AttributeError, LookupError, TypeError), error:
+        # For compatibility, we only log the error and return None.
+        # No exception for the moment.
+        LOG('Resource.convertQuantity', WARNING,
+            'could not convert quantity for %s (%r)'
+            % (self.getRelativeUrl(), error))
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getMeasureList')
+    def getMeasureList(self):
+      """
+      Gets the list of Measure objects describing this resource.
+      """
+      return self.objectValues(portal_type='Measure')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDefaultMeasure')
+    def getDefaultMeasure(self, quantity_unit=None):
+      """
+      Returns the measure object associated to quantity_unit.
+      If no quantity_unit is specified, the quantity_unit of the resource is used.
+      None is returned if the number of found measures differs from 1.
+      """
+      if quantity_unit is None:
+        quantity_unit = self.getQuantityUnit()
+      if quantity_unit:
+        top = lambda relative_url: relative_url.split('/', 1)[0]
+
+        quantity = top(quantity_unit)
+        generic = []
+        default = []
+        for measure in self.getMeasureList():
+          metric_type = measure.getMetricType()
+          if metric_type and quantity == top(metric_type) and \
+             measure.getDefaultMetricType():
+            default.append(measure)
+          if quantity == metric_type:
+            generic.append(measure)
+        result = default or generic
+        if len(result) == 1:
+          return result[0]
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getMeasureRowList')
+    def getMeasureRowList(self):
+      """
+      Returns a list rows to insert in the measure table.
+      Used by z_catalog_measure_list.
+      """
+      quantity_unit_value = self.getQuantityUnitValue()
+      if quantity_unit_value is None:
+        return ()
+
+      quantity_unit = quantity_unit_value.getCategoryRelativeUrl()
+      default = self.getDefaultMeasure(quantity_unit)
+      if default is not None:
+        default = default.getRelativeUrl()
+      metric_type_map = {} # duplicate metric_type are not valid
+
+      for measure in self.getMeasureList():
+        metric_type = measure.getMetricType()
+        if metric_type in metric_type_map:
+          metric_type_map[metric_type] = ()
+        else:
+          metric_type_map[metric_type] = measure.asCatalogRowList()
+        if measure.getRelativeUrl() == default:
+          quantity_unit = ''
+
+      insert_list = []
+      for measure_list in metric_type_map.itervalues():
+        insert_list += measure_list
+
+      metric_type = quantity_unit.split('/', 1)[0]
+      if metric_type and metric_type not in metric_type_map:
+        # At this point, we know there is no default measure and we must add
+        # a row for the management unit, with the resource's uid as uid, and
+        # a generic metric_type.
+        quantity = quantity_unit_value.getProperty('quantity')
+        metric_type_uid = self.getPortalObject().portal_categories \
+                              .getCategoryUid(metric_type, 'metric_type')
+        if quantity and metric_type_uid:
+          uid = self.getUid()
+          insert_list += (uid, uid, '^', metric_type_uid, quantity),
+
+      return insert_list

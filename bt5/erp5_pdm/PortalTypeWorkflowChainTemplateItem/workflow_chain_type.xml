@@ -4,6 +4,10 @@
   <workflow>validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Measure</type>
+  <workflow>edit_workflow, measure_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Product</type>
   <workflow>validation_workflow, edit_workflow</workflow>
  </chain>

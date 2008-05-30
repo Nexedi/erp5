@@ -2505,3 +2505,102 @@ def getCommonTimeZoneList():
   """ Get common (country/capital(major cities) format) timezones list """
   from pytz import common_timezones
   return common_timezones
+
+
+#####################################################
+# Processing of ZRDB.Results objects
+#####################################################
+
+from Shared.DC.ZRDB.Results import Results
+
+def mergeZRDBResults(results, key_column, edit_result):
+  """
+  Merge several ZRDB.Results into a single ZRDB.Results. It's done in 3 steps:
+   1. Rename columns of every table (cf 1st parameter).
+   2. Merge all source tables into a intermediate sparse table.
+      Each processed row is identified according to the columns specified in the
+      2nd parameter: Rows with the same values in the specified columns are
+      merged together, otherwise they are stored separately.
+   3. Convert the intermediate table into a ZRDB.Results structure.
+      Cell values are copied or created according the 3rd parameter.
+      By default, values aren't modified and empty cells are set to None.
+
+  results     - List of ZRDB.Results to merge. Each item can also be a tuple
+                (ZRDB.Results, rename_map) : the columns are renamed before
+                any other processing, according to rename_map (dict).
+  key_column  - 2 rows are merged if and only if there is the same value in
+                the common column(s) specified by key_column.
+                key_column can be either a string or a sequence of strings.
+                () can be passed to merge 1-row tables.
+  edit_result - Map { column_name: function | defaut_value } allowing to edit
+                values (or specify default values) for certain columns in the
+                resulting table:
+                 - function (lambda row, column_name: new_value)
+                 - default_value is interpreted as
+                   (lambda row, column: row.get(column, default_value))
+                Note that whenever a row doesn't have a matching row in every
+                other table, the merged result before editing may contain
+                incomplete rows. get_value also allows you to fill these rows
+                with specific values, instead of the default 'None' value.
+  """
+  if isinstance(key_column,str):
+    key_column = key_column,
+
+  ## Variables holding the resulting table:
+  items = [] # list of columns: each element is an item (cf ZRDB.Results)
+  column_list = [] # list of columns:
+                   # each element is a pair (column name, get_value)
+  data = [] # list of rows of maps column_name => value
+
+  ## For each key, record the row number in 'data'
+  index = {}
+
+  ## Set of columns already seen
+  column_set = set()
+
+  for r in results:
+    ## Step 1
+    if isinstance(r, Results):
+      rename = {}
+    else:
+      r, rename = r
+    new_column_list = []
+    columns = {}
+    for i, column in enumerate(r._searchable_result_columns()):
+      name = column['name']
+      name = rename.get(name, name)
+      if name is None:
+        continue
+      columns[name] = i
+      if name not in column_set:
+        column_set.add(name)
+        new_column_list.append(i)
+        column = column.copy()
+        column['name'] = name
+        items.append(column)
+        # prepare step 3
+        get_value = edit_result.get(name)
+        column_list += (name, hasattr(get_value, '__call__') and get_value or
+          (lambda row, column, default=get_value: row.get(column, default))),
+
+    ## Step 2
+    try:
+      index_pos = [ columns[rename.get(name,name)] for name in key_column ]
+    except KeyError:
+      raise KeyError("Missing '%s' column in source table" % name)
+    for row in r:
+      key = tuple(row[i] for i in index_pos)
+      if key in index: # merge the row to an existing one
+        merged_row = data[index[key]]
+      else: # new row
+        index[key] = len(data)
+        merged_row = {}
+        data.append(merged_row)
+      for column, i in columns.iteritems():
+        merged_row[column] = row[i]
+
+  ## Step 3
+  return Results((items, [
+      [ get_value(row, column) for column, get_value in column_list ]
+      for row in data
+    ]))

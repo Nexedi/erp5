@@ -179,6 +179,13 @@ class Resource:
 
     )
 
+    _constraints = (
+        {   'id': 'resource_measures_consistency',
+            'description': '',
+            'type': 'ResourceMeasuresConsistency',
+        },
+    )
+
     _categories = ( 'source', 'destination', 'quantity_unit', 'price_unit',
                     'weight_unit', 'length_unit', 'height_unit', 'width_unit',
                     'volume_unit',

@@ -1,5 +1,7 @@
 Component | edit_workflow
 Component | validation_workflow
+Measure | edit_workflow
+Measure | measure_interaction_workflow
 Product | edit_workflow
 Product | validation_workflow
 Purchase Supply Line | edit_workflow

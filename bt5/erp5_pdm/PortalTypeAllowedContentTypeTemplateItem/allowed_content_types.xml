@@ -1,5 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Component">
+  <item>Measure</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
   <item>Image</item>
@@ -9,7 +10,11 @@
  <portal_type id="Component Module">
   <item>Component</item>
  </portal_type>
+ <portal_type id="Measure">
+  <item>Measure Cell</item>
+ </portal_type>
  <portal_type id="Product">
+  <item>Measure</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
   <item>Image</item>
@@ -46,6 +51,7 @@
   <item>Service Individual Variation</item>
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
+  <item>Measure</item>
  </portal_type>
  <portal_type id="Service Module">
   <item>Service</item>
