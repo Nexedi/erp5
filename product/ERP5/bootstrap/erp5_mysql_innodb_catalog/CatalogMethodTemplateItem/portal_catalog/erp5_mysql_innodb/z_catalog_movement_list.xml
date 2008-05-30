@@ -42,13 +42,13 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getInventoriatedQuantity</string> </key>
+                                <key> <string>getPrice</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getPrice</string> </key>
+                                <key> <string>getQuantity</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -132,7 +132,7 @@
 <string>getSourceUid</string>
 <string>getDestinationUid</string>
 <string>getResourceUid</string>
-<string>getInventoriatedQuantity</string>
+<string>getQuantity</string>
 <string>getStartDate</string>
 <string>getStopDate</string>
 <string>getPrice</string>
@@ -157,20 +157,20 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>isMovement\r\n
-uid\r\n
-getExplanationUid\r\n
-getSourceUid\r\n
-getDestinationUid\r\n
-getResourceUid\r\n
-getInventoriatedQuantity\r\n
-getStartDate\r\n
-getStopDate\r\n
-getPrice\r\n
-isAccountable\r\n
-isOrderable\r\n
-isDeliverable\r\n
-isDivergent\r\n
+            <value> <string>isMovement\n
+uid\n
+getExplanationUid\n
+getSourceUid\n
+getDestinationUid\n
+getResourceUid\n
+getQuantity\n
+getStartDate\n
+getStopDate\n
+getPrice\n
+isAccountable\n
+isOrderable\n
+isDeliverable\n
+isDivergent\n
 getVariationText</string> </value>
         </item>
         <item>
@@ -236,7 +236,7 @@ VALUES\n
   <dtml-sqlvar expr="getSourceUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getInventoriatedQuantity[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="getQuantity[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,\n
@@ -315,7 +315,7 @@ VALUES\n
   <dtml-sqlvar expr="getSourceUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getInventoriatedQuantity[loop_item]" type="float" optional>,\n
+  <dtml-sqlvar expr="getQuantity[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,\n
