@@ -256,7 +256,7 @@ class TestMovement(ERP5TypeTestCase):
     mvt = self._makeOne('mvt')
     mvt.setQuantity(10)
     self.assertEquals(10, mvt.getQuantity())
-    self.assertEquals(None, mvt.getTotalPrice())
+    self.assertEquals(0, mvt.getTotalPrice())
     mvt.edit(quantity=20)
     self.assertEquals(20, mvt.getQuantity())
   
