@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>description</string>
+                <string>allow_jump</string>
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
@@ -79,6 +80,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key>                 <string>allow_jump</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
                 <item>
                     <key>                 <string>base_category</string> </key>
                     <value> <string>source</string> </value>
