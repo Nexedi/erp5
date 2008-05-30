@@ -32,6 +32,7 @@
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Task">
+  <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Task Module">
