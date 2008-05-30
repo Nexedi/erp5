@@ -278,7 +278,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.portal.organisation_module.manage_permission(
             'Add portal content', roles=['Member', 'Manager'], acquire=1)
 
-    self.username = 'username'
+    self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
                                              reference=self.username,
