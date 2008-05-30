@@ -192,6 +192,10 @@ class ERP5UserManager(BasePlugin):
         def _getUserByLogin(login, exact_match):
           # because we aren't logged in, we have to create our own
           # SecurityManager to be able to access the Catalog
+          if isinstance(login, list):
+            login = tuple(login)
+          elif not isinstance(login, tuple):
+            login = (str(login),)
           sm = getSecurityManager()
           if sm.getUser().getId() != SUPER_USER:
             newSecurityManager(self, self.getUser(SUPER_USER))

@@ -405,6 +405,40 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
             getSecurityManager().getUser().getRolesInContext(module))
     self.failIf('Assignor' in
             getSecurityManager().getUser().getRolesInContext(obj))
+
+  def testGetUserByLogin(self):
+    """Test getUserByLogin method
+    """
+    self.loginAsUser(self.username)
+
+    # getUserByLogin accept login as a string
+    self.portal.portal_caches.clearAllCache()
+    get_transaction().commit()
+    person_list = self.portal.acl_users.erp5_users.getUserByLogin(self.username)
+    self.assertEquals(1, len(person_list))
+    self.assertEquals(self.username, person_list[0].getReference())
+
+    # getUserByLogin accept login as a list
+    self.portal.portal_caches.clearAllCache()
+    get_transaction().commit()
+    person_list = self.portal.acl_users.erp5_users.getUserByLogin([self.username])
+    self.assertEquals(1, len(person_list))
+    self.assertEquals(self.username, person_list[0].getReference())
+
+    # getUserByLogin accept login as a tuple
+    self.portal.portal_caches.clearAllCache()
+    get_transaction().commit()
+    person_list = self.portal.acl_users.erp5_users.getUserByLogin((self.username,))
+    self.assertEquals(1, len(person_list))
+    self.assertEquals(self.username, person_list[0].getReference())
+
+    # PreferenceTool pass a user as parameter
+    user = getSecurityManager().getUser()
+    self.portal.portal_caches.clearAllCache()
+    get_transaction().commit()
+    person_list = self.portal.acl_users.erp5_users.getUserByLogin(user)
+    self.assertEquals(1, len(person_list))
+    self.assertEquals(self.username, person_list[0].getReference())
     
 def test_suite():
   suite = unittest.TestSuite()
