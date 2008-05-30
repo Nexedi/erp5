@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_float_index</string> </value>
+            <value> <string>my_float_index</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
