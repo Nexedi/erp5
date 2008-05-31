@@ -68,9 +68,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 # Transit event workflow\n
-context.plan()\n
-context.order()\n
-context.start()\n
+if \'event_workflow\' in context.portal_workflow.getWorkflowsFor(context):\n
+  context.plan()\n
+  context.order()\n
+  context.start()\n
 \n
 if body is None:\n
   body = context.getTextContent() #XXX This does not support structured text format.\n

@@ -1,3 +1,6 @@
+2008-5-31 yusei
+* Invoke workflow method only when event worklfow is used.
+
 2008-5-29 yusei
 * Add type based method for Event.send and use MailTemplate to build mail message.
 * Add a minimum support of html mail.
