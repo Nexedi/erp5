@@ -1060,7 +1060,6 @@ class SimulationTool(BaseTool):
               assert isinstance(where_query, basestring) and len(where_query)
               stock_sql_kw['where_expression'] = '(%s) AND (%s)' % \
                 (where_query, greater_than_date_query)
-              LOG(None, 0, 'optimisation_success = True')
               # Get initial inventory amount
               initial_inventory_line_list = self.Resource_zGetInventoryList(
                 stock_table_id=EQUAL_DATE_TABLE_ID,
