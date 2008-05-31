@@ -47,6 +47,7 @@ from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from AccessControl import Unauthorized
 
 _MARKER = []
@@ -308,17 +309,16 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
                                             original_id=document.getId(),
                                             editable_absolute_url=document.absolute_url()))
       return document.__of__(self)
+
     # no document found for current user, still such document may exists
     # in some cases user (like Anonymous) can not view document according to portal catalog
     # but we may ask him to login if such a document exists
-    # XXX: make sure document exists
-    if getattr(self,  'isAuthorizationForced',  None) is not None:
-      if self.isAuthorizationForced():
+    isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
+    if isAuthorizationForced is not None and isAuthorizationForced():
+      getDocumentValue = UnrestrictedMethod(self.getDocumentValue)
+      if getDocumentValue(name=name, portal=portal) is not None:
         # force user to login as specified in Web Section
         raise Unauthorized
-    else:
-      # force user to login unconditionally of context
-      raise Unauthorized
 
   security.declareProtected(Permissions.View, 'getDocumentValue')
   def getDocumentValue(self, name=None, portal=None, **kw):
