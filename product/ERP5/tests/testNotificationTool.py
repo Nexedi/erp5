@@ -106,7 +106,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   quiet = 1
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', )
+    return ('erp5_base',)
 
   def getTitle(self):
     return "Notification Tool"
@@ -471,7 +471,16 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+
+class TestNotificationToolWithCRM(TestNotificationTool):
+  """Make sure that notification tool works with crm"""
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_crm')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestNotificationTool))
+  suite.addTest(unittest.makeSuite(TestNotificationToolWithCRM))
   return suite
