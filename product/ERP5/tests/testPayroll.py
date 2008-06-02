@@ -1159,10 +1159,10 @@ class TestPayroll(TestPayrollMixin):
           portal_type='Pay Sheet Model Line',
           resource_value=self.labour,
           variation_category_list=['tax_category/employee_share'],
-          base_amount_list=['base_salary'],
           editable=1)
-    # Note that for now it is required that the editable line contains at least
-    # one cell
+    # Note that it is required that the editable line contains at least one
+    # cell, to know which tax_category is used (employee share or employer
+    # share).
     line.updateCellRange(base_id='movement')
     cell = line.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
