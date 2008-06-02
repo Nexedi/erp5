@@ -68,6 +68,16 @@
             <value> <string encoding="cdata"><![CDATA[
 
 precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
+\n
+quantity = cell.getQuantity() or 0\n
+price = cell.getPrice() or 0\n
+\n
+model_line = cell.getParentValue()\n
+\n
+if model_line.isEditable():\n
+  return dict(quantity=quantity,\n
+              price=price)\n
+\n
 base_application = 0\n
 tax_category_list = cell.getVariationCategoryList(base_category_list= \\\n
     \'tax_category\')\n
@@ -82,8 +92,6 @@ if base_amount_dict:\n
   for base in model_line.getBaseAmountList(base=1):\n
     if base_amount_dict.has_key(base):\n
       base_application += base_amount_dict[base][tax_category]\n
-quantity = cell.getQuantity() or 0\n
-price = cell.getPrice() or 0\n
 \n
 \n
 salary_range_list = cell.getVariationCategoryList(\\\n
@@ -171,17 +179,18 @@ return {\'quantity\':quantity, \'price\':price}\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>precision</string>
+                            <string>quantity</string>
+                            <string>price</string>
+                            <string>model_line</string>
+                            <string>dict</string>
                             <string>base_application</string>
                             <string>tax_category_list</string>
                             <string>_getitem_</string>
                             <string>tax_category</string>
                             <string>None</string>
-                            <string>model_line</string>
                             <string>_getiter_</string>
                             <string>base</string>
                             <string>_inplacevar_</string>
-                            <string>quantity</string>
-                            <string>price</string>
                             <string>salary_range_list</string>
                             <string>len</string>
                             <string>salary_range</string>
