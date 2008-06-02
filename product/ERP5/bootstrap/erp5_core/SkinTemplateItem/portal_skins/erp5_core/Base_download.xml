@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -71,6 +68,14 @@
             <value> <string>request = container.REQUEST\n
 response = request.RESPONSE\n
 \n
+from zExceptions import Unauthorized\n
+\n
+try:\n
+  result = context.index_html(request, response)\n
+except Unauthorized:\n
+  msg = context.Base_translateString("You don\'t have enough permission for converting this document.")\n
+  return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
+\n
 if hasattr(context,\'getContentType\'):\n
   response.setHeader(\'Content-type\', context.getContentType())\n
 else:\n
@@ -78,7 +83,8 @@ else:\n
 \n
 file_name = context.getSourceReference() or context.getTitle() or context.getId()\n
 response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file_name)\n
-return context.index_html(request, response)\n
+\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -125,8 +131,13 @@ return context.index_html(request, response)\n
                             <string>container</string>
                             <string>request</string>
                             <string>response</string>
-                            <string>hasattr</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
                             <string>context</string>
+                            <string>result</string>
+                            <string>msg</string>
+                            <string>dict</string>
+                            <string>hasattr</string>
                             <string>file_name</string>
                           </tuple>
                         </value>
