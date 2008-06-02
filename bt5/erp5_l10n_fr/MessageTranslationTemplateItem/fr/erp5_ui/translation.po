@@ -10,7 +10,7 @@ msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 
 
 msgid "- ${number} item(s) selected"
-msgstr "${number} éléments sélectionnés"
+msgstr "- ${number} éléments sélectionnés"
 
 msgid "${number} record(s)"
 msgstr "${number} enregistrements "
