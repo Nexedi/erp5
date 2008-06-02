@@ -1228,7 +1228,131 @@ class TestPayroll(TestPayrollMixin):
                     salary_range_relative_url='',)])
     pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEquals(0, len(pay_sheet_line_list))
-  
+
+  def test_createEditablePaySheetLineAppliedToBase(self):
+    # test the creation of lines with editable lines in the model, when those
+    # editable lines applies to a base
+    # line1 will contribute to 'base_salary'
+    line1 = self.model.newContent(
+          id='line1',
+          portal_type='Pay Sheet Model Line',
+          resource_value=self.labour,
+          variation_category_list=['tax_category/employee_share'],
+          base_amount_list=['base_salary'],
+          float_index=1,
+          int_index=1)
+    line1.updateCellRange(base_id='movement')
+    cell = line1.newCell('tax_category/employee_share',
+                        portal_type='Pay Sheet Cell',
+                        base_id='movement')
+    cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setPrice(1)
+    cell.setQuantity(100)
+    # line2 will apply to 'base_salary', but we'll set 0 quantity in the dialog
+    line2 = self.model.newContent(
+          id='line2',
+          portal_type='Pay Sheet Model Line',
+          resource_value=self.labour,
+          variation_category_list=['tax_category/employee_share'],
+          base_amount_list=['base_salary'],
+          editable=1,
+          float_index=2,
+          int_index=2)
+    line2.updateCellRange(base_id='movement')
+    cell = line2.newCell('tax_category/employee_share',
+                        portal_type='Pay Sheet Cell',
+                        base_id='movement')
+    cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setPrice(1)
+
+    pay_sheet = self.createPaySheet(self.model)
+    
+    # PaySheetTransaction_getEditableObjectLineList is the script used as list
+    # method to display editable lines in the dialog listbox
+    editable_line_list = pay_sheet\
+          .PaySheetTransaction_getEditableObjectLineList()
+    self.assertEquals(1, len(editable_line_list))
+    editable_line = editable_line_list[0]
+    self.assertEquals(1, editable_line.employee_share_price)
+    self.assertEquals(0, editable_line.employee_share_quantity)
+    self.assertEquals('paysheet_model_module/model_one/line2',
+                      editable_line.model_line)
+    self.assertEquals(None, editable_line.salary_range_relative_url)
+    
+    # PaySheetTransaction_createAllPaySheetLineList is the script used to create line and cells in the
+    # paysheet using the listbox input
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
+      listbox=[dict(listbox_key='0',
+                    employee_share_price=.5,
+                    employee_share_quantity=4,
+                    model_line='paysheet_model_module/model_one/line2',
+                    salary_range_relative_url='',)])
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(2, len(pay_sheet_line_list))
+    pay_sheet_line1 = [l for l in pay_sheet_line_list
+                         if l.getIntIndex() == 1][0]
+    self.assertEquals(self.labour, pay_sheet_line1.getResourceValue())
+    cell = pay_sheet_line1.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(1, cell.getPrice())
+    self.assertEquals(100, cell.getQuantity())
+    
+    pay_sheet_line2 = [l for l in pay_sheet_line_list
+                         if l.getIntIndex() == 2][0]
+    self.assertEquals(self.labour, pay_sheet_line2.getResourceValue())
+    cell = pay_sheet_line2.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(.5, cell.getPrice())
+    self.assertEquals(4, cell.getQuantity())
+
+    # if the script is called again, previous content is erased.
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
+      listbox=[dict(listbox_key='0',
+                    employee_share_price=0.6,
+                    employee_share_quantity=10,
+                    model_line='paysheet_model_module/model_one/line2',
+                    salary_range_relative_url='',)])
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(2, len(pay_sheet_line_list))
+    pay_sheet_line1 = [l for l in pay_sheet_line_list
+                         if l.getIntIndex() == 1][0]
+    self.assertEquals(self.labour, pay_sheet_line1.getResourceValue())
+    cell = pay_sheet_line1.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(1, cell.getPrice())
+    self.assertEquals(100, cell.getQuantity())
+    
+    pay_sheet_line2 = [l for l in pay_sheet_line_list
+                         if l.getIntIndex() == 2][0]
+    self.assertEquals(self.labour, pay_sheet_line2.getResourceValue())
+    cell = pay_sheet_line2.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(0.6, cell.getPrice())
+    self.assertEquals(10, cell.getQuantity())
+    
+    # If the user enters a null quantity, the line will not be created
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
+      listbox=[dict(listbox_key='0',
+                    employee_share_price=1,
+                    employee_share_quantity=0,
+                    model_line='paysheet_model_module/model_one/line2',
+                    salary_range_relative_url='',)])
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(1, len(pay_sheet_line_list))
+    pay_sheet_line1 = [l for l in pay_sheet_line_list
+                         if l.getIntIndex() == 1][0]
+    self.assertEquals(self.labour, pay_sheet_line1.getResourceValue())
+    cell = pay_sheet_line1.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(1, cell.getPrice())
+    self.assertEquals(100, cell.getQuantity())
+
+    
   def test_paysheet_consistency(self):
     # minimal test for checkConsistency on a Pay Sheet Transaction and its
     # subdocuments (may have to be updated when we'll add more constraints).
