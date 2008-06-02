@@ -81,7 +81,7 @@ except ImportError:
   pass
 
 from Persistence import Persistent
-from Acquisition import Implicit
+from Acquisition import Implicit, Explicit
 
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
@@ -93,7 +93,15 @@ def getSecurityProduct(acl_users):
     return SECURITY_USING_NUX_USER_GROUPS
 
 
-class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
+class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper, Explicit):
+
+
+    def __getattr__(self, name):
+        vars = self.__vars
+        if vars.has_key(name):
+            return vars[name]
+        ob = aq_inner(self.__ob)
+        return getattr(ob, name)
 
     def __setattr__(self, name, value):
       # We need to update the uid during the cataloging process
@@ -165,6 +173,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
               add(prefix)
               add(prefix + ':' + role)
         return list(allowed)
+
 
 class RelatedBaseCategory(Method):
     """A Dynamic Method to act as a related key.
@@ -745,8 +754,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if predicate_property_dict is not None:
           vars['predicate_property_dict'] = predicate_property_dict
         vars['security_uid'] = security_uid
-
-        return w
+        return w.__of__(object.aq_parent)
 
     security.declarePrivate('reindexObject')
     def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
