@@ -43,6 +43,7 @@ from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from AccessControl.PermissionRole import rolesForPermissionOn
+from ExtensionClass import Base
 
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.CMFCore.Expression import Expression
@@ -93,7 +94,7 @@ def getSecurityProduct(acl_users):
     return SECURITY_USING_NUX_USER_GROUPS
 
 
-class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
+class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper, Base):
 
     def __setattr__(self, name, value):
       # We need to update the uid during the cataloging process
@@ -745,8 +746,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if predicate_property_dict is not None:
           vars['predicate_property_dict'] = predicate_property_dict
         vars['security_uid'] = security_uid
-
-        return w
+        return w.__of__(object.aq_parent)
+        #return w
 
     security.declarePrivate('reindexObject')
     def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
