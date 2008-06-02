@@ -127,8 +127,14 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, batch_mode=0, force=1</string> </value>
+            <value> <string>form_id, batch_mode=0, force=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -186,7 +192,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
             <value>
               <tuple>
                 <int>0</int>
-                <int>1</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
