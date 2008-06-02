@@ -99,13 +99,13 @@ class TestPayrollMixin(ERP5TypeTestCase):
     self.organisation_module = self.portal.organisation_module
     self.person_module = self.portal.person_module
     self.payroll_service_module = self.portal.payroll_service_module
-    self.paysheet_model_module = self.portal.paysheet_model_module 
+    self.paysheet_model_module = self.portal.paysheet_model_module
     self.createCategories()
     self.createCurrencies()
 
-    self.model = self.createModel(self.model_id, self.model_title, 
-        self.person_id, self.person_title, self.person_career_grade, 
-        self.organisation_id, self.organisation_title, 
+    self.model = self.createModel(self.model_id, self.model_title,
+        self.person_id, self.person_title, self.person_career_grade,
+        self.organisation_id, self.organisation_title,
         self.variation_settings_category_list, self.price_currency)
 
     self.login()
@@ -114,8 +114,8 @@ class TestPayrollMixin(ERP5TypeTestCase):
     self.urssaf_id = 'sickness_insurance'
     self.labour_id = 'labour'
 
-    self.urssaf_slice_list = ['salary_range/'+self.france_settings_slice_a, 
-                              'salary_range/'+self.france_settings_slice_b, 
+    self.urssaf_slice_list = ['salary_range/'+self.france_settings_slice_a,
+                              'salary_range/'+self.france_settings_slice_b,
                               'salary_range/'+self.france_settings_slice_c]
 
     self.urssaf_share_list = ['tax_category/'+self.tax_category_employee_share,
@@ -125,20 +125,20 @@ class TestPayrollMixin(ERP5TypeTestCase):
     self.salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
 
 
-    payroll_service_organisation = self.createOrganisation(id='urssaf', 
-        title='URSSAF')
-    self.urssaf=self.createPayrollService(id=self.urssaf_id, 
+    payroll_service_organisation = self.createOrganisation(id='urssaf',
+                                                           title='URSSAF')
+    self.urssaf=self.createPayrollService(id=self.urssaf_id,
         title='State Insurance',
-        organisation=payroll_service_organisation, 
+        organisation=payroll_service_organisation,
         base_amount_list=['deductible_tax',],
         product_line='state_insurance',
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.urssaf_slice_list + \
                                 self.urssaf_share_list)
 
-    self.labour=self.createPayrollService(id=self.labour_id, 
+    self.labour=self.createPayrollService(id=self.labour_id,
         title='Labour',
-        organisation=None, 
+        organisation=None,
         product_line='labour',
         base_amount_list=['base_salary', 'gross_salary'],
         variation_base_category_list=['tax_category', 'salary_range'],
@@ -231,7 +231,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
 
   def createCurrencies(self):
     """Create some currencies.
-    This script will reuse existing currencies, because we want currency ids 
+    This script will reuse existing currencies, because we want currency ids
     to be stable, as we use them as categories.
     """
     currency_module = self.getCurrencyModule()
@@ -254,10 +254,10 @@ class TestPayrollMixin(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """ """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', 
-        'erp5_payroll',)
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+            'erp5_payroll',)
 
-  def createPerson(self, id='one', title='One', 
+  def createPerson(self, id='one', title='One',
       career_subordination_value=None, career_grade=None, **kw):
     """
       Create some Pesons so that we have something to feed.
@@ -266,7 +266,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
                                                  self.person_portal_type)
     if hasattr(person_module, id):
       person_module.manage_delObjects([id])
-    person = person_module.newContent(portal_type=self.person_portal_type, 
+    person = person_module.newContent(portal_type=self.person_portal_type,
                                       id=id)
     person.edit(
         title=title,
@@ -289,17 +289,17 @@ class TestPayrollMixin(ERP5TypeTestCase):
     return organisation
 
   def createPayrollService(self, id='', title='', organisation='',
-      base_amount_list=None, variation_base_category_list=None, 
+      base_amount_list=None, variation_base_category_list=None,
       variation_category_list=None, product_line=None, **kw):
     payroll_service_portal_type = 'Payroll Service'
     payroll_service_module = self.portal.getDefaultModule(\
                                     portal_type=payroll_service_portal_type)
 
-    if base_amount_list == None: 
+    if base_amount_list == None:
       base_amount_list=[]
-    if variation_category_list == None: 
+    if variation_category_list == None:
       variation_category_list=[]
-    if variation_base_category_list == None: 
+    if variation_base_category_list == None:
       variation_category_list=[]
     if hasattr(payroll_service_module, id):
       payroll_service_module.manage_delObjects([id])
@@ -318,8 +318,8 @@ class TestPayrollMixin(ERP5TypeTestCase):
     self.tic()
     return payroll_service
 
-  def createModel(self, id, title='', person_id='', 
-      person_title='', person_career_grade='', 
+  def createModel(self, id, title='', person_id='',
+      person_title='', person_career_grade='',
       organisation_id='', organisation_title='',
       variation_settings_category_list=None,
       price_currency=''):
@@ -330,7 +330,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
       variation_settings_category_list = []
 
     organisation = self.createOrganisation(organisation_id, organisation_title)
-    person = self.createPerson(id=person_id, title=person_title, 
+    person = self.createPerson(id=person_id, title=person_title,
                                career_subordination_value=organisation,
                                career_grade=person_career_grade)
 
@@ -354,7 +354,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
     '''
       add a new slice in the model
     '''
-    slice = model.newCell(slice, portal_type='Pay Sheet Model Slice', 
+    slice = model.newCell(slice, portal_type='Pay Sheet Model Slice',
         base_id=base_id)
     slice.setQuantityRangeMax(max_value)
     slice.setQuantityRangeMin(min_value)
@@ -378,24 +378,24 @@ class TestPayrollMixin(ERP5TypeTestCase):
         self.france_settings_slice_c, self.plafond*4, self.plafond*8))
     return slice_list
 
-  def createModelLine(self, model, id, variation_category_list, 
+  def createModelLine(self, model, id, variation_category_list,
       resource, slice_list, share_list, values, editable=False,
       base_amount_list=['base_salary']):
     '''
-      test the function addModelLine and test if the model line has been 
+      test the function addModelLine and test if the model line has been
       well created.
       explaination for values :
-      if slice_list is ('slice_a', 'slice_b') and share list is ('employer', 
-      'employee') and if you want to put 100 % of 1000 for slice_a for the 
-      employee and employer, and 50% of the base_application for slice_b 
-      employer and and 2000 for slice_b employee, the value list will look 
+      if slice_list is ('slice_a', 'slice_b') and share list is ('employer',
+      'employee') and if you want to put 100 % of 1000 for slice_a for the
+      employee and employer, and 50% of the base_application for slice_b
+      employer and and 2000 for slice_b employee, the value list will look
       like this :
       values = [[[1000, 1], [1000, 1]], [[2000, None], [None, 0.5]]]
 
       next, two representations to well understand :
       
        'employee_share', 'employer_share'
-      [[  1470, None  ], [  2100, None  ]] 
+      [[  1470, None  ], [  2100, None  ]]
        'salary_range/france/forfait'
 
     'employee_share',  'employer_share'   'employee_share',  'employer_share'
@@ -403,7 +403,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
 'salary_range/france/tranche_a''salary_range/france/tranche_b'
     '''
     
-    # verify if category used in this model line are selected in the resource 
+    # verify if category used in this model line are selected in the resource
     resource_list = resource.getVariationCategoryList(base=1)
     msg='%r != %r' % (resource_list, variation_category_list)
     for i in variation_category_list:
@@ -464,7 +464,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
 
   def calculatePaySheet(self, paysheet):
     '''
-      Calcul the given paysheet like if you hace click on the 'Calculation of 
+      Calcul the given paysheet like if you hace click on the 'Calculation of
       the Pay Sheet Transaction' action button.
       XXX Editable line are not yet take into account
     '''
@@ -484,7 +484,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
     share_list = pay_sheet_line.getVariationCategoryList(\
         base_category_list='tax_category')
     for slice in slice_list:
-      for share in share_list: 
+      for share in share_list:
         cell = pay_sheet_line.getCell(share, slice)
         value = cell.getQuantity()
         min_slice = correct_value_slice_list[i-1]
@@ -512,14 +512,14 @@ class TestPayroll(TestPayrollMixin):
         len(self.paysheet_model_module.contentValues(portal_type=\
         self.paysheet_model_portal_type))
 
-    self.model = self.createModel(self.model_id, 
-                                  self.model_title, 
-                                  self.person_id, 
-                                  self.person_title, 
-                                  self.person_career_grade, 
-                                  self.organisation_id, 
-                                  self.organisation_title, 
-                                  self.variation_settings_category_list, 
+    self.model = self.createModel(self.model_id,
+                                  self.model_title,
+                                  self.person_id,
+                                  self.person_title,
+                                  self.person_career_grade,
+                                  self.organisation_id,
+                                  self.organisation_title,
+                                  self.variation_settings_category_list,
                                   self.price_currency)
 
     model_count_after_add = \
@@ -533,11 +533,11 @@ class TestPayroll(TestPayrollMixin):
     self.model = self.paysheet_model_module._getOb(self.model_id)
     self.assertEqual(self.model_id, self.model.getId())
     self.assertEqual(self.model_title, self.model.getTitle())
-    self.assertEqual(self.organisation_title, 
-        self.model.getDestinationSectionTitle())
+    self.assertEqual(self.organisation_title,
+                     self.model.getDestinationSectionTitle())
     self.assertEqual(self.person_title, self.model.getSourceSectionTitle())
-    self.assertEqual(self.variation_settings_category_list, 
-        self.model.getVariationSettingsCategoryList(base=1))
+    self.assertEqual(self.variation_settings_category_list,
+                     self.model.getVariationSettingsCategoryList(base=1))
 
   def test_02_addModelLine(self):
     '''
@@ -557,11 +557,11 @@ class TestPayroll(TestPayrollMixin):
     model_line_count_before_add = len(self.model.contentValues(portal_type=\
         self.paysheet_model_line_portal_type))
 
-    returned_model_line = self.createModelLine(model=self.model, 
-        id=model_line_id, variation_category_list=variation_category_list, 
-        resource=self.urssaf, share_list=self.urssaf_share_list, 
+    returned_model_line = self.createModelLine(model=self.model,
+        id=model_line_id, variation_category_list=variation_category_list,
+        resource=self.urssaf, share_list=self.urssaf_share_list,
         slice_list=self.urssaf_slice_list,
-        values=[[[None, 0.01], [None, 0.02],[None, 0.03]], [[None, 0.04], 
+        values=[[[None, 0.01], [None, 0.02],[None, 0.03]], [[None, 0.04],
                  [None, 0.05], [None, 0.06]]])
 
     model_line_count_after_add = len(self.model.contentValues(portal_type=\
@@ -578,7 +578,7 @@ class TestPayroll(TestPayrollMixin):
         portal_type=payroll_service_portal_type)
     resource = payroll_service_module._getOb(self.urssaf_id)
     self.assertEqual(resource, model_line.getResourceValue())
-    self.assertEqual(variation_category_list, 
+    self.assertEqual(variation_category_list,
         model_line.getVariationCategoryList())
 
   def test_03_createPaySheet(self):
@@ -593,15 +593,15 @@ class TestPayroll(TestPayrollMixin):
     paysheet = paysheet_module._getOb(paysheet_id)
     self.assertEqual(paysheet_returned, paysheet)
     self.assertEqual(paysheet_id, paysheet.getId())
-    self.assertEqual(paysheet.getDestinationSectionTitle(), 
+    self.assertEqual(paysheet.getDestinationSectionTitle(),
         self.model.getDestinationSectionTitle())
-    self.assertEqual(paysheet.getSourceSectionTitle(), 
+    self.assertEqual(paysheet.getSourceSectionTitle(),
         self.model.getSourceSectionTitle())
-    self.assertEqual(paysheet.getSpecialiseValue(), self.model) 
+    self.assertEqual(paysheet.getSpecialiseValue(), self.model)
 
   def test_04_paySheetCalculation(self):
     '''
-      test if the scripts called by the 'Calculation of the Pay Sheet 
+      test if the scripts called by the 'Calculation of the Pay Sheet
       Transaction' action create the paysheet lines
     '''
     self.addAllSlices(self.model)
@@ -610,11 +610,11 @@ class TestPayroll(TestPayrollMixin):
     model_line_id2 = 'salary'
     base_salary = 10000
 
-    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a, 
-                          'salary_range/'+self.france_settings_slice_b, 
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,
+                          'salary_range/'+self.france_settings_slice_b,
                           'salary_range/'+self.france_settings_slice_c]
 
-    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share, 
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,
                           'tax_category/'+self.tax_category_employer_share]
 
     salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
@@ -623,18 +623,18 @@ class TestPayroll(TestPayrollMixin):
     variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
     variation_category_list_salary = salary_share_list + salary_slice_list
 
-    model_line1 = self.createModelLine(model=self.model, 
+    model_line1 = self.createModelLine(model=self.model,
         id=model_line_id1,
-        variation_category_list=variation_category_list_urssaf, 
-        resource=self.urssaf, share_list=self.urssaf_share_list, 
+        variation_category_list=variation_category_list_urssaf,
+        resource=self.urssaf, share_list=self.urssaf_share_list,
         slice_list=self.urssaf_slice_list,
-        values=[[[None, 0.01], [None, 0.02], [None, 0.03]], [[None, 0.04], 
+        values=[[[None, 0.01], [None, 0.02], [None, 0.03]], [[None, 0.04],
           [None, 0.05], [None, 0.06]]])
 
-    model_line2 = self.createModelLine(model=self.model, 
+    model_line2 = self.createModelLine(model=self.model,
         id=model_line_id2,
-        variation_category_list=variation_category_list_salary, 
-        resource=self.labour, share_list=self.salary_share_list, 
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour, share_list=self.salary_share_list,
         slice_list=salary_slice_list, base_amount_list=[],
         values=[[[base_salary, None]],])
 
@@ -655,7 +655,7 @@ class TestPayroll(TestPayrollMixin):
         len(paysheet.contentValues(portal_type= \
         self.paysheet_line_portal_type))
     self.assertEqual(paysheet_line_count_before_calculation, 0)
-    self.assertEqual(paysheet_line_count_after_calculation, 
+    self.assertEqual(paysheet_line_count_after_calculation,
         pay_sheet_line_count)
 
     # check the amount in the cells of the created paysheet lines
@@ -663,7 +663,7 @@ class TestPayroll(TestPayrollMixin):
       service = pay_sheet_line.getResourceId()
       if service == self.urssaf_id:
         i = 1
-        correct_value_slice_list = [0, self.plafond, self.plafond*4, 
+        correct_value_slice_list = [0, self.plafond, self.plafond*4,
                                     self.plafond*8]
 
         self.assertEqualAmounts(pay_sheet_line, correct_value_slice_list,
@@ -695,17 +695,17 @@ class TestPayroll(TestPayrollMixin):
     variation_category_list_salary = self.salary_share_list + \
         self.salary_slice_list
 
-    model_line1 = self.createModelLine(model=self.model, 
+    model_line1 = self.createModelLine(model=self.model,
         id=model_line_id1,
-        variation_category_list=variation_category_list_urssaf, 
-        resource=self.urssaf, share_list=self.urssaf_share_list, 
+        variation_category_list=variation_category_list_urssaf,
+        resource=self.urssaf, share_list=self.urssaf_share_list,
         slice_list=urssaf_slice_list,
         values=[[[None, 0.03]], [[None, 0.04]],])
 
-    model_line2 = self.createModelLine(model=self.model, 
+    model_line2 = self.createModelLine(model=self.model,
         id=model_line_id2,
-        variation_category_list=variation_category_list_salary, 
-        resource=self.labour, share_list=self.salary_share_list, 
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour, share_list=self.salary_share_list,
         slice_list=self.salary_slice_list, base_amount_list=[],
         values=[[[base_salary, None]],])
 
@@ -726,7 +726,7 @@ class TestPayroll(TestPayrollMixin):
         len(paysheet.contentValues(portal_type= \
         self.paysheet_line_portal_type))
     self.assertEqual(paysheet_line_count_before_calculation, 0)
-    self.assertEqual(paysheet_line_count_after_calculation, 
+    self.assertEqual(paysheet_line_count_after_calculation,
         pay_sheet_line_count)
     
     # check the amount in the cells of the created paysheet lines
@@ -734,7 +734,7 @@ class TestPayroll(TestPayrollMixin):
       service = pay_sheet_line.getResourceId()
       if service == self.urssaf_id:
         i = 2 # the begining max slice
-        correct_value_slice_list = [0, self.plafond, self.plafond*4, 
+        correct_value_slice_list = [0, self.plafond, self.plafond*4,
                                     self.plafond*8]
 
         self.assertEqualAmounts(pay_sheet_line, correct_value_slice_list,
@@ -779,17 +779,17 @@ class TestPayroll(TestPayrollMixin):
     # add some content in the models
     model_employee.newContent(id='over_time_duration',
                               title='over_time_duration',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='over_time_duration',)
 
     model_company.newContent( id='worked_time_duration',
                               title='worked_time_duration',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='worked_time_duration',)
 
     model_country.newContent( id='social_insurance',
                               title='social_insurance',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='social_insurance',)
 
     # inherite from each other
@@ -807,42 +807,42 @@ class TestPayroll(TestPayrollMixin):
     for model in model_reference_dict.keys():
       number_of_different_references.extend(model_reference_dict[model])
 
-    self.assertEqual(len(number_of_different_references), 3) # here, there is 
+    self.assertEqual(len(number_of_different_references), 3) # here, there is
                                                 # 3 differents annotation line
 
     # check the model number
     self.assertEqual(len(model_reference_dict), 3)
-    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()], 
+    self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()],
         ['over_time_duration',])
-    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()], 
+    self.assertEqual(model_reference_dict[model_company.getRelativeUrl()],
         ['worked_time_duration',])
-    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()], 
+    self.assertEqual(model_reference_dict[model_country.getRelativeUrl()],
         ['social_insurance',])
 
     # check with more values on each model
     # employee :
     model_employee.newContent(id='1',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='1',)
     # company :
     model_company.newContent( id='1',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='1',)
     model_company.newContent( id='2',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='2',)
     # country :
     model_country.newContent( id='1',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='1',)
     model_country.newContent( id='2',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='2',)
     model_country.newContent( id='3',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='3',)
     model_country.newContent( id='4',
-                              portal_type='Annotation Line', 
+                              portal_type='Annotation Line',
                               reference='4',)
 
     # return a list of data that should contain data from all model
@@ -858,7 +858,7 @@ class TestPayroll(TestPayrollMixin):
     for model in model_reference_dict.keys():
       number_of_different_references.extend(model_reference_dict[model])
 
-    self.assertEqual(len(number_of_different_references), 7) # here, there is 
+    self.assertEqual(len(number_of_different_references), 7) # here, there is
     # 4 differents annotation lines, and with the 3 ones have been had before
     # that's make 7 !
 
@@ -866,22 +866,22 @@ class TestPayroll(TestPayrollMixin):
 
     # check the model number
     self.assertEqual(len(model_reference_dict), 3)
-    self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]),
         set(['1', 'over_time_duration']))
-    self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]),
         set(['2', 'worked_time_duration']))
-    self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]),
         set(['3','4', 'social_insurance']))
 
 
     # same test with a multi model inheritance
-    model_a = self.paysheet_model_module.newContent(id='model_a', 
+    model_a = self.paysheet_model_module.newContent(id='model_a',
         title='model_a', portal_type='Pay Sheet Model')
-    model_b = self.paysheet_model_module.newContent(id='model_b', 
+    model_b = self.paysheet_model_module.newContent(id='model_b',
         title='model_b', portal_type='Pay Sheet Model')
-    model_c = self.paysheet_model_module.newContent(id='model_c', 
+    model_c = self.paysheet_model_module.newContent(id='model_c',
         title='model_c', portal_type='Pay Sheet Model')
-    model_d = self.paysheet_model_module.newContent(id='model_d', 
+    model_d = self.paysheet_model_module.newContent(id='model_d',
         title='model_d', portal_type='Pay Sheet Model')
 
     # check with more values on each model
@@ -919,7 +919,7 @@ class TestPayroll(TestPayrollMixin):
     for model in model_reference_dict.keys():
       number_of_different_references.extend(model_reference_dict[model])
 
-    self.assertEqual(len(number_of_different_references), 11) # here, there is 
+    self.assertEqual(len(number_of_different_references), 11) # here, there is
     # 8 differents annotation lines, and with the 3 ones have been had before
     # that's make 11 !
     
@@ -954,13 +954,13 @@ class TestPayroll(TestPayrollMixin):
 
     self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]),
         set(['1', 'over_time_duration']))
-    self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_company.getRelativeUrl()]),
         set(['2', 'worked_time_duration']))
-    self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]),
         set(['3','4', 'social_insurance']))
     self.assertEqual(model_reference_dict[model_a.getRelativeUrl()], ['5',])
     self.assertEqual(model_reference_dict[model_b.getRelativeUrl()], ['6',])
-    self.assertEqual(set(model_reference_dict[model_c.getRelativeUrl()]), 
+    self.assertEqual(set(model_reference_dict[model_c.getRelativeUrl()]),
         set(['7', '8']))
 
 
