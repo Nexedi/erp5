@@ -9,8 +9,8 @@ msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 
-msgid "${number} item(s) selected"
-msgstr "${number} élément(s) sélectionné(s)"
+msgid "- ${number} item(s) selected"
+msgstr "${number} éléments sélectionnés"
 
 msgid "${number} record(s)"
 msgstr "${number} enregistrements "
@@ -441,6 +441,27 @@ msgstr "Affectation"
 msgid "Assignments"
 msgstr "Affectations"
 
+msgid "Open Assignment"
+msgstr "Ouvrir l'affectation"
+
+msgid "Close Assignment"
+msgstr "Terminer l'affectation"
+
+msgid "Update Assignment"
+msgstr "Mettre à jour l'affectation"
+
+msgid "Updated"
+msgstr "Mis à jour"
+
+msgid "Cancel Assignment"
+msgstr "Annuler l'affectation"
+
+msgid "Assignment Start Date"
+msgstr "Début de l'affectation"
+
+msgid "Assignment Stop Date"
+msgstr "Fin de l'affectation"
+
 msgid "At Date"
 msgstr "Date de fin (inclu)"
 
@@ -578,9 +599,6 @@ msgstr "Intitule du budget"
 
 msgid "Budget transactions"
 msgstr "Transactions Budgétaires"
-
-msgid "BudgetCell_view"
-msgstr "Vue de Cellule Budgétaire"
 
 msgid "Budgets"
 msgstr "Budgets"
@@ -874,7 +892,7 @@ msgid "Constraints"
 msgstr ""
 
 msgid "Consumption"
-msgstr "Table de Consommation"
+msgstr "Consommation"
 
 msgid "Consumption Table"
 msgstr "Table de Consommation"
@@ -1182,8 +1200,8 @@ msgstr "Modules ERP5"
 msgid "Edit Portal Type '${portal_type}'"
 msgstr ""
 
-msgid "Effective date"
-msgstr "Valable du"
+msgid "Effective Date"
+msgstr "Prends effet le"
 
 msgid "Efficiency"
 msgstr "Efficience"
@@ -1252,10 +1270,7 @@ msgid "Expense"
 msgstr "Charges"
 
 msgid "Expiration Date"
-msgstr "Au"
-
-msgid "Expiration date"
-msgstr "Au"
+msgstr "Expire le"
 
 msgid "Extensions"
 msgstr ""
@@ -1560,11 +1575,8 @@ msgstr "Connexion"
 msgid "Log out"
 msgstr "Déconnexion"
 
-msgid "Logged In as"
-msgstr "Utilisateur"
-
 msgid "Logged In as :"
-msgstr ""
+msgstr "Utilisateur :"
 
 msgid "Login"
 msgstr "Connexion"
@@ -2029,13 +2041,13 @@ msgid "Purchase Invoice Transaction Lines"
 msgstr "Ligne Comptable"
 
 msgid "Purchase Order"
-msgstr "Commande Fournisseur"
+msgstr "Commande d'achat"
 
 msgid "Purchase Order Line"
 msgstr "Ligne de commande"
 
 msgid "Purchase Orders"
-msgstr "Commandes Fournisseur"
+msgstr "Commandes d'achat"
 
 msgid "Purchase Packing List"
 msgstr "Réception commande"
@@ -2056,13 +2068,10 @@ msgid "Purchase Supplies"
 msgstr ""
 
 msgid "Purchase Trade Condition"
-msgstr "Conditions Fournisseurs"
-
-msgid "Purchase Trade Condition List"
-msgstr "Condition Fournisseur"
+msgstr "Conditions d'achat"
 
 msgid "Purchase Trade Conditions"
-msgstr ""
+msgstr "Conditions d'achat"
 
 msgid "Purchase orders not confirmed"
 msgstr "Commandes non confirmées"
@@ -2269,16 +2278,13 @@ msgid "Sale Opportunities"
 msgstr ""
 
 msgid "Sale Order"
-msgstr "Ordres Clients"
+msgstr "Commande de vente"
 
 msgid "Sale Order Line"
-msgstr "Ligne d'ordre"
-
-msgid "Sale Order List"
-msgstr "Ordre"
+msgstr "Ligne de commande"
 
 msgid "Sale Orders"
-msgstr ""
+msgstr "Commandes de vente"
 
 msgid "Sale Packing Lists"
 msgstr ""
@@ -2290,13 +2296,13 @@ msgid "Sale Supplies"
 msgstr ""
 
 msgid "Sale Trade Condition"
-msgstr "Conditions Clients"
+msgstr "Conditions de vente"
 
 msgid "Sale Trade Condition List"
-msgstr "Conditions de Vente"
+msgstr "Conditions de vente"
 
 msgid "Sale Trade Conditions"
-msgstr ""
+msgstr "Conditions de vente"
 
 msgid "Sale orders not confirmed"
 msgstr "Ordres non confirmés"
@@ -2957,4 +2963,49 @@ msgstr "Clôturé"
 
 msgid "Confirmed"
 msgstr "Confirmé"
+
+msgid "Cancel Action"
+msgstr "Annuler l'action"
+
+msgid "Net Total Price"
+msgstr "Montant TTC"
+
+msgid "Specialised Trade Conditions"
+msgstr "Conditions commerciales spécialisées"
+
+msgid "Submit"
+msgstr "Soumettre"
+
+msgid "Submitted"
+msgstr "Soumis"
+
+msgid "Delivery Mode"
+msgstr "Mode de livraison"
+
+msgid "Emit"
+msgstr "Emettre"
+
+msgid "Emitted"
+msgstr "Emis"
+
+msgid "Approve"
+msgstr "Approuver"
+
+msgid "Force"
+msgstr "Forcer"
+
+msgid "Forced"
+msgstr "Forcé"
+
+msgid "Initial Budget"
+msgstr "Budget initial"
+
+msgid "Current Budget"
+msgstr "Budget courant"
+
+msgid "Available Budget"
+msgstr "Budget disponible"
+
+msgid "Budget Consumption"
+msgstr "Consommation budgétaire"
 
