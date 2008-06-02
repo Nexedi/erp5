@@ -106,6 +106,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
+                        <string>your_total_current_budget</string>
                       </list>
                     </value>
                 </item>
