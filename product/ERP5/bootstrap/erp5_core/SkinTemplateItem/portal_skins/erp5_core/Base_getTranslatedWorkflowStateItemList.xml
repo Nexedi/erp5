@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,16 +65,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
+            <value> <string># wf_id : the id of workflow. It can be string, list or tuple.\n
+from Products.CMFCore.utils import getToolByName\n
 \n
 N_ = context.Base_translateString\n
-wf = getToolByName(context, \'portal_workflow\')[wf_id]\n
-item_list = []\n
 \n
-for state in wf.states.objectValues():\n
-  if state.title and state.id != \'deleted\':\n
-    # we hide states without titles\n
-    item_list.append((N_(state.title), state.id))\n
+\n
+if same_type(wf_id, []) or same_type(wf_id, ()):\n
+ wf_id_list = wf_id\n
+else:\n
+  wf_id_list = [wf_id]\n
+\n
+state_dict = {}\n
+item_list = []\n
+for wf_id in wf_id_list:\n
+\n
+  wf = getToolByName(context, \'portal_workflow\')[wf_id]\n
+\n
+\n
+  for state in wf.states.objectValues():\n
+    if state.title and state.id != \'deleted\':\n
+      if not state_dict.has_key(state.id):\n
+        # we hide states without titles\n
+        item_list.append((N_(state.title), state.id))\n
+        state_dict[state.id] = None\n
 \n
 return item_list\n
 </string> </value>
@@ -138,11 +149,16 @@ return item_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>N_</string>
-                            <string>_getitem_</string>
-                            <string>wf</string>
+                            <string>same_type</string>
+                            <string>wf_id_list</string>
+                            <string>state_dict</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
+                            <string>_getitem_</string>
+                            <string>wf</string>
                             <string>state</string>
+                            <string>None</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
