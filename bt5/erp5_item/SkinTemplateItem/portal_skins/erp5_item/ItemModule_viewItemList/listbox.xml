@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -20,6 +17,7 @@
                 <string>columns</string>
                 <string>all_columns</string>
                 <string>search_columns</string>
+                <string>sort_columns</string>
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
@@ -84,12 +82,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getResourceTitle</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentOwnerTitle</string>
+                          <string>Ower</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentSiteTitle</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -105,12 +119,32 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getResourceTitle</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentOwnerTitle</string>
+                          <string>Ower</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentSiteTitle</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -128,7 +162,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -139,12 +173,28 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
+                    <key>                 <string>search_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getResourceTitle</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentOwnerTitle</string>
+                          <string>Ower</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentSiteTitle</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -154,11 +204,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>item_module_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -169,11 +219,38 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getResourceTitle</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentOwnerTitle</string>
+                          <string>Ower</string>
+                        </tuple>
+                        <tuple>
+                          <string>Item_getCurrentSiteTitle</string>
+                          <string>Site</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Items</string> </value>
                 </item>
               </dictionary>

@@ -96,9 +96,10 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
-                        <string>my_comment</string>
-                        <string>my_quantity</string>
-                        <string>my_quantity_unit</string>
+                        <string>my_reference</string>
+                        <string>my_serial_number</string>
+                        <string>my_current_owner</string>
+                        <string>my_current_site</string>
                       </list>
                     </value>
                 </item>
@@ -108,6 +109,9 @@
                       <list>
                         <string>my_variation_category_list</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>my_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
