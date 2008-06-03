@@ -6,7 +6,7 @@ Component | sale_price_view
 Component | view
 Component | view_flow_capacity
 Component | view_measure
-Preference | pdm_preference
+Measure | view
 Product Individual Variation | view
 Product Module | converted_inventory_report
 Product Module | view
@@ -50,6 +50,7 @@ Supply Line | non_discountable_additional_price
 Supply Line | surcharge_ratio
 Supply Line | variable_additional_price
 Supply Line | view
+System Preference | pdm_preference
 Transformation Module | view
 Transformation Operation | complete_quantity_matrix
 Transformation Operation | view
