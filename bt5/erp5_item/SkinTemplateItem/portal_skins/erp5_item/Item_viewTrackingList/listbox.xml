@@ -86,8 +86,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>uid</string>
-                          <string>Item</string>
+                          <string>explanation</string>
+                          <string>Explanation</string>
                         </tuple>
                         <tuple>
                           <string>date</string>
@@ -106,8 +106,8 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>explanation</string>
-                          <string>Explanation</string>
+                          <string>simulation_state</string>
+                          <string>Explanation State</string>
                         </tuple>
                       </list>
                     </value>
@@ -212,7 +212,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Item_getTrackingList</string> </value>
+            <value> <string>Item_getUnfilteredTrackingList</string> </value>
         </item>
       </dictionary>
     </pickle>

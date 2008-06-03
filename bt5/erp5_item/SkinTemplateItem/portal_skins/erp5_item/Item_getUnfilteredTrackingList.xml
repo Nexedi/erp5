@@ -65,39 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-catalog = context.portal_catalog.getResultValue\n
-if current == 1:\n
-  method = context.portal_simulation.getCurrentTrackingList\n
-else:\n
-  method = context.portal_simulation.getTrackingList\n
-\n
-uid = context.getUid()\n
-\n
-history_list = []\n
-\n
-simulation_state = context.getPortalCurrentInventoryStateList() \\\n
-                                  + context.getPortalTransitInventoryStateList() \\\n
-                                  + context.getPortalReservedInventoryStateList()\n
-\n
-kw[\'item.simulation_state\'] = simulation_state\n
-for res in method(aggregate_uid=uid, **kw):\n
-  history = newTempBase(context, str(len(history_list)))\n
-  explanation = catalog(uid=res.delivery_uid).getExplanationValue()\n
-\n
-  history.edit(\n
-      #uid = catalog(uid=res.uid).getTitle(),\n
-      date=res.date,\n
-      node_uid=catalog(uid=res.node_uid).getTitle(),\n
-      section_uid=catalog(uid=res.section_uid).getTitle(),\n
-      resource_uid=catalog(uid=res.resource_uid).getTitle(),\n
-      explanation=explanation.getTitle(),\n
-      url=explanation.absolute_url(),\n
-      simulation_state = explanation.getTranslatedSimulationState(),\n
-  )\n
-  history_list.append(history)\n
-  \n
-return history_list\n
+            <value> <string>return context.Item_getTrackingList(current=0, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -120,7 +88,7 @@ return history_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>current=1,*args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,32 +108,16 @@ return history_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>current</string>
-                            <string>args</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>catalog</string>
-                            <string>method</string>
-                            <string>uid</string>
-                            <string>history_list</string>
-                            <string>simulation_state</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>res</string>
-                            <string>str</string>
-                            <string>len</string>
-                            <string>history</string>
-                            <string>explanation</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,14 +129,12 @@ return history_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>1</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getTrackingList</string> </value>
+            <value> <string>Item_getUnfilteredTrackingList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
