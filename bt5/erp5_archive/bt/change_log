@@ -1,3 +1,6 @@
+2007-06-03 Vincentd
+* Adding security for manager in the archive_workflow (for all states)
+
 2007-11-19 Aurel
 * rewrite workflow script to do more check
 
