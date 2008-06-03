@@ -794,12 +794,12 @@ class Resource(XMLMatrix, Variated):
       if management_unit == quantity_unit:
         return 1.0
       traverse = self.portal_categories['quantity_unit'].unrestrictedTraverse
-      quantity = traverse(quantity_unit).getProperty('quantity')
+      quantity = float(traverse(quantity_unit).getProperty('quantity'))
       if quantity_unit.split('/', 1)[0] != management_unit.split('/', 1)[0]:
         measure = self.getDefaultMeasure(quantity_unit)
         quantity /= measure.getConvertedQuantity(variation_list)
       else:
-        quantity /= traverse(management_unit).getProperty('quantity')
+        quantity /= float(traverse(management_unit).getProperty('quantity'))
       return quantity
 
     # Unit conversion
