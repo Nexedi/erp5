@@ -1222,8 +1222,8 @@ class SimulationTool(BaseTool):
         table_alias_list=(("measure", "measure"),))
 
       if isinstance(quantity_unit, str):
-        quantity_unit = getCategory(quantity_unit,
-                                   'quantity_unit').getProperty('quantity')
+        quantity_unit = float(getCategory(quantity_unit, 'quantity_unit')
+                              .getProperty('quantity'))
 
       method = getattr(self,'get%sInventoryList' % simulation_period)
       return method(quantity_unit=quantity_unit, **kw)

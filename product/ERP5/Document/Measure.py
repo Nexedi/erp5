@@ -132,7 +132,7 @@ class Measure(XMLMatrix):
     metric_type = self.getMetricType()
     if quantity_unit is not None and metric_type and \
         quantity_unit.getParentId() == metric_type.split('/', 1)[0]:
-      return quantity_unit.getProperty('quantity')
+      return float(quantity_unit.getProperty('quantity'))
 
   security.declareProtected(AccessContentsInformation, 'getConvertedQuantity')
   def getConvertedQuantity(self, variation_list=()):
@@ -190,7 +190,7 @@ class Measure(XMLMatrix):
       if quantity is not None:
         quantity *= quantity_unit
         if (not default or quantity ==
-            resource.getQuantityUnitValue().getProperty('quantity')):
+            float(resource.getQuantityUnitValue().getProperty('quantity'))):
           return (uid, resource_uid, '^', metric_type_uid, quantity),
       return ()
 
