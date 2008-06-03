@@ -14,5 +14,6 @@ Task Module | business_application
 Task Report Module | business_application
 Task Report | aggregate
 Task Report | predecessor
+Task Report | requirement
 Task | predecessor
 Task | requirement
