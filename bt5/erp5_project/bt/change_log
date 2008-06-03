@@ -1,3 +1,9 @@
+2008-06-03
+* Add all rights for manager in :
+project_workflow  :  Deleted, Open
+task_report_causality_workflow  :  Building, Solving
+task_report_workflow  :  Delivered, Deleted, Cancelled
+task_workflow  :  Confirmed, Deleted, Cancelled
 2008-04-12 rafael
 * added new domains for Project_viewPlanning
 
