@@ -67,37 +67,231 @@ class Telephone(Coordinate, Base):
                       , PropertySheet.Telephone
                       )
     
-    # The country_dict is used by getRegexDict mapping 
-    # the country number to country name
-    country_dict = {
-      '33' : 'france',
-      '55' : 'brazil',
-      '221' : 'dakar',
-      '64' : 'tokio'
-     }
-
     # The notation always need to have:
     # <country> or <area> or <number> or <ext>
     # If uses a different tag it will be ignored.
     standard_dict = {
-      'default' : {
-        "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
+      # France
+      '33' : {
+        "regex_input_list" : [          
+          # Country, Area, Number, Extension*
+          # +33(0)2-27224896/999 or +33(0)2-27224896/ or +33(0)2-27224896
+          "\+(?P<country>\d+)\(0\)(?P<area>\d+)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)", 
+        
+          # Missing country
+          # +(0)2-27224896/999" or +(0)2-27224896/ or +(0)2-27224896
+          "\+\(0\)(?P<area>\d+)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+
+          # Missing area
+          # +33(0)-27224896/999" or +33(0)-27224896/ or +33(0)-27224896
+          "\+(?P<country>\d+)\(0\)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)", 
+
+          # Missing Country and Area 
+          # +(0)-27224896/999" or +(0)-27224896/ or +(0)-27224896
+          "\+\(0\)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number, Extension*
+          # The area between parenthesis.
+          # +33(629)024425/222 or +33(629)024425/ or +33(629)024425
+          "^\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ ]+)/?(?P<ext>\d+|)$", 
+          # Area, Number Extension*
+          # Area between parenthesis.
+          # (22)27224897/333 or (22)27224897/ or (22)27224897
+          "\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Area, Number, Extension*
+          # Area followed by '-'
+          # (22)-12345678/222 or (22)-12345678/ or (22)-12345678
+          "\((?P<area>\d+)\)\-?(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number and Extension*
+          # Country space area space number slash extension or not
+          # +33 2 098765432/1 or +33 2 098765432/ or +33 2 098765432
+          "\+(?P<country>\d+)\ (?P<area>\d+)\ (?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # This regex is to handle two inputs very similar
+          # but with different behavior
+          # 631 22 43/999 or 631 22 43 or 631 22 43 
+          # will result in {'area':'', 'country':'631 22 43', 'ext':'999 or empty'}
+          #
+          # 631-22 43/999 or 631-22 43 or 631-22 43 
+          # will result in {'area':'631', 'country':'22 43', 'ext':'999 or empty'} 
+          "^(?:0)?((?P<area>\d+)-)?(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047-336-5411/999 or 047-336-5411/ or 047-336-5411
+          "^0(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047(336)5411/999 or 047(336)5411/ or 047(336)5411
+          "^0(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$"
+        ],
         "notation" : "+<country>(0)<area>-<number>/<ext>"
       },
-      'france' : {
-        "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
-        "notation" : "+<country>(0)<area>-<number>/<ext>"
-      },
-      'brazil' : {
-        "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
+      # Brazil
+      '55' : {
+        "regex_input_list" : [
+          # Country, Area, Number, Extension*
+          # +55(2)27224896/999 or +55(2)27224896/ or +55(2)27224896
+          "\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)", 
+          
+          # Country, Area, Number, Extension*
+          # +55-2-27224896/999 or +55-2-27224896/ or +55-2-27224896
+          "\+(?P<country>\d+)-(?P<area>\d+)-(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)", 
+        
+          # Missing country
+          # +(2)27224896/999 or +(2)27224896/ or +(2)27224896
+          "\+\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+          # Missing area
+          # +55()-27224896/999 or +55()-27224896/ or +55()-27224896
+          # +55()27224896/999 or +55()27224896/ or +55()27224896
+          "\+(?P<country>\d+)\(\)(?:\-)?(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+          
+          # Missing Country and Area 
+          # +()27224896/999 or +()27224896/ or +()27224896
+          "\+\(\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number, Extension*
+          # The area between parenthesis.
+          # +55(629)024425/222 or +55(629)024425/ or +55(629)024425
+          "^\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ ]+)/?(?P<ext>\d+|)$", 
+
+          # Area, Number Extension*
+          # Area between parenthesis.
+          # (22)27224897/333 or (22)27224897/ or (22)27224897
+          "\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number and Extension*
+          # Country space area space number slash extension or not
+          # +55 2 098765432/1 or +55 2 098765432/ or +55 2 098765432
+          "\+(?P<country>\d+)\ (?P<area>\d+)\ (?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # This regex is to handle two inputs very similar
+          # but with different behavior
+          # 631 22 43/999 or 631 22 43 or 631 22 43 
+          # will result in {'area':'', 'country':'631 22 43', 'ext':'999 or empty'}
+          #
+          # 631-22 43/999 or 631-22 43 or 631-22 43 
+          # will result in {'area':'631', 'country':'22 43', 'ext':'999 or empty'} 
+          "^((?P<area>\d+)-)?(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047-336-5411/999 or 047-336-5411/ or 047-336-5411
+          "^(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047(336)5411/999 or 047(336)5411/ or 047(336)5411
+          "^(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$"
+        ],
         "notation" : "+<country>(<area>)<number>/<ext>",
       },
-      'dakar' : {
-        "input" : "((\+|)(\(|)(?P<country>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*)",
-        "notation" : "+<country> <number>/<ext>",
+       # Senegal
+      '221' : {
+        "regex_input_list" : [
+          # Country, Area, Number, Extension*
+          # +221(2)27224896/999 or +221(2)27224896/ or +221(2)27224896
+          "\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)", 
+          
+          # Country, Area, Number, Extension*
+          # +221-2-27224896/999 or +221-2-27224896/ or +221-2-27224896
+          "\+(?P<country>\d+)-(?P<area>\d+)-(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)", 
+        
+          # Missing country
+          # +(2)27224896/999" or +(2)27224896/ or +(2)27224896
+          "\+\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+          # Missing area
+          # +221()27224896/999" or +221()27224896/ or +221()27224896
+          "\+(?P<country>\d+)\(\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+          
+          # Missing Country and Area 
+          # +()27224896/999" or +()27224896/ or +()27224896
+          "\+\(\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number, Extension*
+          # The area between parenthesis.
+          # +221(629)024425/222 or +221(629)024425/ or +221(629)024425
+          "^\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ ]+)/?(?P<ext>\d+|)$", 
+          # Area, Number Extension*
+          # Area between parenthesis.
+          # (22)27224897/333 or (22)27224897/ or (22)27224897
+          "\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number and Extension*
+          # Country space area space number slash extension or not
+          # +221 2 098765432/1 or +221 2 098765432/ or +221 2 098765432
+          "\+(?P<country>\d+)\ (?P<area>\d+)\ (?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # This regex is to handle two inputs very similar
+          # but with different behavior
+          # 631 22 43/999 or 631 22 43 or 631 22 43 
+          # will result in {'area':'', 'country':'631 22 43', 'ext':'999 or empty'}
+          #
+          # 631-22 43/999 or 631-22 43 or 631-22 43 
+          # will result in {'area':'631', 'country':'22 43', 'ext':'999 or empty'} 
+          "^((?P<area>\d+)-)?(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047-336-5411/999 or 047-336-5411/ or 047-336-5411
+          "^(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047(336)5411/999 or 047(336)5411/ or 047(336)5411
+          "^(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$"
+        ],
+        "notation" : "+<country>(<area>)<number>/<ext>",
       },
-      'tokio' : {
-        "input" : "((\+|)(?P<country>[\d]*))(0)?(( |)(\(0\)|)(\(|)(?P<area>[\d]*))?((\)|)(-|)(?P<number>[\d^ ^-]*))((\/|)(?P<ext>[\d]*))",
+      # Japan
+      '81' : {
+        "regex_input_list" : [
+          # Country, Area, Number, Extension*
+          # +81(2)27224896/999 or +81(2)27224896/ or +81(2)27224896
+          "\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)", 
+          
+          # Country, Area, Number, Extension*
+          # +81-2-27224896/999 or +81-2-27224896/ or +81-2-27224896
+          "\+(?P<country>\d+)-(?P<area>\d+)-(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)", 
+        
+          # Missing country
+          # +(2)27224896/999" or +(2)27224896/ or +(2)27224896
+          "\+\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+          
+          # Missing Country and Area 
+          # +()27224896/999" or +()27224896/ or +()27224896
+          "\+\(\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number, Extension*
+          # The area between parenthesis.
+          # +81(629)024425/222 or +81(629)024425/ or +81(629)024425
+          "^\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ ]+)/?(?P<ext>\d+|)$", 
+          # Area, Number Extension*
+          # Area between parenthesis.
+          # (22)27224897/333 or (22)27224897/ or (22)27224897
+          "\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # Country, Area, Number and Extension*
+          # Country space area space number slash extension or not
+          # +81 2 098765432/1 or +81 2 098765432/ or +81 2 098765432
+          "\+(?P<country>\d+)\ (?P<area>\d+)\ (?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+        
+          # This regex is to handle two inputs very similar
+          # but with different behavior
+          # 631 22 43/999 or 631 22 43 or 631 22 43 
+          # will result in {'area':'', 'country':'631 22 43', 'ext':'999 or empty'}
+          #
+          # 631-22 43/999 or 631-22 43 or 631-22 43 
+          # will result in {'area':'631', 'country':'22 43', 'ext':'999 or empty'} 
+          "^((?P<area>\d+)-)?(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047-336-5411/999 or 047-336-5411/ or 047-336-5411
+          "^(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
+        
+          # Area, Number, Extension*
+          # 047(336)5411/999 or 047(336)5411/ or 047(336)5411
+          "^(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$"
+        ],
         "notation" : "+<country>(<area>)<number>/<ext>",
       }
     }
@@ -112,23 +306,30 @@ class Telephone(Coordinate, Base):
       if coordinate_text is None:
         coordinate_text = ''
 
-      #This regexp get the coordinate text and extract only numbers
-      onlynumber = ''.join(re.findall('[0-9]', coordinate_text))
-      
-      #Test if coordinate_text has or not markups.
-      if len(coordinate_text) > len(onlynumber):
-        #trying to get a possible contry number to be used by script
-        country = re.match('((\+|)(?P<country>\d*))', \
-                         coordinate_text).groupdict().get('country','')
-        regexdict = self.getRegexDict(index=country)
-        input_parser = regexdict.get('input')
-        number_match = re.match(input_parser, coordinate_text)
-        if not number_match:
+      # This regexp get the coordinate text 
+      # and extract number and letters
+      input_regex_without_markup = '[0-9A-Za-z]'
+      input_without_markup = ''.join(re.findall(input_regex_without_markup,\
+                                                coordinate_text))
+      # Test if coordinate_text has or not markups.
+      if len(coordinate_text) > len(input_without_markup):
+        # Trying to get the regex list.
+        input_parser_list = self._getRegexList(coordinate_text=coordinate_text)
+        number_match = None
+        for input_parser in input_parser_list:
+          possible_number_match = re.match(input_parser, coordinate_text)
+          if possible_number_match not in [None]:
+            number_match = possible_number_match
+            break
+        if number_match == None:
+          from zLOG import LOG, WARNING
+          msg = "Doesn't exist a regex to handle this telephone: ", coordinate_text
+          LOG('*** Telephone ***',WARNING,msg)
           return
         number_dict = number_match.groupdict()
       else:
         number_dict = {'number' : coordinate_text}
-      
+
       country=number_dict.get('country','')
       area=number_dict.get('area','')
       number=number_dict.get('number','')
@@ -138,17 +339,28 @@ class Telephone(Coordinate, Base):
           (area in ['', None]) and \
           (number in ['', None]) and \
           (ext in ['', None])):
-        country = area = number = extension=''
+        country = area = number = extension = ''
       else:
         # The country and area is trying to get from dict, 
         # but if it fails must be get from preference
+        country_default_number = self.portal_preferences.getPreferredTelephoneDefaultCountryNumber()
+        area_default_number = self.portal_preferences.getPreferredTelephoneDefaultAreaNumber()
+
         country = (number_dict.get('country') or \
-                   self.portal_preferences.getPreferredTelephoneDefaultCountryNumber() or \
+                   country_default_number or \
                    '').strip()
         area = (number_dict.get('area') or \
-                self.portal_preferences.getPreferredTelephoneDefaultAreaNumber() or 
+                area_default_number or 
                 '').strip()
-        number = (number_dict.get('number') or '').strip().replace('-', '').replace(' ','')
+        number = (number_dict.get('number') or '').strip()
+
+        # Formating the number.
+        # Removing any ")", "(", "-" and " "
+        number = number.replace('-', '')
+        number = number.replace(' ','')
+        number = number.replace(')','')
+        number = number.replace('(','')
+
         extension = (number_dict.get('ext') or '').strip()
 
       self.edit(telephone_country = country,
@@ -180,10 +392,9 @@ class Telephone(Coordinate, Base):
           (telephone_number == '') and \
           (telephone_extension == '')): 
         return ''
-      
-      regexdict = self.getRegexDict(index=telephone_country)
-      notation = regexdict.get('notation')
-
+ 
+      # Trying to get the notation
+      notation = self._getNotation(telephone_country=telephone_country)
       if notation not in [None, '']:
         notation=notation.replace('<country>',telephone_country)
         notation=notation.replace('<area>',telephone_area)
@@ -226,37 +437,33 @@ class Telephone(Coordinate, Base):
       """
       return ("+33(0)6-62 05 76 14",)
 
-    def getRegexDict(self, index=None):
+    def _getRegexDict(self, index=None):
       """
         Returns a dict with Regex and Notations based from 
         country or region
       """
-      # In case of index is a number
-      # should return a region from dict or from form field
-      if index not in [None,'']:
-        # If index is not in country_dict
-        # the possible country can be found at region field
-        # in context or in preferences
-        if index not in self.country_dict.keys():
-          region = self.getRegion() or \
-             self.portal_preferences.getPreferredTelephoneDefaultRegion()
-        else:
-          region = self.country_dict.get(index,'')
-      else:
-        region = self.getRegion() or \
-          self.portal_preferences.getPreferredTelephoneDefaultRegion()
-      
-      # Find the region in standard_dict
-      if region is not None:
-        region_list=region.split('/')
-        for i in region_list:
-          if self.standard_dict.get(i) is not None:
-            region = i
-      
-      # If region doesn't exist this method 
-      # should to return a default regex.
-      if region not in self.standard_dict.keys() or region is None:
-        region = 'default'
-      
-      dict = self.standard_dict.get(region)
-      return dict
+      # Trying to get the Regex Dict
+      if index not in self.standard_dict.keys():
+        index = self.portal_preferences.getPreferredTelephoneDefaultCountryNumber() or '33'
+           
+      return self.standard_dict.get(index)
+    
+    def _getRegexList(self, coordinate_text):
+      """
+        Returns the regex list.
+      """
+      # Trying to get a possible contry number
+      country_regex = '((\+|)(?P<country>\d*))'
+      country = re.match(country_regex, \
+                       coordinate_text).groupdict().get('country','')
+      regex_dict = self._getRegexDict(index=country)
+      input_parser = regex_dict.get('regex_input_list')
+      return input_parser
+  
+    def _getNotation(self, telephone_country):
+      """
+        Returns the notation that will be used by asText method.
+      """
+      regex_dict = self._getRegexDict(index=telephone_country)
+      notation = regex_dict.get('notation')
+      return notation
