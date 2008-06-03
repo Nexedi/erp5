@@ -1932,6 +1932,8 @@ class Catalog(Folder,
             elif key == 'uid':
               # uid is always ambiguous so we can only change it here
               new_key = 'catalog.uid'
+            else:
+              LOG('SQLCatalog', WARNING, 'buildSQLQuery this key is too ambiguous : %s' % key)
           else:
             new_key = key
           if new_key is not None:
