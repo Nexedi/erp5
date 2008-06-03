@@ -1,4 +1,7 @@
-2008-06-03
+2008-06-03 vincentd
+* Add all rights for manager in the invoice_causality_workflow(Solving)
+
+2008-06-03 vincentd
 * Change manager security for account_workflow, accounting_period_workflow and accounting_workflow.
 
 2008-05-16 jerome
