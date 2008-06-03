@@ -1,3 +1,6 @@
+2008-06-03 vincentd
+* Add all rights to manager to inventory workflow(Deleted), order_workflow(Deleted, Closed, Cancelled, Open), packing_list_causality_workflow (Building, Solving) and packing_list_workflow(Deleted, Cancelled)
+
 2008-05-26 yo
 * Change the title of my_order to Priority, because only priority-related categories are displayed in Express.
 
