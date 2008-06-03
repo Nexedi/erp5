@@ -65,19 +65,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>source_project_uid_list = [x.uid for x in context.portal_catalog(\n
+            <value> <string encoding="cdata"><![CDATA[
+
+source_project_uid_list = [x.uid for x in context.portal_catalog(\n
      relative_url=\'%s%%\' % context.getRelativeUrl())]\n
+\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+\n
+sql_kw = {}\n
+if kw.has_key(\'from_date\') and kw[\'from_date\'] is not None:\n
+  query_kw = {\'delivery.start_date\' : kw[\'from_date\'],\n
+              \'range\' : \'min\'}\n
+  sql_kw[\'delivery.start_date\'] = Query(**query_kw)\n
+if kw.has_key(\'at_date\') and kw[\'at_date\'] is not None:\n
+  query_kw = {\'delivery.stop_date\' : kw[\'at_date\'],\n
+              \'range\' : \'ngt\'}\n
+  sql_kw[\'delivery.stop_date\'] = Query(**query_kw)\n
+if kw.has_key(\'simulation_state\') and len(kw[\'simulation_state\']) > 0 :\n
+  sql_kw[\'simulation_state\'] = kw[\'simulation_state\']\n
 \n
 task_list = [x.getObject() for x in \\\n
   context.portal_catalog(selection=selection, selection_report=selection_report, \n
           portal_type=\'Task\',\n
-          source_project_uid = source_project_uid_list)]\n
+          source_project_uid = source_project_uid_list,\n
+          **sql_kw)]\n
 task_line_list = []\n
 for task in task_list:\n
   task_line_list.extend(task.contentValues(portal_type=\'Task Line\'))\n
 \n
 return task_line_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -129,6 +148,15 @@ return task_line_list\n
                             <string>context</string>
                             <string>x</string>
                             <string>source_project_uid_list</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>sql_kw</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>query_kw</string>
+                            <string>_apply_</string>
+                            <string>_write_</string>
+                            <string>len</string>
                             <string>task_list</string>
                             <string>task_line_list</string>
                             <string>task</string>
