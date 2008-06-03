@@ -65,9 +65,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.Item_getResourceValue() is not None:\n
-  return context.Item_getResourceValue().getTitle()\n
-return \'\'\n
+            <value> <string># Jump to the deliveries related to current item\n
+\n
+\n
+selection_uid_list = []\n
+search_list = context.portal_simulation.getTrackingList(item=context.getRelativeUrl())\n
+for search_result in search_list:\n
+  movement_uid = search_result[\'delivery_uid\']\n
+  if movement_uid is not None:\n
+    movement = context.portal_catalog.getObject(movement_uid)\n
+    delivery = movement.getRootDeliveryValue()\n
+    delivery_uid = delivery.getUid()\n
+    if delivery_uid not in selection_uid_list:\n
+      selection_uid_list.append(delivery_uid)\n
+\n
+request=context.REQUEST\n
+if len(selection_uid_list) != 0 : \n
+  kw = {\'uid\': selection_uid_list}\n
+  context.portal_selections.setSelectionParamsFor(\'Item_jumpToDeliveryForm\', kw)\n
+  #request.set(\'object_uid\', context.getUid())\n
+  request.set(\'uids\', selection_uid_list)\n
+  return context.Item_jumpToDeliveryForm(\n
+        uids=selection_uid_list, REQUEST=request)\n
+\n
+redirect_url = \'%s/view?%s\' % (context.getPath(),\n
+            \'portal_status_message=No+Related+Delivery+For+Current+Item\')\n
+return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
 </string> </value>
         </item>
         <item>
@@ -83,8 +106,14 @@ return \'\'\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -110,9 +139,22 @@ return \'\'\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
+                            <string>selection_uid_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>search_list</string>
+                            <string>_getiter_</string>
+                            <string>search_result</string>
+                            <string>_getitem_</string>
+                            <string>movement_uid</string>
                             <string>None</string>
+                            <string>movement</string>
+                            <string>delivery</string>
+                            <string>delivery_uid</string>
+                            <string>request</string>
+                            <string>len</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -129,7 +171,11 @@ return \'\'\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getResourceTitle</string> </value>
+            <value> <string>Item_jumpToDelivery</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -1,6 +1,22 @@
+Internal Packing List Line | item_creation
+Internal Packing List | aggregate_item
+Item Module | create_order
 Item Module | view
-Item | tracking
+Item | create_order
+Item | delivery_jump
+Item | tracking_list
 Item | view
+Purchase Order Line | item_creation
+Purchase Order | aggregate_item
+Purchase Packing List Line | item_creation
+Purchase Packing List | aggregate_item
+Returned Sale Packing List Line | item_creation
+Returned Sale Packing List | aggregate_item
+Sale Order Line | item_creation
+Sale Order | aggregate_item
+Sale Packing List Line | item_creation
+Sale Packing List | aggregate_item
 Service Report Module | view
-Service Report | tracking
+Service Report | delivery_jump
+Service Report | tracking_list
 Service Report | view

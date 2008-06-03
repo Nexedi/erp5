@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Check data validity\n
+error_count = 0\n
+#error_count = context.Item_createRelatedAffectationUpdate(destination, destination_section,portal_type,site_suggestion,source,source_section,stop_date,title,batch_mode=1, **kw)\n
+#context.log(\'error_count\',error_count)\n
+context.log(\'portal_type\',portal_type)\n
+if portal_type not in (\'Sale Packing List\'):\n
+  if error_count > 0:\n
+    return context.Item_createRelatedAffectationUpdate(destination,\\\n
+                                                       destination_section, \\\n
+                                                       portal_type,\\\n
+                                                       site_suggestion,\\\n
+                                                       source, \\\n
+                                                       source_section, \\\n
+                                                       stop_date,title, \\\n
+                                                       batch_mode=0, **kw)\n
+\n
+property_dict = {\'title\':title,\n
+                 \'destination_section\' : destination_section,\n
+                 \'destination\' : destination,                 \n
+                 \'source_section\' : source_section,\n
+                 \'source\' : source,\n
+                 \'stop_date\' : stop_date,\n
+                 \'start_date\' : start_date,\n
+                 \'portal_type\' : portal_type, }\n
+\n
+module = context.getDefaultModule(portal_type=portal_type)\n
+line_portal_type = \'%s Line\' % portal_type\n
+\n
+pl_dict = {}\n
+#context.log(\'property_dict:\',property_dict)\n
+for k,v in property_dict.items():\n
+  pl_dict[k]=v\n
+\n
+pl_line_dict = {}\n
+pl_line_dict[\'portal_type\'] = line_portal_type\n
+\n
+pl_line_dict[\'title\']= \'%s\' % (context.getReference())\n
+pl_line_dict[\'aggregate_value_list\'] = [context]\n
+pl_line_dict[\'quantity\'] = quantity\n
+pl_line_dict[\'quantity_unit\'] = quantity_unit\n
+\n
+pl_value = module.newContent(**pl_dict)\n
+pl_line_value = pl_value.newContent(**pl_line_dict)\n
+\n
+context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>destination=None,destination_section=None,portal_type=None,site_suggestion=None,source=None,source_section=None,start_date=None,quantity=None,stop_date=None,title=\'\',**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>10</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>destination</string>
+                            <string>destination_section</string>
+                            <string>portal_type</string>
+                            <string>site_suggestion</string>
+                            <string>source</string>
+                            <string>source_section</string>
+                            <string>start_date</string>
+                            <string>quantity</string>
+                            <string>stop_date</string>
+                            <string>title</string>
+                            <string>kw</string>
+                            <string>error_count</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>_apply_</string>
+                            <string>property_dict</string>
+                            <string>module</string>
+                            <string>line_portal_type</string>
+                            <string>pl_dict</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                            <string>pl_line_dict</string>
+                            <string>quantity_unit</string>
+                            <string>pl_value</string>
+                            <string>pl_line_value</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Item_createRelatedAffectationValidate</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
