@@ -352,11 +352,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.logout()
     self.assertEqual(None,  websection._getExtensibleContent(request,  document_reference))
     self.assertEqual('404 Not Found',  request.RESPONSE.getHeader('status'))
-    
-    # Anonymous user should be prompted to login when viewing non available document
-    # contained in a Web Page (like ..web_page_module/1/<document_reference>)
-    self.assertRaises(Unauthorized,  webpage._getExtensibleContent,  request,  document_reference)
-       
+
     # set authorization_forced flag
     self.login()
     websection.setAuthorizationForced(1)
