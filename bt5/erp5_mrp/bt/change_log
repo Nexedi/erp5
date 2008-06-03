@@ -1,3 +1,9 @@
+2008-06-03 vincentd
+* Add all rights to manager in :
+production_order_workflow  :  Confirmed, Cancelled
+production_packing_list_causality_workflow  :  Building, Solving
+production_packing_list_workflow  :  Delivered, Cancelled
+
 2008-01-16 kazuhiko
 * enable acquire_local_roles on Supply Link, Supply Node and Supply Chain Module.
 

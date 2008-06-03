@@ -47,6 +47,8 @@
               <tuple>
                 <string>Modify portal content</string>
                 <string>Add portal content</string>
+                <string>Access contents information</string>
+                <string>View</string>
               </tuple>
             </value>
         </item>
