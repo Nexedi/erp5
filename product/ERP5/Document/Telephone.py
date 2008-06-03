@@ -401,6 +401,9 @@ class Telephone(Coordinate, Base):
         notation=notation.replace('<number>',telephone_number)
         notation=notation.replace('<ext>',telephone_extension)
 
+      if telephone_extension == '':
+        notation=notation.replace('/','')
+
       return notation
 
     security.declareProtected(Permissions.AccessContentsInformation,
