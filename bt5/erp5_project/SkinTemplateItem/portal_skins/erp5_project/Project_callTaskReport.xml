@@ -73,6 +73,7 @@ request = container.REQUEST\n
 if use_ods_style:\n
   context.getPortalObject().portal_skins.changeSkin(\'ODS\')\n
   request.set(\'portal_skin\', \'ODS\') # Some TALES expressions checks this\n
+  request.set(\'reset\', 1) # Some TALES expressions checks this\n
 \n
 if target_language:\n
   request[\'AcceptLanguage\'].set(target_language, 10)\n

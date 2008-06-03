@@ -43,18 +43,14 @@
             </value>
         </item>
         <item>
-            <key> <string>action</string> </key>
-            <value> <string>Project_callTaskReport</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
+            <key> <string>_owner</string> </key>
             <value>
-              <list/>
+              <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -70,6 +66,9 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -78,23 +77,37 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_format</string>
-                        <string>your_print_mode</string>
-                        <string>your_target_language</string>
+                        <string>your_simulation_state</string>
+                        <string>your_at_date</string>
+                        <string>your_from_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_simulation_state</string>
-                        <string>your_from_date</string>
-                        <string>your_at_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -102,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Project_viewTaskReportListDialog</string> </value>
+            <value> <string>Project_viewDialogFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -110,11 +123,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessTemplate_viewExportBusinessTemplateDialo</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>Project_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -126,15 +135,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Related Tasks Report</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
