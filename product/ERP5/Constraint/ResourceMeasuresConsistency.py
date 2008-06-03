@@ -60,9 +60,6 @@ class ResourceMeasuresConsistency(Constraint):
     error_list = []
     portal = obj.getPortalObject()
 
-    if obj.getPortalType() not in portal.getPortalResourceTypeList():
-      return error_list
-
     error = lambda msg, **kw: error_list.append(
       self._generateError(obj, self._getMessage(msg), mapping=kw))
 
