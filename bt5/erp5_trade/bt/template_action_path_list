@@ -15,6 +15,7 @@ Internal Packing List Line | view_price
 Internal Packing List Module | view
 Internal Packing List Module | workflow_report
 Internal Packing List | view
+Internal Packing List | view_stock
 Inventory Cell | view
 Inventory Line | inventory_view
 Inventory Line | price_view
@@ -61,6 +62,7 @@ Purchase Packing List | jump_related_purchase_order
 Purchase Packing List | packing_list_print
 Purchase Packing List | profile_view
 Purchase Packing List | view
+Purchase Packing List | view_stock
 Purchase Trade Condition Module | view
 Purchase Trade Condition | view
 Purchase Trade Condition | view_discount
@@ -76,6 +78,7 @@ Returned Sale Packing List Module | workflow_report
 Returned Sale Packing List | choose_solve_actions
 Returned Sale Packing List | jump_related_sale_invoice
 Returned Sale Packing List | view
+Returned Sale Packing List | view_stock
 Sale Order Cell | view
 Sale Order Line | price_view
 Sale Order Line | quantity_view
@@ -107,6 +110,7 @@ Sale Packing List | jump_related_sale_invoice
 Sale Packing List | packing_list_print
 Sale Packing List | view
 Sale Packing List | view_container_list
+Sale Packing List | view_stock
 Sale Trade Condition Module | view
 Sale Trade Condition | view
 Sale Trade Condition | view_discount
