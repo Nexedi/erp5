@@ -35,13 +35,19 @@
   <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
+ <portal_type id="Task Line">
+  <item>requirement</item>
+ </portal_type>
  <portal_type id="Task Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Task Report">
+  <item>predecessor</item>
   <item>aggregate</item>
   <item>requirement</item>
-  <item>predecessor</item>
+ </portal_type>
+ <portal_type id="Task Report Line">
+  <item>requirement</item>
  </portal_type>
  <portal_type id="Task Report Module">
   <item>business_application</item>

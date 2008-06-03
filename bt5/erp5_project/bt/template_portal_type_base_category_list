@@ -10,7 +10,9 @@ Requirement | source_decision
 Sale Order Line | predecessor
 Sale Order Milestone | predecessor
 Sale Packing List Line | predecessor
+Task Line | requirement
 Task Module | business_application
+Task Report Line | requirement
 Task Report Module | business_application
 Task Report | aggregate
 Task Report | predecessor
