@@ -280,6 +280,8 @@ def split_lines(CD_file_line_list):\n
   CD_line_list = []\n
   treated_container_list = []\n
   line_number = 0\n
+  reference_list = []\n
+  ref_append = reference_list.append\n
   for CD_line in CD_file_line_list:\n
     line_number += 1\n
     new_CD_line = string.replace(CD_line, \'\\n\', \'\')\n
@@ -310,20 +312,21 @@ def split_lines(CD_file_line_list):\n
                         ,\'range_stop\'  : line_range_stop\n
                         ,\'quantity\'    : line_quantity}\n
                        )\n
-    # check reference doesn\'t already exist for this resource\n
-    movement_container_list = context.portal_catalog(portal_type = "Cash Container Item",\n
-                                                     reference = line_container_id,\n
-                                                     default_destination_uid = destination_uid,\n
-                                                     simulation_state = "!=cancelled")\n
-    # if we find container line with same reference, we must\n
-    # check the resource defined on line\n
-    for same_container in movement_container_list:\n
-      same_container = same_container.getObject()\n
-      for o in same_container.objectValues():\n
-        if o.getResourceUid() == resource_value.getUid():\n
-          #context.log("same containter exist %s" %(o.getPath(), "AURELXXX"))\n
-                      #           raise ValueError, "same containter exist %s" %(o.getPath(),)\n
-          return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
+    ref_append(line_container_id)\n
+\n
+\n
+  # check reference doesn\'t already exist for this resource\n
+  movement_container_list = context.portal_catalog(portal_type = "Cash Container Item",\n
+                                                   reference = reference_list,\n
+                                                   simulation_state = ["empty", "draft", "rejected", "confirmed", "delivered",])\n
+  # if we find container line with same reference, we must\n
+  # check the resource defined on line\n
+  resource_uid = resource_value.getUid()\n
+  for same_container in movement_container_list:\n
+    same_container = same_container.getObject()\n
+    for o in same_container.objectValues():\n
+      if o.getResourceUid() ==  resource_uid and o.getDestinationUid() == destination_uid:\n
+        return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
 \n
 \n
   if line_number > 0:\n
