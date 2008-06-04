@@ -395,6 +395,13 @@ class TestSearchKeyQuery(unittest.TestCase):
     #Boolean Mode
     self.compare(FullTextKey,
                 'full_text.SearchableText',
+                'john stuart mill',
+                "MATCH full_text.SearchableText AGAINST ('+john +stuart +mill' IN BOOLEAN MODE)",
+                ["MATCH full_text.SearchableText AGAINST ('+john +stuart +mill' IN BOOLEAN MODE) AS full_text_SearchableText_relevance",
+                "MATCH full_text.SearchableText AGAINST ('+john +stuart +mill' IN BOOLEAN MODE) AS SearchableText_relevance"])
+
+    self.compare(FullTextKey,
+                'full_text.SearchableText',
                 'John*',
                 "MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE)",
                 ["MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE) AS full_text_SearchableText_relevance",

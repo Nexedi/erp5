@@ -27,6 +27,7 @@
 ##############################################################################
 
 from SearchKey import SearchKey
+import re
 
 SEARCH_MODE_MAPPING = {'in_boolean_mode': 'IN BOOLEAN MODE',
                        'with_query_expansion': 'WITH QUERY EXPANSION'}
@@ -62,8 +63,6 @@ class FullTextKey(SearchKey):
     #r'[^\+\-<>\(\)\~\*\"\s]\S*'
     #r'[\x7F-\xFF\w\d][\x7F-\xFF\w\d]*'
     # WORD may contain arbitrary letters and numbers without white space
-    word_value = t.value
-    t.value = "'%s'" % word_value
     return t
 
   def buildSQLExpression(self, key, value,
@@ -79,6 +78,9 @@ class FullTextKey(SearchKey):
         if token.type != 'WORD':
           mode = SEARCH_MODE_MAPPING['in_boolean_mode']
           break
+      if mode == '' and len(tokens) > 1:
+        value = ' '.join(['+%s' %  x.value for x in tokens])
+        mode = SEARCH_MODE_MAPPING['in_boolean_mode']
     # split (if possible) to column.key
     if key.find('.') != -1:
       table, column = key.split('.')
