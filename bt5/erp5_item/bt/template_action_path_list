@@ -5,6 +5,7 @@ Item Module | view
 Item | create_order
 Item | delivery_jump
 Item | jump_to_invoice
+Item | jump_to_order
 Item | tracking_list
 Item | view
 Purchase Order Line | item_creation
