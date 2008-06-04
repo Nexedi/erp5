@@ -65,12 +65,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change[\'object\']\n
+            <value> <string encoding="cdata"><![CDATA[
+
+order = state_change[\'object\']\n
 \n
 item_list = order.getAggregateValueList()\n
 quantity = sum([ i.getQuantity() for i in item_list if i.getQuantity() is not None ])\n
-order.setQuantity(quantity)\n
-</string> </value>
+\n
+if quantity > order.getQuantity():\n
+  order.setQuantity(quantity)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>

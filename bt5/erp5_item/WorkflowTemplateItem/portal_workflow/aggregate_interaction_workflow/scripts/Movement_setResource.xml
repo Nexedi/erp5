@@ -68,13 +68,14 @@
             <value> <string>order = state_change[\'object\']\n
 \n
 resource_list = [ ]\n
-for item in order.getAggregateValueList():\n
-  resource = item.Item_getResourceValue()\n
-  if resource not in resource_list or (resource is not None):\n
-    resource_list.append(resource)\n
+if order.getResourceValue() in [\'\', None ]:\n
+  for item in order.getAggregateValueList():\n
+    resource = item.Item_getResourceValue()\n
+    if resource not in resource_list or (resource is not None):\n
+      resource_list.append(resource)\n
 \n
-if len(resource_list) == 1: \n
-  order.setResourceValue(resource)\n
+  if len(resource_list) == 1: \n
+    order.setResourceValue(resource)\n
 </string> </value>
         </item>
         <item>
@@ -121,11 +122,11 @@ if len(resource_list) == 1: \n
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>resource_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
                             <string>item</string>
                             <string>resource</string>
-                            <string>None</string>
                             <string>len</string>
                           </tuple>
                         </value>
