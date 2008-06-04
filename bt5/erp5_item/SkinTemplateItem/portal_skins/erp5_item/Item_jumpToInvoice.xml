@@ -84,7 +84,7 @@ if len(selection_uid_list) != 0 : \n
         uids=selection_uid_list, REQUEST=request)\n
 \n
 redirect_url = \'%s/view?%s\' % (context.getPath(),\n
-            \'portal_status_message=No+Related+Delivery+For+Current+Item\')\n
+            \'portal_status_message=No+Related+Invoice+For+Current+Item\')\n
 return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
 </string> </value>
         </item>
