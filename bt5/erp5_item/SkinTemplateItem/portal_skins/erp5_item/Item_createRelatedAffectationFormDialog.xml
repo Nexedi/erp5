@@ -53,6 +53,16 @@
             <value> <string>Item_createRelatedAffectationValidate</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -96,10 +106,7 @@
                     <value>
                       <list>
                         <string>my_reference</string>
-                        <string>my_quantity_unit</string>
                         <string>my_resource</string>
-                        <string>your_source</string>
-                        <string>your_source_section</string>
                       </list>
                     </value>
                 </item>
@@ -118,6 +125,7 @@
                     <value>
                       <list>
                         <string>my_quantity</string>
+                        <string>my_quantity_unit</string>
                         <string>your_portal_type</string>
                       </list>
                     </value>
@@ -159,7 +167,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Item_createRelatedAffectationUpdate</string> </value>
+            <value> <string>Item_createAffectationFormDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -65,29 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Check data validity\n
-error_count = 0\n
-#error_count = context.Item_createRelatedAffectationUpdate(destination, destination_section,portal_type,site_suggestion,source,source_section,stop_date,title,batch_mode=1, **kw)\n
-#context.log(\'error_count\',error_count)\n
-context.log(\'portal_type\',portal_type)\n
-if portal_type not in (\'Sale Packing List\'):\n
-  if error_count > 0:\n
-    return context.Item_createRelatedAffectationUpdate(destination,\\\n
-                                                       destination_section, \\\n
-                                                       portal_type,\\\n
-                                                       site_suggestion,\\\n
-                                                       source, \\\n
-                                                       source_section, \\\n
-                                                       stop_date,title, \\\n
-                                                       batch_mode=0, **kw)\n
+            <value> <string># Check data validity\n
+source = context.Item_getCurrentSiteValue()\n
+source_section = context.Item_getCurrentOwnerTitle(with_title=0)\n
 \n
 property_dict = {\'title\':title,\n
                  \'destination_section\' : destination_section,\n
                  \'destination\' : destination,                 \n
-                 \'source_section\' : source_section,\n
-                 \'source\' : source,\n
                  \'stop_date\' : stop_date,\n
                  \'start_date\' : start_date,\n
                  \'portal_type\' : portal_type, }\n
@@ -96,7 +80,6 @@ module = context.getDefaultModule(portal_type=portal_type)\n
 line_portal_type = \'%s Line\' % portal_type\n
 \n
 pl_dict = {}\n
-#context.log(\'property_dict:\',property_dict)\n
 for k,v in property_dict.items():\n
   pl_dict[k]=v\n
 \n
@@ -109,12 +92,12 @@ pl_line_dict[\'quantity\'] = quantity\n
 pl_line_dict[\'quantity_unit\'] = quantity_unit\n
 \n
 pl_value = module.newContent(**pl_dict)\n
+pl_value.setSourceValue(source)\n
+pl_value.setSourceSectionValue(source)\n
 pl_line_value = pl_value.newContent(**pl_line_dict)\n
 \n
 context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,7 +119,7 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>destination=None,destination_section=None,portal_type=None,site_suggestion=None,source=None,source_section=None,start_date=None,quantity=None,stop_date=None,title=\'\',**kw</string> </value>
+            <value> <string>destination=None,destination_section=None,portal_type=None,site_suggestion=None,start_date=None,quantity=None,start_date=None,stop_date=None,title=\'\',quantity_unit=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -166,17 +149,17 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                             <string>destination_section</string>
                             <string>portal_type</string>
                             <string>site_suggestion</string>
-                            <string>source</string>
-                            <string>source_section</string>
                             <string>start_date</string>
                             <string>quantity</string>
+                            <string>start_date</string>
                             <string>stop_date</string>
                             <string>title</string>
+                            <string>quantity_unit</string>
                             <string>kw</string>
-                            <string>error_count</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_apply_</string>
+                            <string>source</string>
+                            <string>source_section</string>
                             <string>property_dict</string>
                             <string>module</string>
                             <string>line_portal_type</string>
@@ -186,7 +169,7 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                             <string>v</string>
                             <string>_write_</string>
                             <string>pl_line_dict</string>
-                            <string>quantity_unit</string>
+                            <string>_apply_</string>
                             <string>pl_value</string>
                             <string>pl_line_value</string>
                             <string>_getitem_</string>
@@ -210,8 +193,8 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                 <none/>
                 <none/>
                 <none/>
-                <none/>
                 <string></string>
+                <none/>
               </tuple>
             </value>
         </item>
