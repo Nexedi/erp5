@@ -75,10 +75,10 @@ from the contribute form.\n
 """\n
 \n
 order = [\n
-  \'file_name\',\n
   \'input\',\n
-  \'user_login\',\n
-  \'content\' ]\n
+  \'content\',\n
+  \'file_name\',\n
+  \'user_login\']\n
 \n
 return order\n
 </string> </value>
