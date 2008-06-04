@@ -1,5 +1,6 @@
 2008-06-03 vincentd
-* add security to manager in the assignment_workflow for Close and Open state
+* add security to manager in the assignment_workflow for Close and Open states
+and query_workflow for Cancelled and Answered states
 
 2008-04-21 jerome
 * Fix default images on Person and Organisation (for virtual hosting)
