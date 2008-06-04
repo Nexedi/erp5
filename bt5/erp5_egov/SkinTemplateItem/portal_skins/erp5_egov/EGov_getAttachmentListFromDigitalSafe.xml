@@ -65,34 +65,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'This script check that all required files have been uploaded\'\'\'\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+            <value> <string>\'\'\'\n
+  Return a list of user documents corresponding to the title\n
+\'\'\'\n
 \n
-document = state_change[\'object\']\n
-portal_type = document.getPortalType()\n
 \n
-# dict of required documents\n
-attachement_type_dict = {\'Carte ID\':\'Required\',\n
-                         \'Tableau des d\xc3\xa9penses\':\'Optional\',\n
-                         \'D\xc3\xa9tail des \xc3\xa9xon\xc3\xa9ratations\':\'Required\',\n
-                         \'Application Certificate\':\'Optional\',\n
-                        }\n
+user_corresponding_document_list = []\n
 \n
-document_title_list = [x.getTitle() for x in document.contentValues(portal_type=\'File\')]\n
+# here we must search in the user digital safe documents that have the given title\n
+#XXX to be done\n
 \n
-required_title_list = [x for x,y in attachement_type_dict.items() if y == \'Required\']\n
+if not len(user_corresponding_document_list):\n
+  user_corresponding_document_list.append(\'Your digital safe contains no relevant document\')\n
+else:\n
+  user_corresponding_document_list.append(\'Other\')\n
 \n
-message = \'The following documents are missing to submit the request :\'\n
-missing_document_list = []\n
-for required_title in required_title_list:\n
-  if required_title not in document_title_list:\n
-    missing_document_list.append(\'%s\' % required_title)\n
-\n
-if len(missing_document_list):\n
-  message = N_(message)\n
-  raise ValidationFailed, "%s %s" % (message, \', \'.join(missing_document_list))\n
+return user_corresponding_document_list\n
 </string> </value>
         </item>
         <item>
@@ -108,8 +96,14 @@ if len(missing_document_list):\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>title=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,28 +129,10 @@ if len(missing_document_list):\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>N_</string>
-                            <string>_getitem_</string>
-                            <string>document</string>
-                            <string>portal_type</string>
-                            <string>attachement_type_dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>document_title_list</string>
-                            <string>y</string>
-                            <string>required_title_list</string>
-                            <string>message</string>
-                            <string>missing_document_list</string>
-                            <string>required_title</string>
+                            <string>title</string>
+                            <string>user_corresponding_document_list</string>
                             <string>len</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
@@ -168,12 +144,14 @@ if len(missing_document_list):\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PDFDocument_validateFormDataBeforeSubmission</string> </value>
+            <value> <string>EGov_getAttachmentListFromDigitalSafe</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

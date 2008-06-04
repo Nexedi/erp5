@@ -1,3 +1,8 @@
+2008-06-04 fabien
+* enhance EGov_Base_editAndNextStep script, now it should be possible to not
+have a modified Base_edit script
+* moved here some script from safi_tva bt
+
 2008-05-26 fabien
 bt refactoring :
 * change portal_types names

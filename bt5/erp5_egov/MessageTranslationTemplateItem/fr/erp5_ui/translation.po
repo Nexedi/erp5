@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2008-05-29 14:05+CET\n"
-"PO-Revision-Date: 2008-05-29 14:05+CET\n"
+"POT-Creation-Date: 2008-06-04 19:06+CET\n"
+"PO-Revision-Date: 2008-06-04 19:06+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -561,6 +561,9 @@ msgstr "Alarme"
 msgid "Alarm Tool"
 msgstr "Outil Alarme"
 
+msgid "All Applications"
+msgstr ""
+
 msgid "All Documents"
 msgstr "Tous les documents"
 
@@ -570,14 +573,23 @@ msgstr ""
 msgid "All Rights Reserved to the DGID"
 msgstr "Tous Droits réservés à la DGID"
 
+msgid "All attached files add to your application"
+msgstr ""
+
 msgid "All documents"
 msgstr ""
 
 msgid "All documents add to your requests"
 msgstr "Tous les documents ajoutés à votre demande"
 
+msgid "All documents resulting of your application"
+msgstr ""
+
 msgid "All documents resulting of your requests"
 msgstr "Tous les documents résultants de votre demande"
+
+msgid "All events related on your application"
+msgstr ""
 
 msgid "All pending Applications"
 msgstr "Toutes les demandes en cours"
@@ -2322,7 +2334,13 @@ msgstr ""
 msgid "ERP5 eGov Universal Workflow"
 msgstr ""
 
+msgid "ERP5 eGov anonymous Workflow"
+msgstr ""
+
 msgid "ERP5 eGov test Workflow"
+msgstr ""
+
+msgid "ERP5 eGov universal Workflow"
 msgstr ""
 
 msgid "Edit"
@@ -2766,6 +2784,9 @@ msgstr "Clé IBAN"
 msgid "ID"
 msgstr ""
 
+msgid "ID Card"
+msgstr ""
+
 msgid "ID of a page template or form which defines the rendering layout for contents"
 msgstr ""
 
@@ -3123,6 +3144,9 @@ msgstr "Déconnexion"
 msgid "Long Title"
 msgstr ""
 
+msgid "M0 Form"
+msgstr ""
+
 msgid "MIME Type"
 msgstr ""
 
@@ -3142,6 +3166,9 @@ msgid "Maintainers"
 msgstr ""
 
 msgid "Manage Business Templates"
+msgstr ""
+
+msgid "Mandate Form"
 msgstr ""
 
 msgid "Mandate Form Module"
@@ -3454,6 +3481,9 @@ msgid "Only document of type"
 msgstr "Seulement les document de type"
 
 msgid "Only document whith this actor"
+msgstr ""
+
+msgid "Only document with this actor"
 msgstr ""
 
 msgid "Open"
@@ -4693,6 +4723,9 @@ msgid "Show All"
 msgstr "Tout Montrer"
 
 msgid "Si vous n'êtes pas un citoyen sénégalais, vous devez joindre votre carte d'identité"
+msgstr ""
+
+msgid "Sign"
 msgstr ""
 
 msgid "Signature Preview"
@@ -6057,6 +6090,12 @@ msgstr "Vous avez été déconnecté. Merci d'avoir utilisé ce site web."
 msgid "You have no documents."
 msgstr ""
 
+msgid "You have to join the boss of the company identity card"
+msgstr ""
+
+msgid "You have to provide a M0 form copy"
+msgstr ""
+
 msgid "You may now logout or go home and proceed to other applications:"
 msgstr "Vous pouvez maintenant vous déconnecter ou retourner à l'accueil pour effectuer d'autres demandes :"
 
@@ -6071,6 +6110,9 @@ msgstr "Vous trouverez ci-dessous la liste des pièces jointe qui doivent ou peu
 
 msgid "Your application has been submitted successfully"
 msgstr "Votre demande à bien été prise en compte"
+
+msgid "Your application has been submitted successfully under the reference"
+msgstr ""
 
 msgid "Your request has been submitted successfully"
 msgstr "Votre demande à bien été prise en compte"
@@ -6152,6 +6194,9 @@ msgstr ""
 
 msgid "cash_status"
 msgstr "Etat de valeur"
+
+msgid "clean"
+msgstr ""
 
 msgid "closed"
 msgstr ""

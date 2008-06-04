@@ -86,7 +86,7 @@ if context.portal_membership.isAnonymousUser():\n
 \n
 next_url_dict = {\n
     \'DeclarationTVA_view\' : \'DeclarationTVA_viewAttachmentList\',\n
-    \'DeclarationTVA_viewAttachmentList\' : \'PDFDocument_viewLoginInformation\'\n
+    \'SubscriptionForm_view\': \'SubscriptionForm_viewAttachmentList\',\n
 }\n
 \n
 # edit the document with the entered data before to change of state\n
@@ -101,15 +101,7 @@ context.Base_edit(form_id=form_id, \n
 \n
 if not next_url_dict.has_key(form_id):\n
   next_url = \'PDFDocument_viewLoginInformation\'\n
-  context.submit()\n
-else:\n
-  next_url = next_url_dict[form_id]\n
-\n
-successful_edit_redirect_url = \'%s/%s\' % (context.absolute_url(), next_url)\n
-\n
-# if the current step is DeclarationTVA_viewAttachmentList, the document must\n
-# be submitted\n
-if form_id == \'DeclarationTVA_viewAttachmentList\':\n
+  # if the next url is PDFDocument_viewLoginInformation, submit the application\n
   try : \n
     context.portal_workflow.doActionFor(context,\n
                                       \'submit_action\')\n
@@ -117,6 +109,11 @@ if form_id == \'DeclarationTVA_viewAttachmentList\':\n
     return request[\'RESPONSE\'].redirect(\n
                "%s/%s?portal_status_message=%s" %\n
                (context.absolute_url(), form_id, message))\n
+  #context.submit()\n
+else:\n
+  next_url = next_url_dict[form_id]\n
+\n
+successful_edit_redirect_url = \'%s/%s\' % (context.absolute_url(), next_url)\n
 \n
 result = request[\'RESPONSE\'].redirect(successful_edit_redirect_url) \n
 return result\n
