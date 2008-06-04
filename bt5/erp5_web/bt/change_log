@@ -1,3 +1,6 @@
+2008-06-03 vincentd
+* add rights for manager in publication_workflow(Published state)
+
 2008-5-26 jps
 * Revise version to 5.0.1.
 * Configuration is now more generic
