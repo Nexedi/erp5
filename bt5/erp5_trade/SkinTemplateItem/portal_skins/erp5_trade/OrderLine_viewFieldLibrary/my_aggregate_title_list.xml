@@ -20,7 +20,9 @@
             <value>
               <list>
                 <string>title</string>
+                <string>base_category</string>
                 <string>portal_type</string>
+                <string>catalog_index</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -64,6 +66,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key>                 <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -98,6 +108,14 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>aggregate</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>aggregate</string> </value>
+                </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
@@ -146,7 +164,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or here.getAggregate()</string> </value>
+            <value> <string>python: (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or (here.getAggregate()) or (here.getResource() is None and here.getPortalItemTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
