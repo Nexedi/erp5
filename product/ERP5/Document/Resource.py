@@ -887,11 +887,11 @@ class Resource(XMLMatrix, Variated):
         # At this point, we know there is no default measure and we must add
         # a row for the management unit, with the resource's uid as uid, and
         # a generic metric_type.
-        quantity = float(quantity_unit_value.getProperty('quantity'))
+        quantity = quantity_unit_value.getProperty('quantity')
         metric_type_uid = self.getPortalObject().portal_categories \
                               .getCategoryUid(metric_type, 'metric_type')
         if quantity and metric_type_uid:
           uid = self.getUid()
-          insert_list += (uid, uid, '^', metric_type_uid, quantity),
+          insert_list += (uid, uid, '^', metric_type_uid, float(quantity)),
 
       return insert_list

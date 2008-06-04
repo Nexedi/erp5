@@ -32,6 +32,13 @@ from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Variated import Variated
 
+
+def getQuantity(quantity_unit_value):
+  quantity = quantity_unit_value.getProperty('quantity')
+  if quantity is not None:
+    return float(quantity)
+
+
 class Measure(XMLMatrix):
   """
     A Measure
@@ -132,7 +139,7 @@ class Measure(XMLMatrix):
     metric_type = self.getMetricType()
     if quantity_unit is not None and metric_type and \
         quantity_unit.getParentId() == metric_type.split('/', 1)[0]:
-      return float(quantity_unit.getProperty('quantity'))
+      return getQuantity(quantity_unit)
 
   security.declareProtected(AccessContentsInformation, 'getConvertedQuantity')
   def getConvertedQuantity(self, variation_list=()):
@@ -190,7 +197,7 @@ class Measure(XMLMatrix):
       if quantity is not None:
         quantity *= quantity_unit
         if (not default or quantity ==
-            float(resource.getQuantityUnitValue().getProperty('quantity'))):
+            getQuantity(resource.getQuantityUnitValue())):
           return (uid, resource_uid, '^', metric_type_uid, quantity),
       return ()
 
