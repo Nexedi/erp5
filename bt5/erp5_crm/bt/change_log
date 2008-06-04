@@ -1,3 +1,8 @@
+2008-06-04
+* Add rights for manager in :
+sale_opportunity_workflow  :  Contacted, Cancelled
+ticket_workflow  :  Closed, Cancelled
+
 2008-5-31 yusei
 * Invoke workflow method only when event worklfow is used.
 
