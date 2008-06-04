@@ -66,20 +66,26 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Define here which sources of metadata should be preferred - the \n
-\'order\' tuple defines the order. Source listed first is preferred\n
-over source listed later.\n
-\'input\' means data that are already set on the document (through web\n
-interface, for example), supplied in the email text or submitted\n
+This script is part of erp5_ingestion bt5.\n
+It is used to define the preference order of data sources used when \n
+ingesting a document.\n
+ \n
+Data source listed first is preferred over one listed later.\n
+\n
+Possible data sources:\n
+\n
+ * \'input\' - data that is already set on the document (through web\n
+interface for example), supplied in the email text or submitted\n
 from the contribute form.\n
+\n
+ * \'content\' - metadata available in document content itself\n
+\n
+ * \'file_name\' - file name of the ingested document\n
+\n
+ * \'user_login\' - user login of the logged in user\n
+\n
 """\n
-\n
-order = [\n
-  \'input\',\n
-  \'content\',\n
-  \'file_name\',\n
-  \'user_login\']\n
-\n
+order = [\'input\', \'content\', \'file_name\', \'user_login\']\n
 return order\n
 </string> </value>
         </item>
