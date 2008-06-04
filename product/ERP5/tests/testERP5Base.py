@@ -974,7 +974,6 @@ class TestERP5Base(ERP5TypeTestCase):
       ["+55-047-12345678/990","+55(0)047-12345678/990"],
       ["+55-047-12345678/","+55(0)047-12345678"],
       ["+55-047-12345678","+55(0)047-12345678"]
-
     ]
 
     for i in input_list:
@@ -984,6 +983,10 @@ class TestERP5Base(ERP5TypeTestCase):
   def test_TelephoneWhenTheDefaultCountryAndAreaPreferenceIsBlank(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
     tel = pers.newContent(portal_type='Telephone')
+    pref = self.portal_preferences.default_site_preference
+    pref.setPreferredTelephoneDefaultCountryNumber('')
+    pref.setPreferredTelephoneDefaultAreaNumber('')
+    pref.enable()
     tel.fromText(coordinate_text='12345678')
     self.assertEquals('+(0)-12345678',tel.asText())
 
