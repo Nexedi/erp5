@@ -85,7 +85,7 @@
                     <value> <string>Base_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>input_order</string> </key>
+                    <key> <string>input_order</string> </key>
                     <value> <string>dmy</string> </value>
                 </item>
                 <item>
@@ -93,11 +93,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>timezone_style</string> </key>
+                    <key> <string>timezone_style</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Stop Date</string> </value>
                 </item>
               </dictionary>

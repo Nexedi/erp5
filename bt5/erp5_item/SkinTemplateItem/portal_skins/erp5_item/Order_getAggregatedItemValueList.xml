@@ -132,7 +132,7 @@ return [context.portal_catalog.getObject(uid) for uid in selection_uid_list]\n
                             <string>kw</string>
                             <string>selection_uid_list</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>pl_type</string>
                             <string>pl_line_type</string>
                             <string>pl_cell_type</string>
