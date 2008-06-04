@@ -1,3 +1,6 @@
+2008-06-04 yusei
+* Add comment column in the glossary module listbox.
+
 2008-06-03
 * Add seurity to manager in the bug_workflow for Cancelled, Draft, Open and Closed state.
 
