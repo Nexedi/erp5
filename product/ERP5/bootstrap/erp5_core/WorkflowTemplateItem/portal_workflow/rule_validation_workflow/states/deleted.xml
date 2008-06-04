@@ -96,9 +96,7 @@
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
               </dictionary>

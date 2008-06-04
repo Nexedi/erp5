@@ -1,5 +1,5 @@
-2008-06-04 vincentd
-* Add rights for manager in rule_validation_workflow (Deleted state)
+2008-06-04
+* remove bad commit
 
 2008-05-15 yusei
 * Add portal_transforms and mimetypes_registry. portal_notifications needs them.
