@@ -27,9 +27,13 @@
 ##############################################################################
 
 from AccessControl.User import UnrestrictedUser
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from AccessControl.SpecialUsers import system
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
+try:
+  from Zope2 import app
+except ImportError:
+  from Zope import app
 
 class PrivilegedUser(UnrestrictedUser):
   """User that bypasses all security checks, but retains an original
@@ -68,23 +72,25 @@ class UnrestrictedMethod(object):
   def __call__(self, *args, **kw):
     security_manager = getSecurityManager()
     user = security_manager.getUser()
-    isAnonymousUser =  user.getUserName()=='Anonymous User'
-    if user.getId() is None and not isAnonymousUser:
+    anonymous = (user.getUserName() == 'Anonymous User')
+    if user.getId() is None and not anonymous:
       # This is a special user, thus the user is not allowed to own objects.
       super_user = UnrestrictedUser(user.getUserName(), None,
                                     user.getRoles(), user.getDomains())
-    elif isAnonymousUser:
-      # switch to ERP5 SUPER_USER
-      # XXX: hard-coded username and roles (this is bad but no way we could 
-      # currently get context (i.e. switch to roles of owner of portal)
-      # another possibility is to pass username, roles from outside in constructor
-      super_user = UnrestrictedUser(SUPER_USER, None,
-                                    ('Manager', 'Assignor' ), ('',))
     else:
-      uf = user.aq_inner.aq_parent
-      # XXX is it better to get roles from the parent (i.e. portal)?
+      try:
+        # XXX is it better to get roles from the parent (i.e. portal)?
+        uf = user.aq_inner.aq_parent
+      except AttributeError:
+        uf = app().acl_users
       role_list = uf.valid_roles()
-      super_user = PrivilegedUser(user.getId(), None,
+      if anonymous:
+        # If the user is anonymous, use the id of the system user,
+        # so that it would not be treated as an unauthorized user.
+        user_id = str(system)
+      else:
+        user_id = user.getId()
+      super_user = PrivilegedUser(user_id, None,
                                   role_list, user.getDomains()).__of__(uf)
     newSecurityManager(None, super_user)
     try:
