@@ -77,7 +77,7 @@ history =  context.portal_workflow.getInfoFor(ob=packing_list,\n
 \n
 question_list = [question for question in history if question[\'action\'] == \'question_action\' ]\n
 if len(question_list) > 0:\n
-  question = last_question[-1][\'comment\']\n
+  question = question_list[-1][\'comment\']\n
 else:\n
   question = \'\'\n
 \n
@@ -174,7 +174,6 @@ Please visit ERP5: %(url)s\n
                             <string>question</string>
                             <string>question_list</string>
                             <string>len</string>
-                            <string>last_question</string>
                             <string>source_person</string>
                             <string>destination_decision_person</string>
                             <string>None</string>
