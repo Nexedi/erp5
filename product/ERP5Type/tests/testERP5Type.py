@@ -1807,12 +1807,6 @@ class TestPropertySheet:
               title =       beta_title, )
       beta_path = beta.getCategoryRelativeUrl()
 
-      beta.manage_permission('View', roles=[], acquire=0)
-      beta.manage_permission('Access contents information', roles=[], acquire=0)
-      # with this security setting, it's not possible to access "beta":
-      self.assertRaises(Unauthorized,
-          region_category.restrictedTraverse, "beta")
-
       gamma_id = "gamma"
       gamma_title = "Gamma System"
       gamma = region_category.newContent(
@@ -1824,6 +1818,13 @@ class TestPropertySheet:
       # Make sure categories are reindexed
       get_transaction().commit()
       self.tic()
+
+      beta.manage_permission('View', roles=[], acquire=0)
+      beta.manage_permission('Access contents information', roles=[], acquire=0)
+      # with this security setting, it's not possible to access "beta":
+      self.assertRaises(Unauthorized,
+          region_category.restrictedTraverse, "beta")
+
 
       # Create a new person, and associate it to beta and gamma.
       module = self.getPersonModule()
