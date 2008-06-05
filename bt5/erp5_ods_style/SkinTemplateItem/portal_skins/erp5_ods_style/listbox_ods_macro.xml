@@ -78,6 +78,12 @@
                        tal:condition="listboxline/isTitleLine">\n
               <tal:block metal:define-slot="list_header">\n
                 <table:table-row table:style-name=\'ro4\'>\n
+                  <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">\n
+                    <table:table-cell table:style-name=\'report-column-title\'\n
+                                      table:number-columns-spanned=\'1\'\n
+                                      office:value-type=\'string\'>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
                   <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
                     <tal:block tal:define="column_property python: column_item[1];\n
                                            column_id python: column_item[0]">\n
