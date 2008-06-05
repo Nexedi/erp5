@@ -70,7 +70,7 @@
 \n
 orga_id = "site_%3s" %(site.getCodification())\n
 org = context.organisation_module[orga_id]\n
-context.log(\'org\',org)\n
+\n
 return org\n
 </string> </value>
         </item>

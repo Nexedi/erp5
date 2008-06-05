@@ -38,6 +38,7 @@
             <value>
               <tuple>
                 <string>confirm</string>
+                <string>delete</string>
               </tuple>
             </value>
         </item>

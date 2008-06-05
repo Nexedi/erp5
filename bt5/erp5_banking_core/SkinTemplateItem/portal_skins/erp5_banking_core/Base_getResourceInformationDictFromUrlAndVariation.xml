@@ -153,9 +153,7 @@ if movement is not None: # case of history\n
 #    resource_dict[\'simulation_state_title\'] = movement.getTranslatedSimulationStateTitle()\n
 #  resource_dict[\'explanation_translated_relative_url\'] = "%s/%s" % \\\n
 #        (explanation_value.getTranslatedPortalType(),source_reference)\n
-#  context.log("explanation_uid", explanation_uid)\n
   catalog_explanation = cache_dict[\'cache_explanation\'][explanation_uid]\n
-#  context.log("explanation_uid url", catalog_explanation.relative_url)\n
   resource_dict[\'explanation_relative_url\'] = catalog_explanation.relative_url\n
   source_reference = catalog_explanation.source_reference\n
   resource_dict[\'source_reference\'] = catalog_explanation.source_reference\n
