@@ -79,7 +79,7 @@
             <key> <string>script_name</string> </key>
             <value>
               <list>
-                <string>check_companyInexistance</string>
+                <string>checkAccountInexistance</string>
               </list>
             </value>
         </item>

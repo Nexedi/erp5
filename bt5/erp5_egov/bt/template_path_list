@@ -1,3 +1,5 @@
 web_page_module/*
+web_site_module/dgid
+web_site_module/dgid/*
 web_site_module/egov_portal
 web_site_module/egov_portal/*

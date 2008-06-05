@@ -65,18 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document_module = context.portal_url.getPortalObject().getDefaultModule(\'document_module\')\n
-\n
-# get user name\n
+            <value> <string># get user name\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
 return context.portal_catalog(portal_type=context.getPortalDocumentTypeList(), \n
                               sort_on=\'creation_date\', \n
                               sort_order=\'reverse\',\n
                               owner=user_name);\n
-\n
-#document_module.searchFolder(portal_type=context.getPortalDocumentTypeList(), \n
-#                                    owner=user_name)\n
 </string> </value>
         </item>
         <item>
@@ -129,7 +124,6 @@ return context.portal_catalog(portal_type=context.getPortalDocumentTypeList(), \
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>document_module</string>
                             <string>user_name</string>
                           </tuple>
                         </value>

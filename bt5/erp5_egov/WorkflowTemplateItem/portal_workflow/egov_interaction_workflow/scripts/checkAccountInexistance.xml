@@ -65,21 +65,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>changed_object = state_change[\'object\']\n
+            <value> <string encoding="cdata"><![CDATA[
+
+changed_object = state_change[\'object\']\n
 login = changed_object.getCompanyName().lower()\n
 \n
 # check that no existing organisation have the same RCCM number or login\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-if len(changed_object.portal_catalog(portal_type=\'Organisation\',\n
-  corporate_registration_code=changed_object.getNinea())):\n
+\n
+result = changed_object.portal_catalog(portal_type=\'Organisation\',\n
+           corporate_registration_code=changed_object.getRccm())\n
+if len(result) > 1:\n
+  raise ValidationFailed, "Error : There is more than one company with the "\\\n
+    " registration code \'%s\'" % changed_object.getRccm()\n
+\n
+if len(result) and result[0].getObject().getReference():\n
   raise ValidationFailed, "Error : A company with the registration code \'%s\'"\\\n
-    " already exists" % changed_object.getNinea()\n
+    " already exists and have already an account" % changed_object.getRccm()\n
 \n
 if len((changed_object.portal_catalog(portal_type=\'Organisation\',\n
     reference=login))):\n
   raise ValidationFailed, "Error : A company with the login \'%s\'"\\\n
     " already exists" % login\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -128,6 +138,7 @@ if len((changed_object.portal_catalog(portal_type=\'Organisation\',\n
                             <string>login</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>result</string>
                             <string>len</string>
                           </tuple>
                         </value>
@@ -145,7 +156,7 @@ if len((changed_object.portal_catalog(portal_type=\'Organisation\',\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>check_companyInexistance</string> </value>
+            <value> <string>checkAccountInexistance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

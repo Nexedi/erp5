@@ -70,31 +70,35 @@
 portal = changed_object.getPortalObject()\n
 organisation_module = portal.getDefaultModule(portal_type=\'Organisation\')\n
 \n
+result = changed_object.portal_catalog(portal_type=\'Organisation\',\n
+           corporate_registration_code=changed_object.getRccm())\n
+\n
+# if the organisation don\'t exists, create it\n
+if not len(result):\n
+  organisation = organisation_module.newContent(\\\n
+      portal_type=\'Organisation\',\n
+      title=changed_object.getCompanyName(),\n
+      corporate_name=changed_object.getCompanyName(),\n
+      address_street_address=changed_object.getAddressStreetAddress(),\n
+      address_zip_code=changed_object.getAddressZipCode(),\n
+      address_city=changed_object.getAddressCity(),\n
+      address_region=changed_object.getAddressRegion(),\n
+      corporate_registration_code=changed_object.getRccm(),\n
+      vat_code=changed_object.getNinea())\n
+else:\n
+  organisation = result[0].getObject()\n
+\n
+# set the login and password required a manager role, so a script with a \n
+# proxy role is used\n
 login = changed_object.getCompanyName().lower()\n
-\n
-new_organisation = organisation_module.newContent(\\\n
-    portal_type=\'Organisation\',\n
-    title=changed_object.getCompanyName(),\n
-    corporate_name=changed_object.getCompanyName(),\n
-    address_street_address=changed_object.getAddressStreetAddress(),\n
-    address_zip_code=changed_object.getAddressZipCode(),\n
-    address_city=changed_object.getAddressCity(),\n
-    address_region=changed_object.getAddressRegion(),\n
-    corporate_registration_code=changed_object.getNinea(),\n
-    role=\'registry/entreprise\', #XXX this should not be hardcoded\n
-    reference=login)\n
-\n
-\n
-# set the password required a manager role, so a script with a proxy role is\n
-# used\n
 password = changed_object.Person_generatePassword()\n
-context.EGov_setPasswordAsManager(new_organisation, password)\n
+context.EGov_setLoginAndPasswordAsManager(organisation, login, password)\n
 \n
 # here, call a method to send credentials by email\n
 # XXX in the future, it should be possible to chose the mean to receive\n
 # credentials (email, sms, postal mail)\n
 user_email = changed_object.getEmail()\n
-changed_object.sendCrendentialsByEMail(login, password, user_email)\n
+context.sendCrendentialsByEMail(login, password, user_email)\n
 </string> </value>
         </item>
         <item>
@@ -149,8 +153,10 @@ changed_object.sendCrendentialsByEMail(login, password, user_email)\n
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>organisation_module</string>
+                            <string>result</string>
+                            <string>len</string>
+                            <string>organisation</string>
                             <string>login</string>
-                            <string>new_organisation</string>
                             <string>password</string>
                             <string>context</string>
                             <string>user_email</string>
