@@ -110,7 +110,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_stop_date</string>
-                        <string>my_site</string>
+                        <string>my_destination</string>
                         <string>listbox_total_price</string>
                       </list>
                     </value>
