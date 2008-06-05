@@ -145,8 +145,11 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
       for (i = 0; i < row_list.length; i++) {\n
         var fake_row = document.createElement("tr");\n
         var row_element_list = row_list[i];\n
-        for (j = 0; j < row_element_list.length; j++)\n
-          fake_row.appendChild(row_element_list[j]);\n
+        for (j = 0; j < row_element_list.length; j++) {\n
+          var fake_cell = document.createElement("td");\n
+          fake_cell.appendChild(row_element_list[j]);\n
+          fake_row.appendChild(fake_cell);\n
+        }\n
         fake_table.appendChild(fake_row);\n
       }\n
     }\n

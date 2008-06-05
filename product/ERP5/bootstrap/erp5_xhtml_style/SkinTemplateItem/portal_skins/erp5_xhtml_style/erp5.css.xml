@@ -599,11 +599,6 @@ table.fake {\n
   width: 100%;\n
 }\n
 \n
-table.fake > tr > fieldset {\n
-  display: table-cell;\n
-  float: none;\n
-}\n
-\n
 .content .field {\n
   position: relative;\n
   clear: left;\n
@@ -674,7 +669,8 @@ table.fake fieldset {\n
   border-width: 0;\n
   padding: 0;\n
   margin: 0;\n
-  width: 50%;\n
+  width: 100%;\n
+  float: none;\n
 }\n
 \n
 fieldset.center,\n
