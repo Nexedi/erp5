@@ -250,7 +250,7 @@ def split_head(CD_file_line_list):\n
     return {\'error\':True, \'message\':message_dict[\'12\'], \'head_dict\':{}}\n
 \n
   # Define destination\n
-  user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  user_site_list = context.Baobab_getUserAssignedRootSiteList()\n
   if user_site_list is None:\n
     return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
 \n
