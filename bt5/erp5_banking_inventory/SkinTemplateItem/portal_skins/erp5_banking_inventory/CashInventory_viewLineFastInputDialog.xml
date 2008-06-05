@@ -91,7 +91,7 @@ if currency_id == context.Baobab_getPortalReferenceCurrencyID():\n
 else:\n
   letter_list      = [\'not_defined\']\n
   variation_list   = [\'not_defined\']\n
-  cash_status_list = [\'not_defined\', \'valid\']\n
+  cash_status_list = [\'not_defined\']\n
 \n
 cash_detail_dict = {\'line_portal_type\'           : \'Cash Inventory Line\'\n
                     , \'operation_currency\'       : context.getPriceCurrencyId()\n

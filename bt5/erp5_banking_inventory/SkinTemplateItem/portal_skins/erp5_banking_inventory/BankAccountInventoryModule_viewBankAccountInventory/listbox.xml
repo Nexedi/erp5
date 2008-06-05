@@ -395,7 +395,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>EmptyByDefaultListBox_asHTML</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -404,6 +404,10 @@
                         <tuple>
                           <string>Bank Account Inventory</string>
                           <string>Bank Account Inventory</string>
+                        </tuple>
+                        <tuple>
+                          <string>Bank Account Inventory Group</string>
+                          <string>Bank Account Inventory Group</string>
                         </tuple>
                       </list>
                     </value>
