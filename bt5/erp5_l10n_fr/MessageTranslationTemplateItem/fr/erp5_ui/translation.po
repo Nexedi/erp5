@@ -168,6 +168,9 @@ msgstr "Activité en suspens"
 msgid "Add ${portal_type}"
 msgstr "Ajouter ${portal_type}"
 
+msgid "New ${portal_type}"
+msgstr "Nouveau ${portal_type}"
+
 msgid "Add Apparel Fabric Colour Variation"
 msgstr "Ajouter Coloris"
 
@@ -865,7 +868,7 @@ msgid "Complete variation matrix"
 msgstr "Autres variantes"
 
 msgid "Component"
-msgstr "Composant"
+msgstr "Fourniture"
 
 msgid "Component List"
 msgstr "Liste des Fournitures"
@@ -874,7 +877,7 @@ msgid "Component Variation"
 msgstr "Nom de la variante"
 
 msgid "Components"
-msgstr ""
+msgstr "Fournitures"
 
 msgid "Configure"
 msgstr "Configurer"
@@ -3008,4 +3011,22 @@ msgstr "Budget disponible"
 
 msgid "Budget Consumption"
 msgstr "Consommation budgétaire"
+
+msgid "Workflow Modification in Progress"
+msgstr "Changement d'état en cours"
+
+msgid "Change State"
+msgstr "Changer d'état"
+
+msgid "Taxs"
+msgstr "Taxes"
+
+msgid "Create User"
+msgstr "Créer un compte utilisateur"
+
+msgid "Base Contribution"
+msgstr ""
+
+msgid "Set Relation"
+msgstr "Établir la relation"
 
