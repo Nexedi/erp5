@@ -133,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(context.portal_categories.region, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
+            <value> <string>python: here.portal_categories.region.getCategoryChildTitleItemList(sort_id=\'translated_title\', checked_permission=\'View\', filter_node=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
