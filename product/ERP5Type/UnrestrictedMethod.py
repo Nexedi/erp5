@@ -27,6 +27,7 @@
 ##############################################################################
 
 from AccessControl.User import UnrestrictedUser
+from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
 
@@ -67,10 +68,18 @@ class UnrestrictedMethod(object):
   def __call__(self, *args, **kw):
     security_manager = getSecurityManager()
     user = security_manager.getUser()
-    if user.getId() is None:
+    isAnonymousUser =  user.getUserName()=='Anonymous User'
+    if user.getId() is None and not isAnonymousUser:
       # This is a special user, thus the user is not allowed to own objects.
       super_user = UnrestrictedUser(user.getUserName(), None,
                                     user.getRoles(), user.getDomains())
+    elif isAnonymousUser:
+      # switch to ERP5 SUPER_USER
+      # XXX: hard-coded username and roles (this is bad but no way we could 
+      # currently get context (i.e. switch to roles of owner of portal)
+      # another possibility is to pass username, roles from outside in constructor
+      super_user = UnrestrictedUser(SUPER_USER, None,
+                                    ('Manager', 'Assignor' ), ('',))
     else:
       uf = user.aq_inner.aq_parent
       # XXX is it better to get roles from the parent (i.e. portal)?
