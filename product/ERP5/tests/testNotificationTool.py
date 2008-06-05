@@ -31,6 +31,7 @@ import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
@@ -111,7 +112,22 @@ class TestNotificationTool(ERP5TypeTestCase):
   def getTitle(self):
     return "Notification Tool"
 
+  def createUser(self, name, role_list):
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(name, 'password', role_list, [])
+
+  def changeUser(self, name):
+    self.old_user = getSecurityManager().getUser()
+    user_folder = self.getPortal().acl_users
+    user = user_folder.getUserById(name).__of__(user_folder)
+    newSecurityManager(None, user)
+
+  def changeToPreviousUser(self):
+    newSecurityManager(None, self.old_user)
+
   def afterSetUp(self):
+    self.createUser('erp5user', ['Auditor', 'Author'])
+    self.createUser('manager', ['Manager'])
     portal = self.getPortal()
     if 'MailHost' in portal.objectIds():
       portal.manage_delObjects(['MailHost'])
@@ -120,6 +136,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     get_transaction().commit()
     self.tic()
+    self.changeUser('erp5user')
 
   def beforeTearDown(self):
     get_transaction().abort()
@@ -137,32 +154,36 @@ class TestNotificationTool(ERP5TypeTestCase):
     Create a user
     """
     person = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="userA",
-                                    password="passwordA",
-                                    default_email_text="userA@example.invalid")
+                                                  default_email_text="userA@example.invalid")
+    self.changeUser('manager')
+    person.edit(reference="userA", password="passwordA")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    self.changeToPreviousUser()
 
   def stepAddUserB(self, sequence=None, sequence_list=None, **kw):
     """
     Create a user
     """
     person = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="userB",
-                                    password="passwordA",
-                                    default_email_text="userB@example.invalid")
+                                                  default_email_text="userB@example.invalid")
+    self.changeUser('manager')
+    person.edit(reference="userB", password="passwordA")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    self.changeToPreviousUser()
 
   def stepAddUserWithoutEmail(self, sequence=None, sequence_list=None, **kw):
     """
     Create a user
     """
-    person = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="userWithoutEmail",
-                                    password="passwordA")
+    person = self.portal.person_module.newContent(portal_type="Person")
+
+    self.changeUser('manager')
+    person.edit(reference="userWithoutEmail", password="passwordA")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    self.changeToPreviousUser()
 
   def test_01_defaultBehaviour(self, quiet=quiet, run=run_all_test):
     if not run: return
