@@ -45,25 +45,54 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="doc_list python:here.Document_getRelatedDocumentList(relation_id=\'wiki_successor\')">\n
-  <div class="related_docs" tal:condition="doc_list">\n
-    <div class="title" i18n:translate="" i18n:domain="ui">Wiki successors</div>\n
-    <ul>\n
-      <li tal:repeat="doc doc_list">\n
-        <a tal:content="doc/getTitleOrId" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
-      </li>\n
-    </ul>\n
-  </div>\n
-</tal:block>\n
-<tal:block tal:define="doc_list python:here.Document_getRelatedDocumentList(relation_id=\'wiki_predecessor\')">\n
-  <div class="related_docs" tal:condition="doc_list">\n
-    <div class="title" i18n:translate="" i18n:domain="ui">Wiki predecessors</div>\n
-    <ul tal:define="doc_list python:here.Document_getRelatedDocumentList(relation_id=\'wiki_predecessor\')">\n
-      <li tal:repeat="doc doc_list">\n
-        <a tal:content="doc/getTitleOrId" tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
-      </li>\n
-    </ul>\n
-  </div>\n
+<tal:block tal:define="default_section_document python: here.getDefaultDocumentValue() or here">  \n
+\n
+  <tal:block tal:condition="default_section_document">\n
+    <tal:block tal:define="related_wiki_successor_document_list python:\n
+                             default_section_document.Document_getRelatedDocumentList(\n
+                                     relation_id=\'wiki_successor\');\n
+                           related_wiki_predecessor_document_list python:\n
+                             default_section_document.Document_getRelatedDocumentList(\n
+                                     relation_id=\'wiki_predecessor\');\n
+                           all_wiki_related_document_list python:\n
+                             list(related_wiki_successor_document_list) +\n
+                             list(related_wiki_predecessor_document_list)">\n
+\n
+      <div class="related_docs" tal:condition="related_wiki_successor_document_list">\n
+        <div class="title" i18n:translate="" i18n:domain="ui">Wiki successors</div>\n
+        <ul>\n
+          <li tal:repeat="doc related_wiki_successor_document_list">\n
+            <a tal:content="doc/getTitleOrId" \n
+                tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+          </li>\n
+        </ul>\n
+      </div>\n
+\n
+      <div class="related_docs" tal:condition="related_wiki_predecessor_document_list">\n
+        <div class="title" i18n:translate="" i18n:domain="ui">Wiki predecessors</div>\n
+        <ul>\n
+          <li tal:repeat="doc related_wiki_predecessor_document_list">\n
+            <a tal:content="doc/getTitleOrId" \n
+                tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+          </li>\n
+        </ul>\n
+      </div>\n
+\n
+      <div class="related_docs" tal:condition="not: all_wiki_related_document_list">\n
+        <div class="title" i18n:translate="" i18n:domain="ui">\n
+          No related wiki documents found.\n
+        </div>\n
+      </div>\n
+\n
+    </tal:block>\n
+  </tal:block>\n
+\n
+  <tal:block tal:condition="not: default_section_document">\n
+    <div class="title" i18n:translate="" i18n:domain="ui">\n
+      No related wiki documents found.\n
+    </div>\n
+  </tal:block>\n
+\n
 </tal:block>
 
 ]]></string> </value>
