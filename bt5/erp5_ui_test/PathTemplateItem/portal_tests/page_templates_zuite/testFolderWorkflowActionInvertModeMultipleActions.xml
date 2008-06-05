@@ -120,7 +120,7 @@ testFolderWorkflowActionInvertModeMultipleActions -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>Mass Workflow Transition</td>\n
+  <td>Change State</td>\n
 </tr>\n
 \n
 <!-- we have a listbox with 2 lines, one for 2 Draft Foos, the other for 1\n
