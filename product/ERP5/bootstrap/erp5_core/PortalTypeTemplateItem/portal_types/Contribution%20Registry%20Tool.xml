@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string></string> </value>
+            <value> <string>folder_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string></string> </value>
+            <value> <string>addFolder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
