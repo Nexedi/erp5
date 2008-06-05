@@ -45,7 +45,9 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="default_section_document python: here.getDefaultDocumentValue() or here">  \n
+<tal:block tal:define="\n
+  default_section_document python: test(here.getPortalType() in (\'Web Site\', \'Web Section\',), \n
+                                        here.getDefaultDocumentValue(), here)">  \n
 \n
   <tal:block tal:condition="default_section_document">\n
     <tal:block tal:define="related_wiki_successor_document_list python:\n
