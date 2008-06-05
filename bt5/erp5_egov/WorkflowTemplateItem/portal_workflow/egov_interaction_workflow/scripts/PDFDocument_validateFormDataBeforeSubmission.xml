@@ -76,9 +76,9 @@ portal_type = document.getPortalType()\n
 # dict of required documents\n
 attachement_type_dict = { \'Declaration TVA\':\n
                             {\n
-                             \'Carte ID\':\'Required\',\n
-                             \'Tableau des d\xc3\xa9penses\':\'Optional\',\n
-                             \'D\xc3\xa9tail des \xc3\xa9xon\xc3\xa9ratations\':\'Required\',\n
+                             \'ID Card\':\'Required\',\n
+                             \'Expenditure Table\':\'Optional\',\n
+                             \'Exemptions Details\':\'Required\',\n
                              \'Application Certificate\':\'Optional\',\n
                             },\n
                           \'Subscription Form\':\n
