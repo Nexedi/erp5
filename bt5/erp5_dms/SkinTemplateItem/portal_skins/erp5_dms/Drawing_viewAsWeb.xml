@@ -90,7 +90,6 @@
                     <key> <string>not_assigned</string> </key>
                     <value>
                       <list>
-                        <string>your_download_link</string>
                         <string>your_download_pdf</string>
                       </list>
                     </value>
