@@ -404,6 +404,10 @@ class ERP5TypeInformation( FactoryTypeInformation,
                               'getInstancePropertyAndBaseCategoryList')
     def getInstancePropertyAndBaseCategoryList(self):
       """Return all the properties and base categories of the portal type. """
+      # XXX Does not return the list of all properties and categories
+      # currently (as implementation does not follow exactly the accessor
+      # generation, like for Expression evaluation). Should be probably better
+      # to get the list from property holder and not from property sheet
       ptype_object = self
       # get the klass of the object based on the constructor document
       m = Products.ERP5Type._m
