@@ -30,18 +30,24 @@ from Products.CMFCore.Expression import Expression
 
 class PaySheetModelLine:
   """
-    Properties which allow to define a generic Price.
+    Properties for Pay Sheet Model Lines.
   """
-  _properties = ( 
+  _properties = (
     { 'id'          : 'editable',
-      'description' : 'If set to 1, the Pay Sheet Line values could be edited \
-          at the Pay Sheet calculation step',
+      'description' : 'If set to 1, the Pay Sheet Line values could be edited'
+                      ' at the Pay Sheet calculation step',
       'type'        : 'boolean',
       'mode'        : 'w' 
     },
     { 'id'          : 'calculation_script_id',
-      'description' : 'If no script found on Pay Sheet Model Lines, this \
-          script is used to do localised calculs',
+      'description' : 'If no script found on Pay Sheet Model Lines, this'
+                      ' script is used to do localised calculs',
+      'type'        : 'string',
+      'mode'        : 'w',
+    },
+    { 'id'          : 'source_annotation_line_reference',
+      'description' : 'The Payroll Service Provider will be the one defined in'
+                      ' the Annotation Line with this reference.',
       'type'        : 'string',
       'mode'        : 'w',
     },
