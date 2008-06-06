@@ -1701,7 +1701,10 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     types_tool = self.getPortalObject().portal_types
     types_list = list(types_tool.objectIds())
     for key in self._archive.keys():
-      portal_type, allowed_type = key.split(' | ')
+      try:
+        portal_type, allowed_type = key.split(' | ')
+      except ValueError:
+        raise ValueError('Invalid item %r in %s' % (key, self.name))
       # check properties corresponds to what is defined in site
       if not portal_type in types_list:
         raise ValueError, "Portal Type %s not found in site" %(portal_type,)
