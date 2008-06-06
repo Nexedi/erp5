@@ -1,14 +1,5 @@
 <local_roles_item>
  <local_roles>
-  <role id='CSC_DGID-DI-CGE'>
-   <item>Author</item>
-  </role>
-  <role id='DGID-DI-CGE'>
-   <item>Auditor</item>
-  </role>
-  <role id='admin'>
-   <item>Owner</item>
-  </role>
  </local_roles>
  <group_local_roles>
  </group_local_roles>
