@@ -516,7 +516,7 @@ class TestConstraint(PropertySheetTestCase):
               SetObjectBadTypedProperty \
               CreatePropertyTypeValidity \
               CallCheckConsistency \
-              CheckIfConstraintFailed \
+              CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
@@ -536,7 +536,7 @@ class TestConstraint(PropertySheetTestCase):
               SetObjectBadTypedProperty \
               CreatePropertyTypeValidity \
               CallFixConsistency \
-              CheckIfConstraintFailed \
+              CheckIfConstraintSucceeded \
               CallCheckConsistency \
               CheckIfConstraintSucceeded \
               '
@@ -550,7 +550,7 @@ class TestConstraint(PropertySheetTestCase):
               SetObjectIntLocalProperty \
               CreatePropertyTypeValidity \
               CallFixConsistency \
-              CheckIfConstraintFailed \
+              CheckIfConstraintSucceeded \
               CallCheckConsistency \
               CheckIfConstraintSucceeded \
               '
@@ -1429,8 +1429,7 @@ class TestConstraint(PropertySheetTestCase):
     message = consistency_message_list[0]
     self.assertEquals('Attribute title does not match',
                   str(message.getTranslatedMessage()))
-    
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestConstraint))

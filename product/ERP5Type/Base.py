@@ -61,6 +61,7 @@ from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransa
 from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer, CopyError,\
@@ -1426,7 +1427,15 @@ class Base( CopyContainer,
     if ERP5PropertyManager.hasProperty(self,key):
       ERP5PropertyManager._updateProperty(self, key, value)
     else:
-      ERP5PropertyManager._setProperty(self, key, value, type=type)
+      # Try to guess the type definition of this non defined property
+      for type_name, type_dict in type_definition.items():
+        # XXX type parameter name is bad, because it's a builtin function of
+        # python
+        if isinstance(value, __builtins__['type'](type_dict.get('default'))):
+          type = type_name
+          break
+      ERP5PropertyManager._setProperty(self, key, value,
+                                       type=type)
     # This should not be there, because this ignore all checks made by
     # the PropertyManager. If there is problems, please complain to
     # seb@nexedi.com
