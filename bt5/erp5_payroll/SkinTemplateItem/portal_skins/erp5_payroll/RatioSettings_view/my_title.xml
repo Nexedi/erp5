@@ -81,17 +81,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_width</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <int>40</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_permission</string> </key>
+                    <key> <string>editable_permission</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_role</string> </key>
+                    <key> <string>editable_role</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -105,11 +105,11 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>not_viewable</string> </key>
+                    <key> <string>not_viewable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>read_only</string> </key>
+                    <key> <string>read_only</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -117,13 +117,13 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>viewable_permission</string> </key>
+                    <key> <string>viewable_permission</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>viewable_role</string> </key>
+                    <key> <string>viewable_role</string> </key>
                     <value>
                       <list/>
                     </value>
