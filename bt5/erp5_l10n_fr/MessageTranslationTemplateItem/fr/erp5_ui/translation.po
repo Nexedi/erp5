@@ -3021,6 +3021,9 @@ msgstr "Écriture de paye"
 msgid "Pay Sheet Model"
 msgstr "Modèle de paye"
 
+msgid "Pay Sheet Models"
+msgstr "Modèles de paye"
+
 msgid "Work Period Start"
 msgstr "Début de période"
 
@@ -3103,7 +3106,7 @@ msgid "Employer Share Amount"
 msgstr "Montant Part Employeur"
 
 msgid "Payroll Service Provider"
-msgstr "Organisme Collecteur"
+msgstr "Organisme collecteur"
 
 msgid "Payroll Service"
 msgstr "Cotisation"
@@ -3191,4 +3194,7 @@ msgstr "Part salariale (Montant ou Taux)"
 
 msgid "Employer Share (Amount or Percent)"
 msgstr "Part employeur (Montant ou Taux)"
+
+msgid "Annotation Line Reference for Payroll Service Provider"
+msgstr "Reference de l'annotation pour l'organisme collecteur"
 
