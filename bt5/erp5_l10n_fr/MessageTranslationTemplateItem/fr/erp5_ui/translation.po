@@ -1855,7 +1855,7 @@ msgid "Payment term (day)"
 msgstr "Terme du payement"
 
 msgid "Payroll Services"
-msgstr ""
+msgstr "Cotisations"
 
 msgid "People"
 msgstr "Personnes"
