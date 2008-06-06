@@ -587,10 +587,13 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerSkillList()     , skill_path_list)
     self.assertEquals(person.getCareerSkillTitleList(), skill_title_list)
     self.assertEquals(person.getCareerSkillValueList(), skill_object_list)
+    self.assertEquals(person.getCareerSkillTitle(), skill_title_list[0])
+    self.assertEquals(person.getCareerSkillValue(), skill_object_list[0])
     # skill must be acquired on person 
     person.reindexObject(); get_transaction().commit(); self.tic()
     for skill_object in skill_object_list:
       self.failUnless(person in skill_object.getSkillRelatedValueList())
+    self.assertEquals(person.getSkillValue(), skill_object_list[0])
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
     """
