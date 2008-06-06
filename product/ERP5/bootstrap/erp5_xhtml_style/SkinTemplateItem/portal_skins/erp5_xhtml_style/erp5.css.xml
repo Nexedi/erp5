@@ -599,10 +599,17 @@ table.fake {\n
   width: 100%;\n
 }\n
 \n
+table.fake tr td {\n
+  vertical-align: top;\n
+  width: 50%;\n
+}\n
+\n
 .content .field {\n
   position: relative;\n
   clear: left;\n
   font-style: italic;\n
+  width: 100%;\n
+  overflow: auto;\n
 }\n
 \n
 .content .field .input {\n
