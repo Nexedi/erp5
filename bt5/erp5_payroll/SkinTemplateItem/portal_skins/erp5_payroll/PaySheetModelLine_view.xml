@@ -117,6 +117,8 @@
                         <string>my_int_index</string>
                         <string>my_reference</string>
                         <string>my_resource_title</string>
+                        <string>my_source_annotation_line_reference</string>
+                        <string>my_source_title</string>
                         <string>my_calculation_script_id</string>
                       </list>
                     </value>
