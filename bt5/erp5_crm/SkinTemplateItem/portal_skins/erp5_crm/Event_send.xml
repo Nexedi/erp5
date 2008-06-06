@@ -67,12 +67,6 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# Transit event workflow\n
-if \'event_workflow\' in context.portal_workflow.getWorkflowsFor(context):\n
-  context.plan()\n
-  context.order()\n
-  context.start()\n
-\n
 if body is None:\n
   body = context.getTextContent() #XXX This does not support structured text format.\n
 \n
@@ -145,6 +139,12 @@ for to_url in to_url_list:\n
 \n
 context.setData(mail_message)\n
 \n
+# Transit event workflow\n
+if context.getTypeInfo() is not None:\n
+  context.plan()\n
+  context.order()\n
+  context.start()\n
+\n
 if download:\n
   return mail_message\n
 
@@ -206,9 +206,9 @@ if download:\n
                             <string>attachment_list</string>
                             <string>download</string>
                             <string>kw</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
                             <string>sender</string>
                             <string>additional_headers</string>
                             <string>to_url_list</string>
