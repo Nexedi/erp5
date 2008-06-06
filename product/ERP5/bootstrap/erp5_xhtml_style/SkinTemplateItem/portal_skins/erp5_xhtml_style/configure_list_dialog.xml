@@ -114,11 +114,9 @@
                     <select name="field_columns">\n
                       <option selected="selected"\n
                               value="None"\n
-                              i18n:translate="" i18n:domain="ui">\n
-                        \n
-                      </option>\n
+                              i18n:translate="" i18n:domain="ui"></option>\n
                       <option tal:repeat="option all_columns"\n
-                              tal:content="python:option[1]"\n
+                              tal:content="python: option[1]"\n
                               tal:attributes="value python:option[0]"\n
                               i18n:translate="" i18n:domain="ui" />\n
                     </select>\n
