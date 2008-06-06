@@ -106,6 +106,12 @@ for model, sub_object_id_list in sub_object_by_model.items():\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type_list=[]</string> </value>
         </item>

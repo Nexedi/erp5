@@ -109,6 +109,12 @@ return movement_list\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>explanation_uid=None, **kw</string> </value>
         </item>

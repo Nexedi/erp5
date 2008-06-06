@@ -118,7 +118,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The date this model expires.</string> </value>
                 </item>
                 <item>
@@ -136,7 +136,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Expiration Date</string> </value>
                 </item>
               </dictionary>

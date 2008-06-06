@@ -95,6 +95,7 @@ line_list = []\n
 object_dict_list = []\n
 id = 0\n
 \n
+context.log(model_line_list)\n
 for model_line in model_line_list:\n
   base_category_list = model_line.getVariationBaseCategoryList()\n
   base_application_list = model_line.getBaseAmountTitleList()\n
@@ -108,9 +109,20 @@ for model_line in model_line_list:\n
   cartesian_product = cartesianProduct(list_of_list)\n
 \n
   previous_share = None\n
-\n
   object_dict = {}\n
+\n
+  if cartesian_product == [[]]:\n
+    context.log(\'rien\')\n
+    \n
+    share_dict = {}\n
+    if 0:\n
+      share_dict[cell.getTaxCategory()+\'_price\'] = 0\n
+      share_dict[cell.getTaxCategory()+\'_quantity\'] = 0\n
+    continue\n
+\n
   for tuple in cartesian_product:\n
+    context.log(tuple)\n
+\n
     share_dict = {}\n
     cell = model_line.getCell(*tuple)\n
     if cell is None:\n
@@ -301,8 +313,8 @@ return line_list\n
                             <string>None</string>
                             <string>previous_share</string>
                             <string>object_dict</string>
-                            <string>tuple</string>
                             <string>share_dict</string>
+                            <string>tuple</string>
                             <string>_apply_</string>
                             <string>cell</string>
                             <string>quantity</string>

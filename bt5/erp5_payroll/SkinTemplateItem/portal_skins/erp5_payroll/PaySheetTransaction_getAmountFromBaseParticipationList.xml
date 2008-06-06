@@ -129,6 +129,12 @@ return amount\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_participation_list=None, category_list=None</string> </value>
         </item>

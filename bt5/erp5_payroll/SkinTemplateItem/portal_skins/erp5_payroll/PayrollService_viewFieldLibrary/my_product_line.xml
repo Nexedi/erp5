@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>TODO: may change in the near future</string> </value>
                 </item>
                 <item>
@@ -94,7 +94,7 @@
                     <value> <string>Resource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Tax Classification</string> </value>
                 </item>
               </dictionary>

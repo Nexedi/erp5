@@ -101,6 +101,12 @@ return category_list\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>matrixbox=0, base_id=\'movement\',**kw</string> </value>
         </item>

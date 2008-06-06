@@ -67,7 +67,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -84,7 +84,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -96,7 +96,7 @@
                     <value> <string>PayrollService_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -104,7 +104,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Base Application</string> </value>
                 </item>
               </dictionary>

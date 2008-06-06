@@ -82,7 +82,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The script used to calculated the withhold amount for this line instead of the default script</string> </value>
                 </item>
                 <item>
@@ -98,7 +98,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Model Line Calculation Script</string> </value>
                 </item>
               </dictionary>
