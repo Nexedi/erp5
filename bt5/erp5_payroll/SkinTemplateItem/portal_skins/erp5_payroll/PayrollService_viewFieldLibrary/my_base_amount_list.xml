@@ -94,7 +94,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key>                 <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -104,8 +104,8 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Base Participation</string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Base Contribution</string> </value>
                 </item>
               </dictionary>
             </value>
