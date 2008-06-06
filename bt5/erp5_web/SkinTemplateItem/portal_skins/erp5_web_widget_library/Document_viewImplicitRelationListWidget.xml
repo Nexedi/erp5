@@ -46,10 +46,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block tal:define="\n
-  default_section_document python: test(here.getPortalType() in (\'Web Site\', \'Web Section\',), \n
-                                        here.getDefaultDocumentValue(), here)">  \n
+  default_section_document python: request.get(\'current_web_document\', here);\n
+  isDocument python: default_section_document.isDocument;">  \n
 \n
-  <tal:block tal:condition="default_section_document">\n
+  <tal:block tal:condition="isDocument">\n
     <tal:block tal:define="related_wiki_successor_document_list python:\n
                              default_section_document.Document_getRelatedDocumentList(\n
                                      relation_id=\'wiki_successor\');\n
@@ -89,7 +89,7 @@
     </tal:block>\n
   </tal:block>\n
 \n
-  <tal:block tal:condition="not: default_section_document">\n
+  <tal:block tal:condition="not: isDocument">\n
     <div class="title" i18n:translate="" i18n:domain="ui">\n
       No related wiki documents found.\n
     </div>\n
