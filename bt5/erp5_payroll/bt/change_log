@@ -1,3 +1,6 @@
+2008-06-06 jerome
+* Merge skin folders to have only erp5_payroll
+
 2008-03-06 jerome
 * API change: PaySheetTransaction_getMovementList was returning the total price as "xxx_quantity" on brains. It now returns quantity, price and total_price respectivly.
 
