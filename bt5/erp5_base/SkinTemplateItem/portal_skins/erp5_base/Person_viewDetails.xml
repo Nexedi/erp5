@@ -130,6 +130,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_career_title</string>
                         <string>my_social_code</string>
                         <string>my_career_reference</string>
                         <string>my_career_collective_agreement_title</string>
