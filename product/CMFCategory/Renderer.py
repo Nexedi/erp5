@@ -220,13 +220,21 @@ class Renderer(Filter):
         label = url
       # Add base category in label
       if self.display_base_category:
+        base_category_display_method_id = 'getTitleOrId'
+        # If we are asked a translated version, display translated title of the
+        # base category
+        if self.translate_display or (self.display_id and 
+                                      'translated' in self.display_id.lower()):
+          base_category_display_method_id = 'getTranslatedTitleOrId'
         if self.base_category:
           bc = value.portal_categories.resolveCategory(self.base_category)
-          label = '%s/%s' % (bc.getTitleOrId(), label)
+          bc_title = getattr(bc, base_category_display_method_id)()
+          label = '%s/%s' % (bc_title, label)
         else:
           if getattr(value, 'getBaseCategoryValue', None) is not None:
             bc = value.getBaseCategoryValue()
-            label = '%s/%s' % (bc.getTitleOrId(), label)
+            bc_title = getattr(bc, base_category_display_method_id)()
+            label = '%s/%s' % (bc_title, label)
 
       if self.is_right_display:
         item = [url, label]
