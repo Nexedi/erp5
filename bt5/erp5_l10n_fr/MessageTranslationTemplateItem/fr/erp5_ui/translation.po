@@ -1224,18 +1224,6 @@ msgstr "Lettre d'émission"
 msgid "Emit date"
 msgstr "Date"
 
-msgid "Employee"
-msgstr "Employé"
-
-msgid "Employee share rate (%)"
-msgstr "Part Employé (%)"
-
-msgid "Employer"
-msgstr "Employeur"
-
-msgid "Employer share rate (%)"
-msgstr "Part employeur (%)"
-
 msgid "Enable Preference"
 msgstr "Activer la préférence"
 
@@ -1815,23 +1803,11 @@ msgstr "Coller"
 msgid "Pay Sheet Line"
 msgstr "Ligne de Feuille de Salaire"
 
-msgid "Pay Sheet Lines"
-msgstr "Lignes de Feuille de Salaire"
-
-msgid "Pay Sheet Model"
-msgstr ""
-
-msgid "Pay Sheet Transaction"
-msgstr "Transaction de Feuille de Salaire"
-
 msgid "Pay Sheet Transaction Line"
 msgstr "Ligne de Transaction de Feuille de Salaire"
 
 msgid "Pay Sheet Transaction Lines"
 msgstr "Lignes comptables"
-
-msgid "Pay Sheet View"
-msgstr "Feuille de Paie"
 
 msgid "Pay sheet calculation done."
 msgstr "Calcul de feuille de salaire effectué."
@@ -1850,9 +1826,6 @@ msgstr "Règlement"
 
 msgid "Payment Condition"
 msgstr "Conditions de Règlement"
-
-msgid "Payment Date"
-msgstr "Date de paiement"
 
 msgid "Payment Delay (days)"
 msgstr "Délai de paiement"
@@ -3024,9 +2997,198 @@ msgstr "Taxes"
 msgid "Create User"
 msgstr "Créer un compte utilisateur"
 
-msgid "Base Contribution"
-msgstr ""
-
 msgid "Set Relation"
 msgstr "Établir la relation"
+
+msgid "Temporary Close Accounting Period"
+msgstr "Clôturer temporairement la période comptable"
+
+msgid "Tax Category"
+msgstr "Catégorie de Taxe"
+
+msgid "Base Application"
+msgstr "Appliqué sur"
+
+msgid "Base Contribution"
+msgstr "Contribue à"
+
+msgid "Calculation Order"
+msgstr "Ordre de calcul"
+
+msgid "Pay Sheet Transaction"
+msgstr "Écriture de paye"
+
+msgid "Pay Sheet Model"
+msgstr "Modèle de paye"
+
+msgid "Work Period Start"
+msgstr "Début de période"
+
+msgid "Work Period End"
+msgstr "Fin de période"
+
+msgid "Work Duration"
+msgstr "Durée de travail"
+
+msgid "Work Duration Unit"
+msgstr "Unitée de la durée de travail"
+
+msgid "Variation Base"
+msgstr "Axes de variantage"
+
+msgid "Variation Range"
+msgstr "Variantes"
+
+msgid "Social Security"
+msgstr "Sécurité sociale"
+
+msgid "Salary Range"
+msgstr "Tranches"
+
+msgid "PaySheet Order"
+msgstr "Ordre d'affichage"
+
+msgid "Editable"
+msgstr "Éditable"
+
+msgid "Default Calculation Script"
+msgstr "Script de calcul par défaut"
+
+msgid "Model Line Calculation Script"
+msgstr "Script de calcul"
+
+msgid "Base Salary"
+msgstr "Salaire de base"
+
+msgid "Deductible Tax"
+msgstr "Cotisation déductible"
+
+msgid "Net Salary"
+msgstr "Salaire net"
+
+msgid "Non Deductible Tax"
+msgstr "Cotisation non déductible"
+
+msgid "Non Tax Withholding"
+msgstr "Retenues sur salaire"
+
+msgid "Non Taxable Bonus"
+msgstr "Indemnitée non imposable"
+
+msgid "Overtime"
+msgstr "Heures supplémentaires"
+
+msgid "Total Deduction"
+msgstr "Total Retenues"
+
+msgid "Total Income"
+msgstr "Total Gains"
+
+msgid "Employee Share"
+msgstr "Part Salariale"
+
+msgid "Employee Share Rate"
+msgstr "Taux Part Salariale"
+
+msgid "Employee Share Amount"
+msgstr "Montant Part Salariale"
+
+msgid "Employer Share"
+msgstr "Part Employeur"
+
+msgid "Employer Share Rate"
+msgstr "Taux Part Employeur"
+
+msgid "Employer Share Amount"
+msgstr "Montant Part Employeur"
+
+msgid "Payroll Service Provider"
+msgstr "Organisme Collecteur"
+
+msgid "Payroll Service"
+msgstr "Cotisation"
+
+msgid "Employee"
+msgstr "Salarié"
+
+msgid "Employer"
+msgstr "Employeur"
+
+msgid "OverTime Duration Unit"
+msgstr "Unité de durée des heures supplémentaires"
+
+msgid "Overtime Duration"
+msgstr "Durée des heures supplémentaires"
+
+msgid "Annotation Line"
+msgstr "Annotation"
+
+msgid "Annotation Lines"
+msgstr "Annotations"
+
+msgid "Ratio Settings"
+msgstr "Constantes"
+
+msgid "Annotation Function"
+msgstr "Fonction de l'annotation"
+
+msgid "Annotation Value"
+msgstr "Valeur de l'annotation"
+
+msgid "Annotation Unit"
+msgstr "Unité de l'annotation"
+
+msgid "Apply Pay Sheet Model"
+msgstr "Appliquer le modèle"
+
+msgid "Pay Sheet Transaction updated."
+msgstr "Écriture de paye modifiée."
+
+msgid "Pay Sheet View"
+msgstr "Feuille de paye"
+
+msgid "Pay Sheet Lines"
+msgstr "Ligne de paye"
+
+msgid "Calculate Pay Sheet"
+msgstr "Calculer la feuille de paye"
+
+msgid "Pay Sheet Model Ratio Line"
+msgstr "Constante"
+
+msgid "Ratio Setting"
+msgstr "Constante"
+
+msgid "Ratio Setting Value"
+msgstr "Valeur de la Constante"
+
+msgid "Inherited Models"
+msgstr "Modèles hérités"
+
+msgid "Payment Date"
+msgstr "Date de réglement"
+
+msgid "Salary Ranges"
+msgstr "Tranches"
+
+msgid "Slice Min and Max"
+msgstr "Intervalle de la tranche"
+
+msgid "Slice Settings"
+msgstr "Tranches"
+
+msgid "Slice"
+msgstr "Tranche"
+
+msgid "Pay Sheet Model Lines"
+msgstr "Lignes de modèle"
+
+msgid "Pay Sheet Model Line"
+msgstr "Ligne de modèle"
+
+msgid "Employee Share (Amount or Percent)"
+msgstr "Part salariale (Montant ou Taux)"
+
+msgid "Employer Share (Amount or Percent)"
+msgstr "Part employeur (Montant ou Taux)"
 

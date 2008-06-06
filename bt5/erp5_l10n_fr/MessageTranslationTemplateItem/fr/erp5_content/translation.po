@@ -40,3 +40,49 @@ msgstr "Dettes"
 
 msgid "Cash"
 msgstr "Trésorerie"
+
+msgid "Tax Category"
+msgstr "Catégorie de Taxe"
+
+msgid "Base Application"
+msgstr "Appliqué sur"
+
+msgid "Base Contribution"
+msgstr "Contribue à"
+
+msgid "Salary Range"
+msgstr "Tranches"
+
+msgid "Base Salary"
+msgstr "Salaire de base"
+
+msgid "Deductible Tax"
+msgstr "Cotisation déductible"
+
+msgid "Net Salary"
+msgstr "Salaire net"
+
+msgid "Non Deductible Tax"
+msgstr "Cotisation non déductible"
+
+msgid "Non Tax Withholding"
+msgstr "Retenues sur salaire"
+
+msgid "Non Taxable Bonus"
+msgstr "Indemnitée non imposable"
+
+msgid "Overtime"
+msgstr "Heures supplémentaires"
+
+msgid "Total Deduction"
+msgstr "Total Retenues"
+
+msgid "Total Income"
+msgstr "Total Gains"
+
+msgid "Employee Share"
+msgstr "Part Salariale"
+
+msgid "Employer Share"
+msgstr "Part Employeur"
+
