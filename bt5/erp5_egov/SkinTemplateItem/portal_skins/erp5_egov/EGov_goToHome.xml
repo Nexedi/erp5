@@ -124,7 +124,7 @@ return result\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>portal</string>
                             <string>absolute_url</string>

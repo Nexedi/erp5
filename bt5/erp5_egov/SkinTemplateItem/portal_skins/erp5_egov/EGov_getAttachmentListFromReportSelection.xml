@@ -120,7 +120,7 @@ return params[\'attachment_list\']\n
                             <string>args</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>params</string>
                             <string>_getitem_</string>
                           </tuple>

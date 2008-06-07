@@ -122,7 +122,7 @@ return context.portal_catalog.countResults(**kw)\n
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>section_value</string>
                             <string>_getitem_</string>
                             <string>_apply_</string>

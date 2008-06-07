@@ -116,7 +116,7 @@ return len((context.portal_catalog(portal_type=\'Organisation\',\n
                             <string>request</string>
                             <string>len</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

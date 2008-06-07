@@ -92,7 +92,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>header</string> </key>
+                    <key> <string>header</string> </key>
                     <value>
                       <list>
                         <string>header_section</string>
@@ -101,7 +101,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>website_logo</string>

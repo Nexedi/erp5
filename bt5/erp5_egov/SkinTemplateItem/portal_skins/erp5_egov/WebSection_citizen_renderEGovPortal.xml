@@ -88,13 +88,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>authenticate</string> </key>
+                    <key> <string>authenticate</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
                         <string>my_documents</string>
@@ -105,7 +105,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>tools</string> </key>
+                    <key> <string>tools</string> </key>
                     <value>
                       <list>
                         <string>tools_tab</string>
@@ -113,13 +113,13 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>upload</string> </key>
+                    <key> <string>upload</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>vip_space</string> </key>
+                    <key> <string>vip_space</string> </key>
                     <value>
                       <list>
                         <string>become_vip</string>
@@ -127,7 +127,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>widget_space</string> </key>
+                    <key> <string>widget_space</string> </key>
                     <value>
                       <list>
                         <string>listboxPendingApplications</string>
