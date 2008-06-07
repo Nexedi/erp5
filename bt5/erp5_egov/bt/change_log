@@ -1,3 +1,6 @@
+2008-06-07 fabien
+* move all web page and web site to safi_egov bt
+
 2008-06-04 fabien
 * enhance EGov_Base_editAndNextStep script, now it should be possible to not
 have a modified Base_edit script
