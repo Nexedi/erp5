@@ -4,3 +4,7 @@ from Folder import Folder
 from SimpleItem import SimpleItem
 from XMLObject import XMLObject
 from DocumentationHelper import DocumentationHelper
+from BaseType import BaseType
+from ActionInformation import ActionInformation
+from RoleInformation import RoleInformation
+from TranslationInformation import TranslationInformation
