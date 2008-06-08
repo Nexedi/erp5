@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-
-
 class SimpleItem:
     """
         Properties of a simple item with title and description

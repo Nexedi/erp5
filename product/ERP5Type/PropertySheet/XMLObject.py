@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-
 class XMLObject:
     """
         Base properties for all ERP5 synchronizable
