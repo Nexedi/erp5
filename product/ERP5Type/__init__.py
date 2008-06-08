@@ -29,6 +29,9 @@
     ERP5Type is provides a RAD environment for Zope / CMF
     All ERP5 classes derive from ERP5Type
 """
+# Switch(es) for ongoing development which require single code base
+USE_BASE_TYPE = False
+USE_INTERACTOR = False
 
 # Update ERP5 Globals
 import sys, Permissions, os
@@ -57,17 +60,23 @@ def allowClassTool():
 def initialize( context ):
   # Import Product Components
   from Tool import ClassTool, CacheTool, MemcachedTool, SessionTool
+  if USE_BASE_TYPE:
+    from Tool import TypesTool
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
-  content_classes = ( Base.Base, XMLObject.XMLObject, )
+  content_classes = ( Base.Base, XMLObject.XMLObject)
   portal_tools = ( ClassTool.ClassTool,
                    CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
-                   SessionTool.SessionTool )
+                   SessionTool.SessionTool,
+                  )
+  if USE_BASE_TYPE:
+    content_classes = content_classes + (ERP5TypeInformation,)
+    portal_tools = portal_tools + (TypesTool.TypesTool, )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
@@ -88,6 +97,9 @@ def initialize( context ):
   # We should register local classes at some point
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
+  # Experimental Interactor
+  if USE_INTERACTOR:
+    import Interactor
 
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo

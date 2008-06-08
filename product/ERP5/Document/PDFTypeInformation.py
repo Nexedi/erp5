@@ -28,22 +28,14 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+from Products.ERP5Type import USE_BASE_TYPE
 
-class PDFTypeInformation(XMLObject, ERP5TypeInformation):
+if not USE_BASE_TYPE:
+  from Products.ERP5Type.XMLObject import XMLObject
+  
+  class PDFTypeInformation(XMLObject):
     """
-      EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
-
-      A Type Information class which (will) implement
-      all PDF Editor related methods in a more generic
-      way.
-
-      WARNING: the XMLObject inheritance is only there
-      to prevent breaking existing systems. It 
-      must be removed from inheritance chain for this
-      class to be used. However, we are not planning to
-      commit it.
+      Dummy class
     """
     # CMF Type Definition
     meta_type = 'ERP5 PDF Type Information'
@@ -51,15 +43,32 @@ class PDFTypeInformation(XMLObject, ERP5TypeInformation):
     isPortalContent = 1
     isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+else:
+  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Folder
-                      , PropertySheet.BaseType
-                     )
+  class PDFTypeInformation(ERP5TypeInformation):
+      """
+        EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
+  
+        A Type Information class which (will) implement
+        all PDF Editor related methods in a more generic
+        way.
+      """
+      # CMF Type Definition
+      meta_type = 'ERP5 PDF Type Information'
+      portal_type = 'PDF Type'
+      isPortalContent = 1
+      isRADContent = 1
+  
+      # Declarative security
+      security = ClassSecurityInfo()
+      security.declareObjectProtected(Permissions.AccessContentsInformation)
+  
+      # Default Properties
+      property_sheets = ( PropertySheet.Base
+                        , PropertySheet.XMLObject
+                        , PropertySheet.CategoryCore
+                        , PropertySheet.SimpleItem
+                        , PropertySheet.Folder
+                        , PropertySheet.BaseType
+                      )

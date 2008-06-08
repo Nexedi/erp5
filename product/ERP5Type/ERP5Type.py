@@ -39,6 +39,7 @@ from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions
+from Products.ERP5Type import USE_BASE_TYPE
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 # Security uses ERP5Security by default
@@ -65,9 +66,9 @@ from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
-class ERP5TypeInformation( FactoryTypeInformation,
-                           RoleProviderBase,
-                           TranslationProviderBase ):
+class ERP5TypeInformationMixIn( FactoryTypeInformation,
+                                RoleProviderBase,
+                                TranslationProviderBase ):
     """
     ERP5 Types are based on FactoryTypeInformation
 
@@ -81,8 +82,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
     """
 
     __implements__ = ITypeInformation
-
     meta_type = 'ERP5 Type Information'
+
     security = ClassSecurityInfo()
 
     manage_options = ( SimpleItemWithProperties.manage_options[:1]
@@ -92,7 +93,8 @@ class ERP5TypeInformation( FactoryTypeInformation,
                      + SimpleItemWithProperties.manage_options[1:]
                      )
 
-    _properties = (TypeInformation._basic_properties + (
+    if not USE_BASE_TYPE:
+      _properties = (TypeInformation._basic_properties + (
         {'id':'factory', 'type': 'string', 'mode':'w',
          'label':'Product factory method'},
         {'id':'permission', 'type': 'string', 'mode':'w',
@@ -315,19 +317,6 @@ class ERP5TypeInformation( FactoryTypeInformation,
 
         return ob
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPropertySheetList')
-    def getPropertySheetList( self ):
-        """
-            Return list of content types.
-            XXX I (seb) think the name is bad
-                (jp) yes, the name is bad, it should be getAvailablePropertySheetList
-        """
-        result = Products.ERP5Type.PropertySheet.__dict__.keys()
-        result = filter(lambda k: not k.startswith('__'),  result)
-        result.sort()
-        return result
-
     security.declareProtected(Permissions.ManagePortal,
                               'setPropertySheetList')
     def setPropertySheetList( self, property_sheet_list):
@@ -344,26 +333,6 @@ class ERP5TypeInformation( FactoryTypeInformation,
         """
         return self.hidden_content_type_list
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBaseCategoryList')
-    def getBaseCategoryList( self ):
-        result = self.portal_categories.getBaseCategoryList()
-        result.sort()
-        return result
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getConstraintList')
-    def getConstraintList( self ):
-        result = Products.ERP5Type.Constraint.__dict__.keys()
-        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
-                        result)
-        result.sort()
-        return result
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getGroupList')
-    def getGroupList( self ):
-        return self.defined_group_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstanceBaseCategoryList')
@@ -780,7 +749,107 @@ class ERP5TypeInformation( FactoryTypeInformation,
         search_source_list.extend([ri.id, ri.title, ri.description,
           ri.getCondition(), ri.base_category_script ])
       return ' '.join(search_source_list)
+
+if USE_BASE_TYPE:
+  from Products.ERP5Type.XMLObject import XMLObject
+
+  class ERP5TypeInformation(XMLObject,
+                            ERP5TypeInformationMixIn):
+    """
+       EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
+    """
+    portal_type = 'Base Type'
+    isPortalContent = 1
+    isRADContent = 1
+
+    security = ClassSecurityInfo()
+
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.Folder
+                      , PropertySheet.BaseType
+                      )
+
+    def getTypeInfo(self, *args):
+      if not len(args): 
+        return XMLObject.getTypeInfo(self)
+      else:
+        return self.getParentValue().getTypeInfo(self, args[0])
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalPropertySheetList')
+    def getPortalPropertySheetList( self ):
+        """
+            Return list of content types.
+            XXX I (seb) think the name is bad
+                (jp) yes, the name is bad, it should be getAvailablePropertySheetList
+        """
+        result = Products.ERP5Type.PropertySheet.__dict__.keys()
+        result = filter(lambda k: not k.startswith('__'),  result)
+        result.sort()
+        return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalBaseCategoryList')
+    def getPortalBaseCategoryList( self ):
+        result = self.portal_categories.getBaseCategoryList()
+        result.sort()
+        return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalConstraintList')
+    def getPortalConstraintList( self ):
+        result = Products.ERP5Type.Constraint.__dict__.keys()
+        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
+                        result)
+        result.sort()
+        return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalTypeGroupList')
+    def getPortalTypeGroupList( self ):
+        return self.defined_group_list
+
+else:
+  class ERP5TypeInformation(ERP5TypeInformationMixIn):
+  
+    security = ClassSecurityInfo()
     
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPropertySheetList')
+    def getPropertySheetList( self ):
+        """
+            Return list of content types.
+            XXX I (seb) think the name is bad
+                (jp) yes, the name is bad, it should be getAvailablePropertySheetList
+        """
+        result = Products.ERP5Type.PropertySheet.__dict__.keys()
+        result = filter(lambda k: not k.startswith('__'),  result)
+        result.sort()
+        return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getBaseCategoryList')
+    def getBaseCategoryList( self ):
+        result = self.portal_categories.getBaseCategoryList()
+        result.sort()
+        return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getConstraintList')
+    def getConstraintList( self ):
+        result = Products.ERP5Type.Constraint.__dict__.keys()
+        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
+                        result)
+        result.sort()
+        return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getGroupList')
+    def getGroupList( self ):
+        return self.defined_group_list
 
 InitializeClass( ERP5TypeInformation )
 
@@ -799,6 +868,3 @@ Products.CMFCore.TypesTool.typeClasses.append(
                            'action':'manage_addERP5TIForm',
                            'permission':'Manage portal'}, )
 Products.CMFCore.TypesTool.TypesTool.manage_addERP5TIForm = manage_addERP5TIForm
-
-
-# vim: filetype=python syntax=python shiftwidth=2 

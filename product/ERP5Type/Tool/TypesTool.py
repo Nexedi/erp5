@@ -24,7 +24,7 @@ from Acquisition import aq_base
 
 class TypesTool(BaseTool, CMFCoreTypesTool):
   """
-      EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
+      EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
   """
 
   id = 'portal_types'
