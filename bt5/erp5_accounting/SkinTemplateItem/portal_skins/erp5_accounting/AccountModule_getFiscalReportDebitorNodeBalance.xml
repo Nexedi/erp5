@@ -89,7 +89,6 @@ else:\n
 sum = 0.0\n
 for inventory in portal.portal_simulation.getInventoryList(\n
                                     group_by_node=1,\n
-                                    group_by_mirror_section=1,\n
                                     **kw):\n
   if inventory.total_price > 0:\n
     sum += inventory.total_price\n
