@@ -1,3 +1,6 @@
+2008-06-09 yusei
+* Added Event_send proxy role (Manager).
+
 2008-06-06 yusei
 * In Event_send, invoke transition only when portal type is available (it means crm portal types are installed).
 
