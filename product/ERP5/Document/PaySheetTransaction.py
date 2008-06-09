@@ -324,6 +324,7 @@ class PaySheetTransaction(Invoice):
       return cmp(a.getIntIndex(), b.getIntIndex())
 
 
+    # XXX should this be recursive ? then should membership be strict
     base_amount_list = paysheet.portal_categories['base_amount'].contentValues()
     base_amount_list.sort(sortByIntIndex)
 
@@ -507,13 +508,16 @@ class PaySheetTransaction(Invoice):
 
     return pay_sheet_line_list
 
-  def getInheritedObjectValueList(self, portal_type_list):
+  def getInheritedObjectValueList(self, portal_type_list, property_list=()):
     '''Return a list of all subobjects of the herited model (incuding the
-      dependencies)
+      dependencies).
+      If property_list is provided, only subobjects with at least one of those
+      properties is defined will be taken into account
     '''
     model = self.getSpecialiseValue()
     model_reference_dict = model.getInheritanceModelReferenceDict(
-                                   portal_type_list=portal_type_list)
+                                   portal_type_list=portal_type_list,
+                                   property_list=property_list)
 
     sub_object_list = []
     traverse = self.getPortalObject().unrestrictedTraverse

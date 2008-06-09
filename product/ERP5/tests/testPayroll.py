@@ -1437,6 +1437,48 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(2, len(paysheet.contentValues()))
 
 
+  def test_apply_model_empty_line(self):
+    # apply a model with some empty lines
+    eur = self.portal.currency_module.EUR
+    employee = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee')
+    employer = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Employer')
+    model = self.portal.paysheet_model_module.newContent(
+                      portal_type='Pay Sheet Model',
+                      source_section_value=employee,
+                      destination_section_value=employer,
+                      price_currency_value=eur,
+                      payment_condition_payment_date=DateTime(2008, 1, 1),
+                      work_time_annotation_line_quantity=10)
+    employee_model = self.portal.paysheet_model_module.newContent(
+                      portal_type='Pay Sheet Model',
+                      specialise_value=model,
+                      work_time_annotation_line_quantity=20)
+    employee_model.setWorkTimeAnnotationLineQuantity(None)
+    paysheet = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      specialise_value=employee_model)
+    
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(employee, paysheet.getSourceSectionValue())
+    self.assertEquals(employer, paysheet.getDestinationSectionValue())
+    self.assertEquals(eur, paysheet.getResourceValue())
+    self.assertEquals(eur, paysheet.getPriceCurrencyValue())
+    self.assertEquals(DateTime(2008, 1, 1),
+                      paysheet.getPaymentConditionPaymentDate())
+    # WorkTimeAnnotationLine is not taken on employee_model, because the line
+    # is "empty", it is taken on model.
+    self.assertEquals(10, paysheet.getWorkTimeAnnotationLineQuantity())
+
+    # applying twice does not copy subdocument twice
+    self.assertEquals(2, len(paysheet.contentValues()))
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(2, len(paysheet.contentValues()))
+
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()

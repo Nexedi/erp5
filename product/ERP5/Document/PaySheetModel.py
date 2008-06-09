@@ -86,25 +86,35 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
     return cell
 
 
-  def getReferenceDict(self, portal_type_list):
+  def getReferenceDict(self, portal_type_list, property_list=()):
     '''Return all objects reference and id of the model wich portal_type is in
     the portal_type_list. If type does not have a reference, it's ID is used.
+    If property_list is provided, only objects for which at least one of
+    properties is true will be added.
     '''
-    reference_dict={}
+    reference_dict = {}
 
     object_list = self.contentValues(portal_type=portal_type_list,
                                      sort_on='id')
-
+    
     for obj in object_list:
-      reference_dict[obj.getProperty('reference', obj.getId())] = obj.getId()
+      keep = (len(property_list) == 0)
+      for property_ in property_list:
+        if obj.hasProperty(property_):
+          keep = 1
+          break
+      if keep:
+        reference_dict[obj.getProperty('reference',
+                                       obj.getId())] = obj.getId()
 
     return reference_dict
 
-  def getInheritanceModelReferenceDict(self, portal_type_list):
-    '''
-      return a dict with the model url as key and a list of reference 
-      as value. Normaly, a Reference appear only one time in the final output
-      It's use a Breadth First Search
+  def getInheritanceModelReferenceDict(self, portal_type_list, property_list=()):
+    '''Returns a dict with the model url as key and a list of reference as
+    value. Normaly, a Reference appear only one time in the final output.
+    It uses Breadth First Search. 
+    If property_list is not empty, documents for which all properties in
+    property_list are false will be skipped.
     '''
     model = self
     already_add_models = [model]
@@ -118,7 +128,8 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
       id_list = []
       specialise_list = model.getSpecialiseValueList()
 
-      model_reference_list=model.getReferenceDict(portal_type_list)
+      model_reference_list = model.getReferenceDict(
+                           portal_type_list, property_list=property_list)
       for reference in model_reference_list.keys():
         if reference not in reference_list:
           reference_list.append(reference)
