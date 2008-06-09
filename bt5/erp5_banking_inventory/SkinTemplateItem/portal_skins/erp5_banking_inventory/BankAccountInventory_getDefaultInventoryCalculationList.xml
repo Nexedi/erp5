@@ -126,7 +126,7 @@ return default_inventory_calculation_list\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>default_inventory_calculation_list</string>
                           </tuple>
                         </value>
