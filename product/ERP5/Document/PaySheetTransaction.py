@@ -169,38 +169,38 @@ class PaySheetTransaction(Invoice):
     resource_value = self.getPortalObject().unrestrictedTraverse(resource)
     # Add a new Pay Sheet Line
     payline = self.newContent(
-             portal_type                  = 'Pay Sheet Line',
-             title                        = title,
-             description                  = description,
-             destination                  = self.getSourceSection(),
-             source_section               = resource_value.getSource(),
-             resource_value               = resource_value,
-             destination_section          = self.getDestinationSection(),
-             variation_base_category_list = ('tax_category', 'salary_range'),
-             variation_category_list      = var_cat_list,
-             base_amount_list             = base_amount_list,
-             int_index                    = int_index,
-             **kw)
+                       portal_type='Pay Sheet Line',
+                       title=title,
+                       description=description,
+                       destination=self.getSourceSection(),
+                       source_section=resource_value.getSource(),
+                       resource_value=resource_value,
+                       destination_section=self.getDestinationSection(),
+                       variation_base_category_list=('tax_category',
+                                                     'salary_range'),
+                       variation_category_list=var_cat_list,
+                       base_amount_list=base_amount_list,
+                       int_index=int_index,
+                       **kw)
 
     # add cells categories to the Pay Sheet Line
     # it's a sort of inheritance of sub-object data
     if categories is not None:
       categories_list = payline.getCategoryList()
       categories_list.extend(categories)
-      payline.edit(categories = categories_list)
+      payline.edit(categories=categories_list)
 
     base_id = 'movement'
-    a = payline.updateCellRange(base_id = base_id)
+    a = payline.updateCellRange(base_id=base_id)
     # create cell_list
     for cell in good_cell_list:
-      paycell = payline.newCell(base_id = base_id, *cell['category_list'])
+      paycell = payline.newCell(base_id=base_id, *cell['category_list'])
       # if the price aven't be completed, it should be set to 1 (=100%)
       if not cell['price']:
         cell['price'] = 1
-      paycell.edit( mapped_value_property_list = ('price', 'quantity'),
-                    force_update               = 1,
+      paycell.edit(mapped_value_property_list=('price', 'quantity'),
+                    force_update=1,
                     **cell)
-
     return payline
 
 
@@ -312,7 +312,6 @@ class PaySheetTransaction(Invoice):
     # Get Precision
     precision = paysheet.getPriceCurrencyValue().getQuantityPrecision()
 
-
     # in this dictionary will be saved the current amount corresponding to 
     # the tuple (tax_category, base_amount) :
     # current_amount = base_amount_dict[base_amount][share]
@@ -339,7 +338,7 @@ class PaySheetTransaction(Invoice):
 
     # main loop : find all informations and create cell and PaySheetLines
     for model_line in model_line_list:
-      cell_list       = []
+      cell_list = []
       # test with predicate if this model line could be applied
       if not model_line.test(paysheet,):
         # This model_line should not be applied
@@ -348,14 +347,14 @@ class PaySheetTransaction(Invoice):
             ( model_line.getTitle(), model_line.getRelativeUrl() ))
         continue
 
-      service          = model_line.getResourceValue()
+      service = model_line.getResourceValue()
       if service is None:
         raise ValueError, 'Model Line %s has no resource' % (
                                         model_line.getRelativeUrl())
-      title            = model_line.getTitleOrId()
-      int_index        = model_line.getFloatIndex()
+      title = model_line.getTitleOrId()
+      int_index = model_line.getFloatIndex()
       base_amount_list = model_line.getBaseAmountList()
-      resource         = service.getRelativeUrl()
+      resource = service.getRelativeUrl()
 
       if model_line.getDescription():
         desc = model_line.getDescription()
@@ -490,13 +489,13 @@ class PaySheetTransaction(Invoice):
       if cell_list:
         # create the PaySheetLine
         pay_sheet_line = paysheet.createPaySheetLine(
-                                            title     = title,
-                                            resource  = resource,
-                                            int_index = int_index,
-                                            desc      = desc,
-                                            base_amount_list = base_amount_list,
-                                            cell_list = cell_list,
-                                            categories= categories)
+                                            title=title,
+                                            resource=resource,
+                                            int_index=int_index,
+                                            desc=desc,
+                                            base_amount_list=base_amount_list,
+                                            cell_list=cell_list,
+                                            categories=categories)
         pay_sheet_line_list.append(pay_sheet_line)
 
 
