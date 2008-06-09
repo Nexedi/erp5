@@ -238,4 +238,9 @@ class ItemListGetter(BaseGetter):
     psyco.bind(__call__)
 
 
-# And Tester ???
+class Tester(ListGetter):
+  """Tests if the category is set.
+  """
+  def __call__(self, instance, *args, **kw):
+    return not not ListGetter.__call__(self, instance, *args, **kw)
+

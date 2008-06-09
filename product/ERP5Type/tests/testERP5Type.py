@@ -1793,6 +1793,13 @@ class TestPropertySheet:
       foo.setRegionValueSet([gamma], 
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
+
+      # check hasCategory accessors
+      foo.setRegionValue(None)
+      self.assertEquals(None, foo.getRegion())
+      self.assertFalse(foo.hasRegion())
+      foo.setRegionValue(beta)
+      self.assertTrue(foo.hasRegion())
     
     def test_category_accessor_to_unaccessible_documents(self):
       # Category Accessors raises Unauthorized when you try to access objects

@@ -1859,6 +1859,11 @@ def createCategoryAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
 
+  accessor_name = 'has' + UpperCase(id)
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, Category.Tester, ())
+    property_holder.declareProtected(read_permission, accessor_name)
+
   setter_name = 'set' + UpperCase(id)
   if not hasattr(property_holder, setter_name):
     property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
