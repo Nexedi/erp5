@@ -44,7 +44,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                         <dtml-if expr="isMethodFiltered(id)">checked</dtml-if> value="1">
         </td>
       </tr>
-      <dtml-if expr="getFilteredPortalTypeList(method_id)">
+      <dtml-if expr="isMethodFiltered(id)">
       <tr>
         <td align="left" valign="top">
         Portal Type <select size="5" multiple="multiple" name="<dtml-var id>_type">
