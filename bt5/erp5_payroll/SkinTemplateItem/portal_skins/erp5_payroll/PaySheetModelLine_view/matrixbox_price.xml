@@ -62,7 +62,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key>                 <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getProperty(\'price\')</string> </value>
+            <value> <string>python: cell is not None and cell.getProperty(\'price\')</string> </value>
         </item>
       </dictionary>
     </pickle>

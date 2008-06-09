@@ -63,7 +63,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key>                 <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -77,7 +77,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>precision</string> </key>
+                    <key>                 <string>precision</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -130,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getProperty(\'quantity\')</string> </value>
+            <value> <string>python: cell is not None and cell.getProperty(\'quantity\')</string> </value>
         </item>
       </dictionary>
     </pickle>
