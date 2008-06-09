@@ -102,7 +102,7 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryItemList')
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
-                                   display_id='title',
+                                   display_id='logical_path',
                                    current_category=None,**kw):
     """
       Returns the list of possible variations
@@ -125,7 +125,7 @@ class Amount(Base, Variated):
                              is_right_display=0,
                              display_none_category=0, base=base,
                              current_category=current_category,
-                             display_id='logical_path',**kw).\
+                             display_id=display_id, **kw).\
                                                render(category_list))
       object_list = [x for x in resource_list \
                        if x.getPortalType() != 'Category']
@@ -134,7 +134,7 @@ class Amount(Base, Variated):
                              base_category=base_category,
                              display_none_category=0, base=base,
                              current_category=current_category,
-                             display_id=display_id,**kw).\
+                             display_id='title', **kw).\
                                                render(object_list))
     return variation_category_item_list
 
