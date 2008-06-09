@@ -387,8 +387,8 @@ class TestQuery(unittest.TestCase):
   def testQuotedStringFullTextKey(self):
     q = Query(title='Foo d\'Ba', type='fulltext')
     self.assertEquals(
-        dict(where_expression="MATCH title AGAINST ('Foo d''Ba' )",
-             select_expression_list=["MATCH title AGAINST ('Foo d''Ba' )"
+        dict(where_expression="MATCH title AGAINST ('+Foo +d''Ba' IN BOOLEAN MODE)",
+             select_expression_list=["MATCH title AGAINST ('+Foo +d''Ba' IN BOOLEAN MODE)"
                                      " AS title_relevance"]),
           q.asSQLExpression())
 
