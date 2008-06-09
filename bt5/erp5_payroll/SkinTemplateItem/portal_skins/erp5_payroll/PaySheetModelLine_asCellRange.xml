@@ -81,8 +81,9 @@ def framing(cell, name):\n
     # This error happens when the cell is not found in the parent model or any\n
     # inherited model.\n
     raise ValueError, "PaySheetModelLine_asCellRange: cell is None for %s" % name\n
-  return \'%s <= %s < %s\' % (str(cell.getQuantityRangeMin()), name,\n
-      str(cell.getQuantityRangeMax()))\n
+  return \'%s <= %s < %s\' % (cell.getQuantityRangeMin(),\n
+                            name,\n
+                            cell.getQuantityRangeMax())\n
 \n
 \n
 translateString = context.Base_translateString\n
@@ -95,6 +96,7 @@ if matrixbox :\n
     for base_category in base_category_list:\n
       category_cell_range = []\n
       category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,),\n
+                                                                display_id=\'translated_logical_path\',\n
                                                                 checked_permission=\'View\')\n
       for category_item in category_item_list:\n
         if base_category == \'salary_range\':\n
@@ -103,13 +105,14 @@ if matrixbox :\n
                       category_item[0])))\n
         elif base_category == \'tax_category\':\n
           category_cell_range.append((category_item[1], \n
-            translateString(\'%s (Amount or Percent)\' % category_item[0])))\n
+            translateString(\'${tax_category_title} (Amount or Percent)\',\n
+                            mapping=dict(tax_category_title=category_item[0]))))\n
         else:\n
           raise ValueError, "PaySheetModelLine_asCellRange: the two categories "\\\n
                 "must could be only tax_category and salary_range"\n
       cell_range.append(category_cell_range)\n
 \n
-    cell_range = filter(lambda x: x != [], cell_range )\n
+    cell_range = filter(lambda x: x != [], cell_range)\n
   return cell_range\n
 else:\n
   list_of_category_list = []\n
@@ -185,6 +188,7 @@ else:\n
                             <string>category_item_list</string>
                             <string>category_item</string>
                             <string>_getitem_</string>
+                            <string>dict</string>
                             <string>ValueError</string>
                             <string>filter</string>
                             <string>list_of_category_list</string>
