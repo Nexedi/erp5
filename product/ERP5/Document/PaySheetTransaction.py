@@ -173,7 +173,6 @@ class PaySheetTransaction(Invoice):
                        title=title,
                        description=description,
                        destination=self.getSourceSection(),
-                       source_section=resource_value.getSource(),
                        resource_value=resource_value,
                        destination_section=self.getDestinationSection(),
                        variation_base_category_list=('tax_category',
@@ -185,9 +184,10 @@ class PaySheetTransaction(Invoice):
 
     # add cells categories to the Pay Sheet Line
     # it's a sort of inheritance of sub-object data
-    if categories is not None:
+    if categories:
       categories_list = payline.getCategoryList()
       categories_list.extend(categories)
+      # XXX editing categories directly is wrong !
       payline.edit(categories=categories_list)
 
     base_id = 'movement'
@@ -199,8 +199,8 @@ class PaySheetTransaction(Invoice):
       if not cell['price']:
         cell['price'] = 1
       paycell.edit(mapped_value_property_list=('price', 'quantity'),
-                    force_update=1,
-                    **cell)
+                   force_update=1,
+                   **cell)
     return payline
 
 
@@ -355,6 +355,23 @@ class PaySheetTransaction(Invoice):
       int_index = model_line.getFloatIndex()
       base_amount_list = model_line.getBaseAmountList()
       resource = service.getRelativeUrl()
+      
+      # get the service provider, either on the model line, or using the
+      # annotation line reference.
+      source_section = None
+      source_annotation_line_reference = \
+                    model_line.getSourceAnnotationLineReference()
+      if model_line.getSource():
+        source_section = model_line.getSource()
+      elif source_annotation_line_reference:
+        for annotation_line in paysheet.contentValues(
+                                    portal_type='Annotation Line'):
+          annotation_line_reference = annotation_line.getReference() \
+                                           or annotation_line.getId()
+          if annotation_line_reference == source_annotation_line_reference \
+              and annotation_line.getSource():
+            source_section = annotation_line.getSource()
+            break
 
       if model_line.getDescription():
         desc = model_line.getDescription()
@@ -491,6 +508,7 @@ class PaySheetTransaction(Invoice):
         pay_sheet_line = paysheet.createPaySheetLine(
                                             title=title,
                                             resource=resource,
+                                            source_section=source_section,
                                             int_index=int_index,
                                             desc=desc,
                                             base_amount_list=base_amount_list,

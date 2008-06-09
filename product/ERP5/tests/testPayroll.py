@@ -125,20 +125,18 @@ class TestPayrollMixin(ERP5TypeTestCase):
     self.salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
 
 
-    payroll_service_organisation = self.createOrganisation(id='urssaf',
-                                                           title='URSSAF')
-    self.urssaf=self.createPayrollService(id=self.urssaf_id,
+    self.payroll_service_organisation = self.createOrganisation(
+                                          id='urssaf', title='URSSAF')
+    self.urssaf = self.createPayrollService(id=self.urssaf_id,
         title='State Insurance',
-        organisation=payroll_service_organisation,
         base_amount_list=['deductible_tax',],
         product_line='state_insurance',
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.urssaf_slice_list + \
                                 self.urssaf_share_list)
 
-    self.labour=self.createPayrollService(id=self.labour_id,
+    self.labour = self.createPayrollService(id=self.labour_id,
         title='Labour',
-        organisation=None,
         product_line='labour',
         base_amount_list=['base_salary', 'gross_salary'],
         variation_base_category_list=['tax_category', 'salary_range'],
@@ -288,9 +286,10 @@ class TestPayrollMixin(ERP5TypeTestCase):
     self.tic()
     return organisation
 
-  def createPayrollService(self, id='', title='', organisation='',
+  def createPayrollService(self, id='', title='',
       base_amount_list=None, variation_base_category_list=None,
       variation_category_list=None, product_line=None, **kw):
+
     payroll_service_portal_type = 'Payroll Service'
     payroll_service_module = self.portal.getDefaultModule(\
                                     portal_type=payroll_service_portal_type)
@@ -304,14 +303,13 @@ class TestPayrollMixin(ERP5TypeTestCase):
     if hasattr(payroll_service_module, id):
       payroll_service_module.manage_delObjects([id])
 
-    payroll_service = payroll_service_module.newContent(\
-        title=title,
-        portal_type                  = self.payroll_service_portal_type,
-        id                           = id,
-        source_value                 = organisation,
-        quantity_unit                = 'time/month',
-        product_line                 = product_line,
-        base_amount_list             = base_amount_list)
+    payroll_service = payroll_service_module.newContent(
+                            title=title,
+                            portal_type=self.payroll_service_portal_type,
+                            id=id,
+                            quantity_unit='time/month',
+                            product_line=product_line,
+                            base_amount_list=base_amount_list)
     payroll_service.setVariationBaseCategoryList(variation_base_category_list)
     payroll_service.setVariationCategoryList(variation_category_list)
     get_transaction().commit()
@@ -378,9 +376,17 @@ class TestPayrollMixin(ERP5TypeTestCase):
         self.france_settings_slice_c, self.plafond*4, self.plafond*8))
     return slice_list
 
-  def createModelLine(self, model, id, variation_category_list,
-      resource, slice_list, share_list, values, editable=False,
-      base_amount_list=['base_salary']):
+  def createModelLine(self,
+                      model,
+                      id,
+                      variation_category_list,
+                      resource,
+                      slice_list,
+                      share_list,
+                      values,
+                      editable=False,
+                      source_value=None,
+                      base_amount_list=['base_salary']):
     '''
       test the function addModelLine and test if the model line has been
       well created.
@@ -411,14 +417,14 @@ class TestPayrollMixin(ERP5TypeTestCase):
 
     if hasattr(model, id):
       model.manage_delObjects([id])
-    model_line = model.newContent(\
-        portal_type                  = self.paysheet_model_line_portal_type,
-        id                           = id,
-        resource_value               = resource,
-        source_section_value         = model.getSourceSectionValue(),
-        editable                     = editable,
-        base_amount_list             = base_amount_list,
-        variation_category_list      = variation_category_list,)
+    model_line = model.newContent(
+                        portal_type=self.paysheet_model_line_portal_type,
+                        id=id,
+                        resource_value=resource,
+                        source_value=source_value,
+                        editable=editable,
+                        base_amount_list=base_amount_list,
+                        variation_category_list=variation_category_list,)
     get_transaction().commit()
     self.tic()
 
@@ -467,6 +473,7 @@ class TestPayrollMixin(ERP5TypeTestCase):
       Calcul the given paysheet like if you hace click on the 'Calculation of
       the Pay Sheet Transaction' action button.
       XXX Editable line are not yet take into account
+      XXX this method should not exist ! use the standard method
     '''
     paysheet_line_list = \
         paysheet.createPaySheetLineList()
@@ -626,10 +633,12 @@ class TestPayroll(TestPayrollMixin):
     model_line1 = self.createModelLine(model=self.model,
         id=model_line_id1,
         variation_category_list=variation_category_list_urssaf,
-        resource=self.urssaf, share_list=self.urssaf_share_list,
+        resource=self.urssaf,
+        share_list=self.urssaf_share_list,
         slice_list=self.urssaf_slice_list,
         values=[[[None, 0.01], [None, 0.02], [None, 0.03]], [[None, 0.04],
-          [None, 0.05], [None, 0.06]]])
+               [None, 0.05], [None, 0.06]]],
+        source_value=self.payroll_service_organisation)
 
     model_line2 = self.createModelLine(model=self.model,
         id=model_line_id2,
@@ -668,6 +677,9 @@ class TestPayroll(TestPayrollMixin):
 
         self.assertEqualAmounts(pay_sheet_line, correct_value_slice_list,
             base_salary, i)
+        self.assertEquals(
+            [self.payroll_service_organisation.getRelativeUrl()],
+            pay_sheet_line._getCategoryMembershipList('source_section'))
 
       elif service == self.labour_id:
         cell = pay_sheet_line.getCell(\
@@ -675,6 +687,8 @@ class TestPayroll(TestPayrollMixin):
             'salary_range/'+ self.france_settings_forfait)
         value = cell.getTotalPrice()
         self.assertEqual(base_salary, value)
+        self.assertEquals([],
+            pay_sheet_line._getCategoryMembershipList('source_section'))
 
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
@@ -1436,7 +1450,6 @@ class TestPayroll(TestPayrollMixin):
     paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(2, len(paysheet.contentValues()))
 
-
   def test_apply_model_empty_line(self):
     # apply a model with some empty lines
     eur = self.portal.currency_module.EUR
@@ -1477,6 +1490,59 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(2, len(paysheet.contentValues()))
     paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(2, len(paysheet.contentValues()))
+
+  def test_calculate_paysheet_source_annotation_line_reference(self):
+    # the payroll service provider can be specified using the reference of an
+    # annotation line.
+    eur = self.portal.currency_module.EUR
+    employee = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee')
+    employer = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Employer')
+    provider = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Payroll Service Provider')
+    model = self.portal.paysheet_model_module.newContent(
+                      portal_type='Pay Sheet Model',
+                      source_section_value=employee,
+                      destination_section_value=employer,
+                      price_currency_value=eur,)
+    model_line = model.newContent(
+                    portal_type='Pay Sheet Model Line',
+                    resource_value=self.urssaf,
+                    variation_category_list=['tax_category/employee_share'],
+                    source_annotation_line_reference='tax1')
+    model_line.updateCellRange(base_id='movement')
+    cell = model_line.newCell('tax_category/employee_share',
+                              portal_type='Pay Sheet Cell',
+                              base_id='movement')
+    cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setPrice(10)
+    cell.setQuantity(10)
+
+    annotation = model.newContent(
+                        portal_type='Annotation Line',
+                        reference='tax1',
+                        source_value=provider)
+
+    paysheet = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      specialise_value=model)
+    
+    paysheet.PaySheetTransaction_applyModel()
+    paysheet.createPaySheetLineList()
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(1, len(paysheet_line_list))
+    paysheet_line = paysheet_line_list[0]
+
+    self.assertEquals([provider.getRelativeUrl()],
+                      paysheet_line._getCategoryMembershipList('source_section'))
+    self.assertEquals(self.urssaf, paysheet_line.getResourceValue())
+    self.assertEquals(100, paysheet_line.getTotalPrice())
+    self.assertEquals(['tax_category/employee_share'],
+                      paysheet_line.getVariationCategoryList())
 
 
 import unittest
