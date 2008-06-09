@@ -1381,7 +1381,7 @@ class Base( CopyContainer,
     self._setProperty(key,value, type=type, **kw)
     self.reindexObject()
 
-  def _setProperty(self, key, value, type='string', **kw):
+  def _setProperty(self, key, value, type=None, **kw):
     """
       Previous Name: _setValue
 
@@ -1389,7 +1389,7 @@ class Base( CopyContainer,
 
       **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
     """
-    if type != 'string': # Speed
+    if type is not None: # Speed
       if type in list_types: # Patch for OFS PropertyManager
         key += '_list'
     accessor_name = '_set' + UpperCase(key)
@@ -1427,15 +1427,7 @@ class Base( CopyContainer,
     if ERP5PropertyManager.hasProperty(self,key):
       ERP5PropertyManager._updateProperty(self, key, value)
     else:
-      # Try to guess the type definition of this non defined property
-      for type_name, type_dict in type_definition.items():
-        # XXX type parameter name is bad, because it's a builtin function of
-        # python
-        if isinstance(value, __builtins__['type'](type_dict.get('default'))):
-          type = type_name
-          break
-      ERP5PropertyManager._setProperty(self, key, value,
-                                       type=type)
+      ERP5PropertyManager._setProperty(self, key, value, type=type)
     # This should not be there, because this ignore all checks made by
     # the PropertyManager. If there is problems, please complain to
     # seb@nexedi.com
