@@ -33,12 +33,9 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.AccountingTransactionLine import AccountingTransactionLine
 
 class PaySheetTransactionLine(AccountingTransactionLine):
-  """
-  Pay Sheet Transaction Lines allow to move some quantity of money from a source to a destination like
-  an Accounting Transaction Line with more informative content
-
-  A paysheet transaction line contain details of the paysheet calculation for accounting(ex: insurances, pension, helps...).
-
+  """Not used and here for compatibility.
+  
+  Pay Sheet Transaction Line portal type uses AccountingTransactionLine class
   """
 
   meta_type = 'ERP5 Pay Sheet Transaction Line'
