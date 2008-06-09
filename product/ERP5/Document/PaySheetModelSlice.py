@@ -69,8 +69,3 @@ class PaySheetModelSlice(DeliveryCell):
                       , PropertySheet.PaySheetModel
                       )
 
-    def reindexObject(self, *k, **kw):
-      """
-      Reindex children and simulation
-      """
-      self.recursiveReindexObject(*k,**kw)
