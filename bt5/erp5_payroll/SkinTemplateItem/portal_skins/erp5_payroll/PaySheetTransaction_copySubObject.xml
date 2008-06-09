@@ -69,7 +69,8 @@
 portal_type_list) in the paysheet.\n
 \'\'\'\n
 \n
-sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
+sub_object_list = context.getInheritedObjectValueList(\n
+                         portal_type_list, property_list=property_list)\n
 \n
 # Erase existing sub objects with same reference\n
 delete_id_list = []\n
@@ -113,7 +114,7 @@ for model, sub_object_id_list in sub_object_by_model.items():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type_list=[]</string> </value>
+            <value> <string>portal_type_list=[], property_list=()</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,13 +134,14 @@ for model, sub_object_id_list in sub_object_by_model.items():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>portal_type_list</string>
+                            <string>property_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>sub_object_list</string>
@@ -166,6 +168,7 @@ for model, sub_object_id_list in sub_object_by_model.items():\n
             <value>
               <tuple>
                 <list/>
+                <tuple/>
               </tuple>
             </value>
         </item>

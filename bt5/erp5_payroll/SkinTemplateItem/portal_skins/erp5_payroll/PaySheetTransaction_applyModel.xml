@@ -99,9 +99,13 @@ if not paysheet.getResource():\n
   paysheet.setResource(getPropertyFromModel(model, \'price_currency\'))\n
 \n
 # copy model sub objects into paysheet\n
-portal_type_list = [\'Annotation Line\', \'Payment Condition\', \n
-                    \'Pay Sheet Model Ratio Line\']\n
-paysheet.PaySheetTransaction_copySubObject(portal_type_list)\n
+paysheet.PaySheetTransaction_copySubObject(\n
+                  \'Annotation Line\',\n
+                  property_list=(\'quantity\', \'source\', \'resource\'))\n
+paysheet.PaySheetTransaction_copySubObject(\n
+                  \'Pay Sheet Model Ratio Line\',\n
+                  property_list=(\'quantity\',))\n
+paysheet.PaySheetTransaction_copySubObject(\'Payment Condition\')\n
 \n
 if not batch_mode:\n
   return context.Base_redirect(form_id,\n
@@ -164,7 +168,6 @@ if not batch_mode:\n
                             <string>None</string>
                             <string>dict</string>
                             <string>getPropertyFromModel</string>
-                            <string>portal_type_list</string>
                           </tuple>
                         </value>
                     </item>
