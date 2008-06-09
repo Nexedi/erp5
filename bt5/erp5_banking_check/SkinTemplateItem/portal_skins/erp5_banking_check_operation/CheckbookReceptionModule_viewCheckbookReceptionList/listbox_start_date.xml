@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_start_date</string> </value>
         </item>
@@ -410,28 +404,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>date</string> </key>
+                    <key> <string>date</string> </key>
                     <value>
                       <list>
-<string>year</string>
-<string>month</string>
-<string>day</string>
+                        <string>year</string>
+                        <string>month</string>
+                        <string>day</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>time</string> </key>
+                    <key> <string>time</string> </key>
                     <value>
                       <list>
-<string>hour</string>
-<string>minute</string>
-<string>ampm</string>
+                        <string>hour</string>
+                        <string>minute</string>
+                        <string>ampm</string>
                       </list>
                     </value>
                 </item>
