@@ -65,6 +65,7 @@
   <tal:block metal:define-macro="listbox">\n
 \n
   <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
+                 title python:listbox.get_value(\'title\', REQUEST=request);\n
                  selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
                  editable_columns python:listbox.get_value(\'editable_columns\', REQUEST=request);\n
                  editable_fields python:dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
@@ -90,7 +91,14 @@
 \n
 \n
       <tal:block tal:define="global column_width python:here.ListBox_getColumnWithDict(listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=frame_width, listbox=listbox)"/>\n
-\n
+      <table  splitbyrow="1" repeatrows="0" repeatcols="0"  style="StandardTableWithGrid">\n
+        <tr>\n
+          <td>\n
+            <para  style="TableHeader"\n
+                   tal:content="python: here.Localizer.erp5_ui.gettext(title.decode(\'utf-8\')).encode(\'utf8\')"/>\n
+          </td>\n
+        </tr>\n
+      </table>\n
       <table  splitbyrow="1" repeatrows="1" repeatcols="0"  style="StandardTableWithGrid">\n
 \n
         <tal:block tal:repeat="listboxline python: listboxline_list">\n
