@@ -3189,11 +3189,8 @@ msgstr "Lignes de modèle"
 msgid "Pay Sheet Model Line"
 msgstr "Ligne de modèle"
 
-msgid "Employee Share (Amount or Percent)"
-msgstr "Part salariale (Montant ou Taux)"
-
-msgid "Employer Share (Amount or Percent)"
-msgstr "Part employeur (Montant ou Taux)"
+msgid "${tax_category_title} (Amount or Percent)"
+msgstr "${tax_category_title} (Montant ou Taux)"
 
 msgid "Annotation Line Reference for Payroll Service Provider"
 msgstr "Reference de l'annotation pour l'organisme collecteur"
