@@ -83,7 +83,7 @@
         in place and is not needed for archive. In the case (3) of\n
         a web page, the new version replaces the previous one,\n
         the previous one being kept in place for archive.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -128,7 +128,7 @@ return variation_text\n
                             <string>args</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>variation_text</string>
                             <string>None</string>
                             <string>destination</string>

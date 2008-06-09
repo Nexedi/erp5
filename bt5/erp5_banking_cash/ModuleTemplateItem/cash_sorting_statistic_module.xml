@@ -208,8 +208,9 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add HBTreeFolder2s</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>

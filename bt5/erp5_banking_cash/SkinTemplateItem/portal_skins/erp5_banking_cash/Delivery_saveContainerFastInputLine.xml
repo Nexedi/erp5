@@ -75,6 +75,7 @@ result_line = []\n
 if listbox is None:\n
   listbox = []\n
 \n
+\n
 def isSameSet(a, b):\n
   for i in a:\n
     if not(i in b) : return 0\n
