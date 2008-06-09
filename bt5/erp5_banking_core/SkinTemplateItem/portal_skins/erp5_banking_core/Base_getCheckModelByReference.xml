@@ -143,7 +143,7 @@ return model_list[0]\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>x</string>
                             <string>model_list</string>
                             <string>len</string>

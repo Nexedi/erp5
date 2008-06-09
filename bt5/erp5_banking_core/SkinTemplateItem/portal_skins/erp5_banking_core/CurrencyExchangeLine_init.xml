@@ -126,7 +126,7 @@ context.setStopDate(stop_date)\n
                             <string>current_date_string</string>
                             <string>start_date</string>
                             <string>stop_date</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

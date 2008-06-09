@@ -118,7 +118,7 @@ context.setDestination(\'account_module/bank_account\')\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>True</string>
                           </tuple>
                         </value>

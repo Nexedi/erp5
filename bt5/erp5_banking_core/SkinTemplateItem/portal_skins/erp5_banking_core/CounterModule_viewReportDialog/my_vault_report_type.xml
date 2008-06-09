@@ -241,12 +241,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>history</string>
-                          <string>history</string>
+                          <string>inventory</string>
+                          <string>inventory</string>
                         </tuple>
                         <tuple>
-                          <string>inventory</string>
-                          <string>inventory</string>
+                          <string>history</string>
+                          <string>history</string>
                         </tuple>
                       </list>
                     </value>

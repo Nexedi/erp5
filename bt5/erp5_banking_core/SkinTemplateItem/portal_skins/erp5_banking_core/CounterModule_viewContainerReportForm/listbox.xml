@@ -519,11 +519,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>selection</string>
+                          <string>reference</string>
 <string></string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
+                          <string>selection</string>
 <string></string>
                         </tuple>
                         <tuple>

@@ -139,7 +139,7 @@ else:\n
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>login</string>
                             <string>persons</string>
                             <string>len</string>

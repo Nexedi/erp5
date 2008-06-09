@@ -134,7 +134,7 @@ return check_resource\n
                             <string>_getattr_</string>
                             <string>entity_portal_type</string>
                             <string>check_model_reference</string>
-<string>context</string>
+                            <string>context</string>
                             <string>check_resource</string>
                           </tuple>
                         </value>

@@ -130,7 +130,7 @@ return previous_state\n
                             <string>workflow_id</string>
                             <string>state</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>workflow_item_list</string>
                             <string>None</string>
                             <string>previous_state</string>

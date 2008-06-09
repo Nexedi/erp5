@@ -125,6 +125,7 @@ return total\n
                             <string>context</string>
                             <string>line</string>
                             <string>None</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

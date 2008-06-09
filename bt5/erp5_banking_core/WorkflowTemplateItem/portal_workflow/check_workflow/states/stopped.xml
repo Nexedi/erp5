@@ -67,11 +67,11 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -83,19 +83,19 @@
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

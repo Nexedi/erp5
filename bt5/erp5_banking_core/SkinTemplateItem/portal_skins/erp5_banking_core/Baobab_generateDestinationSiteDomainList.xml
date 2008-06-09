@@ -163,6 +163,7 @@ return domain_list\n
                             <string>parent_path</string>
                             <string>domain</string>
                             <string>script</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

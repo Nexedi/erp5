@@ -17,10 +17,24 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -29,7 +43,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -43,7 +56,6 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>

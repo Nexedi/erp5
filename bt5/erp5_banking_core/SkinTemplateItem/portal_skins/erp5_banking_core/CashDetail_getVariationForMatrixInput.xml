@@ -208,6 +208,7 @@ return return_list\n
                             <string>column_base_list</string>
                             <string>counter</string>
                             <string>str</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

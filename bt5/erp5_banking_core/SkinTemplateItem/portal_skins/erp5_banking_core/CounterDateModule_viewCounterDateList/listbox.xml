@@ -39,6 +39,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -52,6 +56,10 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -108,10 +116,6 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -178,6 +182,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -191,6 +199,10 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -247,10 +259,6 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -562,7 +570,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>searchFolder</unicode> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

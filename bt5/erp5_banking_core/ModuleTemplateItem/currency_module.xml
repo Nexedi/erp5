@@ -9,7 +9,6 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
-   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>Access arbitrary user session data</name>
@@ -41,7 +40,6 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
-   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>Add Accelerated HTTP Cache Managers</name>
@@ -211,8 +209,9 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
+  <permission type='tuple'>
    <name>Add HBTreeFolder2s</name>
+   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
@@ -509,7 +508,6 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
-   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>List portal members</name>
@@ -698,7 +696,6 @@
    <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
-   <role>Member</role>
   </permission>
   <permission type='tuple'>
    <name>View management screens</name>

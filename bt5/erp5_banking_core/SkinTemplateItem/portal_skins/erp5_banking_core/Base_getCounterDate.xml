@@ -132,7 +132,7 @@ return counter_date\n
                             <string>DateTime</string>
                             <string>None</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>counter_date_list</string>
                             <string>counter_date</string>
                             <string>len</string>

@@ -189,7 +189,7 @@ if column_names == 1:\n
     column_list.extend([\n
         (vault + \'_quantity\', getTitleFromCategoryUrl(vault) + \' Quantity\'),\n
         (vault + \'_total_price\', getTitleFromCategoryUrl(vault) + \' TotalPrice\')\n
-        ])\n
+])\n
   column_list.append((\'general_total_price\', \'General TotalPrice\'))\n
   return column_list\n
 \n
@@ -209,6 +209,7 @@ else: \n
                                                                  , ignore_variation=0\n
                                                                  ,**inventory_kw\n
                                                                  )\n
+#context.log(\'CounterMOdule_getVaultTransactionList, inventory_kw\', inventory_kw)\n
 #context.log(\'CounterMOdule_getVaultTransactionList, sql src:\',context.portal_simulation.getCurrentInventoryList( node=vault_url_list\n
 #                                                                , ignore_variation=0,src__=1\n
 #                                                               ,**inventory_kw\n
@@ -281,9 +282,7 @@ cache_dict[\'cache_explanation\'] = {}\n
 \n
 if vault_report_type == \'history\':\n
   if len(explanation_uid_list) > 0:\n
-#    context.log("getAllFromCatalog, expla uid", explanation_uid_list)\n
     catalog_result_list = context.Base_zGetAllFromCatalog(uid_list=explanation_uid_list)\n
-#    context.log("getAllFromCatalog", context.Base_zGetAllFromCatalog(uid_list=explanation_uid_list, src__=1))\n
     for line in catalog_result_list:\n
       cache_dict[\'cache_explanation\'][line.uid] = line\n
 \n
@@ -315,7 +314,6 @@ for resource in resource_dict.keys():\n
            explanation_uid=explanation_uid,\n
            cache_dict=cache_dict)\n
   #tmp_dict = {}\n
-  #context.log("resource %s" %(resource,), "tmp_dict %s"  %(tmp_dict[\'explanation_relative_url\'],))\n
   general_total_price = 0\n
   for vault in vault_dict.keys():\n
     try:\n
@@ -338,9 +336,9 @@ for resource in resource_dict.keys():\n
       tmp_dict.update({\'date\':resource_in_vault[\'date\']})\n
     general_total_price += resource_in_vault[\'total_price\']\n
     tmp_dict[\'general_total_price\'] = general_total_price\n
-#     temp_base = newTempBase(context, "new_%03i" % i)\n
-#     temp_base = temp_base.asContext(**tmp_dict)\n
-#     total_inventory_list.append(temp_base)\n
+    #temp_base = newTempBase(context, "new_%03i" % i)\n
+    #temp_base = temp_base.asContext(**tmp_dict)\n
+    #total_inventory_list.append(temp_base)\n
     total_inventory_list.append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
     i += 1\n
 \n

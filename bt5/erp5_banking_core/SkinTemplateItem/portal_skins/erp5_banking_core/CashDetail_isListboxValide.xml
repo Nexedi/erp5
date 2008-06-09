@@ -167,6 +167,7 @@ return 1\n
                             <string>y</string>
                             <string>int</string>
                             <string>str</string>
+                            <string>_inplacevar_</string>
                             <string>len</string>
                             <string>currentVariation</string>
                             <string>range</string>

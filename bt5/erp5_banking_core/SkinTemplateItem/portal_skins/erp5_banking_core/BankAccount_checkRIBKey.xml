@@ -148,6 +148,7 @@ return (str(rib) == str(old_rib))\n
                             <string>list</string>
                             <string>nb</string>
                             <string>_getattr_</string>
+                            <string>_inplacevar_</string>
                             <string>long</string>
                             <string>rib</string>
                             <string>str</string>

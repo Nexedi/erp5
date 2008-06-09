@@ -120,7 +120,7 @@ return context.asContext(_range_criterion=identity_criterion)\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>parent</string>
                             <string>start_date</string>
                             <string>stop_date</string>
