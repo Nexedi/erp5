@@ -1064,8 +1064,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # Field found
         field_key = field.generate_field_key()
         field_value = REQUEST.form[field_key]
-        # XXX Hardcoded form name
-        dialog_id = 'Base_viewRelatedObjectList'
+        dialog_id = field.get_value('relation_form_id') or 'Base_viewRelatedObjectList'
         redirect_form = getattr(o, dialog_id)
         # XXX Hardcoded listbox field
         selection_name = redirect_form.listbox.get_value('selection_name')

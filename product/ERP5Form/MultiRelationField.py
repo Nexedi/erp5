@@ -62,7 +62,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   local_property_names = ['update_method', 'jump_method', 'allow_jump', 
                           'base_category', 'portal_type', 'allow_creation', 
                           'container_getter_id', 'catalog_index',
-                          'relation_setter_id', 'columns', 'sort',
+                          'relation_setter_id', 'relation_form_id', 'columns', 'sort',
                           'parameter_list','list_method',
                           'first_item', 'items', 'size', 'extra_item',
                           ]
@@ -134,6 +134,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Relation Update Method',
                              description=(
       "The method to invoke in order to update the relation"),
+                             default="",
+                             required=0)
+
+  relation_form_id = fields.StringField('relation_form_id',
+                             title='Relation Form',
+                             description=(
+      "Form to display relation choices"),
                              default="",
                              required=0)
 
