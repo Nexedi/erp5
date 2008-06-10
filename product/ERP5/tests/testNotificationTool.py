@@ -500,8 +500,7 @@ class TestNotificationTool(ERP5TypeTestCase):
 
     message = """\
 > Hello, will you go to the park on sunday?
-Yes, I will go.
-"""
+Yes, I will go."""
 
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject',
