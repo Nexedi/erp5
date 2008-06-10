@@ -443,6 +443,23 @@ class Alarm(XMLObject, PeriodicityMixin):
     candidate_list = self.getDestinationValueList()
     if not candidate_list:
       candidate_list = None
+    result_list = [x for x in self.getLastActiveProcess().getResultList() if x is not None]
+    attachment_list = []
+    if len(result_list):
+      def sort_result_list(a, b):
+        result = - cmp(a.severity, b.severity)
+        if result == 0:
+          result = cmp(a.summary, b.summary)
+        return result
+      result_list.sort(sort_result_list)
+      rendered_alarm_result_list = ['%02i summary: %s\n%s\n----' %
+        (int(getattr(x, 'severity', 0)), getattr(x, 'summary', ''), getattr(x, 'detail', ''))
+        for x in result_list]
+      rendered_alarm_result = '\n'.join(rendered_alarm_result_list)
+      attachment_list.append({'name': 'alarm_result.txt',
+                              'content': rendered_alarm_result,
+                              'mime_type': 'text/plain'})
+
     notification_tool.sendMessage(recipient=candidate_list, 
                 subject='[%s] ERP5 Alarm Notification: %s' %
                   (prefix, self.getTitle()),
@@ -453,7 +470,8 @@ Alarm Description:
 %s
 
 Alarm URL: %s
-""" % (self.getTitle(), self.getDescription(), self.absolute_url()))
+""" % (self.getTitle(), self.getDescription(), self.absolute_url()),
+                                  attachment_list=attachment_list)
 
   security.declareProtected(Permissions.View, 'getLastActiveProcess')
   def getLastActiveProcess(self):
