@@ -79,7 +79,7 @@ def decode_email(file):
     # so we ignore this one to avoid doubling
     elif content_type == 'message/rfc822':
       continue
-    elif content_type == "text/plain":
+    elif content_type in ("text/plain", "text/html"):
       charset = part.get_content_charset()
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
@@ -539,9 +539,7 @@ Yes, I will go.
     Check that if notification format is html.
     """
 
-    message = """\
-<a href="http://www.erp5.com/">Click Here!!</a>
-"""
+    message = """<a href="http://www.erp5.com/">Click Here!!</a>"""
     
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject',
@@ -557,7 +555,7 @@ Yes, I will go.
     #
     # Without CRM, it does not support HTML mail.
     #
-    self.assertEquals(mail_dict['body'], 'Click Here!!\n')
+    self.assertEquals(mail_dict['body'], 'Click Here!!')
     self.assertSameSet([], mail_dict['attachment_list'])
 
   def test_12_HtmlMessage(self, quiet=quiet, run=run_all_test):
@@ -589,9 +587,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     Check that if notification format is html.
     """
 
-    message = """\
-<a href="http://www.erp5.com/">Click Here!!</a>
-"""
+    message = """<a href="http://www.erp5.com/">Click Here!!</a>"""
     
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject',
@@ -607,7 +603,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     #
     # With CRM, it support HTML mail.
     #
-    self.assertEquals(mail_dict['body'], message)
+    self.assertEquals(mail_dict['body'], '<html><body>%s</body></html>' % message)
     self.assertSameSet([], mail_dict['attachment_list'])
 
 
