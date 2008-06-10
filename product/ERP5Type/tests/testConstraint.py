@@ -516,7 +516,7 @@ class TestConstraint(PropertySheetTestCase):
               SetObjectBadTypedProperty \
               CreatePropertyTypeValidity \
               CallCheckConsistency \
-              CheckIfConstraintSucceeded \
+              CheckIfConstraintFailed \
               '
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
@@ -536,7 +536,7 @@ class TestConstraint(PropertySheetTestCase):
               SetObjectBadTypedProperty \
               CreatePropertyTypeValidity \
               CallFixConsistency \
-              CheckIfConstraintSucceeded \
+              CheckIfConstraintFailed \
               CallCheckConsistency \
               CheckIfConstraintSucceeded \
               '
