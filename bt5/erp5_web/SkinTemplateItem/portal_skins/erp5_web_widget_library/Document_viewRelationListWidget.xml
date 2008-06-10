@@ -42,59 +42,132 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block tal:define="\n
   default_section_document python: request.get(\'current_web_document\', here);\n
-  isDocument python: default_section_document.isDocument;">  \n
+  isDocument python: default_section_document.isDocument;">\n
+  \n
   <tal:block tal:condition="isDocument">\n
+\n
     <tal:block\n
       tal:define="related_successor_document_list  python:\n
                     default_section_document.Document_getRelatedDocumentList(\n
                              relation_id=\'related_successor\');\n
+\n
+                  related_similar_cloud_document_list  python:\n
+                    default_section_document.Document_getRelatedDocumentList(\n
+                             relation_id=\'related_similar_cloud\');\n
+\n
                   related_similar_document_list  python:\n
                     default_section_document.Document_getRelatedDocumentList(\n
                              relation_id=\'related_similar\');\n
+\n
                   related_predecessor_document_list python:\n
                     default_section_document.Document_getRelatedDocumentList(\n
                              relation_id=\'related_predecessor\');\n
-                  all_related_document_list python: \n
-                    related_successor_document_list +\n
-                    related_similar_document_list +\n
-                    related_predecessor_document_list">\n
 \n
-      <div class="related_docs" tal:condition="related_successor_document_list">\n
-        <div class="title" i18n:translate="" i18n:domain="ui">Related</div>\n
-        <ul>\n
-          <li tal:repeat="doc related_successor_document_list">\n
-            <a tal:content="doc/getTitleOrId" \n
-                tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
-          </li>\n
-        </ul>\n
-      </div>\n
+                  related_wiki_successor_document_list python:\n
+                             default_section_document.Document_getRelatedDocumentList(\n
+                                     relation_id=\'wiki_successor\');\n
 \n
-      <div class="related_docs" tal:condition="related_similar_document_list">\n
+                  related_wiki_predecessor_document_list python:\n
+                             default_section_document.Document_getRelatedDocumentList(\n
+                                     relation_id=\'wiki_predecessor\');\n
+\n
+                  similar python: (related_similar_document_list,\n
+                                   related_similar_cloud_document_list,);\n
+                  all_similar python: len(similar[0]) + len(similar[1]);\n
+\n
+                  reference python: (related_successor_document_list,\n
+                                    related_wiki_successor_document_list,);\n
+                  all_reference  python: len(reference[0]) + len(reference[1]);\n
+\n
+                  related python: (related_predecessor_document_list,\n
+                                   related_wiki_predecessor_document_list,);\n
+                  all_related python: len(related[0]) + len(related[1]);\n
+\n
+                  all_related_document_list_number python: \n
+                    all_similar + all_reference + all_related">\n
+\n
+      <div class="related_docs" \n
+           tal:condition="all_similar">\n
         <div class="title" i18n:translate="" i18n:domain="ui">Similar</div>\n
-        <ul>\n
-          <li tal:repeat="doc related_similar_document_list">\n
-            <a tal:content="doc/getTitleOrId" \n
-                tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
-          </li>\n
-        </ul>\n
+        <div class="related_docs_explicit" \n
+             tal:condition="python: len(similar[0])">\n
+          <ul>\n
+            <li tal:repeat="doc python: similar[0]">\n
+              <a tal:content="doc/getTitleOrId" \n
+                  tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+            </li>\n
+          </ul>\n
+        </div>\n
+        <div class="related_docs_imlicit" \n
+             tal:condition="python: len(similar[1])">\n
+          <ul>\n
+            <li tal:repeat="doc python: similar[1]">\n
+              <a tal:content="doc/getTitleOrId" \n
+                  tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+            </li>\n
+          </ul>\n
+        </div>\n
       </div>\n
 \n
-      <div class="related_docs" tal:condition="related_predecessor_document_list">\n
+      <div class="related_docs" \n
+           tal:condition="all_reference">\n
+\n
         <div class="title" i18n:translate="" i18n:domain="ui">Reference</div>\n
-        <ul>\n
-          <li tal:repeat="doc doc_list">\n
-            <a tal:content="doc/getTitleOrId" \n
-                tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
-          </li>\n
-        </ul>\n
+        <div class="related_docs_explicit" \n
+             tal:condition="python: len(reference[0])">\n
+          <ul>\n
+            <li tal:repeat="doc python: reference[0]">\n
+              <a tal:content="doc/getTitleOrId" \n
+                  tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+            </li>\n
+          </ul>\n
+        </div>\n
+        <div class="related_docs_imlicit" \n
+             tal:condition="python: len(reference[1])">\n
+          <ul>\n
+            <li tal:repeat="doc python: reference[1]">\n
+              <a tal:content="doc/getTitleOrId" \n
+                  tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+            </li>\n
+          </ul>\n
+        </div>\n
       </div>\n
 \n
-      <div class="related_docs" tal:condition="not: all_related_document_list">\n
+      <div class="related_docs" \n
+           tal:condition="all_related">\n
+        <div class="title" i18n:translate="" i18n:domain="ui">Related</div>\n
+        <div class="related_docs_explicit" \n
+             tal:condition="python: len(related[0])">\n
+          <ul>\n
+            <li tal:repeat="doc python: related[0]">\n
+              <a tal:content="doc/getTitleOrId" \n
+                  tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+            </li>\n
+          </ul>\n
+        </div>\n
+        <div class="related_docs_imlicit" \n
+             tal:condition="python: len(related[1])">\n
+           <ul>\n
+            <li tal:repeat="doc python: related[1]">\n
+              <a tal:content="doc/getTitleOrId" \n
+                  tal:attributes="href python:doc.absolute_url()+\'/view\'"/>\n
+            </li>\n
+          </ul>\n
+        </div>\n
+      </div>\n
+      \n
+      <div class="related_docs" tal:condition="python: all_related_document_list_number==0">\n
         <div class="title" i18n:translate="" i18n:domain="ui">\n
           No related documents found.\n
         </div>\n
@@ -102,6 +175,7 @@
 \n
     </tal:block>\n
   </tal:block>\n
+\n
 \n
   <tal:block tal:condition="not: isDocument">\n
     <div class="title" i18n:translate="" i18n:domain="ui">\n

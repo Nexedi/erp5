@@ -42,9 +42,23 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<tal:block tal:replace="nothing">\n
+  <!--\n
+  This widget is left for backward compatibility  as the information it \n
+  renders is rendered in Document_viewRelationListWidget which \n
+  should be default and only one.\n
+  -->\n
+</tal:block>\n
+\n
 <tal:block tal:define="\n
   default_section_document python: request.get(\'current_web_document\', here);\n
   isDocument python: default_section_document.isDocument;">  \n
