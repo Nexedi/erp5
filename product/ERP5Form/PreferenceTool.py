@@ -230,7 +230,8 @@ class PreferenceTool(BaseTool):
           prefs.append(pref)
     prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
     # add system preferences after user preferences
-    sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', **kw)]
+    sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', **kw) \
+                 if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
     sys_prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
     return sys_prefs + prefs
 

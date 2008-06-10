@@ -433,9 +433,18 @@ class TestPreferences(ERP5TypeTestCase):
     preference_tool = self.portal.portal_preferences
     site_pref = preference_tool.newContent(
                           portal_type='System Preference',
+                          preferred_accounting_transaction_simulation_state_list="this_is_default",
                           priority=Priority.SITE)
+    # check not taken into account if not enabled
+    self.assertEquals(None,
+                      preference_tool.getPreferredAccountingTransactionSimulationStateList())    
+    # enable it and check preference is returned
     self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
     self.assertEquals(site_pref.getPreferenceState(), 'global')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(['this_is_default'],
+                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
     
     # Members can't add new system preferences
     uf = self.getPortal().acl_users
