@@ -53,7 +53,7 @@
 
 <tal:body xmlns:tal="http://xml.zope.org/namespaces/tal"\n
           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-          ><tal:x replace="options/body"/></tal:body>
+          ><tal:x replace="structure options/body"/></tal:body>
 
 ]]></string> </value>
         </item>

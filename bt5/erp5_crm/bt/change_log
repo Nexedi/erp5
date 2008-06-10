@@ -1,3 +1,6 @@
+2008-06-10 yusei
+* Don't escape html markup in Event_viewMimeMessage.
+
 2008-06-09 yusei
 * Added Event_send proxy role (Manager).
 
