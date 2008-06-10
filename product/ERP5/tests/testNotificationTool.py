@@ -492,12 +492,123 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def stepCheckNotificationPlainTextFormat(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check that if notification format is plain text.
+    """
+
+    message = """\
+> Hello, will you go to the park on sunday?
+Yes, I will go.
+"""
+
+    self.portal.portal_notifications.sendMessage(
+        recipient='userA', subject='Subject',
+        message_text_format='text/plain', message=message)
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals(['userA@example.invalid'], mto)
+    # Check Message
+    mail_dict = decode_email(messageText)
+    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
+    self.assertEquals(mail_dict['body'], message)
+    self.assertSameSet([], mail_dict['attachment_list'])
+
+  def test_11_TextMessage(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test message format'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    sequence_list = SequenceList()
+    sequence_string = '\
+        AddUserA \
+        Tic \
+        CheckNotificationPlainTextFormat \
+        '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def stepCheckNotificationHtmlFormat(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check that if notification format is html.
+    """
+
+    message = """\
+<a href="http://www.erp5.com/">Click Here!!</a>
+"""
+    
+    self.portal.portal_notifications.sendMessage(
+        recipient='userA', subject='Subject',
+        message_text_format='text/html', message=message)
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals(['userA@example.invalid'], mto)
+    # Check Message
+    mail_dict = decode_email(messageText)
+    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
+    #
+    # Without CRM, it does not support HTML mail.
+    #
+    self.assertEquals(mail_dict['body'], 'Click Here!!\n')
+    self.assertSameSet([], mail_dict['attachment_list'])
+
+  def test_12_HtmlMessage(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test message format'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    sequence_list = SequenceList()
+    sequence_string = '\
+        AddUserA \
+        Tic \
+        CheckNotificationHtmlFormat \
+        '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
 class TestNotificationToolWithCRM(TestNotificationTool):
   """Make sure that notification tool works with crm"""
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_crm')
+
+  def stepCheckNotificationHtmlFormat(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check that if notification format is html.
+    """
+
+    message = """\
+<a href="http://www.erp5.com/">Click Here!!</a>
+"""
+    
+    self.portal.portal_notifications.sendMessage(
+        recipient='userA', subject='Subject',
+        message_text_format='text/html', message=message)
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals(['userA@example.invalid'], mto)
+    # Check Message
+    mail_dict = decode_email(messageText)
+    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
+    #
+    # With CRM, it support HTML mail.
+    #
+    self.assertEquals(mail_dict['body'], message)
+    self.assertSameSet([], mail_dict['attachment_list'])
 
 
 def test_suite():
