@@ -499,6 +499,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string>Base_viewCustomRelatedObjectList</string> </value>
+                </item>
+                <item>
                     <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
