@@ -147,7 +147,7 @@ getVatCode\r\n
                                                                      \'Subscription Form\', \n
                                                                      \'Declaration TVA\',\n
                                                                      \'Mandate Form\', \n
-                                                                     \'Person\',\n
+                                                                     \'Assignment\',\n
                                                                      \'Organisation\')">\n
       <dtml-call expr="egov_list.append(loop_item)">\n
     </dtml-if>\n
@@ -221,7 +221,7 @@ VALUES\n
                                                                      \'Subscription Form\', \n
                                                                      \'Declaration TVA\',\n
                                                                      \'Mandate Form\', \n
-                                                                     \'Person\',\n
+                                                                     \'Assignment\',\n
                                                                      \'Organisation\')">\n
       <dtml-call expr="egov_list.append(loop_item)">\n
     </dtml-if>\n

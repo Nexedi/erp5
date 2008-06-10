@@ -6,7 +6,7 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: here.getPortalType() in ('M0','M0 Bis','M2','M2 Bis','M4','P0','P2','P4','S1','S5','Subscription Form','Declaration TVA','Mandate Form', 'Organisation', 'Person')</value>
+  <value>python: here.getPortalType() in ('M0','M0 Bis','M2','M2 Bis','M4','P0','P2','P4','S1','S5','Subscription Form','Declaration TVA','Mandate Form', 'Organisation', 'Assignment')</value>
  </item>
  <item key="_filter_type_archive" type="tuple">
  </item>
