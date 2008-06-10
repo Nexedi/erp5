@@ -551,10 +551,7 @@ Yes, I will go."""
     # Check Message
     mail_dict = decode_email(messageText)
     self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    #
-    # Without CRM, it does not support HTML mail.
-    #
-    self.assertEquals(mail_dict['body'], 'Click Here!!')
+    self.assertEquals(mail_dict['body'], '<html><body>%s</body></html>' % message)
     self.assertSameSet([], mail_dict['attachment_list'])
 
   def test_12_HtmlMessage(self, quiet=quiet, run=run_all_test):
@@ -582,31 +579,6 @@ class TestNotificationToolWithCRM(TestNotificationTool):
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_crm')
-
-  def stepCheckNotificationHtmlFormat(self, sequence=None, 
-                                  sequence_list=None, **kw):
-    """
-    Check that if notification format is html.
-    """
-
-    message = """<a href="http://www.erp5.com/">Click Here!!</a>"""
-    
-    self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject',
-        message_text_format='text/html', message=message)
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
-    # Check Message
-    mail_dict = decode_email(messageText)
-    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    #
-    # With CRM, it support HTML mail.
-    #
-    self.assertEquals(mail_dict['body'], '<html><body>%s</body></html>' % message)
-    self.assertSameSet([], mail_dict['attachment_list'])
 
 
 def test_suite():
