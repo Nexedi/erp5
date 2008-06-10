@@ -339,7 +339,20 @@ class TestPasswordTool(ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
 
 
+class TestPasswordToolWithCRM(TestPasswordTool):
+  """
+  Test reset of password
+  """
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_crm',)
+
+  def getTitle(self):
+    return "Password Tool with CRM"
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPasswordTool))
+  suite.addTest(unittest.makeSuite(TestPasswordToolWithCRM))
   return suite
