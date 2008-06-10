@@ -178,7 +178,7 @@
 \n
 \n
   <tal:block tal:condition="not: isDocument">\n
-    <div class="title" i18n:translate="" i18n:domain="ui">\n
+    <div i18n:translate="" i18n:domain="ui">\n
       No related documents found.\n
     </div>\n
   </tal:block>\n
