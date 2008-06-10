@@ -79,6 +79,7 @@ for x in portal.portal_simulation.getInventoryList(\n
     item_list.append((resource.getTitle(),\n
                       resource.getRelativeUrl()))\n
 \n
+item_list.sort(lambda a, b: cmp(a[0], b[0]))\n
 return item_list\n
 </string> </value>
         </item>

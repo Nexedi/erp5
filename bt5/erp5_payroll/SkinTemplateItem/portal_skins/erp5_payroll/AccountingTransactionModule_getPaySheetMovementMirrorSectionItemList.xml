@@ -72,6 +72,7 @@ getobject = portal.portal_catalog.getobject\n
 for x in portal.portal_simulation.getInventoryList(\n
                               portal_type=(\'Pay Sheet Cell\',\n
                                            \'Pay Sheet Line\'),\n
+                              group_by_resource=0,\n
                               group_by_mirror_section=1):\n
   mirror_section_uid = x.mirror_section_uid\n
   if mirror_section_uid:\n
@@ -80,6 +81,7 @@ for x in portal.portal_simulation.getInventoryList(\n
       item_list.append((mirror_section.getTitle(),\n
                         mirror_section.getRelativeUrl()))\n
 \n
+item_list.sort(lambda a, b: cmp(a[0], b[0]))\n
 return item_list\n
 </string> </value>
         </item>
