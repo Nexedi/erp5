@@ -1,4 +1,7 @@
 2008-06-10 yusei
+* Move Event_send and mail templates to erp5_core.
+
+2008-06-10 yusei
 * Don't escape html markup in Event_viewMimeMessage.
 
 2008-06-09 yusei
