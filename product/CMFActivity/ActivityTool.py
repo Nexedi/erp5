@@ -274,11 +274,13 @@ Subject: %s
 
 Document: %s
 Method: %s
+Arguments:%r
+Named Parameters:%r
 Exception: %s %s
 
 %s
 """ % (activity_tool.email_from_address, user_email, message,
-       message, '/'.join(self.object_path), self.method_id,
+       message, '/'.join(self.object_path), self.method_id, self.args, self.kw,
        self.exc_type, self.exc_value, self.traceback)
     try:
       activity_tool.MailHost.send( mail_text )
