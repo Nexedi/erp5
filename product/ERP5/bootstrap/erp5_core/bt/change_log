@@ -1,3 +1,6 @@
+2008-06-10 yusei
+* Move Event_send and mail templates from erp5_crm. It supports html email by default.
+
 2008-06-04
 * remove bad commit
 
