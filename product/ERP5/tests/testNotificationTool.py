@@ -577,6 +577,9 @@ Yes, I will go."""
 class TestNotificationToolWithCRM(TestNotificationTool):
   """Make sure that notification tool works with crm"""
 
+  def getTitle(self):
+    return "Notification Tool With CRM"
+
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_crm')
 
