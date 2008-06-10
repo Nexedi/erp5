@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
 from Products.ERP5Type.Base import WorkflowMethod
@@ -36,6 +37,11 @@ from Products.ERP5.Document.Document import Document
 from Products.ERP5Type.WebDAVSupport import TextContent
 from Products.CMFDefault.utils import isHTMLSafe
 import re
+
+try:
+  from string import Template
+except ImportError:
+  from Products.ERP5Type.patches.string import Template
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 
@@ -162,6 +168,26 @@ class TextDocument(Document, TextContent):
       # check if document has set text_content and convert if necessary
       text_content = self.getTextContent()
       if text_content is not None:
+        # If a method for string substitutions of the text content, perform it.
+        # Decode everything into unicode before the substitutions, in order to
+        # avoid encoding errors.
+        method_id = self.getTextContentSubstitutionMappingMethodId()
+        if method_id:
+          mapping = guarded_getattr(self, method_id)()
+
+          if isinstance(text_content, str):
+            text_content = text_content.decode('utf-8')
+
+          unicode_mapping = {}
+          for k, v in mapping.iteritems():
+            if isinstance(v, str):
+              v = v.decode('utf-8')
+            elif not isinstance(v, unicode):
+              v = str(v).decode('utf-8')
+            unicode_mapping[k] = v
+
+          text_content = Template(text_content).substitute(unicode_mapping)
+
         portal_transforms = getToolByName(self, 'portal_transforms')
         result = portal_transforms.convertToData(mime_type, text_content,
                                                  object=self, context=self,

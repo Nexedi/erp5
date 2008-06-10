@@ -362,6 +362,44 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.logout()
     self.assertRaises(Unauthorized,  websection._getExtensibleContent,  request,  document_reference)
     
+  def test_07_WebPageTextContentSubstituions(self, quiet=quiet, run=run_all_test):
+    """
+      Simple Case of showing the proper text content with and without a substitution
+      mapping method.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\ntest_07_WebPageTextContentSubstituions'
+      ZopeTestCase._print(message)
+
+    content = '<a href="${toto}">$titi</a>'
+    substituted_content = '<a href="foo">bar</a>'
+    mapping = dict(toto='foo', titi='bar')
+
+    portal = self.getPortal()
+    document = portal.web_page_module.newContent(portal_type='Web Page', 
+            text_content=content)
+   
+    # No substitution should occur.
+    self.assertEquals(document.asStrippedHTML(), content)
+
+    klass = document.__class__
+    klass.getTestSubstitutionMapping = lambda self, **kw: mapping
+    document.setTextContentSubstitutionMappingMethodId('getTestSubstitutionMapping')
+
+    # Substitutions should occur.
+    # XXX purge transformation cache.
+    if hasattr(document, '_v_transform_cache'):
+      delattr(document, '_v_transform_cache')
+    self.assertEquals(document.asStrippedHTML(), substituted_content)
+
+    klass._getTestSubstitutionMapping = klass.getTestSubstitutionMapping
+    document.setTextContentSubstitutionMappingMethodId('_getTestSubstitutionMapping')
+
+    # Even with the same callable object, a restricted method id should not be callable.
+    self.assertRaises(Unauthorized, document.asStrippedHTML)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))

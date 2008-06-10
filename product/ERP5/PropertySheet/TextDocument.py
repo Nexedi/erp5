@@ -37,6 +37,11 @@ class TextDocument:
             'type'        : 'text',
             'mode'        : 'w'
             },
+        {   'id'          : 'text_content_substitution_mapping_method_id',
+            'description' : 'The method ID which returns a mapping for substitutions of a text content',
+            'type'        : 'string',
+            'mode'        : 'w'
+            },
         {   'id'          : 'text_format',
             'description' : 'The format of the text content of this document',
             'type'        : 'string',
