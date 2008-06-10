@@ -122,6 +122,7 @@ inventory_list = {}\n
 \n
 employee_total = 0\n
 employer_total = 0\n
+base_total = 0\n
 \n
 i = 0\n
 for inventory in employee_inventory_list:\n
@@ -135,9 +136,19 @@ for inventory in employee_inventory_list:\n
                employee_share=price,\n
                base=inventory.quantity, )\n
   employee_total += price\n
+  base_total += inventory.quantity\n
 \n
-# XXX what about taxes with only employer share ?\n
 for inventory in employer_inventory_list:\n
+  if employee.getUid() not in inventory_list:\n
+    inventory_list[employee.getUid()] = Object(id=i,\n
+               employee_career_reference=employee.getCareerReference(),\n
+               employee_title=employee.getTitle(),\n
+               employee_career_function=employee.getCareerFunctionTitle(),\n
+               employee_share=0,\n
+               base=inventory.quantity, )\n
+    base_total += inventory.quantity\n
+    i = i + 1\n
+\n
   price = inventory.total_price or 0\n
   employee = inventory.getDestinationValue()\n
   inventory_list[employee.getUid()].employer_share = price\n
@@ -149,6 +160,7 @@ total = employee_total + employer_total\n
 \n
 request.set(\'employee_total\', employee_total)\n
 request.set(\'employer_total\', employer_total)\n
+request.set(\'base_total\', base_total)\n
 request.set(\'total\', total)\n
 \n
 invent_list = []\n
@@ -233,6 +245,7 @@ return invent_list\n
                             <string>inventory_list</string>
                             <string>employee_total</string>
                             <string>employer_total</string>
+                            <string>base_total</string>
                             <string>i</string>
                             <string>_getiter_</string>
                             <string>inventory</string>
