@@ -389,9 +389,6 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.setTextContentSubstitutionMappingMethodId('getTestSubstitutionMapping')
 
     # Substitutions should occur.
-    # XXX purge transformation cache.
-    if hasattr(document, '_v_transform_cache'):
-      delattr(document, '_v_transform_cache')
     self.assertEquals(document.asStrippedHTML(), substituted_content)
 
     klass._getTestSubstitutionMapping = klass.getTestSubstitutionMapping

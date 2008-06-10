@@ -168,26 +168,6 @@ class TextDocument(Document, TextContent):
       # check if document has set text_content and convert if necessary
       text_content = self.getTextContent()
       if text_content is not None:
-        # If a method for string substitutions of the text content, perform it.
-        # Decode everything into unicode before the substitutions, in order to
-        # avoid encoding errors.
-        method_id = self.getTextContentSubstitutionMappingMethodId()
-        if method_id:
-          mapping = guarded_getattr(self, method_id)()
-
-          if isinstance(text_content, str):
-            text_content = text_content.decode('utf-8')
-
-          unicode_mapping = {}
-          for k, v in mapping.iteritems():
-            if isinstance(v, str):
-              v = v.decode('utf-8')
-            elif not isinstance(v, unicode):
-              v = str(v).decode('utf-8')
-            unicode_mapping[k] = v
-
-          text_content = Template(text_content).substitute(unicode_mapping)
-
         portal_transforms = getToolByName(self, 'portal_transforms')
         result = portal_transforms.convertToData(mime_type, text_content,
                                                  object=self, context=self,
@@ -198,6 +178,28 @@ class TextDocument(Document, TextContent):
             LOG('TextDocument.convert', WARNING,
                 'portal_transforms failed to convert to %s: %r' % (mime_type, self))
             result = ''
+
+        # If a method for string substitutions of the text content, perform it.
+        # Decode everything into unicode before the substitutions, in order to
+        # avoid encoding errors.
+        method_id = self.getTextContentSubstitutionMappingMethodId()
+        if method_id:
+          mapping = guarded_getattr(self, method_id)()
+
+          if isinstance(result, str):
+            result = result.decode('utf-8')
+
+          unicode_mapping = {}
+          for k, v in mapping.iteritems():
+            if isinstance(v, str):
+              v = v.decode('utf-8')
+            elif not isinstance(v, unicode):
+              v = str(v).decode('utf-8')
+            unicode_mapping[k] = v
+
+          result = Template(result).substitute(unicode_mapping)
+          # XXX is it better to convert back to str?
+
         return mime_type, result
       else:
         # text_content is not set, return empty string instead of None
