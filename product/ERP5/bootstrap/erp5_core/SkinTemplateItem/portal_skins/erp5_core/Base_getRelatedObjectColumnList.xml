@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -68,10 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = getattr(context, context.REQUEST.form_id, None).get_field( context.REQUEST.field_id ).get_value(\'columns\')\n
+            <value> <string>listbox = getattr(context, context.REQUEST.form_id, None).get_field( context.REQUEST.field_id )\n
+dialog_id = listbox.get_value(\'relation_form_id\') or \'Base_viewRelatedObjectList\'\n
+result = listbox.get_value(\'columns\')\n
 \n
 if result in [ [], (), None, \'\']:\n
-  result = getattr(context, \'Base_viewRelatedObjectList\', None).get_field( \'listbox\' ).get_value(\'columns\')\n
+  result = getattr(context, dialog_id, None).get_field( \'listbox\' ).get_value(\'columns\')\n
 \n
 return result\n
 </string> </value>
@@ -84,6 +83,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -120,6 +125,8 @@ return result\n
                             <string>getattr</string>
                             <string>context</string>
                             <string>None</string>
+                            <string>listbox</string>
+                            <string>dialog_id</string>
                             <string>result</string>
                           </tuple>
                         </value>
