@@ -261,6 +261,11 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertEqual(len(self.portal.portal_password.password_request_dict), 0)
 
 
+  def stepLogout(self, sequence=None, sequence_list=None, **kw):
+    """
+    Logout
+    """
+    self.logout()
 
   # tests
   def test_01_checkPasswordTool(self, quiet=quiet, run=run_all_test):
@@ -272,6 +277,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = 'CheckPasswordToolExists '  \
                       'AddUser Tic ' \
+                      'Logout ' \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
                       'TryLostPasswordWithBadUser Tic ' \
                       'CheckNoMailSent ' \
@@ -298,6 +304,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = 'CheckPasswordToolExists '  \
                       'AddUser Tic ' \
+                      'Logout ' \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
                       'LostPassword Tic ' \
                       'CheckMailSent ' \
@@ -318,6 +325,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = 'CheckPasswordToolExists '  \
                       'AddUser Tic ' \
+                      'Logout ' \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
                       'LostPassword Tic ' \
                       'CheckMailSent ' \
