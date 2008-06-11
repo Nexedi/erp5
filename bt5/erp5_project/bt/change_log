@@ -1,6 +1,8 @@
+2008-06-11 rafael
+* Use portal_notifications to send messages.
+
 2008-06-11 yo
 * Add a notification for finishing a task report.
-
 
 2008-06-03 vincentd
 * Add all rights for manager in :
