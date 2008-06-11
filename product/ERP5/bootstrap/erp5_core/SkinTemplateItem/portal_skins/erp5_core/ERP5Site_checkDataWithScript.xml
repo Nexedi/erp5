@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Recursively call a script on all subobjects.\n
+\n
+From document pointed to by \'relative_url\':\n
+- If its depth is 1 (ie no slash) and \'id_list\' isn\'t empty, immediately call a\n
+  script (\'method_id\') on all objects given by id_list. Also call it\n
+  recursively on subobjects if \'recursive\' is true.\n
+- Else, forward this call to its subobjects, which are given by \'id_list\'.\n
+  If id_list is None:\n
+  - if \'relative_url\' points to a HBTree and if \'full\' is false,\n
+    all subobjects for last \'hbtree_days\' are considered.\n
+  - else, all subobjects are considered.\n
+\n
+ method_id  - Script to call.\n
+ method_kw  - Dict containing arguments for \'method_id\'.\n
+ packet     - Maximum size (in number of objects to process)\n
+              of created activities.\n
+\n
+For the portal, \'relative_url\' must be false and only module objects are\n
+considered if id_list is None.\n
+"""\n
+\n
+document = context.getPortalObject()\n
+if relative_url:\n
+  document = document.restrictedTraverse(relative_url)\n
+  depth = len(relative_url.split(\'/\'))\n
+else:\n
+  depth = 0\n
+\n
+maximum_depth = 1\n
+\n
+assert depth <= maximum_depth\n
+\n
+def activate(**kw):\n
+  return context.activate(activity=\'SQLQueue\', lonely=1, tag=tag, **kw)\n
+\n
+if depth == maximum_depth and id_list:\n
+  # Immediate recursive check\n
+  error_list = []\n
+  if method_kw is None:\n
+    method_kw = {}\n
+  def recurse(document):\n
+    error_list.extend(getattr(document, method_id)(**method_kw))\n
+    if recursive:\n
+      for subdocument in document.objectValues():\n
+        recurse(subdocument)\n
+  for id in id_list:\n
+    recurse(document[id])\n
+  if active_process is None:\n
+    return error_list\n
+  if len(error_list):\n
+    # Create an activity to update active_process,\n
+    #  in order to prevent conflict errors.\n
+    activate(active_process=active_process, priority=2) \\\n
+    .Base_asActiveResult(title=relative_url, error_list=error_list)\n
+else:\n
+  if id_list is None:\n
+    if full or not getattr(document, \'isHBTree\', lambda: 0)():\n
+      id_list = document.objectIds()\n
+      if not depth:\n
+        id_list = tuple(x for x in id_list if x.endswith(\'_module\'))\n
+    else:\n
+      from DateTime import DateTime\n
+      id_list = []\n
+      for day_ago in xrange(hbtree_days):\n
+        date = (DateTime()-day_ago).strftime(\'%Y%m%d\')\n
+        context.log(\'date for objectIds\', date)\n
+        try:\n
+          id_list += document.objectIds(base_id=date)\n
+        except (TypeError, IndexError):\n
+          pass\n
+\n
+  if active_process is None:\n
+    active_process = context.newActiveProcess().getPath()\n
+  kw = dict(relative_url=relative_url, active_process=active_process,\n
+            tag=tag, full=full, recursive=recursive, packet=packet,\n
+            method_id=method_id, method_kw=method_kw)\n
+  if depth < maximum_depth:\n
+    packet = 1\n
+    relative_url = relative_url and relative_url + \'/\' or \'\'\n
+  for i in xrange(0, len(id_list), packet):\n
+    if packet == 1:\n
+      kw[\'relative_url\'] = relative_url + id_list[i]\n
+    else:\n
+      kw[\'id_list\'] = tuple(id_list[i:i+packet])\n
+    activate(priority=4).ERP5Site_checkDataWithScript(**kw)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>method_id, relative_url=None, active_process=None, id_list=None, full=0, recursive=1, tag=None, packet=30, hbtree_days=3, method_kw=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>10</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>method_id</string>
+                            <string>relative_url</string>
+                            <string>active_process</string>
+                            <string>id_list</string>
+                            <string>full</string>
+                            <string>recursive</string>
+                            <string>tag</string>
+                            <string>packet</string>
+                            <string>hbtree_days</string>
+                            <string>method_kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>document</string>
+                            <string>len</string>
+                            <string>depth</string>
+                            <string>maximum_depth</string>
+                            <string>AssertionError</string>
+                            <string>activate</string>
+                            <string>error_list</string>
+                            <string>None</string>
+                            <string>recurse</string>
+                            <string>_getiter_</string>
+                            <string>id</string>
+                            <string>_getitem_</string>
+                            <string>getattr</string>
+                            <string>tuple</string>
+                            <string>DateTime</string>
+                            <string>xrange</string>
+                            <string>day_ago</string>
+                            <string>date</string>
+                            <string>_inplacevar_</string>
+                            <string>TypeError</string>
+                            <string>IndexError</string>
+                            <string>dict</string>
+                            <string>kw</string>
+                            <string>i</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <int>0</int>
+                <int>1</int>
+                <none/>
+                <int>30</int>
+                <int>3</int>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_checkDataWithScript</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

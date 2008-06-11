@@ -34,7 +34,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import createZODBPythonScript, FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
 
 class TestERP5Base(ERP5TypeTestCase):
@@ -1170,6 +1170,33 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('closed', assignment.getValidationState())
     self.assertNotEquals(None, assignment.getStopDate())
     self.assertEquals(DateTime().day(), assignment.getStopDate().day())
+
+  def test_ERP5Site_checkDataWithScript(self):
+    test = 'test_ERP5Site_checkDataWithScript'
+    createZODBPythonScript(self.getSkinsTool().custom, test, '',
+                                           'return context.getRelativeUrl(),')
+
+    organisation = self.getOrganisationModule() \
+                       .newContent(portal_type='Organisation')
+    organisation.setDefaultAddressCity('Lille')
+    organisation.setDefaultAddressZipCode('59000')
+    person = self.getPersonModule().newContent(portal_type='Person')
+    person.setDefaultEmailText('nobody@example.com')
+
+    portal_activities = self.getActivityTool()
+    active_process = portal_activities.newActiveProcess()
+    portal_activities.ERP5Site_checkDataWithScript(method_id=test, tag=test,
+                                       active_process=active_process.getPath())
+    self.tic()
+    relative_url_list = sum((x.detail.split('\n')
+                             for x in active_process.getResultList()), [])
+
+    self.assertEquals(len(relative_url_list), len(set(relative_url_list)))
+    for obj in organisation, person, person.getDefaultEmailValue():
+      self.assertTrue(obj.getRelativeUrl() in relative_url_list)
+    for relative_url in relative_url_list:
+      self.assertTrue('/' in relative_url)
+      self.assertNotEquals(None, self.portal.unrestrictedTraverse(relative_url))
 
 
 def test_suite():
