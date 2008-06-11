@@ -1,3 +1,6 @@
+2008-06-11 yusei
+* Move Event_send and mail templates to erp5_base. erp5_core should be a minimum.
+
 2008-06-10 yusei
 * Move Event_send and mail templates from erp5_crm. It supports html email by default.
 
