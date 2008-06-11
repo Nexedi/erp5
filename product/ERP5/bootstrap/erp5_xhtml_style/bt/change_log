@@ -1,3 +1,6 @@
+2008-06-11 yo
+* Append LOCALIZER_LANGUAGE=xxx to the redirected URL in Base_doLanguage. This is a hack to prevent false caching.
+
 2008-06-09 kazuhiko
 * Add icons for domain tree.
 
