@@ -251,12 +251,12 @@ class CopyContainer:
         userid=user.getId()
         if userid is not None:
           #remove previous owners
-          dict = self.__ac_local_roles__
-          for key, value in dict.items():
+          local_role_dict = self.__ac_local_roles__
+          for key, value in local_role_dict.items():
             if 'Owner' in value:
               value.remove('Owner')
           #add new owner
-          l=dict.setdefault(userid, [])
+          l=local_role_dict.setdefault(userid, [])
           l.append('Owner')
 
     # Clear the transaction references
