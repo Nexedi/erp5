@@ -32,6 +32,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+from Products.ERP5Type.Base import _aq_reset
 from zLOG import LOG
 
 try:
@@ -1086,6 +1087,44 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.assertEquals(obj, value)
       obj = category_tool.resolveCategory('mapping/order/' + relative_url)
       self.assertEquals(obj, value)
+
+  def test_31_assert_raise_if_base_category_is_missing(self):
+    #First remove Base Category
+    self.portal.portal_categories.manage_delObjects(['region'])
+    get_transaction().commit()
+    self.tic()
+    #call _aq_reset to regenerate Accessors
+    _aq_reset()
+    obj = self.portal.person_module.newContent(portal_type='Person')
+    get_transaction().commit()
+    self.tic()
+    try:
+      #Setters
+      self.assertRaises(AttributeError, getattr, obj, 'setRegion')
+      self.assertRaises(AttributeError, getattr, obj, 'setRegionValueList')
+      self.assertRaises(AttributeError, getattr, obj, 'setRegionList')
+      #getters
+      self.assertRaises(AttributeError, getattr, obj, 'getRegion')
+      self.assertRaises(AttributeError, getattr, obj, 'getRegionValueList')
+      self.assertRaises(AttributeError, getattr, obj, 'getRegionList')
+      #Tester
+      self.assertRaises(AttributeError, getattr, obj, 'hasRegion')
+    finally:
+      #add Base Category
+      self.portal.portal_categories.newContent(id='region', portal_type='Base Category')
+    get_transaction().commit()
+    self.tic()
+    #check Method exists after base_category creation
+    #Setters
+    self.assertTrue(getattr(obj, 'setRegion') is not None)
+    self.assertTrue(getattr(obj, 'setRegionValueList') is not None)
+    self.assertTrue(getattr(obj, 'setRegionList') is not None)
+    #getters
+    self.assertTrue(getattr(obj, 'getRegion') is not None)
+    self.assertTrue(getattr(obj, 'getRegionValueList') is not None)
+    self.assertTrue(getattr(obj, 'getRegionList') is not None)
+    #Tester
+    self.assertTrue(getattr(obj, 'hasRegion') is not None)
 
 def test_suite():
   suite = unittest.TestSuite()
