@@ -107,7 +107,7 @@ def PropertyManager_setProperty(self, id, value, type=None):
 
     if type in ('selection', 'multiple selection'):
         if not hasattr(self, value):
-            raise 'Bad Request', 'No select variable %s' % value
+            raise BadRequest, 'No select variable %s' % value
         self._local_properties=getattr(self, '_local_properties', ()) + (
             {'id':id, 'type':type, 'select_variable':value},)
         if type=='selection':
