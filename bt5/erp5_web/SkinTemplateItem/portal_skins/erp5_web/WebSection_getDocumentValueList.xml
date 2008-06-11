@@ -122,7 +122,8 @@ try:\n
   current_section = context.getWebSectionValue()\n
 \n
   # Build the list of parameters\n
-  valid_portal_type_list = portal.getPortalDocumentTypeList()\n
+  if not kw.has_key(\'portal_type\'):\n
+    kw[\'portal_type\'] = portal.getPortalDocumentTypeList()\n
 \n
   if language is None:\n
     language = portal.Localizer.get_selected_language()\n
@@ -137,8 +138,7 @@ try:\n
     group_by = (\'reference\',)\n
 \n
   # Return the list of matching documents for the given states\n
-  return current_section.searchResults(portal_type=valid_portal_type_list,\n
-                                       language=language,\n
+  return current_section.searchResults(language=language,\n
                                        validation_state=validation_state,\n
                                        sort_on=sort_on,\n
                                        group_by=group_by,\n
@@ -206,7 +206,7 @@ except Unauthorized:\n
                             <string>portal_catalog</string>
                             <string>context</string>
                             <string>current_section</string>
-                            <string>valid_portal_type_list</string>
+                            <string>_write_</string>
                             <string>None</string>
                             <string>_apply_</string>
                           </tuple>
