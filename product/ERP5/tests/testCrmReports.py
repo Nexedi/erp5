@@ -31,12 +31,12 @@
 """Tests Standards ERP5 Crm Reports
 """
 import unittest
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 
-class CrmTestCase(ERP5TypeTestCase):
+class CrmTestCase(ERP5ReportTestCase):
   """Tests starts with a preference activated for self.my_organisation, logged in
   as a user with Assignee, Assignor and Author role.
 
@@ -155,11 +155,9 @@ class CrmTestCase(ERP5TypeTestCase):
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
 
-  def setUp(self):
+  def afterSetUp(self):
     """Setup the fixture.
     """
-    ERP5TypeTestCase.setUp(self)
-    self.portal = self.getPortal()
     self.event_module = self.portal.event_module
     self.campaign_module = self.portal.campaign_module
     self.meeting_module = self.portal.meeting_module
@@ -168,7 +166,6 @@ class CrmTestCase(ERP5TypeTestCase):
     self.organisation_module = self.portal.organisation_module
     self.person_module = self.portal.person_module
     self.portal_categories = self.portal.portal_categories
-
  
     # create group category
     if not self.portal_categories['group'].has_key('demo_group'): 
@@ -233,7 +230,7 @@ class CrmTestCase(ERP5TypeTestCase):
     self.tic()
 
 
-  def tearDown(self):
+  def beforeTearDown(self):
     """Remove all documents.
     """
     get_transaction().abort()
@@ -255,7 +252,6 @@ class CrmTestCase(ERP5TypeTestCase):
                       
     get_transaction().commit()
     self.tic()
-    ERP5TypeTestCase.tearDown(self)
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
@@ -275,36 +271,6 @@ class TestCrmReports(CrmTestCase):
   """
   def getTitle(self):
     return "Crm Reports"
-
-  # utility methods for ERP5 Report -> TODO move in framework !
-  def getReportSectionList(self, report_name):
-    """Get the list of report sections in a report."""
-    report = getattr(self.portal, report_name)
-    report_method = getattr(self.portal, report.report_method)
-    return report_method()
-
-  def getListBoxLineList(self, report_section):
-    """Render the listbox in a report section, return None if no listbox exists
-    in the report_section.
-    """
-    result = None
-    here = report_section.getObject(self.portal)
-    report_section.pushReport(self.portal)
-    form = getattr(here, report_section.getFormId())
-    if form.has_field('listbox'):
-      result = form.listbox.get_value('default',
-                                      render_format='list',
-                                      REQUEST=self.portal.REQUEST)
-    report_section.popReport(self.portal)
-    return result
-
-  def checkLineProperties(self, line, **kw):
-    """Check properties of a report line.
-    """
-    for k, v in kw.items():
-      self.assertEquals(v, line.getColumnProperty(k),
-          '`%s`: expected: %r actual: %r' % (k, v, line.getColumnProperty(k)))
-  # /utility methods for ERP5 Report
 
   def testCampaignStatus(self):
     # Campaign Status report.

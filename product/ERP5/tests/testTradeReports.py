@@ -29,12 +29,12 @@
 """Tests Standards ERP5 Trade Reports
 """
 import unittest
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 
-class TestTradeReports(ERP5TypeTestCase):
+class TestTradeReports(ERP5ReportTestCase):
   """Test Trade reports
   """
   def getTitle(self):
@@ -201,15 +201,6 @@ class TestTradeReports(ERP5TypeTestCase):
       
     return sale_order
       
-
-  def checkLineProperties(self, line, **kw):
-    """Check properties of a report line.
-    """
-    for k, v in kw.items():
-      self.assertEquals(v, line.getColumnProperty(k),
-          '`%s`: expected: %r actual: %r' % (k, v, line.getColumnProperty(k)))
-  # /utility methods for ERP5 Report
-
   def testSaleOrderReport(self):
     """
     Sale order report.
@@ -470,30 +461,6 @@ class TestTradeReports(ERP5TypeTestCase):
                  'total amount': 84.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
-
-  # utility methods for ERP5 Report
-  def getReportSectionList(self, context, report_name):
-    """Get the list of report sections in a report."""
-    report = getattr(context, report_name)
-    report_method = getattr(context, report.report_method)
-    return report_method()
-
-  def getListBoxLineList(self, report_section):
-    """Render the listbox in a report section, return None if no listbox exists
-    in the report_section.
-    """
-    result = None
-    here = report_section.getObject(self.portal)
-    report_section.pushReport(self.portal)
-    form = getattr(here, report_section.getFormId())
-    if form.has_field('listbox'):
-      result = form.listbox.get_value('default',
-                                      render_format='list',
-                                      REQUEST=self.portal.REQUEST)
-    report_section.popReport(self.portal)
-    return result
-
-        
 
   def testStockReport(self):
     """
