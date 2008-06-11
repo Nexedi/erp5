@@ -90,18 +90,21 @@ portal_catalog = portal.portal_catalog\n
 # The list of portal types here should be large enough to include\n
 # all portal_types defined in the various sections so that\n
 # href tags which point to a document by reference can still work.\n
-valid_portal_type_list = [\'Web Page\', ]\n
+valid_portal_type_list = portal.getPortalDocumentTypeList()\n
 \n
 # Find the applicable language\n
-if kw.has_key(\'language\'):\n
-  language = kw[\'language\']\n
-  del kw[\'language\']\n
-else:\n
+if language is None:\n
   language = portal.Localizer.get_selected_language()\n
+\n
+if validation_state is None:\n
+  validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
+                      \'shared\', \'shared_alive\', \'public\', \'validated\')\n
 \n
 # Search the catalog for all documents matching the reference\n
 # this will only return documents which are accessible by the user\n
-web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list,\n
+web_page_list = portal_catalog(reference=name,\n
+                               portal_type=valid_portal_type_list,\n
+                               validation_state=validation_state,\n
                                language=language,\n
                                order_by=[(\'version\', \'descending\')],\n
                                group_by=(\'reference\',),\n
@@ -109,7 +112,9 @@ web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_lis
 \n
 if len(web_page_list) == 0 and language != \'en\':\n
   # Search again with English as a fallback.\n
-  web_page_list = portal_catalog(reference=name, portal_type=valid_portal_type_list,\n
+  web_page_list = portal_catalog(reference=name,\n
+                                 portal_type=valid_portal_type_list,\n
+                                 validation_state=validation_state,\n
                                  language=\'en\',\n
                                  order_by=[(\'version\', \'descending\')],\n
                                  group_by=(\'reference\',),\n
@@ -117,7 +122,9 @@ if len(web_page_list) == 0 and language != \'en\':\n
 \n
 if len(web_page_list) == 0:\n
   # Search again without the language\n
-  web_page_list = portal_catalog(reference=name, portal_type=\'Web Page\', \n
+  web_page_list = portal_catalog(reference=name,\n
+                                 portal_type=valid_portal_type_list,\n
+                                 validation_state=validation_state,\n
                                  order_by=[(\'version\', \'descending\')],\n
                                  group_by=(\'reference\',),\n
                                  **kw)\n
@@ -154,7 +161,7 @@ return web_page\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>name, portal=None, **kw</string> </value>
+            <value> <string>name, portal=None, language=None, validation_state=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,7 +181,7 @@ return web_page\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -182,19 +189,19 @@ return web_page\n
                           <tuple>
                             <string>name</string>
                             <string>portal</string>
+                            <string>language</string>
+                            <string>validation_state</string>
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_catalog</string>
                             <string>valid_portal_type_list</string>
-                            <string>_getitem_</string>
-                            <string>language</string>
-                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>web_page_list</string>
                             <string>len</string>
                             <string>web_page</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -207,6 +214,8 @@ return web_page\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <none/>
                 <none/>
               </tuple>
             </value>

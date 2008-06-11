@@ -112,22 +112,39 @@
 \n
  - Display only the latest version and the appropriate language.\n
 """\n
-portal_catalog = container.portal_catalog\n
+from zExceptions import Unauthorized\n
 \n
-# First find the Web Section or Web Site we belong to\n
-current_section = context.getWebSectionValue()\n
+try:\n
+  portal = container.getPortalObject()\n
+  portal_catalog = portal.portal_catalog\n
 \n
-# Build the list of parameters\n
-if not kw.has_key(\'validation_state\'):\n
-  kw[\'validation_state\'] = [\'draft\', \'submitted\', \'shared\',\n
-                            \'released\', \'published\', \'restricted\']\n
-if not kw.has_key(\'sort_on\'):\n
-  kw[\'sort_on\'] = [(\'int_index\', \'descending\')]\n
-if not kw.has_key(\'group_by\'):\n
-  kw[\'group_by\'] = (\'reference\',)\n
+  # First find the Web Section or Web Site we belong to\n
+  current_section = context.getWebSectionValue()\n
 \n
-# Return the list of matching documents for the given states\n
-return current_section.searchResults(**kw)\n
+  # Build the list of parameters\n
+  valid_portal_type_list = portal.getPortalDocumentTypeList()\n
+\n
+  if language is None:\n
+    language = portal.Localizer.get_selected_language()\n
+\n
+  if validation_state is None:\n
+    validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
+                        \'shared\', \'shared_alive\', \'public\', \'validated\')\n
+  if sort_on is None:\n
+    sort_on = [(\'int_index\', \'descending\')]\n
+\n
+  if group_by is None:\n
+    group_by = (\'reference\',)\n
+\n
+  # Return the list of matching documents for the given states\n
+  return current_section.searchResults(portal_type=valid_portal_type_list,\n
+                                       language=language,\n
+                                       validation_state=validation_state,\n
+                                       sort_on=sort_on,\n
+                                       group_by=group_by,\n
+                                       **kw)\n
+except Unauthorized:\n
+  return []\n
 </string> </value>
         </item>
         <item>
@@ -150,7 +167,7 @@ return current_section.searchResults(**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>language=None, validation_state=None, sort_on=None, group_by=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -170,19 +187,27 @@ return current_section.searchResults(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>language</string>
+                            <string>validation_state</string>
+                            <string>sort_on</string>
+                            <string>group_by</string>
                             <string>kw</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
                             <string>_getattr_</string>
                             <string>container</string>
+                            <string>portal</string>
                             <string>portal_catalog</string>
                             <string>context</string>
                             <string>current_section</string>
-                            <string>_write_</string>
+                            <string>valid_portal_type_list</string>
+                            <string>None</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -195,7 +220,12 @@ return current_section.searchResults(**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

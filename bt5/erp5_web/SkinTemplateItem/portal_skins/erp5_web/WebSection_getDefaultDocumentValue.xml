@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -109,8 +106,8 @@ if not reference_list: return None # Quick return\n
 # to some extend. This list takes into account some common\n
 # state IDs used in ERP5.\n
 return context.getDocumentValue(name=reference_list,\n
-            validation_state=[\'released\', \'published\', \'shared\',\n
-                              \'public\', \'validated\', ])\n
+            validation_state=(\'released\', \'released_alive\', \'published\', \'published_alive\',\n
+                              \'shared\', \'shared_alive\', \'public\', \'validated\'))\n
 </string> </value>
         </item>
         <item>
