@@ -1179,6 +1179,6 @@ class PaymentModeMovementGroup(PropertyMovementGroup):
   """ Group movements that have the same payment mode."""
   _property = 'payment_mode'
 
-class ColourMovementGroup(RootMovementGroup):
+class ColourMovementGroup(PropertyMovementGroup):
   """ Group movements that have the same colour category."""
   _property = 'colour'
