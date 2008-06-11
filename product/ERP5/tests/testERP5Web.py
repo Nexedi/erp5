@@ -337,6 +337,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = self.portal.web_page_module.newContent(
                                       portal_type = 'Web Page', 
                                       reference = document_reference)
+    document.release()
     website.setAuthorizationForced(0)  
     websection.setAuthorizationForced(0)                                      
     get_transaction().commit()
