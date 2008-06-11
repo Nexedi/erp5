@@ -100,7 +100,7 @@ class DefaultGetter(BaseGetter):
             acquisition_object_id=self._acquisition_object_id,
             is_list_type=is_list_type,
             is_tales_type=is_tales_type,
-            **kw
+            checked_permission=kw.get('checked_permission', None),
             )
 
     psyco.bind(__call__)
@@ -179,7 +179,7 @@ class ListGetter(BaseGetter):
             acquisition_object_id=self._acquisition_object_id,
             is_list_type=is_list_type,
             is_tales_type=is_tales_type,
-            **kw
+            checked_permission=kw.get('checked_permission', None),
             )
 
     psyco.bind(__call__)
