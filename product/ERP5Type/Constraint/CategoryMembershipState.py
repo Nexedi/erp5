@@ -47,7 +47,7 @@ class CategoryMembershipState(Constraint):
   _message_id_list = ['message_different_state']
 
   message_different_state = \
-      "${workflow_variable} for object ${membership_url} is ${current_state}" \
+      "${workflow_variable} for object ${membership_url} is ${current_state} " \
       "which is not in ${valid_state_list}"
 
   def checkConsistency(self, obj, fixit=0):
