@@ -790,6 +790,43 @@ class ERP5TypeTestCase(PortalTestCase):
                             % title) # run_unit_test depends on this string.
         raise
 
+
+class ERP5ReportTestCase(ERP5TypeTestCase):
+  """Base class for testing ERP5 Reports
+  """
+  def getReportSectionList(self, report_name):
+    """Get the list of report sections in a report."""
+    report = getattr(self.portal, report_name)
+    report_method = getattr(self.portal, report.report_method)
+    return report_method()
+
+  def getListBoxLineList(self, report_section):
+    """Render the listbox in a report section, return None if no listbox exists
+    in the report_section.
+    """
+    result = None
+    here = report_section.getObject(self.portal)
+    report_section.pushReport(self.portal)
+    form = getattr(here, report_section.getFormId())
+    if form.has_field('listbox'):
+      result = form.listbox.get_value('default',
+                                      render_format='list',
+                                      REQUEST=self.portal.REQUEST)
+    report_section.popReport(self.portal)
+    return result
+
+  def checkLineProperties(self, line, **kw):
+    """Check properties of a report line.
+    """
+    diff_list = []
+    for k, v in kw.items():
+      if v != line.getColumnProperty(k):
+        diff_list.append('`%s`: expected: %r actual: %r' %
+                                (k, v, line.getColumnProperty(k)))
+    if diff_list:
+      self.fail('Lines differs:\n' + '\n'.join(diff_list))
+
+
 from unittest import _makeLoader, TestSuite
 
 def dummy_makeSuite(testCaseClass, prefix='dummy_test', sortUsing=cmp, suiteClass=TestSuite):
