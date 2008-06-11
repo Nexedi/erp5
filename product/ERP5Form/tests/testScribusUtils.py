@@ -27,7 +27,6 @@
 
 import unittest
 import os
-import DateTime
 from zLOG import LOG
 
 from Testing import ZopeTestCase
