@@ -271,7 +271,7 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
     if user is _MARKER:
       user = None # By default, do nothing
       if old_user is None or old_user.getUserName() == 'Anonymous User':
-        user_folder = getToolByName(self, 'acl_users', None)
+        user_folder = getattr(self.getPortalObject(), 'acl_users', None)
         if user_folder is not None:
           try:
             if request.get('PUBLISHED', _MARKER) is _MARKER:
