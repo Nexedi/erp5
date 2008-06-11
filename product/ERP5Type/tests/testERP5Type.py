@@ -1861,6 +1861,76 @@ class TestPropertySheet:
       self.assertRaises(Unauthorized, foo.getRegionValue)
       self.assertRaises(Unauthorized, foo.getRegionTitle)
 
+    def test_acquired_property_to_unaccessible_documents(self):
+      # Acquired Accessors raises Unauthorized when you try to access objects
+      # you cannot Access, unless you explictly pass checked_permission=
+
+      region_category = self.getPortal().portal_categories.region
+      beta_id = "beta"
+      beta_title = "Beta System"
+      beta = region_category.newContent(
+              portal_type = "Category",
+              id =          beta_id,
+              title =       beta_title, )
+      beta_path = beta.getCategoryRelativeUrl()
+
+      gamma_id = "gamma"
+      gamma_title = "Gamma System"
+      gamma = region_category.newContent(
+              portal_type = "Category",
+              id =          gamma_id,
+              title =       gamma_title, )
+      gamma_path = gamma.getCategoryRelativeUrl()
+
+      # Make sure categories are reindexed
+      get_transaction().commit()
+      self.tic()
+
+      beta.manage_permission('View', roles=[], acquire=0)
+      beta.manage_permission('Access contents information', roles=[], acquire=0)
+      # with this security setting, it's not possible to access "beta":
+      self.assertRaises(Unauthorized,
+          region_category.restrictedTraverse, "beta")
+
+      # Define the acquired property
+      text = """
+class TestPropertySheet:
+    \"\"\"
+        TestAcquiredAccessorPropertySheet for this unit test
+    \"\"\"
+
+    _properties = (
+        {   'id'          : 'wrapped_region_title',
+            'description' : 'The title of the region',
+            'type'        : 'string',
+            'acquisition_base_category'     : ('region',),
+            'acquisition_portal_type'       : ('Category', ),
+            'acquisition_copy_value'        : 0,
+            'acquisition_accessor_id'       : 'getTitle',
+            'acquisition_depends'           : None,
+            'alt_accessor_id'               : ('_categoryGetRegionTitle', ),
+            'mode'        : 'w' },
+      )
+
+"""
+      self._addPropertySheet('Person', text)
+
+      # Create a new person, and associate it to beta and gamma.
+      module = self.getPersonModule()
+      foo = module.newContent(portal_type='Person', title='Foo')
+      foo.setRegionValueList((beta, gamma))
+
+      # getRegionList returns relative URLs, no security checks are applied
+      self.assertEquals([beta_path, gamma_path],
+                        foo.getRegionList())
+      self.assertEquals([gamma_path],
+          foo.getRegionList(checked_permission='View'))
+
+      # getWrappedRegionTitleList raise Unauthorized if a related document is
+      # private
+      self.assertRaises(Unauthorized, foo.getWrappedRegionTitleList)
+      self.assertEquals(["Gamma System"],
+          foo.getWrappedRegionTitleList(checked_permission='View'))
 
     def test_category_accessor_to_non_existing_documents(self):
       # tests behaviour of category accessors with relations to non existing

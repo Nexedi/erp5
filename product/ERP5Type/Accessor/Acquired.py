@@ -99,7 +99,8 @@ class DefaultGetter(BaseGetter):
             alt_accessor_id=self._alt_accessor_id,
             acquisition_object_id=self._acquisition_object_id,
             is_list_type=is_list_type,
-            is_tales_type=is_tales_type
+            is_tales_type=is_tales_type,
+            **kw
             )
 
     psyco.bind(__call__)
@@ -177,7 +178,8 @@ class ListGetter(BaseGetter):
             alt_accessor_id=self._alt_accessor_id,
             acquisition_object_id=self._acquisition_object_id,
             is_list_type=is_list_type,
-            is_tales_type=is_tales_type
+            is_tales_type=is_tales_type,
+            **kw
             )
 
     psyco.bind(__call__)
