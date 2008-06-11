@@ -6,10 +6,10 @@
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -95,7 +95,7 @@ class RootMovementGroup:
         # We are on a node group
         movement_list = self.getMovementList()
         if len(movement_list) > 0:
-          # We have a conflict here, because it is forbidden to have 
+          # We have a conflict here, because it is forbidden to have
           # 2 movements on the same node group
           tmp_result = self._separate(movement)
           self._movement_list, split_movement_list = tmp_result
@@ -112,19 +112,19 @@ class RootMovementGroup:
 
   def setGroupEdit(self, **kw):
     """
-      Store properties for the futur created object 
+      Store properties for the futur created object
     """
     self._property_dict = kw
 
   def updateGroupEdit(self, **kw):
     """
-      Update properties for the futur created object 
+      Update properties for the futur created object
     """
     self._property_dict.update(kw)
 
   def getGroupEditDict(self):
     """
-      Get property dict for the futur created object 
+      Get property dict for the futur created object
     """
     return getattr(self, '_property_dict', {})
 
@@ -165,7 +165,7 @@ class RootMovementGroup:
           added_movement = None
         else:
           break
-        
+
       return [new_stored_movement], [rejected_movement]
 
   ########################################################
@@ -260,7 +260,7 @@ class OrderMovementGroup(RootMovementGroup):
 allow_class(OrderMovementGroup)
 
 class CausalityAssignmentMovementGroup(RootMovementGroup):
-  """ 
+  """
   This movement group is used in order to define the causality
   on lines and cells.
   """
@@ -290,7 +290,7 @@ allow_class(CausalityAssignmentMovementGroup)
 
 class CausalityMovementGroup(RootMovementGroup):
   """ TODO: docstring """
-  
+
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     explanation_relative_url = self._getExplanationRelativeUrl(movement)
@@ -316,13 +316,13 @@ class CausalityMovementGroup(RootMovementGroup):
       # get the enclosing delivery for this cell or line
       if hasattr(explanation_value, 'getExplanationValue') :
         explanation_value = explanation_value.getExplanationValue()
-        
+
       explanation_relative_url = explanation_value.getRelativeUrl()
     return explanation_relative_url
-    
+
   def test(self,movement):
     return self._getExplanationRelativeUrl(movement) == self.explanation
-    
+
 allow_class(CausalityMovementGroup)
 
 class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
@@ -345,10 +345,10 @@ class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
     if explanation_value is not None:
       explanation_relative_url = explanation_value.getRelativeUrl()
     return explanation_relative_url
-    
+
   def test(self,movement):
     return self._getExplanationRelativeUrl(movement) == self.explanation
-    
+
 allow_class(RootAppliedRuleCausalityMovementGroup)
 
 # Again add a strange movement group, it was first created for building
@@ -367,10 +367,10 @@ class ParentExplanationMovementGroup(RootMovementGroup):
   def _getParentExplanationValue(self, movement):
     """ Get the order value for a movement """
     return movement.getParentValue().getExplanationValue()
-    
+
   def test(self,movement):
     return self._getParentExplanationValue(movement) == self.explanation_value
-    
+
 allow_class(ParentExplanationMovementGroup)
 
 class PathMovementGroup(RootMovementGroup):
@@ -569,7 +569,7 @@ class DateMovementGroup(RootMovementGroup):
 allow_class(DateMovementGroup)
 
 class CriterionMovementGroup(RootMovementGroup):
-  
+
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     if hasattr(movement, 'getGroupCriterion'):
@@ -791,7 +791,7 @@ class FakeMovement:
         if variation_category not in reference_variation_category_list:
           error_raising_needed = 1
           break
-    
+
     if error_raising_needed == 1:
       raise ValueError, "FakeMovement not well used."
 
@@ -811,7 +811,7 @@ class FakeMovement:
       Return content movement list
     """
     return self.__movement_list
-    
+
   def setDeliveryValue(self, object):
     """
       Set Delivery value for each movement
@@ -835,7 +835,7 @@ class FakeMovement:
 
   def getRelativeUrl(self):
     """
-      Only use to return a short description of one movement 
+      Only use to return a short description of one movement
       (if user did not configure DeliveryBuilder well...).
       Be careful.
     """
@@ -858,7 +858,7 @@ class FakeMovement:
       mvt_ratio = 1 / len(self.__movement_list)
       for movement in self.__movement_list:
         movement.edit(delivery_ratio=mvt_ratio)
-      
+
   def getPrice(self):
     """
       Return calculated price
@@ -867,7 +867,7 @@ class FakeMovement:
       return getattr(self, self.__price_method)()
     else:
       return None
-  
+
   def setPriceMethod(self, method):
     """
       Set the price method
@@ -879,7 +879,7 @@ class FakeMovement:
       Return calculated quantity
     """
     return getattr(self, self.__quantity_method)()
- 
+
   def setQuantityMethod(self, method):
     """
       Set the quantity method
@@ -888,7 +888,7 @@ class FakeMovement:
 
   def getAveragePrice(self):
     """
-      Return average price 
+      Return average price
     """
     if self.getAddQuantity()>0:
       return (self.getAddPrice() / self.getAddQuantity())
@@ -907,7 +907,7 @@ class FakeMovement:
 
   def getAddPrice(self):
     """
-      Return total price 
+      Return total price
     """
     total_price = 0
     for movement in self.getMovementList():
@@ -1110,9 +1110,9 @@ class SplitMovementGroup(RootMovementGroup):
 allow_class(SplitMovementGroup)
 
 class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
-  """ 
+  """
   Groups movement that comes from simulation movement that shares the
-  same Production Applied Rule. 
+  same Production Applied Rule.
   """
   def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
@@ -1128,11 +1128,11 @@ class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
     transformation_rule = transformation_applied_rule.getSpecialiseValue()
     if transformation_rule.getPortalType() != 'Transformation Rule':
       raise MovementGroupError, 'movement! %s' % movement.getPath()
-    # XXX Dirty hardcoded 
+    # XXX Dirty hardcoded
     production_movement = transformation_applied_rule.pr
     production_packing_list = production_movement.getExplanationValue()
     return production_packing_list.getRelativeUrl()
-    
+
   def test(self,movement):
     return self._getExplanationRelativeUrl(movement) == self.explanation
 
@@ -1238,5 +1238,3 @@ class PaymentModeMovementGroup(PropertyMovementGroup):
 class ColourMovementGroup(RootMovementGroup):
   """ Group movements that have the same colour category."""
   _property = 'colour'
-
-  
