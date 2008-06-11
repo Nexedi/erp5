@@ -478,8 +478,11 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(['this_is_system'],
                       preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
-    # check a user can't edit preference which are marked for manager
-    self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
+    # check a user can't edit preference which are marked for manager (only for zope2.8)
+    try:
+      from ZODB.Transaction import Transaction
+    except ImportError:      
+      self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
 
     
 
