@@ -50,6 +50,7 @@ from Products.ZCatalog.Lazy import LazyMap
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
 
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from zLOG import LOG, BLATHER, PROBLEM
 
 
@@ -1057,6 +1058,26 @@ def createExpressionContext(object, portal=None):
       }
   return getEngine().getContext(data)
 
+def getExistingBaseCategoryList(portal, base_cat_list):
+  cache = getReadOnlyTransactionCache(portal)
+  if cache is None:
+    from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+    cache = getTransactionalVariable(portal)
+  category_tool = portal.portal_categories
+  new_base_cat_list = []
+  for base_cat in base_cat_list:
+    key = (base_cat,)
+    try:
+      value = cache[key]
+    except KeyError:
+      value = category_tool._getOb(base_cat, None)
+      if value is None:
+        LOG('ERP5Type.Utils.getExistingBaseCategoryList', PROBLEM, 'base_category "%s" is missing, can not generate Accessors' % (base_cat))
+      cache[key] = value
+    if value is not None:
+      new_base_cat_list.append(base_cat)
+  return tuple(new_base_cat_list)
+
 def setDefaultProperties(property_holder, object=None, portal=None):
     """
       This methods sets default accessors for this object as well
@@ -1121,7 +1142,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
           new_cat_list.append(result)
       else:
         new_cat_list.append(cat)
-    cat_list = new_cat_list
+    cat_list = getExistingBaseCategoryList(portal, new_cat_list)
 
     for const in constraint_list:
       for key,value in const.items():
