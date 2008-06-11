@@ -27,6 +27,8 @@
 
 import unittest
 import os
+import DateTime
+from zLOG import LOG
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -287,6 +289,43 @@ class TestScribusUtils(ERP5TypeTestCase):
       field = getattr(form, field_name, None)
       self.assertEquals(field.values['editable'], 1)
 
+  def test_07_DateTimeFieldWithModuleCreation(self):
+    '''Just create a module using scribus file and pdf file with DateTimeField
+    and test DateTime format'''
+
+    self.portal.ERP5Site_createModuleScribus(
+                  option_html=1,
+                  desired_width=800,
+                  desired_height=600,
+                  module_portal_type="Authorisation Module",
+                  portal_skins_folder="erp5_authorisation",
+                  object_portal_type="Authorisation",
+                  object_title="Authorisation",
+                  module_id="authorisation_module",
+                  module_title="Authorisation Module Title",
+                  import_pdf_file=self.makeFileUpload('Authorisation.pdf'),
+                  import_scribus_file=self.makeFileUpload('Authorisation.sla'),)
+
+    self.assertNotEqual(self.portal._getOb('authorisation_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_authorisation", None), None)
+    self.assertEquals("Authorisation Module Title",
+                      self.portal.authorisation_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Authorisation Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Authorisation"), None)
+    # Create a 
+    portal = self.getPortal()
+    # add property sheet Task in portal type Authorisation
+    self.portal.portal_types.Authorisation.setPropertySheetList('Task')
+    authorisation_module = self.portal.authorisation_module
+    authorisation = authorisation_module.newContent(portal_type='Authorisation')
+    # fill Authorisation
+    authorisation.setTitle('Mun Dad')
+    authorisation.setStartDate('2008/06/11')
+    form = self.portal.portal_skins.erp5_authorisation.Authorisation_view
+    input_order = form.my_start_date.get_value('input_order')
+    self.assertEqual(input_order,'dmy')
 
 
 def test_suite():
