@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -106,19 +103,25 @@
  - change the behaviour of WebSection_getPermanentURL\n
    for documents which are not published.\n
 """\n
+# If no reference is defined, no way to build a permanent URL.\n
+reference = document.getReference()\n
+if not reference:\n
+  return document.absolute_url()\n
+\n
 # Return absolute URL if this is not an appropriate portal_type\n
-valid_portal_type_list = [\'Web Page\', ] # WARNING - this is a copy from WebSection_getDocumentValue\n
+portal = context.getPortalObject()\n
+valid_portal_type_list = portal.getPortalDocumentTypeList()\n
 if document.getPortalType() not in valid_portal_type_list:\n
   return document.absolute_url()\n
 \n
 # Return absolute URL if this is not a \'live\' document\n
-validation_state = [\'draft\', \'submitted\', \'shared\',     # WARNING - this is a copy from WebSection_getDocumentValueList\n
-                    \'released\', \'published\', \'restricted\']\n
-if not document.getReference() or document.getValidationState() not in validation_state:\n
+validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
+                    \'shared\', \'shared_alive\', \'public\', \'validated\')\n
+if document.getValidationState() not in validation_state:\n
   return document.absolute_url()\n
 \n
 # Return the URL\n
-return "%s/%s" % (context.absolute_url(), document.getReference())\n
+return "%s/%s" % (context.absolute_url(), reference)\n
 </string> </value>
         </item>
         <item>
@@ -168,10 +171,12 @@ return "%s/%s" % (context.absolute_url(), document.getReference())\n
                         <value>
                           <tuple>
                             <string>document</string>
-                            <string>valid_portal_type_list</string>
                             <string>_getattr_</string>
-                            <string>validation_state</string>
+                            <string>reference</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>valid_portal_type_list</string>
+                            <string>validation_state</string>
                           </tuple>
                         </value>
                     </item>

@@ -1,4 +1,7 @@
 2008-06-11 yo
+* Make WebSection_getPermanentURL consistent.
+
+2008-06-11 yo
 * Make the scripts for retrieving documents more consistent.
 
 2008-06-10 yo
