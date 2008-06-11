@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
+from zLOG import LOG
 
 no_crawl_protocol_list = ['mailto', 'javascript', ]
 no_host_protocol_list = ['mailto', 'news', 'javascript',]
@@ -147,6 +148,9 @@ class Url(Coordinate, Base, UrlMixIn):
     * extra_headers is a dictionnary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
     """
+    LOG('ERP5/Document/Url.send',0, 
+     'DEPRECATED Url.send should not be used, use portal_notifications instead.')
+
     if from_url is None:
       from_url = self.getUrlString(None)
     if to_url is None:
