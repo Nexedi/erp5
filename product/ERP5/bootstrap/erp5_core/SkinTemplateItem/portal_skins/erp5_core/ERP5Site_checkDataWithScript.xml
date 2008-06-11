@@ -120,7 +120,7 @@ if depth == maximum_depth and id_list:\n
     # Create an activity to update active_process,\n
     #  in order to prevent conflict errors.\n
     activate(active_process=active_process, priority=2) \\\n
-    .Base_asActiveResult(title=relative_url, error_list=error_list)\n
+    .Base_makeActiveResult(title=relative_url, error_list=error_list)\n
 else:\n
   if id_list is None:\n
     if full or not getattr(document, \'isHBTree\', lambda: 0)():\n
