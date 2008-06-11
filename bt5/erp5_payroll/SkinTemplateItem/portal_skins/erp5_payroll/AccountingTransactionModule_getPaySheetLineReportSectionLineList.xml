@@ -70,6 +70,7 @@ from DateTime import DateTime\n
 \n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
+translateString = portal.Base_translateString\n
 \n
 section_category = request[\'section_category\']\n
 section_uid_list = portal.Base_getSectionUidListForSectionCategory(section_category)\n
@@ -90,6 +91,7 @@ portal_simulation = context.getPortalObject().portal_simulation\n
 \n
 employee_params = {\n
     \'group_by_node\' : 1,\n
+    \'group_by_variation\': 1,\n
     \'section_uid\' : section_uid_list,\n
     \'tax_category_uid\' : context.portal_categories.tax_category.employee_share.getUid(),\n
     \'at_date\' : at_date,\n
@@ -101,6 +103,7 @@ employee_params = {\n
 \n
 employer_params = {\n
     \'group_by_node\' : 1,\n
+    \'group_by_variation\': 1,\n
     \'section_uid\' : section_uid_list,\n
     \'tax_category_uid\' : context.portal_categories.tax_category.employer_share.getUid(),\n
     \'at_date\' : at_date,\n
@@ -127,33 +130,48 @@ base_total = 0\n
 i = 0\n
 for inventory in employee_inventory_list:\n
   price = inventory.total_price or 0\n
-  employee = inventory.getDestinationValue()\n
+  movement = inventory.getObject()\n
+  employee = movement.getDestinationValue()\n
+  salary_range = movement.getSalaryRange()\n
+  salary_range_title = movement.getSalaryRange() and\\\n
+                          movement.getSalaryRangeValue().getTranslatedTitle()\n
+\n
   i = i + 1\n
-  inventory_list[employee.getUid()] = Object(id=i,\n
+  inventory_list[(employee.getUid(), salary_range)] = Object(id=i,\n
                employee_career_reference=employee.getCareerReference(),\n
                employee_title=employee.getTitle(),\n
                employee_career_function=employee.getCareerFunctionTitle(),\n
+               salary_range=salary_range,\n
+               salary_range_title=salary_range_title,\n
                employee_share=price,\n
                base=inventory.quantity, )\n
   employee_total += price\n
   base_total += inventory.quantity\n
 \n
 for inventory in employer_inventory_list:\n
-  if employee.getUid() not in inventory_list:\n
-    inventory_list[employee.getUid()] = Object(id=i,\n
+  price = inventory.total_price or 0\n
+  movement = inventory.getObject()\n
+  employee = movement.getDestinationValue()\n
+  salary_range = movement.getSalaryRange()\n
+  salary_range_title = movement.getSalaryRange() and\\\n
+                          movement.getSalaryRangeValue().getTranslatedTitle()\n
+\n
+  key = (employee.getUid(), salary_range)\n
+  if key not in inventory_list:\n
+    inventory_list[key] = Object(id=i,\n
                employee_career_reference=employee.getCareerReference(),\n
                employee_title=employee.getTitle(),\n
                employee_career_function=employee.getCareerFunctionTitle(),\n
                employee_share=0,\n
+               salary_range=salary_range,\n
+               salary_range_title=salary_range_title,\n
                base=inventory.quantity, )\n
     base_total += inventory.quantity\n
     i = i + 1\n
 \n
-  price = inventory.total_price or 0\n
   employee = inventory.getDestinationValue()\n
-  inventory_list[employee.getUid()].employer_share = price\n
-  inventory_list[employee.getUid()].total = \\\n
-       inventory_list[employee.getUid()].employee_share + price\n
+  inventory_list[key].employer_share = price\n
+  inventory_list[key].total = inventory_list[key].employee_share + price\n
   employer_total += price\n
 \n
 total = employee_total + employer_total\n
@@ -163,11 +181,72 @@ request.set(\'employer_total\', employer_total)\n
 request.set(\'base_total\', base_total)\n
 request.set(\'total\', total)\n
 \n
-invent_list = []\n
-invent_list = inventory_list.values()\n
-invent_list.sort(lambda x, y: cmp(x.id, y.id))\n
 \n
-return invent_list\n
+sorted_inventory_list = []\n
+sorted_inventory_list = inventory_list.values()\n
+\n
+# sort by salary range, and add intermediate sums if needed\n
+def sort_method(a, b):\n
+  salary_range_diff = cmp(a.salary_range, b.salary_range)\n
+  if salary_range_diff:\n
+    return salary_range_diff\n
+  employee_career_reference_diff = cmp(a.employee_career_reference,\n
+                                       b.employee_career_reference)\n
+  if employee_career_reference_diff:\n
+    return employee_career_reference_diff\n
+  return cmp(a.employee_title, b.employee_title)\n
+\n
+sorted_inventory_list.sort(sort_method)\n
+\n
+i = 0\n
+intermediate_base_total = 0\n
+intermediate_employee_total = 0\n
+intermediate_employer_total = 0\n
+\n
+multiple_salary_range = 0\n
+if sorted_inventory_list:\n
+  new_inventory_list = []\n
+\n
+  current_salary_range = sorted_inventory_list[0][\'salary_range\']\n
+  current_salary_range_title = sorted_inventory_list[0][\'salary_range_title\']\n
+\n
+  for inventory in sorted_inventory_list:\n
+    i = i+1\n
+    inventory[\'id\'] = i\n
+\n
+    if inventory[\'salary_range\'] != current_salary_range:\n
+      multiple_salary_range = 1\n
+      new_inventory_list.append(Object(\n
+               employee_title=translateString(\'Total ${salary_range_title}\',\n
+                     mapping=dict(salary_range_title=current_salary_range_title)),\n
+               base=intermediate_base_total,\n
+               employee_share=intermediate_employee_total,\n
+               employer_share=intermediate_employer_total))\n
+\n
+      intermediate_base_total = 0\n
+      intermediate_employee_total = 0\n
+      intermediate_employer_total = 0\n
+\n
+      current_salary_range = inventory[\'salary_range\']\n
+      current_salary_range_title = inventory[\'salary_range_title\']\n
+\n
+    intermediate_base_total += inventory[\'base\']\n
+    intermediate_employee_total += inventory.get(\'employee_share\', 0)\n
+    intermediate_employer_total += inventory.get(\'employer_share\', 0)\n
+    new_inventory_list.append(inventory)\n
+\n
+  if multiple_salary_range:\n
+    new_inventory_list.append(Object(\n
+           employee_title=translateString(\'Total ${salary_range_title}\',\n
+                 mapping=dict(salary_range_title=current_salary_range_title)),\n
+           base=intermediate_base_total,\n
+           employee_share=intermediate_employee_total,\n
+           employer_share=intermediate_employer_total))\n
+     \n
+  return new_inventory_list\n
+\n
+\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -224,6 +303,7 @@ return invent_list\n
                             <string>context</string>
                             <string>request</string>
                             <string>portal</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>section_category</string>
                             <string>section_uid_list</string>
@@ -250,11 +330,24 @@ return invent_list\n
                             <string>_getiter_</string>
                             <string>inventory</string>
                             <string>price</string>
+                            <string>movement</string>
                             <string>employee</string>
+                            <string>salary_range</string>
+                            <string>salary_range_title</string>
                             <string>_inplacevar_</string>
+                            <string>key</string>
                             <string>employer_share</string>
                             <string>total</string>
-                            <string>invent_list</string>
+                            <string>sorted_inventory_list</string>
+                            <string>sort_method</string>
+                            <string>intermediate_base_total</string>
+                            <string>intermediate_employee_total</string>
+                            <string>intermediate_employer_total</string>
+                            <string>multiple_salary_range</string>
+                            <string>new_inventory_list</string>
+                            <string>current_salary_range</string>
+                            <string>current_salary_range_title</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
