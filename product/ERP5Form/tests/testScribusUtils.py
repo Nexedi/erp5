@@ -302,19 +302,19 @@ class TestScribusUtils(ERP5TypeTestCase):
                   object_title="Authorisation",
                   module_id="authorisation_module",
                   module_title="Authorisation Module Title",
-                  import_pdf_file=self.makeFileUpload('Authorisation.pdf'),
-                  import_scribus_file=self.makeFileUpload('Authorisation.sla'),)
-
+                import_pdf_file=self.makeFileUpload('Authorisation.pdf'),
+                import_scribus_file=self.makeFileUpload('Authorisation.sla'),)
+    portal = self.getPortal()
+    portal_types = self.portal.portal_types
     self.assertNotEqual(self.portal._getOb('authorisation_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_authorisation", None), None)
     self.assertEquals("Authorisation Module Title",
                       self.portal.authorisation_module.getTitle())
-    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Authorisation Module"),
-                        None)
-    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Authorisation"), None)
+    module_portal_type = portal_types.getTypeInfo("Authorisation Module")
+    self.assertNotEqual(module_portal_type, None)
+    self.assertNotEqual(portal_types.getTypeInfo("Authorisation"), None)
     # Create a 
-    portal = self.getPortal()
     # add property sheet Task in portal type Authorisation
     self.portal.portal_types.Authorisation.setPropertySheetList('Task')
     authorisation_module = self.portal.authorisation_module
