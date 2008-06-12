@@ -794,10 +794,10 @@ class ERP5TypeTestCase(PortalTestCase):
 class ERP5ReportTestCase(ERP5TypeTestCase):
   """Base class for testing ERP5 Reports
   """
-  def getReportSectionList(self, report_name):
-    """Get the list of report sections in a report."""
-    report = getattr(self.portal, report_name)
-    report_method = getattr(self.portal, report.report_method)
+  def getReportSectionList(self, context, report_name):
+    """Get the list of report sections in a report called on context."""
+    report = getattr(context, report_name)
+    report_method = getattr(context, report.report_method)
     return report_method()
 
   def getListBoxLineList(self, report_section):
