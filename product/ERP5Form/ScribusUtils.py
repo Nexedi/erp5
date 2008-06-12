@@ -1071,7 +1071,7 @@ class ManageCSS:
            str(scaling_factor1 *float(properties_field['position_x'])) + 'px'
 
         if properties_field['input_order'] in \
-             ['day/month/year', 'dmy', 'month/day/year', 'mdy']:
+             ['day/month/year', 'dmy', 'dmY', 'month/day/year', 'mdy', 'mdY']:
 
           # specified input order. must be dd/mm/yyyy or mm/dd/yyyy (year is
           # the last field).
@@ -2076,11 +2076,11 @@ class ScribusParser:
     # getting special properties for DateTimeField objects
     if object_dict['erp_type'] == 'DateTimeField':
       # recovering ERP equivalent for user's input_order
-      if properties_field['input_order'] in ['day/month/year','dmy']:
+      if properties_field['input_order'] in ['day/month/year', 'dmy', 'dmY']:
         object_dict['attributes']['input_order'] = 'dmy'
-      elif properties_field['input_order'] in ['month/day/year','mdy']:
+      elif properties_field['input_order'] in ['month/day/year','mdy', 'mdY']:
         object_dict['attributes']['input_order'] = 'mdy'
-      elif properties_field['input_order'] in ['year/month/day','ymd']:
+      elif properties_field['input_order'] in ['year/month/day','ymd', 'Ymd']:
         object_dict['attributes']['input_order'] = 'ymd'
       else:
         LOG('ScribusParser', INFO, 
