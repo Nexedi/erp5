@@ -139,9 +139,15 @@ else:\n
 \n
 # Change acquisition context of document, in order to get web section layout\n
 target = context.restrictedTraverse(target.getRelativeUrl())\n
-target.REQUEST.set(\'editable_mode\', editable_mode)\n
-target.REQUEST.set(\'portal_status_message\', msg)\n
-return target.view()\n
+target_request = target.REQUEST\n
+target_request.set(\'editable_mode\', editable_mode)\n
+target_request.set(\'portal_status_message\', msg)\n
+# clean up REQUEST as it is possible that this script is called\n
+# on an another Document in an edit view (then fields will be passed in REQUEST \n
+# overriding next form HTML generation in \'target.view()\' )\n
+for key in target_request.form.keys():\n
+  if key.startswith(\'field_my_\'):\n
+    del target_request.form[key]\n
 \n
 # XXX Do not use redirect, as it leeds to conflict error with convertion process\n
 # return target.Base_redirect(\'view\',\n
@@ -157,6 +163,12 @@ return target.view()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -218,6 +230,9 @@ return target.view()\n
                             <string>AttributeError</string>
                             <string>target</string>
                             <string>dict</string>
+                            <string>target_request</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
                           </tuple>
                         </value>
                     </item>
