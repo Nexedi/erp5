@@ -181,7 +181,7 @@ def ERP5Site_createModuleScribus(self,
     # attributes to get properties values.
     # This represents the main process of the script.
     widget_properties = \
-        ScribusParser.getPropertiesConversionDict(text_field_list)
+        ScribusParser.getPropertiesConversionDict(text_field_list, option_html)
 
     LOG('ERP5Site_createModuleScribus', INFO,
         'createmodule < ScribusParser.getPropertiesConversionDict')

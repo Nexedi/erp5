@@ -1149,7 +1149,6 @@ class ManageCSS:
 
       field_nb_range = field_nb + 1
       field_range = range(field_nb_range)
-      field_range = field_range
       for iterator in field_range:
         # iterator take the field_id according to the field_nb
         # ie (0..field_nb)
@@ -1499,7 +1498,7 @@ class ScribusParser:
 
 
   security.declarePublic('getPropertiesConversionDict')
-  def getPropertiesConversionDict(self, text_page_dict):
+  def getPropertiesConversionDict(self, text_page_dict, option_html):
     """
     takes a dict generated from 'getXmlObjectsProperties' method
     and returns a dict of PAGE including a list with usefull
@@ -1878,12 +1877,16 @@ class ScribusParser:
           # will automatically insert ' ' between element.
           # > this value is not used in ScribusUtils.py , but in PDFForm.py
           # when creating the fdf file to fill the PDF form.
-          object_properties['date_separator'] = \
+          if option_html == 1 and object_properties['editable'] == 1:
+            object_properties['date_separator'] = ''
+            object_properties['time_separator'] = ''
+          else:
+            object_properties['date_separator'] = \
                 sp.getObjectTooltipProperty('date_separator',
                                             '/',
                                             object_name,
                                             tooltipfield_properties_dict)
-          object_properties['time_separator'] = \
+            object_properties['time_separator'] = \
                 sp.getObjectTooltipProperty('time_separator',
                                             ':',
                                             object_name,
