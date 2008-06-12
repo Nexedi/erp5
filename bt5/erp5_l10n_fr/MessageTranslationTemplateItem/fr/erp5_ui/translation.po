@@ -1912,7 +1912,7 @@ msgid "Plan Transaction"
 msgstr "Planifier la transaction"
 
 msgid "Planned"
-msgstr "Plannifié"
+msgstr "Planifié"
 
 msgid "Plans of purchase orders"
 msgstr "Planifier des ordres d'achat"
@@ -3194,4 +3194,8 @@ msgstr "${tax_category_title} (Montant ou Taux)"
 
 msgid "Annotation Line Reference for Payroll Service Provider"
 msgstr "Reference de l'annotation pour l'organisme collecteur"
+
+msgid "Employee Number"
+msgstr "Matricule"
+
 
