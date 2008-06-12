@@ -1663,6 +1663,7 @@ class TestPayroll(TestPayrollMixin):
     request_form['mirror_section'] = provider.getRelativeUrl()
     
     report_section_list = self.getReportSectionList(
+                             self.portal.accounting_module,
                              'AccountingTransactionModule_viewPaySheetLineReport')
     self.assertEquals(1, len(report_section_list))
       
@@ -1851,6 +1852,7 @@ class TestPayroll(TestPayrollMixin):
     request_form['mirror_section'] = provider.getRelativeUrl()
     
     report_section_list = self.getReportSectionList(
+                             self.portal.accounting_module,
                              'AccountingTransactionModule_viewPaySheetLineReport')
     self.assertEquals(1, len(report_section_list))
       

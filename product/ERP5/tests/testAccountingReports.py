@@ -154,6 +154,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -317,6 +318,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['payment'] = bank1.getRelativeUrl()
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -531,6 +533,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -629,6 +632,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -700,6 +704,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -804,6 +809,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['detailed_from_date_summary'] = 1
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     # the report has 4 sections, 
     self.assertEquals(4, len(report_section_list))
@@ -875,6 +881,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -935,6 +942,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -993,6 +1001,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -1046,6 +1055,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     
@@ -1090,6 +1100,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1122,6 +1133,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['stopped', 'confirmed']
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewAccountStatementReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1157,6 +1169,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1254,6 +1267,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1365,6 +1379,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1448,6 +1463,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1511,6 +1527,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1589,6 +1606,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1655,6 +1673,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1733,6 +1752,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1799,6 +1819,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1869,6 +1890,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1910,6 +1932,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -1986,6 +2009,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['per_account_class_summary'] = 1
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
     self.assertEquals(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
@@ -2034,6 +2058,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
 
     report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
     self.assertEquals(6, len(report_section_list))
 

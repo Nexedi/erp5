@@ -374,6 +374,7 @@ class TestCrmReports(CrmTestCase):
     request_form['validation_state'] = ['validated',]
     
     report_section_list = self.getReportSectionList(
+                               self.portal.campaign_module,
                                'CampaignModule_viewCampaignStatusReport')
     self.assertEquals(1, len(report_section_list))
         
@@ -521,6 +522,7 @@ class TestCrmReports(CrmTestCase):
     request_form['validation_state'] = ['validated',]
     
     report_section_list = self.getReportSectionList(
+                               self.portal.campaign_module,
                                'CampaignModule_viewCampaignDetailedReport')
     self.assertEquals(2, len(report_section_list))
         
@@ -684,6 +686,7 @@ class TestCrmReports(CrmTestCase):
     request_form['validation_state'] = ['validated',]
     
     report_section_list = self.getReportSectionList(
+                               self.portal.meeting_module,
                                'MeetingModule_viewMeetingStatusReport')
     self.assertEquals(1, len(report_section_list))
         
@@ -829,6 +832,7 @@ class TestCrmReports(CrmTestCase):
     request_form['validation_state'] = ['validated',]
     
     report_section_list = self.getReportSectionList(
+                               self.portal.meeting_module,
                                'MeetingModule_viewMeetingDetailedReport')
     self.assertEquals(2, len(report_section_list))
         
@@ -992,6 +996,7 @@ class TestCrmReports(CrmTestCase):
     request_form['validation_state'] = ['validated',]
     
     report_section_list = self.getReportSectionList(
+                        self.portal.support_request_module,
                         'SupportRequestModule_viewSupportRequestStatusReport')
     self.assertEquals(1, len(report_section_list))
         
@@ -1137,6 +1142,7 @@ class TestCrmReports(CrmTestCase):
     request_form['validation_state'] = ['validated',]
     
     report_section_list = self.getReportSectionList(
+                      self.portal.support_request_module,
                       'SupportRequestModule_viewSupportRequestDetailedReport')
     self.assertEquals(2, len(report_section_list))
         
@@ -1300,6 +1306,7 @@ class TestCrmReports(CrmTestCase):
     request_form['sale_opportunity_state'] = ['contacted','offered']
     
     report_section_list = self.getReportSectionList(
+                      self.portal.sale_opportunity_module,
                       'SaleOpportunityModule_viewSaleOpportunityStatusReport')
     self.assertEquals(1, len(report_section_list))
         
@@ -1445,6 +1452,7 @@ class TestCrmReports(CrmTestCase):
     request_form['sale_opportunity_state'] = ['contacted','offered']
     
     report_section_list = self.getReportSectionList(
+                     self.portal.sale_opportunity_module,
                     'SaleOpportunityModule_viewSaleOpportunityDetailedReport')
     self.assertEquals(2, len(report_section_list))
         
@@ -1701,6 +1709,7 @@ class TestCrmReports(CrmTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     
     report_section_list = self.getReportSectionList(
+                                    self.portal.event_module,
                                     'EventModule_viewEventActivityReport')
     #Obtain 2 listbox with outgoing and incoming events
     self.assertEquals(2, len(report_section_list))
@@ -2043,6 +2052,7 @@ class TestCrmReports(CrmTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     
     report_section_list = self.getReportSectionList(
+                                    self.portal.event_module,
                                     'EventModule_viewEventDetailedReport')
     #Obtain 1 listbox with outgoing and incoming events
     self.assertEquals(1, len(report_section_list))
