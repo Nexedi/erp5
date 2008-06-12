@@ -110,6 +110,7 @@ class Setter(Method):
 from Products.CMFCore.Expression import Expression
 def _evaluateTales(instance=None, value=None):
   from Products.ERP5Type.Utils import createExpressionContext
+  __traceback_info__ = (instance, value)
   expression = Expression(value)
   econtext = createExpressionContext(instance)
   return expression(econtext)
