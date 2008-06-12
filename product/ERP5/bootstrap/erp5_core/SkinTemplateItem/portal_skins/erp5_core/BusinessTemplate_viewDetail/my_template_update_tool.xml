@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>CheckBoxField</string>
-        </tuple>
-        <none/>
+        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -147,7 +144,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>if checked, if will install all the missing tools in the site when installing the business template</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

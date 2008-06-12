@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The method used to solve the problem detected by the alarm if any</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

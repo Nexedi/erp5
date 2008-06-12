@@ -208,7 +208,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The preferred date order in which datetime field will be displayed (dd/mm/yyyy, yyyy/mm/dd, ...)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

@@ -100,17 +100,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Base_viewSearchResultList</string> </key>
+                    <key> <string>Base_viewSearchResultList</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>all_editable_columns</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -141,11 +141,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>disable_link</string> </key>
+                    <key> <string>disable_link</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -156,13 +156,13 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_permission</string> </key>
+                    <key> <string>editable_permission</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_role</string> </key>
+                    <key> <string>editable_role</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -176,29 +176,29 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>lines</string> </key>
+                    <key> <string>lines</string> </key>
                     <value> <int>600</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_action</string> </key>
+                    <key> <string>list_action</string> </key>
                     <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>not_viewable</string> </key>
+                    <key> <string>not_viewable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>read_only</string> </key>
+                    <key> <string>read_only</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>base_workflow_history_selection</string> </value>
                 </item>
                 <item>
@@ -206,11 +206,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Workflow History</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>url_columns</string> </key>
+                    <key> <string>url_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -241,13 +241,13 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>viewable_permission</string> </key>
+                    <key> <string>viewable_permission</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>viewable_role</string> </key>
+                    <key> <string>viewable_role</string> </key>
                     <value>
                       <list/>
                     </value>

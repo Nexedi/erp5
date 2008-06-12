@@ -210,7 +210,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Identifiant number</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

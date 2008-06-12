@@ -67,21 +67,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>all_columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>count_method</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -95,31 +95,31 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>lines</string> </key>
+                    <key> <string>lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>search</string> </key>
+                    <key> <string>search</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>select</string> </key>
+                    <key> <string>select</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort_columns</string> </key>
+                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -134,13 +134,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>all_columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -163,15 +163,15 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>count_method</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -194,35 +194,35 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>lines</string> </key>
+                    <key> <string>lines</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>search</string> </key>
+                    <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>select</string> </key>
+                    <key> <string>select</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>workflow_action_dialog_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort_columns</string> </key>
+                    <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>

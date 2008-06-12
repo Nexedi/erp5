@@ -118,7 +118,7 @@ return context.Base_redirect(form_id,\n
                             <string>form_id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>translateString</string>
                             <string>dict</string>
                           </tuple>

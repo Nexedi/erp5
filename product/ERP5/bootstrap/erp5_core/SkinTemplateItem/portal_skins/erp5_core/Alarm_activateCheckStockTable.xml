@@ -111,7 +111,7 @@ active_process.postResult(result)\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>active_process</string>
                             <string>result</string>
                           </tuple>

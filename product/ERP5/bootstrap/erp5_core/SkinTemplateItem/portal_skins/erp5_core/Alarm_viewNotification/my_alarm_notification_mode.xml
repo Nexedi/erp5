@@ -192,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Tell when we need to notify users of alarm\'s result</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

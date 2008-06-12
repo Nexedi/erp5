@@ -77,7 +77,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_template_path_list</string>

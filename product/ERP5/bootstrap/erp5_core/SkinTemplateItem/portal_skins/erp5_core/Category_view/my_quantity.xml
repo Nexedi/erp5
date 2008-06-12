@@ -99,6 +99,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
                 </item>
@@ -121,6 +125,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Quantity</string> </value>
                 </item>
               </dictionary>
             </value>

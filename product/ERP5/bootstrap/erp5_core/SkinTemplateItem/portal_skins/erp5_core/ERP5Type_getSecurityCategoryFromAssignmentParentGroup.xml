@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ExternalMethod.ExternalMethod</string>
-          <string>ExternalMethod</string>
-        </tuple>
-        <none/>
+        <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

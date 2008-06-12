@@ -123,7 +123,7 @@ return item_list\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
                             <string>item_list</string>

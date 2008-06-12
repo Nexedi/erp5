@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Value that indicate the rank in an order list</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

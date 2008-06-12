@@ -69,6 +69,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -120,6 +121,14 @@
                         <string>my_comment</string>
                         <string>my_multi_list_field</string>
                         <string>my_checkbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>not_assigned</string> </key>
+                    <value>
+                      <list>
+                        <string>your_graph</string>
                       </list>
                     </value>
                 </item>

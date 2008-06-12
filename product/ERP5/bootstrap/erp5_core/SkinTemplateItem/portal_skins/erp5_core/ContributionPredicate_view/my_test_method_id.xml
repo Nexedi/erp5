@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>ID of a script to test if the rule should be applied.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

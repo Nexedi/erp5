@@ -75,7 +75,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>display_width</string> </key>
+                    <key> <string>description</string> </key>
+                    <value> <string>Identifiant number</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
                     <value> <int>30</int> </value>
                 </item>
                 <item>
@@ -89,6 +93,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>ID</string> </value>
                 </item>
               </dictionary>
             </value>

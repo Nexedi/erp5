@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The next date at which alarm will be executed</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

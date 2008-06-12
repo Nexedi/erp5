@@ -115,7 +115,7 @@
                             <string>bundle_offset</string>
                             <string>active_process</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
