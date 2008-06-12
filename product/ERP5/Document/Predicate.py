@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from warnings import warn
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner
@@ -177,7 +178,12 @@ class Predicate(XMLObject, Folder):
           try:
             result = result and method(self)
           except TypeError:
+            if method.func_code.co_argcount != 0:
+              raise
             # backward compatibilty with script that takes no argument
+            warn('Predicate %s uses an old-style method (%s) that does not'
+                 ' take the predicate as argument' % (
+               self.getRelativeUrl(), method.__name__), DeprecationWarning)
             result = result and method()
 #        LOG('predicate test', 0,
 #            '%s after method %s ' % (result, test_method_id))
