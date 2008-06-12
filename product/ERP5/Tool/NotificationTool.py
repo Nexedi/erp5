@@ -226,7 +226,8 @@ class NotificationTool(BaseTool):
                   notifier_list=None, priority_level=None,
                   store_as_event=False,
                   message_text_format='text/plain',
-                  event_keyword_argument_dict=None):
+                  event_keyword_argument_dict=None,
+                  portal_type_list=None):
     """
       This method provides a common API to send messages to erp5 users
       from object actions of worflow scripts.
@@ -265,15 +266,19 @@ class NotificationTool(BaseTool):
       event_keyword_argument_dict -- additional keyword arguments which is used for
                                      constructor of event document.
 
+      portal_type_list -- Portal Type of Users
+
     TODO: support default notification email
     """
     portal = self.getPortalObject()
     catalog_tool = getToolByName(self, 'portal_catalog')
-
+    if portal_type_list is None:
+      portal_type_list = ('Person',)
     # Find "From" Person
     from_person = None
     if isinstance(sender, basestring):
-      sender = catalog_tool.getResultValue(portal_type='Person', reference=sender)
+      sender = catalog_tool.getResultValue(portal_type=portal_type_list,
+                                           reference=sender)
     if sender is not None:
       email_value = sender.getDefaultEmailValue()
       if email_value is not None and email_value.asText():
@@ -286,7 +291,8 @@ class NotificationTool(BaseTool):
         recipient = (recipient,)
       for person in recipient:
         if isinstance(person, basestring):
-          person = catalog_tool.getResultValue(portal_type='Person', reference=person)
+          person = catalog_tool.getResultValue(portal_type=portal_type_list,
+                                               reference=person)
           if person is None:
             # For backward compatibility. I recommend to use ValueError.(yusei)
             raise IndexError, "Can't find person document which reference is '%s'" % person
