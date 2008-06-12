@@ -32,8 +32,10 @@ import unittest
 
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import DummyLocalizer
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 
@@ -398,8 +400,111 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Even with the same callable object, a restricted method id should not be callable.
     self.assertRaises(Unauthorized, document.asStrippedHTML)
 
+
+class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
+  """
+  Test for erp5_web with simple security.
+  """
+  run_all_test = 1
+  quiet = 1
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base',
+            'erp5_dms_mysql_innodb_catalog',
+            'erp5_web',
+            )
+
+  def getTitle(self):
+    return "Web"
+
+  def createUser(self, name, role_list):
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(name, 'password', role_list, [])
+
+  def changeUser(self, name):
+    self.old_user = getSecurityManager().getUser()
+    user_folder = self.getPortal().acl_users
+    user = user_folder.getUserById(name).__of__(user_folder)
+    newSecurityManager(None, user)
+
+  def afterSetUp(self):
+    self.portal.Localizer = DummyLocalizer()
+    self.createUser('admin', ['Manager'])
+    self.createUser('erp5user', ['Auditor', 'Author'])
+    get_transaction().commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    get_transaction().abort()
+    def clearModule(module):
+      module.manage_delObjects(list(module.objectIds()))
+      get_transaction().commit()
+      self.tic()
+    clearModule(self.portal.web_site_module)
+    clearModule(self.portal.web_page_module)
+
+  def testAccessWebPageByReference(self):
+    self.changeUser('admin')
+    site = self.portal.web_site_module.newContent(portal_type='Web Site',
+                                                  id='site')
+    section = site.newContent(portal_type='Web Section', id='section')
+
+    get_transaction().commit()
+    self.tic()
+
+    section.setCriterionProperty('portal_type')
+    section.setCriterion('portal_type', max='', identity=['Web Page'], min='')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.changeUser('erp5user')
+    page_en = self.portal.web_page_module.newContent(portal_type='Web Page')
+    page_en.edit(reference='my-first-web-page',
+                 language='en',
+                 version='1',
+                 text_format='text/plain',
+                 text_content='Hello, World!')
+
+    get_transaction().commit()
+    self.tic()
+
+    page_en.publish()
+
+    get_transaction().commit()
+    self.tic()
+
+    page_ja = self.portal.web_page_module.newContent(portal_type='Web Page')
+    page_ja.edit(reference='my-first-web-page',
+                 language='ja',
+                 version='1',
+                 text_format='text/plain',
+                 text_content='こんにちは、世界！')
+
+    get_transaction().commit()
+    self.tic()
+
+    page_ja.publish()
+
+    get_transaction().commit()
+    self.tic()
+
+    # By Anonymous
+    self.logout()
+
+    self.portal.Localizer.changeLanguage('en')
+
+    target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
+    self.assertEqual('Hello, World!', target.getTextContent())
+
+    self.portal.Localizer.changeLanguage('ja')
+
+    target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
+    self.assertEqual('こんにちは、世界！', target.getTextContent())
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
+  suite.addTest(unittest.makeSuite(TestERP5WebWithSimpleSecurity))
   return suite
-
