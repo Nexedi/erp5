@@ -210,6 +210,8 @@ class RootMovementGroup:
 
   def __repr__(self):
     repr_str = '<%s object at 0x%x\n' % (self.__class__.__name__, id(self))
+    if getattr(self, '_property_dict', None) is not None:
+      repr_str += ' _property_dict = %r,\n' % self._property_dict
     if self._movement_list:
       repr_str += ' _movement_list = %r,\n' % self._movement_list
     if self._group_list:
