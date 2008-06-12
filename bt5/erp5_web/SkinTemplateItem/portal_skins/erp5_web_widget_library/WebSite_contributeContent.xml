@@ -148,6 +148,7 @@ target_request.set(\'portal_status_message\', msg)\n
 for key in target_request.form.keys():\n
   if key.startswith(\'field_my_\'):\n
     del target_request.form[key]\n
+return target.view()\n
 \n
 # XXX Do not use redirect, as it leeds to conflict error with convertion process\n
 # return target.Base_redirect(\'view\',\n
