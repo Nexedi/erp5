@@ -132,7 +132,10 @@
       </span>\n
       <span class="separator"><!--separator--></span>\n
       <span id="search">\n
-        <input type="text" name="field_your_search_text" />\n
+        <input type="text" name="field_your_search_text" \n
+               onkeypress="submitFormOnEnter(event, \n
+                                              \'main_form\',\n
+                                              \'Base_searchResultList\');"/>\n
         <button type="submit" name="Base_searchResultList:method" title="Search"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
