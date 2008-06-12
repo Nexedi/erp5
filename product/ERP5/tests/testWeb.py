@@ -108,10 +108,10 @@ class TestWeb(ERP5TypeTestCase):
     self.changeUser('erp5user')
     page_en = self.portal.web_page_module.newContent(portal_type='Web Page')
     page_en.edit(reference='my-first-web-page',
-              language='en',
-              version='1',
-              text_format='text/plain',
-              text_content='Hello, World!')
+                 language='en',
+                 version='1',
+                 text_format='text/plain',
+                 text_content='Hello, World!')
 
     get_transaction().commit()
     self.tic()
@@ -123,10 +123,10 @@ class TestWeb(ERP5TypeTestCase):
 
     page_ja = self.portal.web_page_module.newContent(portal_type='Web Page')
     page_ja.edit(reference='my-first-web-page',
-              language='ja',
-              version='1',
-              text_format='text/plain',
-              text_content='こんにちは、世界！')
+                 language='ja',
+                 version='1',
+                 text_format='text/plain',
+                 text_content='こんにちは、世界！')
 
     get_transaction().commit()
     self.tic()
