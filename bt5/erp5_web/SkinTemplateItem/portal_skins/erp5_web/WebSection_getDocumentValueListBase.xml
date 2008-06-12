@@ -65,9 +65,76 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># In normal web sites, pages only in a selected language should be displayed.\n
-kw[\'all_languages\'] = False\n
-return context.WebSection_getDocumentValueListBase(**kw)\n
+            <value> <string>"""\n
+ This script is part of ERP5 Web\n
+\n
+ ERP5 Web is a business template of ERP5 which provides a way\n
+ to create web sites which can display selected\n
+ ERP5 contents through multiple custom web layouts.\n
+\n
+ This script returns a list of document values (ie. objects or brains)\n
+ which are considered as part of this section. It can be\n
+ a list of web pages (usual case), a list of products\n
+ (online catalog), a list of tenders (e-government), etc.\n
+\n
+ The default implementation provided here consists in\n
+ listing documents which meet the predicate defined\n
+ by the section (ex. which are part of a given publication_section)\n
+ and which are in "published" state and of a "Web Page" portal_type.\n
+\n
+ It should be noted that document selection should be implemented\n
+ as much as possible using the Domain API.\n
+\n
+ This script can be changed to meet other requirements. For example\n
+ one may want to display a list of products in a section. In this case,\n
+ this script must return a list of documents of type "Product"\n
+ with a "validated" state and in the appropriate product family.\n
+\n
+ This script is intended to be overriden by creating a new script\n
+ within the Web Section or Web Site instance. It can be also\n
+ customised per portal type within portal_skins. Customisation\n
+ thourgh local scripts is recommended to host multiple sites\n
+ on the same ERP5Site instance.\n
+\n
+ The API uses **kw so that it is possible to extend the behaviour of\n
+ the default script with advanced features (ex. group by reference,\n
+ by version, only select a specific publication state, etc.).\n
+\n
+ Here are some suggestions which can either be implemented using\n
+ SQL (group_by, order_by) or using additional python scripting\n
+ if this is compatible with data size.\n
+\n
+ SUGGESTIONS:\n
+\n
+ - Prevent showing duplicate references\n
+ \n
+ - Add documents associated to this section through \'aggregate\'.\n
+\n
+ - Display only the latest version and the appropriate language.\n
+"""\n
+from zExceptions import Unauthorized\n
+\n
+try:\n
+  portal = container.getPortalObject()\n
+\n
+  # First find the Web Section or Web Site we belong to\n
+  current_section = context.getWebSectionValue()\n
+\n
+  # Build the list of parameters\n
+  if language is None:\n
+    language = portal.Localizer.get_selected_language()\n
+\n
+  if validation_state is None:\n
+    validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
+                        \'shared\', \'shared_alive\', \'public\', \'validated\')\n
+\n
+  query = current_section.buildSQLQuery(validation_state=validation_state, **kw)\n
+  return current_section.WebSection_zGetDocumentValueList(language=language,\n
+                                                          all_languages=all_languages,\n
+                                                          from_table_list=query[\'from_table_list\'],\n
+                                                          where_expression=query[\'where_expression\'])\n
+except Unauthorized:\n
+  return []\n
 </string> </value>
         </item>
         <item>
@@ -90,7 +157,7 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>language=None, validation_state=None, all_languages=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -110,18 +177,27 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>language</string>
+                            <string>validation_state</string>
+                            <string>all_languages</string>
                             <string>kw</string>
-                            <string>False</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>container</string>
+                            <string>portal</string>
+                            <string>context</string>
+                            <string>current_section</string>
+                            <string>None</string>
+                            <string>_apply_</string>
+                            <string>query</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,12 +209,16 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getDocumentValueList</string> </value>
+            <value> <string>WebSection_getDocumentValueListBase</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
