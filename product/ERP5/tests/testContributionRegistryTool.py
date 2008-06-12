@@ -77,19 +77,19 @@ return predicate.getDestinationPortalType()
 
   def setUpMimeType(self):
     portal_categories = self.portal.portal_categories
-    if getattr(portal_categories, 'mime_type', None):
+    if getattr(portal_categories, 'mime_type', None) is None:
       mime_type = portal_categories.newContent(portal_type='Base Category',
                                                id='mime_type')
       text = mime_type.newContent(portal_type='Category', id='text')
-      html = html.newContent(portal_type='Category', id='html')
+      text.newContent(portal_type='Category', id='html')
       get_transaction().commit()
       self.tic()
 
-    if getattr(portal_categories, 'mime_type', None):
+    if getattr(portal_categories, 'mime_type', None) is None:
       mime_type = portal_categories.newContent(portal_type='Base Category',
                                                id='mime_type')
-      text = mime_type.newContent(portal_type='Category', id='message')
-      html = html.newContent(portal_type='Category', id='rfc822')
+      message = mime_type.newContent(portal_type='Category', id='message')
+      message.newContent(portal_type='Category', id='rfc822')
       get_transaction().commit()
       self.tic()
 
