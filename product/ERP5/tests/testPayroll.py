@@ -1146,15 +1146,15 @@ class TestPayroll(TestPayrollMixin):
     cell0 = line.newCell('tax_category/employee_share',
                          portal_type='Pay Sheet Cell', base_id='movement')
     cell0.setMappedValuePropertyList(['quantity', 'price'])
+    cell0.setVariationCategoryList(('tax_category/employee_share',))
     cell0.setPrice(2)
     cell0.setQuantity(3)
-    cell0.setTaxCategory('employee_share')
     cell1 = line.newCell('tax_category/employer_share',
                          portal_type='Pay Sheet Cell', base_id='movement')
     cell1.setMappedValuePropertyList(['quantity', 'price'])
+    cell1.setVariationCategoryList(('tax_category/employer_share',))
     cell1.setPrice(4)
     cell1.setQuantity(5)
-    cell1.setTaxCategory('employer_share')
     
     movement_list = pay_sheet.PaySheetTransaction_getMovementList()
     self.assertEquals(1, len(movement_list))
@@ -1182,6 +1182,7 @@ class TestPayroll(TestPayrollMixin):
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
     cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setVariationCategoryList(('tax_category/employee_share',))
     cell.setPrice(1)
 
     pay_sheet = self.createPaySheet(self.model)
@@ -1260,6 +1261,7 @@ class TestPayroll(TestPayrollMixin):
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
     cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setVariationCategoryList(('tax_category/employee_share',))
     cell.setPrice(1)
     cell.setQuantity(100)
     # line2 will apply to 'base_salary', but we'll set 0 quantity in the dialog
@@ -1277,6 +1279,7 @@ class TestPayroll(TestPayrollMixin):
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
     cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setVariationCategoryList(('tax_category/employee_share',))
     cell.setPrice(1)
 
     pay_sheet = self.createPaySheet(self.model)
