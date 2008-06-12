@@ -208,6 +208,19 @@ class RootMovementGroup:
     new_movement.setQuantityMethod("getAddQuantity")
     return new_movement, None
 
+  def __repr__(self):
+    repr_str = '<%s object at 0x%x\n' % (self.__class__.__name__, id(self))
+    if self._movement_list:
+      repr_str += ' _movement_list = %r,\n' % self._movement_list
+    if self._group_list:
+      repr_str += ' _group_list = [\n%s]>' % (
+        '\n'.join(['   %s' % x for x in (',\n'.join([repr(i) for i in self._group_list])).split('\n')]))
+    else:
+      repr_str += ' _last_line_class_name = %r,\n' % self._last_line_class_name
+      repr_str += ' _separate_method_name_list = %r,\n' % self._separate_method_name_list
+      repr_str += ' _group_list = []>'
+    return repr_str
+
 allow_class(RootMovementGroup)
 
 class OrderMovementGroup(RootMovementGroup):
