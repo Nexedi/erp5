@@ -294,7 +294,7 @@ class Image(File, OFSImage):
 
   # Conversion API
   security.declareProtected(Permissions.ModifyPortalContent, 'convert')
-  def convert(self, format, display=None, quality=75, resolution=None, frame=None):
+  def convert(self, format, display=None, quality=75, resolution=None, frame=None, **kw):
     """
     Implementation of conversion for PDF files
     """

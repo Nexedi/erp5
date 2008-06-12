@@ -151,8 +151,46 @@ class TextDocument(Document, TextContent):
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
       return data
 
+    def _substituteTextContent(self, text, **kw):
+      # If a method for string substitutions of the text content, perform it.
+      # Decode everything into unicode before the substitutions, in order to
+      # avoid encoding errors.
+      method_id = self.getTextContentSubstitutionMappingMethodId()
+      if method_id:
+        mapping = guarded_getattr(self, method_id)(**kw)
+
+        is_str = isinstance(text, str)
+        if is_str:
+          text = text.decode('utf-8')
+
+        unicode_mapping = {}
+        for k, v in mapping.iteritems():
+          if isinstance(v, str):
+            v = v.decode('utf-8')
+          elif not isinstance(v, unicode):
+            v = str(v).decode('utf-8')
+          unicode_mapping[k] = v
+
+        text = Template(text).substitute(unicode_mapping)
+
+        # If the original was a str, convert it back to str.
+        if is_str:
+          text = text.encode('utf-8')
+
+      return text
+
+    security.declareProtected(Permissions.View, 'asSubjectText')
+    def asSubjectText(self, substitution_method_parameter_dict=None, **kw):
+      """
+        Converts the subject of the document to a textual representation.
+      """
+      subject = TextDocument.inheritedAttribute('asSubjectText')(self, **kw)
+      if substitution_method_parameter_dict is None:
+        substitution_method_parameter_dict = {}
+      return self._substituteTextContent(subject, **substitution_method_parameter_dict)
+
     security.declareProtected(Permissions.View, 'convert')
-    def convert(self, format, **kw):
+    def convert(self, format, substitution_method_parameter_dict=None, **kw):
       """
         Convert text using portal_transforms or oood
       """
@@ -179,26 +217,9 @@ class TextDocument(Document, TextContent):
                 'portal_transforms failed to convert to %s: %r' % (mime_type, self))
             result = ''
 
-        # If a method for string substitutions of the text content, perform it.
-        # Decode everything into unicode before the substitutions, in order to
-        # avoid encoding errors.
-        method_id = self.getTextContentSubstitutionMappingMethodId()
-        if method_id:
-          mapping = guarded_getattr(self, method_id)()
-
-          if isinstance(result, str):
-            result = result.decode('utf-8')
-
-          unicode_mapping = {}
-          for k, v in mapping.iteritems():
-            if isinstance(v, str):
-              v = v.decode('utf-8')
-            elif not isinstance(v, unicode):
-              v = str(v).decode('utf-8')
-            unicode_mapping[k] = v
-
-          result = Template(result).substitute(unicode_mapping)
-          # XXX is it better to convert back to str?
+        if substitution_method_parameter_dict is None:
+          substitution_method_parameter_dict = {}
+        result = self._substituteText(result, **substitution_method_parameter_dict)
 
         return mime_type, result
       else:

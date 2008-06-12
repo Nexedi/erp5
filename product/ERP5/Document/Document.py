@@ -1178,16 +1178,30 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     format, data = self.convert(format)
     return len(data)
 
+  security.declareProtected(Permissions.View, 'asSubjectText')
+  def asSubjectText(self, **kw):
+    """
+      Converts the subject of the document to a textual representation.
+    """
+    subject = self.getSubject()
+    if not subject:
+      # XXX not sure if this fallback is a good idea.
+      subject = self.getTitle()
+    if subject is None:
+      subject = ''
+    return str(subject)
+
   security.declareProtected(Permissions.View, 'asText')
-  def asText(self):
+  def asText(self, **kw):
     """
       Converts the content of the document to a textual representation.
     """
-    mime, data = self.convert(format='txt')
+    kw['format'] = 'txt'
+    mime, data = self.convert(**kw)
     return str(data)
 
   security.declareProtected(Permissions.View, 'asEntireHTML')
-  def asEntireHTML(self):
+  def asEntireHTML(self, **kw):
     """
       Returns a complete HTML representation of the document
       (with body tags, etc.). Adds if necessary a base
@@ -1196,7 +1210,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
       Actual conversion is delegated to _asHTML
     """
-    html = self._asHTML()
+    html = self._asHTML(**kw)
     if self.getUrlString():
       # If a URL is defined, add the base tag
       # if base is defined yet.
@@ -1210,7 +1224,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     return html
 
   security.declarePrivate('_asHTML')
-  def _asHTML(self):
+  def _asHTML(self, **kw):
     """
       A private method which converts to HTML. This method
       is the one to override in subclasses.
@@ -1218,13 +1232,15 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     if not self.hasBaseData():
       raise ConversionError('This document has not been processed yet.')
     if self.hasConversion(format='base-html'):
+      # FIXME: no substitution may occur in this case.
       mime, data = self.getConversion(format='base-html')
       return data
-    mime, html = self.convert(format='html')
+    kw['format'] = 'html'
+    mime, html = self.convert(**kw)
     return html
 
   security.declareProtected(Permissions.View, 'asStrippedHTML')
-  def asStrippedHTML(self):
+  def asStrippedHTML(self, **kw):
     """
       Returns a stripped HTML representation of the document
       (without html and body tags, etc.) which can be used to inline
@@ -1233,9 +1249,11 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     if not self.hasBaseData():
       return ''
     if self.hasConversion(format='stripped-html'): # XXX this is redundant since we never set it
+      # FIXME: no substitution may occur in this case.
       mime, data = self.getConversion(format='stripped-html')
       return data
-    mime, html = self.convert(format='html')
+    kw['format'] = 'html'
+    mime, html = self.convert(**kw)
     body_list = re.findall(self.body_parser, str(html))
     if len(body_list):
       stripped_html = body_list[0]
