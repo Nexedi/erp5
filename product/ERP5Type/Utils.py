@@ -367,17 +367,15 @@ class TempDocumentConstructor(DocumentConstructor):
       self.klass = TempDocument
 
     def __call__(self, folder, id, REQUEST=None, **kw):
+      # CMF constructInstance is never used to build temp objects
+      # so we never return the id.
       o = self.klass(id)
+      if folder.isTempObject():
+        folder._setObject(id, o)
+      o = o.__of__(folder)
       if kw:
-        o.__of__(folder)._edit(force_update=1, **kw)
-      isTempObject = getattr(folder, 'isTempObject', None)
-      if isTempObject is not None and isTempObject():
-        folder._setObject(id, o)# Temp Object in Temp Object should use containment
-        return id               # return id to be compatible with CMF constructInstance
-      else:                     # Temp Object in Persistent Object should use acquisition
-        o = o.__of__(folder)
-      return o                  # We should return id if called on a Factory Dispatcher
-                                # and return o if called on a container
+        o._edit(force_update=1, **kw)
+      return o
 
 
 python_file_parser = re.compile('^(.*)\.py$')
@@ -869,6 +867,9 @@ def initializeProduct( context,
     if hasattr(content_class, 'add' + content_class.__name__):
       extra_content_constructors += [
                 getattr(content_class, 'add' + content_class.__name__)]
+    if hasattr(content_class, 'newTemp' + content_class.__name__):
+      extra_content_constructors += [
+                getattr(content_class, 'newTemp' + content_class.__name__)]
 
   # Define FactoryTypeInformations for all content classes
   contentFactoryTypeInformations = []
@@ -993,11 +994,18 @@ def setDefaultConstructor(klass):
     """
       Create the default content creation method
     """
-    if not hasattr(klass, 'add' + klass.__name__):
+    document_constructor_name = 'add' + klass.__name__
+    if not hasattr(klass, document_constructor_name):
       document_constructor = DocumentConstructor(klass)
-      document_constructor_name = "add%s" % klass.__name__
       setattr(klass, document_constructor_name, document_constructor)
       document_constructor.__name__ = document_constructor_name
+
+    temp_document_constructor_name = 'newTemp' + klass.__name__
+    if not hasattr(klass, temp_document_constructor_name):
+      temp_document_constructor = TempDocumentConstructor(klass)
+      setattr(klass, temp_document_constructor_name, temp_document_constructor)
+      temp_document_constructor.__name__ = temp_document_constructor_name
+      klass.security.declarePublic(temp_document_constructor_name)
 
 
 def createExpressionContext(object, portal=None):

@@ -108,7 +108,8 @@ class Domain(Predicate, MetaNode, MetaResource):
     We need a way to know how deep we are in the domain generation
     to prevent infinite recursion XXX not implemented
     """
-    klass = tmp_domain_generator = self.newContent(portal_type='Domain Generator', temp_object=1)
+    klass = tmp_domain_generator = self.newContent(
+      portal_type='Domain Generator', temp_object=1, filter_content_types=0)
     script = self.getDomainGeneratorMethodId('')
     return tmp_domain_generator.getDomainGeneratorList(depth=depth, klass=klass, script=script, parent=self)
 
@@ -117,9 +118,9 @@ class Domain(Predicate, MetaNode, MetaResource):
     """
     We generate temp domain here because we must set an aquisition wrapper
     """
-    domain = self.newContent(id=id, portal_type='Domain', temp_object=1)
-    domain = domain.__of__(self)
-    return domain
+    domain = self.newContent(id=id, portal_type='Domain',
+                             temp_object=1, filter_content_types=0)
+    return domain.__of__(self)
 
   def getChildDomainValueList(self, parent = None, **kw):
     """

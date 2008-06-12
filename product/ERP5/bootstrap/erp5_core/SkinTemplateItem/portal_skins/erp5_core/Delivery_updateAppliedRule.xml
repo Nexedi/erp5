@@ -79,6 +79,9 @@ applied_rule_dict = {\n
   \'Sale Packing List\': \'default_delivery_rule\',\n
   \'Sale Invoice Transaction\': \'default_invoice_rule\',\n
 \n
+  \'Internal Packing List\': None,\n
+  \'Returned Sale Packing List\': None,\n
+\n
   \'Accounting Rule Cell\': None,\n
   \'Accounting Transaction\': None,\n
   \'Production Packing List\': None,\n

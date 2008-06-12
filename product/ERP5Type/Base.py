@@ -410,38 +410,25 @@ class PropertyHolder:
     """
     Return a list of tuple (id, method) for every accessor
     """
+    accessor_method_item_list = []
     for x, y in self._getItemList():
       if isinstance(y, types.TupleType):
+        if y is WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
+          continue
         if len(y) == 0:
           raise ValueError("problem at %s %s" % (self._portal_type, x))
-    result = []
-    #for x in self._getItemList():
-      #if isinstance(x[1], Accessor):
-        #result.append(x)
-      #elif isinstance(x[1], types.TupleType):
-        #LOG('isinstance', 0, str(x))
-        #if x[1] is not WORKFLOW_METHOD_MARKER and issubclass(x[1][0], Accessor):
-          #result.append(x)
-    #return result
-    return [x for x in self._getItemList() if isinstance(x[1], Accessor)
-        or (isinstance(x[1], types.TupleType)
-            and x[1] is not WORKFLOW_METHOD_MARKER
-            and x[0] != '__ac_permissions__'
-            and issubclass(x[1][0], Accessor))]
+        if not issubclass(y[0], Accessor):
+          continue
+      elif not isinstance(y, Accessor):
+        continue
+      accessor_method_item_list.append((x, y))
+    return accessor_method_item_list
 
   def getAccessorMethodIdList(self):
     """
     Return the list of accessor IDs
     """
-    for x, y in self._getItemList():
-      if isinstance(y, types.TupleType):
-        if len(y) == 0:
-          raise ValueError("problem at %s %s" % (self._portal_type, x))
-    return [x[0] for x in self._getItemList() if isinstance(x[1], Accessor)
-        or (isinstance(x[1], types.TupleType)
-            and x[1] is not WORKFLOW_METHOD_MARKER
-            and x[0] != '__ac_permissions__'
-            and issubclass(x[1][0], Accessor))]
+    return [ x[0] for x in self.getAccessorMethodItemList() ]
 
   def getWorkflowMethodItemList(self):
     """

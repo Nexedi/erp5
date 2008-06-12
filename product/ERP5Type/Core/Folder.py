@@ -100,11 +100,19 @@ class FolderMixIn(ExtensionClass.Base):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declarePublic('isTempObject')
+  def isTempObject(self):
+    """Return true if self is an instance of a temporary document class.
+    """
+    # Note: Folder inherits from Base and FolderMixIn but Base has priority.
+    return 0
+
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
           container=None, created_by_builder=0, activate_kw=None,
-          is_indexable=None, temp_object=0, reindex_kw=None, **kw):
+          is_indexable=None, temp_object=0, reindex_kw=None,
+          filter_content_types=1, **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -112,29 +120,41 @@ class FolderMixIn(ExtensionClass.Base):
     pt = self._getTypesTool()
     if container is None:
       container = self
-    if id is None and not temp_object:
+    temp_container = container.isTempObject()
+
+    # The only case where the id is unused (because the new object is not added
+    # to its parent) is when a temp object is created inside a non-temp object.
+    if id is None and (temp_container or not temp_object):
       new_id = str(container.generateNewId( id_group=id_group,
                                             default=default,
                                             method=method))
     else:
       new_id = str(id)
+
     if portal_type is None:
       # XXX This feature is very confusing
       # And made the code more difficult to update
       portal_type = container.allowedContentTypes()[0].id
-
-    # we get an object from factory only for first temp container object
-    # otherwise we get an id so we can use the classic way
-    if temp_object and not getattr(container, 'isTempObject', lambda: 0)():
-      from Products.ERP5Type import Document
-      factory_name = 'newTemp%s' %(portal_type.replace(' ', ''))
-      m = getattr(Document, factory_name)
-      new_instance = m(container, new_id)
-    else:
-      myType = pt.getTypeInfo(container)
-      if myType is not None and not myType.allowType( portal_type ) and \
-         'portal_trash' not in container.getPhysicalPath():
+    elif filter_content_types:
+      type_info = pt.getTypeInfo(container)
+      if type_info is not None and not type_info.allowType(portal_type) and \
+          'portal_trash' not in container.getPhysicalPath():
         raise ValueError('Disallowed subobject type: %s' % portal_type)
+
+    # Use the factory even if the parent is already a temp object,
+    # like this we do not call the classic way, indeed, we do not
+    # need to call init script, security settings on temp objects.
+    if temp_object or temp_container:
+      type_info = pt.getTypeInfo(portal_type)
+      if not type_info.factory or not type_info.factory.startswith('add'):
+        raise ValueError('Product factory for %s is invalid: %s' %
+                         (portal_type, type_info.factory))
+      p = container.manage_addProduct[type_info.product]
+      m = getattr(p, 'newTemp' + type_info.factory[3:])
+      new_instance = m(new_id, container)
+      if hasattr(new_instance, '_setPortalTypeName'):
+        new_instance._setPortalTypeName(portal_type)
+    else:
       pt.constructContent( type_name=portal_type,
                            container=container,
                            id=new_id,

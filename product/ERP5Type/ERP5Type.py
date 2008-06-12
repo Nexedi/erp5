@@ -249,27 +249,6 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
 
         return default
 
-    def _getFactoryMethod(self, container, check_security=1):
-        if not self.product or not self.factory:
-            raise ValueError, ('Product factory for %s was undefined' %
-                               self.getId())
-        p = container.manage_addProduct[self.product]
-        if hasattr(container, 'isTempObject') and container.isTempObject():
-          factory_name = self.factory.replace('add', 'newTemp') # We suppose here
-                         # that methods are names addClass or newTempClass
-                         # Prefix should be moved to a central place.
-          m = getattr(p, factory_name, None)
-        else:
-          m = getattr(p, self.factory, None)
-        if m is None:
-            raise ValueError, ('Product factory for %s was invalid' %
-                               self.getId())
-        if not check_security:
-            return m
-        if getSecurityManager().validate(p, p, self.factory, m):
-            return m
-        raise AccessControl_Unauthorized( 'Cannot create %s' % self.getId() )
-    
     security.declarePublic('constructInstance')
     def constructInstance( self, container, id,
                            created_by_builder=0, *args, **kw ):
