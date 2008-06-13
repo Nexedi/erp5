@@ -173,9 +173,9 @@ class TestPayrollMixin(ERP5ReportTestCase):
                           % (message.object_path, message.method_id) )
     get_transaction().commit()
 
-  def login(self, quiet=0, run=1):
+  def login(self):
     uf = self.getPortal().acl_users
-    uf._doAddUser('admin', 'admin', ['Manager', 'Assignee', 'Assignor',
+    uf._doAddUser('admin', '', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('admin').__of__(uf)
     newSecurityManager(None, user)
@@ -224,7 +224,11 @@ class TestPayrollMixin(ERP5ReportTestCase):
             'base_amount/%s' % self.base_amount_base_salary,
             'grade/%s' % self.grade_worker,
             'grade/%s' % self.grade_engineer,
-            'group/demo_group'
+            'quantity_unit/time/mounth',
+            'group/demo_group',
+            'product_line/base_salary',
+            'product_line/payroll_tax_1',
+            'product_line/payroll_tax_2',
            )
 
   def createCurrencies(self):
@@ -253,7 +257,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_payroll',)
+            'erp5_invoicing', 'erp5_payroll', )
 
   def createPerson(self, id='one', title='One',
       career_subordination_value=None, career_grade=None, **kw):
@@ -1916,6 +1920,285 @@ class TestPayroll(TestPayrollMixin):
                             total=((2000 * .50 + 3500 * .20) +
                                    (2000 * .40 + 3500 * .32)))
 
+  def test_AccountingLineGeneration(self):
+    # create payroll services
+    base_salary = self.portal.payroll_service_module.newContent(
+                          portal_type='Payroll Service',
+                          title='Base Salary',
+                          product_line='base_salary',
+                          variation_base_category_list=('tax_category',),
+                          variation_category_list=('tax_category/employee_share',
+                                                   'tax_category/employer_share'))
+    bonus = self.portal.payroll_service_module.newContent(
+                          portal_type='Payroll Service',
+                          title='Bonus',
+                          product_line='base_salary',
+                          variation_base_category_list=('tax_category',),
+                          variation_category_list=('tax_category/employee_share',
+                                                   'tax_category/employer_share'))
+    deductions = self.portal.payroll_service_module.newContent(
+                          portal_type='Payroll Service',
+                          title='Deductions',
+                          product_line='base_salary',
+                          variation_base_category_list=('tax_category',),
+                          variation_category_list=('tax_category/employee_share',
+                                                   'tax_category/employer_share'))
+    tax1 = self.portal.payroll_service_module.newContent(
+                          portal_type='Payroll Service',
+                          title='Tax1',
+                          product_line='payroll_tax_1',
+                          variation_base_category_list=('tax_category',),
+                          variation_category_list=('tax_category/employee_share',
+                                                   'tax_category/employer_share'))
+
+    # create accounts
+    account_payroll_wages_expense = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Payroll Wages (expense)',
+                          account_type='expense',)
+    account_payroll_taxes_expense = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Payroll Taxes (expense)',
+                          account_type='expense',)
+    account_net_wages = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Net Wages',
+                          account_type='liability/payable',)
+    account_payroll_taxes = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Payroll Taxes',
+                          account_type='liability/payable',)
+
+    # create an invoice transaction rule for pay sheets.
+    rule = self.portal.portal_rules.newContent(
+                          portal_type='Invoice Transaction Rule',
+                          title='Rule for PaySheet Accounting',
+                          reference='paysheet_transaction_rule',
+                          test_method_id=
+                              'SimulationMovement_testInvoiceTransactionRule')
+    rule.newContent(portal_type='Predicate',
+                    title='Employee Share',
+                    string_index='tax_category',
+                    int_index=1,
+                    membership_criterion_base_category_list=('tax_category',),
+                    membership_criterion_category_list=('tax_category/employee_share',))
+    rule.newContent(portal_type='Predicate',
+                    title='Employer Share',
+                    string_index='tax_category',
+                    int_index=2,
+                    membership_criterion_base_category_list=('tax_category',),
+                    membership_criterion_category_list=('tax_category/employer_share',))
+
+    rule.newContent(portal_type='Predicate',
+                    title='Base Salary',
+                    string_index='payroll_service',
+                    int_index=1,
+                    membership_criterion_base_category_list=('product_line',),
+                    membership_criterion_category_list=('product_line/base_salary',))
+    rule.newContent(portal_type='Predicate',
+                    title='Payroll Tax 1',
+                    string_index='payroll_service',
+                    int_index=2,
+                    membership_criterion_base_category_list=('product_line',),
+                    membership_criterion_category_list=('product_line/payroll_tax_1',))
+
+    get_transaction().commit()
+    self.tic()
+
+    cell_list = rule.contentValues(portal_type='Accounting Rule Cell')
+    self.assertEquals(4, len(cell_list))
+
+    employee_base_salary = rule._getOb('movement_0_0')
+    self.assertEquals('Employee Share * Base Salary',
+                      employee_base_salary.getTitle())
+    employee_base_salary.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_debit=1,
+                      destination_value=account_payroll_wages_expense)
+    employee_base_salary.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_credit=1,
+                      destination_value=account_net_wages)
+
+    employer_tax = rule._getOb('movement_1_1')
+    self.assertEquals('Employer Share * Payroll Tax 1',
+                      employer_tax.getTitle())
+    employer_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_debit=1,
+                      destination_value=account_payroll_taxes)
+    employer_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_credit=1,
+                      destination_value=account_payroll_taxes_expense)
+
+    employee_tax = rule._getOb('movement_0_1')
+    self.assertEquals('Employee Share * Payroll Tax 1',
+                      employee_tax.getTitle())
+    employee_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_debit=1,
+                      destination_value=account_payroll_taxes)
+    employee_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_credit=1,
+                      generate_prevision_script_id=\
+      'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
+                      destination_value=account_net_wages)
+    rule.validate()
+
+    # create a pay sheet
+    eur = self.portal.currency_module.EUR
+    employer = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Employer',
+                      price_currency_value=eur,
+                      group_value=self.portal.portal_categories.group.demo_group)
+    employee = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee',
+                      career_reference='E1',
+                      career_subordination_value=employer)
+    provider = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Payroll Service Provider')
+
+    ps = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      price_currency_value=eur,
+                      resource_value=eur,
+                      title='Employee 1',
+                      destination_section_value=employer,
+                      source_section_value=employee,
+                      start_date=DateTime(2006, 1, 1),)
+    
+    # base salary = 2000
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Base salary',
+                   resource_value=base_salary,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=1, quantity=2000, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=1, quantity=2000, tax_category='employer_share')
+    
+    # base_salary += 100 (bonus)
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Bonus',
+                   resource_value=bonus,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=1, quantity=100, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=1, quantity=100, tax_category='employer_share')
+
+    # base_salary -= 50 (deductions)   => base_salary == 2050
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Deduction',
+                   resource_value=deductions,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=-1, quantity=50, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=-1, quantity=50, tax_category='employer_share')
+
+    # tax1 = 10% for employee ( 205 ) 
+    #        20% for employer ( 410 )
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Tax 1',
+                   resource_value=tax1,
+                   source_section_value=provider,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=-.1, quantity=2050, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=-.2, quantity=2050, tax_category='employer_share')
+
+    ps.plan()
+
+    get_transaction().commit()
+    self.tic()
+    
+    related_applied_rule = ps.getCausalityRelatedValue(
+                                portal_type='Applied Rule')
+    self.assertNotEquals(related_applied_rule, None)
+    
+    # build accounting lines
+    ps.confirm()
+    ps.start()
+    get_transaction().commit()
+    self.tic()
+
+    accounting_line_list = ps.contentValues(
+        portal_type='Pay Sheet Transaction Line')
+    self.assertEquals(len(accounting_line_list), 4)
+    
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_payroll_wages_expense][0]
+    self.assertEquals(2050, line.getDestinationDebit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_net_wages][0]
+    self.assertEquals(2050 - 205, line.getDestinationCredit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+    self.assertEquals(employee, line.getSourceSectionValue())
+    
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_payroll_taxes_expense][0]
+    self.assertEquals(410, line.getDestinationDebit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_payroll_taxes][0]
+    self.assertEquals(410 + 205, line.getDestinationCredit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+    self.assertEquals(provider, line.getSourceSectionValue())
+    
 
 import unittest
 def test_suite():
