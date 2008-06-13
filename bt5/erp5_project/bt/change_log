@@ -1,3 +1,6 @@
+2008-06-13 yusei
+* Removed unused action in Project type information.
+
 2008-06-11 rafael
 * Use portal_notifications to send messages.
 
