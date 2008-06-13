@@ -624,9 +624,17 @@ class PropertyMovementGroup(RootMovementGroup):
     return self._property_dict[self._property] == \
             movement.getProperty(self._property)
 
-class ResourceMovementGroup(PropertyMovementGroup):
+class ResourceMovementGroup(RootMovementGroup):
   """ Group movements that have the same resource. """
-  _property = 'resource'
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.resource = movement.getResource()
+    self.setGroupEdit(
+        resource_value=movement.getResourceValue()
+    )
+
+  def test(self, movement):
+    return movement.getResource() == self.resource
 
 allow_class(ResourceMovementGroup)
 
