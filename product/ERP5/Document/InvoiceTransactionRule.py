@@ -78,7 +78,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     cell = self._getMatchingCell(context_movement)
 
     if cell is not None : # else, we do nothing
-      for transaction_line in cell.objectValues() :
+      for accounting_rule_cell_line in cell.objectValues() :
         # get the resource (in that order):
         #  * resource from the invoice (using deliveryValue)
         #  * price_currency from the invoice
@@ -113,7 +113,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
                                         .getParentValue().getParentValue()
         if resource is None :
           # last resort : get the resource from the rule
-          resource = transaction_line.getResource() or cell.getResource()
+          resource = accounting_rule_cell_line.getResource() or cell.getResource()
           if resource in (None, '') :
             # XXX this happen in many order, so this log is probably useless
             LOG("InvoiceTransactionRule", PROBLEM,
@@ -121,15 +121,15 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 
         # XXX Harcoded list
         prevision_line = {
-            'id': transaction_line.getId(),
-            'source': transaction_line.getSource(),
+            'id': accounting_rule_cell_line.getId(),
+            'source': accounting_rule_cell_line.getSource(),
             'source_section': context_movement.getSourceSection(),
             'source_decision': context_movement.getSourceDecision(),
             'source_administration': context_movement.getSourceAdministration(),
             'source_project': context_movement.getSourceProject(),
             'source_function': context_movement.getSourceFunction(),
             'source_payment': context_movement.getSourcePayment(),
-            'destination': transaction_line.getDestination(),
+            'destination': accounting_rule_cell_line.getDestination(),
             'destination_section': context_movement.getDestinationSection(),
             'destination_section': context_movement.getDestinationSection(),
             'destination_decision': context_movement.getDestinationDecision(),
@@ -141,18 +141,24 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             'stop_date': context_movement.getStopDate(),
             'resource': resource,
 #               'variation_category_list': \
-#                   transaction_line.getVariationCategoryList(),
+#                   accounting_rule_cell_line.getVariationCategoryList(),
 #               'variation_property_dict': \
-#                   transaction_line.getVariationPropertyDict(),
-#               'aggregate_list': transaction_line.getAggregateList(),
-#               'price': transaction_line.getPrice(),
-#               'price_currency': transaction_line.getPriceCurrency(),
+#                   accounting_rule_cell_line.getVariationPropertyDict(),
+#               'aggregate_list': accounting_rule_cell_line.getAggregateList(),
+#               'price': accounting_rule_cell_line.getPrice(),
+#               'price_currency': accounting_rule_cell_line.getPriceCurrency(),
             # calculate (quantity * price) * cell_quantity
             'quantity': (context_movement.getCorrectedQuantity() *
-              context_movement.getPrice(0.0)) * transaction_line.getQuantity(),
-#               'quantity_unit': transaction_line.getQuantityUnit(),
+              context_movement.getPrice(0.0)) * accounting_rule_cell_line.getQuantity(),
+#               'quantity_unit': accounting_rule_cell_line.getQuantityUnit(),
             'force_update': 1,
             }
+
+        if accounting_rule_cell_line.hasProperty('generate_prevision_script_id'):
+          generate_prevision_script_id = \
+                accounting_rule_cell_line.getGeneratePrevisionScriptId()
+          prevision_line.update(getattr(context_movement,
+                                        generate_prevision_script_id)(prevision_line))
         prevision_list.append(prevision_line)
 
     return prevision_list
