@@ -1,3 +1,6 @@
+2008-06-13 aurel
+* Set description on field from glossary
+
 2008-06-11 ivan
 * Move local_permission_interaction_workflow from erp5_dms to erp5_base.
 

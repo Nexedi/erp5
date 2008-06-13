@@ -85,6 +85,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The number of digit after the comma for the given currency, for example 2 means we can have cents (0,00)</string> </value>
+                </item>
+                <item>
                     <key> <string>display_maxwidth</string> </key>
                     <value> <int>6</int> </value>
                 </item>

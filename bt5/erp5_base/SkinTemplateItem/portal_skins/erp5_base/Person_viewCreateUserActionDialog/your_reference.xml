@@ -77,11 +77,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>description</string> </key>
+                    <value> <string>The username this person will use to log in the system.\n
+\n
+The system will check that there isn\'t another user with the same username.</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -93,12 +99,16 @@
                     <value> <string>Person_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>required</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>User Login</string> </value>
                 </item>
               </dictionary>
             </value>

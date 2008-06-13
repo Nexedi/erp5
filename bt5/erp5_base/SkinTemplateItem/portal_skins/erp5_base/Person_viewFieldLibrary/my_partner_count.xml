@@ -59,17 +59,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -87,7 +87,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -98,7 +98,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -106,7 +106,7 @@
                     <value> <string>The number of partner for the person.</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>

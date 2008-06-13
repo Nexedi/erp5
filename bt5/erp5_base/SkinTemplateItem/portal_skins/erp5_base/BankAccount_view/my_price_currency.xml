@@ -75,7 +75,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The currency that is used by this bank account.</string> </value>
                 </item>
                 <item>

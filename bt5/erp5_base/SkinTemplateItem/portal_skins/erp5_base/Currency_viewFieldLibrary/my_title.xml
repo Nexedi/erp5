@@ -84,7 +84,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Full, long name of the currency</string> </value>
+                    <value> <string>The title of the document.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

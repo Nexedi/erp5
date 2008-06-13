@@ -196,7 +196,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Integer use to sort agent</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
