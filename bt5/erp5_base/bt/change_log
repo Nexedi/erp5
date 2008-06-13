@@ -1,3 +1,6 @@
+2008-06-11 ivan
+* Move local_permission_interaction_workflow from erp5_dms to erp5_base.
+
 2008-06-11 yusei
 * Move Event_send and mail templates to erp5_base. Notification tool depends on them.
 
