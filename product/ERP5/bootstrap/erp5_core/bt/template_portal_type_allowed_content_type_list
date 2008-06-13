@@ -2,6 +2,7 @@ Alarm Tool | Alarm
 Applied Rule | Simulation Movement
 Base Category | Category
 Base Domain | Domain
+Base Domain | Domain Generator
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Factory | SQL Cache

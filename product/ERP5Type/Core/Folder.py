@@ -111,8 +111,7 @@ class FolderMixIn(ExtensionClass.Base):
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
           container=None, created_by_builder=0, activate_kw=None,
-          is_indexable=None, temp_object=0, reindex_kw=None,
-          filter_content_types=1, **kw):
+          is_indexable=None, temp_object=0, reindex_kw=None, **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -135,7 +134,7 @@ class FolderMixIn(ExtensionClass.Base):
       # XXX This feature is very confusing
       # And made the code more difficult to update
       portal_type = container.allowedContentTypes()[0].id
-    elif filter_content_types:
+    else:
       type_info = pt.getTypeInfo(container)
       if type_info is not None and not type_info.allowType(portal_type) and \
           'portal_trash' not in container.getPhysicalPath():

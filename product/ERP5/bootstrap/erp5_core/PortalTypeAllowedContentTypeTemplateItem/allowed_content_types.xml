@@ -10,6 +10,7 @@
  </portal_type>
  <portal_type id="Base Domain">
   <item>Domain</item>
+  <item>Domain Generator</item>
  </portal_type>
  <portal_type id="Cache Factory">
   <item>Ram Cache</item>
