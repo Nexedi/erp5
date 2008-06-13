@@ -7,6 +7,7 @@ Account | transaction_list
 Account | view
 Accounting Period | jump_related_balance_transaction
 Accounting Period | view
+Accounting Rule Cell Line | view
 Accounting Rule Cell | view
 Accounting Rule Cell | view_destination
 Accounting Transaction Line | view

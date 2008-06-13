@@ -3,6 +3,7 @@
   <item>Account</item>
  </portal_type>
  <portal_type id="Accounting Rule Cell">
+  <item>Accounting Rule Cell Line</item>
   <item>Accounting Transaction Line</item>
  </portal_type>
  <portal_type id="Accounting Transaction">

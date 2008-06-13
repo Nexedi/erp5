@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Accounting Rule Cell Line">
+  <item>AccountingRuleCellLine</item>
+ </portal_type>
  <portal_type id="Accounting Transaction">
   <item>AccountingTransaction</item>
  </portal_type>
