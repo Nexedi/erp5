@@ -86,6 +86,7 @@ applied_rule_dict = {\n
   \'Accounting Transaction\': None,\n
   \'Production Packing List\': None,\n
   \'Production Report\': None,\n
+  \'Pay Sheet Model\': None,\n
   \n
   \'Amortisation Transaction\' : None,\n
   \'Task Report\': \'default_delivery_rule\',\n
