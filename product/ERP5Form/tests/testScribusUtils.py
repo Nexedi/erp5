@@ -33,6 +33,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
+from DateTime import DateTime
 
 class TestScribusUtils(ERP5TypeTestCase):
   '''Unit test for SribusUtils API'''
@@ -314,18 +315,45 @@ class TestScribusUtils(ERP5TypeTestCase):
     module_portal_type = portal_types.getTypeInfo("Authorisation Module")
     self.assertNotEqual(module_portal_type, None)
     self.assertNotEqual(portal_types.getTypeInfo("Authorisation"), None)
-    # Create a 
+    # Create an Authorisation
     # add property sheet Task in portal type Authorisation
     self.portal.portal_types.Authorisation.setPropertySheetList('Task')
     authorisation_module = self.portal.authorisation_module
     authorisation = authorisation_module.newContent(portal_type='Authorisation')
     # fill Authorisation
-    authorisation.setTitle('Mun Dad')
-    authorisation.setStartDate('2008/06/11')
+    authorisation.setTitle('Mum Dad')
+    start_date = DateTime('2000/01/01')
+    stop_date = DateTime('2001/01/01 12:00 GMT')
+    authorisation.setStartDate(start_date)
+    authorisation.setStopDate(stop_date)
     form = self.portal.portal_skins.erp5_authorisation.Authorisation_view
-    input_order = form.my_start_date.get_value('input_order')
-    self.assertEqual(input_order,'dmy')
-
+    # test property input_order on all DateTimeField
+    input_order_other_date = form.my_other_date.get_value('input_order')
+    input_order_start_date = form.my_start_date.get_value('input_order')
+    input_order_stop_date = form.my_stop_date.get_value('input_order')
+    self.assertEqual(input_order_other_date,'ymd')
+    self.assertEqual(input_order_start_date,'dmy')
+    self.assertEqual(input_order_stop_date,'ymd')
+    # test result of expression TALES with DateTimeField
+    form = self.portal.portal_skins.erp5_authorisation
+    pdf = form.Authorisation_viewAuthorisationAsPdf
+    cell_name_other_date = pdf.getCellNames()[0]
+    cell_name_start_date = pdf.getCellNames()[1]
+    cell_name_stop_date = pdf.getCellNames()[2]
+    tales_expr_other_date = pdf.getCellTALES(cell_name_other_date)
+    tales_expr_start_date = pdf.getCellTALES(cell_name_start_date)
+    tales_expr_stop_date = pdf.getCellTALES(cell_name_stop_date)
+    from Products.CMFCore.Expression import Expression
+    from Products.CMFCore.Expression import getExprContext
+    expr_other_date = Expression(tales_expr_other_date)
+    expr_start_date = Expression(tales_expr_start_date)
+    expr_stop_date = Expression(tales_expr_stop_date)
+    result_other_date = expr_other_date(getExprContext(authorisation, authorisation))
+    result_start_date = expr_start_date(getExprContext(authorisation, authorisation))
+    result_stop_date = expr_stop_date(getExprContext(authorisation, authorisation))
+    self.assertEquals(result_other_date, None)
+    self.assertEquals(result_start_date, start_date.strftime('%d/%m/%Y'))
+    self.assertEquals(result_stop_date, stop_date.strftime('%Y/%m/%d %H:%M'))
 
 def test_suite():
   suite = unittest.TestSuite()
