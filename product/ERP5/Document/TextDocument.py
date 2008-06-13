@@ -219,7 +219,7 @@ class TextDocument(Document, TextContent):
 
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
-        result = self._substituteText(result, **substitution_method_parameter_dict)
+        result = self._substituteTextContent(result, **substitution_method_parameter_dict)
 
         return mime_type, result
       else:
