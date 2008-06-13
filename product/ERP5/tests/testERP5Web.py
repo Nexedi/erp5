@@ -443,7 +443,9 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     clearModule(self.portal.web_site_module)
     clearModule(self.portal.web_page_module)
 
-  def testAccessWebPageByReference(self):
+  def test_01_AccessWebPageByReference(self, quiet=quiet, run=run_all_test):
+    if not run:
+      return
     self.changeUser('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                   id='site')
@@ -501,7 +503,42 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
     self.assertEqual('こんにちは、世界！', target.getTextContent())
-
+    
+  def test_02_LocalRolesFromRoleDefinition(self, quiet=quiet, run=run_all_test):
+    """ Test setting local roles on Web Site/ Web Sectio using ERP5 Role Definition objects . """
+    if not run:
+      return
+    portal = self.portal
+    person_reference = 'webuser'
+    site = portal.web_site_module.newContent(portal_type='Web Site',
+                                                  id='site')
+    section = site.newContent(portal_type='Web Section', id='section')
+    person = portal.person_module.newContent(portal_type = 'Person', 
+                                                                    reference = person_reference)
+    # add Role Definition for site and section
+    site_role_definition = site.newContent(portal_type = 'Role Definition', 
+                                                           role_name = 'Assignee', 
+                                                           agent = person.getRelativeUrl())
+    section_role_definition = section.newContent(portal_type = 'Role Definition', 
+                                                           role_name = 'Associate', 
+                                                           agent = person.getRelativeUrl())                                                           
+    get_transaction().commit()
+    self.tic()
+    # check if Role Definition have create local roles
+    self.assertSameSet(('Assignee',),  
+                                 site.get_local_roles_for_userid(person_reference))
+    self.assertSameSet(('Associate',),  
+                                 section.get_local_roles_for_userid(person_reference))
+                                 
+    # delete Role Definition and check again (local roles must be gone too)
+    site.manage_delObjects(site_role_definition.getId())
+    section.manage_delObjects(section_role_definition.getId())
+    get_transaction().commit()
+    self.tic()
+    self.assertSameSet((),  
+                                 site.get_local_roles_for_userid(person_reference))
+    self.assertSameSet((),  
+                                 section.get_local_roles_for_userid(person_reference))                                 
 
 def test_suite():
   suite = unittest.TestSuite()
