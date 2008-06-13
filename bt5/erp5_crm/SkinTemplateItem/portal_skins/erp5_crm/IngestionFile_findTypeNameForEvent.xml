@@ -67,8 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempEvent\n
 \n
-new_id = newTempEvent(context, \'subobject\', data=context.getData())\n
-event = context[new_id]\n
+event = newTempEvent(context, \'subobject\', data=context.getData())\n
 \n
 # First, try to find portal type from content.\n
 portal_type = event.getPropertyDictFromContent().get(\'portal_type\', None)\n
@@ -126,8 +125,6 @@ return predicate.getDestinationPortalType()\n
                             <string>newTempEvent</string>
                             <string>context</string>
                             <string>_getattr_</string>
-                            <string>new_id</string>
-                            <string>_getitem_</string>
                             <string>event</string>
                             <string>None</string>
                             <string>portal_type</string>
