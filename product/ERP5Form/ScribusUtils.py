@@ -44,6 +44,8 @@ from urllib import quote
 from Products.ERP5.ERP5Site import ERP5Site
 from Products.Formulator.TALESField import TALESMethod
 from Products.Formulator.MethodField import Method
+from Products.ERP5Type.Utils import convertToUpperCase
+
 # defining global variables
 # ANFLAG tag
 # these values can be found in the Scribus document format
@@ -60,7 +62,7 @@ def_readOnly = '1'
 # define if the script uses personal properties or create a
 # PropertySheet and a Document model to save data.
 # used in 'setPropertySheetAndDocument', 'setObjectPortalType'
-# and 'setPDFForm' 
+# and 'setPDFForm'
 def_usePropertySheet = 0
 
 
@@ -518,12 +520,14 @@ class ManageFiles:
                  skin_folder,
                  object_names,
                  object_title,
-                 pdf_file
+                 pdf_file,
+                 global_properties
                  ):
     """
     imports PDF file as a PDFForm in ERP5 and updates its TALES
     expressions
     """
+    my_prefix = 'my_'
     pdf_file.seek(0)
     factory.addPDFForm(object_names['view_pdf'], object_title, pdf_file)
     # iterating objects in skin_folder
@@ -531,31 +535,60 @@ class ManageFiles:
       if c.getId() == object_names['view_pdf']:
         # current object is PDF Form
         cell_name_list = c.getCellNames()
-        for cell_name in cell_name_list:
-          if cell_name[0:3] == 'my_':
+        for cell_name in global_properties['object'].keys():
+          if cell_name[:len(my_prefix)] == my_prefix:
             cell_process_name_list = []
-            for word in cell_name[3:].split('_'):
-              word = word.capitalize()
-              cell_process_name_list.append(word)
-            if def_usePropertySheet == 1:
+            suffix = cell_name[len(my_prefix):].split('_')[-1]
+            # If properties field are filled in scribus, get Type form
+            # global_properties. Else, guess Type by suffix id (eg: List, Date,...)
+            list_field_type_list = ('ListField', 'MultiListField', 'LinesField',)
+            date_field_type_list = ('DateTimeField',)
+            suffix_mapping = {'List' : list_field_type_list,
+                              'Date' : date_field_type_list}
+            field_dict = global_properties['object'][cell_name]
+            field_type = field_dict.get('erp_type', suffix_mapping.get(suffix, [''])[0])
+            if def_usePropertySheet:
               # generating PropertySheet and Document, no need to use them to
               # get field data
-              if cell_process_name_list[-1] == 'List':
-                TALES = "python: " + ", ".join(
-                     "here.get" + "".join(cell_process_name_list) + "()" )
-
+              if field_type in list_field_type_list:
+                TALES = "python: %s " % ', '.join(
+               "here.get%s()" % convertToUpperCase(cell_name[len(my_prefix):]))
+              elif field_type in date_field_type_list:
+                attributes_dict = field_dict['attributes']
+                # assign the property input_order
+                input_order = attributes_dict['input_order']
+                input_order = input_order.replace('y', 'Y')
+                # make the Tales according to the cases
+                date_pattern = '/'.join(['%%%s' % s for s in list(input_order)])
+                if not(attributes_dict['date_only']):
+                  date_pattern += ' %H:%M'
+                TALES = "python: here.get%s() is not None and here.get%s().strftime('%s') or ''"\
+                 % (convertToUpperCase(cell_name[len(my_prefix):]),
+                    convertToUpperCase(cell_name[len(my_prefix):]),
+                    date_pattern)
               else:
-                TALES = "python: here.get" + "".join(
-                     cell_process_name_list) + "()"
+                TALES = "python: here.get%s()" %\
+                                 convertToUpperCase(cell_name[len(my_prefix):])
 
             else:
-              # PropertySheet and Document 
-              if cell_process_name_list[-1] == 'List':
-                TALES = "python: " + ", ".join(
-                      "here.getProperty('" + cell_name[3:] + "')")
-
+              if field_type in list_field_type_list:
+                TALES = "python: %s" % ', '.join(
+                      "here.getProperty('%s')" % cell_name[len(my_prefix):])
+              elif field_type in date_field_type_list:
+                attributes_dict = field_dict['attributes']
+                # assign the property input_order
+                input_order = attributes_dict['input_order']
+                input_order = input_order.replace('y', 'Y')
+                # make the Tales according to the cases
+                date_pattern = '/'.join(['%%%s' % s for s in list(input_order)])
+                if not(attributes_dict['date_only']):
+                  date_pattern += ' %H:%M'
+                TALES = "python: here.getProperty('%s') is not None and here.getProperty('%s').strftime('%s') or ''"\
+                      % (cell_name[len(my_prefix):],
+                         cell_name[len(my_prefix):],
+                         date_pattern)
               else:
-                TALES = "python: here.getProperty('" + cell_name[3:] +"')"
+                TALES = "python: here.getProperty('%s')" % cell_name[len(my_prefix):]
             LOG('ManageFiles', INFO, '   %s > %s ' % (cell_name, TALES))
             c.setCellTALES(cell_name, TALES)
 
@@ -577,7 +610,7 @@ class ManageFiles:
     extract background pictures from pdf file and convert them
     in the right format (JPEG) and save them in the corresponding
     folder (skin_folder).
-    to work, this procedure needs convert (from ImageMagick) 
+    to work, this procedure needs convert (from ImageMagick)
     installed on the server otherwise nothing is created.
     Temp files wich are created are deleted once the job is done.
     At the end, return the properties (size_x, size_y) the background
@@ -747,7 +780,7 @@ class ManageFiles:
     PropertySheetRegistry and DocumentRegistry have to be
     reinitialized after this procedure has been called.
     """
-    if def_usePropertySheet:    
+    if def_usePropertySheet:
       LOG('ManageFiles', INFO, ' object_names = %s' % object_names['view_id'])
       #property_form = getattr(skin_folder,object_names['view_id'])
       # defining file name for Property Sheet

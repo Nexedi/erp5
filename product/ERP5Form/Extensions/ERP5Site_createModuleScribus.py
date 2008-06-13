@@ -341,7 +341,8 @@ def ERP5Site_createModuleScribus(self,
                          skin_folder,
                          object_names,
                          object_title,
-                         pdf_file=import_pdf_file
+                         import_pdf_file,
+                         global_properties
                          )
   LOG('ERP5Site_createModuleScribus', INFO, 
       'createmodule < PDF settings managed')
