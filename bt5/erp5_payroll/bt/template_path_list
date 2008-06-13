@@ -12,3 +12,4 @@ portal_categories/base_amount/total_deductions
 portal_categories/base_amount/total_income
 portal_categories/tax_category/employee_share
 portal_categories/tax_category/employer_share
+portal_deliveries/pay_sheet_transaction_builder
