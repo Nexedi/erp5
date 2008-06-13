@@ -1,6 +1,8 @@
+2008-06-12 ivan
+* Move Role Definition to erp5_base
+
 2008-06-05 yusei
-* Use updateLocalRolesOnSecurityGroups instead of assignRoleToSecurityGroup in
-local_permission_interaction_workflow/scripts/Parent_updateAllLocalRoles
+* Use updateLocalRolesOnSecurityGroups instead of assignRoleToSecurityGroup in local_permission_interaction_workflow/scripts/Parent_updateAllLocalRoles
 
 2008-04-19 yo
 * Remove erp5_crm from the dependencies.
