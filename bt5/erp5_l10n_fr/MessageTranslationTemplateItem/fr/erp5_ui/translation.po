@@ -514,7 +514,7 @@ msgid "Bank Account Title"
 msgstr "Domiciliation bancaire"
 
 msgid "Bank Accounts"
-msgstr "Comptes banquaires"
+msgstr "Comptes bancaires"
 
 msgid "Bank Branch"
 msgstr "Code guichet"
