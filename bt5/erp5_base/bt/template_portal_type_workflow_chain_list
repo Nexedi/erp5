@@ -26,4 +26,5 @@ Person | validation_workflow
 Query | edit_workflow
 Query | query_workflow
 Role Definition | edit_workflow
+Role Definition | local_permission_interaction_workflow
 Telephone | edit_workflow

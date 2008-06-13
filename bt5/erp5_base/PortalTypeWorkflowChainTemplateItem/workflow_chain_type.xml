@@ -69,7 +69,7 @@
  </chain>
  <chain>
   <type>Role Definition</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Telephone</type>
