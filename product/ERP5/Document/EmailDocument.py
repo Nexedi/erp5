@@ -215,7 +215,7 @@ class EmailDocument(File, TextDocument):
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
   def getTitle(self, default=_MARKER):
     """
-    Returns the title
+    Returns the title from the mail subject
     """
     if not self.hasFile():
       # Return the standard text content if no file was provided
@@ -224,11 +224,16 @@ class EmailDocument(File, TextDocument):
       else:
         return self._baseGetTitle(default)
     return self.getContentInformation().get('Subject', '')
+  
+  def title_or_id(self):
+    """Return the title if it is not blank and the id otherwise.
+    """
+    return self.getTitleOrId()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
   def getStartDate(self, default=_MARKER):
     """
-    Returns the title
+    Returns the date from the mail date
     """
     if not self.hasFile():
       # Return the standard start date if no file was provided

@@ -370,6 +370,8 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     # tite is found automatically, based on the Subject: header in the mail
     event = self._ingestMail('simple')
     self.assertEquals('Simple Mail Test', event.getTitle())
+    self.assertEquals('Simple Mail Test', event.getTitleOrId())
+    self.assertEquals('Simple Mail Test', event.title_or_id())
 
   def test_asText(self):
     # asText requires portal_transforms
