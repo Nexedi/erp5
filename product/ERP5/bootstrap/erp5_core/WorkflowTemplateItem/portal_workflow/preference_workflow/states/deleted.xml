@@ -17,11 +17,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The preference is deleted</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>enabled</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,16 +31,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Enabled</string> </value>
+            <value> <string>Deleted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>disable</string>
-                <string>disable_action</string>
-                <string>global_enable</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -55,26 +51,21 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -83,7 +74,6 @@
                     <value>
                       <tuple>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -91,9 +81,7 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

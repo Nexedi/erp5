@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Enable Preference</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?field_my_workflow_action=enable_action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>enable</string> </value>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>enable_action</string> </value>
+            <value> <string>delete_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -67,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -81,6 +78,7 @@
             <value>
               <tuple>
                 <string>Owner</string>
+                <string>Assigner</string>
                 <string>Manager</string>
               </tuple>
             </value>
