@@ -14,6 +14,7 @@ Web Section | generate_section
 Web Section | history
 Web Section | layout_configuration
 Web Section | list
+Web Section | local_permission
 Web Section | metadata
 Web Section | new_default_page
 Web Section | new_page
@@ -27,6 +28,7 @@ Web Site Module | view
 Web Site | generate_section
 Web Site | history
 Web Site | layout_configuration
+Web Site | local_permission
 Web Site | metadata
 Web Site | new_default_page
 Web Site | predicate

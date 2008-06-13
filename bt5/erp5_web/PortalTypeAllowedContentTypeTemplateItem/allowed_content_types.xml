@@ -9,9 +9,11 @@
  <portal_type id="Web Section">
   <item>Web Section</item>
   <item>File</item>
+  <item>Role Definition</item>
   <item>Image</item>
  </portal_type>
  <portal_type id="Web Site">
+  <item>Role Definition</item>
   <item>Web Section</item>
   <item>Image</item>
   <item>File</item>

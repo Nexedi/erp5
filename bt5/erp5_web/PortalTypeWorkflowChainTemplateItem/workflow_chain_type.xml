@@ -5,10 +5,10 @@
  </chain>
  <chain>
   <type>Web Section</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Web Site</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
