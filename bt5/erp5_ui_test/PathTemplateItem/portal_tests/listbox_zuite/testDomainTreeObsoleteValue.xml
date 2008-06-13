@@ -109,13 +109,13 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
-\t<td>+ Title 0</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
+\t<td>Title 0</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
-\t<td>+ Title 1</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+\t<td>Title 1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -140,7 +140,7 @@
 <!-- Click on + Title 0 -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>link=+ Title 0</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -150,23 +150,23 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
-\t<td>- Title 0</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_open"]</td>\n
+\t<td>Title 0</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
-\t<td>+ Title 1</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+\t<td>Title 1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[3]//a</td>\n
-\t<td>+ Title 2</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[3]//a[@class="tree_closed"]</td>\n
+\t<td>Title 2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[4]//a</td>\n
-\t<td>+ Title 3</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[4]//a[@class="tree_closed"]</td>\n
+\t<td>Title 3</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -199,13 +199,13 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
-\t<td>+ Title 1</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
+\t<td>Title 1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
-\t<td>+ Title 2</td>\n
+\t<td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+\t<td>Title 2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
