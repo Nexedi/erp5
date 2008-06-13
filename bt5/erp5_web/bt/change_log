@@ -1,3 +1,6 @@
+2008-06-13 ivan
+* Show workflow state for Web Site and Web Section
+
 2008-06-12 yo
 * Refactor WebSection_getDocumentValueList, so that it can be mostly shared with km. Now this script relies on a custom Z SQL Method to generate a good query.
 
