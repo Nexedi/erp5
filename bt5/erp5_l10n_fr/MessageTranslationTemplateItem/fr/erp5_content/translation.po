@@ -69,7 +69,7 @@ msgid "Non Tax Withholding"
 msgstr "Retenues sur salaire"
 
 msgid "Non Taxable Bonus"
-msgstr "Indemnitée non imposable"
+msgstr "Indemnitée non cotisables"
 
 msgid "Overtime"
 msgstr "Heures supplémentaires"
@@ -86,3 +86,5 @@ msgstr "Part Salariale"
 msgid "Employer Share"
 msgstr "Part Employeur"
 
+msgid "Gross Salary"
+msgstr "Salaire Brut"
