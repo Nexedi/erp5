@@ -30,6 +30,7 @@ import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Products.ERP5Type.Base import _aq_reset
@@ -1042,6 +1043,35 @@ class TestCMFCategory(ERP5TypeTestCase):
       [['', ''], ['A', '1']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
                                        cache=0))
+
+  def test_28b_getCategoryChildItemList_checked_permission_cache(self):
+    # getCategoryChildTitleItemList take into account user 
+    pc = self.getCategoriesTool()
+
+    bc_id = 'barfoo'
+    bc = pc.newContent(portal_type='Base Category', id=bc_id)
+    a = bc.newContent(portal_type='Category', id='1', title='A')
+    b = bc.newContent(portal_type='Category', id='2', title='B')
+    b1 = b.newContent(portal_type='Category', id='21', title='B1')
+
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
+    uf._doAddUser('bob', '', ['Member'], [])
+    login = PortalTestCase.login
+
+    checked_permission = 'View'
+    
+    b.manage_permission(checked_permission, roles=['Assignor'], acquire=0)
+    login(self, 'alice')
+    self.assertEquals(
+      [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,))
+    
+    login(self, 'bob')
+    self.assertEquals(
+      [['', ''], ['A', '1']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,))
+
 
   def test_29_renameBaseCategory(self):
     bc = self.portal.portal_categories.newContent(

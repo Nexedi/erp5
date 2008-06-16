@@ -30,6 +30,7 @@ import string
 
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
+from AccessControl import getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 from Products.CMFCore.utils import getToolByName
 
@@ -528,13 +529,20 @@ class Category(Folder):
       if not cache:
         return _renderCategoryChildItemList(
                       recursive=recursive, base=base, **kw)
-
+      
+      # If checked_permission is specified, we include the username in the
+      # cache key
+      username = None
+      if 'checked_permission' in kw:
+        username = str(getSecurityManager().getUser())
+        
       # Some methods are language dependent so we include the language in the
       # key
       localizer = getToolByName(self, 'Localizer')
       language = localizer.get_selected_language()
       m = CachingMethod(_renderCategoryChildItemList,
-            ('Category_getCategoryChildItemList', language, self.getPath()),
+            ('Category_getCategoryChildItemList', language,
+              self.getPath(), username),
             cache_factory=cache)
 
       return m(recursive=recursive, base=base, **kw)
