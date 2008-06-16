@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -49,6 +46,12 @@
             <key> <string>_col</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -100,7 +103,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CREATE TABLE `portal_ids` (\n
-  `id_group` VARCHAR(255),\n
+  `id_group` VARBINARY(255),\n
   `last_id` BIGINT UNSIGNED,\n
   PRIMARY KEY  (`id_group`)\n
 ) TYPE=InnoDB\n
@@ -117,9 +120,11 @@ INSERT INTO `portal_ids` (`id_group`, `last_id`) VALUES (<dtml-sqlvar sequence-k
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -147,7 +152,7 @@ INSERT INTO `portal_ids` (`id_group`, `last_id`) VALUES (<dtml-sqlvar sequence-k
                         <value> <string encoding="cdata"><![CDATA[
 
 CREATE TABLE `portal_ids` (\n
-  `id_group` VARCHAR(255),\n
+  `id_group` VARBINARY(255),\n
   `last_id` BIGINT UNSIGNED,\n
   PRIMARY KEY  (`id_group`)\n
 ) TYPE=InnoDB\n
