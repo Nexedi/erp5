@@ -93,6 +93,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>A list of optional base categories which defines possible discrete variations.</string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>

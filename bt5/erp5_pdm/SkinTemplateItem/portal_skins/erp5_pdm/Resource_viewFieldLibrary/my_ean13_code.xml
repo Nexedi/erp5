@@ -84,6 +84,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The EAN 13 code of this document</string> </value>
+                </item>
+                <item>
                     <key> <string>external_validator</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>

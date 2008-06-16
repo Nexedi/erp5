@@ -374,7 +374,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The organisation or person to whom merchandise or service is delivered over or provided to.</string> </value>
+                    <value> <string>Recipient or beneficiary of the supply</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

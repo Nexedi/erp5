@@ -118,7 +118,7 @@ return context.getPortalObject().portal_simulation \\\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>

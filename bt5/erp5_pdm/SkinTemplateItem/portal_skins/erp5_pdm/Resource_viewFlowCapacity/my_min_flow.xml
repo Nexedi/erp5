@@ -190,7 +190,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Minimal quantity to use on a movement.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

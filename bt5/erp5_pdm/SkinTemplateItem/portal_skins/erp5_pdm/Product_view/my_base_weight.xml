@@ -73,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>A typical per unit weight of the resource</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -85,6 +89,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Resource_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Weight (kg)</string> </value>
                 </item>
               </dictionary>
             </value>

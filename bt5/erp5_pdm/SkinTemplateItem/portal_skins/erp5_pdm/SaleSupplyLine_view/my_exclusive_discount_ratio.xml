@@ -115,6 +115,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -127,6 +131,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>BaseTradeSale_FieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Exclusive Discount Ratio</string> </value>
                 </item>
               </dictionary>
             </value>
