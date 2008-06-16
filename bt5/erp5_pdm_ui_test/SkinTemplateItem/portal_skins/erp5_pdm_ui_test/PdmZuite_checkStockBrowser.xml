@@ -58,7 +58,7 @@
     <!-- Click on + link -->\n
     <tr>\n
       <td>clickAndWait</td>\n
-      <td tal:content="python: \'link=+ %s\' % link_title">link=+ node</td>\n
+      <td tal:content="python: \'link=%s\' % link_title">link=node</td>\n
       <td></td>\n
     </tr>\n
 \n
