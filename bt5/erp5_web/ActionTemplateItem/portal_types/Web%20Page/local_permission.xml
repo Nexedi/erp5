@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>7.0</float> </value>
+            <value> <float>5.5</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -93,7 +93,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: \'Role Definition\' in portal.portal_types[\'Web Section\'].allowed_content_types</string> </value>
+            <value> <string>python: \'Role Definition\' in portal.portal_types[\'Web Page\'].allowed_content_types</string> </value>
         </item>
       </dictionary>
     </pickle>
