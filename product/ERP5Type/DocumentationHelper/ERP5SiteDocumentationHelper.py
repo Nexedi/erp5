@@ -33,7 +33,6 @@ from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from DocumentationSection import DocumentationSection
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
 
 class ERP5SiteDocumentationHelper(DocumentationHelper):
   """
@@ -50,7 +49,7 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -79,7 +78,7 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     """
     Returns the description of the documentation helper
     """
-    return self.getDocumentedObject().description
+    return getattr(self.getDocumentedObject(), "description", '')
   
   security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateIdList' )
   def getBusinessTemplateIdList(self):
@@ -99,18 +98,19 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     """
     """
     bt_list = []
-    for bt in self.getDocumentedObject().portal_templates.objectValues():
-      revision = ""
-      version = "" 	    
-      if hasattr(bt, 'revision'):
-        revision = bt.revision
-      if hasattr(bt, 'version'):
-	version = bt.version   
-      current_state = ''
-      for wh in bt.workflow_history['business_template_installation_workflow']:
-        current_state = wh['installation_state']
-      if current_state == 'installed':	
-        bt_list.append((bt.getId(), bt.title, bt.description, version, revision))
+    portal_templates = getattr(self.getDocumentedObject(), "portal_templates", None)
+    if portal_templates is not None:
+      for bt in portal_templates.objectValues():
+        current_state = ''
+        for wh in bt.workflow_history['business_template_installation_workflow']:
+          current_state = wh['installation_state']
+        if current_state == 'installed':	
+          bt_list.append((bt.getId(), 
+		          getattr(bt, "title", ''), 
+			  getattr(bt, "description", ''),
+			  getattr(bt, "version", ''), 
+			  getattr(bt, "revision", '')
+			 ))
     return bt_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateURIList' )

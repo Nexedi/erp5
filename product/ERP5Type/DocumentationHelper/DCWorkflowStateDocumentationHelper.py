@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
 
 def getPermissionsOfRole(state=None, role=''):
   """
@@ -41,7 +40,6 @@ def getPermissionsOfRole(state=None, role=''):
     M = Modify Portal Content
     C = Add Portal Content
   """
-  #LOG('yoooo', INFO, 'state=%s role=%s ' % (state, role))
   permissions = ""
   if state != None:
     if hasattr(state, '__dict__'):
@@ -87,7 +85,7 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return getattr(self.getDocumentedObject(), "__name__", "")
 
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
@@ -95,7 +93,7 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().__dict__["title"]
+    return getattr(self.getDocumentedObject(), "title", "")
 
   def getSectionList(self):
     """
@@ -108,7 +106,7 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
     """
     Returns list of possible transitions from this state
     """
-    return self.getDocumentedObject().transitions
+    return getattr(self.getDocumentedObject(), "transitions", [])
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleOwner' )
   def getPermissionsOfRoleOwner(self):

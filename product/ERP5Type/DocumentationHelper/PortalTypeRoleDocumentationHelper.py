@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
 
 class PortalTypeRoleDocumentationHelper(DocumentationHelper):
   """
@@ -59,7 +58,7 @@ class PortalTypeRoleDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return getattr(self.getDocumentedObject(), "__name__", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
   def getSectionList(self):
@@ -73,20 +72,20 @@ class PortalTypeRoleDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryList' )
   def getCategoryList(self):
     """
     Returns the list of categories for the role
     """
-    return self.getDocumentedObject().category
+    return getattr(self.getDocumentedObject(), "category", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryScript' )
   def getBaseCategoryScript(self):
     """
     Returns the base category script of the role
     """
-    return self.getDocumentedObject().base_category_script
+    return getattr(self.getDocumentedObject(), "base_category_script", '')
 
 InitializeClass(PortalTypeRoleDocumentationHelper)

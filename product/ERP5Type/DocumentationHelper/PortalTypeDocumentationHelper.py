@@ -29,11 +29,10 @@
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from DocumentationHelper import DocumentationHelper
+from DocumentationHelper import DocumentationHelper, TempObjectLibrary
 from DocumentationSection import DocumentationSection
 from PortalTypeInstanceDocumentationHelper import PortalTypeInstanceDocumentationHelper
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
 
 def getPortalType(uri=''):
   """
@@ -86,12 +85,12 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
 
  
   security.declareProtected( Permissions.AccessContentsInformation, 'getTempInstance' )
-  def getTempInstance(self, portal_type=''):
+  def getTempInstance(self, portal_type):
     """
     Returns a temporary instance of the given portal_type
     """
-    temp_folder = self.getPortalObject().portal_classes.newContent(id='temp_instance', portal_type='Folder', temp_object=1)
-    return temp_folder.newContent(id=portal_type, portal_type=portal_type, temp_object=1)
+    self.getTempInstance = TempObjectLibrary(self.getPortalObject().portal_classes)
+    return self.getTempInstance(portal_type)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
   def getSectionList(self):
@@ -133,13 +132,13 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
         id='workflow_method',
         title='Workflow Method',
         class_name='WorkflowMethodDocumentationHelper',
-        uri_list=self.getWorkflowMethodURIList(inherited=0),
+        uri_list=self.getWorkflowMethodUriList(inherited=0),
       ),
       DocumentationSection(
         id='accessor',
         title='Accessor',
         class_name='AccessorMethodDocumentationHelper',
-        uri_list=self.getAccessorMethodURIList(inherited=0),
+        uri_list=self.getAccessorMethodUriList(inherited=0),
       ),
       DocumentationSection(
         id='class_method',
@@ -162,7 +161,7 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of allowed content type of the documentation helper
     """
-    return self.getDocumentedObject().allowed_content_types
+    return getattr(self.getDocumentedObject(), "allowed_content_types", [])
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getAllowedContentTypeURIList' )
   def getAllowedContentTypeURIList(self):
@@ -177,7 +176,7 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of hidden content type of the documentation helper
     """
-    return self.getDocumentedObject().hidden_content_type_list
+    return getattr(self.getDocumentedObject(), "hidden_content_type_list", [])
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getHiddenContentTypeURIList' )
   def getHiddenContentTypeURIList(self):
@@ -192,14 +191,15 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of base category of the documentation helper
     """
-    return self.getDocumentedObject().base_category_list
+    return getattr(self.getDocumentedObject(), "base_category_list", [])
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getAcquireLocalRoles' )
   def getAcquireLocalRoles(self):
     """
     Returns the list of allowed content type for the documentation helper
     """
-    if self.getDocumentedObject().acquire_local_roles:
+    local_roles = getattr(self.getDocumentedObject(), "acquire_local_roles", '')
+    if local_roles:
       return 'Yes'
     else:
       return 'No'	    
@@ -209,7 +209,8 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of property sheets for the documentation helper
     """
-    temp_object = self.getTempInstance(self.getDocumentedObject().id)
+    id = getattr(self.getDocumentedObject(), "id", '')
+    temp_object = self.getTempInstance(id)
     property_sheet = []
     for obj in temp_object.property_sheets:
       property_sheet.append(obj.__module__.split('.')[-1])
@@ -230,14 +231,15 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of groups for the documentation helper
     """
-    return self.getDocumentedObject().group_list
+    return getattr(self.getDocumentedObject(), "group_list", [])
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getActionIdList' )
   def getActionIdList(self):
     """
     """
     action_list = []
-    for action in  self.getDocumentedObject()._actions:
+    actions = getattr(self.getDocumentedObject(), "_actions", [])
+    for action in actions:
       action_list.append(action.getId())
     return action_list
 
@@ -277,7 +279,8 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     """
     role_list = []
-    for role in  self.getDocumentedObject()._roles:
+    roles = getattr(self.getDocumentedObject(), "_roles", '')
+    for role in roles:
       role_list.append(role.Title())
     return role_list
 
@@ -312,7 +315,6 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     from Products.ERP5Type.Base import Base
     portal_type = getPortalType(self.uri)
     temp_object = self.getTempInstance(portal_type)
-    #LOG('yomido1', INFO, 'dir() = %s' % dir(temp_object))
     dir_temp = dir(temp_object)
     return Base.aq_portal_type[(portal_type, temp_object.__class__)]
   
@@ -334,6 +336,20 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     module = klass.__module__
     uri_prefix = '' #'%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodUriList' )
+  def getWorkflowMethodUriList(self, inherited=1, local=1):
+    """
+    Returns a list of URIs to workflow  methods
+    """
+    method_id_list = self.getWorkflowMethodIdList()
+    portal_type = getPortalType(self.uri)
+    klass = self.getTempInstance(portal_type).__class__
+    class_name = klass.__name__
+    module = klass.__module__
+    uri_prefix = 'portal_classes/temp_instance/%s' % self.uri.split('/')[-1]
+    return map(lambda x: '%s#%s' % (uri_prefix, x), method_id_list)
+    
   
   security.declareProtected( Permissions.AccessContentsInformation, 'getClassMethodIdList' )
   def getClassMethodIdList(self, inherited=1, local=1):
@@ -376,5 +392,17 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     uri_prefix = '%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodUriList' )
+  def getAccessorMethodUriList(self, inherited=1, local=1):
+    """
+    Returns a list of URIs to accessor methods
+    """
+    method_id_list = self.getAccessorMethodIdList(inherited=inherited)
+    portal_type = getPortalType(self.uri)
+    klass = self.getTempInstance(portal_type).__class__.__bases__[0]
+    class_name = klass.__name__
+    module = klass.__module__
+    uri_prefix = self.uri
+    return map(lambda x: '%s#%s' % (uri_prefix, x), method_id_list)
 
 InitializeClass(PortalTypeDocumentationHelper)

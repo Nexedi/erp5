@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
 
 class PortalTypeActionDocumentationHelper(DocumentationHelper):
   """
@@ -45,7 +44,7 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return self.getDocumentedObject().Description()
+    return getattr(self.getDocumentedObject(), "description", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -59,7 +58,7 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return getattr(self.getDocumentedObject(), "__name__", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
   def getSectionList(self):
@@ -73,14 +72,15 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPermissions' )
   def getPermissions(self):
     """
     Returns the permissions of the documentation helper
     """
-    return ', '.join(x for x in self.getDocumentedObject().permissions)
+    permissions = getattr(self.getDocumentedObject(), "permissions", [])
+    return ', '.join(x for x in permissions)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVisible' )
   def getVisible(self):
@@ -88,13 +88,13 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     Returns the visibility of the documentation helper
     """
     TITLE =['No', 'Yes']
-    return TITLE[self.getDocumentedObject().visible]
+    return TITLE[getattr(self.getDocumentedObject(), "visible", 0)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCategory' )
   def getCategory(self):
     """
     Returns the category of the documentation helper
     """
-    return self.getDocumentedObject().category
+    return getattr(self.getDocumentedObject(), "category", '')
 
 InitializeClass(PortalTypeActionDocumentationHelper)

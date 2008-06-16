@@ -54,14 +54,14 @@ class CatalogMethodDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().id
+    return getattr(self.getDocumentedObject(), 'id', '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), 'title', '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSource' )
   def getSource(self):
@@ -69,7 +69,7 @@ class CatalogMethodDocumentationHelper(DocumentationHelper):
     Returns the source code of the documentation helper
     """
     from zLOG import LOG, INFO
-    source_code = self.getDocumentedObject().src
+    source_code =  getattr(self.getDocumentedObject(), 'src', '')
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is None:
       LOG('DCWorkflowScriptDocumentationHelper', INFO,
@@ -85,20 +85,30 @@ class CatalogMethodDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().connection_id
+    return getattr(self.getDocumentedObject(), 'connection_id', '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getArgumentList' )
   def getArgumentList(self):
     """
     Returns the arguments of the documentation helper
     """
-    return self.getDocumentedObject()._arg._keys
+    #return self.getDocumentedObject()._arg._keys
+    keys = []
+    arg = getattr(self.getDocumentedObject(), '_arg', None)
+    if arg is not None:
+      keys = getattr(arg, '_keys', [])	    
+    return keys
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCatalog' )
   def getCatalog(self):
     """
     Returns the catalog name of the documentation helper
     """
-    return self.getDocumentedObject().aq_parent.__name__
+    #return self.getDocumentedObject().aq_parent.__name__
+    catalog = ''
+    parent = getattr(self.getDocumentedObject(), 'aq_parent', None)
+    if parent is not None:
+      catalog = getattr(parent, '__name__', '')
+    return catalog
 
 InitializeClass(CatalogMethodDocumentationHelper)

@@ -55,7 +55,7 @@ class DCWorkflowScriptDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return getattr(self.getDocumentedObject(), "__name__", "")
 
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
@@ -63,7 +63,7 @@ class DCWorkflowScriptDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", "")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
   def getSectionList(self):

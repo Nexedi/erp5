@@ -54,14 +54,15 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().name.split("/")[-1]
+    name = getattr(self.getDocumentedObject(), "name", '')
+    return name.split("/")[-1]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().name
+    return getattr(self.etDocumentedObject(), "name", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
   def getSourceCode(self):
@@ -75,7 +76,7 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
       property_sheet_file.seek(0)	    
       source_code = property_sheet_file.read()
       portal_transforms = getattr(self, 'portal_transforms', None)
-      if portal_transforms is not None:
+      if portal_transforms is None:
         LOG('DCWorkflowScriptDocumentationHelper', INFO, 
 	  'Transformation Tool is not installed. No convertion of python script to html')	    
         return source_code

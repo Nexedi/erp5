@@ -42,6 +42,13 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
   def __init__(self, uri):
     self.uri = uri
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
+  def getSectionList(self):
+    """
+    Returns a list of documentation sections
+    """
+    return []
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
@@ -54,14 +61,14 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().id
+    return getattr(self.getDocumentedObject(), "id", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaTypeList' )
   def getMetaTypeList(self):
@@ -78,9 +85,11 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     Returns the list of sub-objects ids of the documentation helper
     """
     file_list = []
-    for file in self.getDocumentedObject().objectValues():
-      if not meta_type or file.meta_type == meta_type:
-        file_list.append(file.id)
+    files = self.getDocumentedObject()
+    if files is not None:
+      for file in files.objectValues():
+        if not meta_type or file.meta_type == meta_type:
+          file_list.append(file.id)
     return file_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getFileItemList' )
@@ -89,9 +98,11 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     Returns the list of sub-objects items of the documentation helper
     """
     file_list = []
-    for file in self.getDocumentedObject().objectValues():
-      if not meta_type or file.meta_type == meta_type:	    
-        file_list.append((file.id, file.title, file.meta_type))
+    files = self.getDocumentedObject()
+    if files is not None:
+      for file in files.objectValues():
+        if not meta_type or file.meta_type == meta_type:	    
+          file_list.append((file.id, file.title, file.meta_type))
     return file_list
 
 InitializeClass(SkinFolderDocumentationHelper)

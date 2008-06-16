@@ -47,28 +47,28 @@ class SkinFolderItemDocumentationHelper(DocumentationHelper):
     """
     Returns the type of the documentation helper
     """
-    return self.getDocumentedObject().meta_type
+    return getattr(self.getDocumentedObject(), "meta_type", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
   def getId(self):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().id
+    return getattr(self.getDocumentedObject(), "id", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType' )
   def getContentType(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().content_type
+    return getattr(self.getDocumentedObject(), "content_type", '')
 
     
 

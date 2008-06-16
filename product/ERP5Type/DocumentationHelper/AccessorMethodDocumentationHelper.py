@@ -78,7 +78,7 @@ class AccessorMethodDocumentationHelper(DocumentationHelper):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return self.getDocumentedObject().__doc__
+    return getattr(self.getDocumentedObject(), "__doc__", "")
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -86,14 +86,13 @@ class AccessorMethodDocumentationHelper(DocumentationHelper):
     Returns the type of the documentation helper
     """
     return "Accessor Method"
-    #return self.getDocumentedObject().func_code.__module__
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().__name__
+    return getattr(self.getDocumentedObject(), "__name__", "")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
   def getSectionList(self):

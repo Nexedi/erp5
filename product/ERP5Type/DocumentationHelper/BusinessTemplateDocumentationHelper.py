@@ -49,7 +49,7 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), 'title', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -114,21 +114,21 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the description of the documentation helper
     """
-    return self.getDocumentedObject().description
+    return getattr(self.getDocumentedObject(), 'description', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVersion' )
   def getVersion(self):
     """
     Returns the version of the business template
     """
-    return self.getDocumentedObject().version
+    return getattr(self.getDocumentedObject(), 'version', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getRevisionNumber' )
   def getRevisionNumber(self):
     """
     Returns the revision number of the documentation helper
     """
-    return self.getDocumentedObject().revision
+    return getattr(self.getDocumentedObject(), 'revision', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getBuildingState' )
   def getBuildingState(self):
@@ -149,14 +149,15 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the list of maintainers of the business template
     """
-    return self.getDocumentedObject().maintainer
+    return  getattr(self.getDocumentedObject(), 'maintainer', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDependencyList' )
   def getDependencyList(self):
     """
     Returns the list of dependencies of the business template
     """
-    return self.getDocumentedObject().dependency
+    return getattr(self.getDocumentedObject(), 'dependency', '')
+
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPortalTypeIdList' )
   def getPortalTypeIdList(self):
@@ -191,8 +192,8 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     """
     dc_workflow_list = []
-    #for wf in self.getDocumentedObject().template_workflow_id:
-    for wf in getattr(self.getDocumentedObject(), 'template_workflow_id', []):
+    template_workflow_id_list = getattr(self.getDocumentedObject(), 'template_workflow_id', [])
+    for wf in template_workflow_id_list:
       url = '/' + self.getPortalObject().id + '/portal_workflow/' + wf 	    
       wf_object = self.getPortalObject().unrestrictedTraverse(url)
       if wf_object.__class__.__name__ == 'DCWorkflowDefinition':
@@ -212,7 +213,8 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     """
     workflow_list = []
-    for wf in getattr(self.getDocumentedObject(), 'template_workflow_id', []):
+    template_workflow_id_list = getattr(self.getDocumentedObject(), 'template_workflow_id', [])
+    for wf in template_workflow_id_list:
       url = '/' + self.getPortalObject().id + '/portal_workflow/' + wf
       wf_object = self.getPortalObject().unrestrictedTraverse(url)
       if wf_object.__class__.__name__ == 'InteractionWorkflowDefinition':
@@ -231,9 +233,9 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
   def getBaseCategoryList(self):
     """
     """
-    return getattr(self.getDocumentedObject(), 'template_base_category', [])
+    return getattr(self.getDocumentedObject(), 'template_base_category', '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPortalTypeURIList' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryURIList' )
   def getBaseCategoryURIList(self):
     """
     """

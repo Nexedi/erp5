@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
 
 class DCWorkflowPermissionDocumentationHelper(DocumentationHelper):
   """
@@ -45,7 +44,7 @@ class DCWorkflowPermissionDocumentationHelper(DocumentationHelper):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return "" #self.getDocumentedObject().__dict__["description"]
+    return getattr(self.getDocumentedObject(), "description", "")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -59,14 +58,14 @@ class DCWorkflowPermissionDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return "" #self.getDocumentedObject().__name__
+    return getattr(self.getDocumentedObject(), "__name__", "")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return "" #self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", "")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
   def getSectionList(self):

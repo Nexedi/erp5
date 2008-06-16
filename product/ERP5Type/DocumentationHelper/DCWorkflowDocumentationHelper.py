@@ -32,7 +32,6 @@ from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from DocumentationSection import DocumentationSection
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO 
 from Products.DCWorkflowGraph.DCWorkflowGraph import getGraph
 
 def getStatePermissionsOfRole(state=None, role=''):
@@ -76,7 +75,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns the Id of the documentation helper
     """
-    return self.getInstance().__name__
+    return getattr(self.getInstance(), '__name__', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -90,15 +89,14 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getInstance().title
+    return getattr(self.getInstance(), 'title', '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
   def getDescription(self):
     """
     Returns the description of the documentation helper
     """
-    #return self.getInstance().__dict__["description"]
-    return self.getInstance().description
+    return getattr(self.getInstance(), 'description', '')
 
 
 
@@ -152,8 +150,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     state_list = []
-    for state in  self.getInstance().states.objectValues():
-      state_list.append(state.getId())
+    states = getattr(self.getInstance(), 'states', None)
+    if states is not None:
+      for state in states.objectValues():
+        state_list.append(state.getId())
     return state_list
  
   security.declareProtected( Permissions.AccessContentsInformation, 'getStateItemList' )
@@ -161,16 +161,18 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     state_list = []
-    for state in  self.getInstance().states.objectValues():
-      state_list.append((state.getId(), 
-                         state.__dict__["title"],
-                         getStatePermissionsOfRole(state, 'Owner'),
-                         getStatePermissionsOfRole(state, 'Assignor'),
-                         getStatePermissionsOfRole(state, 'Assignee'),  
-                         getStatePermissionsOfRole(state, 'Associate'),
-                         getStatePermissionsOfRole(state, 'Author'),
-                         getStatePermissionsOfRole(state, 'Auditor')
-                       ))
+    states = getattr(self.getInstance(), 'states', None)
+    if states is not None:
+      for state in states.objectValues():
+        state_list.append((getattr(state, "id", ""),
+                           getattr(state, "title", ""),
+                           getStatePermissionsOfRole(state, 'Owner'),
+                           getStatePermissionsOfRole(state, 'Assignor'),
+                           getStatePermissionsOfRole(state, 'Assignee'),  
+                           getStatePermissionsOfRole(state, 'Associate'),
+                           getStatePermissionsOfRole(state, 'Author'),
+                           getStatePermissionsOfRole(state, 'Auditor')
+                         ))
     return state_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getStateUriList' )
@@ -197,8 +199,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     transition_list = []
-    for transition in  self.getInstance().transitions.objectValues():
-      transition_list.append(transition.getId())
+    transitions = getattr(self.getInstance(), 'transitions', None)
+    if transitions is not None:
+      for transition in transitions.objectValues():
+        transition_list.append(transition.getId())
     return transition_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getTransitionItemList' )
@@ -207,18 +211,20 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     transition_list = []
     trigger_type_list = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-    for transition in  self.getInstance().transitions.objectValues():
-      guard_roles = ""
-      guard = dir(transition.guard)
-      if hasattr(transition.guard, '__dict__'):
-         if 'roles' in transition.guard.__dict__.keys():
-           guard_roles = ', '.join(role for role in transition.guard.__dict__['roles'])
-      transition_list.append((transition.getId(), 
-                              transition.title, 
-                              trigger_type_list[transition.trigger_type], 
-                              transition.__dict__["description"],
-                              guard_roles
-                            ))
+    transitions = getattr(self.getInstance(), 'transitions', None)
+    if transitions is not None:
+      for transition in  self.getInstance().transitions.objectValues():
+        guard_roles = ""
+        guard = dir(transition.guard)
+        if hasattr(transition.guard, '__dict__'):
+          if 'roles' in transition.guard.__dict__.keys():
+            guard_roles = ', '.join(role for role in transition.guard.__dict__['roles'])
+        transition_list.append((transition.getId(), 
+                                getattr(transition, "title", ""), 
+                                trigger_type_list[transition.trigger_type], 
+                                getattr(transition, "description", ""),
+                                guard_roles
+                              ))
     return transition_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getTransitionUriList' )
@@ -244,8 +250,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     variable_list = []
-    for variable in  self.getInstance().variables.objectValues():
-      variable_list.append(variable.getId())
+    variables = getattr(self.getInstance(), 'variables', None)
+    if variables is not None:
+      for variable in variables.objectValues():
+        variable_list.append(variable.getId())
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableItemList' )
@@ -253,8 +261,13 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     variable_list = []
-    for variable in  self.getInstance().variables.objectValues():
-      variable_list.append((variable.getId(), variable.title, variable.__dict__.get("description",'')))
+    variables = getattr(self.getInstance(), 'variables', None)
+    if variables is not None:
+      for variable in  variables.objectValues():
+        variable_list.append((variable.getId(), 
+		              getattr(variable, "title", ""), 
+			      getattr(variable, "description", "")
+			    ))
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
@@ -280,8 +293,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     permission_list = []
-    for permission in  self.getInstance().permissions:
-      permission_list.append(permission)
+    permissions = getattr(self.getInstance(), "permissions", None)
+    if permissions is not None:
+      for permission in permissions:
+        permission_list.append(permission)
     return permission_list
     
 
@@ -308,8 +323,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     worklist_list = []
-    for wl in  self.getInstance().worklists.objectValues():
-      worklist_list.append(wl.__name__)
+    worklists = getattr(self.getInstance(), "worklists", None)
+    if worklists is not None:
+      for wl in worklists.objectValues():
+        worklist_list.append(getattr(wl, "__name__", ''))
     return worklist_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getWorklistItemList' )
@@ -317,17 +334,19 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     worklist_list = []
-    for wl in  self.getInstance().worklists.objectValues():
-      guard_roles = ""
-      guard = dir(wl.guard)
-      if wl.title == "":
-        title = wl.actbox_name
-      else:
-	title = wl.title
-      if hasattr(wl.guard, '__dict__'):
-        if 'roles' in wl.guard.__dict__.keys():
-          guard_roles = ', '.join(role for role in wl.guard.__dict__['roles'])
-      worklist_list.append((wl.__name__, title, wl.__dict__["description"],guard_roles))
+    worklists = getattr(self.getInstance(), "worklists", None)
+    if worklists is not None:
+      for wl in worklists.objectValues():
+        guard_roles = ""
+        guard = dir(wl.guard)
+        if wl.title == "":
+          title = wl.actbox_name
+        else:
+  	  title = wl.title
+        if hasattr(wl.guard, '__dict__'):
+          if 'roles' in wl.guard.__dict__.keys():
+            guard_roles = ', '.join(role for role in wl.guard.__dict__['roles'])
+        worklist_list.append((wl.__name__, title, wl.__dict__["description"],guard_roles))
     return worklist_list
 
   
@@ -354,8 +373,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     script_list = []
-    for script in  self.getInstance().scripts.objectValues():
-      script_list.append(script.__name__)
+    scripts = getattr(self.getInstance(), "scripts", None)
+    if scripts is not None:
+      for script in scripts.objectValues():
+        script_list.append(getattr(script, "__name__", ''))
     return script_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getScriptItemList' )
@@ -363,13 +384,12 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     script_list = []
-    for script in  self.getInstance().scripts.objectValues():
-      #guard_roles = ""
-      #guard = dir(script.guard)
-      #if hasattr(script.guard, '__dict__'):
-      #  if 'roles' in script.guard.__dict__.keys():
-      #    guard_roles = ', '.join(role for role in script.guard.__dict__['roles'])
-      script_list.append((script.__name__, script.title))
+    scripts = getattr(self.getInstance(), "scripts", None)
+    if scripts is not None:
+      for script in scripts.objectValues():
+        script_list.append((getattr(script, "__name__", ''), 
+		            getattr(script, "title", '')
+			   ))
     return script_list
 
 
@@ -404,6 +424,6 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
       Returns the graphic representation of the workflow as a PNG file
     """
-    return getGraph(self, wf_id=self.getInstance().__name__, format=format)
+    return getGraph(self, wf_id=getattr(self.getInstance(), "__name__", ''), format=format)
 
 InitializeClass(DCWorkflowDocumentationHelper)

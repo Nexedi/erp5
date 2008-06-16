@@ -32,7 +32,6 @@ from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from DocumentationSection import DocumentationSection
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO 
 from Products.DCWorkflowGraph.DCWorkflowGraph import getGraph
 
 def getStatePermissionsOfRole(state=None, role=''):
@@ -76,7 +75,8 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns the Id of the documentation helper
     """
-    return self.getInstance().__name__
+    return getattr(self.getInstance(), "__name__", '')
+    
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -90,14 +90,14 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return self.getInstance().title
+    return getattr(self.getInstance(), "title", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
   def getDescription(self):
     """
     Returns the description of the documentation helper
     """
-    return self.getInstance().description
+    return getattr(self.getInstance(), "description", '')
 
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
@@ -150,8 +150,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     state_list = []
-    for state in  self.getInstance().states.objectValues():
-      state_list.append(state.getId())
+    if hasattr(self.getInstance(), "states"):
+      if self.getInstance().states is not None:	    
+        for state in  self.getInstance().states.objectValues():
+          state_list.append(state.getId())
     return state_list
  
   security.declareProtected( Permissions.AccessContentsInformation, 'getStateItemList' )
@@ -159,16 +161,18 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     state_list = []
-    for state in  self.getInstance().states.objectValues():
-      state_list.append((state.getId(), 
-                         state.__dict__["title"],
-                         getStatePermissionsOfRole(state, 'Owner'),
-                         getStatePermissionsOfRole(state, 'Assignor'),
-                         getStatePermissionsOfRole(state, 'Assignee'),  
-                         getStatePermissionsOfRole(state, 'Associate'),
-                         getStatePermissionsOfRole(state, 'Author'),
-                         getStatePermissionsOfRole(state, 'Auditor')
-                       ))
+    if hasattr(self.getInstance(), "states"):
+      if self.getInstance().states is not None:	    
+        for state in  self.getInstance().states.objectValues():
+          state_list.append((state.getId(), 
+                             state.__dict__["title"],
+                             getStatePermissionsOfRole(state, 'Owner'),
+                             getStatePermissionsOfRole(state, 'Assignor'),
+                             getStatePermissionsOfRole(state, 'Assignee'),  
+                             getStatePermissionsOfRole(state, 'Associate'),
+                             getStatePermissionsOfRole(state, 'Author'),
+                             getStatePermissionsOfRole(state, 'Auditor')
+                           ))
     return state_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getStateUriList' )
@@ -195,8 +199,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     transition_list = []
-    for transition in  self.getInstance().transitions.objectValues():
-      transition_list.append(transition.getId())
+    if hasattr(self.getInstance(), "transitions"):
+      if self.getInstance().transitions is not None:	     
+        for transition in  self.getInstance().transitions.objectValues():
+          transition_list.append(transition.getId())
     return transition_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getTransitionItemList' )
@@ -205,18 +211,20 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     transition_list = []
     trigger_type_list = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-    for transition in  self.getInstance().transitions.objectValues():
-      guard_roles = ""
-      guard = dir(transition.guard)
-      if hasattr(transition.guard, '__dict__'):
-         if 'roles' in transition.guard.__dict__.keys():
-           guard_roles = ', '.join(role for role in transition.guard.__dict__['roles'])
-      transition_list.append((transition.getId(), 
-                              transition.title, 
-                              trigger_type_list[transition.trigger_type], 
-                              transition.__dict__["description"],
-                              guard_roles
-                            ))
+    if hasattr(self.getInstance(), "transitions"):
+      if self.getInstance().transitions is not None:	    
+        for transition in  self.getInstance().transitions.objectValues():
+          guard_roles = ""
+          guard = dir(transition.guard)
+          if hasattr(transition.guard, '__dict__'):
+            if 'roles' in transition.guard.__dict__.keys():
+              guard_roles = ', '.join(role for role in transition.guard.__dict__['roles'])
+              transition_list.append((transition.getId(), 
+                                      transition.title, 
+                                      trigger_type_list[transition.trigger_type], 
+                                      transition.__dict__["description"],
+                                      guard_roles
+                                    ))
     return transition_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getTransitionUriList' )
@@ -242,8 +250,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     variable_list = []
-    for variable in  self.getInstance().variables.objectValues():
-      variable_list.append(variable.getId())
+    if hasattr(self.getInstance(), "variables"):
+      if self.getInstance().variables is not None:	    
+        for variable in  self.getInstance().variables.objectValues():
+          variable_list.append(variable.getId())
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableItemList' )
@@ -251,8 +261,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     variable_list = []
-    for variable in  self.getInstance().variables.objectValues():
-      variable_list.append((variable.getId(), variable.title, variable.__dict__["description"]))
+    if hasattr(self.getInstance(), "variables"):
+      if self.getInstance().variables is not None:	    
+        for variable in  self.getInstance().variables.objectValues():
+          variable_list.append((variable.getId(), variable.title, variable.__dict__["description"]))
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
@@ -278,8 +290,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     permission_list = []
-    for permission in  self.getInstance().permissions:
-      permission_list.append(permission)
+    if hasattr(self.getInstance(), "permissions"):
+      if self.getInstance().permissions is not None:
+        for permission in  self.getInstance().permissions:
+          permission_list.append(permission)
     return permission_list
     
 
@@ -306,8 +320,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     worklist_list = []
-    for wl in  self.getInstance().worklists.objectValues():
-      worklist_list.append(wl.__name__)
+    if hasattr(self.getInstance(), "worklists"):
+      if self.getInstance().worklists is not None:
+        for wl in  self.getInstance().worklists.objectValues():
+          worklist_list.append(wl.__name__)
     return worklist_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getWorklistItemList' )
@@ -315,17 +331,19 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     worklist_list = []
-    for wl in  self.getInstance().worklists.objectValues():
-      guard_roles = ""
-      guard = dir(wl.guard)
-      if wl.title == "":
-        title = wl.actbox_name
-      else:
-	title = wl.title
-      if hasattr(wl.guard, '__dict__'):
-        if 'roles' in wl.guard.__dict__.keys():
-          guard_roles = ', '.join(role for role in wl.guard.__dict__['roles'])
-      worklist_list.append((wl.__name__, title, wl.__dict__["description"],guard_roles))
+    if hasattr(self.getInstance(), "worklists"):
+      if self.getInstance().worklists is not None:
+        for wl in  self.getInstance().worklists.objectValues():
+          guard_roles = ""
+          guard = dir(wl.guard)
+          if wl.title == "":
+            title = wl.actbox_name
+          else:
+    	    title = wl.title
+          if hasattr(wl.guard, '__dict__'):
+            if 'roles' in wl.guard.__dict__.keys():
+              guard_roles = ', '.join(role for role in wl.guard.__dict__['roles'])
+          worklist_list.append((wl.__name__, title, wl.__dict__["description"],guard_roles))
     return worklist_list
 
   
@@ -352,8 +370,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     script_list = []
-    for script in  self.getInstance().scripts.objectValues():
-      script_list.append(script.__name__)
+    if hasattr(self.getInstance(), "scripts"):
+      if self.getInstance().scripts is not None:
+        for script in  self.getInstance().scripts.objectValues():
+          script_list.append(script.__name__)
     return script_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getScriptItemList' )
@@ -361,13 +381,10 @@ class InteractionWorkflowDocumentationHelper(DocumentationHelper):
     """
     """
     script_list = []
-    for script in  self.getInstance().scripts.objectValues():
-      #guard_roles = ""
-      #guard = dir(script.guard)
-      #if hasattr(script.guard, '__dict__'):
-      #  if 'roles' in script.guard.__dict__.keys():
-      #    guard_roles = ', '.join(role for role in script.guard.__dict__['roles'])
-      script_list.append((script.__name__, script.title))
+    if hasattr(self.getInstance(), "scripts"):
+      if self.getInstance().scripts is not None:
+        for script in  self.getInstance().scripts.objectValues():
+          script_list.append((script.__name__, script.title))
     return script_list
 
 

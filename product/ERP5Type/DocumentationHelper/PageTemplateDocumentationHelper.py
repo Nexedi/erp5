@@ -54,14 +54,15 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().id
+    return getattr(self.getDocumentedObject(), "id", '')
+
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
   def getSourceCode(self):
@@ -69,7 +70,7 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     Returns the source code the script python
     """
     from zLOG import LOG, INFO
-    source_code = self.getDocumentedObject()._text
+    source_code = getattr(self.getDocumentedObject(), "_text", '')
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is None:
       LOG('DCWorkflowScriptDocumentationHelper', INFO, 

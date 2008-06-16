@@ -54,20 +54,20 @@ class ERP5FormDocumentationHelper(DocumentationHelper):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().id
+    return getattr(self.getDocumentedObject(), "id", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return self.getDocumentedObject().title
+    return getattr(self.getDocumentedObject(), "title", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getEncoding' )
   def getEncoding(self):
     """
     Returns the encoding of the ERP5 Form
     """
-    return self.getDocumentedObject().encoding
+    return getattr(self.getDocumentedObject(), "encoding", '')
 
 InitializeClass(ERP5FormDocumentationHelper)
