@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>135</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Category</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>\xc5\x9arodki pieni\xc4\x99\xc5\xbcne w drodze (wed\xc5\x82ug poszczeg\xc3\xb3lnych plac\xc3\xb3wek handlowych i us\xc5\x82ugowych odprowadzaj\xc4\x85cych utargi got\xc3\xb3wkowe za po\xc5\x9brednictwem trezora bankowego, inkasent\xc3\xb3w lub poczty)</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

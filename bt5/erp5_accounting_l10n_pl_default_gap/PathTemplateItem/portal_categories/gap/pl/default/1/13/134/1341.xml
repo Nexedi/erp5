@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1341</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Category</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string encoding="base64">UmFjaHVuZWsgYmFua293eSB3eW9kcsSZYm5pb255Y2ggxZtyb2Rrw7N3IHBpZW5pxJnFvG55Y2gg
+WkbFmlM=</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

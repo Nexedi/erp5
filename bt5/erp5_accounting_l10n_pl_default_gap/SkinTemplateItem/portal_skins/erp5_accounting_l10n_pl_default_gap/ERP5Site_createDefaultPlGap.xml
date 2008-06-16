@@ -1,0 +1,422 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Deployment script\n
+Creates gap structure under gap/pl/default.\n
+The definition text is a raw text representation of a wiki page\n
+with accountants-approved gap structure\n
+"""\n
+\n
+gap_text = \\\n
+""" * [0] Aktywa trwa\xc5\x82e\n
+   * [01] \xc5\x9arodki trwa\xc5\x82e\n
+     * [011] Grunty (w tym prawo wieczystego u\xc5\xbcytkowania gruntu)\n
+     * [012] Budynki, lokale i obiekty in\xc5\xbcynierii l\xc4\x85dowej i wodnej\n
+     * [013] Urz\xc4\x85dzenia techniczne i maszyny\n
+     * [014] \xc5\x9arodki transportu\n
+       * [0141] Samochody osobowe\n
+       * [0142] Samochody ci\xc4\x99\xc5\xbcarowe\n
+     * [015] Inne \xc5\x9brodki trwa\xc5\x82e (w tym inwentarz \xc5\xbcywy zaliczany do \xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych)\n
+   * [02] Warto\xc5\x9bci niematerialne i prawne\n
+     * [021] Koszty zako\xc5\x84czonych prac rozwojowych\n
+     * [022] Warto\xc5\x9b\xc4\x87 firmy\n
+     * [023] Inne warto\xc5\x9bci niematerialne i prawne\n
+   * [03] D\xc5\x82ugoterminowe aktywa finansowe\n
+     * [031] Udzia\xc5\x82y lub akcje\n
+     * [032] Inne papiery warto\xc5\x9bciowe\n
+     * [033] Udzielone po\xc5\xbcyczki\n
+     * [034] Inne d\xc5\x82ugoterminowe aktywa finansowe\n
+     * [035] Odpisy aktualizuj\xc4\x85ce d\xc5\x82ugoterminowe aktywa finansowe (ewidencja szczeg\xc3\xb3\xc5\x82owa powinna by\xc4\x87 podporz\xc4\x85dkowana ewidencji na kontach od 031000 do 034000)\n
+   * [04] Inwestycje w nieruchomo\xc5\x9bci i prawa\n
+     * [041] Nieruchomo\xc5\x9bci\n
+     * [042] Warto\xc5\x9bci niematerialne i prawne\n
+   * [07] Odpisy umorzeniowe \xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych, warto\xc5\x9bci niematerialnych i prawnych oraz inwestycji w nieruchomo\xc5\x9bci i prawa\n
+     * [071] Odpisy umorzeniowe \xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych (do kont 011000 do 015000)\n
+     * [072] Odpisy umorzeniowe warto\xc5\x9bci niematerialnych i prawnych  (do kont 021000 do 023000)\n
+     * [073] Odpisy umorzeniowe inwestycji w nieruchomo\xc5\x9bci i prawa (do kont 041000 do 042000)\n
+   * [08] \xc5\x9arodki trwa\xc5\x82e w budowie (ewidencj\xc4\x99 szczeg\xc3\xb3\xc5\x82owa prowadzi si\xc4\x99 wed\xc5\x82ug grup K\xc5\x9aT i poszczeg\xc3\xb3lnych tytu\xc5\x82\xc3\xb3w \xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych w budowie)\n
+   * [09] Ewidencja pozabilansowa\n
+     * [091] Obce \xc5\x9brodki trwa\xc5\x82e\n
+     * [092] \xc5\x9arodki trwa\xc5\x82e w likwidacji\n
+ * [1] \xc5\x9arodki pieni\xc4\x99\xc5\xbcne, rachunki bankowe oraz inne kr\xc3\xb3tkoterminowe aktywa finansowe\n
+   * [10] Kasa\n
+   * [13] Rachunki i kredyty bankowe\n
+     * [131] Rachunek bie\xc5\xbc\xc4\x85cy\n
+     * [132] Rachunek walutowy\n
+     * [133] Kredyty bankowe\n
+     * [134] Inne rachunki bankowe \n
+       * [1341] Rachunek bankowy wyodr\xc4\x99bnionych \xc5\x9brodk\xc3\xb3w pieni\xc4\x99\xc5\xbcnych ZF\xc5\x9aS\n
+       * [1342] Rachunek bankowy lokat terminowych (wed\xc5\x82ug poszczeg\xc3\xb3lnych lokat)\n
+       * [1343] Rachunek bankowy akredytywy (wed\xc5\x82ug poszczeg\xc3\xb3lnych kontrahent\xc3\xb3w}\n
+     * [135] \xc5\x9arodki pieni\xc4\x99\xc5\xbcne w drodze (wed\xc5\x82ug poszczeg\xc3\xb3lnych plac\xc3\xb3wek handlowych i us\xc5\x82ugowych odprowadzaj\xc4\x85cych utargi got\xc3\xb3wkowe za po\xc5\x9brednictwem trezora bankowego, inkasent\xc3\xb3w lub poczty)\n
+   * [14] Kr\xc3\xb3tkoterminowe aktywa finansowe\n
+     * [141] Udzia\xc5\x82y lub akcje\n
+     * [142] Inne papiery warto\xc5\x9bciowe\n
+     * [143] Udzielone po\xc5\xbcyczki\n
+     * [144] Inne kr\xc3\xb3tkoterminowe aktywa finansowe\n
+     * [145] Odpisy aktualizuj\xc4\x85ce kr\xc3\xb3tkoterminowe aktywa finansowe\n
+ * [2] Rozrachunki i roszczenia\n
+   * [20] Rozrachunki z kontrahentami\n
+     * [201] Rozrachunki z odbiorcami\n
+     * [202] Rozrachunki z dostawcami\n
+   * [22] Rozrachunki publicznoprawne\n
+     * [221] Rozrachunki z urz\xc4\x99dem skarbowym z tytu\xc5\x82u VAT\n
+     * [222] Rozrachunki z urz\xc4\x99dem skarbowym z tytu\xc5\x82u VAT nale\xc5\xbcnego\n
+       * [2221] rozliczenie nale\xc5\xbcnego VAT\n
+       * [2222] korekty nale\xc5\xbcnego VAT\n
+     * [223] Rozrachunki z urz\xc4\x99dem skarbowym z tytu\xc5\x82u VAT naliczonego\n
+       * [2231] rozliczenie naliczonego VAT\n
+       * [2232] korekty naliczonego VAT\n
+     * [224] Pozosta\xc5\x82e rozrachunki publicznoprawne \n
+       * [2241] Rozrachunki publicznoprawne z urz\xc4\x99dem skarbowym \n
+         * [22411] podatek dochodowy\n
+         * [22412] podatek od czynno\xc5\x9bci cywilnoprawnych\n
+       * [2242] Rozrachunki publicznoprawne z urz\xc4\x99dem miasta/gminy - ewentualnie dalej wed\xc5\x82ug tytu\xc5\x82\xc3\xb3w rozrachunk\xc3\xb3w (np. z tytu\xc5\x82u podatku od nieruchomo\xc5\x9bci, od \xc5\x9brodk\xc3\xb3w transportowych, z tytu\xc5\x82u innych op\xc5\x82at lokalnych)\n
+         * [22421] Podatek od nieruchomo\xc5\x9bci\n
+         * [22422] podatek od \xc5\x9brodk\xc3\xb3w transportowych\n
+       * [2243] Rozrachunki publicznoprawne z urz\xc4\x99dem celnym\n
+       * [2244] Rozrachunki publicznoprawne z ZUS \n
+       * [2245]  Rozrachunki publicznoprawne z PFRON\n
+   * [23] Rozrachunki z tytu\xc5\x82u wynagrodze\xc5\x84 i innych \xc5\x9bwiadcze\xc5\x84 na rzecz pracownik\xc3\xb3w\n
+     * [231] Rozrachunki z tytu\xc5\x82u wynagrodze\xc5\x84\n
+       * [2311] umowa o prac\xc4\x99 \n
+       * [2312] umowy cywilnoprawne\n
+     * [232] Rozrachunki z pracownikami\n
+       * [2321] zaliczki\n
+   * [24] Rozrachunki z akcjonariuszami i udzia\xc5\x82owcami\n
+     * [241] Rozrachunki z akcjonariuszami\n
+     * [242] Rozrachunki z udzia\xc5\x82owcami\n
+   * [25] Pozosta\xc5\x82e rozrachunki\n
+     * [251] Inne rozrachunki z kontrahentami\n
+   * [26] Po\xc5\xbcyczki \n
+     * [261] Po\xc5\xbcyczki otrzymane\n
+     * [262]  Po\xc5\xbcyczki udzielone\n
+   * [27] Rozliczenie niedobor\xc3\xb3w i nadwy\xc5\xbcek\n
+     * [271] Rozliczenie niedobor\xc3\xb3w\n
+     * [272] Rozliczenie nadwy\xc5\xbcek\n
+   * [28] Nale\xc5\xbcno\xc5\x9bci dochodzone na drodze s\xc4\x85dowej\n
+   * [29] Rozrachunki pozabilansowe\n
+     * [291] Nale\xc5\xbcno\xc5\x9bci warunkowe\n
+     * [292] Zobowi\xc4\x85zania warunkowe\n
+     * [293] Weksle obce dyskontowane lub indosowane\n
+ * [3] Materia\xc5\x82y i towary\n
+   * [30] Rozliczenie zakupu\n
+     * [301] Rozliczenie zakupu materia\xc5\x82\xc3\xb3w\n
+     * [302] Rozliczenie zakupu towar\xc3\xb3w\n
+     * [303] Rozliczenie zakupu us\xc5\x82ug obcych\n
+     * [304] Rozliczenie zakupu sk\xc5\x82adnik\xc3\xb3w aktyw\xc3\xb3w trwa\xc5\x82ych (\xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych i inwestycji w nieruchomo\xc5\x9bci oraz d\xc3\xb3br i us\xc5\x82ug do ich budowy lub ulepsze\xc5\x84, a tak\xc5\xbce warto\xc5\x9bci niematerialnych i prawnych)\n
+   * [31] Materia\xc5\x82y i opakowania\n
+     * [311] Materia\xc5\x82y\n
+     * [312] Opakowania\n
+     * [313] Materia\xc5\x82y w przerobie\n
+   * [33] Towary\n
+     * [331] Towary w hurcie\n
+     * [332] Towary w detalu\n
+     * [333] Towary w zak\xc5\x82adach gastronomicznych\n
+     * [334] Towary skupu\n
+     * [335] Towary poza jednostk\xc4\x85\n
+     * [336] Nieruchomo\xc5\x9bci i prawa maj\xc4\x85tkowe przeznaczone do obrotu\n
+   * [34] Odchylenia od cen ewidencyjnych materia\xc5\x82\xc3\xb3w i towar\xc3\xb3w\n
+     * [341] Odchylenia od cen ewidencyjnych materia\xc5\x82\xc3\xb3w\n
+     * [342] Odchylenia od cen ewidencyjnych towar\xc3\xb3w \n
+       * [3421] Odchylenia od cen ewidencyjnych towar\xc3\xb3w w hurcie\n
+       * [3422] Odchylenia od cen ewidencyjnych towar\xc3\xb3w w detalu\n
+       * [3423] Odchylenia od cen ewidencyjnych towar\xc3\xb3w w zak\xc5\x82adach gastronomicznych\n
+       * [3424] Odchylenia od cen ewidencyjnych towar\xc3\xb3w skupu\n
+     * [346] Odchylenia od cen ewidencyjnych opakowa\xc5\x84\n
+     * [347] Odchylenia z tytu\xc5\x82u aktualizacji warto\xc5\x9bci zapas\xc3\xb3w materia\xc5\x82\xc3\xb3w i towar\xc3\xb3w\n
+   * [39] Zapasy obce\n
+ * [4] Koszty wed\xc5\x82ug rodzaj\xc3\xb3w i ich rozliczenie\n
+   * [40] Koszty wed\xc5\x82ug rodzaj\xc3\xb3w\n
+     * [401] Amortyzacja\n
+       * [4011] amortyzacja urz\xc4\x85dze\xc5\x84 technicznych\n
+       * [4012] amortyzacja \xc5\x9brodk\xc3\xb3w transportu\n
+     * [402] Zu\xc5\xbcycie materia\xc5\x82\xc3\xb3w i energii \n
+       * [4021] Zu\xc5\xbcycie surowc\xc3\xb3w do wytwarzania produkt\xc3\xb3w \n
+       * [4022] Zu\xc5\xbcycie energii\n
+       * [4023] Zu\xc5\xbcycie paliwa dla \xc5\x9brodk\xc3\xb3w transportu\n
+         * [40231] Zu\xc5\xbcycie Oleju nap\xc4\x99dowego\n
+         * [40232] Zu\xc5\xbcycie  Etyliny 95\n
+       * [4024] Zu\xc5\xbcycie innych materia\xc5\x82\xc3\xb3w\n
+     * [403] Us\xc5\x82ugi obce\n
+       * [4031] Us\xc5\x82ugi obcego transportu\n
+       * [4032] Us\xc5\x82ugi remontowe obce\n
+       * [4033] Pozosta\xc5\x82e us\xc5\x82ugi obce\n
+     * [404] Podatki i op\xc5\x82aty\n
+       * [4041] Podatek od nieruchomo\xc5\x9bci\n
+       * [4042]  Podatek od \xc5\x9brodk\xc3\xb3w transportowych \n
+       * [4043] Podatek akcyzowy\n
+       * [4045] VAT niepodlegaj\xc4\x85cy odliczeniu\n
+       * [4046] Pozosta\xc5\x82e podatki i op\xc5\x82aty\n
+     * [405] Wynagrodzenia\n
+       * [4051] Wynagrodzenia pracownik\xc3\xb3w\n
+       * [4052] Wynagrodzenia os\xc3\xb3b dora\xc5\xbanie zatrudnionych\n
+     * [406] Ubezpieczenia spo\xc5\x82eczne i inne \xc5\x9bwiadczenia\n
+       * [4061]  Sk\xc5\x82adki na ubezpieczenia spo\xc5\x82eczne, FP, FG\xc5\x9aP\n
+       * [4062] Odpisy na zak\xc5\x82adowy fundusz \xc5\x9bwiadcze\xc5\x84 socjalnych lub \xc5\x9bwiadczenia urlopowe \n
+       * [4063] Pozosta\xc5\x82e \xc5\x9bwiadczenia\n
+     * [407] Pozosta\xc5\x82e koszty rodzajowe\n
+   * [49] Rozliczenie koszt\xc3\xb3w\n
+ * [5] Koszty wed\xc5\x82ug typ\xc3\xb3w dzia\xc5\x82alno\xc5\x9bci i ich rozliczenie\n
+   * [50] Koszty dzia\xc5\x82alno\xc5\x9bci podstawowej - produkcyjnej\n
+     * [501] Koszty produkcji przemys\xc5\x82owej\n
+     * [502] Koszty produkcji budowlano-monta\xc5\xbcowej\n
+     * [503] Koszty produkcji rolnej\n
+     * [504] Koszty us\xc5\x82ug podstawowych\n
+     * [509] Koszty brak\xc3\xb3w\n
+   * [52] Koszty dzia\xc5\x82alno\xc5\x9bci podstawowej - handlowej\n
+     * [522] Koszty dzia\xc5\x82alno\xc5\x9bci podstawowej - handlowej \n
+       * [5221] Koszty hurtu \n
+       * [5222] Koszty detalu \n
+       * [5223] Koszty zak\xc5\x82ad\xc3\xb3w gastronomicznych \n
+       * [5224] Koszty skupu\n
+     * [523] Koszty wydzia\xc5\x82owe\n
+     * [529] Koszty sprzeda\xc5\xbcy\n
+   * [53] Koszty dzia\xc5\x82alno\xc5\x9bci pomocniczej\n
+   * [55] Koszty zarz\xc4\x85du\n
+   * [58] Rozliczenie koszt\xc3\xb3w dzia\xc5\x82alno\xc5\x9bci\n
+ * [6] Produkty i rozliczenia mi\xc4\x99dzyokresowe\n
+   * [60] Produkty gotowe i p\xc3\xb3\xc5\x82produkty\n
+     * [601] Produkty gotowe\n
+       * [6011]  Produkty gotowe w magazynie \n
+       * [6012] Produkty gotowe poza jednostk\xc4\x85\n
+     * [602] P\xc3\xb3\xc5\x82produkty\n
+   * [62] Odchylenia od cen ewidencyjnych produkt\xc3\xb3w\n
+     * [621] Odchylenia od cen ewidencyjnych produkt\xc3\xb3w\n
+     * [622] Odchylenia z tytu\xc5\x82u aktualizacji warto\xc5\x9bci zapas\xc3\xb3w produkt\xc3\xb3w\n
+   * [64] Rozliczenia mi\xc4\x99dzyokresowe koszt\xc3\xb3w\n
+     * [641] Czynne rozliczenia mi\xc4\x99dzyokresowe koszt\xc3\xb3w\n
+     * [642] Bierne rozliczenia mi\xc4\x99dzyokresowe koszt\xc3\xb3w\n
+   * [65] Pozosta\xc5\x82e rozliczenia mi\xc4\x99dzyokresowe\n
+     * [651] Aktywa z tytu\xc5\x82u odroczonego podatku dochodowego\n
+     * [652] Inne rozliczenia mi\xc4\x99dzyokresowe\n
+   * [67] Inwentarz \xc5\xbcywy\n
+     * [671] Inwentarz \xc5\xbcywy\n
+     * [672] Odchylenia od cen ewidencyjnych inwentarza \xc5\xbcywego\n
+ * [7] Przychody i koszty zwi\xc4\x85zane z ich osi\xc4\x85gni\xc4\x99ciem\n
+   * [70] Przychody i koszty zwi\xc4\x85zane ze sprzeda\xc5\xbc\xc4\x85 produkt\xc3\xb3w\n
+     * [701] Sprzeda\xc5\xbc produkt\xc3\xb3w\n
+     * [702] Koszt sprzedanych produkt\xc3\xb3w\n
+   * [73] Przychody i koszty zwi\xc4\x85zane ze sprzeda\xc5\xbc\xc4\x85 towar\xc3\xb3w\n
+     * [731] Sprzeda\xc5\xbc towar\xc3\xb3w\n
+     * [732] Warto\xc5\x9b\xc4\x87 sprzedanych towar\xc3\xb3w w cenach zakupu (nabycia)\n
+   * [74] Przychody i koszty zwi\xc4\x85zane ze sprzeda\xc5\xbc\xc4\x85 materia\xc5\x82\xc3\xb3w i opakowa\xc5\x84\n
+     * [741] Sprzeda\xc5\xbc materia\xc5\x82\xc3\xb3w i opakowa\xc5\x84\n
+     * [742] Warto\xc5\x9b\xc4\x87 sprzedanych materia\xc5\x82\xc3\xb3w i opakowa\xc5\x84\n
+   * [75] Przychody i koszty finansowe\n
+     * [751] Przychody finansowe\n
+     * [752] Koszty finansowe\n
+   * [76] Pozosta\xc5\x82e przychody i koszty operacyjne\n
+     * [761] Pozosta\xc5\x82e przychody operacyjne\n
+     * [762] Pozosta\xc5\x82e koszty operacyjne\n
+   * [77] Zyski i straty nadzwyczajne\n
+     * [771] Zyski nadzwyczajne\n
+     * [772] Straty nadzwyczajne\n
+   * [79] Obroty wewn\xc4\x99trzne i koszty obrot\xc3\xb3w wewn\xc4\x99trznych\n
+     * [791] Obroty wewn\xc4\x99trzne\n
+     * [792] Koszty obrot\xc3\xb3w wewn\xc4\x99trznych\n
+ * [8] Kapita\xc5\x82y (fundusze) w\xc5\x82asne, fundusze specjalne i wynik finansowy\n
+   * [80] Kapita\xc5\x82y w\xc5\x82asne\n
+     * [801] Kapita\xc5\x82 (fundusz) podstawowy\n
+     * [802] Kapita\xc5\x82 (fundusz) zapasowy \n
+     * [803] Kapita\xc5\x82 (fundusz) rezerwowy\n
+     * [804] Kapita\xc5\x82 (fundusz) z aktualizacji wyceny\n
+     * [805] Kapita\xc5\x82y  (fundusze)  wydzielone w jednostce statutowej  i  zak\xc5\x82adach  (oddzia\xc5\x82ach) samodzielnie sporz\xc4\x85dzaj\xc4\x85cych bilans\n
+   * [81] Rozliczenie wyniku finansowego\n
+   * [82] Rezerwy\n
+     * [821] Rezerwa z tytu\xc5\x82u odroczonego podatku dochodowego\n
+     * [822] Pozosta\xc5\x82e rezerwy\n
+   * [83] Rozliczenia mi\xc4\x99dzyokresowe przychod\xc3\xb3w\n
+   * [84] Fundusze specjalne\n
+     * [841] Zak\xc5\x82adowy fundusz \xc5\x9bwiadcze\xc5\x84 socjalnych\n
+     * [842] Inne fundusze specjalne\n
+       * [8421] Zak\xc5\x82adowy fundusz rehabilitacji os\xc3\xb3b niepe\xc5\x82nosprawnych \n
+       * [8422] Fundusz nagr\xc3\xb3d \n
+       * [8423]  Fundusz na remonty zasob\xc3\xb3w mieszkaniowych\n
+   * [86] Wynik finansowy\n
+   * [87] Podatek dochodowy i inne obowi\xc4\x85zkowe obci\xc4\x85\xc5\xbcenia wyniku finansowego\n
+     * [871] Podatek dochodowy od os\xc3\xb3b prawnych\n
+     * [872] Inne obowi\xc4\x85zkowe obci\xc4\x85\xc5\xbcenia wyniku finansowego"""\n
+\n
+gap = context.getPortalObject().portal_categories.gap.pl.default\n
+\n
+for line in gap_text.splitlines():\n
+  sp_line = line.split(None, 2)\n
+  num = sp_line[1].strip(\'[]\')\n
+  descr = sp_line[2]\n
+  if len(num)==1:\n
+    parent = gap\n
+  else:\n
+    cpath=\'\'\n
+    path=[]\n
+    for n in num[0:-1]:\n
+      cpath += n\n
+      path.append(cpath)\n
+    parent = gap.restrictedTraverse(\'/\'.join(path))\n
+    print \'Added to \',parent\n
+\n
+  parent.newContent(id=num, title=descr)  \n
+  \n
+\n
+\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>gap_text</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>gap</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>None</string>
+                            <string>sp_line</string>
+                            <string>_getitem_</string>
+                            <string>num</string>
+                            <string>descr</string>
+                            <string>len</string>
+                            <string>parent</string>
+                            <string>cpath</string>
+                            <string>path</string>
+                            <string>n</string>
+                            <string>_inplacevar_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_createDefaultPlGap</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
