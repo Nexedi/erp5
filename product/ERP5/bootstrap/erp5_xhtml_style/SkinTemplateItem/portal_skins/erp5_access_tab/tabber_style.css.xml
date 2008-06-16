@@ -43,9 +43,14 @@
 \n
 /* Replace code at erp5.css*/\n
 \n
-.document .actions li a span {\n
+.document .actions li.non_selected a span {\n
   padding: 5px 8px 3px 0px !important;\n
 }\n
+\n
+.document .actions li.selected a span {\n
+  padding: 5px 8px 4px 0px !important;\n
+}\n
+\n
 .document .actions li a span img {\n
   margin: -2px;\n
   padding-right: 3px;\n
