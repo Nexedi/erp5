@@ -1600,13 +1600,13 @@ class TestPayroll(TestPayrollMixin):
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=.50, quantity=2000, tax_category='employee_share')
+    cell_employee.edit(price=-.50, quantity=2000, tax_category='employee_share')
     cell_employer = line.newCell('tax_category/employer_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=.40, quantity=2000, tax_category='employer_share')
+    cell_employer.edit(price=-.40, quantity=2000, tax_category='employer_share')
     ps1.plan()
 
     ps2 = self.portal.accounting_module.newContent(
@@ -1627,13 +1627,13 @@ class TestPayroll(TestPayrollMixin):
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=.50, quantity=3000, tax_category='employee_share')
+    cell_employee.edit(price=-.50, quantity=3000, tax_category='employee_share')
     cell_employer = line.newCell('tax_category/employer_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=.40, quantity=3000, tax_category='employer_share')
+    cell_employer.edit(price=-.40, quantity=3000, tax_category='employer_share')
 
     other_line = ps2.newContent(portal_type='Pay Sheet Line',
                    resource_value=payroll_service,
@@ -1647,13 +1647,13 @@ class TestPayroll(TestPayrollMixin):
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=.46, quantity=2998, tax_category='employee_share')
+    cell_employee.edit(price=-.46, quantity=2998, tax_category='employee_share')
     cell_employer = other_line.newCell('tax_category/employer_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=.42, quantity=2998, tax_category='employer_share')
+    cell_employer.edit(price=-.42, quantity=2998, tax_category='employer_share')
 
     get_transaction().commit()
     self.tic()
@@ -1758,7 +1758,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employee_a.edit(price=.50, quantity=1000,
+    cell_employee_a.edit(price=-.50, quantity=1000,
                          tax_category='employee_share',
                          salary_range='france/tranche_a')
     cell_employee_b = line.newCell('tax_category/employee_share',
@@ -1767,7 +1767,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employee_b.edit(price=.20, quantity=500,
+    cell_employee_b.edit(price=-.20, quantity=500,
                          tax_category='employee_share',
                          salary_range='france/tranche_b')
 
@@ -1777,7 +1777,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employer_a.edit(price=.40, quantity=1000,
+    cell_employer_a.edit(price=-.40, quantity=1000,
                          tax_category='employer_share',
                          salary_range='france/tranche_a')
     cell_employer_b = line.newCell('tax_category/employer_share',
@@ -1786,7 +1786,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employer_b.edit(price=.32, quantity=500,
+    cell_employer_b.edit(price=-.32, quantity=500,
                          tax_category='employer_share',
                          salary_range='france/tranche_b')
 
@@ -1813,7 +1813,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employee_a.edit(price=.50, quantity=1000,
+    cell_employee_a.edit(price=-.50, quantity=1000,
                          salary_range='france/tranche_a',
                          tax_category='employee_share')
     cell_employee_b = line.newCell('tax_category/employee_share',
@@ -1822,7 +1822,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employee_b.edit(price=.20, quantity=3000,
+    cell_employee_b.edit(price=-.20, quantity=3000,
                          salary_range='france/tranche_b',
                          tax_category='employee_share')
 
@@ -1832,7 +1832,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employer_a.edit(price=.40, quantity=1000,
+    cell_employer_a.edit(price=-.40, quantity=1000,
                          salary_range='france/tranche_a',
                          tax_category='employer_share')
     cell_employer_b = line.newCell('tax_category/employer_share',
@@ -1841,7 +1841,7 @@ class TestPayroll(TestPayrollMixin):
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
-    cell_employer_b.edit(price=.32, quantity=3000,
+    cell_employer_b.edit(price=-.32, quantity=3000,
                          salary_range='france/tranche_b',
                          tax_category='employer_share')
     get_transaction().commit()
