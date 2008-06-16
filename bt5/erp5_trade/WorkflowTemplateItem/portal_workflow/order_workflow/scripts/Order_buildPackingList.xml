@@ -70,7 +70,8 @@
 previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
 expand_tag = order.getPath() + \'_expand\'\n
 activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_id = \'default_order_rule\',activate_kw=activate_kw)\n
+order.activate(tag=expand_tag, after_tag=previous_tag).updateAppliedRule(\n
+             rule_reference=\'default_order_rule\', activate_kw=activate_kw)\n
 \n
 \n
 order_portal_type = order.getPortalType()\n
