@@ -74,7 +74,7 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is None:
       LOG('DCWorkflowScriptDocumentationHelper', INFO, 
-	  'Transformation Tool is not installed. No convertion of python script to html')	    
+   'Transformation Tool is not installed. No convertion of python script to html')	    
       return source_code
     src_mimetype='text/plain'
     mime_type = 'text/html'

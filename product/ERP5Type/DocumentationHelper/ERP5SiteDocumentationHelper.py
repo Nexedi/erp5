@@ -88,7 +88,7 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     for bt in self.getDocumentedObject().portal_templates.objectValues():
       current_state = ''
       for wh in bt.workflow_history['business_template_installation_workflow']:	
-	current_state = wh['installation_state']      
+ current_state = wh['installation_state']      
       if current_state == 'installed': 	      
         bt_list.append(bt.getId())
     return bt_list
@@ -106,11 +106,11 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
           current_state = wh['installation_state']
         if current_state == 'installed':	
           bt_list.append((bt.getId(), 
-		          getattr(bt, "title", ''), 
-			  getattr(bt, "description", ''),
-			  getattr(bt, "version", ''), 
-			  getattr(bt, "revision", '')
-			 ))
+ 	          getattr(bt, "title", ''), 
+ 		  getattr(bt, "description", ''),
+ 		  getattr(bt, "version", ''), 
+ 		  getattr(bt, "revision", '')
+ 		 ))
     return bt_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateURIList' )
