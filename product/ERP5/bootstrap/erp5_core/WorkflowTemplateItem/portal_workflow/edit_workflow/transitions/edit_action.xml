@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
