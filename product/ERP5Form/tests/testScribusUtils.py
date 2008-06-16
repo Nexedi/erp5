@@ -242,8 +242,7 @@ class TestScribusUtils(ERP5TypeTestCase):
       self.assertNotEquals(field.values['required'], 1)
 
   def test_06_readOnlyFields(self):
-    ''' Set read only property on a scribus field. After creating module with
-    scribus, it should not be possible to edit it.'''
+    '''check the read_only fields are really read_only'''
     # module creation using scribus file containing fields with read only
     # property set:
     self.portal.ERP5Site_createModuleScribus(
@@ -290,8 +289,7 @@ class TestScribusUtils(ERP5TypeTestCase):
       self.assertEquals(field.values['editable'], 1)
 
   def test_07_DateTimeFieldWithModuleCreation(self):
-    '''Just create a module using scribus file and pdf file with DateTimeField
-    and test DateTime format'''
+    '''test DateTime format'''
 
     self.portal.ERP5Site_createModuleScribus(
                   option_html=1,
@@ -350,9 +348,12 @@ class TestScribusUtils(ERP5TypeTestCase):
     expr_other_date = Expression(tales_expr_other_date)
     expr_start_date = Expression(tales_expr_start_date)
     expr_stop_date = Expression(tales_expr_stop_date)
-    result_other_date = expr_other_date(getExprContext(authorisation, authorisation))
-    result_start_date = expr_start_date(getExprContext(authorisation, authorisation))
-    result_stop_date = expr_stop_date(getExprContext(authorisation, authorisation))
+    result_other_date = expr_other_date(getExprContext(authorisation, 
+                                                       authorisation))
+    result_start_date = expr_start_date(getExprContext(authorisation, 
+                                                       authorisation))
+    result_stop_date = expr_stop_date(getExprContext(authorisation, 
+                                                     authorisation))
     self.assertEquals(result_other_date, '')
     self.assertEquals(result_start_date, start_date.strftime('%d/%m/%Y'))
     self.assertEquals(result_stop_date, stop_date.strftime('%Y/%m/%d %H:%M'))
