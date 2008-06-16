@@ -96,7 +96,7 @@ class CatalogMethodDocumentationHelper(DocumentationHelper):
     keys = []
     arg = getattr(self.getDocumentedObject(), '_arg', None)
     if arg is not None:
-      keys = getattr(arg, '_keys', [])	    
+      keys = getattr(arg, '_keys', [])
     return keys
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCatalog' )

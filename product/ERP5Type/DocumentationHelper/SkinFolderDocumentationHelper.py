@@ -73,7 +73,7 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaTypeList' )
   def getMetaTypeList(self):
     meta_type_dict = {}
-    for file in self.getDocumentedObject().objectValues():	  
+    for file in self.getDocumentedObject().objectValues():
       meta_type_dict[file.meta_type] = None
     type_list = meta_type_dict.keys()
     type_list.sort()
@@ -101,7 +101,7 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     files = self.getDocumentedObject()
     if files is not None:
       for file in files.objectValues():
-        if not meta_type or file.meta_type == meta_type:	    
+        if not meta_type or file.meta_type == meta_type:
           file_list.append((file.id, file.title, file.meta_type))
     return file_list
 

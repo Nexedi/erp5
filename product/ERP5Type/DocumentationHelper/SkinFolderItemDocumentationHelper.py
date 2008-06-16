@@ -70,6 +70,5 @@ class SkinFolderItemDocumentationHelper(DocumentationHelper):
     """
     return getattr(self.getDocumentedObject(), "content_type", '')
 
-    
 
 InitializeClass(SkinFolderItemDocumentationHelper)

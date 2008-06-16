@@ -75,8 +75,8 @@ class DCWorkflowWorklistDocumentationHelper(DocumentationHelper):
     """
     if self.getDocumentedObject().title == "":
       return self.getDocumentedObject().actbox_name
-    else: 
-      return self.getDocumentedObject().title  
+    else:
+      return self.getDocumentedObject().title
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getGuardRoles' )
   def getGuardRoles(self):
@@ -103,6 +103,6 @@ class DCWorkflowWorklistDocumentationHelper(DocumentationHelper):
     for key in var_matches.keys():
       var_matches_list.append('%s: %s' % (key, ', '.join(x for x in var_matches[key])))
       #var_matches_list.append((key, '%s' % ', '.join(x for x in var_matches[key])))
-    return var_matches_list 
-     
+    return var_matches_list
+
 InitializeClass(DCWorkflowWorklistDocumentationHelper)

@@ -135,13 +135,13 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     """
     return self._getPropertyHolder()
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodIdList' )
   def getWorkflowMethodIdList(self, inherited=1):
     """
     """
-    return self._getPropertyHolder().getWorkflowMethodIdList()    
-  
+    return self._getPropertyHolder().getWorkflowMethodIdList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodURIList' )
   def getWorkflowMethodURIList(self, inherited=1, local=1):
     """

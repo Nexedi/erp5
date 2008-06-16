@@ -38,17 +38,17 @@ def getStatePermissionsOfRole(state=None, role=''):
   permissions = ""
   if state != None:
     if hasattr(state, '__dict__'):
-      if 'permission_roles' in state.__dict__.keys():	    
-        if 'View' in state.__dict__['permission_roles'].keys():	    
+      if 'permission_roles' in state.__dict__.keys():
+        if 'View' in state.__dict__['permission_roles'].keys():
           if role in state.__dict__['permission_roles']['View']:
             permissions += "V"
-        if 'Access contents information' in state.__dict__['permission_roles'].keys():	  
+        if 'Access contents information' in state.__dict__['permission_roles'].keys():
           if role in state.__dict__['permission_roles']['Access contents information']:
             permissions += "A"
-        if 'Modify portal content' in state.__dict__['permission_roles'].keys():	  
+        if 'Modify portal content' in state.__dict__['permission_roles'].keys():
           if role in state.__dict__['permission_roles']['Modify portal content']:
             permissions += "M"
-        if 'Add portal content' in state.__dict__['permission_roles'].keys():	
+        if 'Add portal content' in state.__dict__['permission_roles'].keys():
           if role in state.__dict__['permission_roles']['Add portal content']:
             permissions += "C"
   return permissions
@@ -62,12 +62,12 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-   
+
   def __init__(self, uri):
     self.uri = uri
 
   def getInstance(self):
-    return self.getPortalObject().restrictedTraverse(self.uri) 
+    return self.getPortalObject().restrictedTraverse(self.uri)
 
   # API Implementation
   security.declareProtected( Permissions.AccessContentsInformation, 'getId' )
@@ -155,7 +155,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
       for state in states.objectValues():
         state_list.append(state.getId())
     return state_list
- 
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getStateItemList' )
   def getStateItemList(self):
     """
@@ -168,7 +168,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
                            getattr(state, "title", ""),
                            getStatePermissionsOfRole(state, 'Owner'),
                            getStatePermissionsOfRole(state, 'Assignor'),
-                           getStatePermissionsOfRole(state, 'Assignee'),  
+                           getStatePermissionsOfRole(state, 'Assignee'),
                            getStatePermissionsOfRole(state, 'Associate'),
                            getStatePermissionsOfRole(state, 'Author'),
                            getStatePermissionsOfRole(state, 'Auditor')
@@ -219,9 +219,9 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
         if hasattr(transition.guard, '__dict__'):
           if 'roles' in transition.guard.__dict__.keys():
             guard_roles = ', '.join(role for role in transition.guard.__dict__['roles'])
-        transition_list.append((transition.getId(), 
-                                getattr(transition, "title", ""), 
-                                trigger_type_list[transition.trigger_type], 
+        transition_list.append((transition.getId(),
+                                getattr(transition, "title", ""),
+                                trigger_type_list[transition.trigger_type],
                                 getattr(transition, "description", ""),
                                 guard_roles
                               ))
@@ -264,10 +264,10 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     variables = getattr(self.getInstance(), 'variables', None)
     if variables is not None:
       for variable in  variables.objectValues():
-        variable_list.append((variable.getId(), 
-		              getattr(variable, "title", ""), 
-			      getattr(variable, "description", "")
-			    ))
+        variable_list.append((variable.getId(),
+                              getattr(variable, "title", ""),
+                              getattr(variable, "description", "")
+                            ))
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
@@ -298,7 +298,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
       for permission in permissions:
         permission_list.append(permission)
     return permission_list
-    
+
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionURIList' )
   def getPermissionURIList(self):
@@ -310,14 +310,14 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     module = klass.__module__
     uri_prefix = '%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), permission_id_list)
-   
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionUriList' )
   def getPermissionUriList(self):
     """
     """
     permission_id_list = self.getPermissionIdList()
     return map(lambda x: '%s/permissions/%s' % (self.uri, x), permission_id_list)
- 
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getWorklistIdList' )
   def getWorklistIdList(self):
     """
@@ -342,14 +342,14 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
         if wl.title == "":
           title = wl.actbox_name
         else:
-  	  title = wl.title
+          title = wl.title
         if hasattr(wl.guard, '__dict__'):
           if 'roles' in wl.guard.__dict__.keys():
             guard_roles = ', '.join(role for role in wl.guard.__dict__['roles'])
         worklist_list.append((wl.__name__, title, wl.__dict__["description"],guard_roles))
     return worklist_list
 
-  
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getWorklistURIList' )
   def getWorklistURIList(self):
     """
@@ -387,9 +387,9 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     scripts = getattr(self.getInstance(), "scripts", None)
     if scripts is not None:
       for script in scripts.objectValues():
-        script_list.append((getattr(script, "__name__", ''), 
-		            getattr(script, "title", '')
-			   ))
+        script_list.append((getattr(script, "__name__", ''),
+                            getattr(script, "title", '')
+                           ))
     return script_list
 
 

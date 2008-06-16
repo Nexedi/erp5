@@ -32,8 +32,8 @@ from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 
-class ZSQLMethodDocumentationHelper(DocumentationHelper): 
-  """ 
+class ZSQLMethodDocumentationHelper(DocumentationHelper):
+  """
   Provides documentation about a Z SQL Method
   """
   security = ClassSecurityInfo()

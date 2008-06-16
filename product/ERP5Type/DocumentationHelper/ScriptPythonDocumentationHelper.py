@@ -72,8 +72,8 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     source_code = getattr(self.getDocumentedObject(), "_body", '')
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is None:
-      LOG('DCWorkflowScriptDocumentationHelper', INFO, 
-	  'Transformation Tool is not installed. No convertion of python script to html')	    
+      LOG('DCWorkflowScriptDocumentationHelper', INFO,
+          'Transformation Tool is not installed. No convertion of python script to html')
       return source_code
     src_mimetype='text/x-python'
     mime_type = 'text/html'

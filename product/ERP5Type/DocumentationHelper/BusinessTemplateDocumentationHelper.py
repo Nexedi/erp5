@@ -194,10 +194,10 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     dc_workflow_list = []
     template_workflow_id_list = getattr(self.getDocumentedObject(), 'template_workflow_id', [])
     for wf in template_workflow_id_list:
-      url = '/' + self.getPortalObject().id + '/portal_workflow/' + wf 	    
+      url = '/' + self.getPortalObject().id + '/portal_workflow/' + wf
       wf_object = self.getPortalObject().unrestrictedTraverse(url)
       if wf_object.__class__.__name__ == 'DCWorkflowDefinition':
-        dc_workflow_list.append(wf)      
+        dc_workflow_list.append(wf)
     return dc_workflow_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDCWorkflowURIList' )

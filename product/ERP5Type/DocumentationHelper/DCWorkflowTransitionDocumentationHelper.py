@@ -119,10 +119,10 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     """
     role_list = ()
     if hasattr(self.getDocumentedObject(),'guard'):
-      dir(self.getDocumentedObject().guard)	    
+      dir(self.getDocumentedObject().guard)
       if hasattr(self.getDocumentedObject().guard, '__dict__'):
-	if 'roles' in self.getDocumentedObject().guard.__dict__.keys():	      
+        if 'roles' in self.getDocumentedObject().guard.__dict__.keys():
           role_list = self.getDocumentedObject().guard.__dict__['roles']
     return ', '.join(role for role in role_list)
-   
+
 InitializeClass(DCWorkflowTransitionDocumentationHelper)

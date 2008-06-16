@@ -73,12 +73,12 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
     source_code = ""
     property_sheet_file = self.getDocumentedObject()
     if property_sheet_file is not None:
-      property_sheet_file.seek(0)	    
+      property_sheet_file.seek(0)
       source_code = property_sheet_file.read()
       portal_transforms = getattr(self, 'portal_transforms', None)
       if portal_transforms is None:
-        LOG('DCWorkflowScriptDocumentationHelper', INFO, 
-	  'Transformation Tool is not installed. No convertion of python script to html')	    
+        LOG('DCWorkflowScriptDocumentationHelper', INFO,
+          'Transformation Tool is not installed. No convertion of python script to html')
         return source_code
     src_mimetype='text/x-python'
     mime_type = 'text/html'
