@@ -172,24 +172,7 @@ def getSearchDialog(self, REQUEST=None):
 
 
   def addFullTextStringField(field_id, field_title):
-    raise NotImplementedError
     addStringField(field_id, field_title)
-
-    request_key = field_id
-    field_id = 'your_%s_search_mode' % field_id
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
-    field = temp_form._getOb(field_id)
-    field.manage_edit_xmlrpc(dict(
-        form_id='Base_viewDialogFieldLibrary',
-        field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(title), usage=N_('Search Mode')))))
-    field._surcharged_tales(
-        dict(
-            default=TALESMethod(
-              'here/portal_selections/%s/%s_search_mode | nothing' 
-                                    % (selection_name, request_key))),
-            ['title', 'items', 'default'])
-
 
   def addKeywordSearchStringField(column_id, column_title,
                                   default_search_key='ExactMatch'):
