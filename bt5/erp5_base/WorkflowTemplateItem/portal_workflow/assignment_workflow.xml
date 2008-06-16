@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Workflow used to determine the status of assignments for a given for a person</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

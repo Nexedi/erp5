@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>State of a query when an answer has been given</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
