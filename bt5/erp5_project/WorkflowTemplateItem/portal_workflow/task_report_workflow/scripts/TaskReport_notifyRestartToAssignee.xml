@@ -72,7 +72,13 @@ source_person = task_report.getSourceValue(portal_type="Person")\n
 destination_decision_person = task_report.getDestinationDecisionValue(portal_type="Person")\n
 if destination_decision_person is None:\n
   destination_decision_person = task_report.getDestinationValue(portal_type="Person")\n
-if source_person is not None and  destination_decision_person is not None:\n
+\n
+# send notification only if the source have a valid email and is a user in the\n
+# system\n
+if source_person is not None \\\n
+      and destination_decision_person is not None\\\n
+      and source_person.getDefaultEmailText() \\\n
+      and source_person.getReference():\n
     message = """\n
 Restarted task has been assigned to you by %(assignor)s.\n
 \n
@@ -88,7 +94,7 @@ Please visit ERP5: %(url)s\n
 """ % {\n
        \'assignor\': destination_decision_person.getTitle(),\n
        \'title\'   : task_report.getTitle(),\n
-       \'url\'     : \'%s/%s\' % (task_report.ERP5Site_getAbsoluteUrl(),\n
+       \'url\'     : \'%s/%s/view\' % (task_report.ERP5Site_getAbsoluteUrl(),\n
                               task_report.getRelativeUrl()),\n
        \'comment\' : task_report.getComment(),\n
        \'start_date\': task_report.getStartDate().Date(),\n

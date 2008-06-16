@@ -72,7 +72,13 @@ source_person = task_report.getSourceValue(portal_type="Person")\n
 destination_decision_person = task_report.getDestinationDecisionValue(portal_type="Person")\n
 if destination_decision_person is None:\n
   destination_decision_person = task_report.getDestinationValue(portal_type="Person")\n
-if source_person is not None and destination_decision_person is not None:\n
+\n
+# We send a message only if the requester have an email and is a user in the\n
+# system.\n
+if source_person is not None \\\n
+     and destination_decision_person is not None \\\n
+     and destination_decision_person.getDefaultEmailText() \\\n
+     and destination_decision_person.getReference():\n
   message = """\n
 %s has finished the task report titled with %s.\n
 Please look at this URL:\n
