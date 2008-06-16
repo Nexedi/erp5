@@ -1,3 +1,6 @@
+2008-06-16 jerome
+* use getTitle to show title of current document in <title> in view mode.
+
 2008-06-12 ivan
 * Catch pressed Enter key and submit form for top,right fulltext search input field
 
