@@ -319,13 +319,15 @@ class TestScribusUtils(ERP5TypeTestCase):
     # add property sheet Task in portal type Authorisation
     self.portal.portal_types.Authorisation.setPropertySheetList('Task')
     authorisation_module = self.portal.authorisation_module
-    authorisation = authorisation_module.newContent(portal_type='Authorisation')
-    # fill Authorisation
-    authorisation.setTitle('Mum Dad')
     start_date = DateTime('2000/01/01')
     stop_date = DateTime('2001/01/01 12:00 GMT')
-    authorisation.setStartDate(start_date)
-    authorisation.setStopDate(stop_date)
+    authorisation = authorisation_module.newContent(\
+          portal_type='Authorisation',
+          title = 'Mum Dad',
+          start_date = start_date,
+          stop_date = stop_date
+        )
+
     form = self.portal.portal_skins.erp5_authorisation.Authorisation_view
     # test property input_order on all DateTimeField
     input_order_other_date = form.my_other_date.get_value('input_order')
@@ -351,7 +353,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     result_other_date = expr_other_date(getExprContext(authorisation, authorisation))
     result_start_date = expr_start_date(getExprContext(authorisation, authorisation))
     result_stop_date = expr_stop_date(getExprContext(authorisation, authorisation))
-    self.assertEquals(result_other_date, None)
+    self.assertEquals(result_other_date, '')
     self.assertEquals(result_start_date, start_date.strftime('%d/%m/%Y'))
     self.assertEquals(result_stop_date, stop_date.strftime('%Y/%m/%d %H:%M'))
 
