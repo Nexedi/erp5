@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state of a document wich has been validated</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,6 +40,12 @@
                 <string>invalidate</string>
                 <string>invalidate_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>

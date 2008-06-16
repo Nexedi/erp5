@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Indicate if an alarm is enabled or not (working or not)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

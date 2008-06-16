@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The action call by the user to set the document to the deleted state</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
