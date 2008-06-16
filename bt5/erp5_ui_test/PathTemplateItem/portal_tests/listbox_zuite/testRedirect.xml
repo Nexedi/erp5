@@ -388,18 +388,18 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
-  <td>+ a</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
+  <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
-  <td>+ b</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+  <td>b</td>\n
 </tr>\n
 <!-- Click on "+ a" link -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=+ a</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -409,23 +409,23 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a</td>\n
-  <td>- a</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_open"]</td>\n
+  <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a</td>\n
-  <td>+ a1</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+  <td>a1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[3]//a</td>\n
-  <td>+ a2</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[3]//a[@class="tree_closed"]</td>\n
+  <td>a2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[4]//a</td>\n
-  <td>+ b</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[4]//a[@class="tree_closed"]</td>\n
+  <td>b</td>\n
 </tr>\n
 <!-- END of inspired code -->\n
 <tr>\n

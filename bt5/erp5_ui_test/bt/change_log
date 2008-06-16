@@ -1,3 +1,6 @@
+2008-06-16 yusei
+* Update listbox_zuite/testRedirect for recent changes of domain tree rendering.
+
 2008-06-13 kazuhiko
 * modify tests according to the changes of domain tree rendering.
 
