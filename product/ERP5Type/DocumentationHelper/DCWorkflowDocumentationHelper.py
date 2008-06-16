@@ -265,9 +265,9 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     if variables is not None:
       for variable in  variables.objectValues():
         variable_list.append((variable.getId(), 
- 	              getattr(variable, "title", ""), 
- 		      getattr(variable, "description", "")
- 		    ))
+		              getattr(variable, "title", ""), 
+			      getattr(variable, "description", "")
+			    ))
     return variable_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getVariableURIList' )
@@ -388,8 +388,8 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     if scripts is not None:
       for script in scripts.objectValues():
         script_list.append((getattr(script, "__name__", ''), 
- 	            getattr(script, "title", '')
- 		   ))
+		            getattr(script, "title", '')
+			   ))
     return script_list
 
 
