@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -94,13 +91,13 @@ Test domain tree of Account Module\n
 <tr>\n
   <td>clickAndWait</td>\n
   <!-- XXX it should probably be the category `id`, not the title. -->\n
-  <td>link=+ My Country</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <!-- XXX it should probably be the category `id`, not the title. -->\n
-  <td>link=+ My Accounting Standards</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[3]//a[@class="tree_closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -157,7 +154,7 @@ Test domain tree of Account Module\n
 -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=+ 4</td>\n
+  <td>//table[@id="listbox_domain_tree_table"]//tr[7]//a[@class="tree_closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -337,8 +334,7 @@ Test domain tree of Account Module\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></string> </value>
         </item>

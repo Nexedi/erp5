@@ -1,3 +1,7 @@
+2008-06-16 yusei
+* Update accounting_zuite/test_account_module/test_account_module_domain_tree.html
+for the recent changes of domain tree.
+
 2008-03-04 jerome
 * Define an "is_selenium_0_8" boolean variable in the common template and start using it for commands that requires selenium 0.8 or more.
 
