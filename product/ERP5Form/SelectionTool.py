@@ -1095,6 +1095,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                                              selection_name,
                                              current_uid_list)
           field_value = str(field_value).splitlines()
+          # Prevent displaying useless empty list or list with only one element
+          if not field_value:
+            field_value = ''
+          if len(field_value) == 1:
+            field_value = field_value[0]
           REQUEST.form[field_key] = field_value
           portal_status_message = Message(
                           domain='erp5_ui',
