@@ -65,6 +65,16 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
+  <td>${base_url}/portal_preferences/AccessTabZuite_setPreference</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Preference Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
   <td>${base_url}/portal_preferences/ListBoxZuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
@@ -75,7 +85,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/portal_preferences/erp5_ui_test_preference/view</td>\n
+  <td>${base_url}/portal_preferences/access_tab_test_preference/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -112,7 +122,7 @@
 </tal:block>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/portal_preferences/erp5_ui_test_preference/view</td>\n
+  <td>${base_url}/portal_preferences/access_tab_test_preference/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -141,8 +151,16 @@
   <td>//div[@class="index_html"]/h2</td>\n
   <td>Welcome to ERP5</td>\n
 </tr>\n
-\n
-\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_preferences/AccessTabZuite_disablePreference</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Disabled Preference Successfully.</td>\n
+  <td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>\n
