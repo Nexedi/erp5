@@ -1462,13 +1462,19 @@ class TestPayroll(TestPayrollMixin):
     employee = self.portal.person_module.newContent(
                       portal_type='Person',
                       title='Employee')
+    employee_bank_account = employee.newContent(
+                      portal_type='Bank Account')
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer')
+    employer_bank_account = employee.newContent(
+                      portal_type='Bank Account')
     model = self.portal.paysheet_model_module.newContent(
                       portal_type='Pay Sheet Model',
                       source_section_value=employee,
+                      source_payment_value=employee_bank_account,
                       destination_section_value=employer,
+                      destination_payment_value=employer_bank_account,
                       price_currency_value=eur,
                       payment_condition_payment_date=DateTime(2008, 1, 1),
                       work_time_annotation_line_quantity=10)
@@ -1479,6 +1485,8 @@ class TestPayroll(TestPayrollMixin):
     paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(employee, paysheet.getSourceSectionValue())
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
+    self.assertEquals(employee_bank_account, paysheet.getSourcePaymentValue())
+    self.assertEquals(employer_bank_account, paysheet.getDestinationPaymentValue())
     self.assertEquals(eur, paysheet.getResourceValue())
     self.assertEquals(eur, paysheet.getPriceCurrencyValue())
     self.assertEquals(DateTime(2008, 1, 1),
