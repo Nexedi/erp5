@@ -3034,7 +3034,7 @@ msgid "Work Duration"
 msgstr "Durée de travail"
 
 msgid "Work Duration Unit"
-msgstr "Unitée de la durée de travail"
+msgstr "Unité de la durée de travail"
 
 msgid "Variation Base"
 msgstr "Axes de variantage"
