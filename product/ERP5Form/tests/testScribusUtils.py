@@ -358,6 +358,28 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertEquals(result_start_date, start_date.strftime('%d/%m/%Y'))
     self.assertEquals(result_stop_date, stop_date.strftime('%Y/%m/%d %H:%M'))
 
+  def test_08_ModuleCreationWithoutField(self):
+    '''check it's possible to create a module using an empty scribus file without errors'''
+    self.portal.ERP5Site_createModuleScribus(
+            module_portal_type="Empty Module",
+            portal_skins_folder="erp5_empty",
+            object_portal_type="Empty",
+            object_title="Empty",
+            module_id="empty_module",
+            module_title="Empty Module Title",
+            import_pdf_file=self.makeFileUpload('test_without_field.pdf'),
+            import_scribus_file=self.makeFileUpload('test_without_field.sla'),)
+    self.assertNotEqual(self.portal._getOb('empty_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_empty", None), None)
+    self.assertEquals("Empty Module Title",
+                      self.portal.empty_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Empty Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Empty"), None)
+    form = self.portal.portal_skins.erp5_empty.Empty_view
+    self.assertEquals(0, len(form.objectValues()))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestScribusUtils))
