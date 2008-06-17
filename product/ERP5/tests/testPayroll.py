@@ -1971,6 +1971,166 @@ class TestPayroll(TestPayrollMixin):
                             total=((2000 * .50 + 3500 * .20) +
                                    (2000 * .40 + 3500 * .32)))
 
+  def test_NetSalaryReport(self):
+    eur = self.portal.currency_module.EUR
+    salary_service = self.portal.payroll_service_module.newContent(
+                      portal_type='Payroll Service',
+                      title='Gross Salary',
+                      variation_base_category_list=('tax_category',),
+                      variation_category_list=('tax_category/employee_share',
+                                               'tax_category/employer_share'))
+    payroll_service = self.portal.payroll_service_module.newContent(
+                      portal_type='Payroll Service',
+                      title='PS1',
+                      variation_base_category_list=('tax_category',),
+                      variation_category_list=('tax_category/employee_share',
+                                               'tax_category/employer_share'))
+    employer = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Employer',
+                      price_currency_value=eur,
+                      group_value=self.portal.portal_categories.group.demo_group)
+    employee1 = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee One',
+                      career_reference='E1',
+                      career_subordination_value=employer)
+    employee1_ba = employee1.newContent(portal_type='Bank Account',
+                                        title='Bank 1')
+    employee2 = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee Two',
+                      career_reference='E2',
+                      career_subordination_value=employer)
+    employee2_ba = employee2.newContent(portal_type='Bank Account',
+                                        title='Bank 2')
+    provider = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Payroll Service Provider')
+    other_provider = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Another Payroll Service Provider')
+    ps1 = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      title='Employee 1',
+                      destination_section_value=employer,
+                      source_section_value=employee1,
+                      payment_condition_source_payment_value=employee1_ba,
+                      start_date=DateTime(2006, 1, 1),)
+    line = ps1.newContent(portal_type='Pay Sheet Line',
+                   resource_value=salary_service,
+                   destination_value=employee1,
+                   base_amount='net_salary',
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=1, quantity=2000, tax_category='employee_share')
+    line = ps1.newContent(portal_type='Pay Sheet Line',
+                   resource_value=payroll_service,
+                   source_section_value=provider,
+                   destination_value=employee1,
+                   base_amount='net_salary',
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=-.50, quantity=2000, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=-.40, quantity=2000, tax_category='employer_share')
+    ps1.plan()
+
+    ps2 = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      title='Employee 2',
+                      destination_section_value=employer,
+                      source_section_value=employee2,
+                      payment_condition_source_payment_value=employee2_ba,
+                      start_date=DateTime(2006, 1, 1),)
+    line = ps2.newContent(portal_type='Pay Sheet Line',
+                   resource_value=salary_service,
+                   destination_value=employee2,
+                   base_amount='net_salary',
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=1, quantity=3000, tax_category='employee_share')
+    line = ps2.newContent(portal_type='Pay Sheet Line',
+                   resource_value=payroll_service,
+                   source_section_value=provider,
+                   destination_value=employee2,
+                   base_amount='net_salary',
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    line.updateCellRange(base_id='movement')
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=-.50, quantity=3000, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=-.40, quantity=3000, tax_category='employer_share')
+
+    get_transaction().commit()
+    self.tic()
+
+    # set request variables and render                 
+    request_form = self.portal.REQUEST
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['draft', 'planned']
+    
+    report_section_list = self.getReportSectionList(
+                             self.portal.accounting_module,
+                             'AccountingTransactionModule_viewNetSalaryReport')
+    self.assertEquals(1, len(report_section_list))
+      
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+
+    # base_unit_quantity for EUR is set to 0.001 in createCurrencies, so the
+    # precision is 3
+    precision = self.portal.REQUEST.get('precision')
+    self.assertEquals(3, precision)
+    
+    self.checkLineProperties(data_line_list[0],
+                            employee_career_reference='E1',
+                            employee_title='Employee One',
+                            employee_bank_account='Bank 1',
+                            total_price=2000 - (2000 * .5),)
+    self.checkLineProperties(data_line_list[1],
+                            employee_career_reference='E2',
+                            employee_title='Employee Two',
+                            employee_bank_account='Bank 2',
+                            total_price=3000 - (3000 * .5),)
+    # stat line 
+    self.checkLineProperties(
+            line_list[-1],
+            total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
+
   def test_AccountingLineGeneration(self):
     # create payroll services
     base_salary = self.portal.payroll_service_module.newContent(
