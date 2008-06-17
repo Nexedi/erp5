@@ -108,7 +108,7 @@ for account in accounts :\n
   except AttributeError: # no account of this gap nr has been set up\n
     return 0\n
 #  except :\n
-#    raise \'error on\', (account, shortAccountNumberToFullGapCategory(account))\n
+#    raise \'error on\', (account, shortAccountNumberToFullGapCategory(account, **kw))\n
 return float ("%.2f"%(sum))\n
 </string> </value>
         </item>

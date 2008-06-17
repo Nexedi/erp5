@@ -65,12 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'crap - should take gap root from preferences\'\'\'\n
+            <value> <string>gap_root = kw.get(\'gap_root\', context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap())\n
+context.log(gap_root)\n
 \n
 parts=[]\n
 for i in range(len(accountNumber)+1):\n
   parts.append(accountNumber[:i])\n
-return \'gap/pl/wpkR\'+\'/\'.join(parts)\n
+  context.log(parts)\n
+return gap_root+\'/\'.join(parts)\n
 </string> </value>
         </item>
         <item>
@@ -93,7 +95,7 @@ return \'gap/pl/wpkR\'+\'/\'.join(parts)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>accountNumber</string> </value>
+            <value> <string>accountNumber, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,12 +122,15 @@ return \'gap/pl/wpkR\'+\'/\'.join(parts)\n
                         <value>
                           <tuple>
                             <string>accountNumber</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>gap_root</string>
                             <string>parts</string>
                             <string>_getiter_</string>
                             <string>range</string>
                             <string>len</string>
                             <string>i</string>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
