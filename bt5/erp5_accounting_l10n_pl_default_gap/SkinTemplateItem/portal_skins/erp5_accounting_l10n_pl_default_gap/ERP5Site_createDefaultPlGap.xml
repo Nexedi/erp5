@@ -73,7 +73,7 @@ with accountants-approved gap structure\n
 """\n
 \n
 gap_text = \\\n
-""" * [0] Aktywa trwa\xc5\x82e\n
+"""* [0] Aktywa trwa\xc5\x82e\n
    * [01] \xc5\x9arodki trwa\xc5\x82e\n
      * [011] Grunty (w tym prawo wieczystego u\xc5\xbcytkowania gruntu)\n
      * [012] Budynki, lokale i obiekty in\xc5\xbcynierii l\xc4\x85dowej i wodnej\n
@@ -91,7 +91,7 @@ gap_text = \\\n
      * [032] Inne papiery warto\xc5\x9bciowe\n
      * [033] Udzielone po\xc5\xbcyczki\n
      * [034] Inne d\xc5\x82ugoterminowe aktywa finansowe\n
-     * [035] Odpisy aktualizuj\xc4\x85ce d\xc5\x82ugoterminowe aktywa finansowe (ewidencja szczeg\xc3\xb3\xc5\x82owa powinna by\xc4\x87 podporz\xc4\x85dkowana ewidencji na kontach od 031000 do 034000)\n
+     * [035] Odpisy aktualizuj\xc4\x85ce d\xc5\x82ugoterminowe aktywa finansowe\n
    * [04] Inwestycje w nieruchomo\xc5\x9bci i prawa\n
      * [041] Nieruchomo\xc5\x9bci\n
      * [042] Warto\xc5\x9bci niematerialne i prawne\n
@@ -99,7 +99,7 @@ gap_text = \\\n
      * [071] Odpisy umorzeniowe \xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych (do kont 011000 do 015000)\n
      * [072] Odpisy umorzeniowe warto\xc5\x9bci niematerialnych i prawnych  (do kont 021000 do 023000)\n
      * [073] Odpisy umorzeniowe inwestycji w nieruchomo\xc5\x9bci i prawa (do kont 041000 do 042000)\n
-   * [08] \xc5\x9arodki trwa\xc5\x82e w budowie (ewidencj\xc4\x99 szczeg\xc3\xb3\xc5\x82owa prowadzi si\xc4\x99 wed\xc5\x82ug grup K\xc5\x9aT i poszczeg\xc3\xb3lnych tytu\xc5\x82\xc3\xb3w \xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych w budowie)\n
+   * [08] \xc5\x9arodki trwa\xc5\x82e w budowie\n
    * [09] Ewidencja pozabilansowa\n
      * [091] Obce \xc5\x9brodki trwa\xc5\x82e\n
      * [092] \xc5\x9arodki trwa\xc5\x82e w likwidacji\n
@@ -113,7 +113,7 @@ gap_text = \\\n
        * [1341] Rachunek bankowy wyodr\xc4\x99bnionych \xc5\x9brodk\xc3\xb3w pieni\xc4\x99\xc5\xbcnych ZF\xc5\x9aS\n
        * [1342] Rachunek bankowy lokat terminowych (wed\xc5\x82ug poszczeg\xc3\xb3lnych lokat)\n
        * [1343] Rachunek bankowy akredytywy (wed\xc5\x82ug poszczeg\xc3\xb3lnych kontrahent\xc3\xb3w}\n
-     * [135] \xc5\x9arodki pieni\xc4\x99\xc5\xbcne w drodze (wed\xc5\x82ug poszczeg\xc3\xb3lnych plac\xc3\xb3wek handlowych i us\xc5\x82ugowych odprowadzaj\xc4\x85cych utargi got\xc3\xb3wkowe za po\xc5\x9brednictwem trezora bankowego, inkasent\xc3\xb3w lub poczty)\n
+     * [135] \xc5\x9arodki pieni\xc4\x99\xc5\xbcne w drodze\n
    * [14] Kr\xc3\xb3tkoterminowe aktywa finansowe\n
      * [141] Udzia\xc5\x82y lub akcje\n
      * [142] Inne papiery warto\xc5\x9bciowe\n
@@ -136,7 +136,7 @@ gap_text = \\\n
        * [2241] Rozrachunki publicznoprawne z urz\xc4\x99dem skarbowym \n
          * [22411] podatek dochodowy\n
          * [22412] podatek od czynno\xc5\x9bci cywilnoprawnych\n
-       * [2242] Rozrachunki publicznoprawne z urz\xc4\x99dem miasta/gminy - ewentualnie dalej wed\xc5\x82ug tytu\xc5\x82\xc3\xb3w rozrachunk\xc3\xb3w (np. z tytu\xc5\x82u podatku od nieruchomo\xc5\x9bci, od \xc5\x9brodk\xc3\xb3w transportowych, z tytu\xc5\x82u innych op\xc5\x82at lokalnych)\n
+       * [2242] Rozrachunki publicznoprawne z urz\xc4\x99dem miasta/gminy\n
          * [22421] Podatek od nieruchomo\xc5\x9bci\n
          * [22422] podatek od \xc5\x9brodk\xc3\xb3w transportowych\n
        * [2243] Rozrachunki publicznoprawne z urz\xc4\x99dem celnym\n
@@ -169,7 +169,7 @@ gap_text = \\\n
      * [301] Rozliczenie zakupu materia\xc5\x82\xc3\xb3w\n
      * [302] Rozliczenie zakupu towar\xc3\xb3w\n
      * [303] Rozliczenie zakupu us\xc5\x82ug obcych\n
-     * [304] Rozliczenie zakupu sk\xc5\x82adnik\xc3\xb3w aktyw\xc3\xb3w trwa\xc5\x82ych (\xc5\x9brodk\xc3\xb3w trwa\xc5\x82ych i inwestycji w nieruchomo\xc5\x9bci oraz d\xc3\xb3br i us\xc5\x82ug do ich budowy lub ulepsze\xc5\x84, a tak\xc5\xbce warto\xc5\x9bci niematerialnych i prawnych)\n
+     * [304] Rozliczenie zakupu sk\xc5\x82adnik\xc3\xb3w aktyw\xc3\xb3w trwa\xc5\x82ych\n
    * [31] Materia\xc5\x82y i opakowania\n
      * [311] Materia\xc5\x82y\n
      * [312] Opakowania\n

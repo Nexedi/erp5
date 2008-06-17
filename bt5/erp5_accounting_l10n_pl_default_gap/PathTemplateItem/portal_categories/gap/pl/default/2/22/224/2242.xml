@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Rozrachunki publicznoprawne z urz\xc4\x99dem miasta/gminy - ewentualnie dalej wed\xc5\x82ug tytu\xc5\x82\xc3\xb3w rozrachunk\xc3\xb3w (np. z tytu\xc5\x82u podatku od nieruchomo\xc5\x9bci, od \xc5\x9brodk\xc3\xb3w transportowych, z tytu\xc5\x82u innych op\xc5\x82at lokalnych)</string> </value>
+            <value> <string>Rozrachunki publicznoprawne z urz\xc4\x99dem miasta/gminy</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
