@@ -123,12 +123,13 @@ for business_field in business_field_list:\n
     else: # type == \'action\'\n
       wf_item_path = \'%s/transitions/%s_actbox_name\' % (wf_item.aq_parent.aq_parent.id, wf_item.id)\n
       wf_item_title = wf_item.actbox_name\n
-    \n
+    wf_item_description = wf_item.description\n
 \n
     line.edit(wf_item_path=wf_item_path,\n
               wf_item_type=type,\n
               wf_item_title=wf_item_title,\n
               wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),\n
+              wf_item_description = wf_item_description,\n
               reference=reference,\n
               term_list=term_list\n
               )\n
@@ -212,6 +213,7 @@ return line_list\n
                             <string>_inplacevar_</string>
                             <string>wf_item_path</string>
                             <string>wf_item_title</string>
+                            <string>wf_item_description</string>
                           </tuple>
                         </value>
                     </item>

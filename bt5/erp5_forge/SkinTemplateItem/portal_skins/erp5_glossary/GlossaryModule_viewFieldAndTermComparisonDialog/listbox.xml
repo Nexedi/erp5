@@ -349,6 +349,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>field_description</string>
+                          <string>Current Description</string>
+                        </tuple>
+                        <tuple>
                           <string>term</string>
                           <string>Term</string>
                         </tuple>

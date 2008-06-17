@@ -114,6 +114,7 @@ for business_field in business_field_list:\n
     line = newTempBase(context, \'tmp_glossary_field_%s\' %  c)\n
     c += 1\n
     field_title = field.get_value(\'title\')\n
+    field_description = field.get_value(\'description\')\n
     field_note_list = []\n
     if field.meta_type==\'ProxyField\':\n
       if field.is_delegated(\'title\') is True:\n
@@ -125,6 +126,7 @@ for business_field in business_field_list:\n
               field_path=field_path,\n
               field_edit_url = \'%s/manage_main\' % field.absolute_url(),\n
               field_note=\' \'.join(field_note_list),\n
+              field_description=field_description,\n
               reference=reference,\n
               term_list=term_list,\n
               field_meta_type=field.meta_type\n
@@ -206,6 +208,7 @@ return line_list\n
                             <string>line</string>
                             <string>_inplacevar_</string>
                             <string>field_title</string>
+                            <string>field_description</string>
                             <string>field_note_list</string>
                             <string>True</string>
                             <string>None</string>
