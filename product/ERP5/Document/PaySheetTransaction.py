@@ -195,9 +195,6 @@ class PaySheetTransaction(Invoice):
     # create cell_list
     for cell in good_cell_list:
       paycell = payline.newCell(base_id=base_id, *cell['category_list'])
-      # if the price aven't be completed, it should be set to 1 (=100%)
-      if not cell['price']:
-        cell['price'] = 1
       paycell.edit(mapped_value_property_list=('price', 'quantity'),
                    force_update=1,
                    **cell)
@@ -483,7 +480,7 @@ class PaySheetTransaction(Invoice):
         quantity = cell_dict['quantity']
         price = cell_dict['price']
 
-        if quantity:
+        if quantity and price:
           cell_list.append(cell_dict)
 
           # update the base_participation

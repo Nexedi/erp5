@@ -224,7 +224,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
             'base_amount/%s' % self.base_amount_base_salary,
             'grade/%s' % self.grade_worker,
             'grade/%s' % self.grade_engineer,
-            'quantity_unit/time/mounth',
+            'quantity_unit/time/month',
             'group/demo_group',
             'product_line/base_salary',
             'product_line/payroll_tax_1',
@@ -1373,6 +1373,57 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(1, cell.getPrice())
     self.assertEquals(100, cell.getQuantity())
 
+  def test_createPaySheetLineNonePrice(self):
+    # test the creation of lines when the price is not set, but only the
+    # quantity. This means that no ratio is applied on this line.
+    line = self.model.newContent(
+          id='line',
+          portal_type='Pay Sheet Model Line',
+          resource_value=self.labour,
+          variation_category_list=['tax_category/employee_share'],)
+    line.updateCellRange(base_id='movement')
+    cell = line.newCell('tax_category/employee_share',
+                        portal_type='Pay Sheet Cell',
+                        base_id='movement')
+    cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setVariationCategoryList(('tax_category/employee_share',))
+    cell.setQuantity(5)
+
+    pay_sheet = self.createPaySheet(self.model)
+    
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList()
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(1, len(pay_sheet_line_list))
+    pay_sheet_line = pay_sheet_line_list[0]
+    self.assertEquals(self.labour, pay_sheet_line.getResourceValue())
+    cell = pay_sheet_line.getCell('tax_category/employee_share',
+                                  base_id='movement')
+    self.assertNotEquals(None, cell)
+    self.assertEquals(1, cell.getPrice())
+    self.assertEquals(5, cell.getQuantity())
+    
+  def test_createPaySheetLineZeroPrice(self):
+    # test the creation of lines when the price is set to zero: the line should
+    # not be created.
+    line = self.model.newContent(
+          id='line',
+          portal_type='Pay Sheet Model Line',
+          resource_value=self.labour,
+          variation_category_list=['tax_category/employee_share'],)
+    line.updateCellRange(base_id='movement')
+    cell = line.newCell('tax_category/employee_share',
+                        portal_type='Pay Sheet Cell',
+                        base_id='movement')
+    cell.setMappedValuePropertyList(('quantity', 'price'))
+    cell.setVariationCategoryList(('tax_category/employee_share',))
+    cell.setQuantity(5)
+    cell.setPrice(0)
+
+    pay_sheet = self.createPaySheet(self.model)
+    
+    pay_sheet.PaySheetTransaction_createAllPaySheetLineList()
+    pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEquals(0, len(pay_sheet_line_list))
     
   def test_paysheet_consistency(self):
     # minimal test for checkConsistency on a Pay Sheet Transaction and its
