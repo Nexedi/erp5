@@ -118,8 +118,8 @@
               <tuple>
                 <string>ResourceMovementGroup</string>
                 <string>BaseVariantMovementGroup</string>
-                <string>CausalityAssignmentMovementGroup</string>
                 <string>AggregateMovementGroup</string>
+                <string>CausalityAssignmentMovementGroup</string>
               </tuple>
             </value>
         </item>
