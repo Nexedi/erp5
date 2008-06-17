@@ -65,28 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# XXX Localizer-dependent\n
+            <value> <string># XXX Localizer-dependent\n
 portal = context.getPortalObject()\n
-\n
-# Make the URL for the redirection. The language is appended, because when HTTP caching is utilized,\n
-# If-Modified-Since ignores Vary, so the URL must be different from another language. Note that this\n
-# is still a kind of hack, because the language is not appended to other links.\n
-\n
-# XXX relying on the referer is a bad idea, but we don\'t have any other way to retrieve the original URL\n
-# currently.\n
-url = context.REQUEST[\'HTTP_REFERER\']\n
-if \'?\' in url:\n
-  delimiter = \'&\'\n
-else:\n
-  delimiter = \'?\'\n
-url = \'%s%sLOCALIZER_LANGUAGE=%s\' % (url, delimiter, select_language)\n
-\n
-portal.Localizer.changeLanguage(select_language, goto=url)\n
-
-
-]]></string> </value>
+portal.Localizer.changeLanguage(select_language)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -138,9 +120,6 @@ portal.Localizer.changeLanguage(select_language, goto=url)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>_getitem_</string>
-                            <string>url</string>
-                            <string>delimiter</string>
                           </tuple>
                         </value>
                     </item>

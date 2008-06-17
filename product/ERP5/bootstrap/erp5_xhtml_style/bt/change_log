@@ -1,3 +1,6 @@
+2008-06-17 yusei
+* Revert previous changes of Base_doLanguage, because this causes another problem.
+
 2008-06-16 yusei
 * Fixed tabber_style.css to display border line under unselected tabs in the front page.
 
