@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')] + [(i.getTitle(), i.getUid()) for i in CONTEXTS[\'cell\'].term_list]</string> </value>
+            <value> <string>python:[(\'\', \'\')] + [("%s, %s" %(i.getTitle(), i.getDescription()[:30]), i.getUid()) for i in CONTEXTS[\'cell\'].term_list]</string> </value>
         </item>
       </dictionary>
     </pickle>
