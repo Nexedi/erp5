@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Version of the Rule</string> </value>
+                    <value> <string>The Version of the Business Template</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
