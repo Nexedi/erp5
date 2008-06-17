@@ -65,11 +65,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
+            <value> <string encoding="cdata"><![CDATA[
+
+\'\'\'\n
   return the amount composed by all amount of paysheet line wich category of\n
   category_list parameter is in variation_category_list of the PaySheet line \n
   and wich payroll service has a base_participation in the \n
   base_participation_list\n
+\n
+XXX this script needs refactoring, no need to get the base amount on the resource.\n
+It is now stored on the movement: see http://svn.erp5.org/?view=rev&revision=21660\n
+\n
 \'\'\'\n
 \n
 # test the list parameters\n
@@ -100,12 +106,18 @@ for pay_sheet_line in paysheet.contentValues(portal_type=\'Pay Sheet Line\'):\n
           for category in category_list:\n
             if category in pay_sheet_line.getVariationCategoryList():\n
               cell = pay_sheet_line.getCell(slice, category)\n
+              if cell is None:\n
+                context.log((pay_sheet_line, slice, category))\n
+                continue\n
               total_price = cell.getQuantity() * cell.getPrice()\n
               amount += total_price\n
       else:\n
         for category in category_list:\n
           if category in pay_sheet_line.getVariationCategoryList():\n
             cell = pay_sheet_line.getCell(category)\n
+            if cell is None:\n
+              context.log((pay_sheet_line, slice, category))\n
+              continue\n
             total_price = cell.getQuantity() * cell.getPrice()\n
             amount += total_price\n
         \n
@@ -114,7 +126,9 @@ for pay_sheet_line in paysheet.contentValues(portal_type=\'Pay Sheet Line\'):\n
 \n
 amount = round(amount, precision)\n
 return amount\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
