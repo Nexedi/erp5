@@ -399,7 +399,83 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Even with the same callable object, a restricted method id should not be callable.
     self.assertRaises(Unauthorized, document.asStrippedHTML)
+    
+  def test_08_LatestContent(self, quiet=quiet, run=run_all_test):
+    """ Test latest content for a Web Section. Test different use case like languaeg, workflow state.
+   """
+    if not run: return
+    if not quiet:
+      message = '\ntest_08_LatestContent'
+      ZopeTestCase._print(message)    
+    portal = self.getPortal()
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    portal_categories = portal.portal_categories
+    publication_section_category_id_list = ['documentation',  'administration']
+    for category_id in publication_section_category_id_list:
+      portal_categories.publication_section.newContent(portal_type = 'Category', 
+                                                                             id = category_id)
+    #set predicate on web section using 'publication_section'
+    websection.edit(membership_criterion_base_category = ['publication_section'], 
+                            membership_criterion_category=['publication_section/%s' 
+                                                                              %publication_section_category_id_list[0]])
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals(0,  len(websection.getDocumentValueList())) 
+    # create pages belonging to this publication_section 'documentation'
+    web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page', 
+                                                 language = 'en', 
+                                                 publication_section_list=publication_section_category_id_list[:1])
+    web_page_en.publish()
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(1,  len(websection.getDocumentValueList()))
+    self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
+    
+    # create pages belonging to this publication_section 'documentation' but for 'bg' language
+    web_page_bg = portal.web_page_module.newContent(portal_type = 'Web Page', 
+                                                 language = 'bg', 
+                                                 publication_section_list=publication_section_category_id_list[:1])
+    web_page_bg.publish()
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(1,  len(websection.getDocumentValueList(language='bg')))
+    self.assertEquals(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
+    
+    # reject page
+    web_page_bg.reject()
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(0,  len(websection.getDocumentValueList(language='bg')))
 
+  def test_09_DefaultDocumentForWebSection(self, quiet=quiet, run=run_all_test):
+    """ Testetting default document for a Web Section. Test  use case like workflow state of document.
+         Note: due to generic ERP5 Web implementation this test highly depends on WebSection_geDefaulttDocumentValueList
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_09_DefaultDocumentForWebSection'
+      ZopeTestCase._print(message)    
+    portal = self.getPortal()
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    publication_section_category_id_list = ['documentation',  'administration']
+    
+    # create pages belonging to this publication_section 'documentation'
+    web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page', 
+                                                 language = 'en', 
+                                                 reference='NXD-DDP', 
+                                                 publication_section_list=publication_section_category_id_list[:1])    
+    websection.setAggregateValue(web_page_en)
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(None,   websection.getDefaultDocumentValue())
+    # publish it
+    web_page_en.publish()
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(web_page_en,   websection.getDefaultDocumentValue())
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
