@@ -1487,6 +1487,10 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
     self.assertEquals(employee_bank_account, paysheet.getSourcePaymentValue())
     self.assertEquals(employer_bank_account, paysheet.getDestinationPaymentValue())
+    self.assertEquals(employee_bank_account,
+                      paysheet.getPaymentConditionSourcePaymentValue())
+    self.assertEquals(employer_bank_account,
+                      paysheet.getPaymentConditionDestinationPaymentValue())
     self.assertEquals(eur, paysheet.getResourceValue())
     self.assertEquals(eur, paysheet.getPriceCurrencyValue())
     self.assertEquals(DateTime(2008, 1, 1),
