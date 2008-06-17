@@ -53,11 +53,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>1.5</float> </value>
+            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>View Invoice</string> </value>
+            <value> <string>Invoice View</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
