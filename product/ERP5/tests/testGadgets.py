@@ -177,14 +177,6 @@ class TestGadgets(ERP5TypeTestCase):
     self.assertEqual(base_websection_pad.getObject(),
                      current_websection_pad.getObject())
     
-    
-                                                      
-                                                                 
-    
-
-    
-   
-    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestGadgets))

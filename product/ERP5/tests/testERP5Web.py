@@ -430,8 +430,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     web_page_en.publish()
     get_transaction().commit()
     self.tic()
-    self.assertEquals(1,  len(websection.getDocumentValueList()))
-    self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
+    self.assertEquals(1,  len(websection.getDocumentValueList(anguage='en')))
+    self.assertEquals(web_page_en,  websection.getDocumentValueList(anguage='en')[0].getObject())
     
     # create pages belonging to this publication_section 'documentation' but for 'bg' language
     web_page_bg = portal.web_page_module.newContent(portal_type = 'Web Page', 
@@ -448,6 +448,13 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     get_transaction().commit()
     self.tic()
     self.assertEquals(0,  len(websection.getDocumentValueList(language='bg')))
+    
+    # publish page and search without a language (by default system should return 'en' docs only)
+    web_page_bg.publish()
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(1,  len(websection.getDocumentValueList()))
+    self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
 
   def test_09_DefaultDocumentForWebSection(self, quiet=quiet, run=run_all_test):
     """ Testetting default document for a Web Section. Test  use case like workflow state of document.
