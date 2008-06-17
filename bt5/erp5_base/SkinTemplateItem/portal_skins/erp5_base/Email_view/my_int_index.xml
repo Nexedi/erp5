@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Index used to sort coordinates</string> </value>
+                    <value> <string>Index used to sort emails</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

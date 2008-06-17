@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The beginning date for validity of the currency exchange rate.</string> </value>
+                    <value> <string>The beginning date for validity of the agent.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

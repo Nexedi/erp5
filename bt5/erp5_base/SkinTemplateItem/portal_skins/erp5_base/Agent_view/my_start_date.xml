@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The date the organisation was registered.</string> </value>
+                    <value> <string>Date at which was created the agent</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

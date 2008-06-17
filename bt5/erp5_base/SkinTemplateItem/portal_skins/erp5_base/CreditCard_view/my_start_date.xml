@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Date when the bank account was open.</string> </value>
+                    <value> <string>Date at which the credit card is valid</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

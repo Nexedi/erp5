@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The bank organisation in which this bank account was openned.</string> </value>
+                    <value> <string>The bank organisation which delivered the credit card</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

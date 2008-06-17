@@ -80,7 +80,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The usual name of the person.</string> </value>
+                    <value> <string>The usual name of the organisation.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

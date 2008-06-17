@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Date when the bank account was closed.</string> </value>
+                    <value> <string>Date when the credit card is no longer valid</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

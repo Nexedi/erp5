@@ -304,7 +304,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Validity Stop Date</string> </value>
+                    <value> <string>Validity End Date</string> </value>
                 </item>
               </dictionary>
             </value>
