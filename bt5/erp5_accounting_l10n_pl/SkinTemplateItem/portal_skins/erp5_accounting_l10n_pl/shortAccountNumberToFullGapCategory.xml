@@ -66,7 +66,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>gap_root = kw.get(\'gap_root\', context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap())\n
-context.log(gap_root)\n
 \n
 parts=[]\n
 for i in range(len(accountNumber)+1):\n

@@ -96,8 +96,9 @@ kw.update(params_kw)\n
 \n
 \n
 sum = 0\n
+\n
 for account in accounts :\n
-  kw[\'node_category\']= context.shortAccountNumberToFullGapCategory(account)\n
+  kw[\'node_category\']= context.shortAccountNumberToFullGapCategory(account, **kw)\n
   #context.log(\'KW for getInventory\',kw)\n
   try : \n
     #val = (context.portal_simulation.getInventory(**kw) or 0)\n
@@ -108,7 +109,7 @@ for account in accounts :\n
   except AttributeError: # no account of this gap nr has been set up\n
     return 0\n
 #  except :\n
-#    raise \'error on\', (account, shortAccountNumberToFullGapCategory(account, **kw))\n
+#    raise \'error on\', (account, shortAccountNumberToFullGapCategory(account))\n
 return float ("%.2f"%(sum))\n
 </string> </value>
         </item>
