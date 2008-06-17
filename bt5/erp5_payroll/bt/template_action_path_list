@@ -12,6 +12,7 @@ Pay Sheet Model Slice | view
 Pay Sheet Model | view
 Pay Sheet Model | view_annotation_lines
 Pay Sheet Model | view_payment
+Pay Sheet Model | view_profile
 Pay Sheet Model | view_ratio_settings
 Pay Sheet Model | view_slice_settings
 Pay Sheet Transaction Line | view
@@ -21,6 +22,7 @@ Pay Sheet Transaction | apply_model
 Pay Sheet Transaction | calcul
 Pay Sheet Transaction | view
 Pay Sheet Transaction | view_payment
+Pay Sheet Transaction | view_profile
 Pay Sheet Transaction | view_ratio_settings
 Payroll Service Module | view
 Payroll Service | view
