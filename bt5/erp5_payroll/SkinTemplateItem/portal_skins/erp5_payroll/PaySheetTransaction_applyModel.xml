@@ -92,6 +92,12 @@ if not paysheet.getDestinationSection():\n
 if not paysheet.getSourceSection():\n
   paysheet.setSourceSection(getPropertyFromModel(model, \'source_section\'))\n
 \n
+if not paysheet.getSourcePayment():\n
+  paysheet.setSourcePayment(getPropertyFromModel(model, \'source_payment\'))\n
+\n
+if not paysheet.getDestinationPayment():\n
+  paysheet.setDestinationPayment(getPropertyFromModel(model, \'destination_payment\'))\n
+\n
 if not paysheet.getPriceCurrency():\n
   paysheet.setPriceCurrency(getPropertyFromModel(model, \'price_currency\'))\n
 \n
