@@ -181,7 +181,8 @@ class Telephone(Coordinate, Base):
         from zLOG import LOG, WARNING
         msg = "Doesn't exist a regex to handle this telephone: ", \
                                                                coordinate_text
-        LOG('Telephone.fromText', WARNING, msg)
+        LOG('Telephone.fromText', WARNING, msg) 
+        self.edit(telephone_number = input_without_markup)
         return
       number_dict = number_match.groupdict()
     else:
