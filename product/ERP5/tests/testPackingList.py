@@ -37,7 +37,6 @@ class TestPackingListMixin(TestOrderMixin):
   """
     Test business template erp5_trade 
   """
-  packable_packing_list_portal_type_list = ['Sale Packing List']
   container_portal_type = 'Container'
   container_line_portal_type = 'Container Line'
   container_cell_portal_type = 'Container Cell'
@@ -413,7 +412,7 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepCheckSimulationConnected(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Check if simulation movement are connected
     """
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
@@ -606,8 +605,6 @@ class TestPackingListMixin(TestOrderMixin):
       not equals to the quantity of the packing list
     """
     packing_list = sequence.get('packing_list')
-    if packing_list.getPortalType() not in \
-        self.packable_packing_list_portal_type_list: return
     self.assertEquals(0,packing_list.isPacked())
     self.assertEquals('missing',packing_list.getContainerState())
 
@@ -619,8 +616,6 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    if packing_list.getPortalType() not in \
-        self.packable_packing_list_portal_type_list: return
     get_transaction().commit()
     self.assertEquals(1,packing_list.isPacked())
     self.assertEquals('packed',packing_list.getContainerState())
@@ -631,8 +626,6 @@ class TestPackingListMixin(TestOrderMixin):
       equals to the quantity of the packing list
     """
     packing_list = sequence.get('new_packing_list')
-    if packing_list.getPortalType() not in \
-        self.packable_packing_list_portal_type_list: return
     self.stepCheckPackingListIsPacked(sequence=sequence,
                                       packing_list=packing_list)
 
@@ -951,8 +944,44 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                ).newContent(portal_type=self.packing_list_portal_type)
     self.failUnless(hasattr(pl, 'getPriceCurrency'))
     
+
+class TestPurchasePackingListMixin(TestPackingListMixin):
+  """Mixing class with steps to test purchase packing lists.
+  """
+  order_portal_type = 'Purchase Order'
+  order_line_portal_type = 'Purchase Order Line'
+  order_cell_portal_type = 'Purchase Order Cell'
+  packing_list_portal_type = 'Purchase Packing List'
+  packing_list_line_portal_type = 'Purchase Packing List Line'
+  packing_list_cell_portal_type = 'Purchase Packing List Cell'
+  delivery_builder_id = 'purchase_packing_list_builder'
+  order_workflow_id = 'order_workflow'
+  container_portal_type = None
+  container_line_portal_type = None
+  container_cell_portal_type = None
+  
+  # all steps related to packing and container does not apply on purchase
+  def ignored_step(self, **kw):
+    return
+  stepAddPackingListContainer = ignored_step
+  stepDefineNewPackingListContainer = ignored_step
+  stepAddPackingListContainerLine = ignored_step
+  stepSetContainerLineSmallQuantity = ignored_step
+  stepSetContainerLineFullQuantity = ignored_step
+  stepSetContainerFullQuantity = ignored_step
+  stepCheckPackingListIsNotPacked = ignored_step
+  stepCheckPackingListIsPacked = ignored_step
+  stepCheckNewPackingListIsPacked = ignored_step
+
+
+class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
+  """Tests for purchase packing list.
+  """
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPackingList))
+  suite.addTest(unittest.makeSuite(TestPurchasePackingList))
   return suite
 
