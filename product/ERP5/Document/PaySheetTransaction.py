@@ -486,7 +486,7 @@ class PaySheetTransaction(Invoice):
 
           # update the base_participation
           for base_participation in base_participation_list:
-            base_participation = 'base_amount/%s' %s base_participation
+            base_participation = 'base_amount/%s' % base_participation
             if quantity:
               if base_amount_dict.has_key(base_participation) and \
                   base_amount_dict[base_participation].has_key(share):
