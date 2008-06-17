@@ -352,6 +352,7 @@ class PaySheetTransaction(Invoice):
       int_index = model_line.getFloatIndex()
       base_amount_list = model_line.getBaseAmountList()
       resource = service.getRelativeUrl()
+      base_participation_list = service.getBaseAmountList()
       
       # get the service provider, either on the model line, or using the
       # annotation line reference.
@@ -484,8 +485,8 @@ class PaySheetTransaction(Invoice):
           cell_list.append(cell_dict)
 
           # update the base_participation
-          base_participation_list = service.getBaseAmountList(base=1)
           for base_participation in base_participation_list:
+            base_participation = 'base_amount/%s' %s base_participation
             if quantity:
               if base_amount_dict.has_key(base_participation) and \
                   base_amount_dict[base_participation].has_key(share):
@@ -508,7 +509,9 @@ class PaySheetTransaction(Invoice):
                                             source_section=source_section,
                                             int_index=int_index,
                                             desc=desc,
-                                            base_amount_list=base_amount_list,
+                                            # TODO: this is base_contribution,
+                                            # not base_amount
+                                            base_amount_list=base_participation_list,
                                             cell_list=cell_list,
                                             categories=categories)
         pay_sheet_line_list.append(pay_sheet_line)
