@@ -129,7 +129,7 @@ base_total = 0\n
 \n
 i = 0\n
 for inventory in employee_inventory_list:\n
-  price = - inventory.total_price or 0\n
+  price = - (inventory.total_price or 0)\n
   movement = inventory.getObject()\n
   employee = movement.getDestinationValue()\n
   salary_range = movement.getSalaryRange()\n
@@ -149,7 +149,7 @@ for inventory in employee_inventory_list:\n
   base_total += inventory.quantity\n
 \n
 for inventory in employer_inventory_list:\n
-  price = - inventory.total_price or 0\n
+  price = - (inventory.total_price or 0)\n
   movement = inventory.getObject()\n
   employee = movement.getDestinationValue()\n
   salary_range = movement.getSalaryRange()\n
