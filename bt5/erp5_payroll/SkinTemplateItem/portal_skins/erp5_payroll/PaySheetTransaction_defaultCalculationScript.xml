@@ -69,8 +69,10 @@
 
 precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 \n
-quantity = cell.getQuantity() or 0\n
-price = cell.getPrice() or 0\n
+quantity = cell.getQuantity()\n
+price = cell.getPrice()\n
+if price is None:\n
+  price = 1\n
 \n
 model_line = cell.getParentValue()\n
 \n
@@ -181,13 +183,13 @@ return {\'quantity\':quantity, \'price\':price}\n
                             <string>precision</string>
                             <string>quantity</string>
                             <string>price</string>
+                            <string>None</string>
                             <string>model_line</string>
                             <string>dict</string>
                             <string>base_application</string>
                             <string>tax_category_list</string>
                             <string>_getitem_</string>
                             <string>tax_category</string>
-                            <string>None</string>
                             <string>_getiter_</string>
                             <string>base</string>
                             <string>_inplacevar_</string>
