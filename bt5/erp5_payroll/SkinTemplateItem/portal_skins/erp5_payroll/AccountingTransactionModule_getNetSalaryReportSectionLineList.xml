@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+from DateTime import DateTime\n
+\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+translateString = portal.Base_translateString\n
+\n
+net_salary_base_amount_uid = \\\n
+              portal.portal_categories.base_amount.net_salary.getUid()\n
+employee_share_uid = \\\n
+              portal.portal_categories.tax_category.employee_share.getUid()\n
+\n
+section_category = request[\'section_category\']\n
+section_uid = portal.Base_getSectionUidListForSectionCategory(section_category)\n
+\n
+# currency precision\n
+currency = portal.Base_getCurrencyForSection(section_category)\n
+precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+request.set(\'precision\', precision)\n
+\n
+from_date = None\n
+if request.get(\'from_date\'):\n
+  from_date = DateTime(request[\'from_date\'])\n
+at_date = DateTime(request[\'at_date\'])\n
+simulation_state = request[\'simulation_state\']\n
+\n
+object_list = []\n
+total_price = 0\n
+\n
+# FIXME: this report does not support multiple Payment Condition\n
+# FIXME: parent_base_amount will be updated to use base_contribution someday\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                    parent_base_amount_uid=net_salary_base_amount_uid,\n
+                    tax_category_uid=employee_share_uid,\n
+                    portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'),\n
+                    section_uid=section_uid,\n
+                    simulation_state=simulation_state,\n
+                    precision=precision,\n
+                    from_date=from_date,\n
+                    at_date=at_date,\n
+                    group_by_resource=0,\n
+                    group_by_node=1, ):\n
+  price = inventory.total_price or 0\n
+  total_price += price\n
+  movement = inventory.getObject()\n
+  employee = movement.getDestinationValue()\n
+  employee_bank_account = movement.getExplanationValue()\\\n
+                                      .getDefaultPaymentConditionSourcePaymentTitle()\n
+\n
+  object_list.append(\n
+      Object(uid=-1,\n
+             employee_career_reference=employee.getCareerReference(),\n
+             employee_title=employee.getTitle(),\n
+             employee_bank_account=employee_bank_account,\n
+             total_price=price))\n
+\n
+request.set(\'total_price\', total_price)\n
+\n
+def sort_method(a, b):\n
+  employee_career_reference_diff = cmp(a.employee_career_reference,\n
+                                       b.employee_career_reference)\n
+  if employee_career_reference_diff:\n
+    return employee_career_reference_diff\n
+  return cmp(a.employee_title, b.employee_title)\n
+\n
+object_list.sort(sort_method)\n
+\n
+return object_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>DateTime</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>portal</string>
+                            <string>translateString</string>
+                            <string>net_salary_base_amount_uid</string>
+                            <string>employee_share_uid</string>
+                            <string>_getitem_</string>
+                            <string>section_category</string>
+                            <string>section_uid</string>
+                            <string>currency</string>
+                            <string>precision</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>simulation_state</string>
+                            <string>object_list</string>
+                            <string>total_price</string>
+                            <string>_getiter_</string>
+                            <string>inventory</string>
+                            <string>price</string>
+                            <string>_inplacevar_</string>
+                            <string>movement</string>
+                            <string>employee</string>
+                            <string>employee_bank_account</string>
+                            <string>sort_method</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getNetSalaryReportSectionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
