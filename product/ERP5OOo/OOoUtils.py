@@ -181,7 +181,7 @@ class OOoBuilder(Implicit):
       document_element.setAttributeNodeNS(tal)
       document_element.setAttributeNodeNS(i18n)
       document_element.setAttributeNodeNS(metal)
-      document_element.setAttribute('tal:attributes', 'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")')
+      document_element.setAttributeNS(None, 'tal:attributes', 'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")')
       from xml.dom.ext import PrettyPrint
       PrettyPrint(document_element, output)
       return output.getvalue()
