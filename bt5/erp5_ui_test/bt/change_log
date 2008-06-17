@@ -1,3 +1,6 @@
+2008-06-16 jerome
+* Stop calling BTZuite_setPreference in test and add a docstring to explain its purpose.
+
 2008-06-16 yusei
 * Update listbox_zuite/testRedirect for recent changes of domain tree rendering.
 

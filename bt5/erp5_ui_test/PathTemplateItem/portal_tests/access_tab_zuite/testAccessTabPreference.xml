@@ -65,16 +65,6 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/portal_preferences/BTZuite_setPreference</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Set Preference Successfully.</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>open</td>\n
   <td>${base_url}/portal_preferences/ListBoxZuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n

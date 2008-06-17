@@ -65,16 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># set subversion working copy list and enable preference\n
-if working_copy_list:\n
-  list = tuple(working_copy_list.split(\',\'))\n
-else:\n
-  list = (\'/var/lib/zope/unit_test/svn/bt5\', \'/var/lib/zope/unit_test/Products/ERP5/bootstrap\',)\n
+            <value> <string>"""Set subversion working copy list and enable preference.\n
+\n
+This script is called by Products.ERP5Type.tests.runFunctionalTest to set\n
+subversion working copy paths. It\'s not meant to be called by zelenium tests.\n
+"""\n
 \n
 pref = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
 if pref is None:\n
   pref = context.portal_preferences.newContent(id="erp5_ui_test_preference", portal_type="Preference")\n
-pref.setPreferredSubversionWorkingCopyList(list)\n
+pref.setPreferredSubversionWorkingCopyList(tuple(working_copy_list.split(\',\')))\n
 pref.enable()\n
 \n
 return \'Set Preference Successfully.\'\n
@@ -100,7 +100,7 @@ return \'Set Preference Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>working_copy_list=\'\'</string> </value>
+            <value> <string>working_copy_list</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -127,13 +127,12 @@ return \'Set Preference Successfully.\'\n
                         <value>
                           <tuple>
                             <string>working_copy_list</string>
-                            <string>tuple</string>
-                            <string>_getattr_</string>
-                            <string>list</string>
                             <string>getattr</string>
+                            <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
                             <string>pref</string>
+                            <string>tuple</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,9 +144,7 @@ return \'Set Preference Successfully.\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
