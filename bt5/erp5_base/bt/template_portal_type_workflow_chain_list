@@ -18,6 +18,8 @@ Fax | edit_workflow
 File | edit_workflow
 Image | edit_workflow
 Link | edit_workflow
+Notification Message | edit_workflow
+Notification Message | notification_message_workflow
 Organisation | edit_workflow
 Organisation | validation_workflow
 Person | edit_workflow

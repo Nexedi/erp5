@@ -25,6 +25,10 @@ Image | download
 Image | fullsize_view
 Image | view
 Link | view
+Notification Message | list
+Notification Message | local_permission
+Notification Message | view
+Notification Message | view_editor
 Organisation Module | view
 Organisation | details
 Organisation | document_view

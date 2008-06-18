@@ -56,6 +56,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Notification Message</type>
+  <workflow>edit_workflow, notification_message_workflow</workflow>
+ </chain>
+ <chain>
   <type>Organisation</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

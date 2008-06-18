@@ -14,6 +14,12 @@
  <portal_type id="Currency Module">
   <item>Currency</item>
  </portal_type>
+ <portal_type id="Notification Message">
+  <item>Role Definition</item>
+ </portal_type>
+ <portal_type id="Notification Message Module">
+  <item>Notification Message</item>
+ </portal_type>
  <portal_type id="Organisation">
   <item>Address</item>
   <item>Chat Address</item>

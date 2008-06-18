@@ -1,4 +1,5 @@
 currency_module
+notification_message_module
 organisation_module
 person_module
 query_module

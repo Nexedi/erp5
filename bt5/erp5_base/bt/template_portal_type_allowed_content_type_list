@@ -3,6 +3,8 @@ Bank Account | Agent
 Currency Exchange Line | Currency Exchange Cell
 Currency Module | Currency
 Currency | Currency Exchange Line
+Notification Message Module | Notification Message
+Notification Message | Role Definition
 Organisation Module | Organisation
 Organisation | Address
 Organisation | Bank Account
