@@ -69,7 +69,12 @@
 preference = getattr(preference_tool, "access_tab_test_preference", None)\n
 if preference is not None:\n
  preference.disable()\n
- return \'Disabled Preference Successfully.\'\n
+ # enable the erp5_ui_test_preference again....\n
+ erp5_ui_test_preference = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
+ if  erp5_ui_test_preference is not None:\n
+   erp5_ui_test_preference.enable()\n
+  \n
+return \'Disabled Preference Successfully.\'\n
 </string> </value>
         </item>
         <item>
@@ -124,6 +129,7 @@ if preference is not None:\n
                             <string>getattr</string>
                             <string>None</string>
                             <string>preference</string>
+                            <string>erp5_ui_test_preference</string>
                           </tuple>
                         </value>
                     </item>
