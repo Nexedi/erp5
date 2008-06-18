@@ -1600,7 +1600,7 @@ msgid "Max. delay (day)"
 msgstr "Délai Max (jours)"
 
 msgid "Measure"
-msgstr "Tableau de Mesures"
+msgstr "Mesure"
 
 msgid "Measure drawing"
 msgstr "Cote"
