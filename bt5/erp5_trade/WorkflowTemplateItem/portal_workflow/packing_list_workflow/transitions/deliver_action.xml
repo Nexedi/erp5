@@ -102,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:(here.getCausalityState() not in (\'building\',\'diverged\')) and (here.getPortalType() != \'Sale Packing List\' or here.getContainerState() == \'packed\')</string> </value>
+            <value> <string>python: here.getCausalityState() not in (\'building\', \'diverged\')</string> </value>
         </item>
       </dictionary>
     </pickle>
