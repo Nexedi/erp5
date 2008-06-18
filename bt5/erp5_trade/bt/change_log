@@ -1,3 +1,6 @@
+2008-06-18 jerome
+* ignore container state for packing list workflow transitions
+
 2008-06-03 vincentd
 * Add all rights to manager to inventory workflow(Deleted), order_workflow(Deleted, Closed, Cancelled, Open), packing_list_causality_workflow (Building, Solving) and packing_list_workflow(Deleted, Cancelled)
 
