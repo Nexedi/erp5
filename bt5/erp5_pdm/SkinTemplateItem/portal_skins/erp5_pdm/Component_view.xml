@@ -106,6 +106,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
+                        <string>my_resource</string>
                         <string>my_product_line</string>
                         <string>my_quantity_unit_list</string>
                         <string>my_ean13_code</string>

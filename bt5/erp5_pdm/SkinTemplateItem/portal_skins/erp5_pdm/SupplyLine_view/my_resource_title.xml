@@ -374,7 +374,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The title of the product involved</string> </value>
+                    <value> <string>The title of the resource involved</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -467,7 +467,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Product</string> </value>
+                    <value> <string>Resource</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
