@@ -140,7 +140,7 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(packing_list.getSource(), order.getSource())
     self.assertEquals(packing_list.getDestination(), order.getDestination())
     self.assertEquals(packing_list.getDestinationSection(), \
-		                       order.getDestinationSection())
+                                       order.getDestinationSection())
     self.assertEquals(packing_list.getSourceSection(), \
                                        order.getSourceSection())
     self.assertEquals(packing_list.getSourceDecision(), \
