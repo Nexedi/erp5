@@ -409,3 +409,13 @@ class NotificationTool(BaseTool):
       This could change though.
     """
     return self.getPortalEventTypeList()
+
+  def getDocumentValue(self, **kw):
+    """
+      Returns the last version of a Notification Document in selected Language.
+    """
+    method = self._getTypeBasedMethod('getDocumentValue')
+    return method(**kw)
+
+  def __call__(self, *args, **kw):
+    return self.sendMessage(*args, **kw)
