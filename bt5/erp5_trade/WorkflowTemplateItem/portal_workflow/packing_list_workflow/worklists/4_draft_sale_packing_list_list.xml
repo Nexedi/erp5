@@ -21,13 +21,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Packing List to Confirm (%(count)s)</string> </value>
+            <value> <string>Sale Packing List to process (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_packing_list_module?simulation_state=draft&portal_type=Sale+Packing+List&local_roles:list=Owner&reset=1
+sale_packing_list_module/view?simulation_state=draft&portal_type=Sale+Packing+List&local_roles:list=Owner&reset=1
 
 ]]></string> </value>
         </item>

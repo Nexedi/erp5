@@ -21,13 +21,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Purchase Packing List to Deliver (%(count)s)</string> </value>
+            <value> <string>Purchase Packing List to validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_packing_list_module?simulation_state=stopped&portal_type=Purchase+Packing+List&local_roles:list=Assignor&reset=1
+purchase_packing_list_module/view?simulation_state=stopped&portal_type=Purchase+Packing+List&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
