@@ -68,9 +68,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 task_report = state_change[\'object\']\n
+portal = task_report.getPortalObject()\n
 \n
 # get question\n
-history =  context.portal_workflow.getInfoFor(ob=task_report,\n
+history = portal.portal_workflow.getInfoFor(ob=task_report,\n
                                             name=\'history\',\n
                                             wf_id=\'task_report_workflow\',\n
                                             default=())\n
@@ -87,12 +88,14 @@ destination_decision_person = task_report.getDestinationDecisionValue(portal_typ
 if destination_decision_person is None:\n
   destination_decision_person = task_report.getDestinationValue(portal_type="Person")\n
 \n
-# send notification only if the source have a valid email and is a user in the\n
-# system\n
+# We send a message only if the requester have an email and the assignee \n
+# is an user that can view the task report.\n
 if source_person is not None \\\n
       and destination_decision_person is not None\\\n
       and source_person.getDefaultEmailText() \\\n
       and source_person.getReference():\n
+  source_user = portal.portal_membership.getMemberById(source_person.getReference())\n
+  if source_user is not None and source_user.has_permission(\'View\', task_report):\n
     message = """\n
 A question from task has been assigned to you by %(assignor)s.\n
 \n
@@ -118,7 +121,6 @@ Please visit ERP5: %(url)s\n
        \'stop_date\': task_report.getStopDate().Date(),\n
        \'question\' : question,\n
       }\n
-    portal = task_report.getPortalObject()\n
     portal.portal_notifications.sendMessage(sender=destination_decision_person, recipient=source_person,\n
                                           subject="[ERP5 Task] Question to You", message=message)\n
 
@@ -140,6 +142,14 @@ Please visit ERP5: %(url)s\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -169,7 +179,7 @@ Please visit ERP5: %(url)s\n
                             <string>_getitem_</string>
                             <string>task_report</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>portal</string>
                             <string>history</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -180,8 +190,8 @@ Please visit ERP5: %(url)s\n
                             <string>source_person</string>
                             <string>destination_decision_person</string>
                             <string>None</string>
+                            <string>source_user</string>
                             <string>message</string>
-                            <string>portal</string>
                           </tuple>
                         </value>
                     </item>

@@ -68,7 +68,12 @@
             <value> <string>if related_simulation_movement_path_list is None:\n
   raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
 \n
+if REQUEST is not None:\n
+  from zExceptions import Unauthorized\n
+  raise Unauthorized(script.id)\n
+\n
 task_report = context\n
+portal = task_report.getPortalObject()\n
 \n
 # First, copy Order properties\n
 task_report.PackingList_copyOrderProperties()\n
@@ -94,9 +99,16 @@ source_person = task_report.getSourceValue(portal_type="Person")\n
 destination_decision_person = task_report.getDestinationDecisionValue(portal_type="Person")\n
 if destination_decision_person is None:\n
   destination_decision_person = task_report.getDestinationValue(portal_type="Person")\n
-if source_person is not None and destination_decision_person is not None:\n
-  message = """\n
-A new task has been assigned to you by %(assignor)s.\n
+\n
+# We send a message only if the requester have an email and the assignee \n
+# is an user that can view the task report.\n
+if source_person is not None \\\n
+     and destination_decision_person is not None \\\n
+     and destination_decision_person.getDefaultEmailText() \\\n
+     and destination_decision_person.getReference():\n
+  source_user = portal.portal_membership.getMemberById(source_person.getReference())\n
+  if source_user is not None and source_user.has_permission(\'View\', task_report):\n
+    message = """A new task has been assigned to you by %(assignor)s.\n
 \n
 This task is named: %(title)s\n
 \n
@@ -116,11 +128,10 @@ Please wisit ERP5: %(url)s\n
        \'start_date\': task_report.getStartDate().Date(),\n
        \'stop_date\': task_report.getStopDate().Date(),\n
       }\n
-  portal = task_report.getPortalObject()\n
-  portal.portal_notifications.sendMessage(sender=destination_decision_person,\n
-                                          recipient=source_person, \n
-                                          subject="[ERP5 Task] %s" % task_report.getTitle(), \n
-                                           message=message)\n
+    portal.portal_notifications.sendMessage(sender=destination_decision_person,\n
+                                            recipient=source_person, \n
+                                            subject="[ERP5 Task] %s" % task_report.getTitle(), \n
+                                            message=message)\n
 \n
 # Then, modify state\n
 confirm_tag = \'%s_confirm\' % task_report.getPath()\n
@@ -156,7 +167,7 @@ task_report.activate(after_path_and_method_id=(related_simulation_movement_path_
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>related_simulation_movement_path_list=None</string> </value>
+            <value> <string>related_simulation_movement_path_list=None, REQUEST=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -176,23 +187,28 @@ task_report.activate(after_path_and_method_id=(related_simulation_movement_path_
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>related_simulation_movement_path_list</string>
+                            <string>REQUEST</string>
                             <string>None</string>
                             <string>RuntimeError</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
+                            <string>_getattr_</string>
+                            <string>script</string>
                             <string>context</string>
                             <string>task_report</string>
-                            <string>_getattr_</string>
+                            <string>portal</string>
                             <string>related_order</string>
                             <string>source_person</string>
                             <string>destination_decision_person</string>
+                            <string>source_user</string>
                             <string>message</string>
-                            <string>portal</string>
                             <string>confirm_tag</string>
                           </tuple>
                         </value>
@@ -206,6 +222,7 @@ task_report.activate(after_path_and_method_id=(related_simulation_movement_path_
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
