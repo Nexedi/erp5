@@ -36,19 +36,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getPortalType</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>getVatCode</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>isPortalContent</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -66,8 +54,6 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isPortalContent</string>
-<string>getPortalType</string>
 <string>uid</string>
 <string>getCorporateRegistrationCode</string>
 <string>getVatCode</string>
@@ -87,9 +73,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>isPortalContent\r\n
-getPortalType\r\n
-uid\r\n
+            <value> <string>uid\r\n
 getCorporateRegistrationCode\r\n
 getVatCode\r\n
 </string> </value>
@@ -132,40 +116,19 @@ getVatCode\r\n
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let egov_list="[]">\n
-  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isPortalContent[loop_item] and getPortalType[loop_item] in (\'M0\',\n
-                                                                     \'M0 Bis\', \n
-                                                                     \'M2\', \n
-                                                                     \'M2 Bis\', \n
-                                                                     \'M4\', \n
-                                                                     \'P0\', \n
-                                                                     \'P2\', \n
-                                                                     \'P4\', \n
-                                                                     \'S1\', \n
-                                                                     \'S5\', \n
-                                                                     \'Subscription Form\', \n
-                                                                     \'Declaration TVA\',\n
-                                                                     \'Mandate Form\', \n
-                                                                     \'Assignment\',\n
-                                                                     \'Organisation\')">\n
-      <dtml-call expr="egov_list.append(loop_item)">\n
-    </dtml-if>\n
-  </dtml-in>\n
-  <dtml-if expr="_.len(egov_list) > 0">\n
+<dtml-if expr="_.len(_.range(_.len(uid))) > 0">\n
 REPLACE INTO\n
   egov\n
 VALUES\n
-    <dtml-in prefix="loop" expr="egov_list">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getVatCode[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
-    </dtml-in>\n
-  </dtml-if>\n
-</dtml-let>\n
+  </dtml-in>\n
+</dtml-if>\n
 
 
 ]]></string> </value>
@@ -206,40 +169,19 @@ VALUES\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let egov_list="[]">\n
-  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isPortalContent[loop_item] and getPortalType[loop_item] in (\'M0\',\n
-                                                                     \'M0 Bis\', \n
-                                                                     \'M2\', \n
-                                                                     \'M2 Bis\', \n
-                                                                     \'M4\', \n
-                                                                     \'P0\', \n
-                                                                     \'P2\', \n
-                                                                     \'P4\', \n
-                                                                     \'S1\', \n
-                                                                     \'S5\', \n
-                                                                     \'Subscription Form\', \n
-                                                                     \'Declaration TVA\',\n
-                                                                     \'Mandate Form\', \n
-                                                                     \'Assignment\',\n
-                                                                     \'Organisation\')">\n
-      <dtml-call expr="egov_list.append(loop_item)">\n
-    </dtml-if>\n
-  </dtml-in>\n
-  <dtml-if expr="_.len(egov_list) > 0">\n
+<dtml-if expr="_.len(_.range(_.len(uid))) > 0">\n
 REPLACE INTO\n
   egov\n
 VALUES\n
-    <dtml-in prefix="loop" expr="egov_list">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getVatCode[loop_item]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
-    </dtml-in>\n
-  </dtml-if>\n
-</dtml-let>\n
+  </dtml-in>\n
+</dtml-if>\n
 
 
 ]]></string> </value>
