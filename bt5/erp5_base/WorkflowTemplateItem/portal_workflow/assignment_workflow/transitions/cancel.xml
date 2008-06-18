@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Action called to cancel a query</string> </value>
+            <value> <string>transition that will cancel an assignment</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

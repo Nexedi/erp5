@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Action called by a user when marking a query answered</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

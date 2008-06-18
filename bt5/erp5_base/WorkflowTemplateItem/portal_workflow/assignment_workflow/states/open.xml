@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Action that will open the Career</string> </value>
+            <value> <string>Action that will open the assignment</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open</string> </value>
+            <value> <string>open</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

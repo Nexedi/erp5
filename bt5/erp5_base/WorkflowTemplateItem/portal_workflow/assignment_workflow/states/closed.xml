@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>State of a career which has been closed</string> </value>
+            <value> <string>State of an assignment which is not valid anylonger</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

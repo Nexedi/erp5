@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>state of a query which has been cancelled</string> </value>
+            <value> <string>State of an assignment that has been cancelled</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

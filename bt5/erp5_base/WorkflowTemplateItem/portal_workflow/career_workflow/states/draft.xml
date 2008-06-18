@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>default state of a user account, no login and password has been defined</string> </value>
+            <value> <string>Default state of a career just after it has been created</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

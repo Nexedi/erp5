@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Action done by the user that will close the assignment of a person</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

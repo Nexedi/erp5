@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>With this action, the Manager or the Assignor can update the assignment data before reopening it.</string> </value>
+            <value> <string>With this action, the Manager of the Assignor can update the assignment data before reopening it.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

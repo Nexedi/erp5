@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>State of the query after being deleted</string> </value>
+            <value> <string>State of an assignment after being trashed</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
