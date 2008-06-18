@@ -196,6 +196,10 @@ class TestNotificationTool(ERP5TypeTestCase):
       TypeError,
       self.portal.portal_notifications.sendMessage,
     )
+    self.assertRaises(
+      TypeError,
+      self.portal.portal_notifications,
+    )
 
   def stepCheckNotificationWithoutSender(self, sequence=None, 
                                          sequence_list=None, **kw):
