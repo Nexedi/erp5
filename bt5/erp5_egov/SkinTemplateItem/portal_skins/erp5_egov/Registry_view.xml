@@ -77,22 +77,14 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
-                        <string>my_destination_project_title</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_translated_validation_state_title</string>
-                        <string>my_destination_form_title</string>
                       </list>
                     </value>
                 </item>
@@ -100,12 +92,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_title</string>
                         <string>my_corporate_registration_code</string>
-                        <string>my_group</string>
-                        <string>my_activity</string>
-                        <string>my_function</string>
-                        <string>my_site</string>
                       </list>
                     </value>
                 </item>
