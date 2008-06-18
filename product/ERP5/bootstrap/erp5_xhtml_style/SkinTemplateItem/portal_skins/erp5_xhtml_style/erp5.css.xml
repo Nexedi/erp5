@@ -400,6 +400,10 @@ input, textarea, select, button, body, div, span, fieldset {\n
   padding: 0;\n
 }\n
 \n
+div.input > select, div.input > input {\n
+  max-width:320px;\n
+}\n
+\n
 option {\n
   white-space: pre;\n
 }\n
@@ -609,7 +613,6 @@ table.fake tr td {\n
   clear: left;\n
   font-style: italic;\n
   width: 100%;\n
-  overflow: auto;\n
 }\n
 \n
 .content .field .input {\n
