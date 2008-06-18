@@ -142,7 +142,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Tell if there is a unit test or not that check the bug</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
