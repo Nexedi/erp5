@@ -170,6 +170,14 @@ task_report.activate(after_path_and_method_id=(related_simulation_movement_path_
             <value> <string>related_simulation_movement_path_list=None, REQUEST=None</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
