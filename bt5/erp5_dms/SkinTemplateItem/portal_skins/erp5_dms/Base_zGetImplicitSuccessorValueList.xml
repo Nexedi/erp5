@@ -42,7 +42,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>reference_list</string>
+                            <string>reference_list</string>
                           </list>
                         </value>
                     </item>

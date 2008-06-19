@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>State of the document when converted to an open document</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

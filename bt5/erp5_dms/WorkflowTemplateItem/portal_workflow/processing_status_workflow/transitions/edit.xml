@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The document is  being edited</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

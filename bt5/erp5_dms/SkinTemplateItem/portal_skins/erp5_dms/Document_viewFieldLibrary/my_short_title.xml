@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -78,6 +75,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map</string> </value>
+                </item>
+                <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
                 </item>
@@ -92,6 +93,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Short Title</string> </value>
                 </item>
               </dictionary>
             </value>

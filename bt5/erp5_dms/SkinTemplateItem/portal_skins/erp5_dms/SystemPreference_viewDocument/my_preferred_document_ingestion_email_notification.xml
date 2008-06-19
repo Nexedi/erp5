@@ -194,7 +194,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Defined when we need to notify about an ingestion (None, always, if problem)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

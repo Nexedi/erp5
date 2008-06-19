@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -19,8 +16,28 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>A public document. Everyone can access it.</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>public</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Public</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

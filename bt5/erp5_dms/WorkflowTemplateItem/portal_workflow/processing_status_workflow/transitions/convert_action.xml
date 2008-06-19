@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Call this action to convert the document to an open document format</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

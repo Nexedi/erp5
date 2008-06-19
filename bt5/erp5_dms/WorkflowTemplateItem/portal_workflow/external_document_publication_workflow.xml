@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.DCWorkflow</string>
-          <string>DCWorkflowDefinition</string>
-        </tuple>
-        <none/>
+        <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -35,6 +32,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>publication workflow for external document</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
