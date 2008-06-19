@@ -487,6 +487,32 @@ class TestTransactionValidation(AccountingTestCase):
         line.setDestinationAssetDebit(38.99)
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
 
+  def test_NonBalancedDestinationAccountingTransactionNoAccount(self):
+    # Accounting Transactions have to be balanced to be validated,
+    # also for destination
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               resource='currency_module/yen',
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_asset_debit=39,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           destination_asset_credit=38.99,
+                           source_credit=500)))
+    # This is not balanced
+    but there are no accounts on destination
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    for line in transaction.getMovementList():
+      if line.getDestinationId() == 'receivable':
+        line.setDestination(None)
+    # but if there are no accounts defined it's not a problem
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
   def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems

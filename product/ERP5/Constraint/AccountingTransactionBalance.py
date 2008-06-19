@@ -50,8 +50,10 @@ class AccountingTransactionBalance(Constraint):
     destination_sum = 0
     for line in obj.getMovementList(
           portal_type=obj.getPortalAccountingMovementTypeList()):
-      source_sum += line.getSourceInventoriatedTotalAssetPrice() or 0
-      destination_sum += \
+      if line.getSourceValue() is not None:
+        source_sum += line.getSourceInventoriatedTotalAssetPrice() or 0
+      if line.getDestinationValue() is not None:
+        destination_sum += \
           line.getDestinationInventoriatedTotalAssetPrice() or 0
     
     source_section = obj.getSourceSectionValue()
