@@ -34,7 +34,8 @@ from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.Document.Document import PermanentURLMixIn
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
-
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from AccessControl import Unauthorized
 from zLOG import LOG, WARNING
 import sys
 
@@ -176,6 +177,16 @@ class WebSection(Domain, PermanentURLMixIn):
           return getattr(self, custom_render_method_id)()
         # The following could be moved to a typed based method for more flexibility
         document = self.getDefaultDocumentValue()
+        if document is None:
+          # no document found for current user, still such document may exists
+          # in some cases user (like Anonymous) can not view document according to portal catalog
+          # but we may ask him to login if such a document exists
+          isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
+          if isAuthorizationForced is not None and isAuthorizationForced():
+            getDefaultDocumentValue = UnrestrictedMethod(self.getDefaultDocumentValue)
+            if getDefaultDocumentValue() is not None:
+              # force user to login as specified in Web Section
+              raise Unauthorized
         if document is not None:
           self.REQUEST.set('current_web_document', document.__of__(self)) # Used to be document
           self.REQUEST.set('is_web_section_default_document', 1)

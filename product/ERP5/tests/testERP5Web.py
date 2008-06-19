@@ -483,6 +483,52 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     get_transaction().commit()
     self.tic()
     self.assertEqual(web_page_en,   websection.getDefaultDocumentValue())
+    
+  def test_10_WebSectionAuthorizationForcedForDefaultDocument(self, quiet=quiet, run=run_all_test):
+    """ Check that when a Web Section contains a default document not accessible by user we have a chance to 
+        require user to login.
+        Whether or not an user will login is controlled by a property on Web Section (authorization_forced).
+    """
+    if not run:   return
+    if not quiet:  
+      message = '\ntest_10_WebSectionAuthorizationForcedForDefaultDocument'
+      ZopeTestCase._print(message)
+    request = self.app.REQUEST    
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    web_page_reference = 'default-document-reference'
+    web_page_en = self.portal.web_page_module.newContent(
+                                      portal_type = 'Web Page', 
+                                      language = 'en', 
+                                      reference = web_page_reference)
+    # this way it's not viewable by anonymous and we can test 
+    web_page_en.releaseAlive() 
+    websection.setAggregateValue(web_page_en)
+    websection.setAuthorizationForced(1)                                     
+    get_transaction().commit()
+    self.tic()
+    
+    # make sure that getDefaultDocumentValue() will return the same document for logged in user
+    # if default document is accessible
+    self.assertEqual(web_page_en.getUid(), 
+                           websection.getDefaultDocumentValue().getUid())
+                          
+    # check Unauthorized exception is raised for anonymous when authorization_forced is set 
+    self.logout()
+    self.assertEqual(None,  websection.getDefaultDocumentValue()) 
+    self.assertRaises(Unauthorized,  websection)                           
+                          
+    # Anonymous User should not get Unauthorized when authorization_forced is not set
+    self.login()
+    websection.setAuthorizationForced(0)
+    get_transaction().commit()
+    self.tic()
+    self.logout()
+    self.assertEqual(None,  websection.getDefaultDocumentValue())
+    try:
+      websection()
+    except Unauthorized:
+      self.fail("Web Section should not prompt user for login.")
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
