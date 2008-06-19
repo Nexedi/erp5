@@ -380,6 +380,37 @@ class TestScribusUtils(ERP5TypeTestCase):
     form = self.portal.portal_skins.erp5_empty.Empty_view
     self.assertEquals(0, len(form.objectValues()))
 
+  def test_09_creationRadioField(self):
+    '''check it's possible to put a field radioField in ERP5 Form created with
+    scribus.
+       Create a RadioField if possible only when you use ERP5 Form rendering
+       and not graphic rendering
+       RadioField with 3 items : young, adult and senior
+    '''
+    self.portal.ERP5Site_createModuleScribus(
+            module_portal_type="Radio Module",
+            portal_skins_folder="erp5_radio",
+            object_portal_type="Radio",
+            object_title="Radio",
+            module_id="radio_module",
+            module_title="Radio Module Title",
+            import_pdf_file=self.makeFileUpload('test_RadioField.pdf'),
+            import_scribus_file=self.makeFileUpload('test_RadioField.sla'),)
+    self.assertNotEqual(self.portal._getOb('radio_module', None), None)
+    self.assertNotEqual(
+        self.portal.portal_skins._getOb("erp5_radio", None), None)
+    self.assertEquals("Radio Module Title",
+                      self.portal.radio_module.getTitle())
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Radio Module"),
+                        None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo("Radio"), None)
+    form = self.portal.portal_skins.erp5_radio.Radio_view
+    field_radio = form.my_radio
+    self.assertEquals(3,
+                      len(field_radio.get_value('items')))
+    items_list = [('young', 'Young'), ('adult', 'Adult'), ('senior', 'Senior')]
+    self.assertEquals(items_list, field_radio.get_value('items'))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestScribusUtils))

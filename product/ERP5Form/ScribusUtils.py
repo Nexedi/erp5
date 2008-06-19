@@ -1788,8 +1788,8 @@ class ScribusParser:
           # from scribus type (selected in the scribus PDF-form properties)
           object_type = str(object_content['ANTYPE'])
           if object_type == '2':
-            #type 2 = PDF-Button
-            object_properties['type'] = 'Button'
+            #type 2 = PDF-Button : InputButtonField
+            object_properties['type'] = 'InputButtonField'
           elif object_type == '3':
             #type 3 = PDF-Text : Stringfield by default
             object_properties['type'] = 'StringField'
@@ -1879,8 +1879,8 @@ class ScribusParser:
         # object is listbox, and listbox have several possible values
         # WARNING listbox have not been tested in graphic rendering for
         # the moment. is there any use for listbox in PDF-like rendering ?
-        if str(object_properties['type']) == 'ListBox' :
-          # checking if this listbox has different possible values
+        if str(object_properties['type']) in ('ListBox', 'RadioField') :
+          # checking if this listbox and the radioField has different possible values
           object_properties['items'] = \
                 sp.getObjectTooltipProperty('items',
                                             '',
@@ -2141,13 +2141,13 @@ class ScribusParser:
                  properties_field['catalog_index']
       object_dict['attributes']['default_module'] =\
                  properties_field['default_module']
-    # idem : special field concerning RadioField (not tested)
+    # idem : special field concerning RadioField ( tested )
     elif object_dict['erp_type'] == 'RadioField':
       # radio fields have not been tested for the moment
       items = []
-      for word_item in properties_field['item'].split('|'):
+      for word_item in properties_field['items'].split('|'):
         items.append((word_item, word_item.capitalize()))
-      object_dict['attributes'] = items
+      object_dict['attributes']['items'] = items
     #elif object_dict['erp_type'] == 'CheckBoxField':
       # checkboxfield needs to have their field data updated
       # this is not done automatically so it is needed to do
