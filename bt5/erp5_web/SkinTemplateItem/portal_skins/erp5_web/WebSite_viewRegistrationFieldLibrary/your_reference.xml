@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The login used by the user, should be unique</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

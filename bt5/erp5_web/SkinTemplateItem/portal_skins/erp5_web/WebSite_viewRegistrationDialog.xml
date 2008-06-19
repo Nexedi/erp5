@@ -74,7 +74,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>left (User Login)</string> </key>
+                    <key> <string>left (User Login)</string> </key>
                     <value>
                       <list>
                         <string>your_reference</string>
@@ -84,7 +84,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right (User Identity)</string> </key>
+                    <key> <string>right (User Identity)</string> </key>
                     <value>
                       <list>
                         <string>your_first_name</string>

@@ -57,7 +57,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -82,7 +82,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>css_class</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string>page hiddenLabel</string> </value>
                 </item>
                 <item>

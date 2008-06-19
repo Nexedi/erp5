@@ -206,7 +206,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>ID of a page template, script, form or any callable object</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

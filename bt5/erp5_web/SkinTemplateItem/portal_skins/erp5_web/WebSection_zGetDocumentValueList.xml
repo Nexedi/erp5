@@ -65,10 +65,10 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>language</string>
-<string>all_languages</string>
-<string>from_table_list</string>
-<string>where_expression</string>
+                            <string>language</string>
+                            <string>all_languages</string>
+                            <string>from_table_list</string>
+                            <string>where_expression</string>
                           </list>
                         </value>
                     </item>

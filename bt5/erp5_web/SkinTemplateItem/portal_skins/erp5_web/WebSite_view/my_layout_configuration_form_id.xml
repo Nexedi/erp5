@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The ID of a form which can be used to configure layout preferences.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>ID of a page template or form which defines the rendering layout for contents</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

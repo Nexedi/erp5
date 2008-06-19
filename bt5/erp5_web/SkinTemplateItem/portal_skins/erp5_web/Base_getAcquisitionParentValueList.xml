@@ -133,7 +133,7 @@ return result\n
                           <tuple>
                             <string>upper_portal_type</string>
                             <string>result</string>
-<string>context</string>
+                            <string>context</string>
                             <string>document</string>
                             <string>None</string>
                             <string>_getattr_</string>

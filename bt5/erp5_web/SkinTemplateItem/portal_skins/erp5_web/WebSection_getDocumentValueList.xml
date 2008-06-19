@@ -121,7 +121,7 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

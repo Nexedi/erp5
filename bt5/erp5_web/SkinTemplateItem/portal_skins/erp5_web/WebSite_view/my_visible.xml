@@ -144,7 +144,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Defines visibility of current section.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
