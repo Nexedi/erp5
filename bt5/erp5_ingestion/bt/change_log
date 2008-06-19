@@ -1,3 +1,6 @@
+2008-06-19 romain
+* Add missing mime_type base category
+
 2008-06-04 ivan
 * Set correct ingestion order
 
