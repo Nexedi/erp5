@@ -126,7 +126,7 @@ else:\n
 \n
 if failure:\n
   msg = context.Base_translateString(msg)\n
-  return target.Base_redirect(\'WebSite_viewAsSCALE\',\n
+  return target.Base_redirect(\'view\',\n
                               keep_items=dict(portal_status_message=msg,\n
                                               editable_mode=0))\n
 # successful ingestion, show appropriate message\n
