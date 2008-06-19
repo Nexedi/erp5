@@ -76,15 +76,18 @@ if related_order is not None:\n
 tag = packing_list.getPath()+\'_expand\'\n
 activate_kw = {\'tag\':tag,\'priority\':3}\n
 \n
-packing_list.activate(after_path=after_path_list,tag=tag,\n
-    priority=3).updateAppliedRule(rule_id = \'default_delivery_rule\',activate_kw=activate_kw)\n
+packing_list.activate(after_path=after_path_list,\n
+                      tag=tag,\n
+                      priority=3).updateAppliedRule(rule_reference=\'default_delivery_rule\',\n
+                                                    activate_kw=activate_kw)\n
 \n
 \n
 # Make sure to reindex related simulation movement if we are already\n
 # simulated, call reindexObject, not immediateReindexObject so that\n
 # catalogObjectList will be called with many objects\n
-packing_list.activate(after_path=after_path_list,tag=tag,\n
-     priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
+packing_list.activate(after_path=after_path_list,\n
+                      tag=tag,\n
+                      priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
 \n
 packing_list.startBuilding()\n
 packing_list.activate(\n
