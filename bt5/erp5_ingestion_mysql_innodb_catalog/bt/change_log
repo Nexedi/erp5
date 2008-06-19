@@ -1,3 +1,6 @@
+2008-06-19 ivan
+* Drop email table only if it exists
+
 2008-04-17 yusei
 * Revise version to 5.0.
 
