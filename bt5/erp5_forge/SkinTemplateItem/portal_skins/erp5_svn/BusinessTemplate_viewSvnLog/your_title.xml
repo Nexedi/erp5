@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
-        </tuple>
-        <none/>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -221,7 +218,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>File commited</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
