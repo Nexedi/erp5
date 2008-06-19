@@ -110,6 +110,9 @@ if title:\n
   if title.startswith(\'Microsoft Word\'):\n
     # Probably a file generated from MS Word\n
     del result[\'title\']\n
+  elif title==context.getId() and not context.title:\n
+    # this is not a true title, but just an id.\n
+    del result[\'title\']\n
 \n
 return result\n
 </string> </value>
