@@ -126,7 +126,7 @@ AAA=</string> </value>
     </style:style>\n
     <style:style style:name="List" style:family="paragraph" style:parent-style-name="Text_20_body" style:class="list"/>\n
     <style:style style:name="Header" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="extra" style:master-page-name="">\n
-      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" style:page-number="auto" fo:background-color="transparent" style:shadow="none" fo:keep-with-next="always">\n
+      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" fo:text-align="end" style:justify-single-word="false" style:register-true="true" style:page-number="auto" fo:background-color="transparent" style:shadow="none" fo:keep-with-next="always" style:vertical-align="auto">\n
         <style:tab-stops/>\n
         <style:background-image/>\n
       </style:paragraph-properties>\n
@@ -215,6 +215,12 @@ AAA=</string> </value>
     <style:style style:name="Graphics" style:family="graphic">\n
       <style:graphic-properties text:anchor-type="paragraph" svg:x="0cm" svg:y="0cm" style:wrap="dynamic" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="center" style:horizontal-rel="paragraph"/>\n
     </style:style>\n
+    <style:style style:name="Header_20_Image" style:display-name="Header Image" style:family="graphic" style:parent-style-name="Graphics">\n
+      <style:graphic-properties svg:width="9.999cm" svg:height="0.049cm" text:anchor-type="paragraph" svg:x="0cm" svg:y="0cm" fo:margin-left="0cm" fo:margin-right="0cm" style:run-through="foreground" style:wrap="right" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="left" style:horizontal-rel="paragraph" fo:background-color="transparent" style:background-transparency="100%" style:shadow="none">\n
+        <style:background-image/>\n
+        <style:columns fo:column-count="1" fo:column-gap="0cm"/>\n
+      </style:graphic-properties>\n
+    </style:style>\n
     <text:outline-style>\n
       <text:outline-level-style text:level="1" style:num-format="">\n
         <style:list-level-properties text:min-label-distance="0.381cm"/>\n
@@ -252,6 +258,9 @@ AAA=</string> </value>
     <text:linenumbering-configuration text:number-lines="false" text:offset="0.499cm" style:num-format="1" text:number-position="left" text:increment="5"/>\n
   </office:styles>\n
   <office:automatic-styles>\n
+    <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Header_20_Image">\n
+      <style:graphic-properties style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="left" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0cm 0cm 0cm 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>\n
+    </style:style>\n
     <style:page-layout style:name="pm1">\n
       <style:page-layout-properties fo:page-width="21.001cm" fo:page-height="29.7cm" style:num-format="1" style:print-orientation="portrait" fo:margin-top="1cm" fo:margin-bottom="1cm" fo:margin-left="1cm" fo:margin-right="1cm" fo:background-color="transparent" style:writing-mode="lr-tb" style:footnote-max-height="0cm">\n
         <style:background-image/>\n
@@ -271,9 +280,6 @@ AAA=</string> </value>
       <style:header-style/>\n
       <style:footer-style/>\n
     </style:page-layout>\n
-    <number:number-style style:name="N0">\n
-      <number:number number:min-integer-digits="1"/>\n
-    </number:number-style>\n
   </office:automatic-styles>\n
   <office:master-styles>\n
     <style:master-page style:name="Standard" style:page-layout-name="pm1">\n
@@ -286,10 +292,17 @@ AAA=</string> </value>
                     orig_of string:of;\n
                     en_of python: unicode(here.Base_translateString(orig_of, lang=\'en\'), \'utf-8\');\n
                     my_of python: unicode(here.Base_translateString(orig_of), \'utf-8\');\n
-                    image_path python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_path\'] or data_dict[\'source_decision_image_path\']">\n
-        <text:p>\n
+                    image_path python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_path\'] or data_dict[\'source_decision_image_path\'];\n
+                    image_width python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_width\'] or data_dict[\'source_decision_image_width\'];\n
+                    image_height python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_height\'] or data_dict[\'source_decision_image_height\']">\n
+        <text:p text:style-name="Header">\n
           <office:include_img tal:condition="image_path"\n
-                              tal:attributes="path image_path"/>\n
+                              tal:attributes="path image_path;\n
+                                              draw:style-name string:fr1;\n
+                                              draw:z-index string:0;\n
+                                              text:anchor-type string:paragraph;\n
+                                              width image_width;\n
+                                              height image_height"/>\n
         </text:p>\n
         <text:p text:style-name="Header"\n
                 tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_title\'] or data_dict[\'source_decision_title\']">\n
