@@ -118,7 +118,7 @@ if resource_list:\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>resource_list</string>
                             <string>_getitem_</string>
                           </tuple>

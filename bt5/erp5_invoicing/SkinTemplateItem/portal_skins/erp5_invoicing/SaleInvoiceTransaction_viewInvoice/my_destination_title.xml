@@ -98,6 +98,10 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Recipient or Beneficiary of the invoice</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_destination_title</string> </value>
                 </item>
@@ -108,6 +112,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Recipient or Beneficiary</string> </value>
                 </item>
               </dictionary>
             </value>

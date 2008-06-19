@@ -123,7 +123,7 @@ return True\n
                         <value>
                           <tuple>
                             <string>rule</string>
-<string>context</string>
+                            <string>context</string>
                             <string>movement</string>
                             <string>_getattr_</string>
                             <string>parent</string>
