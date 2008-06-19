@@ -683,9 +683,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_02_PackingListChangeDestination(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -704,9 +701,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_03_PackingListChangeStartDate(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -725,9 +719,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_04_PackingListDeleteLine(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -744,9 +735,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_05_SimulationChangeQuantity(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -766,9 +754,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_06_SimulationChangeStartDate(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -788,9 +773,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_07_SimulationChangeStartDateWithTwoOrderLine(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -812,9 +794,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_08_AddContainers(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
@@ -834,9 +813,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
   def test_09_AddContainersWithVariatedResources(self, quiet=quiet, run=run_all_test):
-    """
-      Test generation of delivery list
-    """
     if not run: return
     sequence_list = SequenceList()
 
