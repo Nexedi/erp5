@@ -155,6 +155,8 @@ class TestPDFFormButtons(unittest.TestCase):
     # XXX for debugging:
     # file('/tmp/out.pdf', 'w').write(self.pdf_form())
     # os.system('xpdf /tmp/out.pdf')
+    # os.system('kpdf /tmp/out.pdf')
+    # os.system('acroread /tmp/out.pdf')
 
 
 def test_suite():

@@ -38,7 +38,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 
 from zLOG import LOG, PROBLEM, WARNING
-
 import types
 import popen2
 import os
@@ -87,7 +86,7 @@ class PDFTk:
 
   def fillFormWithDict(self, pdfFile, values) :
     """ fill the form with values in """
-    return self.fillFormWithFDF(pdfFile, self._createFdf(values))
+    return self.fillFormWithFDF(pdfFile, self._createFdf(pdfFile, values))
 
   def fillFormWithFDF(self, pdfFile, fdfFile) :
     """ fill the form of pdfFile with the FDF data fdfFile """
@@ -178,20 +177,32 @@ class PDFTk:
         escaped += c
     return escaped
 
-  def _createFdf(self, values, pdfFormUrl=None) :
+  def _createFdf(self, pdfFile, values, pdfFormUrl=None) :
     """ create an fdf document with the dict values """
+    fields = self.dumpDataFields(pdfFile)
     fdf = "%FDF-1.2\x0d%\xe2\xe3\xcf\xd3\x0d\x0a"
     fdf += "1 0 obj\x0d<< \x0d/FDF << /Fields [ "
-    for key, value in values.items():
-      if 0: # if the field is a check box
-            # ... but this is not working yet
-        fdf += "<< /V /%s\n/T (%s)>> \x0d" % (
-             value and 'Yes' or 'Off',
-             self._escapeString(key),)
+    for field in fields:
+      # if the field is a check box
+      if field.get('FieldType') == 'Button' and  \
+         field.get('FieldStateOption') in ('Yes','Off'):
+        # if the check box is check
+        fdf += "<< /Ft /%s\n/V /%s\n/T(%s)>> \x0d" % (
+            'Btn',
+            values.get(field.get('FieldName')) and 'Yes' or 'Off',
+            self._escapeString(field.get('FieldName')))
+      # if the field is a Input Button
+      # ... but this is not working yet
+      # so there is a Warning
+      elif field.get('FieldType') == 'Button' and  \
+           field.get('FieldStateOption') is None:
+        LOG("Field " + field.get('FieldName'),
+             WARNING,
+             "can't be returned in PDF file")
       else:
         fdf += "<</V (%s) /T (%s) /ClrF 2 /ClrFf 1 >> \x0d" % (
-           self._escapeString(value),
-           self._escapeString(key))
+           self._escapeString(values.get(field.get('FieldName'))),
+           self._escapeString(field.get('FieldName')))
 
     fdf += "] \x0d"
 
@@ -199,7 +210,7 @@ class PDFTk:
     if pdfFormUrl not in ("", None) :
       fdf += "/F ("+self._escapeString(pdfFormUrl)+") \x0d"
 
-    fdf += ">> \x0d>> \x0dendobj\x0d";
+    fdf += ">> \x0d>> \x0dendobj\x0d"
     fdf += "trailer\x0d<<\x0d/Root 1 0 R \x0d\x0d>>\x0d%%EOF\x0d\x0a"
     return fdf
 
