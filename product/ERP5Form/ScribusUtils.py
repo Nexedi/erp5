@@ -1879,10 +1879,22 @@ class ScribusParser:
         # object is listbox, and listbox have several possible values
         # WARNING listbox have not been tested in graphic rendering for
         # the moment. is there any use for listbox in PDF-like rendering ?
-        if str(object_properties['type']) in ('ListBox', 'RadioField') :
+        if str(object_properties['type']) == 'ListBox':
           # checking if this listbox and the radioField has different possible values
           object_properties['items'] = \
                 sp.getObjectTooltipProperty('items',
+                                            '',
+                                            object_name,
+                                            tooltipfield_properties_dict)
+        if str(object_properties['type']) == 'RadioField':
+          # checking if the radioField has different possible values
+          object_properties['items'] = \
+                sp.getObjectTooltipProperty('items',
+                                            '',
+                                            object_name,
+                                            tooltipfield_properties_dict)
+          object_properties['orientation'] = \
+                sp.getObjectTooltipProperty('orientation',
                                             '',
                                             object_name,
                                             tooltipfield_properties_dict)
@@ -2148,6 +2160,8 @@ class ScribusParser:
       for word_item in properties_field['items'].split('|'):
         items.append((word_item, word_item.capitalize()))
       object_dict['attributes']['items'] = items
+      object_dict['attributes']['orientation'] = \
+         properties_field['orientation']
     #elif object_dict['erp_type'] == 'CheckBoxField':
       # checkboxfield needs to have their field data updated
       # this is not done automatically so it is needed to do
