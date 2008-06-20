@@ -87,9 +87,7 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     bt_list = []
     for bt in self.getDocumentedObject().portal_templates.objectValues():
       current_state = ''
-      for wh in bt.workflow_history['business_template_installation_workflow']:
-        current_state = wh['installation_state']
-      if current_state == 'installed':
+      if bt.getInstallationState() == 'installed':
         bt_list.append(bt.getId())
     return bt_list
 
