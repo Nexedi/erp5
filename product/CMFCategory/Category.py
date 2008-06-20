@@ -175,17 +175,29 @@ class Category(Folder):
         logical_title_list.append(logical_title)
       return '/'.join(logical_title_list)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTranslatedLogicalPath')
     def getTranslatedLogicalPath(self):
       """
         Returns translated logical path, started under base category.
       """
       return self.getLogicalPath(item_method='getTranslatedTitle')
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getCompactLogicalPath')
     def getCompactLogicalPath(self):
       """
         Returns compact logical path, started under base category.
       """
       return self.getLogicalPath(item_method='getCompactTitle')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTranslatedCompactLogicalPath')
+    def getTranslatedCompactLogicalPath(self):
+      """
+        Returns translated compact logical path, started under base category.
+      """
+      return self.getLogicalPath(item_method='getCompactTranslatedTitle')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getIndentedTitle')
@@ -248,9 +260,25 @@ class Category(Folder):
                                                     'getTranslatedIndentedTitle')
     def getTranslatedIndentedTitle(self):
       """
-        Returns translated logical path, started under base category.
+        Returns translated indented title, started under base category.
       """
       return self.getIndentedTitle(item_method='getTranslatedTitle')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getIndentedCompactTitle')
+    def getIndentedCompactTitle(self):
+      """
+        Returns indented compact title, started under base category.
+      """
+      return self.getIndentedTitle(item_method='getCompactTitle')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTranslatedIndentedCompactTitle')
+    def getTranslatedIndentedCompactTitle(self):
+      """
+        Returns translated indented compact title, started under base category.
+      """
+      return self.getIndentedTitle(item_method='getCompactTranslatedTitle')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
@@ -443,6 +471,18 @@ class Category(Folder):
                        display_id='translated_logical_path', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                             'getCategoryChildTranslatedCompactLogicalPathItemList')
+    def getCategoryChildTranslatedCompactLogicalPathItemList(self,
+                                                             recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getLogicalPath as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+                                           display_id='translated_compact_logical_path',
+                                           base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                              'getCategoryChildCompactLogicalPathItemList')
     def getCategoryChildCompactLogicalPathItemList(self,
                                                    recursive=1, base=0, **kw):
@@ -486,6 +526,28 @@ class Category(Folder):
       """
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='translated_indented_title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getCategoryChildIndentedCompactTitleItemList')
+    def getCategoryChildIndentedCompactTitleItemList(self,
+                                              recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getIndentedTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+          display_id='indented_compact_title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getCategoryChildTranslatedIndentedCompactTitleItemList')
+    def getCategoryChildTranslatedIndentedCompactTitleItemList(self,
+                                              recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getIndentedTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive=recursive,
+          display_id='translated_indented_compact_title', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                               'getCategoryChildIdItemList')
