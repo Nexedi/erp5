@@ -82,7 +82,7 @@ if getattr(context, \'asText\', None) is not None and \\\n
     document_text = context.asText()\n
   else:\n
     # document not converted (due to a conversion error), return message to user\n
-    return context.Base_translateString(\'Document is not converted.\')\n
+    return context.Base_translateString(\'Document is not converted or missing content.\')\n
 \n
 # get search words from listbox selection\n
 argument_names = (\'advanced_search_text\', \n
