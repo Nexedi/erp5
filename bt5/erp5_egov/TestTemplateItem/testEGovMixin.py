@@ -29,6 +29,7 @@ from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from AccessControl.SecurityManagement import getSecurityManager
+from Products.ERP5Type.tests.utils import DummyMailHost
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 
@@ -74,6 +75,12 @@ class TestEGovMixin(SecurityTestCase):
       Method called before the launch of the test to initialize some data
     """
     self.createManagerAndLogin()
+
+    # add a dummy mailhost not to send real messages
+    if 'MailHost' in self.portal.objectIds():
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
     # remove all message in the message_table because
     # the previous test might have failed
     message_list = self.getPortal().portal_activities.getMessageList()
