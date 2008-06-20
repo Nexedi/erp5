@@ -64,8 +64,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name,
   person_object = person_object_list[0].getObject()
   
   # We look for every valid assignments of this user
-  assignment_list = person_object.contentValues(filter={
-                                               'portal_type':'Assignment'})
+  assignment_list = person_object.contentValues(filter={'portal_type':'Assignment'})
   for assignment in assignment_list:
     if assignment.getValidationState() == 'open':
       category_dict = {}
