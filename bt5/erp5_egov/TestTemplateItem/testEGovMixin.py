@@ -176,9 +176,9 @@ class TestEGovMixin(SecurityTestCase):
     module = self.getOrganisationModule()
     if len(module.getObjectIds()) == 0:
       self.createOneOrganisation(self.organisation_1_login, 
-          role='registry/entreprise')
+          role='entreprise/siege')
       self.createOneOrganisation(self.organisation_2_login, 
-          role='registry/entreprise')
+          role='entreprise/siege')
 
       # make this available to catalog
       get_transaction().commit()
