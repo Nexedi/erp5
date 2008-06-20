@@ -65,43 +65,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns a list of function wich are defined in the subordinated organisation if any\n
-  and extend it with all possible functions.\n
-"""\n
+            <value> <string>default_method_name = \'getCategoryChildTranslatedCompactLogicalPathItemList\'\n
+method_name = context.portal_preferences.getPreference(\'preferred_category_child_item_list_method_id\', default=default_method_name)\n
 \n
-portal = context.getPortalObject()\n
-category_child_item_list_method_id = portal.portal_preferences.getPreference(\n
-                        \'preferred_category_child_item_list_method_id\',\n
-                        \'getCategoryChildTranslatedCompactLogicalPathItemList\')\n
+if not translate:\n
+  method_name = method_name.replace(\'Translated\', \'\')\n
 \n
-if \'Translated\' in category_child_item_list_method_id:\n
-  if \'Compact\' in category_child_item_list_method_id:\n
+if translate:\n
+  if \'Compact\' in method_name:\n
     local_sort_id_list = (\'int_index\', \'translated_short_title\')\n
   else:\n
     local_sort_id_list = (\'int_index\', \'translated_title\')\n
 else:\n
-  if \'Compact\' in category_child_item_list_method_id:\n
+  if \'Compact\' in method_name:\n
     local_sort_id_list = (\'int_index\', \'short_title\')\n
   else:\n
     local_sort_id_list = (\'int_index\', \'title\')\n
 \n
-result = []\n
+method = getattr(base_category, method_name)\n
 \n
-if context.getSubordination():\n
-  subordination_value = context.getSubordinationValue()\n
-  if subordination_value is not None:\n
-    function_value = subordination_value.getFunctionValue()\n
-    if function_value is not None:\n
-      result.extend(getattr(function_value, category_child_item_list_method_id)(\n
-                    filter_node=1, local_sort_id=local_sort_id_list))\n
-\n
-result.extend(getattr(\n
-         portal.portal_categories.function,\n
-         category_child_item_list_method_id)(\n
-              filter_node=1, local_sort_id=local_sort_id_list))\n
-\n
-return result\n
+return method(local_sort_id=local_sort_id_list, checked_permission=\'View\', **kw)\n
 </string> </value>
         </item>
         <item>
@@ -118,7 +101,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>base_category, translate=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -138,22 +121,23 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>base_category</string>
+                            <string>translate</string>
+                            <string>kw</string>
+                            <string>default_method_name</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>category_child_item_list_method_id</string>
+                            <string>method_name</string>
                             <string>local_sort_id_list</string>
-                            <string>result</string>
-                            <string>subordination_value</string>
-                            <string>None</string>
-                            <string>function_value</string>
                             <string>getattr</string>
+                            <string>method</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -165,12 +149,14 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Career_getFunctionItemList</string> </value>
+            <value> <string>Base_getPreferredCategoryChildItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
