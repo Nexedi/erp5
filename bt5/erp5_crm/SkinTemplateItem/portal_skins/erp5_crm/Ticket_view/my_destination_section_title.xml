@@ -153,6 +153,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>defined to whi the invoice will be sent</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>

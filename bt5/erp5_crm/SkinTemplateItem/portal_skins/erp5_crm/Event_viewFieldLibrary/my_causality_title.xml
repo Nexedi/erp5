@@ -155,6 +155,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Title of the document which is at the origin of the event</string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>

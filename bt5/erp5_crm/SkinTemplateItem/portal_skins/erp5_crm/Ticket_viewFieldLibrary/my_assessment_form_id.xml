@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -95,6 +92,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The ID of a form which can be used to assess related events.</string> </value>
+                </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>

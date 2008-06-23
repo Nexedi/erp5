@@ -228,7 +228,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Content of the event</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

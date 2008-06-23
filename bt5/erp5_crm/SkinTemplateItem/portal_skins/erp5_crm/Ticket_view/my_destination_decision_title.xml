@@ -153,6 +153,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Tell who requested the ticket</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>

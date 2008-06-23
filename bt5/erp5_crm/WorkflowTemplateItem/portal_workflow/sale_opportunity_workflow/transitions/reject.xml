@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Declare the last offer related to a sale opportunity as rejected by the customer</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

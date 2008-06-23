@@ -123,7 +123,7 @@ else:\n
                             <string>Products.PythonScripts.standard</string>
                             <string>newline_to_br</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>text_format</string>
                             <string>value</string>
                           </tuple>

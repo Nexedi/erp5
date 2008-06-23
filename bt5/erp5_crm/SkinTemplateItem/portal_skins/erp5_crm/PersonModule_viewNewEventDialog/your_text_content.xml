@@ -109,6 +109,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>content of the event</string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>

@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Validate a Sale Opportunity and start the opportunity processing.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>validate</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

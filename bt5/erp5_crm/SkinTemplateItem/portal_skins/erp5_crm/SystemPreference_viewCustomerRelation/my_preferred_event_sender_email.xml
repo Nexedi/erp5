@@ -208,7 +208,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Preferred email for replies sent through the CRM system.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

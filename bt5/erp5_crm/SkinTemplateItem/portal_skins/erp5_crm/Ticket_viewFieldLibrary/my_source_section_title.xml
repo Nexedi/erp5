@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -87,6 +84,10 @@
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>defined who will provide the bill</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

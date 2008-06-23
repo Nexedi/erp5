@@ -116,7 +116,7 @@ except UnicodeDecodeError:\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>text</string>
                             <string>LENGTH</string>
                             <string>_getitem_</string>
