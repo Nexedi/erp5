@@ -421,6 +421,7 @@ class TestERP5BankingMixin:
     self.emission_letter_p = self.emission_letter_base_category.newContent(id='p', portal_type='Category')
     self.emission_letter_s = self.emission_letter_base_category.newContent(id='s', portal_type='Category')
     self.emission_letter_b = self.emission_letter_base_category.newContent(id='b', portal_type='Category')
+    self.emission_letter_k = self.emission_letter_base_category.newContent(id='k', portal_type='Category')
     self.emission_letter_mixed = self.emission_letter_base_category.newContent(id='mixed', portal_type='Category')
     self.emission_letter_not_defined = self.emission_letter_base_category.newContent(id='not_defined', portal_type='Category')
 
@@ -545,15 +546,23 @@ class TestERP5BankingMixin:
     self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST')
     created_site_list = []
     if len(site_list) != 0:
-      if 'paris' in site_list:
-        self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
-        created_site_list.append(self.paris)
-      if 'madrid' in site_list:
-        self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
-        created_site_list.append(self.madrid)
-      if 'siege' in site_list:
-        self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
-        created_site_list.append(self.siege)
+      for site in site_list:
+        if isinstance(site, tuple):
+          codification = site[1]
+          site = site[0]
+        if site == "paris":
+          self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
+          created_site_list.append(self.paris)
+        elif site == 'madrid' :
+          self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
+          created_site_list.append(self.madrid)
+        elif site == 'siege':        
+          self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+          created_site_list.append(self.siege)
+        else:
+          site = self.site_base_category.newContent(id=site, portal_type='Category',  codification=codification, vault_type='site')
+          created_site_list.append(site)
+          
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
     site_vault_type = self.vault_type_base_category.newContent(id='site')
     surface_vault_type = site_vault_type.newContent('surface')
@@ -663,6 +672,8 @@ class TestERP5BankingMixin:
         self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
       if 'siege' not in site_list:
         self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+
+    return created_site_list
 
   def _openDate(self, date=None, site=None, id=None, open=True, container=None, 
                 portal_type=None, force_check=0):
