@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -119,7 +119,7 @@
                     <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>balance_transaction_line_selection</string> </value>
                 </item>
                 <item>

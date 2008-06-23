@@ -77,8 +77,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
-                    <value> <string>The name of the account</string> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The name of the Account</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -89,7 +89,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>required</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -97,7 +97,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Account Name</string> </value>
                 </item>
               </dictionary>

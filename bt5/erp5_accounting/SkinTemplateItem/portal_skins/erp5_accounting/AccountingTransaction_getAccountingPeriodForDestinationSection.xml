@@ -132,7 +132,7 @@ if section is not None:\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>operation_date</string>
                             <string>None</string>
                             <string>section</string>

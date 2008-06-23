@@ -78,12 +78,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string>source_section</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -94,7 +98,7 @@
                     <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>parameter_list</string> </key>
+                    <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -104,7 +108,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Source Section</string> </value>
                 </item>
               </dictionary>

@@ -69,7 +69,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -80,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
 The Financial Section for this account.\n
@@ -102,7 +102,7 @@ Used in some reports (Profit & Loss, Balance Sheet)  and budget.
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Financial Section</string> </value>
                 </item>
               </dictionary>

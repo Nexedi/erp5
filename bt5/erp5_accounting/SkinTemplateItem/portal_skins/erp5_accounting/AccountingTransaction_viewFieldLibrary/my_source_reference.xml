@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>the accountant transaction reference of the sale</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

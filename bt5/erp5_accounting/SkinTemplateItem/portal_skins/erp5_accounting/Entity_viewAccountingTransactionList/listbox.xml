@@ -116,7 +116,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -175,13 +175,13 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>default_params</string> </key>
+                    <key> <string>default_params</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>domain_root_list</string> </key>
+                    <key> <string>domain_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -192,11 +192,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>domain_tree</string> </key>
+                    <key> <string>domain_tree</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -243,7 +243,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
@@ -253,7 +253,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -288,11 +288,11 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>entity_transaction_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort</string> </key>
+                    <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -307,7 +307,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>sort_columns</string> </key>
+                    <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -318,7 +318,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>stat_columns</string> </key>
+                    <key> <string>stat_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -337,7 +337,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>stat_method</string> </key>
+                    <key> <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
@@ -347,11 +347,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Transactions Related To This Entity</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>url_columns</string> </key>
+                    <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
                     </value>

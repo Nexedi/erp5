@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>A short identifier for this accounting period. This will be used to generate references in accounting transactions.</string> </value>
                 </item>
                 <item>
@@ -92,7 +92,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Short Title</string> </value>
                 </item>
               </dictionary>

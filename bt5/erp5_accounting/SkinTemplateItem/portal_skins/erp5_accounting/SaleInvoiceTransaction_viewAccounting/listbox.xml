@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -103,7 +103,7 @@
                     <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>sale_invoice_transaction_line_selection</string> </value>
                 </item>
                 <item>

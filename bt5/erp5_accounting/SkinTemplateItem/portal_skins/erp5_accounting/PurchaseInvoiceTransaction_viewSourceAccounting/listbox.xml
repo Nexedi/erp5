@@ -83,7 +83,7 @@
                     <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>purchase_invoice_transaction_source_selection</string> </value>
                 </item>
                 <item>

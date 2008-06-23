@@ -76,8 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
-                    <value> <string>The description of the accounting transaction.</string> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>General description which may be printed out on official documents and read by suppliers and clients.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -92,7 +92,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>whitespace_preserve</string> </key>
+                    <key> <string>title</string> </key>
+                    <value> <string>Description</string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
               </dictionary>

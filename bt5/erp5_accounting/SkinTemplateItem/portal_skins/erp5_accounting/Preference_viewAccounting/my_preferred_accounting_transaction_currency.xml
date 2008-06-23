@@ -75,7 +75,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The default currency when creating new transactions.</string> </value>
                 </item>
                 <item>
@@ -89,6 +89,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Currency</string> </value>
                 </item>
               </dictionary>
             </value>

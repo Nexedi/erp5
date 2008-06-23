@@ -57,7 +57,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -73,7 +73,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -84,7 +84,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The type of the account.\n
 \n
 This category defines how the account will behave. For instance Payable or Receivable accounts will need to be used with a third party.</string> </value>
@@ -108,7 +108,7 @@ This category defines how the account will behave. For instance Payable or Recei
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Account Type</string> </value>
                 </item>
               </dictionary>

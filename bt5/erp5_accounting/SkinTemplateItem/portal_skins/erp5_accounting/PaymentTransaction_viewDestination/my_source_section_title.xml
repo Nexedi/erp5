@@ -85,6 +85,10 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Third party to who is the transaction associated</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_source_section_title</string> </value>
                 </item>

@@ -75,6 +75,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The reference of the transaction for the third party</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_destination_reference</string> </value>
                 </item>
@@ -88,7 +92,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Third Party Transaction Reference</string> </value>
+                    <value> <string>Third Party Reference</string> </value>
                 </item>
               </dictionary>
             </value>
