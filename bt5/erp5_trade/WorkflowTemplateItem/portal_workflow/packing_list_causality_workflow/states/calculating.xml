@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>calculating if packing list is divergent or not</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -47,6 +47,12 @@
                 <string>split_prevision_action</string>
                 <string>start_building</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>

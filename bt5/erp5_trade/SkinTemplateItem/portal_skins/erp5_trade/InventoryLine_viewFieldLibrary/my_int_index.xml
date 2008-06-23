@@ -80,6 +80,10 @@
                     <value> <string>figure</string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>index used to sort document</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_integer_value</string> </value>
                 </item>

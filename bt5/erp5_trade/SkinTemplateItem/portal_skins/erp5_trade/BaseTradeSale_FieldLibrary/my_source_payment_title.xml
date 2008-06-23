@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The organisation or person who pays.</string> </value>
+                    <value> <string>The organisation or person in charge of receiving the payment for the supplier.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

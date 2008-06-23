@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The person or organisation which the invoice should be sent to and who is in charhe handling administrative paperwork for the client.</string> </value>
+                    <value> <string>The person or organisation which the invoice should be sent to and who is in charge of handling administrative paperwork for the client.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

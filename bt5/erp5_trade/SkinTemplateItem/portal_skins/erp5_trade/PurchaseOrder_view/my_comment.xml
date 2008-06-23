@@ -115,6 +115,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Comments which can be read by internal users but which, unlike description, are not printed out on official documents.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -127,6 +131,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>PurchaseOrder_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Comments</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -222,7 +222,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>General description which may be printed out on official documents and read by suppliers and clients.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

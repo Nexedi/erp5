@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>mark inventory as delivered, can no longer be modified after</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

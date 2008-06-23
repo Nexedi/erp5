@@ -73,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>General description which may be printed out on official documents and read by suppliers and clients.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -85,6 +89,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>PaymentCondition_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Description</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -73,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The person or organisation which the invoice should be sent to and who is in charge of handling administrative paperwork for the client.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_destination_administration_title</string> </value>
                 </item>
@@ -83,6 +87,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Invoice Recipient</string> </value>
                 </item>
               </dictionary>
             </value>

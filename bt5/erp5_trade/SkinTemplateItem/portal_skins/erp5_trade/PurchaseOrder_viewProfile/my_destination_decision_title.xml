@@ -109,6 +109,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The person or organisation in charge of selecting the supplier or taking the decision to place the order.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -121,6 +125,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>PurchaseTradeCondition_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Buyer</string> </value>
                 </item>
               </dictionary>
             </value>

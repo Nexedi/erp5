@@ -198,7 +198,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The percentage of the total price.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Ratio</string> </value>
+                    <value> <string>Percentage of Total</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

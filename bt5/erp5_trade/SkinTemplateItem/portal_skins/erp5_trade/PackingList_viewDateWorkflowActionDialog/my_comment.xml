@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>TextAreaField</string>
-        </tuple>
-        <none/>
+        <global name="TextAreaField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -221,7 +218,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Comments which can be read by internal users but which, unlike description, are not printed out on official documents.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -265,7 +262,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Comment</string> </value>
+                    <value> <string>Comments</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

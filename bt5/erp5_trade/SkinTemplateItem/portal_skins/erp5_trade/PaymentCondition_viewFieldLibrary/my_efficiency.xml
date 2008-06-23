@@ -92,7 +92,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Percentage of the total price. This is exclusive with the "Total" field.</string> </value>
+                    <value> <string>The percentage of the total price.</string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -112,7 +112,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Ratio</string> </value>
+                    <value> <string>Percentage of Total</string> </value>
                 </item>
               </dictionary>
             </value>

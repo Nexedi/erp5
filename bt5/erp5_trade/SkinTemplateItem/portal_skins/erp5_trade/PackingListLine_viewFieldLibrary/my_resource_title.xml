@@ -89,6 +89,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The product or service which is traded.</string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -105,6 +109,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>OrderLine_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Product or Service</string> </value>
                 </item>
               </dictionary>
             </value>

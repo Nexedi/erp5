@@ -115,8 +115,8 @@ return context.Order_viewAsODT(format=format)\n
                             <string>format</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
-<string>container</string>
-<string>context</string>
+                            <string>container</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

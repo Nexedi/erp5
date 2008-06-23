@@ -210,7 +210,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>he amortisation method used for this particular immobilisation period</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

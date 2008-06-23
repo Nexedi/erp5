@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Workflow use to compute if packing is divergent from orders or not</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

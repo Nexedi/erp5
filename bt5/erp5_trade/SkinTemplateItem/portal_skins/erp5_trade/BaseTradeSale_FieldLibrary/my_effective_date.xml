@@ -262,7 +262,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The date from which the offer is valid.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

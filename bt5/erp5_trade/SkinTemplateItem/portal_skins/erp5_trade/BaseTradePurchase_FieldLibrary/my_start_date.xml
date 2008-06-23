@@ -262,7 +262,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The date at which products were shipped or the date at which a service started.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

@@ -73,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>If set, payment will occur at the end of the month of the payment term.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_payment_end_of_month</string> </value>
                 </item>
@@ -83,6 +87,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>End of Month</string> </value>
                 </item>
               </dictionary>
             </value>

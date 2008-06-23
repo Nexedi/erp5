@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Order that are planned to be sent to a supplier or planned to be received from a customer. The order is not sure</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

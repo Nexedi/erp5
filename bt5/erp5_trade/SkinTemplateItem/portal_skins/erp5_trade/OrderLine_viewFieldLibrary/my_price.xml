@@ -86,6 +86,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The unit price at which a product or service is traded. This price is a net price which has been applied all pricing conditions defined in supply documents.</string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -103,7 +107,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Unit Price</string> </value>
+                    <value> <string>Price</string> </value>
                 </item>
               </dictionary>
             </value>

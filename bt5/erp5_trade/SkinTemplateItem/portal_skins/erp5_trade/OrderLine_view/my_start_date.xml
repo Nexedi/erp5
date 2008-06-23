@@ -73,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The date at which products were shipped or the date at which a service started.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -85,6 +89,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>OrderLine_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Shipping Date</string> </value>
                 </item>
               </dictionary>
             </value>

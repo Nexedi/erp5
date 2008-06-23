@@ -79,6 +79,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The person or organisation in charge of handling the sales process or of taking the sales decision.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -91,6 +95,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>PurchasePackingList_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Seller</string> </value>
                 </item>
               </dictionary>
             </value>
