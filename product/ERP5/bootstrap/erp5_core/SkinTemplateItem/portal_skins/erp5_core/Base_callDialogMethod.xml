@@ -203,7 +203,7 @@ if len(listbox_id_list):\n
   can_redirect = 0\n
   # Warn if there are more than one listbox in form ...\n
   if len(listbox_id_list) > 1:\n
-    log(\'Base_callDialogMethod\', \'There are %s listboxes in form %s.\' % (len(listbox_id_list), form.id))\n
+    context.log(\'Base_callDialogMethod\', \'There are %s listboxes in form %s.\' % (len(listbox_id_list), form.id))\n
   # ... but handle them anyway.\n
   for listbox_id in listbox_id_list:\n
     listbox_line_list = []\n
