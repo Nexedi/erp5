@@ -92,6 +92,7 @@ class Organisation(XMLObject):
                       , PropertySheet.Mapping
                       , PropertySheet.Task
                       , PropertySheet.Reference
+                      , PropertySheet.PSJ_Form
                       )
 
 
