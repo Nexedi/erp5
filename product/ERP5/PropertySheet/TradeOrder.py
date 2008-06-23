@@ -91,6 +91,6 @@ class TradeOrder:
       'description'   : 'Stop Date must be after Start Date',
       'type'          : 'TALESConstraint',
       'expression'    : 'python: object.getStopDate() >= object.getStartDate()',
-      'message_expression_false': 'Stop Date must be after Start Date',
+      'message_expression_false': 'Delivery Date must be after Shipping Date',
     },
   )
