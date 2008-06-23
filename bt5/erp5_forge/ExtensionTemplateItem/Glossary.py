@@ -84,3 +84,12 @@ class MyDummyTALInterpreter(TALInterpreter):
       self._i18n_message_id_dict = {msgid:None}
 
     return TALInterpreter.translate(self, msgid, default, i18ndict, obj)
+
+
+from Products.DCWorkflow.Transitions import TransitionDefinition
+def setGuard(self, guard):
+  if isinstance(self, TransitionDefinition):
+    self.guard = guard
+  else:
+    raise ValueError, "not a TransitionDefinition"
+

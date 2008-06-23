@@ -92,6 +92,7 @@ for i in kw.keys():\n
     wf_item.setProperties(term.getTitle(), description=term.getDescription(),\n
         transitions=wf_item.transitions, type_list=wf_item.type_list)\n
   else: # wf_item.meta_type == "Workflow Transition"\n
+    guard = getattr(wf_item, \'guard\', None)\n
     if not is_action:\n
       wf_item.setProperties(\n
           term.getTitle(),\n
@@ -103,7 +104,7 @@ for i in kw.keys():\n
           after_script_name=wf_item.after_script_name,\n
           actbox_name = wf_item.actbox_name,\n
           actbox_url = wf_item.actbox_url,\n
-          actbox_category = wf_item.actbox_category)\n
+          actbox_category = wf_item.actbox_category,)\n
     else:\n
       wf_item.setProperties(\n
           wf_item.title,\n
@@ -115,7 +116,10 @@ for i in kw.keys():\n
           after_script_name=wf_item.after_script_name,\n
           actbox_name = term.getTitle(),\n
           actbox_url = wf_item.actbox_url,\n
-          actbox_category = wf_item.actbox_category)\n
+          actbox_category = wf_item.actbox_category,)\n
+    if guard is not None:\n
+      wf_item.Glossary_setGuard(guard)\n
+\n
 \n
 portal_status_message = context.Base_translateString(\'Workflows updated.\')\n
 context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
@@ -142,6 +146,12 @@ context.Base_redirect(keep_items={\'portal_status_message\':portal_status_messag
         <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -186,6 +196,9 @@ context.Base_redirect(keep_items={\'portal_status_message\':portal_status_messag
                             <string>term</string>
                             <string>wf_item_path</string>
                             <string>wf_item</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>guard</string>
                             <string>portal_status_message</string>
                           </tuple>
                         </value>
