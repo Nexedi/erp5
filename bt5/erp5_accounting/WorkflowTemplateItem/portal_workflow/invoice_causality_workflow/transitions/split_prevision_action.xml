@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>this action create a  new simulation movement with the difference between prevision and current, it allows to postpone part of the delivery</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>split_prevision_action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

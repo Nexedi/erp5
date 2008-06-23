@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>adopt the current prevision, the invoice will be updated with data of the packing list</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>adopt_prevision_action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

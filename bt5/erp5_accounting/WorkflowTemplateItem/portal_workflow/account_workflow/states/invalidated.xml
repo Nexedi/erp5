@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>In this state, no transaction can be input anylong on the account</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Open the accounting period so that transaction can be input</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

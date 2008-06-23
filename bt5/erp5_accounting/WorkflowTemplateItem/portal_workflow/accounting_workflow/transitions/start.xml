@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>mark the transaction that has been recorded in a journal as a debit and a credit</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>start</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

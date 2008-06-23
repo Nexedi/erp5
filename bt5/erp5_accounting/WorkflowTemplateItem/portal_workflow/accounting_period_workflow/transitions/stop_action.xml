@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Marke the accounting period as closed for a temporary moment</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

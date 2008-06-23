@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>this state means the current state is consistent with the prevision</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

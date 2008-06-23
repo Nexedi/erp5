@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Close the accounting period, can\'t be reopen later, no more transaction can be input on this accounting period</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

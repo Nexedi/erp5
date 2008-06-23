@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Calculating the state after a decision has been choosen</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,6 +40,12 @@
                 <string>converge</string>
                 <string>diverge</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
