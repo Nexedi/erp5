@@ -70,12 +70,6 @@ response = request.RESPONSE\n
 \n
 from zExceptions import Unauthorized\n
 \n
-try:\n
-  result = context.index_html(request, response)\n
-except Unauthorized:\n
-  msg = context.Base_translateString("You don\'t have enough permission for converting this document.")\n
-  return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
-\n
 if hasattr(context,\'getContentType\'):\n
   response.setHeader(\'Content-type\', context.getContentType())\n
 else:\n
@@ -83,6 +77,12 @@ else:\n
 \n
 file_name = context.getSourceReference() or context.getTitle() or context.getId()\n
 response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file_name)\n
+\n
+try:\n
+  result = context.index_html(request, response)\n
+except Unauthorized:\n
+  msg = context.Base_translateString("You don\'t have enough permission for converting this document.")\n
+  return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
 \n
 return result\n
 </string> </value>
@@ -95,6 +95,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -133,12 +139,12 @@ return result\n
                             <string>response</string>
                             <string>zExceptions</string>
                             <string>Unauthorized</string>
+                            <string>hasattr</string>
                             <string>context</string>
+                            <string>file_name</string>
                             <string>result</string>
                             <string>msg</string>
                             <string>dict</string>
-                            <string>hasattr</string>
-                            <string>file_name</string>
                           </tuple>
                         </value>
                     </item>
