@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>lines</string>
+                <string>list_method</string>
                 <string>search</string>
                 <string>select</string>
                 <string>anchor</string>
@@ -60,6 +61,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>anchor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -72,21 +77,27 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key>                 <string>lines</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>list_action</string> </key>
+                    <key>                 <string>list_action</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
+                    <key>                 <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>search</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>select</string> </key>
+                    <key>                 <string>select</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -121,8 +132,14 @@
                     <value> <string>list</string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>select</string> </key>
@@ -182,6 +199,38 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 15)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>field/ListBox_getListModeProxyListMethodName</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
