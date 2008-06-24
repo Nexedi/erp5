@@ -109,6 +109,10 @@ a manufactured product, like a pen, a bicycle...</string> </value>
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>
@@ -116,7 +120,7 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Production Packing List Line</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
