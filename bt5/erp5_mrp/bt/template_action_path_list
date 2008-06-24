@@ -1,101 +1,33 @@
-Production Order Cell | history_view
-Production Order Cell | metadata
-Production Order Cell | print
 Production Order Cell | view
-Production Order Line | history
-Production Order Line | metadata
 Production Order Line | price_view
-Production Order Line | print
 Production Order Line | quantity_view
 Production Order Line | view
-Production Order Module | csv_export
-Production Order Module | import_csv
-Production Order Module | list_ui
-Production Order Module | print
-Production Order Module | search
-Production Order Module | sort_on
 Production Order Module | view
-Production Order Rule | history
-Production Order Rule | metadata
-Production Order Rule | print
 Production Order Rule | view
-Production Order | history
 Production Order | jump_to_related_production_packing_list
 Production Order | jump_to_related_production_report
-Production Order | metadata
 Production Order | payment_condition
-Production Order | print
 Production Order | profile_view
 Production Order | view
 Production Order | view_discount
-Production Packing List Cell | history_view
-Production Packing List Cell | metadata
-Production Packing List Cell | print
 Production Packing List Cell | view
-Production Packing List Line | history
-Production Packing List Line | metadata
 Production Packing List Line | option_view
-Production Packing List Line | print
 Production Packing List Line | quantity_view
 Production Packing List Line | view
 Production Packing List Line | view_price
-Production Packing List Module | csv_export
-Production Packing List Module | import_csv
-Production Packing List Module | list_ui
-Production Packing List Module | print
-Production Packing List Module | search
-Production Packing List Module | sort_on
 Production Packing List Module | view
-Production Packing List | history
-Production Packing List | metadata
-Production Packing List | print
 Production Packing List | view
-Production Report Cell | history_view
-Production Report Cell | metadata
-Production Report Cell | print
 Production Report Cell | view
-Production Report Line | history
-Production Report Line | metadata
 Production Report Line | option_view
-Production Report Line | print
 Production Report Line | quantity_view
 Production Report Line | view
 Production Report Line | view_price
-Production Report Module | csv_export
-Production Report Module | import_csv
-Production Report Module | list_ui
-Production Report Module | print
-Production Report Module | search
-Production Report Module | sort_on
 Production Report Module | view
-Production Report | history
-Production Report | metadata
-Production Report | print
 Production Report | view
-Supply Chain Module | csv_export
-Supply Chain Module | list_ui
-Supply Chain Module | print
-Supply Chain Module | search
-Supply Chain Module | sort_on
 Supply Chain Module | view
-Supply Chain | history_view
-Supply Chain | metadata
-Supply Chain | print
 Supply Chain | view
 Supply Chain | view_supply_node
-Supply Link | history_view
-Supply Link | metadata
-Supply Link | print
 Supply Link | view
-Supply Node | history_view
-Supply Node | metadata
-Supply Node | print
 Supply Node | view
-Transformation Rule | history
-Transformation Rule | metadata
-Transformation Rule | print
 Transformation Rule | view
-Transformation Sourcing Rule | history
-Transformation Sourcing Rule | metadata
-Transformation Sourcing Rule | print
 Transformation Sourcing Rule | view
