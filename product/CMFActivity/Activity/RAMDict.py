@@ -70,13 +70,13 @@ class RAMDict(Queue):
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     uid_set = activity_buffer.getUidSet(self)
-    return self.generateMessageId(m) in uid_set
+    return self.generateMessageUID(m) in uid_set
 
   def registerMessage(self, activity_buffer, activity_tool, m):
     message_list = activity_buffer.getMessageList(self)
     message_list.append(m)
     uid_set = activity_buffer.getUidSet(self)
-    uid_set.add(self.generateMessageId(m))
+    uid_set.add(self.generateMessageUID(m))
     m.is_registered = 1
 
   def dequeueMessage(self, activity_tool, processing_node):
