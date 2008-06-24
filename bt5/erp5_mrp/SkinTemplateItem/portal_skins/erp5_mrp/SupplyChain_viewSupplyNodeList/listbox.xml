@@ -119,7 +119,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>supply_chain_view_selection_name</string> </value>
+                    <value> <string>supply_chain_view_supply_node_list_selection_name</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
