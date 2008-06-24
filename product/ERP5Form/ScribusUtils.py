@@ -997,7 +997,7 @@ class ManageCSS:
       # field is required: using special color
       # color is specified as light-blue when standard
       # color = 'green' when error
-      properties_css_object_stand['background'] = 'rgb(192,192,255)'
+      properties_css_object_stand['background'] = 'rgb(236,245,220)'
       properties_css_object_error['background'] = 'rgb(128,128,255)'
     elif properties_field['type'] != 'TextAreaField':
       properties_css_object_stand['background'] = '#F5F5DC'
