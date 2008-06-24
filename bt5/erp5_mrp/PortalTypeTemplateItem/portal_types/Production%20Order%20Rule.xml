@@ -65,8 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      Prouction Order Rule object use a Supply Chain to expand a Production\n
-      Order.\n
+            <value> <string>Prouction Order Rule object use a Supply Chain to expand a Production Order.\n
 </string> </value>
         </item>
         <item>

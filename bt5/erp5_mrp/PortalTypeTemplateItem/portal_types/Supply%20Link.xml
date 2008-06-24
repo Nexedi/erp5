@@ -65,17 +65,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>\n
-      A DeliveryLine object allows to implement lines in\n
-      Deliveries (packing list, order, invoice, etc.)\n
-\n
-      It may include a price (for insurance, for customs, for invoices,\n
-      for orders)\n
-</string> </value>
+            <value> <string>Supply Link defines possible movements of resources between source and destination Supply Nodes. Each Supply Link is associated with one or more industrial phases.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
             <value> <string>addSupplyLink</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -94,6 +92,10 @@
             <value> <string>Supply Link</string> </value>
         </item>
         <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
@@ -102,6 +104,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

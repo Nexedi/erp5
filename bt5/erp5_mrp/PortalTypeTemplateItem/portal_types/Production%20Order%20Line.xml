@@ -71,8 +71,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Product object holds the information about\n
-a manufactured product, like a pen, a bicycle...</string> </value>
+            <value> <string>Defines price, dates and quantity of resource to be produced, allows to choose transformation, which will be used</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

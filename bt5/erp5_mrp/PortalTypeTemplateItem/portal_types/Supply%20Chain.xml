@@ -65,16 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>        A Document can contain text that can be formatted using\n
-        *Structured Text* or *HTML*. Text can be automatically translated\n
-        through the use of \'message catalogs\'.\n
-\n
-        A Document is a terminating leaf\n
-        in the OFS. It can not contain anything.\n
-\n
-        Document inherits from XMLObject and can\n
-        be synchronized accross multiple sites.\n
-</string> </value>
+            <value> <string>Supply Chain defines the route used to produce a resource. Supply Chain is an oriented graph representing production process.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

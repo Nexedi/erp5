@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Production Order requests the production of a quantity of goods or services by a workshop, a production facility or through a given supply chain. Production Orders may reference or embed a Transformation which defines how to produced finished products out of elementary components or operations. </string> </value>
+            <value> <string>A Production Order allows for entering production order information, actors involved in an order, payment conditions, ordered products or services, quantity, price, etc. It also allows to choose supply chain defining the production process and. It follows a standard production order workflow which represents the maturity of an order from prospect to confirmation. Once an order is confirmed, it can not be modified.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

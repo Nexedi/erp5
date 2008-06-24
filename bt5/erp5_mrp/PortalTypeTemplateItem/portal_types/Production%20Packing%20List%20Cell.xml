@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Une ligne tarifaire.</string> </value>
+            <value> <string>A Packing List Cell allows to define specific quantities for each variation of a resource in a packing list line.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -95,6 +95,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
