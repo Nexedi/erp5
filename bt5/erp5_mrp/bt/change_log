@@ -1,3 +1,7 @@
+2008-06-24 luke
+* updated portal types' definitions
+* proxified, cleaned up and made forms more consistent
+
 2008-06-03 vincentd
 * Add all rights to manager in :
 production_order_workflow  :  Confirmed, Cancelled
