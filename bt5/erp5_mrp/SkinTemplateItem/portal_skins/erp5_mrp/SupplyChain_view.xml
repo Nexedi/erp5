@@ -97,14 +97,16 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_id</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
