@@ -2,4 +2,16 @@
  <portal_type id="Production Order Line">
   <item>specialise</item>
  </portal_type>
+ <portal_type id="Production Order Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Production Packing List Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Production Report Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Supply Chain Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>

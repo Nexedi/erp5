@@ -1,1 +1,5 @@
 Production Order Line | specialise
+Production Order Module | business_application
+Production Packing List Module | business_application
+Production Report Module | business_application
+Supply Chain Module | business_application
