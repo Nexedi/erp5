@@ -1,7 +1,7 @@
-##############################################################################
+#############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
-#                         Fabien Morin <fabien@nexedi.com>
+#                         Fabien Morin <fabien@nexedi.com> 
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,16 +26,33 @@
 #
 ##############################################################################
 
-class CorporateRegistrationCode:
+
+class EGovGenericProperties:
   """
-    A new property to set on Assignment the corporate_registration_code
-    number.
+    Autorisation properties and categories
   """
 
   _properties = (
+    # Autorisation properties
     { 'id'         : 'corporate_registration_code'
-    , 'description': 'RCCM du siege'
+    , 'description': 'The corporate registration code of this organisation'
     , 'type'       : 'string'
     , 'mode'       : 'w'
+    },
+    { 'id'                       : 'birthplace'
+    , 'storage_id'               : 'default_birthplace'
+    , 'description'              : 'The current address of the person'
+    , 'type'                     : 'content'
+    , 'portal_type'              : ( 'Address', )
+    , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
+                                     'zip_code', 'region', 'region_title')
+    , 'acquisition_base_category': ( 'subordination', )
+    , 'acquisition_portal_type'  : ( 'Organisation', )
+    , 'acquisition_copy_value'   : 0
+    , 'acquisition_mask_value'   : 1
+    , 'acquisition_sync_value'   : 0
+    , 'acquisition_accessor_id'  : 'getDefaultBirthplaceValue'
+    , 'acquisition_depends'      : None
+    , 'mode'                     : 'w'
     },
   )

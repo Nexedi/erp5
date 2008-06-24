@@ -89,10 +89,11 @@ class Organisation(XMLObject):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Organisation
+                      , PropertySheet.EGovOrganisation
                       , PropertySheet.Mapping
                       , PropertySheet.Task
                       , PropertySheet.Reference
-                      , PropertySheet.PSJ_Form
+                      , PropertySheet.EGovGenericProperties
                       )
 
 
