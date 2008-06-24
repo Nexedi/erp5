@@ -109,6 +109,7 @@
                         <string>my_incoterm</string>
                         <string>my_price_currency</string>
                         <string>my_total_quantity</string>
+                        <string>my_origin</string>
                       </list>
                     </value>
                 </item>
