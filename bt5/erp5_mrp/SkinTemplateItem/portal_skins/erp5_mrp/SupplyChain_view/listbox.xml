@@ -22,6 +22,7 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>selection_name</string>
+                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -116,6 +117,17 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Supply Link</string>
+                          <string>Supply Link</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
