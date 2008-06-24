@@ -116,8 +116,8 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_comment</string>
-                        <string>state</string>
                         <string>total_quantity</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
