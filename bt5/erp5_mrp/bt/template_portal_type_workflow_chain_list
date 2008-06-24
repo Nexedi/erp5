@@ -31,6 +31,7 @@ Production Report | edit_workflow
 Production Report | production_packing_list_causality_workflow
 Production Report | production_packing_list_workflow
 Supply Chain | edit_workflow
+Supply Chain | validation_workflow
 Supply Link | edit_workflow
 Supply Node | edit_workflow
 Transformation Rule | edit_workflow

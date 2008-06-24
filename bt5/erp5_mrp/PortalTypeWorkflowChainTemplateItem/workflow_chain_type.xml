@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>Supply Chain</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Supply Link</type>
