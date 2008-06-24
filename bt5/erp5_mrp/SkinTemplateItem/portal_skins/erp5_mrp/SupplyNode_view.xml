@@ -103,6 +103,7 @@
                     <value>
                       <list>
                         <string>my_destination_title</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
