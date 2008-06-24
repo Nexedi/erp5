@@ -212,50 +212,54 @@ def getSearchDialog(self, REQUEST=None):
   column_list = ListBoxListRenderer(
                       listbox.widget, listbox, request).getAllColumnList()
 
+  search_list = [x[0] for x in ListBoxListRenderer(
+                      listbox.widget, listbox, request).getSearchValueList()]
+
   for column_id, column_title in column_list:
-    # is it a base category ?
-    short_column_id = column_id
-    # strip the usuale default_ and _title that are on standard fields.
-    if short_column_id.endswith('_title'):
-      short_column_id = short_column_id[:-6]
-    if short_column_id.startswith('default_'):
-      short_column_id = short_column_id[8:]
-    if short_column_id in base_category_list:
-      # is this base category empty ? then it might be used to relate documents,
-      # in that case, simply provide a text input
-      if not len(category_tool[short_column_id]):
-        default_search_key = 'ExactMatch'
-        if column_id in sql_catalog_keyword_search_keys:
-          default_search_key = 'Keyword'
-        addKeywordSearchStringField(column_id, column_title,
-                                    default_search_key=default_search_key)
-      else:
-        addListField(short_column_id, column_title)
-      continue
-
-
-    if column_id in catalog_schema:
-      if column_id.endswith('state') or column_id.endswith('state_title'):
-        # this is a workflow state, it will be handled later
-        continue
-      elif 'date' in column_id:
-        # is it date ? -> provide exact + range
-        # TODO: do we need an API in catalog for this ?
-        addDateTimeField(column_id, column_title)
-
-      elif 'quantity' in column_id or 'price' in column_id:
-        # is it float ? -> provide exact + range
-        # TODO: do we need an API in catalog for this ?
-        addFloatField(column_id, column_title)
-      else:
-        if column_id in sql_catalog_full_text_search_keys:
-          addFullTextStringField(column_id, column_title)
-        else:
+    if column_id in search_list:
+      # is it a base category ?
+      short_column_id = column_id
+      # strip the usuale default_ and _title that are on standard fields.
+      if short_column_id.endswith('_title'):
+        short_column_id = short_column_id[:-6]
+      if short_column_id.startswith('default_'):
+        short_column_id = short_column_id[8:]
+      if short_column_id in base_category_list:
+        # is this base category empty ? then it might be used to relate documents,
+        # in that case, simply provide a text input
+        if not len(category_tool[short_column_id]):
           default_search_key = 'ExactMatch'
           if column_id in sql_catalog_keyword_search_keys:
             default_search_key = 'Keyword'
           addKeywordSearchStringField(column_id, column_title,
-                          default_search_key=default_search_key)
+                                      default_search_key=default_search_key)
+        else:
+          addListField(short_column_id, column_title)
+        continue
+
+
+      if column_id in catalog_schema:
+        if column_id.endswith('state') or column_id.endswith('state_title'):
+          # this is a workflow state, it will be handled later
+          continue
+        elif 'date' in column_id:
+          # is it date ? -> provide exact + range
+          # TODO: do we need an API in catalog for this ?
+          addDateTimeField(column_id, column_title)
+
+        elif 'quantity' in column_id or 'price' in column_id:
+          # is it float ? -> provide exact + range
+          # TODO: do we need an API in catalog for this ?
+          addFloatField(column_id, column_title)
+        else:
+          if column_id in sql_catalog_full_text_search_keys:
+            addFullTextStringField(column_id, column_title)
+          else:
+            default_search_key = 'ExactMatch'
+            if column_id in sql_catalog_keyword_search_keys:
+              default_search_key = 'Keyword'
+            addKeywordSearchStringField(column_id, column_title,
+                            default_search_key=default_search_key)
 
   # TODO always add SearchableText ?
   
