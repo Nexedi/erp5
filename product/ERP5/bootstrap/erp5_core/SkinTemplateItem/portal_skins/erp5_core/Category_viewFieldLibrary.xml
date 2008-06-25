@@ -99,7 +99,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_codification</string>
                         <string>listbox_id</string>
                         <string>listbox_int_index</string>
                         <string>listbox_title</string>
