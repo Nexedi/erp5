@@ -111,6 +111,7 @@
                         <string>my_source_decision_title</string>
                         <string>my_stop_date</string>
                         <string>my_price</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
