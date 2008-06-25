@@ -109,6 +109,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_reference</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_start_date</string>
