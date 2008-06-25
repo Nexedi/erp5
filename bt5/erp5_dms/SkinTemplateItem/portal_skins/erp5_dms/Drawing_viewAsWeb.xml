@@ -83,15 +83,14 @@
                     <value>
                       <list>
                         <string>your_drawing_preview</string>
+                        <string>your_download_pdf</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>not_assigned</string> </key>
                     <value>
-                      <list>
-                        <string>your_download_pdf</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
