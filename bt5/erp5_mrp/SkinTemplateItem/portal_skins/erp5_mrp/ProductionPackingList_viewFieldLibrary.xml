@@ -113,6 +113,7 @@
                         <string>my_description</string>
                         <string>my_translated_causality_state_title</string>
                         <string>my_translated_simulation_state_title</string>
+                        <string>my_causality_title</string>
                       </list>
                     </value>
                 </item>
