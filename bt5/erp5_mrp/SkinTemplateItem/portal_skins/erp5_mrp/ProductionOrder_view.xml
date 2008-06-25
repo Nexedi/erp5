@@ -89,7 +89,13 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_int_index</string>
+                        <string>listbox_quantity</string>
+                        <string>listbox_quantity_unit</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_stop_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
