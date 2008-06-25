@@ -165,9 +165,6 @@ class OOOdCommandTransform(commandtransform):
     if self.ooo.isTargetFormatAllowed(format):
       mime, data = self.ooo.convert(format)
       if import_succeed and self.mimetype == 'text/html':
-        builder = OOoBuilder(data)
-        content = builder.extract('content.xml')
-        xml_doc = parseDoc(content)
         data = self.includeImageList(data)
       return data
     else:
