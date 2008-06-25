@@ -43,6 +43,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
@@ -93,6 +99,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_codification</string>
                         <string>listbox_id</string>
                         <string>listbox_int_index</string>
                         <string>listbox_title</string>
@@ -104,6 +111,7 @@
                         <string>my_title</string>
                         <string>my_translated_validation_state_title</string>
                         <string>listbox_short_title</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
