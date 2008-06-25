@@ -98,12 +98,7 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_total_price</string>
                         <string>my_total_quantity</string>
-                        <string>my_origin</string>
-                        <string>my_production_order_lines_listbox</string>
                         <string>my_destination_administration_person_title</string>
                         <string>my_destination_section</string>
                         <string>my_delivery_mode</string>
@@ -114,6 +109,11 @@
                         <string>my_source_section_title</string>
                         <string>my_source_title</string>
                         <string>my_title</string>
+                        <string>my_origin</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_total_price</string>
+                        <string>my_production_order_lines_listbox</string>
                       </list>
                     </value>
                 </item>
