@@ -111,6 +111,8 @@
                         <string>my_total_quantity</string>
                         <string>my_origin</string>
                         <string>my_production_order_lines_listbox</string>
+                        <string>my_destination_administration_person_title</string>
+                        <string>my_destination_section</string>
                       </list>
                     </value>
                 </item>
