@@ -18,9 +18,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>portal_type</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -86,18 +84,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Supply Node</string>
-                          <string>Supply Node</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>SupplyLink_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

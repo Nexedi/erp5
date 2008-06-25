@@ -86,7 +86,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
+                    <value> <string>SupplyLink_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key>                 <string>portal_type</string> </key>

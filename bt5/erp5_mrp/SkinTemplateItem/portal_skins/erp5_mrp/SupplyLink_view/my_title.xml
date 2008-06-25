@@ -84,7 +84,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SupplyChain_viewFieldLibrary</string> </value>
+                    <value> <string>SupplyLink_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
