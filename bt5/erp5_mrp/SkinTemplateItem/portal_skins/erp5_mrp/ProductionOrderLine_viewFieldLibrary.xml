@@ -98,7 +98,6 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
                         <string>my_description</string>
                         <string>my_price</string>
                         <string>my_quantity</string>
@@ -109,6 +108,7 @@
                         <string>my_total_quantity</string>
                         <string>my_specialise_title</string>
                         <string>my_resource_title</string>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
