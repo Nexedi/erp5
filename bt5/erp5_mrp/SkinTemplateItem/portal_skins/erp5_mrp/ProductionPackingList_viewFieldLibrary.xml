@@ -115,6 +115,7 @@
                         <string>my_translated_simulation_state_title</string>
                         <string>my_causality_title</string>
                         <string>my_reference</string>
+                        <string>my_production_packing_list_lines_listbox</string>
                       </list>
                     </value>
                 </item>
