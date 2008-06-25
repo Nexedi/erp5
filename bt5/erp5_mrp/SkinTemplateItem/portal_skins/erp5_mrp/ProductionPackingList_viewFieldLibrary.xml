@@ -114,6 +114,7 @@
                         <string>my_translated_causality_state_title</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_causality_title</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
