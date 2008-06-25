@@ -102,7 +102,8 @@
               </select>\n
               <table id="listbox_domain_tree_table" cellpadding="0"\n
                 summary="This table contains the domain tree"\n
-                tal:attributes="id string:${field_id}_domain_tree_table"\n
+                tal:attributes="id string:${field_id}_domain_tree_table;\n
+                                class string:listbox_domain_tree_table"\n
                 tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False);\n
                             total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">\n
                 <tr tal:repeat="report_tree report_tree_list">\n
@@ -155,7 +156,8 @@
                   tal:attributes="src string:${portal_url_string}/images/spacer.png" />\n
               </td>\n
             </tr>\n
-            <tr id="listbox_title_line" tal:attributes="id string:${field_id}_title_line">\n
+            <tr id="listbox_title_line" tal:attributes="id string:${field_id}_title_line;\n
+                                                        class string:listbox_title_line">\n
               <td class="Left" style="width: 17px">\n
                 <img src="spacer.png" style="width: 5px; height: 5px" alt="spacer"\n
                   tal:attributes="src string:${portal_url_string}/images/spacer.png" />\n
@@ -166,33 +168,39 @@
                   title="Flat List" name="setFlatListMode:method"\n
                   value="1" alt="Flat List"\n
                   tal:attributes="src string:${portal_url_string}/images/text_block.png;\n
-                                  id string:${field_id}_flat_list_mode"\n
+                                  id string:${field_id}_flat_list_mode;\n
+                                  class string:listbox_flat_list_mode"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
                 <input tal:condition="is_report_tree_supported"\n
                   type="image" src="view_tree.png" id="listbox_report_tree_mode"\n
                   title="Report Tree" name="setReportTreeMode:method"\n
                   value="1" alt="Report Tree"\n
                   tal:attributes="src string:${portal_url_string}/images/view_tree.png;\n
-                                  id string:${field_id}_report_tree_mode"\n
+                                  id string:${field_id}_report_tree_mode;\n
+                                  class string:listbox_report_tree_mode"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
                 <input tal:condition="is_domain_tree_supported"\n
                   type="image" src="view_choose.png" id="listbox_domain_tree_mode"\n
                   title="Domain Tree" name="setDomainTreeMode:method"\n
                   value="1" alt="Domain Tree"\n
                   tal:attributes="src string:${portal_url_string}/images/view_choose.png;\n
-                                  id string:${field_id}_domain_tree_mode"\n
+                                  id string:${field_id}_domain_tree_mode;\n
+                                  class string:listbox_domain_tree_mode"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
               </td>\n
               <td style="width: 100%; vertical-align: middle">\n
                 &nbsp;\n
                 <a id="listbox_title" href="list"\n
-                  tal:attributes="id string:${field_id}_title; href here/getListActionUrl">\n
+                  tal:attributes="id string:${field_id}_title; href here/getListActionUrl;\n
+                                  class string:listbox_title">\n
                   <tal:block tal:content="here/getTitle" i18n:domain="ui" i18n:translate=""/>:</a>\n
                 <span id="listbox_record_number"\n
-                  tal:attributes="id string:${field_id}_record_number"\n
+                  tal:attributes="id string:${field_id}_record_number;\n
+                                  class string:listbox_record_number"\n
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
                 <span id="listbox_item_number"\n
-                    tal:attributes="id string:${field_id}_item_number"\n
+                    tal:attributes="id string:${field_id}_item_number;\n
+                                    class string:listbox_item_number"\n
                     i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>\n
               </td>\n
 \t      <td style="white-space: nowrap; vertical-align: middle; text-align: center;">\n
@@ -201,7 +209,8 @@
                   title="Previous Page" name="previousPage:method"\n
                   tal:attributes="id string:${field_id}_previous_page;\n
                                   name string:${field_id}_previousPage:method;\n
-                                  src string:${portal_url_string}/images/1leftarrowv.png"\n
+                                  src string:${portal_url_string}/images/1leftarrowv.png;\n
+                                  class string:listbox_previous_page"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
               </td>\n
 \t      <td style="white-space: nowrap; vertical-align: middle; text-align: center">\n
@@ -209,7 +218,8 @@
                   tal:define="lines here/getMaxLineNumber"\n
                   tal:attributes="id string:${field_id}_page_selection;\n
                                   name string:${field_id}_list_start;\n
-                                  onChange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\')"\n
+                                  onChange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\');\n
+                                  class string:listbox_page_selection"\n
                   i18n:domain="ui" i18n:attributes="title">\n
                   <option value="0"\n
                     tal:repeat="p python: range(0, here.total_pages)"\n
@@ -224,7 +234,8 @@
                   title="Next Page" name="nextPage:method"\n
                   tal:attributes="id string:${field_id}_next_page;\n
                                   name string:${field_id}_nextPage:method;\n
-                                  src string:${portal_url_string}/images/1rightarrowv.png"\n
+                                  src string:${portal_url_string}/images/1rightarrowv.png;\n
+                                  class string:listbox_next_page"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
               </td>\n
             </tr>\n
@@ -233,7 +244,8 @@
         <div class="ListContent">\n
           <table cellpadding="0" cellspacing="0"\n
                  summary="This table contains the listbox content">\n
-            <tr id="listbox_label_line" tal:attributes="id string:${field_id}_label_line">\n
+            <tr id="listbox_label_line" tal:attributes="id string:${field_id}_label_line;\n
+                                                        class string:listbox_label_line">\n
               <td tal:condition="is_report_tree_mode"\n
                 class="Data" style="width: 50px; text-align: left; vertical-align: middle">\n
                 <select name="report_root_url"\n
@@ -254,12 +266,14 @@
                   src="checkall.png" alt="Check All" title="Check All"\n
                   tal:attributes="id string:${field_id}_check_all;\n
                                   name string:${field_id}_checkAll:method;\n
-                                  src string:${portal_url_string}/images/checkall.png"\n
+                                  src string:${portal_url_string}/images/checkall.png;\n
+                                  class string:listbox_check_all"\n
                   i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="uncheckAll:method" value="1"\n
                   src="%(portal_url_string)s/images/decheckall.png" style="border: 0" alt="Uncheck All" title="Uncheck All"\n
                   tal:attributes="id string:${field_id}_uncheck_all;\n
                                   name string:${field_id}_uncheckAll:method;\n
-                                  src string:${portal_url_string}/images/decheckall.png"\n
+                                  src string:${portal_url_string}/images/decheckall.png;\n
+                                  class string:listbox_uncheck_all"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
               </td>\n
               <tal:block tal:repeat="value here/getLabelValueList">\n
@@ -313,7 +327,8 @@
                 <input id="listbox_select" type="image" src="exec16.png"\n
                   title="Action" alt="Action" name="Base_doSelect:method"\n
                   tal:attributes="id string:${field_id}_select;\n
-                                  src string:${portal_url_string}/images/exec16.png"\n
+                                  src string:${portal_url_string}/images/exec16.png;\n
+                                  class string:listbox_select"\n
                   i18n:domain="ui" i18n:attributes="title" />\n
               </td>\n
               <tal:block tal:condition="show_search_line"\n
@@ -376,7 +391,8 @@
             </tal:block>\n
 \n
             <tr tal:condition="here/showStat" id="listbox_stat_line"\n
-              tal:attributes="id string:${field_id}_stat_line">\n
+              tal:attributes="id string:${field_id}_stat_line;\n
+                              class string:listbox_stat_line">\n
               <td tal:condition="is_report_tree_mode" class="Data">&nbsp;</td>\n
               <td class="AnchorColumn Data" tal:condition="show_anchor_column">&nbsp;</td>\n
               <td tal:condition="show_select_column" class="Data">&nbsp;</td>\n

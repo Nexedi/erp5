@@ -540,7 +540,7 @@ div.index_html table {\n
   margin-left: 10px;\n
 }\n
 \n
-#listbox_title_line select,\n
+.listbox_title_line select,\n
 #context_bar select,\n
 #main_bar select {\n
   color: <dtml-var alternate_font_color>;\n
@@ -749,12 +749,12 @@ fieldset.bottom .field .input {\n
   float: None;\n
 }\n
 \n
-#listbox_domain_tree_table a.tree_open {\n
+.listbox_domain_tree_table a.tree_open {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tree_open.png\') left no-repeat;\n
   padding-left:15px;\n
 }\n
 \n
-#listbox_domain_tree_table a.tree_closed {\n
+.listbox_domain_tree_table a.tree_closed {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tree_closed.png\') left no-repeat;\n
   padding-left:15px;\n
 }\n
@@ -1092,9 +1092,9 @@ fieldset.bottom .field .input {\n
   padding-left: 10px;\n
 }\n
 \n
-.ListSummary #listbox_title,\n
-.ListSummary #listbox_record_number,\n
-.ListSummary #listbox_item_number {\n
+.ListSummary .listbox_title,\n
+.ListSummary .listbox_record_number,\n
+.ListSummary .listbox_item_number {\n
 /*   font-size: 90%; */\n
 }\n
 \n
@@ -1114,8 +1114,8 @@ fieldset.bottom .field .input {\n
   display: none;\n
 }\n
 \n
-.ListSummary #listbox_next_page,\n
-.ListSummary #listbox_previous_page {\n
+.ListSummary .listbox_next_page,\n
+.ListSummary .listbox_previous_page {\n
   display: block;\n
   font-size: 0;\n
   width: 22px;\n
@@ -1140,22 +1140,22 @@ fieldset.bottom .field .input {\n
   border-right-width: 1px;\n
 }\n
 \n
-.ListContent #listbox_label_line td.Data {\n
+.ListContent .listbox_label_line td.Data {\n
   border-top-width: 1px;\n
 }\n
 \n
-.ListContent #listbox_label_line {\n
+.ListContent .listbox_label_line {\n
   color: <dtml-var font_color>;\n
   background-color: <dtml-var listbox_label_background_color>;\n
 /*   font-size: 90%; */\n
 }\n
 \n
-.ListContent #listbox_stat_line {\n
+.ListContent .listbox_stat_line {\n
   color: inherit;\n
   background-color: <dtml-var listbox_stat_background_color>;\n
 }\n
 \n
-.ListContent #listbox_stat_line td.Data {\n
+.ListContent .listbox_stat_line td.Data {\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
   border-color: <dtml-var document_border_color>;\n
@@ -1171,9 +1171,9 @@ fieldset.bottom .field .input {\n
   background-color: <dtml-var listbox_even_background_color>;\n
 }\n
 \n
-.ListSummary #listbox_title_line #listbox_title,\n
-.ListSummary #listbox_title_line #listbox_item_number,\n
-.ListSummary #listbox_title_line #listbox_record_number {\n
+.ListSummary .listbox_title_line .listbox_title,\n
+.ListSummary .listbox_title_line .listbox_item_number,\n
+.ListSummary .listbox_title_line .listbox_record_number {\n
   vertical-align: middle;\n
 }\n
 \n
