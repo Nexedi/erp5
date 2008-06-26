@@ -1,3 +1,6 @@
+2008-06-25 rafael
+* Added Document Tabs at Tickets.
+
 2008-06-10 yusei
 * Move Event_send and mail templates to erp5_core.
 

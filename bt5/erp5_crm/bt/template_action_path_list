@@ -1,6 +1,7 @@
 Campaign Module | campaign_detailed_report
 Campaign Module | campaign_status
 Campaign Module | view
+Campaign | document_list
 Campaign | new_event
 Campaign | view
 Event Module | event_activity
@@ -22,6 +23,7 @@ Mail Message | view
 Meeting Module | meeting_detailed_report
 Meeting Module | meeting_status
 Meeting Module | view
+Meeting | document_list
 Meeting | new_event
 Meeting | view
 Note | assessment
@@ -40,11 +42,13 @@ Phone Call | view
 Sale Opportunity Module | sale_opportunity_detailed_report
 Sale Opportunity Module | sale_opportunity_status
 Sale Opportunity Module | view
+Sale Opportunity | document_list
 Sale Opportunity | new_event
 Sale Opportunity | view
 Support Request Module | support_request_detailed_report
 Support Request Module | support_request_status
 Support Request Module | view
+Support Request | document_list
 Support Request | new_event
 Support Request | view
 System Preference | crm_preference
