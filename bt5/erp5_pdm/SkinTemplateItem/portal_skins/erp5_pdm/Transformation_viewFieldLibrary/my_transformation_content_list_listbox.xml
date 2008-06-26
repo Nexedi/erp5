@@ -18,7 +18,7 @@
                 <string>all_columns</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
-                <string>default_params</string>
+                <string>editable_columns</string>
                 <string>domain_root_list</string>
                 <string>report_root_list</string>
               </list>
@@ -102,7 +102,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit_translated_title</string>
+                          <string>quantity_unit</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
@@ -151,7 +151,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit_translated_title</string>
+                          <string>quantity_unit</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
@@ -166,12 +166,6 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key>                 <string>domain_root_list</string> </key>
                     <value>
                       <list>
@@ -182,6 +176,29 @@
                         <tuple>
                           <string>quantity_unit</string>
                           <string>Quantity unit</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>quantity_unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>efficiency</string>
                         </tuple>
                       </list>
                     </value>
