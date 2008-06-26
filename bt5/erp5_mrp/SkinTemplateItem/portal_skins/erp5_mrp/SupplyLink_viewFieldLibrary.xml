@@ -106,6 +106,8 @@
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_deliverable</string>
+                        <string>my_max_delay</string>
+                        <string>my_min_delay</string>
                       </list>
                     </value>
                 </item>
