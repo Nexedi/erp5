@@ -109,22 +109,22 @@ class DomainTool(BaseTool):
 #                 context.getProperty(property))
             value = context.getProperty(property)
             format_dict = {'base_name': base_name}
-            expression = "(%(base_name)s is NULL) AND " \
+            expression = "((%(base_name)s is NULL) AND " \
                          "(%(base_name)s_range_min is NULL) AND " \
-                         "(%(base_name)s_range_max is NULL)" % format_dict
+                         "(%(base_name)s_range_max is NULL))" % format_dict
             if value is not None:
               # Handle Mysql datetime correctly
               if isinstance(value, DateTime):
                 value = value.toZone('UTC').ISO()
               format_dict['value'] = value
               # Generate expression
-              expression += "OR (%(base_name)s = '%(value)s') " \
-                          "OR (%(base_name)s_range_min <= '%(value)s') AND " \
-                              "(%(base_name)s_range_max is NULL) " \
-                          "OR (%(base_name)s_range_min is NULL) AND " \
-                              "%(base_name)s_range_max > '%(value)s' " \
-                          "OR (%(base_name)s_range_min <= '%(value)s') AND " \
-                              "%(base_name)s_range_max > '%(value)s' " \
+              expression += " OR (%(base_name)s = '%(value)s') " \
+                          "OR ((%(base_name)s_range_min <= '%(value)s') AND " \
+                              "(%(base_name)s_range_max is NULL)) " \
+                          "OR ((%(base_name)s_range_min is NULL) AND " \
+                              "%(base_name)s_range_max > '%(value)s)' " \
+                          "OR ((%(base_name)s_range_min <= '%(value)s') AND " \
+                              "%(base_name)s_range_max > '%(value)s)' " \
                             % format_dict
             expression = '( %s )' % expression
             expression_list.append(expression)
