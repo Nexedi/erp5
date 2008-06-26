@@ -95,7 +95,12 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_title</string>
+                        <string>listbox_quantity</string>
+                        <string>listbox_quantity_unit</string>
+                        <string>listbox_efficiency</string>
+                      </list>
                     </value>
                 </item>
                 <item>
