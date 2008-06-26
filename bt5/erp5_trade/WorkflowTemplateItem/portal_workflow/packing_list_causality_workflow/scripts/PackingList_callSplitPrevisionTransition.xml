@@ -76,7 +76,6 @@ start_date = state_change.kwargs[\'start_date\']\n
 packing_list.portal_workflow.doActionFor(\n
       packing_list,\n
       \'split_prevision\',\n
-      wf_id=\'packing_list_causality_workflow\',\n
       start_date=start_date,\n
       stop_date=stop_date)\n
 </string> </value>
