@@ -110,10 +110,6 @@
                           <string>Efficiency</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -157,10 +153,6 @@
                         <tuple>
                           <string>efficiency</string>
                           <string>Efficiency</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
                         </tuple>
                       </list>
                     </value>
