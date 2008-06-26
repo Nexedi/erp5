@@ -28,13 +28,13 @@
 
 import unittest
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5.tests.testPredicate import TestPredicateMixIn, REGION_FRANCE_PATH, REGION_GERMANY_PATH, GROUP_STOREVER_PATH, GROUP_OTHER_PATH
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ZSQLCatalog.SQLCatalog import Query
 
-class TestDomainTool(ERP5TypeTestCase):
+class TestDomainTool(TestPredicateMixIn):
 
   # Different variables used for this test
   run_all_test = 1
@@ -46,12 +46,6 @@ class TestDomainTool(ERP5TypeTestCase):
     """
     """
     return "Domain Tool"
-
-  def enableHotReindexing(self):
-    """
-    You can override this. Return if we should create (1) or not (0) an activity tool
-    """
-    return 0
 
   def getBusinessTemplateList(self):
     """
@@ -65,15 +59,6 @@ class TestDomainTool(ERP5TypeTestCase):
 
   def getResourceModule(self):
     return getattr(self.getPortal(), self.resource_module, None)
-
-  def afterSetUp(self):
-    self.login()
-
-  def login(self, quiet=0):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def getSaleOrderModule(self):
     return getattr(self.getPortal(),'sale_order_module',None)
@@ -409,6 +394,28 @@ class TestDomainTool(ERP5TypeTestCase):
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/blue' % self.resource.getRelativeUrl()]),
                      sort_method=sort_method),45)
+
+  def test_06_SQLQueryDoesNotReturnTooManyPredicates(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Check that SQL query does not return unneeded predicates')
+    predicate_both_match = self.createPredicate(
+        multimembership_criterion_base_category_list=['group', 'region'],
+        membership_criterion_category_list=[GROUP_STOREVER_PATH, REGION_FRANCE_PATH])
+    predicate_one_match = self.createPredicate(
+        multimembership_criterion_base_category_list=['group', 'region'],
+        membership_criterion_category_list=[GROUP_STOREVER_PATH, REGION_GERMANY_PATH])
+    document = self.createDocument(group='nexedi/storever',
+                                   region='europe/western_europe/france')
+    get_transaction().commit()
+    self.tic()
+    portal_domains = self.getPortalObject().portal_domains
+    # Basic sanity checks
+    self.assertTrue(predicate_both_match.test(document))
+    self.assertFalse(predicate_one_match.test(document))
+    self.assertSameSet(portal_domains.searchPredicateList(document, test=1), [predicate_both_match])
+    # Real test
+    self.assertSameSet(portal_domains.searchPredicateList(document, test=0), [predicate_both_match])
 
 def test_suite():
   suite = unittest.TestSuite()

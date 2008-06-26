@@ -48,7 +48,7 @@ RUN_ALL_TESTS = 1
 QUIET = 1
 PREDICATE_FOLDER_NAME = "predicate_unit_test_folder"
 
-class TestPredicates(ERP5TypeTestCase):
+class TestPredicateMixIn(ERP5TypeTestCase):
   """Test Predicates. """
   
   def getTitle(self):
@@ -263,6 +263,8 @@ class TestPredicates(ERP5TypeTestCase):
     doc = sequence.get('doc')
     predicate = sequence.get('predicate')
     self.assertFalse(predicate.test(doc))
+
+class TestPredicates(TestPredicateMixIn):
 
   ############################################################################
   ## Test Methods ############################################################
