@@ -54,7 +54,7 @@ class WebSiteTraversalHook(Persistent):
       Remove the path to the VirtualRoot from a physical path
       and add the path to the WebSite if any
     """
-    if type(path) is type(''):
+    if isinstance(path, str):
       path = path.split( '/')
 
     # Every Web Section acts as a mini site though layout for document editing is the root layout
@@ -98,10 +98,15 @@ class WebSiteTraversalHook(Persistent):
   def __call__(self, container, request):
     """
       Each time we are traversed, we patch the request instance with our
-      rewritted version of physicalPathToVirtualPath
+      own version of physicalPathToVirtualPath
     """
     self._v_request = request
     request.physicalPathToVirtualPath = self._physicalPathToVirtualPath
+
+    # If a skin selection is defined in this web site, change the skin now.
+    skin_selection_name = container.getSkinSelectionName()
+    if skin_selection_name:
+      container.getPortalObject().changeSkin(skin_selection_name)
 
 class WebSite(WebSection):
     """
@@ -124,6 +129,7 @@ class WebSite(WebSection):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.WebSection
+                      , PropertySheet.WebSite
                       , PropertySheet.Predicate
                       )
 
