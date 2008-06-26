@@ -18,7 +18,7 @@
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>stop_date</string> </value>
+            <value> <string>error_message</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -48,33 +48,8 @@
             </value>
         </item>
         <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>update_always</string> </key>
             <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:state_change.kwargs.get(\'stop_date\',state_change[\'object\'].getStopDate())</string> </value>
         </item>
       </dictionary>
     </pickle>

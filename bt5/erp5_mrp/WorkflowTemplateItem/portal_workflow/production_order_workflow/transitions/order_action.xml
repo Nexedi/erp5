@@ -38,7 +38,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Order_validateData</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -65,6 +65,28 @@
             <key> <string>uid</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
       </dictionary>

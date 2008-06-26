@@ -68,11 +68,8 @@
             <value> <string>order = state_change[\'object\']\n
 \n
 tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-activate_kw = {\'tag\': tag,\n
-               \'priority\': 3}\n
-order.activate(**activate_kw).updateAppliedRule(\n
-  rule_id = \'default_production_order_rule\',\n
-  activate_kw=activate_kw)\n
+activate_kw = {\'tag\':tag,\'priority\':3}\n
+order.activate(tag=tag).updateAppliedRule(rule_id = \'default_production_order_rule\',activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -89,7 +86,7 @@ order.activate(**activate_kw).updateAppliedRule(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,12 +113,12 @@ order.activate(**activate_kw).updateAppliedRule(\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>_getattr_</string>
                             <string>tag</string>
                             <string>activate_kw</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

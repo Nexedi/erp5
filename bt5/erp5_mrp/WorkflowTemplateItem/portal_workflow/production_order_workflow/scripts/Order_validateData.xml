@@ -65,21 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change[\'object\']\n
-\n
-previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_id = \'default_production_order_rule\',activate_kw=activate_kw)\n
-\n
-\n
-delivery_builder_list = [\n
-    order.portal_deliveries.production_report_builder,\n
-    order.portal_deliveries.production_packing_list_builder\n
-]\n
-\n
-for delivery_builder in delivery_builder_list:\n
-  delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag,priority=3).build(explanation_uid=order.getUid(),activate_kw=activate_kw)\n
+            <value> <string># This script check that necessary data exists on Order\n
+order = state_change[\'object\']\n
+order.Base_checkConsistency()\n
 </string> </value>
         </item>
         <item>
@@ -96,7 +84,7 @@ for delivery_builder in delivery_builder_list:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,15 +111,10 @@ for delivery_builder in delivery_builder_list:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>_getattr_</string>
-                            <string>previous_tag</string>
-                            <string>expand_tag</string>
-                            <string>activate_kw</string>
-                            <string>delivery_builder_list</string>
-                            <string>_getiter_</string>
-                            <string>delivery_builder</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,7 +131,7 @@ for delivery_builder in delivery_builder_list:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_buildPackingList</string> </value>
+            <value> <string>Order_validateData</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

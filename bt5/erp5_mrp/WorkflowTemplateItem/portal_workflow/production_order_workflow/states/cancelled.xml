@@ -40,6 +40,14 @@
             </value>
         </item>
         <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple>
+                <string>draft_order</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>
@@ -64,41 +72,43 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <list>
-                        <string>Manager</string>
-                      </list>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

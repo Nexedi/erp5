@@ -69,7 +69,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -85,9 +84,9 @@
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -106,7 +105,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

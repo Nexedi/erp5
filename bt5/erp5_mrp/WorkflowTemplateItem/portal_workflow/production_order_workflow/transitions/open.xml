@@ -43,11 +43,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>autoPlan</string> </value>
+            <value> <string>open</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>auto_planned</string> </value>
+            <value> <string>open</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>

@@ -67,9 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>order = state_change[\'object\']\n
 \n
-expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.applyToOrderRelatedMovement(method_id=\'expand\',activate_kw=activate_kw)\n
+order.applyToOrderRelatedMovement(method_id=\'expand\')\n
 </string> </value>
         </item>
         <item>
@@ -116,8 +114,6 @@ order.applyToOrderRelatedMovement(method_id=\'expand\',activate_kw=activate_kw)\
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>_getattr_</string>
-                            <string>expand_tag</string>
-                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>
