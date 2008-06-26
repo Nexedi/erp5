@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Pay Sheet Model</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>paysheet_model_interaction_workflow, validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Model Line</type>
