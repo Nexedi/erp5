@@ -12,16 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_efficiency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,34 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_transformation_content_list_listbox</string> </value>
+                    <value> <string>my_efficiency</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Transformation_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Transformation Transformed Resource</string>
-                          <string>Transformation Transformed Resource</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>selection_name</string> </key>
-                    <value> <string>transformation_view_transformation_transformed_resource_list_selection_name</string> </value>
+                    <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Transformed Resources</string> </value>
                 </item>
               </dictionary>
             </value>

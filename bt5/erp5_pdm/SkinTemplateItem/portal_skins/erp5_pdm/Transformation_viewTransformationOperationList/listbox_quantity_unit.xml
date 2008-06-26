@@ -13,15 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_quantity_unit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -66,6 +64,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -78,37 +82,40 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_transformation_content_list_listbox</string> </value>
+                    <value> <string>my_quantity_unit</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Transformation_viewFieldLibrary</string> </value>
+                    <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_types</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Transformation Transformed Resource</string>
-                          <string>Transformation Transformed Resource</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
-                </item>
-                <item>
-                    <key>                 <string>selection_name</string> </key>
-                    <value> <string>transformation_view_transformation_transformed_resource_list_selection_name</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Transformed Resources</string> </value>
-                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: (\'cell\' in CONTEXTS and cell.getResource()) and cell.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or getattr(here.portal_categories[\'quantity_unit\'], preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(base=0, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>

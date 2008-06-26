@@ -14,8 +14,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>columns</string>
-                <string>all_columns</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
               </list>
@@ -78,76 +76,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key>                 <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>industrial_phase_translated_title</string>
-                          <string>Industrial Phase</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_translated_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>industrial_phase_translated_title</string>
-                          <string>Industrial Phase</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_translated_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_transformation_content_list_listbox</string> </value>
