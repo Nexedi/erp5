@@ -102,12 +102,12 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
-                        </tuple>
-                        <tuple>
                           <string>quantity_unit_translated_title</string>
                           <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>Efficiency</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
@@ -151,12 +151,12 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
-                        </tuple>
-                        <tuple>
                           <string>quantity_unit_translated_title</string>
                           <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>Efficiency</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
