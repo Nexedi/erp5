@@ -1183,7 +1183,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(pay_sheet.PaySheetTransaction_getMovementList(), [])
     # we add a line, then it is returned in the list
     line = pay_sheet.newContent(portal_type='Pay Sheet Line')
-    #self.assertEquals(1, len(pay_sheet.PaySheetTransaction_getMovementList()))
+    self.assertEquals(1, len(pay_sheet.PaySheetTransaction_getMovementList()))
 
     # if the line has cells with different tax categories, new properties are
     # added to this line.
