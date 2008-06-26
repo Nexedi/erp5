@@ -75,10 +75,10 @@ packing_list.updateAppliedRule()\n
 \n
 \n
 packing_list_portal_type = packing_list.getPortalType()\n
-if packing_list_portal_type == \'Sale Packing List\':\n
-  delivery_builder = packing_list.portal_deliveries.sale_packing_list_builder\n
-elif packing_list_portal_type == \'Purchase Packing List\':\n
-  delivery_builder = packing_list.portal_deliveries.purchase_packing_list_builder\n
+if packing_list_portal_type == \'Production Packing List\':\n
+  delivery_builder = packing_list.portal_deliveries.production_packing_list_builder\n
+elif packing_list_portal_type == \'Production Report\':\n
+  delivery_builder = packing_list.portal_deliveries.production_report_builder\n
 \n
 packing_list_relative_url = packing_list.getRelativeUrl()\n
 delivery_builder.updateFromSimulation(packing_list_relative_url)\n
