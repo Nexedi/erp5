@@ -52,7 +52,8 @@ class TestProductionOrderMixin(TestOrderMixin):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel', 'erp5_mrp')
+    return TestOrderMixin.getBusinessTemplateList(self) + \
+        ( 'erp5_mrp', )
 
   def createCategories(self):
     """ 
