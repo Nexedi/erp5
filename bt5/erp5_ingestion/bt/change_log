@@ -1,3 +1,6 @@
+2008-06-26 yusei
+* Revise version to 5.1.
+
 2008-06-19 yusei
 * Fixed Document_getPropertyDictFromContent and now it returns only true title metadata.
 
