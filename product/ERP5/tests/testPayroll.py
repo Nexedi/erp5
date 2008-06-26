@@ -1132,6 +1132,50 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(cell_c.getQuantityRangeMax(), 5)
 
 
+  def test_model_slice_cell_range(self):
+    base_id = 'cell'
+    model_1 = self.paysheet_model_module.newContent(
+                            portal_type='Pay Sheet Model',
+                            variation_settings_category_list=
+                                  ('salary_range/france',))
+
+    model_2 = self.paysheet_model_module.newContent(
+                            portal_type='Pay Sheet Model',
+                            specialise_value=model_1,)
+
+    cell = model_1.newCell('salary_range/france/tranche_a',
+                    portal_type='Pay Sheet Model Slice',
+                    base_id='cell')
+    cell.setQuantityRangeMin(1)
+    cell.setQuantityRangeMax(2)
+    
+    # model 2 gets cell values from model 1 (see test_07_model_getCell)
+    self.assertEquals(1,
+        model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMin())
+    self.assertEquals(2,
+        model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMax())
+
+    # model 2 can override values
+    model_2.edit(variation_settings_category_list=('salary_range/france',))
+    cell = model_2.newCell('salary_range/france/tranche_a',
+                    portal_type='Pay Sheet Model Slice',
+                    base_id='cell')
+    cell.setQuantityRangeMin(3)
+    cell.setQuantityRangeMax(4)
+    self.assertEquals(3,
+        model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMin())
+    self.assertEquals(4,
+        model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMax())
+
+    # when unsetting variation settings category on this model will acquire
+    # again values from specialised model
+    model_2.edit(variation_settings_category_list=())
+    self.assertEquals(1,
+        model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMin())
+    self.assertEquals(2,
+        model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMax())
+
+
   def test_PaySheetTransaction_getMovementList(self):
     # Tests PaySheetTransaction_getMovementList script
     pay_sheet = self.createPaySheet(self.model)
@@ -2422,6 +2466,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(provider, line.getSourceSectionValue())
     
+
 
 import unittest
 def test_suite():
