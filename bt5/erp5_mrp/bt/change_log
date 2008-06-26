@@ -1,3 +1,7 @@
+2008-06-26 luke
+* updated production order workflow to be consistent with current order workflow
+* continued proxification of forms
+
 2008-06-24 luke
 * updated portal types' definitions
 * proxified, cleaned up and made forms more consistent
