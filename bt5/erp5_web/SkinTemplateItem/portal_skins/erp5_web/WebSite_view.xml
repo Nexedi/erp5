@@ -107,7 +107,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>not_assigned</string> </key>
+                    <key> <string>not_assigned</string> </key>
                     <value>
                       <list>
                         <string>my_translated_validation_state_title</string>
@@ -118,6 +118,7 @@
                     <key> <string>right (Layout)</string> </key>
                     <value>
                       <list>
+                        <string>my_skin_selection_name</string>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
                         <string>my_custom_render_method_id</string>
