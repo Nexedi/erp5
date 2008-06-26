@@ -368,7 +368,6 @@ class TestPayrollMixin(ERP5ReportTestCase):
     '''
       create all usefull slices with min and max values
     '''
-    model.updateCellRange(base_id='cell')
     slice_list = []
     slice_list.append(self.addSlice(model, 'salary_range/%s' % \
         self.france_settings_forfait, 0, 9999999999999))
@@ -1039,19 +1038,15 @@ class TestPayroll(TestPayrollMixin):
         self.variation_settings_category_list)
 
     # add some cells in the models
-    model_employee.updateCellRange(base_id='cell')
     self.addSlice(model_employee, 'salary_range/%s' % \
         self.france_settings_slice_a, 0, 1)
 
-    model_company.updateCellRange(base_id='cell')
     self.addSlice(model_company, 'salary_range/%s' % \
         self.france_settings_slice_b, 2, 3)
 
-    model_company_alt.updateCellRange(base_id='cell')
     self.addSlice(model_company_alt, 'salary_range/%s' % \
         self.france_settings_forfait, 20, 30)
 
-    model_country.updateCellRange(base_id='cell')
     self.addSlice(model_country, 'salary_range/%s' % \
         self.france_settings_slice_c, 4, 5)
     
