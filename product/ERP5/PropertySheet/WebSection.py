@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2008 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,7 +27,7 @@
 
 class WebSection:
     """
-        WebSite properties for all ERP5 objects
+        WebSection properties for all ERP5 objects
     """
 
     _properties = (
