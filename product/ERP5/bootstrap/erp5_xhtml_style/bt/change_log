@@ -1,3 +1,6 @@
+2008-06-26 yusei
+* Revise version to 5.1.
+
 2008-06-18 yusei
 * Updated erp5.css. Remove overflow:auto to avoid a firefox bug and set max-width instead.
 
