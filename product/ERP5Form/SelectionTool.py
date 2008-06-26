@@ -629,6 +629,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     def firstPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the first page of a list
+        XXX: As its complementary (lastPage) is broken, this method is
+        probably not used either. If so, it should be removed along with
+        lastPage.
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
@@ -640,6 +643,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     def lastPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the last page of a list
+        XXX: This method is broken, since "total_size" field is not
+        present in the listbox rendering any longer. It should be
+        removed.
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
