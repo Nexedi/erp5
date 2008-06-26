@@ -42,7 +42,6 @@ class TestPurchaseOrder(TestOrder):
   packing_list_line_portal_type = 'Purchase Packing List Line'
   packing_list_cell_portal_type = 'Purchase Packing List Cell'
   delivery_builder_id = 'purchase_packing_list_builder'
-  order_workflow_id='order_workflow'
 
   def getTitle(self):
     return "Purchase Order"

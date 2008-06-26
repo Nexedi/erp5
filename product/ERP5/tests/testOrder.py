@@ -50,7 +50,6 @@ class TestOrderMixin:
   packing_list_line_portal_type = 'Sale Packing List Line'
   packing_list_cell_portal_type = 'Sale Packing List Cell'
   delivery_builder_id = 'sale_packing_list_builder'
-  order_workflow_id='order_workflow'
   size_list = ['Baby','Child/32','Child/34','Man','Woman']
 
   def getBusinessTemplateList(self):
@@ -738,8 +737,7 @@ class TestOrderMixin:
   def modifyOrderState(self, transition_name, sequence=None,
                        sequence_list=None):
     order = sequence.get('order')
-    order.portal_workflow.doActionFor(order, transition_name, \
-                                      wf_id=self.order_workflow_id)
+    order.portal_workflow.doActionFor(order, transition_name)
 
   def stepPlanOrder(self, sequence=None, sequence_list=None, **kw):
     self.modifyOrderState('plan_action', sequence=sequence)

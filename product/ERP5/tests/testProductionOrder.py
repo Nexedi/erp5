@@ -48,7 +48,6 @@ class TestProductionOrderMixin(TestOrderMixin):
   transformed_resource_portal_type = \
                         'Apparel Transformation Transformed Resource'
   operation_line_portal_type = 'Apparel Transformation Operation'
-  order_workflow_id='production_order_workflow'
 
   def getBusinessTemplateList(self):
     """
