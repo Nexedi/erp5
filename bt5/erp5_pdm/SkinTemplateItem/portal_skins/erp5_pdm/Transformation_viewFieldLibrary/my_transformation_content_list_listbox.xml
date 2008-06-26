@@ -114,6 +114,10 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -161,6 +165,10 @@
                         <tuple>
                           <string>Description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
                         </tuple>
                       </list>
                     </value>
