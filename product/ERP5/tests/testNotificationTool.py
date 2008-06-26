@@ -584,6 +584,45 @@ class TestNotificationToolWithCRM(TestNotificationTool):
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_crm')
 
+  def beforeTearDown(self):
+    TestNotificationTool.beforeTearDown(self)
+    self.portal.event_module.manage_delObjects(
+            list(self.portal.event_module.objectIds()))
+    get_transaction().commit()
+    self.tic()
+
+  def test_store_as_event(self):
+    # passing store_as_event=True to NotificationTool.sendMessage will store
+    # the message in an event
+    person = self.portal.person_module.newContent(
+        portal_type="Person",
+        default_email_text="userA@example.invalid")
+
+    self.portal.portal_notifications.sendMessage(
+                                  store_as_event=True,
+                                  recipient=person,
+                                  subject='Subject',
+                                  message='Message')
+    get_transaction().commit()
+    self.tic()
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals(['userA@example.invalid'], mto)
+    
+    # check that an event has been created
+    event_list = self.portal.event_module.contentValues()
+    self.assertEquals(1, len(event_list))
+    
+    event = event_list[0]
+    self.assertEquals('Mail Message', event.getPortalTypeName())
+    self.assertEquals('Subject', event.getTitle())
+    self.assertEquals('Message', event.getTextContent())
+    self.assertNotEquals(None, event.getStartDate())
+    self.assertEquals(person, event.getDestinationValue())
+    self.assertEquals('started', event.getSimulationState())
+
 
 def test_suite():
   suite = unittest.TestSuite()
