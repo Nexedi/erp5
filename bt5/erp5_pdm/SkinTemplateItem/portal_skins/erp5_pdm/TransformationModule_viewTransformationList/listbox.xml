@@ -22,8 +22,6 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
@@ -96,7 +94,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>getResourceTitle</string>
+                          <string>resource_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
@@ -104,7 +102,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -125,7 +123,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>getResourceTitle</string>
+                          <string>resource_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
@@ -133,7 +131,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -159,29 +157,6 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>getResourceTitle</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key>                 <string>selection_name</string> </key>
                     <value> <string>transformation_module_transformation_selection</string> </value>
                 </item>
@@ -192,29 +167,6 @@
                         <tuple>
                           <string>title</string>
                           <string>ascending</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>getResourceTitle</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
-                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
