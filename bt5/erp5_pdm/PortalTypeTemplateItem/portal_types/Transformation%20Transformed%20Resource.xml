@@ -65,9 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A bank account number holds a collection of numbers\n
-and codes (ex. SWIFT, RIB, etc.) which may be used to\n
-identify a bank account.</string> </value>
+            <value> <string>Defines Transformed Resource used in Transformation</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

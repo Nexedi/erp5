@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -61,9 +65,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A bank account number holds a collection of numbers\n
-and codes (ex. SWIFT, RIB, etc.) which may be used to\n
-identify a bank account.</string> </value>
+            <value> <string>Defines Optional Resource used in Transformation</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -72,6 +74,12 @@ identify a bank account.</string> </value>
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -85,6 +93,10 @@ identify a bank account.</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
