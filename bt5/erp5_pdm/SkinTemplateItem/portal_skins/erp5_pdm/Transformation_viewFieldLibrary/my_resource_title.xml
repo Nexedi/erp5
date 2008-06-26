@@ -13,14 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>display_width</string>
                 <string>description</string>
-                <string>default_module</string>
                 <string>portal_type</string>
-                <string>base_category</string>
-                <string>items</string>
               </list>
             </value>
         </item>
@@ -71,15 +66,9 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -94,24 +83,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
-                    <value> <string>resource</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>default_module</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string>apparel_shape_module</string> </value>
                 </item>
                 <item>
                     <key>                 <string>description</string> </key>
                     <value> <string>The title of the main resource involved</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -147,22 +124,6 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>REQUEST/relation_item_list</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="TALESMethod" module="Products.Formulator.TALESField"/>

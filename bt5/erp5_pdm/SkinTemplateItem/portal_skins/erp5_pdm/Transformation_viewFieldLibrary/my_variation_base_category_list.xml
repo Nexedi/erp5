@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>size</string>
                 <string>items</string>
               </list>
             </value>
@@ -66,7 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -91,8 +90,10 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <key>                 <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

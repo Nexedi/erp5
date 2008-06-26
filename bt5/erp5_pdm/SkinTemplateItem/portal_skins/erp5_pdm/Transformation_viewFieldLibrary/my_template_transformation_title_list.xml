@@ -13,12 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>default_module</string>
-                <string>portal_type</string>
                 <string>base_category</string>
-                <string>items</string>
+                <string>portal_type</string>
               </list>
             </value>
         </item>
@@ -69,12 +66,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
-                    <value>
-                      <none/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -90,11 +81,7 @@
                     <value> <string>specialise</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>default_module</string> </key>
+                    <key> <string>default_module</string> </key>
                     <value> <string>transformation_module</string> </value>
                 </item>
                 <item>
