@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf8 -*-
 # Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #          Romain Courteaud <romain@nexedi.com>
@@ -28,8 +28,10 @@
 ##############################################################################
 
 import unittest
+import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from zLOG import LOG
@@ -2372,6 +2374,149 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertNotEquals(related_packing_list, None)
     self.assertEquals(0, len(related_packing_list.contentValues(
                                           portal_type='Payment Condition')))
+
+  def test_Order_viewAsODT(self):
+    # tests order printout
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Order',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
+  def test_Order_viewAsODT_person(self):
+    # test order printout with a person as destination
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.person_module.newContent(
+                              portal_type='Person', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Order',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
+
+  def test_Order_viewAsODT_image(self):
+    # tests order printout with images
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    image = FileUpload(os.path.join(os.path.dirname(__file__),
+                      'test_data', 'images', 'erp5_logo.png'), 'rb')
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client',
+                              default_image_file=image)
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor',
+                              default_image_file=image)
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Order',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
+  def test_Order_viewAsODT_non_ascii(self):
+    # test order printout with non ascii characters
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Résource',)
+    tax = self.portal.tax_module.newContent(portal_type='Tax', title='tàx')
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              title='Cliént',
+                              default_address_city='Vïllà')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              title='Vendœr',
+                              default_address_city='Vïllà')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Ordàr',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            reference='à',
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    tax_line = order.newContent(portal_type='Tax Line',
+                                resource_value=tax,
+                                quantity=30,
+                                price=.26)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
 
 
 
