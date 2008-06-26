@@ -105,6 +105,14 @@
                           <string>Recipient or Beneficiary</string>
                         </tuple>
                         <tuple>
+                          <string>min_delay</string>
+                          <string>Min. delay</string>
+                        </tuple>
+                        <tuple>
+                          <string>max_delay</string>
+                          <string>Max. delay</string>
+                        </tuple>
+                        <tuple>
                           <string>deliverable</string>
                           <string>Last</string>
                         </tuple>
@@ -122,6 +130,14 @@
                         <tuple>
                           <string>deliverable</string>
                           <string>deliverable</string>
+                        </tuple>
+                        <tuple>
+                          <string>min_delay</string>
+                          <string>min_delay</string>
+                        </tuple>
+                        <tuple>
+                          <string>max_delay</string>
+                          <string>max_delay</string>
                         </tuple>
                       </list>
                     </value>

@@ -91,6 +91,9 @@
                     <value>
                       <list>
                         <string>listbox_deliverable</string>
+                        <string>listbox_title</string>
+                        <string>listbox_min_delay</string>
+                        <string>listbox_max_delay</string>
                       </list>
                     </value>
                 </item>
@@ -99,7 +102,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
