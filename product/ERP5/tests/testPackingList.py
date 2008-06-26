@@ -931,7 +931,6 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
   packing_list_line_portal_type = 'Purchase Packing List Line'
   packing_list_cell_portal_type = 'Purchase Packing List Cell'
   delivery_builder_id = 'purchase_packing_list_builder'
-  order_workflow_id = 'order_workflow'
   container_portal_type = None
   container_line_portal_type = None
   container_cell_portal_type = None
