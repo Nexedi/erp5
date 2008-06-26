@@ -63,6 +63,8 @@ def purgeFieldValueCache():
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
   """
+  func_code = None
+
   def __init__(self, method_id, default=''):
     self._method_id = method_id
     self._default = default
@@ -72,7 +74,10 @@ class WidgetDelegatedMethod(Method):
     proxied_field = field.getRecursiveTemplateField()
     if proxied_field:
       proxied_method = getattr(proxied_field.widget, self._method_id)
-      return proxied_method(field, *args, **kw)
+      try:
+        return proxied_method(field, *args, **kw)
+      finally:
+        self.func_code = getattr(proxied_method, 'func_code', None)
     return self._default
 
 
