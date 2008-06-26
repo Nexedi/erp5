@@ -23,6 +23,7 @@
                 <string>columns</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -106,6 +107,21 @@
                         <tuple>
                           <string>deliverable</string>
                           <string>Last</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                        <tuple>
+                          <string>deliverable</string>
+                          <string>deliverable</string>
                         </tuple>
                       </list>
                     </value>

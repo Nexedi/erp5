@@ -89,7 +89,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_deliverable</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -97,6 +99,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
