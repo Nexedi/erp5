@@ -1443,30 +1443,20 @@ class CategoryTool( UniqueObject, Folder, Base ):
         - none_sql_value is used in order to specify what is the None value into
           sql tables
       """
+      def renderUIDValue(uid):
+        uid = ((uid is None) and (none_sql_value, ) or (uid, ))[0]
+        if uid is None:
+          return 'is NULL'
+        else:
+          return '= %s' % (uid, )
       if isinstance(category_list, str):
         category_list = [category_list]
-      sql_expr = []
-      for category in category_list:
-        if category is None:
-          pass
-        elif isinstance(category, str):
-          if category:
-            category_uid = self.getCategoryUid(category)
-            base_category_uid = self.getBaseCategoryUid(category)
-            expression = ''
-            if none_sql_value is not None and category_uid is None:
-              category_uid = none_sql_value
-            if category_uid is None:
-              expression += '%s.category_uid is NULL' % query_table
-            else:
-              expression += '%s.category_uid = %s' % (query_table,category_uid)
-            if none_sql_value is not None and base_category_uid is None:
-              base_category_uid = none_sql_value
-            if base_category_uid is None:
-              expression += ' AND %s.base_category_uid is NULL' % query_table
-            else:
-              expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
-            sql_expr += ["(%s)" % expression]
+      sql_expr = ['(%s.category_uid %s AND %s.base_category_uid %s)' %\
+                  (query_table, renderUIDValue(self.getCategoryUid(x)),
+                   query_table, renderUIDValue(self.getBaseCategoryUid(x)))
+                   for x in category_list if isinstance(x, str) and x]
+      # XXX: This "if" is meaningless. But as it changes the return value,
+      # it's dagerous to remove it without good testing.
       if len(sql_expr) > 0:
         sql_expr = ' OR '.join(sql_expr)
       return sql_expr
