@@ -85,12 +85,15 @@ def getRelatedLatest(category):\n
   funcname = \'get%sValueList\' % convertToUpperCase(category)\n
   func = getattr(context, funcname)\n
   return [o.getLatestVersionValue() for o in func()]\n
-\n
+  \n
 relation_id = kw.get(\'relation_id\') # XXX-JPS Change \'what\' to more explicit name and include in API of script\n
+\n
 if relation_id == \'wiki_predecessor\':\n
-  return context.getImplicitPredecessorValueList()\n
+  return [i.getObject()\n
+          for i in context.getImplicitPredecessorValueList()]\n
 if relation_id == \'wiki_successor\':\n
-  return context.getImplicitSuccessorValueList()\n
+  return [i.getObject() \n
+          for i in context.getImplicitSuccessorValueList()]\n
 if relation_id.startswith(\'related\'):\n
   return getRelatedLatest(relation_id[8:])\n
 if relation_id == \'cloud\':\n
@@ -165,13 +168,13 @@ return [] # failover - undefined relation\n
                             <string>getRelatedLatest</string>
                             <string>_getattr_</string>
                             <string>relation_id</string>
-                            <string>context</string>
-                            <string>_getitem_</string>
-                            <string>dic</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>context</string>
                             <string>i</string>
+                            <string>_getitem_</string>
+                            <string>dic</string>
                             <string>predecessor_value_list</string>
                             <string>successor_value_list</string>
                             <string>similar_value_list</string>
