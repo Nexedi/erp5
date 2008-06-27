@@ -77,7 +77,6 @@ packing_list.edit(\n
   incoterm=related_order.getIncoterm(),\n
   destination_administration_value=\\\n
       related_order.getDestinationAdministrationValue(),\n
-  title=related_order.getTitle(),\n
   activate_kw={\'tag\':tag},\n
 )\n
 \n
