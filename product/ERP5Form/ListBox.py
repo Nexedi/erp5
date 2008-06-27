@@ -2213,18 +2213,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
   def getLineStart(self):
     """Return a requested start number.
     """
-    try:
-      start = self.request.get('list_start')
-      start = int(start)
-    except (TypeError, KeyError):
-      param_dict = self.getParamDict()
-      start = param_dict.get('list_start', 0)
-      if isinstance(start, list):
-        start = start[0]
-      start = int(start)
-    start = max(start, 0)
-
-    return start
+    return int(self.getParamDict().get('list_start', 0))
 
   getLineStart = lazyMethod(getLineStart)
 

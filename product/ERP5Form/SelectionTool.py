@@ -672,8 +672,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
       lines = params.get('list_lines', 0)
-      start = params.get('list_start', 0)
-      REQUEST.form['list_start'] = int(start) + int(lines)
+      start = REQUEST.form.pop('list_start', 0)
+      params['list_start'] = int(start) + int(lines)
+      selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
@@ -686,8 +687,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
       lines = params.get('list_lines', 0)
-      start = params.get('list_start', 0)
-      REQUEST.form['list_start'] = max(int(start) - int(lines), 0)
+      start = REQUEST.form.pop('list_start', 0)
+      params['list_start'] = max(int(start) - int(lines), 0)
+      selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
@@ -699,7 +701,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       params = selection.getParams()
-      params['list_start'] = REQUEST.form.get('list_start', 0)
+      params['list_start'] = int(REQUEST.form.pop('list_start', 0))
       selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
