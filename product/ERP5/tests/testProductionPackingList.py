@@ -184,7 +184,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       consumed_report = consumed_report,
     )
 
-  def stepCheckProducedDeliveryPackingListConfirmed(self, sequence=None, \
+  def stepCheckProducedDeliveryPackingListIsConfirmed(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
@@ -193,7 +193,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckProducedDeliveryPackingListDelivered(self, sequence=None, \
+  def stepCheckProducedDeliveryPackingListIsDelivered(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
@@ -202,7 +202,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckSupplyDeliveryPackingListDelivered(self, sequence=None, \
+  def stepCheckSupplyDeliveryPackingListIsDelivered(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
@@ -211,7 +211,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckProducedReportDelivered(self, sequence=None, \
+  def stepCheckProducedReportIsDelivered(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
@@ -220,7 +220,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckConsumedReportDelivered(self, sequence=None, \
+  def stepCheckConsumedReportIsDelivered(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
@@ -229,7 +229,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckProducedDeliveryPackingListSolved(self, sequence=None, \
+  def stepCheckProducedDeliveryPackingListIsSolved(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
@@ -238,7 +238,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getCausalityState()
     )
 
-  def stepCheckSupplyDeliveryPackingListConfirmed(self, sequence=None, \
+  def stepCheckSupplyDeliveryPackingListIsConfirmed(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
@@ -247,7 +247,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckSupplyDeliveryPackingListSolved(self, sequence=None, \
+  def stepCheckSupplyDeliveryPackingListIsSolved(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
@@ -256,7 +256,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getCausalityState()
     )
 
-  def stepCheckProducedReportConfirmed(self, sequence=None, \
+  def stepCheckProducedReportIsConfirmed(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
@@ -265,7 +265,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckProducedReportSolved(self, sequence=None, \
+  def stepCheckProducedReportIsSolved(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
@@ -274,7 +274,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getCausalityState()
     )
 
-  def stepCheckConsumedReportConfirmed(self, sequence=None, \
+  def stepCheckConsumedReportIsConfirmed(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
@@ -283,7 +283,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getSimulationState()
     )
 
-  def stepCheckConsumedReportSolved(self, sequence=None, \
+  def stepCheckConsumedReportIsSolved(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
@@ -308,17 +308,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
     sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
                       CheckSourcingDeliverySimulation \
                       \
-                      CheckProducedDeliveryPackingListConfirmed \
-                      CheckProducedDeliveryPackingListSolved\
+                      CheckProducedDeliveryPackingListIsConfirmed \
+                      CheckProducedDeliveryPackingListIsSolved\
                       \
-                      CheckSupplyDeliveryPackingListConfirmed \
-                      CheckSupplyDeliveryPackingListSolved\
+                      CheckSupplyDeliveryPackingListIsConfirmed \
+                      CheckSupplyDeliveryPackingListIsSolved\
                       \
-                      CheckProducedReportConfirmed \
-                      CheckProducedReportSolved\
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsSolved\
                       \
-                      CheckConsumedReportConfirmed \
-                      CheckConsumedReportSolved\
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsSolved\
                       \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -330,17 +330,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
     sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
                       CheckSourcingDeliverySimulation \
                       \
-                      CheckProducedDeliveryPackingListConfirmed \
-                      CheckProducedDeliveryPackingListSolved\
+                      CheckProducedDeliveryPackingListIsConfirmed \
+                      CheckProducedDeliveryPackingListIsSolved\
                       \
-                      CheckSupplyDeliveryPackingListConfirmed \
-                      CheckSupplyDeliveryPackingListSolved\
+                      CheckSupplyDeliveryPackingListIsConfirmed \
+                      CheckSupplyDeliveryPackingListIsSolved\
                       \
-                      CheckProducedReportConfirmed \
-                      CheckProducedReportSolved\
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsSolved\
                       \
-                      CheckConsumedReportConfirmed \
-                      CheckConsumedReportSolved\
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsSolved\
                       \
                       SetReadyProducedDeliveryPackingList \
                       StartProducedDeliveryPackingList \
@@ -350,17 +350,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       \
                       CheckSourcingDeliverySimulation \
                       \
-                      CheckProducedDeliveryPackingListDelivered \
-                      CheckProducedDeliveryPackingListSolved\
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
                       \
-                      CheckSupplyDeliveryPackingListConfirmed \
-                      CheckSupplyDeliveryPackingListSolved\
+                      CheckSupplyDeliveryPackingListIsConfirmed \
+                      CheckSupplyDeliveryPackingListIsSolved\
                       \
-                      CheckProducedReportConfirmed \
-                      CheckProducedReportSolved\
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsSolved\
                       \
-                      CheckConsumedReportConfirmed \
-                      CheckConsumedReportSolved\
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsSolved\
                       \
                       SetReadySupplyDeliveryPackingList \
                       StartSupplyDeliveryPackingList \
@@ -370,17 +370,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       \
                       CheckSourcingDeliverySimulation \
                       \
-                      CheckProducedDeliveryPackingListDelivered \
-                      CheckProducedDeliveryPackingListSolved\
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
                       \
-                      CheckSupplyDeliveryPackingListDelivered \
-                      CheckSupplyDeliveryPackingListSolved\
+                      CheckSupplyDeliveryPackingListIsDelivered \
+                      CheckSupplyDeliveryPackingListIsSolved\
                       \
-                      CheckProducedReportConfirmed \
-                      CheckProducedReportSolved\
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsSolved\
                       \
-                      CheckConsumedReportConfirmed \
-                      CheckConsumedReportSolved\
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsSolved\
                       \
                       SetReadyProducedReport \
                       StartProducedReport \
@@ -390,17 +390,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       \
                       CheckSourcingDeliverySimulation \
                       \
-                      CheckProducedDeliveryPackingListDelivered \
-                      CheckProducedDeliveryPackingListSolved\
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
                       \
-                      CheckSupplyDeliveryPackingListDelivered \
-                      CheckSupplyDeliveryPackingListSolved\
+                      CheckSupplyDeliveryPackingListIsDelivered \
+                      CheckSupplyDeliveryPackingListIsSolved\
                       \
-                      CheckProducedReportDelivered \
-                      CheckProducedReportSolved\
+                      CheckProducedReportIsDelivered \
+                      CheckProducedReportIsSolved\
                       \
-                      CheckConsumedReportConfirmed \
-                      CheckConsumedReportSolved\
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsSolved\
                       \
                       SetReadyConsumedReport \
                       StartConsumedReport \
@@ -410,17 +410,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       \
                       CheckSourcingDeliverySimulation \
                       \
-                      CheckProducedDeliveryPackingListDelivered \
-                      CheckProducedDeliveryPackingListSolved\
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
                       \
-                      CheckSupplyDeliveryPackingListDelivered \
-                      CheckSupplyDeliveryPackingListSolved\
+                      CheckSupplyDeliveryPackingListIsDelivered \
+                      CheckSupplyDeliveryPackingListIsSolved\
                       \
-                      CheckProducedReportDelivered \
-                      CheckProducedReportSolved\
+                      CheckProducedReportIsDelivered \
+                      CheckProducedReportIsSolved\
                       \
-                      CheckConsumedReportDelivered \
-                      CheckConsumedReportSolved\
+                      CheckConsumedReportIsDelivered \
+                      CheckConsumedReportIsSolved\
                       \
                       '
     sequence_list.addSequenceString(sequence_string)
