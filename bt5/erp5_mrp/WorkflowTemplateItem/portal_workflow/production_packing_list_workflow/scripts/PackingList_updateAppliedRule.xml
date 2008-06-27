@@ -67,10 +67,29 @@
             <key> <string>_body</string> </key>
             <value> <string>packing_list = state_change[\'object\']\n
 \n
-packing_list.startBuilding()\n
-packing_list.activate().updateCausalityState()\n
+activate_kw = {}\n
+related_order = packing_list.getCausalityValue()\n
+after_path_list = []\n
+if related_order is not None:\n
+  after_path_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
+  after_path_list.append(related_order.getPath() + \'_expand\')\n
+tag = packing_list.getPath()+\'_expand\'\n
+activate_kw = {\'tag\':tag,\'priority\':3}\n
 \n
-packing_list.updateAppliedRule("default_production_packing_list_rule")\n
+packing_list.activate(after_path=after_path_list,tag=tag,\n
+    priority=3).updateAppliedRule(rule_id = \'default_production_packing_list_rule\',activate_kw=activate_kw)\n
+\n
+\n
+# Make sure to reindex related simulation movement if we are already\n
+# simulated, call reindexObject, not immediateReindexObject so that\n
+# catalogObjectList will be called with many objects\n
+packing_list.activate(after_path=after_path_list,tag=tag,\n
+     priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
+\n
+packing_list.startBuilding()\n
+packing_list.activate(\n
+  after_tag = tag,\n
+).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -87,7 +106,7 @@ packing_list.updateAppliedRule("default_production_packing_list_rule")\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,9 +133,15 @@ packing_list.updateAppliedRule("default_production_packing_list_rule")\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>activate_kw</string>
                             <string>_getattr_</string>
+                            <string>related_order</string>
+                            <string>after_path_list</string>
+                            <string>None</string>
+                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>
