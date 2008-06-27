@@ -70,6 +70,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -89,7 +93,7 @@
                     <value> <string>SupplyLink_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
