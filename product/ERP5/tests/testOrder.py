@@ -679,6 +679,14 @@ class TestOrderMixin:
     """
       Test if simulation is matching order
     """
+    self.checkOrderRuleSimulation(rule_id = 'default_order_rule', sequence=sequence, \
+        sequence_list=sequence_list, **kw)
+    
+  def checkOrderRuleSimulation(self, rule_id, sequence=None, sequence_list=None, **kw):
+    """
+      Test if simulation is matching order, be sure that rule_id is used
+      to expand simulation for order
+    """
     order = sequence.get('order')
     related_applied_rule_list = order.getCausalityRelatedValueList( \
                                    portal_type=self.applied_rule_portal_type)
@@ -688,7 +696,7 @@ class TestOrderMixin:
     if order_state in no_applied_rule_state:
       self.assertEquals(0, len(related_applied_rule_list))
     else:
-      LOG('stepCheckOrderSimulation', 0, 'related_applied_rule_list: %s' %
+      LOG('stepCheckOrderRuleSimulation', 0, 'related_applied_rule_list: %s' %
                    str([x.getObject() for x in related_applied_rule_list]))
       self.assertEquals(1, len(related_applied_rule_list))
       applied_rule = related_applied_rule_list[0].getObject()
@@ -697,9 +705,9 @@ class TestOrderMixin:
       self.failUnless(order_state, \
                       applied_rule.getLastExpandSimulationState())
 
-      # Test if applied rule has a specialise value with default_order_rule
+      # Test if applied rule has a specialise value with passed rule_id
       portal_rules = getToolByName(order, 'portal_rules')
-      self.assertEquals(portal_rules.default_order_rule, \
+      self.assertEquals(getattr(portal_rules,rule_id), \
                         applied_rule.getSpecialiseValue())
 
       simulation_movement_list = applied_rule.objectValues()
