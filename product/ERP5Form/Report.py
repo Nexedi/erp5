@@ -266,7 +266,7 @@ class ReportSection:
   _no_parameter_ = []
 
   security.declarePublic('pushReport')
-  def pushReport(self, context, field_prefix=None):
+  def pushReport(self, context, render_prefix=None):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
@@ -276,8 +276,8 @@ class ReportSection:
     selection_list = [self.selection_name]
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_name = context[self.getFormId()].listbox.get_value('selection_name')
-      if field_prefix is not None:
-        selection_name = '%s_%s' % (field_prefix, selection_name)
+      if render_prefix is not None:
+        selection_name = '%s_%s' % (render_prefix, selection_name)
       selection_list += [selection_name]
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
@@ -330,7 +330,7 @@ class ReportSection:
     REQUEST.form = {}
 
   security.declarePublic('popReport')
-  def popReport(self, context, field_prefix=None):
+  def popReport(self, context, render_prefix=None):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       if self.saved_request[k] is self._no_parameter_:
@@ -342,7 +342,7 @@ class ReportSection:
     selection_list = []
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_name = context[self.getFormId()].listbox.get_value('selection_name')
-      if field_prefix is not None:
+      if render_prefix is not None:
         # Return before cleanup, because there is no interest in cleaning up
         # what won't be shared.
         return
