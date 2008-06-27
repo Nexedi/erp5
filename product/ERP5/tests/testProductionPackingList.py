@@ -47,6 +47,22 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list = sequence.get('packing_list')
     packing_list.portal_workflow.doActionFor(packing_list, transition_name)
 
+  def stepAcceptDecisionProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+    self.modifyPackingListState('accept_decision_action', sequence=sequence, packing_list=packing_list)
+
+  def stepAdoptPrevisionSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+
+  def stepAdoptPrevisionProducedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+
+  def stepAdoptPrevisionConsumedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+
   def stepSetReadyProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
     self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
@@ -126,6 +142,21 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
     packing_list = sequence.get('consumed_report')
     self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'delivered')
+
+  def stepDeceraseProducedDeliveryPackingListQuantity(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+    
+    for line in packing_list.getMovementList():
+      line.edit(
+        quantity = line.getQuantity() - 1.0
+      )
+
+  def stepCheckSourcingDeliverySimulationDecerasedQuantity(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+    TODO
+    """
+    self.logMessage('TODO')
 
   def stepCheckSourcingDeliverySimulation(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -238,6 +269,24 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getCausalityState()
     )
 
+  def stepCheckProducedDeliveryPackingListIsDiverged(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+
+    self.assertEquals(
+      'diverged',
+      packing_list.getCausalityState()
+    )
+
+  def stepCheckProducedDeliveryPackingListIsCalculating(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+
+    self.assertEquals(
+      'calculating',
+      packing_list.getCausalityState()
+    )
+
   def stepCheckSupplyDeliveryPackingListIsConfirmed(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
@@ -253,6 +302,15 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
 
     self.assertEquals(
       'solved',
+      packing_list.getCausalityState()
+    )
+
+  def stepCheckSupplyDeliveryPackingListIsDiverged(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+
+    self.assertEquals(
+      'diverged',
       packing_list.getCausalityState()
     )
 
@@ -274,6 +332,15 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getCausalityState()
     )
 
+  def stepCheckProducedReportIsDiverged(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+
+    self.assertEquals(
+      'diverged',
+      packing_list.getCausalityState()
+    )
+
   def stepCheckConsumedReportIsConfirmed(self, sequence=None, \
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
@@ -289,6 +356,15 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
 
     self.assertEquals(
       'solved',
+      packing_list.getCausalityState()
+    )
+
+  def stepCheckConsumedReportIsDiverged(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+
+    self.assertEquals(
+      'diverged',
       packing_list.getCausalityState()
     )
 
@@ -414,7 +490,133 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    # TODO: check case of solving divergence on every delivery
+    # Check a case, when Produced Delivery Packing List is diverged
+    # then accept this decision, next deliver it, then adopt prevision
+    # on rest of documents and deliver them - do it one by one
+    sequence_string = delivery_check_sequence_string + '\
+                      DeceraseProducedDeliveryPackingListQuantity \
+                      \
+                      CheckProducedDeliveryPackingListIsCalculating \
+                      Tic \
+                      CheckProducedDeliveryPackingListIsDiverged \
+                      AcceptDecisionProducedDeliveryPackingList \
+                      Tic \
+                      CheckProducedDeliveryPackingListIsSolved \
+                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      \
+                      CheckSupplyDeliveryPackingListIsConfirmed \
+                      CheckSupplyDeliveryPackingListIsDiverged\
+                      \
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsDiverged\
+                      \
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsDiverged\
+                      \
+                      SetReadyProducedDeliveryPackingList \
+                      StartProducedDeliveryPackingList \
+                      StopProducedDeliveryPackingList \
+                      DeliverProducedDeliveryPackingList \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      \
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
+                      \
+                      CheckSupplyDeliveryPackingListIsConfirmed \
+                      CheckSupplyDeliveryPackingListIsDiverged\
+                      \
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsDiverged\
+                      \
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsDiverged\
+                      \
+                      AdoptPrevisionSupplyDeliveryPackingList \
+                      Tic \
+                      CheckSupplyDeliveryPackingListIsSolved \
+                      \
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsDiverged\
+                      \
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsDiverged\
+                      \
+                      SetReadySupplyDeliveryPackingList \
+                      StartSupplyDeliveryPackingList \
+                      StopSupplyDeliveryPackingList \
+                      DeliverSupplyDeliveryPackingList \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      \
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
+                      \
+                      CheckSupplyDeliveryPackingListIsDelivered \
+                      CheckSupplyDeliveryPackingListIsSolved\
+                      \
+                      CheckProducedReportIsConfirmed \
+                      CheckProducedReportIsDiverged\
+                      \
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsDiverged\
+                      \
+                      AdoptPrevisionProducedReport \
+                      Tic \
+                      CheckProducedReportIsSolved \
+                      \
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsDiverged\
+                      \
+                      SetReadyProducedReport \
+                      StartProducedReport \
+                      StopProducedReport \
+                      DeliverProducedReport \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      \
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
+                      \
+                      CheckSupplyDeliveryPackingListIsDelivered \
+                      CheckSupplyDeliveryPackingListIsSolved \
+                      \
+                      CheckProducedReportIsDelivered \
+                      CheckProducedReportIsSolved\
+                      \
+                      CheckConsumedReportIsConfirmed \
+                      CheckConsumedReportIsDiverged\
+                      \
+                      AdoptPrevisionConsumedReport \
+                      Tic \
+                      CheckProducedReportIsSolved \
+                      \
+                      SetReadyConsumedReport \
+                      StartConsumedReport \
+                      StopConsumedReport \
+                      DeliverConsumedReport \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      \
+                      CheckProducedDeliveryPackingListIsDelivered \
+                      CheckProducedDeliveryPackingListIsSolved\
+                      \
+                      CheckSupplyDeliveryPackingListIsDelivered \
+                      CheckSupplyDeliveryPackingListIsSolved\
+                      \
+                      CheckProducedReportIsDelivered \
+                      CheckProducedReportIsSolved\
+                      \
+                      CheckConsumedReportIsDelivered \
+                      CheckConsumedReportIsSolved\
+                      \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
     sequence_list.play(self)
 
 def test_suite():
