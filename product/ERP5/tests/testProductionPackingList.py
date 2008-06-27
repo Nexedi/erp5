@@ -40,45 +40,6 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                           ERP5TypeTestCase):
   """Mixin for testing Production Packing Lists and Production Reports"""
 
-  def stepCreatePackingList(self,sequence=None, sequence_list=None, **kw):
-    """
-      Create a empty packing_list
-    """
-    organisation = sequence.get('organisation')
-#     person = sequence.get('person')
-    portal = self.getPortal()
-    packing_list_module = portal.getDefaultModule(portal_type=self.packing_list_portal_type)
-    packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
-    packing_list.edit(
-      title = "PackingList",
-      start_date = self.datetime + 10,
-      stop_date = self.datetime + 20,
-    )
-    if organisation is not None:
-      packing_list.edit(source_value=organisation,
-                 source_section_value=organisation,
-                 destination_value=organisation,
-                 destination_section_value=organisation,
-                 source_decision_value=organisation,
-                 destination_decision_value=organisation,
-                 source_administration_value=organisation,
-                 destination_administration_value=organisation,
-                 )
-    sequence.edit( packing_list = packing_list )
-
-  def stepSetPackingListProfile(self,sequence=None, sequence_list=None, **kw):
-    """
-      Set different source and destination on the packing_list
-    """
-    organisation1 = sequence.get('organisation1')
-    organisation2 = sequence.get('organisation2')
-    packing_list = sequence.get('packing_list')
-    packing_list.edit( source_value = organisation1,
-                source_section_value = organisation1,
-                destination_value = organisation2,
-                destination_section_value = organisation2 )
-    self.failUnless('Site Error' not in packing_list.view())
-
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
     """ calls the workflow for the packing list """
@@ -86,134 +47,388 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list = sequence.get('packing_list')
     packing_list.portal_workflow.doActionFor(packing_list, transition_name)
 
-  def stepConfirmPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('confirm_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getSimulationState(), 'confirmed')
-
-  def stepSetReadyPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('set_ready_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
+  def stepSetReadyProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+    self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'ready')
 
-  def stepStartPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('start_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
+  def stepStartProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+    self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'started')
 
-  def stepStopPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('stop_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
+  def stepStopProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+    self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'stopped')
 
-  def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('deliver_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
+  def stepDeliverProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+    self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'delivered')
 
-  def stepCreatePackingListLine(self,sequence=None, sequence_list=None, **kw):
+  def stepSetReadySupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+    self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
+
+  def stepStartSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+    self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+
+  def stepStopSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+    self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+
+  def stepDeliverSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+    self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+
+  def stepSetReadyProducedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+    self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
+
+  def stepStartProducedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+    self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+
+  def stepStopProducedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+    self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+
+  def stepDeliverProducedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+    self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+
+  def stepSetReadyConsumedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+    self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
+
+  def stepStartConsumedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+    self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+
+  def stepStopConsumedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+    self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+
+  def stepDeliverConsumedReport(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+    self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+
+  def stepCheckSourcingDeliverySimulation(self, sequence=None, \
+                                    sequence_list=None, **kw):
     """
-      Create a empty packing_list line
+      Hardcoded delivery checks
     """
-    packing_list = sequence.get('packing_list')
-    packing_list_line = packing_list.newContent(portal_type=self.packing_list_line_portal_type)
-    packing_list_line.edit(
-      title = "PackingList Line"
+    self.stepCheckSourcingSimulation(sequence,sequence_list,**kw)
+
+    produced_movement = sequence.get('produced_movement')
+    operation_movement = sequence.get('operation_movement')
+    component_movement = sequence.get('component_movement')
+    supply_movement = sequence.get('supply_movement')
+    produced_delivery_movement = sequence.get('produced_delivery_movement')
+
+    produced_delivery_packing_list = produced_delivery_movement.getDeliveryValue().getParentValue()
+    supply_delivery_packing_list = supply_movement.getDeliveryValue().getParentValue()
+
+    produced_report = produced_movement.getDeliveryValue().getParentValue()
+
+    operation_report = operation_movement.getDeliveryValue().getParentValue()
+    component_report = component_movement.getDeliveryValue().getParentValue()
+    self.assertEquals(operation_report, component_report)
+    consumed_report = operation_report
+
+    # checks that simulations are same
+    # TODO: resources, quantities, dates, ...
+    self.assertEquals(
+      produced_delivery_movement.getSimulationState(),
+      produced_delivery_packing_list.getSimulationState()
     )
-    sequence.edit(packing_list_line=packing_list_line)
 
-  def stepSetPackingListLineResource(self, sequence=None, sequence_list=None, **kw):
-    """
-      Set packing_list line resource with the current resource
-    """
-    packing_list_line = sequence.get('packing_list_line')
-    resource = sequence.get('resource')
-    packing_list_line.setResourceValue(resource)
-
-  def stepSetPackingListLineDefaultValues(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Set the default price and quantity on the packing_list line.
-    """
-    packing_list_line = sequence.get('packing_list_line')
-    packing_list_line.edit(quantity=self.default_quantity,
-                    price=self.default_price)
-
-  def stepCheckPackingListSimulation(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
+    self.assertEquals(
+      supply_movement.getSimulationState(),
+      supply_delivery_packing_list.getSimulationState()
+    )
     
-    applied_rule = packing_list.getCausalityRelatedValueList(portal_type=\
-        self.applied_rule_portal_type)
-    self.logMessage("TODO")
+    self.assertEquals(
+      produced_movement.getSimulationState(),
+      produced_report.getSimulationState()
+    )
 
-class TestProductionPackingListReport(TestProductionPackingReportListMixin):
-  pass
+    self.assertEquals(
+      component_movement.getSimulationState(),
+      consumed_report.getSimulationState()
+    )
 
-class TestProductionPackingList(TestProductionPackingReportListMixin):
-  """Test Production Packing Lists"""
+    self.assertEquals(
+      operation_movement.getSimulationState(),
+      consumed_report.getSimulationState()
+    )
+
+    sequence.edit(
+      produced_delivery_packing_list = produced_delivery_packing_list,
+      supply_delivery_packing_list = supply_delivery_packing_list,
+      produced_report = produced_report,
+      consumed_report = consumed_report,
+    )
+
+  def stepCheckProducedDeliveryPackingListConfirmed(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+
+    self.assertEquals(
+      'confirmed',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckProducedDeliveryPackingListDelivered(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+
+    self.assertEquals(
+      'delivered',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckSupplyDeliveryPackingListDelivered(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+
+    self.assertEquals(
+      'delivered',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckProducedReportDelivered(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+
+    self.assertEquals(
+      'delivered',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckConsumedReportDelivered(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+
+    self.assertEquals(
+      'delivered',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckProducedDeliveryPackingListSolved(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_delivery_packing_list')
+
+    self.assertEquals(
+      'solved',
+      packing_list.getCausalityState()
+    )
+
+  def stepCheckSupplyDeliveryPackingListConfirmed(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+
+    self.assertEquals(
+      'confirmed',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckSupplyDeliveryPackingListSolved(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('supply_delivery_packing_list')
+
+    self.assertEquals(
+      'solved',
+      packing_list.getCausalityState()
+    )
+
+  def stepCheckProducedReportConfirmed(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+
+    self.assertEquals(
+      'confirmed',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckProducedReportSolved(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('produced_report')
+
+    self.assertEquals(
+      'solved',
+      packing_list.getCausalityState()
+    )
+
+  def stepCheckConsumedReportConfirmed(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+
+    self.assertEquals(
+      'confirmed',
+      packing_list.getSimulationState()
+    )
+
+  def stepCheckConsumedReportSolved(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    packing_list = sequence.get('consumed_report')
+
+    self.assertEquals(
+      'solved',
+      packing_list.getCausalityState()
+    )
+
+class TestProductionDelivery(TestProductionPackingReportListMixin):
+  """Test Production Packing Lists and Reports, mostly based on Production Orders"""
+
   run_all_test = 1
 
-  packing_list_portal_type = 'Production Packing List'
-  packing_list_line_portal_type = 'Production Packing List Line'
-  packing_list_cell_portal_type = 'Production Packing List Cell'
-
-  def getTitle(self):
-    return "Production Packing List"
-
-  def test_01_checkForProductionPackingListWorkflow(self, quiet=0, run=run_all_test):
+  def test_01_sourcingDelivery(self, quiet=0, 
+                                          run=run_all_test):
     """
-      Test that production packing list workflow works, and updates simulations
+    Test for sourcing type of delivery (Production Report and Production Packing Lists).
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is
-    sequence_string = '\
-                      stepCreateOrganisation1 \
-                      stepCreateOrganisation2 \
-                      stepClearActivities \
-                      stepCreatePackingList \
-                      stepSetPackingListProfile \
-                      stepCreateNotVariatedResource \
-                      stepTic \
-                      stepCreatePackingListLine \
-                      stepSetPackingListLineResource \
-                      stepSetPackingListLineDefaultValues \
-                      stepTic \
+    # Check states of deliveries, just after order confirmation
+    sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
+                      CheckSourcingDeliverySimulation \
                       \
-                      stepConfirmPackingList \
-                      stepTic \
+                      CheckProducedDeliveryPackingListConfirmed \
+                      CheckProducedDeliveryPackingListSolved\
                       \
-                      stepSetReadyPackingList \
-                      stepTic \
+                      CheckSupplyDeliveryPackingListConfirmed \
+                      CheckSupplyDeliveryPackingListSolved\
                       \
-                      stepStartPackingList \
-                      stepTic \
+                      CheckProducedReportConfirmed \
+                      CheckProducedReportSolved\
                       \
-                      stepStopPackingList \
-                      stepTic \
+                      CheckConsumedReportConfirmed \
+                      CheckConsumedReportSolved\
                       \
-                      stepDeliverPackingList \
-                      stepTic \
-'
-
+                      '
     sequence_list.addSequenceString(sequence_string)
+
+    # Test when packing list are delivered one by one
+    # Note: I (Luke) know, that below sequence is long
+    #       but I wanted to be sure, that full production
+    #       process is doable.
+    sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
+                      CheckSourcingDeliverySimulation \
+                      \
+                      CheckProducedDeliveryPackingListConfirmed \
+                      CheckProducedDeliveryPackingListSolved\
+                      \
+                      CheckSupplyDeliveryPackingListConfirmed \
+                      CheckSupplyDeliveryPackingListSolved\
+                      \
+                      CheckProducedReportConfirmed \
+                      CheckProducedReportSolved\
+                      \
+                      CheckConsumedReportConfirmed \
+                      CheckConsumedReportSolved\
+                      \
+                      SetReadyProducedDeliveryPackingList \
+                      StartProducedDeliveryPackingList \
+                      StopProducedDeliveryPackingList \
+                      DeliverProducedDeliveryPackingList \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulation \
+                      \
+                      CheckProducedDeliveryPackingListDelivered \
+                      CheckProducedDeliveryPackingListSolved\
+                      \
+                      CheckSupplyDeliveryPackingListConfirmed \
+                      CheckSupplyDeliveryPackingListSolved\
+                      \
+                      CheckProducedReportConfirmed \
+                      CheckProducedReportSolved\
+                      \
+                      CheckConsumedReportConfirmed \
+                      CheckConsumedReportSolved\
+                      \
+                      SetReadySupplyDeliveryPackingList \
+                      StartSupplyDeliveryPackingList \
+                      StopSupplyDeliveryPackingList \
+                      DeliverSupplyDeliveryPackingList \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulation \
+                      \
+                      CheckProducedDeliveryPackingListDelivered \
+                      CheckProducedDeliveryPackingListSolved\
+                      \
+                      CheckSupplyDeliveryPackingListDelivered \
+                      CheckSupplyDeliveryPackingListSolved\
+                      \
+                      CheckProducedReportConfirmed \
+                      CheckProducedReportSolved\
+                      \
+                      CheckConsumedReportConfirmed \
+                      CheckConsumedReportSolved\
+                      \
+                      SetReadyProducedReport \
+                      StartProducedReport \
+                      StopProducedReport \
+                      DeliverProducedReport \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulation \
+                      \
+                      CheckProducedDeliveryPackingListDelivered \
+                      CheckProducedDeliveryPackingListSolved\
+                      \
+                      CheckSupplyDeliveryPackingListDelivered \
+                      CheckSupplyDeliveryPackingListSolved\
+                      \
+                      CheckProducedReportDelivered \
+                      CheckProducedReportSolved\
+                      \
+                      CheckConsumedReportConfirmed \
+                      CheckConsumedReportSolved\
+                      \
+                      SetReadyConsumedReport \
+                      StartConsumedReport \
+                      StopConsumedReport \
+                      DeliverConsumedReport \
+                      Tic \
+                      \
+                      CheckSourcingDeliverySimulation \
+                      \
+                      CheckProducedDeliveryPackingListDelivered \
+                      CheckProducedDeliveryPackingListSolved\
+                      \
+                      CheckSupplyDeliveryPackingListDelivered \
+                      CheckSupplyDeliveryPackingListSolved\
+                      \
+                      CheckProducedReportDelivered \
+                      CheckProducedReportSolved\
+                      \
+                      CheckConsumedReportDelivered \
+                      CheckConsumedReportSolved\
+                      \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # TODO: check case of solving divergence on every delivery
     sequence_list.play(self)
-
-class TestProductionReport(TestProductionPackingList):
-  """Test Production Reports"""
-  run_all_test = 1
-
-  def getTitle(self):
-    return "Production Report"
-
-  packing_list_portal_type = 'Production Report'
-  packing_list_line_portal_type = 'Production Report Line'
-  packing_list_cell_portal_type = 'Production Report Cell'
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionPackingListReport))
-  #suite.addTest(unittest.makeSuite(TestProductionPackingList))
-  #suite.addTest(unittest.makeSuite(TestProductionReport))
+  suite.addTest(unittest.makeSuite(TestProductionDelivery))
   return suite
