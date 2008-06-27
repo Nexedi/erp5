@@ -266,7 +266,7 @@ class ReportSection:
   _no_parameter_ = []
 
   security.declarePublic('pushReport')
-  def pushReport(self, context):
+  def pushReport(self, context, field_prefix=None):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
@@ -275,8 +275,10 @@ class ReportSection:
     portal_selections = context.portal_selections
     selection_list = [self.selection_name]
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
-      selection_list += [
-          context[self.getFormId()].listbox.get_value('selection_name') ]
+      selection_name = context[self.getFormId()].listbox.get_value('selection_name')
+      if field_prefix is not None:
+        selection_name = '%s_%s' % (field_prefix, selection_name)
+      selection_list += [selection_name]
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
     for selection_name in selection_list :
@@ -305,11 +307,12 @@ class ReportSection:
                                            REQUEST, self.listbox_display_mode,
                                            selection_name=selection_name)
         if self.selection_params is not None:
-          self.saved_selections[selection_name]['params'] =  \
-               portal_selections.getSelectionParams(
+          params = portal_selections.getSelectionParams(
                                selection_name, REQUEST=REQUEST)
+          self.saved_selections[selection_name]['params'] = params.copy()
+          params.update(self.selection_params)
           portal_selections.setSelectionParamsFor(selection_name,
-                               self.selection_params, REQUEST=REQUEST)
+                               params, REQUEST=REQUEST)
         if self.selection_columns is not None:
           self.saved_selections[selection_name]['columns'] =  \
                portal_selections.getSelectionColumns(selection_name,
@@ -327,7 +330,7 @@ class ReportSection:
     REQUEST.form = {}
 
   security.declarePublic('popReport')
-  def popReport(self, context):
+  def popReport(self, context, field_prefix=None):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       if self.saved_request[k] is self._no_parameter_:
@@ -338,8 +341,12 @@ class ReportSection:
     portal_selections = context.portal_selections
     selection_list = []
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
-      selection_list += [
-                context[self.getFormId()].listbox.get_value('selection_name') ]
+      selection_name = context[self.getFormId()].listbox.get_value('selection_name')
+      if field_prefix is not None:
+        # Return before cleanup, because there is no interest in cleaning up
+        # what won't be shared.
+        return
+      selection_list += [selection_name]
     selection_list += [self.selection_name]
     # restore report then form selection
     for selection_name in selection_list:
