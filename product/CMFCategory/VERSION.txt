@@ -1,1 +1,1 @@
-CMFCategory 5.0
+CMFCategory 5.2
