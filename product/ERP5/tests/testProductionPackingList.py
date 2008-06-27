@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,7 +36,7 @@ from Products.CMFCore.utils import getToolByName
 from testProductionOrder import TestProductionOrderMixin
 from testPackingList import TestPackingListMixin
 
-class TestProductionPackingListMixin(TestProductionOrderMixin, TestPackingListMixin, \
+class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPackingListMixin, \
                           ERP5TypeTestCase):
   """Mixin for testing Production Packing Lists and Production Reports"""
 
@@ -146,7 +147,10 @@ class TestProductionPackingListMixin(TestProductionOrderMixin, TestPackingListMi
         self.applied_rule_portal_type)
     self.logMessage("TODO")
 
-class TestProductionPackingList(TestProductionPackingListMixin):
+class TestProductionPackingListReport(TestProductionPackingReportListMixin):
+  pass
+
+class TestProductionPackingList(TestProductionPackingReportListMixin):
   """Test Production Packing Lists"""
   run_all_test = 1
 
@@ -209,6 +213,7 @@ class TestProductionReport(TestProductionPackingList):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionPackingList))
-  suite.addTest(unittest.makeSuite(TestProductionReport))
+  suite.addTest(unittest.makeSuite(TestProductionPackingListReport))
+  #suite.addTest(unittest.makeSuite(TestProductionPackingList))
+  #suite.addTest(unittest.makeSuite(TestProductionReport))
   return suite
