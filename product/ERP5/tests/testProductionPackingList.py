@@ -303,9 +303,8 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
     Test for sourcing type of delivery (Production Report and Production Packing Lists).
     """
     if not run: return
-    sequence_list = SequenceList()
-    # Check states of deliveries, just after order confirmation
-    sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
+
+    delivery_check_sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
                       CheckSourcingDeliverySimulation \
                       \
                       CheckProducedDeliveryPackingListIsConfirmed \
@@ -321,27 +320,17 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       CheckConsumedReportIsSolved\
                       \
                       '
+
+    sequence_list = SequenceList()
+    # Check states of deliveries, just after order confirmation
+    sequence_string = delivery_check_sequence_string
     sequence_list.addSequenceString(sequence_string)
 
     # Test when packing list are delivered one by one
     # Note: I (Luke) know, that below sequence is long
     #       but I wanted to be sure, that full production
     #       process is doable.
-    sequence_string = self.SOURCING_ORDER_SEQUENCE + '\
-                      CheckSourcingDeliverySimulation \
-                      \
-                      CheckProducedDeliveryPackingListIsConfirmed \
-                      CheckProducedDeliveryPackingListIsSolved\
-                      \
-                      CheckSupplyDeliveryPackingListIsConfirmed \
-                      CheckSupplyDeliveryPackingListIsSolved\
-                      \
-                      CheckProducedReportIsConfirmed \
-                      CheckProducedReportIsSolved\
-                      \
-                      CheckConsumedReportIsConfirmed \
-                      CheckConsumedReportIsSolved\
-                      \
+    sequence_string = delivery_check_sequence_string + '\
                       SetReadyProducedDeliveryPackingList \
                       StartProducedDeliveryPackingList \
                       StopProducedDeliveryPackingList \
