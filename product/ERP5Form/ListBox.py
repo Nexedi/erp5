@@ -563,10 +563,18 @@ class ListBoxRenderer:
 
   getSelectionTool = lazyMethod(getSelectionTool)
 
+  def getPrefixedString(self, string):
+    prefix = self.render_prefix
+    if prefix is None:
+      result = string
+    else:
+      result = '%s_%s' % (prefix, string)
+    return result
+
   def getId(self):
     """Return the id of the field. Usually, "listbox".
     """
-    return self.field.id
+    return self.getPrefixedString(self.field.id)
 
   getId = lazyMethod(getId)
 
@@ -688,7 +696,7 @@ class ListBoxRenderer:
   def getSelectionName(self):
     """Return the selection name.
     """
-    return self.field.get_value('selection_name')
+    return self.getPrefixedString(self.field.get_value('selection_name'))
 
   getSelectionName = lazyMethod(getSelectionName)
 
