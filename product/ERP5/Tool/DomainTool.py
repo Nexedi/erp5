@@ -122,9 +122,9 @@ class DomainTool(BaseTool):
                           "OR ((%(base_name)s_range_min <= '%(value)s') AND " \
                               "(%(base_name)s_range_max is NULL)) " \
                           "OR ((%(base_name)s_range_min is NULL) AND " \
-                              "%(base_name)s_range_max > '%(value)s)' " \
+                              "%(base_name)s_range_max > '%(value)s') " \
                           "OR ((%(base_name)s_range_min <= '%(value)s') AND " \
-                              "%(base_name)s_range_max > '%(value)s)' " \
+                              "%(base_name)s_range_max > '%(value)s') " \
                             % format_dict
             expression = '( %s )' % expression
             expression_list.append(expression)
