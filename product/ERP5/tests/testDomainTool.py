@@ -413,9 +413,9 @@ class TestDomainTool(TestPredicateMixIn):
     # Basic sanity checks
     self.assertTrue(predicate_both_match.test(document))
     self.assertFalse(predicate_one_match.test(document))
-    self.assertSameSet(portal_domains.searchPredicateList(document, test=1), [predicate_both_match])
+    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, test=1))
     # Real test
-    self.assertSameSet(portal_domains.searchPredicateList(document, test=0), [predicate_both_match])
+    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, test=0))
 
 def test_suite():
   suite = unittest.TestSuite()
