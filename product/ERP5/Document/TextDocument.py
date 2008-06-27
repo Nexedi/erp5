@@ -157,7 +157,11 @@ class TextDocument(Document, TextContent):
       # avoid encoding errors.
       method_id = self.getTextContentSubstitutionMappingMethodId()
       if method_id:
-        mapping = guarded_getattr(self, method_id)(**kw)
+        try:
+          mapping = guarded_getattr(self, method_id)(**kw)
+        except AttributeError:
+          LOG('TextDocument', WARNING, 'could not get the substitution mapping method %s from %r, so the content will not be substituted.' % (method_id, self))
+          mapping = {}
 
         is_str = isinstance(text, str)
         if is_str:
