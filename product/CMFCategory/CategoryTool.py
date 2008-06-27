@@ -1467,27 +1467,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
             else:
               expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
             sql_expr += ["(%s)" % expression]
-        else:
-          single_sql_expr = []
-          for single_category in category:
-            if single_sql_expr != '':
-              category_uid = self.getCategoryUid(single_category)
-              base_category_uid = self.getBaseCategoryUid(single_category)
-              if none_sql_value is not None and category_uid is None:
-                category_uid = none_sql_value
-              if category_uid is None:
-                expression += '%s.category_uid is NULL' % query_table
-              else:
-                expression += '%s.category_uid = %s' % (query_table,category_uid)
-              if none_sql_value is not None and base_category_uid is None:
-                base_category_uid = none_sql_value
-              if base_category_uid is None:
-                expression += ' AND %s.base_category_uid is NULL' % query_table
-              else:
-                expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
-              single_sql_expr += ["(%s)" % expression]
-          if len(single_sql_expr) > 0:
-            sql_expr += "( %s )" % ' OR '.join(single_sql_expr)
       if len(sql_expr) > 0:
         sql_expr = ' OR '.join(sql_expr)
       return sql_expr
