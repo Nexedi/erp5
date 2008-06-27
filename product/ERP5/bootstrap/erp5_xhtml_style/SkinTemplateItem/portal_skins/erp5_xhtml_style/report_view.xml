@@ -61,7 +61,8 @@
         <tal:block tal:define="portal_object here/getPortalObject">\n
           <tal:block tal:repeat="report_item report_method">\n
             <tal:block tal:define="here python: report_item.getObject(portal_object);\n
-                       dummy python: report_item.pushReport(portal_object)">\n
+                                   render_prefix python: \'x%s\' % (repeat[\'report_item\'].index, );\n
+                                   dummy python: report_item.pushReport(portal_object, render_prefix=render_prefix)">\n
               <span tal:condition="report_item/getTitle"\n
                     tal:content="report_item/getTitle"\n
                     tal:attributes="class string:report_title_level_${report_item/getLevel}" />\n
@@ -70,7 +71,7 @@
                   <tal:block metal:use-macro="here/form_render/macros/master" />\n
                 </tal:block>\n
               </tal:block>\n
-              <tal:block tal:define="dummy python:report_item.popReport(portal_object)" />\n
+              <tal:block tal:define="dummy python:report_item.popReport(portal_object, render_prefix=render_prefix)" />\n
             </tal:block>\n
           </tal:block>\n
         </tal:block>\n
