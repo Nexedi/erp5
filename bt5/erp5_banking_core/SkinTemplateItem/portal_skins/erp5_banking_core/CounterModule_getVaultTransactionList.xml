@@ -147,6 +147,7 @@ if kw.has_key("explanation_uid"):\n
   inventory_kw[\'explanation_uid\'] = kw[\'explanation_uid\']\n
   if len(kw[\'explanation_uid\'])==0:\n
     return total_inventory_list\n
+\n
 kw_has_cash_status = kw.has_key("cash_status")\n
 kw_has_emission_letter = kw.has_key("emission_letter")\n
 if kw_has_cash_status or kw_has_emission_letter:\n
@@ -164,13 +165,14 @@ if kw_has_cash_status or kw_has_emission_letter:\n
     emission_letter_list = ["emission_letter/%s%%" % x for x in emission_letter_parameter]\n
   full_variation_list_of_list = [cash_status_list, emission_letter_list]\n
   inventory_kw[\'variation_text\'] = []\n
+  inv_append = inventory_kw[\'variation_text\'].append\n
   for variation_list in cartesianProduct(full_variation_list_of_list):\n
     variation_text_list = [\'%\']\n
     for variation in variation_list:\n
       if variation is not None:\n
         variation_text_list.append(variation)\n
     variation_text = \'\'.join(variation_text_list)\n
-    inventory_kw[\'variation_text\'].append(variation_text)\n
+    inv_append(variation_text)\n
 \n
 if at_date is not None:\n
   # XXX this make sure we look at the end of the day\n
@@ -230,7 +232,7 @@ if summarise:\n
   return [newTempBase(context, "summary", total_quantity=total_quantity, total_price=total_price), ]\n
 \n
 explanation_uid_list = []\n
-\n
+explanation_append = explanation_uid_list.append\n
 #context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n
   node_relative_url = vault_inventory.node_relative_url\n
@@ -251,7 +253,7 @@ for vault_inventory in vault_inventory_list:\n
   if vault_report_type==\'history\':\n
     #resource = (vault_inventory.resource_relative_url, vault_inventory.variation_text or \'\',vault_inventory.stock_uid)\n
     explanation_uid = vault_inventory.explanation_uid\n
-    explanation_uid_list.append(explanation_uid)\n
+    explanation_append(explanation_uid)\n
     resource = (vault_inventory.resource_relative_url, variation_text, explanation_uid,\n
                 vault_inventory.path)\n
   if not vault_inventory_dict[node_relative_url].has_key(resource):\n
@@ -289,7 +291,9 @@ if vault_report_type == \'history\':\n
 end = DateTime()\n
 context.log(\'after getting data into catalog:\',(end-begin)*86400)\n
 i = 0\n
-#for resource in context.Baobab_sortResourceTitleList(resource_dict.keys()):\n
+\n
+append = total_inventory_list.append\n
+\n
 resource_portal_type_cache_dict = {}\n
 for resource in resource_dict.keys():\n
   movement = None\n
@@ -339,7 +343,8 @@ for resource in resource_dict.keys():\n
     #temp_base = newTempBase(context, "new_%03i" % i)\n
     #temp_base = temp_base.asContext(**tmp_dict)\n
     #total_inventory_list.append(temp_base)\n
-    total_inventory_list.append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
+    #total_inventory_list.append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
+    append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
     i += 1\n
 \n
 end = DateTime()\n
@@ -458,6 +463,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>x</string>
                             <string>emission_letter_parameter</string>
                             <string>full_variation_list_of_list</string>
+                            <string>inv_append</string>
                             <string>variation_list</string>
                             <string>variation_text_list</string>
                             <string>variation</string>
@@ -473,6 +479,7 @@ return repr([x for x in total_inventory_list])\n
                             <string>_inplacevar_</string>
                             <string>abs</string>
                             <string>explanation_uid_list</string>
+                            <string>explanation_append</string>
                             <string>node_relative_url</string>
                             <string>must_continue</string>
                             <string>excluded_variation</string>

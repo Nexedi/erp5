@@ -42,7 +42,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid_list</string>
+<string>uid_list</string>
                           </list>
                         </value>
                     </item>
@@ -104,15 +104,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 select \n
-  *\n
-\n
+  uid, relative_url, portal_type, simulation_state, source_reference\n
 FROM catalog\n
 WHERE \n
   1=1\n
-AND (\n
-<dtml-in uid_list>\n
-  uid = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>)
+AND \n
+uid in (<dtml-in uid_list><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>, </dtml-if></dtml-in>)
 
 ]]></string> </value>
         </item>
@@ -153,15 +150,12 @@ AND (\n
                         <value> <string encoding="cdata"><![CDATA[
 
 select \n
-  *\n
-\n
+  uid, relative_url, portal_type, simulation_state, source_reference\n
 FROM catalog\n
 WHERE \n
   1=1\n
-AND (\n
-<dtml-in uid_list>\n
-  uid = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>)
+AND \n
+uid in (<dtml-in uid_list><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>, </dtml-if></dtml-in>)
 
 ]]></string> </value>
                     </item>
