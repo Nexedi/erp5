@@ -161,7 +161,7 @@ class TextDocument(Document, TextContent):
           mapping = guarded_getattr(self, method_id)(**kw)
         except AttributeError:
           LOG('TextDocument', WARNING, 'could not get the substitution mapping method %s from %r, so the content will not be substituted.' % (method_id, self))
-          mapping = {}
+          return text
 
         is_str = isinstance(text, str)
         if is_str:
