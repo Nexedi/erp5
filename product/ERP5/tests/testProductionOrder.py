@@ -844,8 +844,10 @@ class TestProductionOrderMixin(TestOrderMixin):
                       Tic \
                       OrderOrder \
                       Tic \
+                      CheckSourcingSimulation \
                       ConfirmOrder \
                       Tic \
+                      CheckSourcingSimulation \
                       '
     
 class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
