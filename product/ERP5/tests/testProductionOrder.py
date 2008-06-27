@@ -510,6 +510,14 @@ class TestProductionOrderMixin(TestOrderMixin):
              (supply_organisation1, 'getSourceValue'),
              (supply_organisation1, 'getSourceSectionValue')))
     self.assertEquals(0, len(supply_movement.objectValues()))
+    
+    sequence.edit(
+      produced_movement = produced_movement,
+      operation_movement = operation_movement,
+      component_movement = component_movement,
+      supply_movement = supply_movement,
+      produced_delivery_movement = related_simulation_movement,
+    )
 
   def stepCreateProductionOrganisation2(self, sequence=None, 
                                         sequence_list=None, **kw):
