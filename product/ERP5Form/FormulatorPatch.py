@@ -1589,6 +1589,11 @@ def TALESWidget_render_view(self, field, value, REQUEST=None, render_prefix=None
 
 TALESWidget.render_view = TALESWidget_render_view
 
+original_TALESWidget_render = TALESWidget.render
+def TALESWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  return original_TALESWidget_render(self, field, key, value, REQUEST)
+TALESWidget.render = TALESWidget_render
+
 def Widget_render_dict(self, field, value):
   """
   This is yet another field rendering. It is designed to allow code to
