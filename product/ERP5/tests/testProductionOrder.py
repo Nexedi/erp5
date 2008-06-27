@@ -830,6 +830,23 @@ class TestProductionOrderMixin(TestOrderMixin):
            ))
     self.assertEquals(0, len(supply_movement.objectValues()))
 
+  SOURCING_ORDER_SEQUENCE = '\
+                      ClearActivities \
+                      CreateProductionOrganisation1 \
+                      CreateSupplyOrganisation1 \
+                      CreateSourcingSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      ConfirmOrder \
+                      Tic \
+                      '
     
 class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
   """
@@ -956,24 +973,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # Test when order is 
-    sequence_string = '\
-                      ClearActivities \
-                      CreateProductionOrganisation1 \
-                      CreateSupplyOrganisation1 \
-                      CreateSourcingSC \
-                      CreateVariatedResource \
-                      CreateComponent1 \
-                      CreateTransformation \
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateOrderLine \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      ConfirmOrder \
-                      Tic \
-                      '
-    sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(self.SOURCING_ORDER_SEQUENCE)
     sequence_list.play(self)
 
   def test_06_testIndustrialPhase(self, quiet=0, run=run_all_test):
