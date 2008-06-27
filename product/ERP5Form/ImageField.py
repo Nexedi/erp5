@@ -66,12 +66,12 @@ class ImageFieldWidget(Widget.TextWidget):
                                default=75,
                                required=0)
 
-    def render(self, field, key, value, REQUEST):
+    def render(self, field, key, value, REQUEST, render_prefix=None):
         """Render image field as a link to the image
         """
         return self.render_view(field, value, REQUEST=REQUEST)
 
-    def render_view(self, field, value, REQUEST=None):
+    def render_view(self, field, value, REQUEST=None, render_prefix=None):
         """Render image field as a link to the image
         """
         # Url is already defined in value

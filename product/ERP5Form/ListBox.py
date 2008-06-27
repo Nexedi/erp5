@@ -355,14 +355,14 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('page_template')
 
-    def render_view(self, field, value, REQUEST=None, render_format='html', key='listbox'):
+    def render_view(self, field, value, REQUEST=None, render_format='html', key='listbox', render_prefix=None):
         """
           Render a ListBox in read-only.
         """
         if REQUEST is None: REQUEST=get_request()
         return self.render(field, key, value, REQUEST, render_format=render_format)
 
-    def render(self, field, key, value, REQUEST, render_format='html'):
+    def render(self, field, key, value, REQUEST, render_format='html', render_prefix=None):
         """
           This is where most things happen. This method renders a list
           of items
@@ -390,7 +390,7 @@ class ListBoxWidget(Widget.Widget):
         if render_format == 'list':
           renderer = ListBoxListRenderer(self, field, REQUEST)
         else:
-          renderer = ListBoxHTMLRenderer(self, field, REQUEST)
+          renderer = ListBoxHTMLRenderer(self, field, REQUEST, render_prefix=render_prefix)
 
         return renderer()
 
@@ -417,12 +417,13 @@ class ListBoxRenderer:
   and a request object.
   """
 
-  def __init__(self, widget = None, field = None, REQUEST = None, **kw):
+  def __init__(self, widget = None, field = None, REQUEST = None, render_prefix=None, **kw):
     """Store the parameters for later use.
     """
     self.widget = widget
     self.field = field
     self.request = REQUEST
+    self.render_prefix = render_prefix
 
   def getPhysicalPath(self):
     """

@@ -236,7 +236,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                       value_list, None)]
     return result_list
 
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
     """
     Render text input field.
     """
@@ -294,7 +294,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     REQUEST.set('_v_relation_field_index', relation_field_index + 1) 
     return html_string
 
-  def render_view(self, field, value, REQUEST=None):
+  def render_view(self, field, value, REQUEST=None, render_prefix=None):
     """
     Render read only field.
 
@@ -310,7 +310,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     return html_string
 
   def render_wheel(self, field, value, REQUEST, relation_index=0,
-                   sub_index=None):
+                   sub_index=None, render_prefix=None):
     """
     Render wheel used to display a listbox
     """
@@ -329,7 +329,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
            (portal_url_string, portal_selections_url_string,
            relation_index, sub_index_string)
 
-  def render_relation_link(self, field, value, REQUEST):
+  def render_relation_link(self, field, value, REQUEST, render_prefix=None):
     """
     Render link to the related object.
     """

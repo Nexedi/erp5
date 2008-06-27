@@ -35,7 +35,7 @@ class MultiLinkFieldWidget(Widget.MultiItemsWidget):
   property_names = Widget.Widget.property_names +\
                          ['items', 'view_separator', 'extra', 'extra_item']
                            
-  def render_item(self, item_text, item_value, key, css_class, extra_item) :
+  def render_item(self, item_text, item_value, key, css_class, extra_item, render_prefix=None) :
     """Render an Item."""
     return Widget.render_element('a',
                                 href=item_value,
@@ -45,7 +45,7 @@ class MultiLinkFieldWidget(Widget.MultiItemsWidget):
                                 extra_item = extra_item)
   render_selected_item = render_item
   
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
     """Render the field."""
     rendered_items = self.render_items(field, key, value, REQUEST)
     return field.get_value('view_separator').join(rendered_items)

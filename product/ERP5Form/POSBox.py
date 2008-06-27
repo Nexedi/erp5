@@ -220,7 +220,7 @@ class POSBoxWidget(Widget.Widget):
                                 required=0,
                                 group="order summary")
  
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
     """
       Render point of sales widget.
     """
@@ -242,7 +242,7 @@ class POSBoxWidget(Widget.Widget):
         fastResourceEntry_display = field.get_value("display_fastResourceEntry"),
         )
 
-  def render_javascript(self, field, key, value, REQUEST):
+  def render_javascript(self, field, key, value, REQUEST, render_prefix=None):
     here = REQUEST['here']
     page_template = getattr(here,field.get_value("javascript_ZPT"))
 
@@ -259,7 +259,7 @@ class POSBoxWidget(Widget.Widget):
         resource_category_fastResourceEntry = field.get_value('resource_category_fastResourceEntry')
         ) 
 
-  def render_view(self, field, value, REQUEST=None):
+  def render_view(self, field, value, REQUEST=None, render_prefix=None):
     """ 
       Render point of sales widget
     """
@@ -286,6 +286,6 @@ class POSBox(ZMIField):
   def render_css(self, value=None, REQUEST=None):
     return self.widget.render_css(self,'',value,REQUEST)
 
-  def render_javascript(self, value=None, REQUEST=None):
+  def render_javascript(self, value=None, REQUEST=None, render_prefix=None):
     return self.widget.render_javascript(self,'',value,REQUEST)
 

@@ -94,7 +94,7 @@ class ZPyChartWidget(Widget.Widget):
                               default='',
                               required=0)
 
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
     """
       Here, we just generate tags which will later call download
     """

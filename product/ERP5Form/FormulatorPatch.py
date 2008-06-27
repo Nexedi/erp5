@@ -60,7 +60,7 @@ def Field_generate_field_key(self, validation=0, key=None):
     else:
         return '%s.%s:record' % (self.field_record, self.id)
 
-def Field_render(self, value=None, REQUEST=None, key=None):
+def Field_render(self, value=None, REQUEST=None, key=None, render_prefix=None):
     """Render the field widget.
     value -- the value the field should have (for instance
               from validation).
@@ -72,12 +72,12 @@ def Field_render(self, value=None, REQUEST=None, key=None):
     """
     return self._render_helper(self.generate_field_key(key=key), value, REQUEST)
 
-def Field_render_view(self, value=None, REQUEST=None):
+def Field_render_view(self, value=None, REQUEST=None, render_prefix=None):
     """Render value to be viewed.
     """
     return self.widget.render_view(self, value, REQUEST=REQUEST)
 
-def Field_render_sub_field(self, id, value=None, REQUEST=None, key=None):
+def Field_render_sub_field(self, id, value=None, REQUEST=None, key=None, render_prefix=None):
     """Render a sub field, as part of complete rendering of widget in
     a form. Works like render() but for sub field.
         Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
@@ -101,15 +101,25 @@ def Field_validate_sub_field(self, id, REQUEST, key=None):
     return self.sub_form.get_field(id)._validate_helper(
         self.generate_subfield_key(id, validation=1, key=key), REQUEST)
 
-def Field_render_helper(self, key, value, REQUEST):
+def Field_render_helper(self, key, value, REQUEST, render_prefix=None):
     value = self._get_default(key, value, REQUEST)
     __traceback_info__ = ('key=%s value=%r' % (key, value))
     if self.get_value('hidden', REQUEST=REQUEST):
         return self.widget.render_hidden(self, key, value, REQUEST)
     elif (not self.get_value('editable', REQUEST=REQUEST)):
-        return self.widget.render_view(self, value, REQUEST=REQUEST)
+      # XXX: API transition try..except..log..raise. Remove after a while.
+      try:
+        return self.widget.render_view(self, value, REQUEST=REQUEST, render_prefix=render_prefix)
+      except TypeError:
+        LOG('FormulatorPatch', 0, 'To update: %r (%r)' % (self.widget.render_view, getattr(self.widget.render_view, 'func_code', None)))
+        raise
     else:
-        return self.widget.render(self, key, value, REQUEST)
+      # XXX: API transition try..except..log..raise. Remove after a while.
+      try:
+        return self.widget.render(self, key, value, REQUEST, render_prefix=render_prefix)
+      except TypeError:
+        LOG('FormulatorPatch', 0, 'To update: %r (%r)' % (self.widget.render, getattr(self.widget.render, 'func_code', None)))
+        raise
 
 def Field_get_user_input_value(self, key, REQUEST):
   """
@@ -289,7 +299,7 @@ def BooleanValidator_validate(self, field, key, REQUEST):
 BooleanValidator.validate = BooleanValidator_validate
 
 from Products.Formulator.Widget import CheckBoxWidget
-def CheckBoxWidget_render(self, field, key, value, REQUEST):
+def CheckBoxWidget_render(self, field, key, value, REQUEST, render_prefix=None):
   """Render checkbox.
   """
   rendered = [render_element("input",
@@ -317,7 +327,7 @@ def CheckBoxWidget_render(self, field, key, value, REQUEST):
 
 CheckBoxWidget.render = CheckBoxWidget_render
 
-def CheckBoxWidget_render_view(self, field, value, REQUEST=None):
+def CheckBoxWidget_render_view(self, field, value, REQUEST=None, render_prefix=None):
   """Render checkbox in view mode.
   """
   if value:
@@ -343,7 +353,7 @@ from Globals import get_request
 from urlparse import urljoin
 
 class PatchedLinkWidget(TextWidget):
-  def render_view(self, field, value, REQUEST=None):
+  def render_view(self, field, value, REQUEST=None, render_prefix=None):
     """Render link.
     """
     link_type = field.get_value('link_type', REQUEST=REQUEST)
@@ -363,7 +373,7 @@ LinkField.widget = PatchedLinkWidgetInstance
 
 
 # Patch the render_view of TextField to enclose the value within <span> html tags if css class defined
-def TextWidget_patched_render_view(self, field, value, REQUEST=None):
+def TextWidget_patched_render_view(self, field, value, REQUEST=None, render_prefix=None):
   """Render text as non-editable.
      This renderer is designed to be type error resistant.
      in we get a non string value. It does escape the result
@@ -388,12 +398,23 @@ def TextWidget_patched_render_view(self, field, value, REQUEST=None):
 
 from Products.Formulator.Widget import TextWidget
 TextWidget.render_view = TextWidget_patched_render_view
+
+original_TextWidget_render = TextWidget.render
+def TextWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  return original_TextWidget_render(self, field, key, value, REQUEST)
+TextWidget.render = TextWidget_render
+
 from Products.Formulator.Widget import TextAreaWidget
 # Use a standard span rendering
 TextAreaWidget.render_view = TextWidget_patched_render_view
 
+original_TextAreaWidget_render = TextAreaWidget.render
+def TextAreaWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  return original_TextAreaWidget_render(self, field, key, value, REQUEST)
+TextAreaWidget.render = TextAreaWidget_render
+
 class IntegerWidget(TextWidget) :
-  def render(self, field, key, value, REQUEST) :
+  def render(self, field, key, value, REQUEST, render_prefix=None) :
     """Render an editable integer.
     """
     if isinstance(value, float):
@@ -417,7 +438,7 @@ class IntegerWidget(TextWidget) :
                               size=field.get_value('display_width'),
                               extra=field.get_value('extra'))
 
-  def render_view(self, field, value, REQUEST=None):
+  def render_view(self, field, value, REQUEST=None, render_prefix=None):
       """Render a non-editable interger."""
       if isinstance(value, float):
           value = int(value)
@@ -499,7 +520,7 @@ def Widget_render_hidden(self, field, key, value, REQUEST):
                           extra=extra)
     return result
 
-def Widget_render_view(self, field, value, REQUEST=None):
+def Widget_render_view(self, field, value, REQUEST=None, render_prefix=None):
     """Renders this widget for public viewing.
     """
     # default implementation
@@ -545,9 +566,23 @@ for widget_name in ('MultiItemsWidget', 'LabelWidget',
                     'FileWidget', 'PasswordWidget',):
   widget = getattr(WidgetModule, widget_name)
   widget._old_render_view = widget.render_view
-  widget.render_view = lambda self, field, value, REQUEST=None: \
+  widget.render_view = lambda self, field, value, REQUEST=None, render_prefix=None: \
     self._old_render_view(field, value)
+  widget._old_render = widget.render
+  widget.render = lambda self, field, key, value, REQUEST=None, render_prefix=None: \
+    self._old_render(field, key, value, REQUEST)
 
+from Products.Formulator.ListTextAreaField import ListTextAreaWidget
+original_ListTextAreaWidget_render = ListTextAreaWidget.render
+def ListTextAreaWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  return original_ListTextAreaWidget_render(self, field, key, value, REQUEST)
+ListTextAreaWidget.render = ListTextAreaWidget_render
+
+from Products.Formulator.MethodField import MethodWidget
+original_MethodWidget_render = MethodWidget.render
+def MethodWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  return original_MethodWidget_render(self, field, key, value, REQUEST)
+MethodWidget.render = MethodWidget_render
 
 from Products.Formulator.Validator import LinesValidator
 
@@ -612,7 +647,7 @@ FloatValidator.validate = FloatValidator_validate
 
 from Products.Formulator.Widget import SingleItemsWidget
 
-def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
+def SingleItemsWidget_render_items(self, field, key, value, REQUEST, render_prefix=None):
   # get items
   cell = getattr(REQUEST, 'cell', None)
   items = field.get_value('items', REQUEST=REQUEST, cell=cell)
@@ -671,7 +706,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
 
 SingleItemsWidget.render_items = SingleItemsWidget_render_items
 
-def SingleItemsWidget_render_view(self, field, value, REQUEST=None):
+def SingleItemsWidget_render_view(self, field, value, REQUEST=None, render_prefix=None):
   """
   This method is not as efficient as using a StringField in read only.
   Always consider to change the field in your Form.
@@ -690,7 +725,7 @@ ListWidget.render_pdf = SingleItemsWidget_render_view
 RadioWidget.render_view = SingleItemsWidget_render_view
 RadioWidget.render_pdf = SingleItemsWidget_render_view
 
-def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
+def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefix=None):
   # list is needed, not a tuple
   if isinstance(value, tuple):
       value = list(value)
@@ -752,7 +787,7 @@ MultiItemsWidget.render_items = MultiItemsWidget_render_items
 
 from Products.Formulator.Widget import MultiListWidget
 
-def MultiListWidget_render(self, field, key, value, REQUEST):
+def MultiListWidget_render(self, field, key, value, REQUEST, render_prefix=None):
   rendered_items = self.render_items(field, key, value, REQUEST)
   input_hidden = render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0")
   multi_list = render_element(
@@ -770,7 +805,7 @@ MultiListWidget.render = MultiListWidget_render
 
 from Products.Formulator.Widget import MultiCheckBoxWidget
 
-def MultiCheckBoxWidget_render(self, field, key, value, REQUEST):
+def MultiCheckBoxWidget_render(self, field, key, value, REQUEST, render_prefix=None):
   rendered_items = self.render_items(field, key, value, REQUEST)
   rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0"))
   orientation = field.get_value('orientation')
@@ -781,7 +816,7 @@ def MultiCheckBoxWidget_render(self, field, key, value, REQUEST):
                                                                     
 MultiCheckBoxWidget.render = MultiCheckBoxWidget_render
 
-def ListWidget_render(self, field, key, value, REQUEST):
+def ListWidget_render(self, field, key, value, REQUEST, render_prefix=None):
   rendered_items = self.render_items(field, key, value, REQUEST)
   input_hidden = render_element('input', type='hidden', 
                                 name="default_%s:int" % (key, ), value="0") 
@@ -868,7 +903,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
           input_order = 'my'
       return input_order
 
-    def render_dict(self, field, value):
+    def render_dict(self, field, value, render_prefix=None):
       """
         This is yet another field rendering. It is designed to allow code to
         understand field's value data by providing its type and format when
@@ -890,7 +925,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
               'format': field.get_value('date_separator').join(input_order),
               'type': 'date'}
 
-    def render(self, field, key, value, REQUEST):
+    def render(self, field, key, value, REQUEST, render_prefix=None):
         use_ampm = field.get_value('ampm_time_style')
         use_timezone = field.get_value('timezone_style')
         # FIXME: backwards compatibility hack:
@@ -1018,10 +1053,10 @@ class PatchedDateTimeWidget(DateTimeWidget):
         else:
             return date_result
     
-    def render_view(self, field, value, REQUEST=None):
+    def render_view(self, field, value, REQUEST=None, render_prefix=None):
         return self.format_value(field, value, mode='html')
     
-    def render_pdf(self, field, value):
+    def render_pdf(self, field, value, render_prefix=None):
         return self.format_value(field, value, mode='pdf')
 
 DateTimeField.widget = PatchedDateTimeWidget()
@@ -1338,7 +1373,7 @@ class FloatWidget(TextWidget):
           return value.strip()
         return ''
 
-    def render(self, field, key, value, REQUEST):
+    def render(self, field, key, value, REQUEST, render_prefix=None):
         """Render Float input field
         """
         value = self.format_value(field, value)
@@ -1356,7 +1391,7 @@ class FloatWidget(TextWidget):
                                 **extra_keys)
 
 
-    def render_view(self, field, value, REQUEST=None):
+    def render_view(self, field, value, REQUEST=None, render_prefix=None):
         """
           Render Float display field.
           This patch add:
@@ -1382,12 +1417,12 @@ class FloatWidget(TextWidget):
           return "<span class='%s'>%s</span>" % (css_class, value)
         return value
 
-    def render_pdf(self, field, value):
+    def render_pdf(self, field, value, render_prefix=None):
         """Render the field as PDF."""
         return self.format_value(field, value)
 
 
-    def render_dict(self, field, value):
+    def render_dict(self, field, value, render_prefix=None):
       """
         This is yet another field rendering. It is designed to allow code to
         understand field's value data by providing its type and format when
@@ -1455,7 +1490,7 @@ def Field_render_html(self, *args, **kw):
   return self.render(*args, **kw)
 Field.render_html = Field_render_html
 
-def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
+def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None, render_prefix=None):
   """
   render_htmlgrid returns a list of tuple (title, html render)
   """
@@ -1463,30 +1498,40 @@ def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
   widget_key = self.generate_field_key(key=key)
   value = self._get_default(widget_key, value, REQUEST)
   __traceback_info__ = ('key=%s value=%r' % (key, value))
-  return self.widget.render_htmlgrid(self, widget_key, value, REQUEST)
+  # XXX: API transition try..except..log..raise. Remove after a while.
+  try:
+    return self.widget.render_htmlgrid(self, widget_key, value, REQUEST, render_prefix=render_prefix)
+  except TypeError:
+    LOG('FormulatorPatch', 0, 'To update: %r (%r)' % (self.widget.render_htmlgrid, getattr(self.widget.render_htmlgrid, 'func_code', None)))
+    raise
 
 Field.render_htmlgrid = Field_render_htmlgrid
 
-def Widget_render_htmlgrid(self, field, key, value, REQUEST):
+def Widget_render_htmlgrid(self, field, key, value, REQUEST, render_prefix=None):
   """
   render_htmlgrid returns a list of tuple (title, html render)
   """
   # XXX Calling _render_helper on the field is not optimized
-  return ((field.get_value('title'), 
-           field._render_helper(key, value, REQUEST)),)
+  # XXX: API transition try..except..log..raise. Remove after a while.
+  try:
+    return ((field.get_value('title'), 
+             field._render_helper(key, value, REQUEST, render_prefix=render_prefix)),)
+  except TypeError:
+    LOG('FormulatorPatch', 0, 'To update: %r (%r)' % (field._render_helper, getattr(field._render_helper, 'func_code', None)))
+    raise
 Widget.render_htmlgrid = Widget_render_htmlgrid
 
 # Generic possible renderers
-#   def render_ext(self, field, key, value, REQUEST):
+#   def render_ext(self, field, key, value, REQUEST, render_prefix=None):
 #     return getattr(self, '%s_render' % self.__class__.__name__)
 #
-#   def render_pt(self, field, key, value, REQUEST):
+#   def render_pt(self, field, key, value, REQUEST, render_prefix=None):
 #     """
 #     Call a page template which contains 1 macro per field
 #     """
 #     return self.field_master(self.__class__.__name__)
 #
-#   def render_grid(self, field, key, value, REQUEST):
+#   def render_grid(self, field, key, value, REQUEST, render_prefix=None):
 #     return ((self.get_value('title'), self.get_value('value'),)
 #    # What about CSS ? What about description ? What about error ?
 #    # What about rendering a listbox ?
@@ -1529,7 +1574,7 @@ Field.get_javascript_list = Field_get_javascript_list
 
 
 from Products.Formulator.TALESField import TALESWidget
-def TALESWidget_render_view(self, field, value, REQUEST=None):
+def TALESWidget_render_view(self, field, value, REQUEST=None, render_prefix=None):
   """
   Render TALES as read only
   """
@@ -1584,15 +1629,16 @@ Field.PrincipiaSearchSource = Field_PrincipiaSearchSource
 from Products.Formulator.Widget import LinesTextAreaWidget
 
 original_LinesTextAreaWidget_render = LinesTextAreaWidget.render
-def LinesTextAreaWidget_render(self, field, key, value, REQUEST):
+def LinesTextAreaWidget_render(self, field, key, value, REQUEST, render_prefix=None):
   if isinstance(value, (str, unicode)):
     value = [value]
   return original_LinesTextAreaWidget_render(self, field, key, value, REQUEST)
 LinesTextAreaWidget.render = LinesTextAreaWidget_render
 
 original_LinesTextAreaWidget_render_view = LinesTextAreaWidget.render_view
-def LinesTextAreaWidget_render_view(self, field, value, REQUEST=None):
+def LinesTextAreaWidget_render_view(self, field, value, REQUEST=None, render_prefix=None):
   if isinstance(value, (str, unicode)):
     value = [value]
   return original_LinesTextAreaWidget_render_view(self, field, value)
 LinesTextAreaWidget.render_view = LinesTextAreaWidget_render_view
+

@@ -378,7 +378,7 @@ class OOoChartWidget(Widget.Widget):
     return extra_argument_dict
 
 
-  def render_view(self, field, value, REQUEST=None, key=None, render_format='html'):
+  def render_view(self, field, value, REQUEST=None, key=None, render_format='html', render_prefix=None):
     """
       Render a Chart in read-only.
     """
@@ -386,7 +386,7 @@ class OOoChartWidget(Widget.Widget):
     return self.render(field, key, value, REQUEST, render_format=render_format)
 
 
-  def render_odf(self, field, key, value, REQUEST, render_format='ooo'):
+  def render_odf(self, field, key, value, REQUEST, render_format='ooo', render_prefix=None):
     """
       Render a Chart for ODT Style.
     """
@@ -399,7 +399,7 @@ class OOoChartWidget(Widget.Widget):
     return content
 
 
-  def render(self, field, key, value, REQUEST, render_format='html'):
+  def render(self, field, key, value, REQUEST, render_format='html', render_prefix=None):
 
     """
       Render a chart.

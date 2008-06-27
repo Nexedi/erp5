@@ -940,7 +940,7 @@ class PlanningBoxWidget(Widget.Widget):
 
     return CSS_data
 
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
     """
     Method called to render the HTML code relative to the planning.
     for that recover the structure previouly saved in the REQUEST, and then
@@ -961,7 +961,7 @@ class PlanningBoxWidget(Widget.Widget):
     # return HTML data
     return HTML_data
 
-  def render_structure(self, field, REQUEST, context):
+  def render_structure(self, field, REQUEST, context, render_prefix=None):
     """
     This method is the begining of the rendering procedure. it calls all
     methods needed to generate BasicStructure with ERP5 objects, and then

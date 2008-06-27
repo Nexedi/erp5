@@ -68,7 +68,7 @@ class InputButtonWidget(Widget.Widget):
                           default='',
                           required=0)
 
-    def render(self, field, key, value, REQUEST):
+    def render(self, field, key, value, REQUEST, render_prefix=None):
         """Render input button.
         """
         image = field.get_value('image')

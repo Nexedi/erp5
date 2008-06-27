@@ -72,7 +72,7 @@ class EditorWidget(Widget.TextAreaWidget):
                                    items=[('Standard Text Area', 'text_area'),
                                           ('FCK Editor', 'fck_editor')])
 
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
     """
       Render editor
     """
@@ -87,7 +87,7 @@ class EditorWidget(Widget.TextAreaWidget):
                           'inputname'  : key
                         })
 
-  def render_view(self, field, value, REQUEST=None):
+  def render_view(self, field, value, REQUEST=None, render_prefix=None):
     """ 
       Render form in view only mode.
     """

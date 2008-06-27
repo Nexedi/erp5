@@ -175,7 +175,7 @@ class MatrixBoxWidget(Widget.Widget):
         "The cell range should be updated upon edit."),
                                   default=0)
 
-    def render(self, field, key, value, REQUEST, render_format='html'):
+    def render(self, field, key, value, REQUEST, render_format='html', render_prefix=None):
         """
           This is where most things happen. This method renders a list
           of items

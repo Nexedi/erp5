@@ -102,7 +102,7 @@ class ZGDChartWidget(Widget.Widget):
                               default='',
                               required=0)
 
-  def render(self, field, key, value, REQUEST):
+  def render(self, field, key, value, REQUEST, render_prefix=None):
 
     """
     This is where most things happens

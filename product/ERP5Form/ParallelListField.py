@@ -97,7 +97,7 @@ class ParallelListWidget(Widget.MultiListWidget,
         'MultiListField': Widget.MultiListWidgetInstance,
       }
 
-    def render(self, field, key, value, REQUEST):
+    def render(self, field, key, value, REQUEST, render_prefix=None):
       hash_list = generateSubForm(field, value, REQUEST)
       # Call render on each sub field
       sub_field_render_list = []
@@ -111,7 +111,7 @@ class ParallelListWidget(Widget.MultiListWidget,
                                 join(sub_field_render_list)
       return html_string
 
-    def render_htmlgrid(self, field, key, value, REQUEST):
+    def render_htmlgrid(self, field, key, value, REQUEST, render_prefix=None):
       hash_list = generateSubForm(field, value, REQUEST)
       # Call render on each sub field
       sub_field_render_list = []
@@ -125,7 +125,7 @@ class ParallelListWidget(Widget.MultiListWidget,
       return sub_field_render_list
 
     def render_sub_field(self, field, key, value, REQUEST,
-                        sub_field_property_dict):
+                        sub_field_property_dict, render_prefix=None):
       """
       Render dynamically a subfield
       """
