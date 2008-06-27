@@ -28,47 +28,61 @@
 ##############################################################################
 
 class TaskConstraint:
-    """
-       Constraintsts For Task
-    """
-        
-    _constraints = (
-      {   'id'            : 'title_existence',
-          'description'   : 'Title must be defined',
-          'type'          : 'StringAttributeMatch',
-          'title'         :  '^[^ ]',
-      },
-      { 'id'            : 'source',
-        'description'   : 'Source must be defined',
-        'type'          : 'CategoryMembershipArity',
-        'min_arity'     : '1',
-        'max_arity'     : '1',
-        'portal_type'   : ('Person', 'Organisation', 'Category'),
-        'base_category' : ('source',)
-      },
-      { 'id'            : 'destination',
-        'description'   : 'Destination must be defined',
-        'type'          : 'CategoryMembershipArity',
-        'min_arity'     : '1',
-        'max_arity'     : '1',
-        'portal_type'   : ('Person', 'Organisation', 'Category'),
-        'base_category' : ('destination',)
-      },
-      {   'id'            : 'start_date_existence',
-          'description'   : 'Property start_date must be defined',
-          'type'          : 'PropertyExistence',
-          'start_date'    : None,
-      },
-      {   'id'            : 'stop_date_existence',
-          'description'   : 'Property stop date must be defined',
-          'type'          : 'PropertyExistence',
-          'stop_date'    : None,
-      },
-
-      { 'id'            : 'lines',
-        'description'   : 'Lines must be defined',
-        'type'          : 'ContentExistence',
-        'portal_type'   : ('Task Line', 'Task Report Line' ),
-      },
-    )
-  
+  """
+     Constraintsts For Task
+  """
+      
+  _constraints = (
+    { 'id'            : 'title_existence',
+      'description'   : 'Title must be defined',
+      'type'          : 'PropertyExistence',
+      'title'         :  None,
+      'message_property_not_set': 'Title must be defined',
+      'message_no_such_property' : 'Title must be defined',
+    },
+    { 'id'            : 'source_category_membership_arity',
+      'description'   : 'Source must be defined',
+      'type'          : 'CategoryMembershipArity',
+      'min_arity'     : '1',
+      'max_arity'     : '1',
+      'portal_type'   : ('Person', 'Organisation', 'Category'),
+      'base_category' : ('source',),
+      'message_arity_with_portal_type_not_in_range': 'Assignee must be defined',
+    },
+    { 'id'            : 'destination_category_membership_arity',
+      'description'   : 'Destination must be defined',
+      'type'          : 'CategoryMembershipArity',
+      'min_arity'     : '1',
+      'max_arity'     : '1',
+      'portal_type'   : ('Person', 'Organisation', 'Category'),
+      'base_category' : ('destination',),
+      'message_arity_with_portal_type_not_in_range': 'Location must be defined',
+    },
+    { 'id'            : 'start_date_existence',
+      'description'   : 'Property start_date must be defined',
+      'type'          : 'PropertyExistence',
+      'start_date'    : None,
+      'message_property_not_set': 'Begin Date must be defined',
+      'message_no_such_property' : 'Begin Date must be defined' 
+    },
+    { 'id'            : 'stop_date_existence',
+      'description'   : 'Property stop date must be defined',
+      'type'          : 'PropertyExistence',
+      'stop_date'     : None,
+      'message_property_not_set': 'End Date must be defined',
+      'message_no_such_property' : 'End Date must be defined'
+    },
+    { 'id'            : 'date_coherency',
+      'description'   : 'Stop Date must be after Start Date',
+      'type'          : 'TALESConstraint',
+      'expression'    : 'python: object.getStopDate() >= object.getStartDate()',
+      'message_expression_false': 'End Date must be after Begin Date',
+    },
+    { 'id'            : 'lines',
+      'description'   : 'Lines must be defined',
+      'type'          : 'ContentExistence',
+      'portal_type'   : ('Task Line', 'Task Report Line' ),
+      'message_no_subobject_portal_type' : \
+                                'It is required create at least one Line.',
+    },
+  )

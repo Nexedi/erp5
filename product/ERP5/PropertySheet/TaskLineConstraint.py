@@ -27,21 +27,24 @@
 ##############################################################################
 
 class TaskLineConstraint:
-    """
-     Task Line Constraints
-    """
-    _constraints = (
-      {     'id'            : 'quantity_existence',
-            'description'   : 'Property quantity must be defined',
-            'type'          : 'PropertyExistence',
-            'quantity'    : None,
-      },
-      { 'id'            : 'resource',
-        'description'   : 'Resource must be defined',
-        'type'          : 'CategoryMembershipArity',
-        'min_arity'     : '1',
-        'max_arity'     : '1',
-        'portal_type'   : ( ),
-        'base_category' : ('resource',)
-      },
-    )
+  """
+   Task Line Constraints
+  """
+  _constraints = (
+    { 'id'            : 'quantity_existence',
+      'description'   : 'Property quantity must be defined',
+      'type'          : 'PropertyExistence',
+      'quantity'    : None,
+      "message_property_not_set" : 'Quantity must be defined at Lines',
+      "message_no_such_property" : 'Quantity must be defined at Lines'
+    },
+    { 'id'            : 'resource',
+      'description'   : 'Resource must be defined',
+      'type'          : 'CategoryMembershipArity',
+      'min_arity'     : '1',
+      'max_arity'     : '1',
+      'portal_type'   : ( ),
+      'base_category' : ('resource',),
+      'message_arity_not_in_range' : 'Resource must be defined at Lines.' , 
+    },
+  )
