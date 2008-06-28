@@ -34,36 +34,38 @@ from Products.ERP5Type import Permissions
 
 #return the definition string of an object representing a workflow method or a class method or an accessor
 def getDefinitionString(obj=None):
-  if obj == None:
+  if obj is None:
     return ""
-  else:
-    fc_var_names = obj.func_code.co_varnames
-    fc = []
-    for i in range(len(fc_var_names)):
-      if fc_var_names[i] == 'args':
-        fc.append('*args')
-      elif fc_var_names[i] == 'kw':
-        fc.append('**kw')
-      else:
-        fc.append(fc_var_names[i])
-    fd = obj.func_defaults
-    acc_def = obj.__name__ + ' ('
-    if fd == None:
-      acc_def += ', '.join(fc)
+  func_code = getattr(obj, "func_code", None)
+  if func_code is None:
+    return ""
+  fc_var_names = getattr(func_code, "co_varnames", [])
+  fc = []
+  for i in range(len(fc_var_names)):
+    if fc_var_names[i] == 'args':
+      fc.append('*args')
+    elif fc_var_names[i] == 'kw':
+      fc.append('**kw')
     else:
-      for x in range(len(fc)):
-        if (len(fc)-(x+1)<len(fd)):
-          if (x == len(fc)-1):
-            acc_def += " "+str(fc[x])+"='"+str(fd[x-len(fd)])+"'"
-          else:
-            acc_def += " "+str(fc[x])+"='"+str(fd[x-len(fd)])+"',"
+      fc.append(fc_var_names[i])
+  fd = obj.func_defaults
+  acc_def = obj.__name__ + ' ('
+  if fd == None:
+    acc_def += ', '.join(fc)
+  else:
+    for x in range(len(fc)):
+      if (len(fc)-(x+1)<len(fd)):
+        if (x == len(fc)-1):
+          acc_def += " "+str(fc[x])+"='"+str(fd[x-len(fd)])+"'"
         else:
-          if (x == len(fc)-1):
-            acc_def += " "+str(fc[x])
-          else:
-            acc_def += " "+str(fc[x])+","
-    acc_def += ")"
-    return acc_def
+          acc_def += " "+str(fc[x])+"='"+str(fd[x-len(fd)])+"',"
+      else:
+        if (x == len(fc)-1):
+          acc_def += " "+str(fc[x])
+        else:
+          acc_def += " "+str(fc[x])+","
+  acc_def += ")"
+  return acc_def
 
 
 class AccessorMethodDocumentationHelper(DocumentationHelper):

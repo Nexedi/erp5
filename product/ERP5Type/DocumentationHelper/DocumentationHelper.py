@@ -103,8 +103,6 @@ class DocumentationHelper(Implicit):
     if self.uri.startswith('portal_classes/temp_instance'):
       url, method = self.uri.split('#')
       portal_type = url.split('/')[-1]
-      #temp_folder = self.getPortalObject().portal_classes.newContent(id='temp_instance', portal_type='Folder', temp_object=1)
-      #temp_object = temp_folder.newContent(id=portal_type, portal_type=portal_type, temp_object=1)
       self.getTempInstance = TempObjectLibrary(self.getPortalObject().portal_classes)
       temp_object = self.getTempInstance(portal_type)
       if '/' not in method:
@@ -131,17 +129,14 @@ class DocumentationHelper(Implicit):
     elif '/' in self.uri and '#' not in self.uri:
       # URI refers to a portal object
       # and is a relative URL
-      try:
-        documented_object = self.getPortalObject().portal_categories.resolveCategory(self.uri)
-      except:
-        documented_object = None
+      documented_object = self.getPortalObject().portal_categories.unrestrictedTraverse(self.uri, None)
       if documented_object is None:
-        documented_object = self.getPortalObject().unrestrictedTraverse(self.uri)
+        documented_object = self.getPortalObject().unrestrictedTraverse(self.uri, None)
     elif '/' in self.uri and '#' in self.uri:
       if '?' in self.uri:
         base_url, url = self.uri.split('?')
         type, name = url.split('#')
-        parent_object = self.getPortalObject().unrestrictedTraverse(base_url)
+        parent_object = self.getPortalObject().unrestrictedTraverse(base_url, None)
         object_list = getattr(parent_object, type, None)
         documented_object = None
         if object_list is not None:
@@ -150,9 +145,9 @@ class DocumentationHelper(Implicit):
               documented_object = obj
       else:
         url, method = self.uri.split('#')
-        documented_object = self.getPortalObject().unrestrictedTraverse(url)
+        documented_object = self.getPortalObject().unrestrictedTraverse(url, None)
         if '/' not in method:
-          documented_object = self.getPortalObject().unrestrictedTraverse(url)
+          documented_object = self.getPortalObject().unrestrictedTraverse(url, None)
           documented_object = getattr(documented_object, method, None)
         else:
           path_method = method.split('/')
@@ -169,7 +164,7 @@ class DocumentationHelper(Implicit):
         import Products
         documented_object = Products
         for key in module_list[1:]:
-          documented_object = getattr(documented_object, key)
+          documented_object = getattr(documented_object, key, None)
       else:
         raise NotImplemented
         #fp, pathname, description = imp.find_module(base_module)

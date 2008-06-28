@@ -62,7 +62,7 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return getattr(self.etDocumentedObject(), "name", '')
+    return getattr(self.getDocumentedObject(), "name", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
   def getSourceCode(self):
