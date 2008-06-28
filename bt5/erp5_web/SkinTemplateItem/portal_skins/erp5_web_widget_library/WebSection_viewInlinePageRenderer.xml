@@ -73,7 +73,7 @@
 """\n
 \n
 def getInlinePage(reference, language):\n
-  page = context.getDocumentValue(reference)\n
+  page = context.restrictedTraverse(reference)\n
   if page is not None:\n
     return page.asStrippedHTML()\n
   return None\n
@@ -94,6 +94,12 @@ return getInlinePage(reference, language)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -131,7 +137,7 @@ return getInlinePage(reference, language)\n
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>web_site_path</string>
                             <string>language</string>
                           </tuple>

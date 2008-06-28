@@ -1,4 +1,7 @@
 2008-06-28 yo
+* Use restrictedTraverse instead of getDocumentValue in WebSection_viewInlinePageRenderer, because we need an appropriate acquisition wrapper here.
+
+2008-06-28 yo
 * Add a standard method for string substitutions.
 
 2008-06-27 yusei
