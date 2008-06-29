@@ -66,8 +66,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Create new ERP5 objects In Activity from OOo document\n
-context.log(\'object_list\',object_list)\n
-context.log(\'kw\',kw)\n
+from Products.ERP5Type.Log import log\n
+log(\'object_list\',object_list)\n
+log(\'kw\',kw)\n
 for (module_url, per_portal_type_data) in object_list.items():\n
   for (portal_type, new_object_list) in per_portal_type_data.items():\n
     for new_object_property_dict in new_object_list:\n
@@ -144,9 +145,10 @@ for (module_url, per_portal_type_data) in object_list.items():\n
                           <tuple>
                             <string>object_list</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>module_url</string>
                             <string>per_portal_type_data</string>
                             <string>portal_type</string>
@@ -154,6 +156,7 @@ for (module_url, per_portal_type_data) in object_list.items():\n
                             <string>new_object_property_dict</string>
                             <string>None</string>
                             <string>ptype_object</string>
+                            <string>context</string>
                             <string>module</string>
                             <string>allowed_ptype</string>
                             <string>ptype_name</string>

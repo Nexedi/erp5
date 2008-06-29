@@ -75,13 +75,14 @@ return stat_line\n
 \n
 \n
 # XXX example of another way to get the stat line but this is slower\n
+from Products.ERP5Type.Log import log\n
 from Products.PythonScripts.standard import Object\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 request = container.REQUEST\n
 from_date = request.get(\'from_date\', None)\n
 to_date = request.get(\'at_date\', None)\n
 aggregation_level = request.get(\'aggregation_level\', None)\n
-context.log("in stat method", "")\n
+log("in stat method", "")\n
 # build document portal type list\n
 portal_type_list = []\n
 extend = portal_type_list.extend\n
@@ -191,6 +192,8 @@ return [obj,]\n
                             <string>RESPONSE</string>
                             <string>None</string>
                             <string>stat_line</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
@@ -198,10 +201,10 @@ return [obj,]\n
                             <string>from_date</string>
                             <string>to_date</string>
                             <string>aggregation_level</string>
-                            <string>context</string>
                             <string>portal_type_list</string>
                             <string>extend</string>
                             <string>_getiter_</string>
+                            <string>context</string>
                             <string>title</string>
                             <string>path</string>
                             <string>document_type_list</string>
