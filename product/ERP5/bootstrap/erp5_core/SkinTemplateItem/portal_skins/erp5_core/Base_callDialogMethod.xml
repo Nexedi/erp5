@@ -71,6 +71,7 @@
 Generic method called when submitting a form in dialog mode.\n
 Responsible for validating form data and redirecting to the form action.\n
 """\n
+from Products.ERP5Type.Log import log\n
 \n
 # XXX We should not use meta_type properly,\n
 # XXX We need to discuss this problem.(yusei)\n
@@ -203,7 +204,7 @@ if len(listbox_id_list):\n
   can_redirect = 0\n
   # Warn if there are more than one listbox in form ...\n
   if len(listbox_id_list) > 1:\n
-    context.log(\'Base_callDialogMethod\', \'There are %s listboxes in form %s.\' % (len(listbox_id_list), form.id))\n
+    log(\'Base_callDialogMethod\', \'There are %s listboxes in form %s.\' % (len(listbox_id_list), form.id))\n
   # ... but handle them anyway.\n
   for listbox_id in listbox_id_list:\n
     listbox_line_list = []\n
@@ -342,6 +343,8 @@ return request.RESPONSE.redirect(redirect_url)\n
                             <string>dialog_id</string>
                             <string>dialog_category</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>isListBox</string>
                             <string>Products.Formulator.Errors</string>
                             <string>FormValidationError</string>
@@ -373,7 +376,6 @@ return request.RESPONSE.redirect(redirect_url)\n
                             <string>splitted</string>
                             <string>len</string>
                             <string>_write_</string>
-                            <string>log</string>
                             <string>listbox_id</string>
                             <string>listbox_line_list</string>
                             <string>listbox</string>

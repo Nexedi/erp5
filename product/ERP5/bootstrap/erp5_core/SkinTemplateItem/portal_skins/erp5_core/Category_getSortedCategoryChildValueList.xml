@@ -65,8 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this script is no longer needed.\n
-context.log(\'Category_getSortedCategoryChildValueList\', \'use getCategoryChildValueList method\')\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+# this script is no longer needed.\n
+log(\'Category_getSortedCategoryChildValueList\', \'use getCategoryChildValueList method\')\n
 \n
 value_list = filter(lambda o: o.getRelativeUrl() != context.getRelativeUrl(),context.getCategoryChildValueList())\n
 sort_id=\'int_index\'\n
@@ -115,9 +116,11 @@ return value_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>filter</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>filter</string>
                             <string>value_list</string>
                             <string>sort_id</string>
                           </tuple>

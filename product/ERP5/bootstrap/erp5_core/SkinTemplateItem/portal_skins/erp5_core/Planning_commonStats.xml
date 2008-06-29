@@ -76,6 +76,7 @@ recursive method, etc.)\n
 Then take this special list of objects and return a list of special\n
 temp_objects to display as blocks \'as they are\'\n
 """\n
+from Products.ERP5Type.Log import log\n
 from Products.ERP5Type.Document import newTempMovement as newTempBase\n
 from string import zfill\n
 \n
@@ -118,7 +119,7 @@ for input_object in input_object_list:\n
     # creating new object\n
     temp_object = newTempBase(context.getPortalObject(),id=str(temp_object_id), uid =\'new_%s\' % zfill(temp_object_id, 4) )\n
     # editing object with new values\n
-    context.log("%s" % (",".join([start_property_id, str(block_begin),stop_property_id, str(block_end),size_property_id, str(block_size)])))\n
+    log("%s" % (",".join([start_property_id, str(block_begin),stop_property_id, str(block_end),size_property_id, str(block_size)])))\n
     temp_object.setProperty(start_property_id, block_begin)\n
     temp_object.setProperty(stop_property_id, block_end)\n
     temp_object.setProperty(size_property_id, block_size)\n
@@ -225,6 +226,8 @@ return temp_stat_object_list\n
                             <string>object_tree_line</string>
                             <string>REQUEST</string>
                             <string>field</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempMovement</string>
                             <string>newTempBase</string>

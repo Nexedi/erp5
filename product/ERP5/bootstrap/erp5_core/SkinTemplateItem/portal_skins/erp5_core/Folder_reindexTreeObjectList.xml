@@ -67,12 +67,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ERP5Type.Log import log\n
 folder = context\n
 \n
 # Keep compatibility with tree_id\n
 if tree_id_list is not None:\n
-  context.log(\'tree_id\', tree_id)\n
-  context.log(\'tree_id_list\', tree_id_list)\n
+  log(\'tree_id\', tree_id)\n
+  log(\'tree_id_list\', tree_id_list)\n
   if tree_id is not None:\n
     raise ValueError, "both tree and tree_id_list should not be defined"\n
   tree_id = tree_id_list.pop()\n
@@ -197,11 +198,13 @@ if tree_id_list is not None:\n
                             <string>passive_commit</string>
                             <string>tree_tag</string>
                             <string>tree_after_tag</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>context</string>
                             <string>folder</string>
                             <string>None</string>
-                            <string>_getattr_</string>
                             <string>ValueError</string>
+                            <string>_getattr_</string>
                             <string>activate_kw</string>
                             <string>_getiter_</string>
                             <string>key</string>

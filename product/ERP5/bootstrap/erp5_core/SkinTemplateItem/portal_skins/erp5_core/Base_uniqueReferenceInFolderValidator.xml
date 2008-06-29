@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Check the object have an unique reference in it\'s parent folder\n
 """\n
-\n
+from Products.ERP5Type.Log import log\n
 if editor is None : \n
   return 1\n
 \n
@@ -75,13 +75,13 @@ reference = editor\n
 \n
 document = context.restrictedTraverse(request.object_path, None)\n
 if document is None : \n
-  context.log(\'Base_uniqueReferenceInFolderValidator\', \'document is None\')\n
+  log(\'Base_uniqueReferenceInFolderValidator\', \'document is None\')\n
   return 0\n
 \n
 parent_folder = document.getParentValue()\n
 for same_reference in parent_folder.searchFolder(reference = reference):\n
   if same_reference.uid != document.getUid() :\n
-    context.log(\'Base_uniqueReferenceInFolderValidator\',\n
+    log(\'Base_uniqueReferenceInFolderValidator\',\n
                         \'another document with reference %s exists at %s\' % (reference, same_reference.getPath()))\n
     return 0\n
 \n
@@ -136,6 +136,8 @@ return 1\n
                           <tuple>
                             <string>editor</string>
                             <string>request</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>None</string>
                             <string>reference</string>
                             <string>_getattr_</string>
