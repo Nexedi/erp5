@@ -71,12 +71,12 @@ kw[\'portal_type\']             = \'Simulation Movement\'\n
 kw[\'simulation_state\']        = \'confirmed\'\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-#context.log(\'SaleOrder_selectMovement\', \'SQL\\n%s\' % context.Order_zSelectMovement(src__=1, **kw))\n
+#from Products.ERP5Type.Log import log\n
+#log(\'SaleOrder_selectMovement\', \'SQL\\n%s\' % context.Order_zSelectMovement(src__=1, **kw))\n
 \n
 if src__==0:\n
   movement_list = [x.getObject() for x in context.Order_zSelectMovement(**kw)]\n
-  #context.log(\'SaleOrder_selectMovement\', \'mvt : %s\' % movement_list)\n
+  #log(\'SaleOrder_selectMovement\', \'mvt : %s\' % movement_list)\n
   return movement_list\n
 else:\n
   return context.Order_zSelectMovement(src__=1, **kw)\n

@@ -65,17 +65,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(\'task_list\',\'starting\')\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+log(\'task_list\',\'starting\')\n
 task_module = context.getDefaultModule(\'Task Report\')\n
-context.log(\'task_list\',\'next1\')\n
+log(\'task_list\',\'next1\')\n
 task_list = []\n
 if not kw.has_key(\'parent_uid\'):\n
   kw[\'parent_uid\'] = task_module.getUid()\n
-context.log(\'task_list\',\'next2\')\n
-context.log(\'context.getPath()\',context.getPath())\n
+log(\'task_list\',\'next2\')\n
+log(\'context.getPath()\',context.getPath())\n
 \n
 task_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-context.log(\'task_list\',task_list)\n
+log(\'task_list\',task_list)\n
 #return context.searchFolder(**kw)\n
 return task_list\n
 </string> </value>
@@ -121,6 +122,8 @@ return task_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>task_module</string>

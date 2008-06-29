@@ -75,7 +75,7 @@
 \n
   XXX - redirect, translation of dialogs\n
 """\n
-\n
+from Products.ERP5Type.Log import log\n
 req = context.REQUEST\n
 \n
 # check if everything was filled\n
@@ -89,10 +89,10 @@ for f in fields:\n
   else:\n
     kwargs[f] = value\n
 returned_params = \'&\'.join([f+\'=\'+kwargs[f] for f in kwargs])\n
-context.log(returned_params)\n
+log(returned_params)\n
 if missing_string:\n
   params = returned_params + \'&\' + missing_string + \'&portal_status_message=You did not fill all the required fields. See below to find out which fields still have to be filled.\'\n
-  context.log(params)\n
+  log(params)\n
   return req.RESPONSE.redirect(context.absolute_url()+\'?\'+params)\n
 if req.get(\'your_email\') != req.get(\'your_email_repeated\'):\n
   missing_string += \'&missing:list=email&missing:list=email_repeated\'\n
@@ -100,10 +100,10 @@ if req.get(\'your_email\') != req.get(\'your_email_repeated\'):\n
   return req.RESPONSE.redirect(context.absolute_url()+\'?\'+params)\n
 \n
 # create a user\n
-context.log(kwargs)\n
+log(kwargs)\n
 try:\n
   user = context.WebSite_createUser(**kwargs)\n
-  context.log(user)\n
+  log(user)\n
   msg = \'Thank you for registering. Your password will be sent to the email address that you provided once your account has been validated by the appropriate department.\'\n
 except Exception, e:\n
   msg = str(e)\n
@@ -155,6 +155,8 @@ return req.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=\
                           <tuple>
                             <string>a</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>req</string>

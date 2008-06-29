@@ -65,7 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string>#from Products.ERP5Type.Log import log\n
+request = context.REQUEST\n
 object_path = request.get(\'object_path\')\n
 if object_path is None:\n
   # Sometimes the object_path not comes with the request, when you edit for example.\n
@@ -94,7 +95,7 @@ for category in category_list:\n
                 \n
   domain_list.append(domain)\n
 \n
-#context.log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
+#log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
 return domain_list\n
 </string> </value>
         </item>

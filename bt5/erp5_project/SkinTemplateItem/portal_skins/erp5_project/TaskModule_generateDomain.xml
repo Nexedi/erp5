@@ -89,8 +89,8 @@ for category in category_list:\n
               uid = category.getUid())\n
                 \n
   domain_list.append(domain)\n
-\n
-#context.log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
+#from Products.ERP5Type.Log import log\n
+#log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
 return domain_list\n
 </string> </value>
         </item>

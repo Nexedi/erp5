@@ -73,8 +73,8 @@ IMPORTANT WARNING: this script will not work if your simulation movements are no
 reindexed yet ()\n
 \n
 """\n
-\n
-LOG = lambda msg:context.log(\n
+from Products.ERP5Type.Log import log\n
+LOG = lambda msg:log(\n
           "Delivery_setCausalityFromSimulation on %s" % context.getPath(), msg)\n
 LOG = lambda msg:\'DISABLED\'\n
 \n
@@ -150,6 +150,8 @@ delivery.setCausalityValueList(causality_value_set.keys() + delivery.getCausalit
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>LOG</string>
                             <string>context</string>
                             <string>delivery</string>
