@@ -276,13 +276,24 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
           try:
             if request.get('PUBLISHED', _MARKER) is _MARKER:
               # request['PUBLISHED'] is required by validate
-              request.other['PUBLISHED'] = self
+              request['PUBLISHED'] = self
               has_published = False
             else:
               has_published = True
-            user = user_folder.validate(request)
+            try:
+              user = user_folder.validate(request)
+            except AttributeError:
+              # This kind of error happens with unrestrictedTraverse,
+              # because the request object is a fake, and it is just
+              # a dict object.
+              user = None
             if not has_published:
-              del request.other['PUBLISHED']
+              try:
+                del request.other['PUBLISHED']
+              except AttributeError:
+                # The same here as above. unrestrictedTraverse provides
+                # just a plain dict, so request.other does not exist.
+                del request['PUBLISHED']
           except:
             LOG("ERP5 WARNING",0,
                 "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
