@@ -494,7 +494,7 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
 
 StringBaseValidator.validate = StringBaseValidator_validate
 
-def Widget_render_hidden(self, field, key, value, REQUEST):
+def Widget_render_hidden(self, field, key, value, REQUEST, render_prefix=None):
     """Renders this widget as a hidden field.
     """
     try:
@@ -719,10 +719,19 @@ def SingleItemsWidget_render_view(self, field, value, REQUEST=None, render_prefi
   else:
     return title_list[0]
   return value
-    
+
+def RadioWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  rendered_items = self.render_items(field, key, value, REQUEST)
+  orientation = field.get_value('orientation')
+  if orientation == 'horizontal':
+      return string.join(rendered_items, "&nbsp;&nbsp;")
+  else:
+      return string.join(rendered_items, "<br />")
+
 ListWidget.render_view = SingleItemsWidget_render_view
 ListWidget.render_pdf = SingleItemsWidget_render_view
 RadioWidget.render_view = SingleItemsWidget_render_view
+RadioWidget.render = RadioWidget_render
 RadioWidget.render_pdf = SingleItemsWidget_render_view
 
 def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefix=None):
