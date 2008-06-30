@@ -54,6 +54,12 @@ AAA=</string> </value>
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -273,6 +279,9 @@ AAA=</string> </value>
     <style:style style:name="Tableau4.A1" style:family="table-cell">\n
       <style:table-cell-properties fo:padding="0.097cm" fo:border="none"/>\n
     </style:style>\n
+    <style:style style:name="Tableau4.A2" style:family="table-cell">\n
+      <style:table-cell-properties fo:padding="0.097cm" fo:border="none" style:vertical-align="middle"/>\n
+    </style:style>\n
     <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Table_20_Contents">\n
       <style:text-properties style:font-name-asian="DejaVu Sans1" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans1" style:font-size-complex="14pt"/>\n
     </style:style>\n
@@ -334,7 +343,7 @@ AAA=</string> </value>
                                     height image_height"/>\n
               </text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
+            <table:table-cell table:style-name="Tableau4.A2" office:value-type="string">\n
               <text:p text:style-name="Header"\n
                       tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_title\'] or data_dict[\'source_decision_title\']">\n
               </text:p>\n
@@ -350,17 +359,6 @@ AAA=</string> </value>
               <text:p text:style-name="Header"\n
                       tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_vatid\'] or data_dict[\'source_decision_vatid\']">\n
               </text:p>\n
-            </table:table-cell>\n
-            <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
-              <text:p text:style-name="P1"/>\n
-            </table:table-cell>\n
-          </table:table-row>\n
-          <table:table-row>\n
-            <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
-              <text:p text:style-name="P1"/>\n
-            </table:table-cell>\n
-            <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
-              <text:p text:style-name="P1"/>\n
             </table:table-cell>\n
             <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
               <text:p text:style-name="Header_20_Title"\n
