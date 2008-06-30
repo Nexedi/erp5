@@ -16,6 +16,7 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>all_columns</string>
+                <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
@@ -260,6 +261,17 @@
                 <item>
                     <key>                 <string>selection_name</string> </key>
                     <value> <string>transformation_view_selection_name</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
