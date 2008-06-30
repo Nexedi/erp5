@@ -502,8 +502,7 @@ class TestTransactionValidation(AccountingTestCase):
                            destination_value=self.account_module.receivable,
                            destination_asset_credit=38.99,
                            source_credit=500)))
-    # This is not balanced
-    but there are no accounts on destination
+    # This is not balanced but there are no accounts on destination
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
         transaction, 'stop_action')
