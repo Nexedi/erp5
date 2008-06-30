@@ -86,6 +86,14 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -130,6 +138,14 @@
                     <key>                 <string>columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
@@ -177,8 +193,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>title</string>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>reference</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
