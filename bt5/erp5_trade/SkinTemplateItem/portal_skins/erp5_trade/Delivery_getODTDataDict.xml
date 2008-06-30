@@ -161,7 +161,7 @@ for line in getSubLineList(context):\n
       \'style_name\': \'Table_20_Contents\',\n
       \'left_style_name\': \'Table_20_Contents_20_Left\',\n
       \'right_style_name\': \'Table_20_Contents_20_Right\',\n
-      \'index\': line.getReference() or line.getIntIndex(),\n
+      \'index\': line.getIntIndex() or line.getReference(),\n
       \'source_reference\': getSourceReference(line),\n
       \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
       \'description\': desc,\n
