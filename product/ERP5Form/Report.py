@@ -39,6 +39,7 @@ from Products.ERP5Type import PropertySheet
 
 from Form import ERP5Form
 from Form import create_settings_form as Form_create_settings_form
+from Selection import Selection
 
 def create_settings_form():
     form = Form_create_settings_form()
@@ -288,6 +289,10 @@ class ReportSection:
         if self.selection_report_list is not None:
           selection = portal_selections.getSelectionFor(selection_name,
                                                         REQUEST=REQUEST)
+          if selection is None:
+            selection = Selection()
+            portal_selections.setSelectionFor(selection_name, selection, 
+                                              REQUEST=REQUEST)
           self.saved_selections[selection_name]['report_list'] = \
                selection.getReportList()
           selection.edit(report_list=self.selection_report_list)
