@@ -70,6 +70,8 @@ class Transformation(XMLObject, Predicate, Variated):
                       , PropertySheet.DublinCore
                       , PropertySheet.VariationRange
                       , PropertySheet.Predicate
+                      , PropertySheet.Comment
+                      , PropertySheet.Reference
                       #, PropertySheet.Resource
                       , PropertySheet.TransformedResource
                       , PropertySheet.Path
