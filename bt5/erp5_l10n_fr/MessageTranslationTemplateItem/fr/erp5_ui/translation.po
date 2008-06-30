@@ -3198,4 +3198,5 @@ msgstr "Reference de l'annotation pour l'organisme collecteur"
 msgid "Employee Number"
 msgstr "Matricule"
 
-
+msgid "Input data has errors. Please look at error messages below."
+msgstr "Les données entrées comportent des erreurs. Regardez les messages d'erreur ci-dessous."
