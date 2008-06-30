@@ -14,13 +14,13 @@
             <value>
               <list>
                 <string>title</string>
-                <string>items</string>
+                <string>portal_type</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource</string> </value>
+            <value> <string>my_resource_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,13 +65,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -82,17 +86,26 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default_module</string> </key>
+                    <value> <string>apparel_shape_module</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
+                    <value> <string>my_resource_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -120,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories.operation.getCategoryChildLogicalPathItemList(base=1)</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalServiceTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
