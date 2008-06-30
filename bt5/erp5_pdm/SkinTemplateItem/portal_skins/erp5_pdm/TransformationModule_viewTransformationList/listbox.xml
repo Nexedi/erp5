@@ -86,7 +86,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -94,8 +94,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Target Product</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -123,7 +127,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -131,8 +135,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Target Product</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -154,7 +162,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -165,11 +173,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>transformation_module_transformation_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -184,7 +192,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Transformations</string> </value>
                 </item>
               </dictionary>
