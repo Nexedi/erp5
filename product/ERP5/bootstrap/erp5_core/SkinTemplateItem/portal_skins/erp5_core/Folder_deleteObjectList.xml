@@ -83,11 +83,13 @@ if uids == []:\n
 # another proxy to this proxy.\n
 if form_id == \'Base_viewListModeRenderer\':\n
   form_id = context.Base_viewListModeRenderer.listbox.get_value(\'form_id\')\n
+  field_id = context.Base_viewListModeRenderer.listbox.get_value(\'field_id\')\n
 \n
-kw = {\'uid\': uids, \'form_id\': form_id}\n
+kw = {\'uid\': uids, \'form_id\': form_id, \'field_id\': field_id}\n
 request.set(\'object_uid\', context.getUid())\n
 request.set(\'uids\', uids)\n
 request.set(\'proxy_form_id\', form_id)\n
+request.set(\'proxy_field_id\', field_id)\n
 \n
 context.portal_selections.setSelectionParamsFor(\'folder_delete_selection\', kw)\n
 return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
@@ -154,6 +156,7 @@ return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
                             <string>selected_uids</string>
                             <string>message</string>
                             <string>qs</string>
+                            <string>field_id</string>
                             <string>kw</string>
                           </tuple>
                         </value>
