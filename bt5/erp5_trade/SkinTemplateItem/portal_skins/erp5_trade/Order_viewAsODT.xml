@@ -587,11 +587,8 @@ AAA=</string> </value>
                   <table:table-cell table:style-name=\'Tableau3.D3\'\n
                                     office:value-type=\'string\'>\n
                     <tal:block tal:repeat="vat python: data_dict[\'vat_list\']">\n
-                      <tal:block tal:define=\'orig_string python:vat.getResourceTitle(); en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
-                        <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'en_string\'/>:</text:p>\n
-                        <text:p text:style-name=\'Table_20_Heading\'\n
-                                tal:condition=\'python:my_string != en_string\'><span tal:replace=\'my_string\'/>:</text:p>\n
-                      </tal:block>\n
+                      <text:p text:style-name=\'Table_20_Heading\'><span\n
+                          tal:replace=\'vat/getResourceTitle\'/>:</text:p>\n
                     </tal:block>\n
                     <text:p text:style-name=\'Table_20_Heading\'\n
                             tal:define=\'orig_string string:TAX; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")\'><span tal:replace="python: \'Total %s\' % (my_string)"/>:</text:p>\n
