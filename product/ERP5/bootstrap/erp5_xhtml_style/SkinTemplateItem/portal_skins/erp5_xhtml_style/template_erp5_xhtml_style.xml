@@ -141,6 +141,10 @@ IDEAS:\n
                 </div>\n
                 <p class="clear"></p>\n
                 <div tal:content="request/portal_status_message | nothing" id="transition_message" />\n
+                <div id="information_area" tal:condition="python: request.has_key(\'field_errors\')" \n
+                    i18n:translate="" i18n:domain="ui">\n
+                  Input data has errors. Please look at error messages below.\n
+                </div>\n
               </div>\n
               <div id="master">\n
                 <tal:block metal:define-slot="main" />\n

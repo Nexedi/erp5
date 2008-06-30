@@ -979,6 +979,17 @@ fieldset.bottom .field .input {\n
   font-weight: bold;\n
 }\n
 \n
+#information_area {\n
+  margin-top: 1em;\n
+  padding:0.5em 1em 0.5em 1em;\n
+  border-width: 1px;\n
+  border-style: solid;\n
+  border-color: <dtml-var dialog_border_color>;\n
+  color: orange;\n
+  background-color: <dtml-var document_background_color>;\n
+  font-weight: bold;\n
+}\n
+\n
 /* Content */\n
 \n
 .dialog_box {\n
