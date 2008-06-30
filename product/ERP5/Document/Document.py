@@ -367,7 +367,6 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
 
     if cache is not None:
       if cache.get(key, _MARKER) is _MARKER: cache[key] = method
-
     return method(name, portal=portal, **kw)
 
 class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
@@ -794,8 +793,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
     if lista_latest.has_key(self): 
       lista_latest.pop(self) # remove this document
-    if lista_latest.has_key(self.getLatestVersionValue()): 
-      lista_latest.pop(self()) # remove this document
+    if lista_latest.has_key(self.getLatestVersionValue()):
+      # remove last version of document itself from related documents
+      lista_latest.pop(self.getLatestVersionValue()) 
 
     return lista_latest.keys()
 
