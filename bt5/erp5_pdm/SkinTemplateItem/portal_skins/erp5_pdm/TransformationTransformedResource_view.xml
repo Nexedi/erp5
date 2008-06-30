@@ -117,8 +117,8 @@
                       <list>
                         <string>my_variation_category_list</string>
                         <string>my_quantity</string>
-                        <string>my_efficiency</string>
                         <string>my_quantity_unit</string>
+                        <string>my_efficiency</string>
                         <string>my_specialise_title</string>
                       </list>
                     </value>
