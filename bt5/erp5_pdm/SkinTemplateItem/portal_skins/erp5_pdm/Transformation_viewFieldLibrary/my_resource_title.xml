@@ -58,6 +58,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -66,13 +70,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -87,7 +95,7 @@
                     <value> <string>apparel_shape_module</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>Main result of transformation</string> </value>
                 </item>
                 <item>
@@ -99,7 +107,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -114,7 +122,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Target Product</string> </value>
                 </item>
               </dictionary>
@@ -134,7 +142,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in here.getPortalResourceTypeList()]</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalProductTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
