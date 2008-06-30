@@ -12,11 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>base_category</string>
-                <string>catalog_index</string>
-                <string>items</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -66,12 +62,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -82,14 +72,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key>                 <string>base_category</string> </key>
-                    <value> <string>specialise</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_specialise_title</string> </value>
@@ -104,22 +86,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>REQUEST/relation_item_list</string> </value>
         </item>
       </dictionary>
     </pickle>

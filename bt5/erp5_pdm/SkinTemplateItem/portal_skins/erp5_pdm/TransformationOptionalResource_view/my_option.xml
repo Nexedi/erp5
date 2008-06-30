@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>items</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -81,12 +79,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>TransformationOptionalResource_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
