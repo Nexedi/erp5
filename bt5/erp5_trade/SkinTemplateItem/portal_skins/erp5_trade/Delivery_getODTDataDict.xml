@@ -236,7 +236,8 @@ data_dict = {\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\',\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'),\n
   \'destination_section_email\': getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'),\n
-  \'destination_section_vatid\': getVatId(context.getDestinationSection() and context.getDestinationSectionValue().getVatCode() or \'\'),\n
+  \'destination_section_vatid\': getVatId(context.getDestinationSection() and\n
+      context.getDestinationSectionValue().getProperty(\'vat_code\') or \'\'),\n
 \n
   \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
   \'destination_decision_telfax\': getPhoneAndFax(context.getDestinationDecision() and context.getDestinationDecisionValue().getTelephoneText() or \'\',\n
