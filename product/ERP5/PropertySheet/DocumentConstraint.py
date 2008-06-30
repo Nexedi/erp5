@@ -36,7 +36,8 @@ class DocumentConstraint:
       'description': 'Documents should have one group or use one project as \
                       Follow Up relation',
       'expression' : 'python: len(object.getFollowUpList()) > 0 \
-	              or len(object.getGroupList()) > 0',
+	              or len(object.getGroupList()) > 0 or \
+		      object.getValidationState() == "embedded"',
       'type': 'TALESConstraint',
       'message_expression_false': 'Follow Up or Group must be defined',
     },
