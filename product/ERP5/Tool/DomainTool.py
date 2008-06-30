@@ -81,14 +81,12 @@ class DomainTool(BaseTool):
       """
       portal_catalog = context.portal_catalog
       portal_categories = context.portal_categories
-      column_list = []
+      # Search the columns of the predicate table
+      column_list = [x.split('.')[1] for x in portal_catalog.getColumnIds()
+                     if x.startswith('predicate.')]
       expression_list = []
       checked_column_list = []
       sql_kw = {}
-      # Search the columns of the predicate table
-      for column in portal_catalog.getColumnIds():
-        if column.startswith('predicate.'):
-          column_list.append(column.split('.')[1])          
       for column in column_list:
         if column not in checked_column_list:
           range_property = 0
