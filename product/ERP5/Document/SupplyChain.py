@@ -56,6 +56,8 @@ class SupplyChain(Path, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Task
                     , PropertySheet.Arrow
+                    , PropertySheet.Reference
+                    , PropertySheet.Comment
                     , PropertySheet.Movement
                     , PropertySheet.Delivery
                     , PropertySheet.Path
