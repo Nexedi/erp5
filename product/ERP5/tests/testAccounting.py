@@ -430,6 +430,7 @@ class TestTransactionValidation(AccountingTestCase):
                            destination_value=self.account_module.bank,
                            source_debit=500),
                       dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
                            source_credit=500)))
     # refused because no bank account
     self.assertRaises(ValidationFailed,
