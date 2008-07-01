@@ -59,7 +59,8 @@ class DomainTool(BaseTool):
     def searchPredicateList(self, context, test=1, sort_method=None,
                             ignored_category_list=None,
                             tested_base_category_list=None,
-                            filter_method=None, acquired=1, **kw):
+                            filter_method=None, acquired=1,
+                            strict=True, **kw):
       """
       Search all predicates which corresponds to this particular 
       context.
@@ -78,6 +79,21 @@ class DomainTool(BaseTool):
 
       - the acquired parameter allows to define if we want to use
         acquisition for categories. By default we want.
+
+      - strict: if True, generate SQL which will match predicates matching
+        all those categories at the same time, except for categories they do
+        not check at all. Example:
+          Predicate_1 checks foo/bar
+          Predicate_2 checks foo/baz region/somewhere
+          Predicate_3 checks foo/bar region/somewhere
+          When called with category list ['foo/bar', 'region/somewhere'] and
+          strict parameter to True, it will return [Predicate_1, Predicate_3].
+          With strict to False or by not giving a category list, it would also
+          return Predicate_2, because it matches on one criterion out of the 2
+          it checks.
+        Note that it changes the value returned by this function if it was
+        invoked with "test=False" value. Otherwise, it should only change
+        execution duration.
       """
       portal_catalog = context.portal_catalog
       portal_categories = context.portal_categories
@@ -146,14 +162,19 @@ class DomainTool(BaseTool):
                context.getCategoryMembershipList(tested_base_category, base=1))
 
       if tested_base_category_list != []:
-        # Add predicate_category.uid for automatic join
-        sql_kw['predicate_category.uid'] = '!=NULL'
         if len(category_list)==0:
           category_list = ['NULL']
-        category_expression = portal_categories.buildSQLSelector(
+        category_expression_dict = portal_categories.buildAdvancedSQLSelector(
                                            category_list,
                                            query_table='predicate_category',
-                                           none_sql_value=0)
+                                           none_sql_value=0,
+                                           strict=strict)
+        category_expression = category_expression_dict['where_expression']
+        if 'from_expression' in category_expression_dict:
+          sql_kw['from_expression'] = category_expression_dict['from_expression']
+        else:
+          # Add predicate_category.uid for automatic join
+          sql_kw['predicate_category.uid'] = '!=NULL'
         if len(where_expression) > 0:
           where_expression = '(%s) AND \n(%s)' % \
                                           (where_expression,category_expression)
@@ -214,11 +235,21 @@ class DomainTool(BaseTool):
         # Look for each property the first predicate which defines the 
         # property
         for predicate in predicate_list:
-          for mapped_value_property in predicate.getMappedValuePropertyList():
-            if not mapped_value_property_dict.has_key(mapped_value_property):
-              value = predicate.getProperty(mapped_value_property)
-              if value is not None:
-                mapped_value_property_dict[mapped_value_property] = value
+          getMappedValuePropertyList = getattr(predicate,
+            'getMappedValuePropertyList', None)
+          # searchPredicateList returns a list of any kind of predicate, which
+          # includes predicates not containing any mapped value (for exemple, 
+          # domains). In such case, it has no meaning to handle them here.
+          # A better way would be to tell catalog not to provide us with those
+          # extra object, but there is no simple way (many portal types inherit
+          # from MappedValue defining the accessor).
+          # Feel free to improve.
+          if getMappedValuePropertyList is not None:
+            for mapped_value_property in predicate.getMappedValuePropertyList():
+              if not mapped_value_property_dict.has_key(mapped_value_property):
+                value = predicate.getProperty(mapped_value_property)
+                if value is not None:
+                  mapped_value_property_dict[mapped_value_property] = value
         # Update mapped value
         mapped_value = mapped_value.asContext(**mapped_value_property_dict)
       return mapped_value
