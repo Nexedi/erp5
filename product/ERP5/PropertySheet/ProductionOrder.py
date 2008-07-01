@@ -50,7 +50,7 @@ class ProductionOrder:
       'description'   : 'Specialise must be defined',
       'type'          : 'CategoryExistence',
       'portal_type'   : ('Supply Chain',),
-      'destination': 1,
+      'specialise': 1,
       'message_category_not_set': 'Supply Chain must be defined',
     },
     { 'id'            : 'total_quantity',
