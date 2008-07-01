@@ -78,6 +78,20 @@ class Person:
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
+    { 'id'                       : 'birthplace_address'
+    , 'description'              : 'The current address where the person is'\
+                                   ' born'
+    , 'type'                     : 'content'
+    , 'portal_type'              : ( 'Address', )
+    , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
+                                     'zip_code', 'region', 'region_title')
+    , 'acquisition_copy_value'   : 0
+    , 'acquisition_mask_value'   : 1
+    , 'acquisition_sync_value'   : 0
+    , 'acquisition_accessor_id'  : 'getDefaultBirthplaceAddressValue'
+    , 'acquisition_depends'      : None
+    , 'mode'                     : 'w'
+    },
     { 'id'         : 'social_code'
     , 'description': 'The social code of this person.'
     , 'type'       : 'string'
