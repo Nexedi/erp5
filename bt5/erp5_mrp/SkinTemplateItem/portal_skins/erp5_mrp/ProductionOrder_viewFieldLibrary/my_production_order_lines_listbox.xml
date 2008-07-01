@@ -100,7 +100,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Product</string>
                         </tuple>
                         <tuple>
                           <string>specialise_title</string>
@@ -151,7 +151,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Product</string>
                         </tuple>
                         <tuple>
                           <string>specialise_title</string>
