@@ -39,20 +39,4 @@ class EGovGenericProperties:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'                       : 'birthplace'
-    , 'storage_id'               : 'default_birthplace'
-    , 'description'              : 'The current address of the person'
-    , 'type'                     : 'content'
-    , 'portal_type'              : ( 'Address', )
-    , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
-                                     'zip_code', 'region', 'region_title')
-    , 'acquisition_base_category': ( 'subordination', )
-    , 'acquisition_portal_type'  : ( 'Organisation', )
-    , 'acquisition_copy_value'   : 0
-    , 'acquisition_mask_value'   : 1
-    , 'acquisition_sync_value'   : 0
-    , 'acquisition_accessor_id'  : 'getDefaultBirthplaceValue'
-    , 'acquisition_depends'      : None
-    , 'mode'                     : 'w'
-    },
   )
