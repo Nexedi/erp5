@@ -202,6 +202,7 @@ class ReportSection:
                      selection_params=None,
                      listbox_display_mode=None, 
                      selection_columns=None,
+                     selection_stats=None,
                      selection_sort_order=None,
                      selection_report_path=None,
                      selection_report_list=None):
@@ -226,6 +227,7 @@ class ReportSection:
     self.selection_params = selection_params
     self.listbox_display_mode = listbox_display_mode
     self.selection_columns = selection_columns
+    self.selection_stats = selection_stats
     self.selection_sort_order = selection_sort_order
     self.saved_selections = {}
     self.selection_report_path = selection_report_path
@@ -330,6 +332,12 @@ class ReportSection:
                                                        REQUEST=REQUEST)
           portal_selections.setSelectionSortOrder(selection_name,
                       self.selection_sort_order, REQUEST=REQUEST)
+        if self.selection_stats is not None:
+          self.saved_selections[selection_name]['stats'] =  \
+               portal_selections.getSelectionStats(selection_name,
+                                                     REQUEST=REQUEST)
+          portal_selections.setSelectionStats(selection_name,
+                                  self.selection_stats, REQUEST=REQUEST)
 
     self.saved_request_form = REQUEST.form
     REQUEST.form = {}
@@ -388,6 +396,10 @@ class ReportSection:
         if self.selection_sort_order is not None:
           portal_selections.setSelectionSortOrder(selection_name,
                       self.saved_selections[selection_name]['sort_order'],
+                      REQUEST=REQUEST)
+        if self.selection_stats is not None:
+          portal_selections.setSelectionStats(selection_name,
+                      self.saved_selections[selection_name]['stats'],
                       REQUEST=REQUEST)
 
     REQUEST.form = self.saved_request_form
