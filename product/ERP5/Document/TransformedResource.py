@@ -72,6 +72,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
+                      , PropertySheet.Reference
                       , PropertySheet.TransformedResource
                       )
 
