@@ -1910,7 +1910,7 @@ class ListBoxRendererLine:
           # If a stat method is not specified, use the result in the context itself.
           original_value = getattr(context, alias)
           processed_value = original_value
-        else:
+        elif stat_method_id is not None:
           stat_method = getattr(context, stat_method_id)
           if callable(stat_method):
             try:
