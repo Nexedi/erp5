@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_reference</string> </value>
+            <value> <string>listbox_registration_number</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -121,7 +121,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -141,9 +143,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Registry Number</string> </value>
+                    <value> <string>Registration Number</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'entreprise\' in here.getRole()</string> </value>
+            <value> <string>cell/getRegistrationNumber</string> </value>
         </item>
       </dictionary>
     </pickle>
