@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ZSQLMethods.SQL</string>
-          <string>SQL</string>
-        </tuple>
-        <none/>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -32,6 +29,12 @@
                         <key> <string>_data</string> </key>
                         <value>
                           <dictionary>
+                            <item>
+                                <key> <string>from_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
                             <item>
                                 <key> <string>from_table_list</string> </key>
                                 <value>
@@ -98,15 +101,16 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>where_expression</string>
-                            <string>select_expression</string>
-                            <string>group_by_expression</string>
-                            <string>from_table_list</string>
-                            <string>sort_on</string>
-                            <string>limit_expression</string>
-                            <string>search_mode</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>where_expression</string>
+<string>select_expression</string>
+<string>group_by_expression</string>
+<string>from_table_list</string>
+<string>from_expression</string>
+<string>sort_on</string>
+<string>limit_expression</string>
+<string>search_mode</string>
                           </list>
                         </value>
                     </item>
@@ -129,6 +133,7 @@ where_expression\r\n
 select_expression\r\n
 group_by_expression\r\n
 from_table_list:list\r\n
+from_expression\r\n
 sort_on\r\n
 limit_expression\r\n
 search_mode</string> </value>
@@ -176,7 +181,11 @@ SELECT DISTINCT\n
   <dtml-if select_expression>,<dtml-var select_expression></dtml-if>\n
 \n
 FROM\n
-  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  <dtml-if from_expression>\n
+    <dtml-var from_expression>\n
+  <dtml-else>\n
+    <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  </dtml-if>\n
   <dtml-if selection_domain>\n
     <dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias = \'domain_category\')">\n
       <dtml-if expression> , <dtml-var expression> </dtml-if>\n
@@ -223,9 +232,11 @@ LIMIT <dtml-var "limit_expression">\n
             <value>
               <object>
                 <klass>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                  <global name="__newobj__" module="copy_reg"/>
                 </klass>
-                <none/>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -257,7 +268,11 @@ SELECT DISTINCT\n
   <dtml-if select_expression>,<dtml-var select_expression></dtml-if>\n
 \n
 FROM\n
-  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  <dtml-if from_expression>\n
+    <dtml-var from_expression>\n
+  <dtml-else>\n
+    <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  </dtml-if>\n
   <dtml-if selection_domain>\n
     <dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias = \'domain_category\')">\n
       <dtml-if expression> , <dtml-var expression> </dtml-if>\n
