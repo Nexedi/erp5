@@ -39,5 +39,8 @@ class RawKey(SearchKey):
 
   def buildSQLExpression(self, key, value, 
                          format=None, mode=None, range_value=None, stat__=None):
-    where_expression = "%s = '%s'" %(key, value)
+    if value is not None:
+      where_expression = "%s = '%s'" % (key, value)
+    else:
+      where_expression = "%s is NULL" % (key)
     return where_expression, []

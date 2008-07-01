@@ -140,6 +140,8 @@ class SimpleQuery(QueryMixin):
       search_key_class = DefaultKey
     elif isinstance(value, float):
       search_key_class = FloatKey
+    elif value is None:
+      return RawKey
     return search_key_class
 
   def _asSQLExpression(self, search_key_class, key, value, format=None, mode=None, range_value=None, stat__=None):

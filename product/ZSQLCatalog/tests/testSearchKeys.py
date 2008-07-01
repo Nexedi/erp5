@@ -374,7 +374,12 @@ class TestSearchKeyQuery(unittest.TestCase):
                  '.',
                  "delivery.stock = '.'",
                  [])
-                
+    #None values
+    self.compare(RawKey,
+                 'title',
+                 None,
+                 "title is NULL",
+                 [])
   def test_06FullTextKey(self, quiet=quiet, run=run_all_test):
     """ Check FullTextKey query generation"""
     if not run: return
