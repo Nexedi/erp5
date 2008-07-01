@@ -1,6 +1,3 @@
-2008-07-01 yusei
-* Fixed cookie path problem under virtual host.
-
 2008-06-27 yusei
 * Start to develop version 5.2.
 
