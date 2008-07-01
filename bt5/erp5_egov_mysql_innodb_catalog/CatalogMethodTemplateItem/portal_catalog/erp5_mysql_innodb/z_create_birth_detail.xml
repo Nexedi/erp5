@@ -97,7 +97,7 @@
             <value> <string>CREATE TABLE `birth_detail` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `birthplace_city` VARCHAR(255) DEFAULT \'\',\n
-  `birth_date` datetime default NULL,\n
+  `birth_date` datetime DEFAULT NULL,\n
   PRIMARY KEY (`uid`),\n
   KEY `birthplace` (`birthplace_city`),\n
   KEY `birth_date` (`birth_date`)\n
@@ -141,7 +141,7 @@
                         <value> <string>CREATE TABLE `birth_detail` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `birthplace_city` VARCHAR(255) DEFAULT \'\',\n
-  `birth_date` datetime default NULL,\n
+  `birth_date` datetime DEFAULT NULL,\n
   PRIMARY KEY (`uid`),\n
   KEY `birthplace` (`birthplace_city`),\n
   KEY `birth_date` (`birth_date`)\n
