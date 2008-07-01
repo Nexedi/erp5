@@ -65,19 +65,38 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Initialise int_index and reference of object"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Initialise int_index and reference of object\n
+It will set reference to int_index, as string.\n
+In case if container is same type is its children, reference is generated as\n
+<container_reference>.<children_reference>:\n
+  1\n
+  1.1\n
+  1.2\n
+  1.2.1\n
+  1.2.2\n
+  1.3\n
+  1.3.1\n
+"""\n
 \n
 parent = context.getParentValue()\n
 portal_type = context.getPortalType()\n
 \n
 index = len(parent.contentValues(filter={"portal_type": portal_type}))\n
-reference = str(index)\n
+\n
+if parent.getPortalType() == portal_type:\n
+  reference = "%s.%s" % (parent.getReference(), index)\n
+else:\n
+  reference = str(index)\n
 \n
 context.edit(\n
   int_index = index,\n
   reference = reference\n
 )\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -133,8 +152,8 @@ context.edit(\n
                             <string>portal_type</string>
                             <string>len</string>
                             <string>index</string>
-                            <string>str</string>
                             <string>reference</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
