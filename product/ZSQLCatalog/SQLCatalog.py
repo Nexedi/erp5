@@ -2114,12 +2114,7 @@ class Catalog(Folder,
           from_table_dict[table_with_index] = table
 
     # Use a dictionary at the moment.
-    from_expression = kw.get('from_expression', {})
-    final_from_expression = ', '.join(
-      [from_expression.get(table, '`%s` AS `%s`' % (table, alias))
-       for table, alias in from_table_dict.iteritems()])
     return { 'from_table_list' : from_table_dict.items(),
-             'from_expression' : final_from_expression,
              'order_by_expression' : sort_on,
              'where_expression' : where_expression,
              'limit_expression' : limit_expression,
@@ -2137,7 +2132,6 @@ class Catalog(Folder,
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']
-    kw['from_expression'] = query['from_expression']
     kw['limit_expression'] = query['limit_expression']
     kw['select_expression'] = query['select_expression']
     kw['group_by_expression'] = query['group_by_expression']
