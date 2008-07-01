@@ -532,11 +532,11 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_11_WebSection_getDocumentValueList(self, quiet=quiet, run=run_all_test):
     """ Check getting getDocumentValueList from Web Section.
-        XXX: 01.07.2008 (Ivan) this test will fail as currently there are some missing features.
     """
     if not run:   return
     if not quiet:  
-      message = '\nWebSection_getDocumentValueList'
+      message = '\ntest_11_WebSection_getDocumentValueList'
+      ZopeTestCase._print(message)
     portal = self.getPortal()
     website = self.setupWebSite()
     websection = self.setupWebSection()
@@ -546,7 +546,10 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     websection.edit(membership_criterion_base_category = ['publication_section'], 
                             membership_criterion_category=['publication_section/%s' 
                                                                               %publication_section_category_id_list[0]])
-   
+    # clean up
+    self.web_page_module.manage_delObjects(list(self.web_page_module.objectIds()))
+    portal.portal_categories.publication_section.manage_delObjects(
+                                                                  list(portal.portal_categories.publication_section.objectIds()))   
     # create categories
     for category_id in publication_section_category_id_list:
       portal.portal_categories.publication_section.newContent(portal_type = 'Category', 
@@ -573,7 +576,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(len(web_page_list), len(websection.getDocumentValueList()))
     
     # test if limit works
-    self.assertEqual(1, len(websection.getDocumentValueList(limit=1)))
+    self.assertEqual(5, len(websection.getDocumentValueList(limit=5)))
+
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
