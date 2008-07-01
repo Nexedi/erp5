@@ -82,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_create_egov</string> </value>
+            <value> <string>z0_drop_birth_detail</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -94,14 +94,7 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `egov` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `corporate_registration_code` VARCHAR(255) DEFAULT \'\',\n
-  `vat_code` VARCHAR(255) DEFAULT \'\',\n
-  PRIMARY KEY (`uid`),\n
-  KEY `rccm` (`corporate_registration_code`),\n
-  KEY `ninea` (`vat_code`)\n
-) TYPE=InnoDB\n
+            <value> <string>DROP TABLE IF EXISTS birth_detail\n
 </string> </value>
         </item>
         <item>
@@ -138,14 +131,7 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>CREATE TABLE `egov` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `corporate_registration_code` VARCHAR(255) DEFAULT \'\',\n
-  `vat_code` VARCHAR(255) DEFAULT \'\',\n
-  PRIMARY KEY (`uid`),\n
-  KEY `rccm` (`corporate_registration_code`),\n
-  KEY `ninea` (`vat_code`)\n
-) TYPE=InnoDB\n
+                        <value> <string>DROP TABLE IF EXISTS birth_detail\n
 </string> </value>
                     </item>
                   </dictionary>

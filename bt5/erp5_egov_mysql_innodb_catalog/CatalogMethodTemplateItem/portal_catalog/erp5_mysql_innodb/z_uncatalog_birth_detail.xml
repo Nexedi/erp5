@@ -28,24 +28,27 @@
                     <item>
                         <key> <string>_data</string> </key>
                         <value>
-                          <dictionary/>
+                          <dictionary>
+                            <item>
+                                <key> <string>uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
                         </value>
                     </item>
                     <item>
                         <key> <string>_keys</string> </key>
                         <value>
-                          <list/>
+                          <list>
+<string>uid</string>
+                          </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_col</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -56,7 +59,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string></string> </value>
+            <value> <string>uid</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -82,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_create_egov</string> </value>
+            <value> <string>z_uncatalog_birth_detail</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -94,15 +97,12 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `egov` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `corporate_registration_code` VARCHAR(255) DEFAULT \'\',\n
-  `vat_code` VARCHAR(255) DEFAULT \'\',\n
-  PRIMARY KEY (`uid`),\n
-  KEY `rccm` (`corporate_registration_code`),\n
-  KEY `ninea` (`vat_code`)\n
-) TYPE=InnoDB\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+DELETE FROM birth_detail WHERE <dtml-sqltest uid op=eq type=int>\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -138,15 +138,12 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>CREATE TABLE `egov` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `corporate_registration_code` VARCHAR(255) DEFAULT \'\',\n
-  `vat_code` VARCHAR(255) DEFAULT \'\',\n
-  PRIMARY KEY (`uid`),\n
-  KEY `rccm` (`corporate_registration_code`),\n
-  KEY `ninea` (`vat_code`)\n
-) TYPE=InnoDB\n
-</string> </value>
+                        <value> <string encoding="cdata"><![CDATA[
+
+DELETE FROM birth_detail WHERE <dtml-sqltest uid op=eq type=int>\n
+
+
+]]></string> </value>
                     </item>
                   </dictionary>
                 </state>
