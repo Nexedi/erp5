@@ -16,6 +16,7 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>all_columns</string>
+                <string>list_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
               </list>
@@ -99,6 +100,10 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
+                          <string>variation_title</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
@@ -146,6 +151,10 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
+                          <string>variation_title</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
@@ -181,14 +190,15 @@
                     <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key>                 <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Production Packing List Line</string>
-                          <string>Production Packing List Line</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -205,6 +215,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>getMovementList</string> </value>
         </item>
       </dictionary>
     </pickle>

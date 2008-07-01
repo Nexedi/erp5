@@ -15,7 +15,6 @@
               <list>
                 <string>title</string>
                 <string>selection_name</string>
-                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -83,17 +82,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>ProductionPackingList_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Production Report Line</string>
-                          <string>Production Report Line</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
