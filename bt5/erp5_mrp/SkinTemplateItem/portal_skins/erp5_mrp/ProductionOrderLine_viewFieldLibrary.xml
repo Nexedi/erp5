@@ -111,6 +111,7 @@
                         <string>my_title</string>
                         <string>my_int_index</string>
                         <string>my_reference</string>
+                        <string>my_specialise</string>
                       </list>
                     </value>
                 </item>
