@@ -91,9 +91,10 @@
                     <value>
                       <list>
                         <string>listbox_deliverable</string>
-                        <string>listbox_title</string>
                         <string>listbox_min_delay</string>
                         <string>listbox_max_delay</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_int_index</string>
                       </list>
                     </value>
                 </item>
