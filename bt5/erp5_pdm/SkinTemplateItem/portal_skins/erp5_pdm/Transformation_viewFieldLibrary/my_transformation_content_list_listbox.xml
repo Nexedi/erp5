@@ -267,6 +267,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>translated_portal_type</string>
+                          <string>ascending</string>
+                        </tuple>
+                        <tuple>
                           <string>int_index</string>
                           <string>ascending</string>
                         </tuple>
