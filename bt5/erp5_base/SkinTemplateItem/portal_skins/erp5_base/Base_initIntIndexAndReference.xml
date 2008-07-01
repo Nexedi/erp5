@@ -73,7 +73,7 @@ portal_type = context.getPortalType()\n
 index = len(parent.contentValues(filter={"portal_type": portal_type}))\n
 reference = str(index)\n
 \n
-line.edit(\n
+context.edit(\n
   int_index = index,\n
   reference = reference\n
 )\n
@@ -135,7 +135,6 @@ line.edit(\n
                             <string>index</string>
                             <string>str</string>
                             <string>reference</string>
-                            <string>line</string>
                           </tuple>
                         </value>
                     </item>
