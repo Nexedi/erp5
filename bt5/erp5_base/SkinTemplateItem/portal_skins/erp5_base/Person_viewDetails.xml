@@ -116,6 +116,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_start_date</string>
+                        <string>my_default_birthplace_address_city</string>
                         <string>my_birth_name</string>
                         <string>my_middle_name</string>
                         <string>my_prefix</string>
