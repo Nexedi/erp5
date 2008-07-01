@@ -78,7 +78,7 @@ if resource is None:\n
 \n
 # XXX: Is it possible to use cache? Hook it on resource?\n
 for transformation in LazyFilter(\n
-  resource.getResourceRelatedValueList(portal_type=\'Transformation\'),\n
+  resource.getResourceRelatedValueList(portal_type=portal.getPortalTransformationTypeList()),\n
   skip=\'View\'\n
   ):\n
   if not skip_invalidated or transformation.getProperty(\'validation_state\',\'default\') != \'invalidated\':\n

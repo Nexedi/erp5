@@ -66,11 +66,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>production_order_line = state_change[\'object\']\n
+portal = production_order_line.getPortalObject()\n
 \n
 transformation = None\n
 resource = production_order_line.getResourceValue()\n
 if resource is not None:\n
-  transformation_list = [q for q in resource.getResourceRelatedValueList(portal_type=\'Transformation\') \\\n
+  transformation_list = [q for q in resource.getResourceRelatedValueList(portal_type=portal.getPortalTransformationTypeList()) \\\n
     if q.getProperty(\'validation_state\',\'default\') != \'invalidated\']\n
   if len(transformation_list) == 1:\n
     transformation = transformation_list[0].getRelativeUrl()\n
@@ -120,9 +121,10 @@ production_order_line.setSpecialise(transformation)\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>production_order_line</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
                             <string>None</string>
                             <string>transformation</string>
-                            <string>_getattr_</string>
                             <string>resource</string>
                             <string>append</string>
                             <string>$append0</string>
