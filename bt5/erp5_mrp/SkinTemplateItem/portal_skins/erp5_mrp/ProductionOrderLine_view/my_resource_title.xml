@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>base_category</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -74,10 +72,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key>                 <string>base_category</string> </key>
-                    <value> <string>resource</string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_resource_title</string> </value>
