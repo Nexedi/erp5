@@ -99,7 +99,6 @@
                     <value>
                       <list>
                         <string>my_total_quantity</string>
-                        <string>my_destination_section</string>
                         <string>my_delivery_mode</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
