@@ -530,6 +530,51 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     except Unauthorized:
       self.fail("Web Section should not prompt user for login.")
 
+  def test_11_WebSection_getDocumentValueList(self, quiet=quiet, run=run_all_test):
+    """ Check getting getDocumentValueList from Web Section.
+        XXX: 01.07.2008 (Ivan) this test will fail as currently there are some missing features.
+    """
+    if not run:   return
+    if not quiet:  
+      message = '\nWebSection_getDocumentValueList'
+    portal = self.getPortal()
+    website = self.setupWebSite()
+    websection = self.setupWebSection()
+    publication_section_category_id_list = ['documentation',  'administration']
+    
+    #set predicate on web section using 'publication_section'
+    websection.edit(membership_criterion_base_category = ['publication_section'], 
+                            membership_criterion_category=['publication_section/%s' 
+                                                                              %publication_section_category_id_list[0]])
+   
+    # create categories
+    for category_id in publication_section_category_id_list:
+      portal.portal_categories.publication_section.newContent(portal_type = 'Category', 
+                                                                             id = category_id)
+    web_page_reference = 'default-document-reference-%s'
+    web_page_list = []
+    for index in range(0, 10):
+      web_page = self.portal.web_page_module.newContent(
+                                      portal_type = 'Web Page', 
+                                      language = 'en', 
+                                      reference = web_page_reference %index, 
+                                      publication_section_list=publication_section_category_id_list[:1])
+      web_page_list.append(web_page)
+    get_transaction().commit()
+    self.tic()
+    # in draft state no documents should belong to this Web Section    
+    self.assertEqual(0, len(websection.getDocumentValueList()))
+    
+    # when published all web pages should belong to it
+    for web_page in web_page_list:
+      web_page.publish()
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(len(web_page_list), len(websection.getDocumentValueList()))
+    
+    # test if limit works
+    self.assertEqual(1, len(websection.getDocumentValueList(limit=1)))
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
