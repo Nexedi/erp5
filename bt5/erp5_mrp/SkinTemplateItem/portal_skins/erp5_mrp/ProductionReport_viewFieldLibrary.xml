@@ -116,6 +116,7 @@
                         <string>my_causality_title</string>
                         <string>my_reference</string>
                         <string>my_production_report_lines_listbox</string>
+                        <string>my_variation_category_list</string>
                       </list>
                     </value>
                 </item>
