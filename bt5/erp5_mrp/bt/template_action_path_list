@@ -10,6 +10,7 @@ Production Order | payment_condition
 Production Order | profile_view
 Production Order | view
 Production Order | view_discount
+Production Order | view_stock
 Production Packing List Cell | view
 Production Packing List Line | option_view
 Production Packing List Line | quantity_view
@@ -17,6 +18,7 @@ Production Packing List Line | view
 Production Packing List Line | view_price
 Production Packing List Module | view
 Production Packing List | view
+Production Packing List | view_stock
 Production Report Cell | view
 Production Report Line | option_view
 Production Report Line | quantity_view
@@ -24,6 +26,7 @@ Production Report Line | view
 Production Report Line | view_price
 Production Report Module | view
 Production Report | view
+Production Report | view_stock
 Supply Chain Module | view
 Supply Chain | view
 Supply Chain | view_supply_node
