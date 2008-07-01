@@ -246,6 +246,40 @@ class TestProductionOrderMixin(TestOrderMixin):
     )
     sequence.edit(order_line=order_line)
 
+  def stepCreateOrderLineWithoutTransformation(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty order line
+    """
+    order = sequence.get('order')
+    order_line = order.newContent(portal_type=self.order_line_portal_type)
+    resource = sequence.get('resource')
+    order_line.edit(
+      title="Order Line",
+      resource_value=resource,
+      quantity=5
+    )
+    sequence.edit(order_line=order_line)
+
+  def stepCheckOrderLineTransformationIsSet(self, sequence=None, sequence_list=None, **kw):
+    order_line = sequence.get('order_line')
+    transformation = sequence.get('transformation')
+
+    self.assertNotEquals(None, transformation)
+
+    self.assertEquals(order_line.getSpecialiseValue(), transformation)
+
+  def stepCheckOrderLineTransformationIsNotSet(self, sequence=None, sequence_list=None, **kw):
+    order_line = sequence.get('order_line')
+
+    self.assertEquals(order_line.getSpecialiseValue(), None)
+
+  def stepRemoveResourceFromOrderLine(self, sequence=None, sequence_list=None, **kw):
+    order_line = sequence.get('order_line')
+
+    order_line.edit(
+        resource = None
+    )
+
   def stepCheckOrderSimulation(self, sequence=None, sequence_list=None, **kw):
     """
       Test if simulation is matching order
@@ -1043,6 +1077,71 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     self.assertEquals(pasted_supply_node.getRelativeUrl(),
                       pasted_supply_link.getDestination())
 
+  def test_07_testTransformationInteractionProductionOrderLine(self, quiet=0, run=run_all_test):
+    """
+    Test for setting/resetting Transformation on Production Order Line
+    """
+    if not run: return
+
+    bootstrap_sequence_string = '\
+                      ClearActivities \
+                      CreateNotVariatedResource \
+                      CreateOrder \
+                      '
+    sequence_list = SequenceList()
+
+    # normal case
+    sequence_string = bootstrap_sequence_string + '\
+                      CreateTransformation \
+                      Tic \
+                      CreateOrderLineWithoutTransformation \
+                      Tic \
+                      CheckOrderLineTransformationIsSet \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # no transformation
+    sequence_string = bootstrap_sequence_string + '\
+                      CreateOrderLineWithoutTransformation \
+                      Tic \
+                      CheckOrderLineTransformationIsNotSet \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # transformation set, then unset
+    sequence_string = bootstrap_sequence_string + '\
+                      CreateTransformation \
+                      Tic \
+                      CreateOrderLineWithoutTransformation \
+                      Tic \
+                      CheckOrderLineTransformationIsSet \
+                      RemoveResourceFromOrderLine \
+                      Tic \
+                      CheckOrderLineTransformationIsNotSet \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # more than one transformation
+    sequence_string = bootstrap_sequence_string + '\
+                      CreateTransformation \
+                      CreateTransformation \
+                      Tic \
+                      CreateOrderLineWithoutTransformation \
+                      Tic \
+                      CheckOrderLineTransformationIsNotSet \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+    # case for non-apparel
+    self.transformation_portal_type = 'Transformation'
+    self.transformed_resource_portal_type = 'Transformation Transformed Resource'
+    self.operation_line_portal_type = 'Transformation Operation'
+    self.resource_portal_type = 'Product'
+
+    sequence_list.play(self)
+    
   def test_50_testCopyPaste(self, quiet=0, run=run_all_test):
     """
     Check that relation are changed when doing a copy/paste,
