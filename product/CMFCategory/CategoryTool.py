@@ -1443,23 +1443,102 @@ class CategoryTool( UniqueObject, Folder, Base ):
         - none_sql_value is used in order to specify what is the None value into
           sql tables
       """
+      result = self.buildAdvancedSQLSelector(category_list, query_table,
+                 none_sql_value, strict=False)['where_expression']
+      # Quirk to keep strict backward compatibility. Should be removed when
+      # tested.
+      if result == '':
+        result = []
+      return result
+    
+    # SQL Expression Building
+    security.declareProtected(Permissions.AccessContentsInformation, 'buildAdvancedSQLSelector')
+    def buildAdvancedSQLSelector(self, category_list, query_table='category',
+          none_sql_value=None, strict=True, catalog_table_name='catalog'):
+      """
+        Return chunks of SQL to check for category membership.
+
+        none_sql_value (default=None):
+          Specify the SQL value of None in SQL.
+          None means SQL NULL.
+
+        strict (boolean, default=True):
+          False:
+            Resulting query will match any document which matches at least one
+            of given categories.
+          True:
+            Resulting query will match any document which matches all given
+            categories, except for categories which are not defined on the
+            document. This usefull for example for predicates, where one wants
+            to fetch all predicates applicable for a given set of conditions,
+            including generic predicates which check only a subset of those
+            conditions.
+            Performance hint: Order given category list to have most
+            discriminant factors before lesser discriminant ones.
+      """
+      result = {}
       def renderUIDValue(uid):
         uid = ((uid is None) and (none_sql_value, ) or (uid, ))[0]
         if uid is None:
-          return 'is NULL'
+          return 'NULL'
         else:
-          return '= %s' % (uid, )
+          return '%s' % (uid, )
+      def renderUIDWithOperator(uid):
+        value = renderUIDValue(uid)
+        if value == 'NULL':
+          return 'IS NULL'
+        return '= %s' % (value, )
       if isinstance(category_list, str):
         category_list = [category_list]
-      sql_expr = ['(%s.category_uid %s AND %s.base_category_uid %s)' %\
-                  (query_table, renderUIDValue(self.getCategoryUid(x)),
-                   query_table, renderUIDValue(self.getBaseCategoryUid(x)))
-                   for x in category_list if isinstance(x, str) and x]
-      # XXX: This "if" is meaningless. But as it changes the return value,
-      # it's dagerous to remove it without good testing.
-      if len(sql_expr) > 0:
-        sql_expr = ' OR '.join(sql_expr)
-      return sql_expr
+      if strict:
+        category_uid_dict = {}
+        ordered_base_category_uid_list = []
+        # Fetch all category and base category uids, and regroup by
+        # base_category.
+        for category in category_list:
+          if isinstance(category, str) and category:
+            base_category_uid = self.getBaseCategoryUid(category)
+            category_uid_list = category_uid_dict.setdefault(base_category_uid, [])
+            if len(category_uid_list) == 0:
+              # New base category, append it to the ordered list.
+              ordered_base_category_uid_list.append(base_category_uid)
+            category_uid_list.append(self.getCategoryUid(category))
+          else: 
+            LOG('CategoryTool', 0, 'Received invalid category %r' % (category, ))
+        # Generate "left join" and "where" expressions.
+        left_join_list = [catalog_table_name]
+        where_expression_list = []
+        format_dict = {'catalog': catalog_table_name}
+        for base_category_uid in ordered_base_category_uid_list:
+          alias_name = 'base_%s' % (base_category_uid, )
+          format_dict['alias'] = alias_name
+          format_dict['condition'] = renderUIDWithOperator(base_category_uid)
+          left_join_list.append(
+            '`%(alias)s` ON (`%(catalog)s`.uid = `%(alias)s`.uid AND '\
+            '`%(alias)s`.category_strict_membership = "1" AND '\
+            '`%(alias)s`.base_category_uid %(condition)s)' % format_dict)
+          category_uid_name = '`%s`.category_uid' % (alias_name, )
+          category_uid_list = category_uid_dict[base_category_uid]
+          if category_uid_list == [None]:
+            # Only one UID and it's None: do not allow NULL value to be selected.
+            where_expression_list.append('(%s %s)' % \
+              (category_uid_name, renderUIDWithOperator(base_category_uid)))
+          else:
+            # In any other case, allow it.
+            where_expression_list.append('(%s IS NULL OR %s IN (%s))' % \
+              (category_uid_name, category_uid_name,
+               ', '.join([renderUIDValue(x) for x in category_uid_list])))
+        result['from_expression'] = {catalog_table_name:
+          ('\nLEFT JOIN `%s` AS ' % (query_table, )).join(left_join_list)}
+        result['where_expression'] = '(%s)' % (' AND '.join(where_expression_list), )
+        LOG('buildAdvancedSQLSelector', 0, repr(result))
+      else:
+        result['where_expression'] = \
+          ' OR '.join(['(%s.category_uid %s AND %s.base_category_uid %s)' %\
+                       (query_table, renderUIDWithOperator(self.getCategoryUid(x)),
+                        query_table, renderUIDWithOperator(self.getBaseCategoryUid(x)))
+                       for x in category_list if isinstance(x, str) and x])
+      return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
     def getCategoryMemberValueList(self, context, base_category = None,
