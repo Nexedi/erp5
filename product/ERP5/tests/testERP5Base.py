@@ -866,6 +866,13 @@ class TestERP5Base(ERP5TypeTestCase):
                         getattr(org.getCreationDate(), slot)(),
                         'Wrong creation date %s' % org.getCreationDate())
 
+  def test_07_BirthplaceOnPerson(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """Tests birthplace on Person objects.
+    """
+    pers = self.getPersonModule().newContent(portal_type='Person')
+    pers.setDefaultBirthplaceAddressCity('Lille')
+    self.assertEquals('Lille', pers.getDefaultBirthplaceAddressCity())
+
   def test_TelephoneAsText(self):
     # Test asText method
     pers = self.getPersonModule().newContent(portal_type='Person')
