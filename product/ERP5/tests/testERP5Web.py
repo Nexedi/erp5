@@ -544,25 +544,26 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     
     #set predicate on web section using 'publication_section'
     websection.edit(membership_criterion_base_category = ['publication_section'], 
-                            membership_criterion_category=['publication_section/%s' 
-                                                                              %publication_section_category_id_list[0]])
+                     membership_criterion_category=['publication_section/%s' \
+                                                    % publication_section_category_id_list[0]])
     # clean up
     self.web_page_module.manage_delObjects(list(self.web_page_module.objectIds()))
     portal.portal_categories.publication_section.manage_delObjects(
-                                                                  list(portal.portal_categories.publication_section.objectIds()))   
+                                      list(portal.portal_categories.publication_section.objectIds()))   
     # create categories
     for category_id in publication_section_category_id_list:
       portal.portal_categories.publication_section.newContent(portal_type = 'Category', 
-                                                                             id = category_id)
+                                                              id = category_id)
     web_page_reference = 'default-document-reference-%s'
     web_page_list = []
     for index in range(0, 10):
       web_page = self.portal.web_page_module.newContent(
-                                      portal_type = 'Web Page', 
-                                      language = 'en', 
+                                      portal_type = 'Web Page',
+                                      language = 'en',
                                       reference = web_page_reference %index, 
                                       publication_section_list=publication_section_category_id_list[:1])
       web_page_list.append(web_page)
+
     get_transaction().commit()
     self.tic()
     # in draft state no documents should belong to this Web Section    
@@ -692,21 +693,21 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                                                   id='site')
     section = site.newContent(portal_type='Web Section', id='section')
     person = portal.person_module.newContent(portal_type = 'Person', 
-                                                                    reference = person_reference)
+                                             reference = person_reference)
     # add Role Definition for site and section
     site_role_definition = site.newContent(portal_type = 'Role Definition', 
-                                                           role_name = 'Assignee', 
-                                                           agent = person.getRelativeUrl())
+                                           role_name = 'Assignee', 
+                                           agent = person.getRelativeUrl())
     section_role_definition = section.newContent(portal_type = 'Role Definition', 
-                                                           role_name = 'Associate', 
-                                                           agent = person.getRelativeUrl())                                                           
+                                                 role_name = 'Associate', 
+                                                 agent = person.getRelativeUrl())
     get_transaction().commit()
     self.tic()
     # check if Role Definition have create local roles
     self.assertSameSet(('Assignee',),  
-                                 site.get_local_roles_for_userid(person_reference))
+                          site.get_local_roles_for_userid(person_reference))
     self.assertSameSet(('Associate',),  
-                                 section.get_local_roles_for_userid(person_reference))
+                          section.get_local_roles_for_userid(person_reference))
                                  
     # delete Role Definition and check again (local roles must be gone too)
     site.manage_delObjects(site_role_definition.getId())
@@ -714,9 +715,150 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertSameSet((),  
-                                 site.get_local_roles_for_userid(person_reference))
-    self.assertSameSet((),  
-                                 section.get_local_roles_for_userid(person_reference))                                 
+                       site.get_local_roles_for_userid(person_reference))
+    self.assertSameSet((),
+                       section.get_local_roles_for_userid(person_reference))
+
+
+  def test_03_WebSection_getDocumentValueListSecurity(self, quiet=quiet, run=run_all_test):
+    """ Test WebSection_getDocumentValueList behaviour and security"""
+    if not run:
+      return
+    self.changeUser('admin')
+    web_site_module = self.portal.web_site_module
+    site = web_site_module.newContent(portal_type='Web Site',
+                                      id='site')
+
+    section = site.newContent(portal_type='Web Section', 
+                              id='section')
+
+    get_transaction().commit()
+    self.tic()
+
+    section.setCriterionProperty('portal_type')
+    section.setCriterion('portal_type', max='', 
+                         identity=['Web Page'], min='')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.changeUser('erp5user')
+    page_en_0 = self.portal.web_page_module.newContent(portal_type='Web Page')
+    page_en_0.edit(reference='my-first-web-page',
+                 language='en',
+                 version='1',
+                 text_format='text/plain',
+                 text_content='Hello, World!')
+
+    page_en_1 = self.portal.web_page_module.newContent(portal_type='Web Page')
+    page_en_1.edit(reference='my-first-web-page',
+                 language='en',
+                 version='2',
+                 text_format='text/plain',
+                 text_content='Hello, World!')
+
+    page_en_2 = self.portal.web_page_module.newContent(portal_type='Web Page')
+    page_en_2.edit(reference='my-second-web-page',
+                 language='en',
+                 version='2',
+                 text_format='text/plain',
+                 text_content='Hello, World!')
+
+    page_jp_0 = self.portal.web_page_module.newContent(portal_type='Web Page')
+    page_jp_0.edit(reference='my-first-japonese-page',
+                 language='jp',
+                 version='1',
+                 text_format='text/plain',
+                 text_content='Hello, World!')
+
+
+
+    get_transaction().commit()
+    self.changeUser('erp5user')
+    self.tic()
+    self.portal.Localizer.changeLanguage('en')
+      
+    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))    
+
+    self.changeUser('erp5user')
+    page_en_0.publish()
+    get_transaction().commit()
+    self.tic()
+
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEquals(page_en_0.getUid(),
+                      section.WebSection_getDocumentValueList()[0].getUid())
+
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+
+    # By Anonymous
+    self.logout()
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEquals(page_en_0.getUid(), 
+                      section.WebSection_getDocumentValueList()[0].getUid())
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+
+    # Second Object
+    self.changeUser('erp5user')
+    page_en_1.publish()
+    get_transaction().commit()
+    self.tic()
+
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEquals(page_en_1.getUid(), 
+                      section.WebSection_getDocumentValueList()[0].getUid())
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+
+    # By Anonymous
+    self.logout()
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEquals(page_en_1.getUid(), 
+                      section.WebSection_getDocumentValueList()[0].getUid())
+
+    # Trird Object
+    self.changeUser('erp5user')
+    page_en_2.publish()
+    get_transaction().commit()
+    self.tic()
+
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+
+    # By Anonymous
+    self.logout()
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+
+    # First Japonese Object
+    self.changeUser('erp5user')
+    page_jp_0.publish()
+    get_transaction().commit()
+    self.tic()
+
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+
+    # By Anonymous
+    self.logout()
+    self.portal.Localizer.changeLanguage('en')
+    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.portal.Localizer.changeLanguage('jp')
+    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEquals(page_jp_0.getUid(), 
+                      section.WebSection_getDocumentValueList()[0].getUid())
 
 def test_suite():
   suite = unittest.TestSuite()
