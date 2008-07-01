@@ -101,6 +101,8 @@
                         <string>my_description</string>
                         <string>my_destination_title</string>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>
