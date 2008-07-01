@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Production Order Line</type>
-  <workflow>order_movement_simulation_interaction_workflow, production_matrix_workflow, edit_workflow</workflow>
+  <workflow>transformation_interaction_workflow, order_movement_simulation_interaction_workflow, production_matrix_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Rule</type>

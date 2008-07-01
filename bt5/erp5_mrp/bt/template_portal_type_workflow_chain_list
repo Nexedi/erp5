@@ -3,6 +3,7 @@ Production Order Cell | order_movement_simulation_interaction_workflow
 Production Order Line | edit_workflow
 Production Order Line | order_movement_simulation_interaction_workflow
 Production Order Line | production_matrix_workflow
+Production Order Line | transformation_interaction_workflow
 Production Order Rule | edit_workflow
 Production Order Rule | rule_validation_workflow
 Production Order | edit_workflow
