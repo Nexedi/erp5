@@ -10,6 +10,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Anonymous</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
@@ -36,14 +44,9 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>from_table_list</string> </key>
+                                <key> <string>kw</string> </key>
                                 <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>type</string> </key>
-                                        <value> <string>list</string> </value>
-                                    </item>
-                                  </dictionary>
+                                  <dictionary/>
                                 </value>
                             </item>
                             <item>
@@ -53,9 +56,14 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>where_expression</string> </key>
+                                <key> <string>validation_state</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                           </dictionary>
@@ -65,10 +73,10 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>language</string>
-                            <string>all_languages</string>
-                            <string>from_table_list</string>
-                            <string>where_expression</string>
+<string>language</string>
+<string>all_languages</string>
+<string>validation_state</string>
+<string>kw</string>
                           </list>
                         </value>
                     </item>
@@ -93,8 +101,8 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>language\r\n
 all_languages\r\n
-from_table_list:list\r\n
-where_expression</string> </value>
+validation_state:list\r\n
+kw</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -132,6 +140,8 @@ where_expression</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
+\n
 SELECT\n
   t.path AS path, t.uid AS uid, t.version AS version\n
 FROM\n
@@ -140,11 +150,15 @@ FROM\n
       catalog.uid, catalog.path, catalog.int_index,\n
       catalog.reference, my_versioning.language, my_versioning.version\n
     FROM\n
-      <dtml-in from_table_list><dtml-var sequence-item> AS <dtml-var sequence-key>,</dtml-in>\n
+      <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+          <dtml-var table_item> AS <dtml-var table_key>,\n
+      </dtml-in>\n
       versioning AS my_versioning\n
     WHERE\n
       my_versioning.uid = catalog.uid\n
-      AND <dtml-var where_expression>\n
+      <dtml-if "query[\'where_expression\']">\n
+        AND <dtml-var "query[\'where_expression\']">\n
+      </dtml-if>\n
 <dtml-if all_languages>\n
     GROUP BY\n
       catalog.reference\n
@@ -157,12 +171,16 @@ FROM\n
   ) AS t\n
 GROUP BY\n
   t.reference\n
-HAVING\n
-  MAX(t.version) = t.version\n
+  HAVING\n
+    MAX(t.version) = t.version\n
 ORDER BY\n
   t.int_index, t.reference\n
-LIMIT 1000\n
-
+<dtml-if "query[\'limit_expression\']">\n
+  LIMIT <dtml-var "query[\'limit_expression\']">\n
+<dtml-else>\n
+  LIMIT 1000\n
+</dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
         </item>
@@ -202,6 +220,8 @@ LIMIT 1000\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
+\n
 SELECT\n
   t.path AS path, t.uid AS uid, t.version AS version\n
 FROM\n
@@ -210,11 +230,15 @@ FROM\n
       catalog.uid, catalog.path, catalog.int_index,\n
       catalog.reference, my_versioning.language, my_versioning.version\n
     FROM\n
-      <dtml-in from_table_list><dtml-var sequence-item> AS <dtml-var sequence-key>,</dtml-in>\n
+      <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+          <dtml-var table_item> AS <dtml-var table_key>,\n
+      </dtml-in>\n
       versioning AS my_versioning\n
     WHERE\n
       my_versioning.uid = catalog.uid\n
-      AND <dtml-var where_expression>\n
+      <dtml-if "query[\'where_expression\']">\n
+        AND <dtml-var "query[\'where_expression\']">\n
+      </dtml-if>\n
 <dtml-if all_languages>\n
     GROUP BY\n
       catalog.reference\n
@@ -227,12 +251,16 @@ FROM\n
   ) AS t\n
 GROUP BY\n
   t.reference\n
-HAVING\n
-  MAX(t.version) = t.version\n
+  HAVING\n
+    MAX(t.version) = t.version\n
 ORDER BY\n
   t.int_index, t.reference\n
-LIMIT 1000\n
-
+<dtml-if "query[\'limit_expression\']">\n
+  LIMIT <dtml-var "query[\'limit_expression\']">\n
+<dtml-else>\n
+  LIMIT 1000\n
+</dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
                     </item>

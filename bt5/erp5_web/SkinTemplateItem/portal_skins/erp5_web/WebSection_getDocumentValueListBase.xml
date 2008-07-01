@@ -125,14 +125,14 @@ try:\n
     language = portal.Localizer.get_selected_language()\n
 \n
   if validation_state is None:\n
-    validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
-                        \'shared\', \'shared_alive\', \'public\', \'validated\')\n
+    validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\', \\\n
+                                      \'shared\', \'shared_alive\', \'public\', \'validated\')\n
 \n
-  query = current_section.buildSQLQuery(validation_state=validation_state, **kw)\n
   return current_section.WebSection_zGetDocumentValueList(language=language,\n
-                                                          all_languages=all_languages,\n
-                                                          from_table_list=query[\'from_table_list\'],\n
-                                                          where_expression=query[\'where_expression\'])\n
+                                                                                                 all_languages=all_languages,\n
+                                                                                                 validation_state=validation_state,\n
+                                                                                                 kw=kw)\n
+\n
 except Unauthorized:\n
   return []\n
 </string> </value>
@@ -195,9 +195,6 @@ except Unauthorized:\n
                             <string>context</string>
                             <string>current_section</string>
                             <string>None</string>
-                            <string>_apply_</string>
-                            <string>query</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
