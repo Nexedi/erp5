@@ -65,6 +65,9 @@ AAA=</string> </value>
 
 <office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:tal=\'http://xml.zope.org/namespaces/tal\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:metal=\'http://xml.zope.org/namespaces/metal\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\' office:version=\'1.0\'\n
                          tal:define="data_dict here/Order_getODTDataDict;\n
+                                     set_precision python: request.set(\'precision\', here.getQuantityPrecisionFromResource(here.getPriceCurrency()));\n
+                                     quantity_renderer nocall:here/OrderLine_viewFieldLibrary/my_quantity/render_pdf;\n
+                                     price_renderer nocall:here/OrderLine_viewFieldLibrary/my_price/render_pdf;\n
                                      default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language())">\n
   <office:scripts/>\n
   <office:font-face-decls>\n
@@ -499,7 +502,7 @@ AAA=</string> </value>
                               office:value-type=\'float\'\n
                               tal:attributes=\'office:value line_dict/total_quantity\'> \n
               <text:p text:style-name=\'Table_20_Contents\'\n
-                      tal:content=\'line_dict/total_quantity\'\n
+                      tal:content="python: quantity_renderer(line_dict[\'total_quantity\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>qty</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
@@ -516,14 +519,14 @@ AAA=</string> </value>
                               office:value-type=\'float\'\n
                               tal:attributes="office:value line_dict/base_price">\n
               <text:p text:style-name=\'Table_20_Contents\'\n
-                      tal:content=\'python:line_dict["base_price"]\'\n
+                      tal:content="python: price_renderer(line_dict[\'base_price\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>base_price</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
                               office:value-type=\'float\'\n
                               tal:attributes=\'office:value line_dict/total_price\'>\n
               <text:p text:style-name=\'Table_20_Contents\'\n
-                      tal:content=\'python:line_dict["total_price"]\'\n
+                      tal:content="python: price_renderer(line_dict[\'total_price\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>total_price</text:p>\n
             </table:table-cell>\n
           </div>\n
@@ -571,7 +574,7 @@ AAA=</string> </value>
                 <table:table-cell table:style-name=\'Tableau3.E2\'\n
                                   office:value-type=\'float\'\n
                                   tal:attributes=\'office:value data_dict/total_price_novat\'>\n
-                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:data_dict["total_price_novat"]\'>800.000,00</text:p>\n
+                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python: price_renderer(data_dict["total_price_novat"])\'>800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.3\'>\n
@@ -598,12 +601,13 @@ AAA=</string> </value>
                                     office:value-type=\'float\'\n
                                     tal:attributes="office:value python: sum(total_vat_list)">\n
                     <tal:block tal:repeat="vat python: data_dict[\'vat_list\']">\n
-                      <text:p tal:define="vat_price python: vat.getPrice() * vat.getQuantity(); any python: total_vat_list.append(vat_price)"\n
+                      <text:p tal:define="vat_price python: vat.getTotalPrice();\n
+                                          dummy python: total_vat_list.append(vat_price)"\n
                               text:style-name=\'Table_20_Contents_20_Right\'\n
-                              tal:content="vat_price">2000</text:p>\n
+                              tal:content="python: price_renderer(vat_price)">2000</text:p>\n
                     </tal:block>\n
                     <text:p text:style-name=\'Table_20_Contents_20_Right\'\n
-                            tal:content="python: sum(total_vat_list)">2000</text:p>\n
+                            tal:content="python: price_renderer(sum(total_vat_list))">2000</text:p>\n
                   </table:table-cell>\n
                 </tal:block>\n
               </table:table-row>\n
@@ -622,8 +626,9 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau3.E3\' office:value-type=\'float\' tal:attributes="office:value python:data_dict[\'total_price_novat\'] + sum(total_vat_list)">\n
+                  <!-- TODO: use getTotalNetPrice after supporting discount ? -->\n
                   <text:p text:style-name=\'Table_20_Contents_20_Right\'\n
-                          tal:content=\'python:data_dict["total_price_novat"] + sum(total_vat_list)\'>12345</text:p>\n
+                          tal:content=\'python: price_renderer(data_dict["total_price_novat"] + sum(total_vat_list))\'>12345</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.1\'>\n
@@ -662,7 +667,7 @@ AAA=</string> </value>
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.7\'>\n
                 <table:table-cell table:style-name=\'Tableau3.A7\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'P3\' tal:content=\'python:data_dict["description"]\'>my_description</text:p>\n
+                  <text:p text:style-name=\'P3\' tal:content=\'python: data_dict["description"]\'>my_description</text:p>\n
                 </table:table-cell>\n
                 <table:covered-table-cell/>\n
                 <table:covered-table-cell/>\n
