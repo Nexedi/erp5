@@ -102,6 +102,7 @@
                         <string>my_description</string>
                         <string>my_title</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
