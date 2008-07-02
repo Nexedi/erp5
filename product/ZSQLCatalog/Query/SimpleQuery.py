@@ -179,6 +179,24 @@ class SimpleQuery(QueryMixin):
     sql_expressions = {'where_expression': '1', 
                        'select_expression_list': []}
     
+    # try to get search key type by the key definitions passed
+    if search_key_class is None:
+      if search_key == EXACT_MATCH_SEARCH_MODE:
+        search_key_class =  RawKey
+      elif search_key == KEYWORD_SEARCH_MODE or \
+          (key in keyword_search_keys):
+        search_key_class =  KeyWordKey
+      elif search_key == DATETIME_SEARCH_MODE or \
+        (key in datetime_search_keys):
+        search_key_class =  DateTimeKey
+      elif search_key == FULL_TEXT_SEARCH_MODE or \
+        (key in full_text_search_keys):
+        search_key_class =  FullTextKey
+    
+    # get search class based on explicitly passed key type
+    if search_key_class is None:
+      search_key_class = self._getSearchKeyClassByType(type)
+    
     # some use cases where we can just return SQL without grammar staff
     if key is None or (ignore_empty_string and \
                        isinstance(value, basestring) and \
@@ -197,9 +215,6 @@ class SimpleQuery(QueryMixin):
         sql_expressions = {'where_expression':  "%s is NULL" % (key),
                            'select_expression_list': [],}
         return sql_expressions                 
-      # get search class based on explicitly passed key type
-      if search_key_class is None:
-        search_key_class = self._getSearchKeyClassByType(type)   
             
       # we have a list of values and respective operator defined
       if isinstance(value, (tuple, list)):
@@ -258,20 +273,6 @@ class SimpleQuery(QueryMixin):
           if search_key_class is None:
             # try to guess by type of first_element in list
             search_key_class = self._getSearchKeyClassByValue(value[0])
-      
-      # try to get search key type by the key definitions passed
-      if search_key_class is None:
-        if search_key == EXACT_MATCH_SEARCH_MODE:
-          search_key_class =  RawKey
-        elif search_key == KEYWORD_SEARCH_MODE or \
-            (key in keyword_search_keys):
-          search_key_class =  KeyWordKey
-        elif search_key == DATETIME_SEARCH_MODE or \
-          (key in datetime_search_keys):
-          search_key_class =  DateTimeKey
-        elif search_key == FULL_TEXT_SEARCH_MODE or \
-          (key in full_text_search_keys):
-          search_key_class =  FullTextKey
       
       # get search class based on value of value
       if search_key_class is None:

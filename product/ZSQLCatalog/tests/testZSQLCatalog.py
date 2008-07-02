@@ -416,6 +416,21 @@ class TestQuery(unittest.TestCase):
                    select_expression_list=[]),
                 q.asSQLExpression())
 
+  def testListValuesInQuery(self):
+    q = Query(title=('Foo', 'Bar'))
+    self.assertEquals(
+      dict(where_expression="(((((title = 'Foo')))) OR ((((title = 'Bar')))))",
+           select_expression_list=[]),
+        q.asSQLExpression())
+
+  def testListValuesInQueryWithKey(self):
+    q = Query(title=('Foo', 'Bar'), key='Keyword')
+    self.assertEquals(
+      dict(where_expression=
+             "(((((title LIKE '%Foo%')))) OR ((((title LIKE '%Bar%')))))",
+           select_expression_list=[]),
+        q.asSQLExpression())
+
 
 def test_suite():
   suite = unittest.TestSuite()
