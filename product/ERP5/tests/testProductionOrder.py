@@ -156,6 +156,22 @@ class TestProductionOrderMixin(TestOrderMixin):
     )
     sequence.edit(component2=resource)
 
+  def stepInvalidateTransformation(self, sequence=None, sequence_list=None,
+                               **kw):
+    transformation = sequence.get('transformation')
+
+    # XXX: rc user from testOrder is not able to doActionFor ???
+    transformation.invalidate()
+    self.assertEquals('invalidated',transformation.getValidationState())
+
+  def stepValidateTransformation(self, sequence=None, sequence_list=None,
+                               **kw):
+    transformation = sequence.get('transformation')
+
+    # XXX: rc user from testOrder is not able to doActionFor ???
+    transformation.validate()
+    self.assertEquals('validated',transformation.getValidationState())
+
   def stepCreateTransformation(self, sequence=None, sequence_list=None,
                                **kw):
     """
@@ -1139,6 +1155,37 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     self.transformed_resource_portal_type = 'Transformation Transformed Resource'
     self.operation_line_portal_type = 'Transformation Operation'
     self.resource_portal_type = 'Product'
+
+    # Note: Below are cases only for non-apparel - as there is no validation
+    # worklow for Apparel Transformation
+
+    # case of invalidated Transformation
+    sequence_string = bootstrap_sequence_string + '\
+                      CreateTransformation \
+                      Tic \
+                      ValidateTransformation \
+                      InvalidateTransformation \
+                      Tic \
+                      CreateOrderLineWithoutTransformation \
+                      Tic \
+                      CheckOrderLineTransformationIsNotSet \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # case of invalidated Transformation and other
+    sequence_string = bootstrap_sequence_string + '\
+                      CreateTransformation \
+                      Tic \
+                      ValidateTransformation \
+                      InvalidateTransformation \
+                      Tic \
+                      CreateTransformation \
+                      Tic \
+                      CreateOrderLineWithoutTransformation \
+                      Tic \
+                      CheckOrderLineTransformationIsSet \
+                      '
+    sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
     
