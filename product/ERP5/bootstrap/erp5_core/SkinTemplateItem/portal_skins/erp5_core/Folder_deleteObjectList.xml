@@ -79,6 +79,7 @@ if uids == []:\n
   qs = \'?portal_status_message=%s\' % message\n
   return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
 \n
+field_id=\'listbox\'\n
 # XXX If we come from the view mode -> list mode proxy, make sure we don\'t make\n
 # another proxy to this proxy.\n
 if form_id == \'Base_viewListModeRenderer\':\n
