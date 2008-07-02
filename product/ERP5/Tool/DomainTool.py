@@ -61,6 +61,10 @@ class DomainTool(BaseTool):
                             tested_base_category_list=None,
                             filter_method=None, acquired=1,
                             strict=True, **kw):
+      # XXX: about "strict" parameter: This is a transition parameter,
+      # allowing someone hitting a bug to revert to original behaviour easily.
+      # It is not a correct name, as pointed out by Jerome. But instead of
+      # searching for another name, it would be much better to just remove it.
       """
       Search all predicates which corresponds to this particular 
       context.

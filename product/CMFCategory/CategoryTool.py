@@ -1455,6 +1455,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected(Permissions.AccessContentsInformation, 'buildAdvancedSQLSelector')
     def buildAdvancedSQLSelector(self, category_list, query_table='category',
           none_sql_value=None, strict=True, catalog_table_name='catalog'):
+      # XXX: about "strict" parameter: This is a transition parameter,
+      # allowing someone hitting a bug to revert to original behaviour easily.
+      # It is not a correct name, as pointed out by Jerome. But instead of
+      # searching for another name, it would be much better to just remove it.
       """
         Return chunks of SQL to check for category membership.
 
