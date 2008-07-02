@@ -378,7 +378,7 @@ class TestQuery(unittest.TestCase):
                 q.asSQLExpression())
 
   def testQuotedStringKeywordKey(self):
-    q = Query(title='Foo d\'Ba', type='keyword')
+    q = Query(title='Foo d\'Ba', key='Keyword')
     self.assertEquals(
               dict(where_expression="((((title LIKE '%Foo d''Ba%'))))",
                    select_expression_list=[]),
