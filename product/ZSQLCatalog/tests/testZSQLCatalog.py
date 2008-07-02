@@ -384,6 +384,13 @@ class TestQuery(unittest.TestCase):
                    select_expression_list=[]),
                 q.asSQLExpression())
 
+  def testQuotedStringExactMatch(self):
+    q = Query(title='Foo d\'Ba', key='ExactMatch')
+    self.assertEquals(
+              dict(where_expression="title = 'Foo d''Ba'",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
   def testQuotedStringFullTextKey(self):
     q = Query(title='Foo d\'Ba', type='fulltext')
     self.assertEquals(
@@ -391,6 +398,21 @@ class TestQuery(unittest.TestCase):
              select_expression_list=["MATCH title AGAINST ('+Foo +d''Ba' IN BOOLEAN MODE)"
                                      " AS title_relevance"]),
           q.asSQLExpression())
+
+  def testQuotedStringListKeywordKey(self):
+    q = Query(title=('Foo d\'Ba',), key='Keyword')
+    self.assertEquals(
+              dict(where_expression="((((title LIKE '%Foo d''Ba%'))))",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
+  def testQuotedStringListExactMatch(self):
+    q = Query(title=('Foo d\'Ba',), key='ExactMatch')
+    self.assertEquals(
+              dict(where_expression="title = 'Foo d''Ba'",
+                   select_expression_list=[]),
+                q.asSQLExpression())
+
 
   def testQuotedStringDateKey(self):
     q = Query(title='Foo d\'Ba', type='date')
