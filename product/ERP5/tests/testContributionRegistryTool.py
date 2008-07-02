@@ -28,7 +28,10 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from transaction import get_transaction
+try:
+  from transaction import get_transaction
+except ImportError:
+  pass
 
 
 class TestContributionRegistryTool(ERP5TypeTestCase):
