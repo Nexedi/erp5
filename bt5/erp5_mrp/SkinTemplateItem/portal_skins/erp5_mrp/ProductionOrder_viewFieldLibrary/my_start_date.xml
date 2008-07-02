@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>date_only</string>
               </list>
             </value>
         </item>
@@ -75,6 +76,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>date_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_date</string> </value>
                 </item>
@@ -87,7 +92,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Shipping Date</string> </value>
                 </item>
               </dictionary>
