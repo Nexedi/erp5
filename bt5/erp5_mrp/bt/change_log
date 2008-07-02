@@ -1,3 +1,11 @@
+2008-07-01 luke
+* added support for automatic numeration using int_index
+* restricted specialise (transformation) on order line to be chosen only for those defined by resource, made them automatic set in some cases
+
+2008-06-27 luke
+* updated production packing list workflow to be consistent with current packing list workflow
+* reference on deliveries - orders, packing lists and reports are now automatically set
+
 2008-06-26 luke
 * updated production order workflow to be consistent with current order workflow
 * continued proxification of forms
