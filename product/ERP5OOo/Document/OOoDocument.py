@@ -181,18 +181,25 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
                          " in %s format" % (format or 'original'))
 
     # Return the original file by default
+    if self.getSourceReference() is not None:
+      filename = self.getSourceReference()
+    else:
+      filename = self.getId()
     if format is None:
+      RESPONSE.setHeader('Content-Disposition','Attachment;Filename=%s' %filename)
       return File.index_html(self, REQUEST, RESPONSE)
     # Make sure file is converted to base format
     if not self.hasBaseData():
       raise NotConvertedError
     # Else try to convert the document and return it
     mime, result = self.convert(format=format, display=display, **kw)
+    converted_filename = '%s.%s'%(filename.split('.')[0],  format)
     if not mime:
       mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
     RESPONSE.setHeader('Content-Length', len(result))
     RESPONSE.setHeader('Content-Type', mime)
     RESPONSE.setHeader('Accept-Ranges', 'bytes')
+    RESPONSE.setHeader('Content-Disposition','Attachment;Filename=%s' %converted_filename)
     return result
 
   # Format conversion implementation
