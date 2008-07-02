@@ -170,6 +170,26 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserDoesNotExists('bar', 'secret')
     self._assertUserDoesNotExists('bar OR foo', 'secret')
 
+  def test_PersonLoginQuote(self):
+    p = self._makePerson(reference="'", password='secret',)
+    self._assertUserExists("'", 'secret')
+
+  def test_PersonLogin_OR_Keyword(self):
+    p = self._makePerson(reference='foo OR bar', password='secret',)
+    self._assertUserExists('foo OR bar', 'secret')
+    self._assertUserDoesNotExists('foo', 'secret')
+
+  def test_PersonLoginCatalogKeyWord(self):
+    # use something that would turn the username in a ZSQLCatalog catalog keyword
+    p = self._makePerson(reference="foo%", password='secret',)
+    self._assertUserExists("foo%", 'secret')
+    self._assertUserDoesNotExists("foo", 'secret')
+    self._assertUserDoesNotExists("foobar", 'secret')
+
+  def test_PersonLoginNGT(self):
+    p = self._makePerson(reference='< foo', password='secret',)
+    self._assertUserExists('< foo', 'secret')
+
   def test_PersonLoginNonAscii(self):
     """Login can contain non ascii chars."""
     p = self._makePerson(reference='j\xc3\xa9', password='secret',)
@@ -201,6 +221,21 @@ class TestUserManagement(ERP5TypeTestCase):
     """Tests one cannot use the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
     self._assertUserDoesNotExists(SUPER_USER, '')
+
+  def test_searchUsers(self):
+    p1 = self._makePerson(reference='person1')
+    p2 = self._makePerson(reference='person2')
+    self.assertEquals(set(['person1', 'person2']),
+      set([x['userid'] for x in
+        self.portal.acl_users.searchUsers(id='person')]))
+
+  def test_searchUsersExactMatch(self):
+    p = self._makePerson(reference='person')
+    p1 = self._makePerson(reference='person1')
+    p2 = self._makePerson(reference='person2')
+    self.assertEquals(['person', ],
+         [x['userid'] for x in 
+           self.portal.acl_users.searchUsers(id='person', exact_match=True)])
 
   def test_MultiplePersonReference(self):
     """Tests that it's refused to create two Persons with same reference."""

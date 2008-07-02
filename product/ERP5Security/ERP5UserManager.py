@@ -150,10 +150,7 @@ class ERP5UserManager(BasePlugin):
                         }
                 user_info.append(info)
               else:
-                if exact_match:
-                  id_list.append(id)
-                else:
-                  id_list.append('%%%s%%' % id)
+                id_list.append(id)
 
             if id_list:
               for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
@@ -202,9 +199,16 @@ class ERP5UserManager(BasePlugin):
   
           try:
             try:
+              if exact_match:
+                reference_key = 'ExactMatch'
+              else:
+                reference_key = 'Keyword'
+
               result = portal.portal_catalog.unrestrictedSearchResults(
-                                      select_expression='reference',
-                                      portal_type="Person", reference=login)
+                                        select_expression='reference',
+                                        portal_type="Person",
+                                        reference=dict(query=login,
+                                                       key=reference_key))
             except ConflictError:
               raise
             except:
