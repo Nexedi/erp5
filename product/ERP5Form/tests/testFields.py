@@ -76,7 +76,7 @@ class TestRenderViewAPI(unittest.TestCase):
 
   def test_signature(self):
     for field in FieldRegistry.get_field_classes().itervalues():
-      self.assertEquals(('self', 'value', 'REQUEST'),
+      self.assertEquals(('self', 'value', 'REQUEST', 'render_prefix'),
                         field.render_view.im_func.func_code.co_varnames)
       if field is not ProxyField.ProxyField:
         self.assertEquals(('self', 'field', 'value', 'REQUEST'),
