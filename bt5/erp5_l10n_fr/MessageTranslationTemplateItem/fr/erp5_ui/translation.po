@@ -1183,7 +1183,7 @@ msgid "Drafts to Validate"
 msgstr "Brouillons à valider"
 
 msgid "Drawing"
-msgstr "Elément"
+msgstr "Dessin"
 
 msgid "Drawing Reference"
 msgstr "Ref Dessin"
