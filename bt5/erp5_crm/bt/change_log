@@ -1,3 +1,6 @@
+2008-07-02 yusei
+* when ingest email message, find sender from person document first and organisation later.
+
 2008-06-27 yusei
 * Start to develop version 5.2.
 
