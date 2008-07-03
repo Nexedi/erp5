@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
@@ -2662,13 +2663,15 @@ class ModuleTemplateItem(BaseTemplateItem):
         else:
           module = portal.newContent(id=id, portal_type=str(mapping['portal_type']))
         module.setTitle(str(mapping['title']))
-        for name,role_list in list(mapping['permission_list']):
+        for name, role_list in list(mapping['permission_list']):
           acquire = (type(role_list) == type([]))
           try:
             module.manage_permission(name, roles=role_list, acquire=acquire)
           except ValueError:
             # Ignore a permission not present in this system.
-            pass
+            LOG('ERP5', PROBLEM,
+                'Unable to update module permission "%s" with roles %s' % (
+                  name, role_list), error=sys.exc_info())
 
   def _importFile(self, file_name, file):
     dict = {}
