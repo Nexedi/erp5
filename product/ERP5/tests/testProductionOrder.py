@@ -59,6 +59,28 @@ class TestProductionOrderMixin(TestOrderMixin):
   def login(self, quiet=0, run=1):
     ERP5TypeTestCase.login(self)
 
+  def setUpPreferences(self):
+    portal = self.getPortal()
+    preferences = getToolByName(portal,'portal_preferences')
+
+    system_preference = preferences.newContent(
+      portal_type = 'System Preference'
+    )
+
+    system_preference.edit(
+      preferred_product_individual_variation_base_category = ('variation',),
+      preferred_component_individual_variation_base_category = ('variation',),
+      priority = 1,
+    )
+
+    system_preference.enable()
+    get_transaction().commit()
+    self.tic()
+
+  def afterSetUp(self):
+    TestOrderMixin.afterSetUp(self)
+    self.setUpPreferences()
+
   def createCategories(self):
     """ 
       Light install create only base categories, so we create 
@@ -71,6 +93,45 @@ class TestProductionOrderMixin(TestOrderMixin):
         o = self.category_tool.operation.newContent(
                                                portal_type='Category',
                                                id=category_id)
+
+  def stepCreateVariatedResource(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    """
+      Create a resource with variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      title = "VariatedResource",
+      industrial_phase_list=["phase1", "phase2"],
+      product_line = 'apparel'
+    )
+
+#    resource.setSizeList(self.size_list)
+    # Add colour variation
+    colour_variation_count = 3
+    for i in range(colour_variation_count):
+      variation_portal_type = 'Product Individual Variation'
+      variation = resource.newContent(portal_type = variation_portal_type)
+      variation.edit(
+        title = 'ColourVariation%s' % str(i),
+        variation_base_category_list = ('variation',)
+      )
+    # Add morphology variation
+    morphology_variation_count = 2
+    for i in range(morphology_variation_count) :
+      variation_portal_type = 'Product Individual Variation'
+      variation = resource.newContent(portal_type=variation_portal_type)
+      variation.edit(
+        title = 'MorphologyVariation%s' % str(i),
+        variation_base_category_list = ('variation',)
+      )
+
+    sequence.edit( resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
 
   def stepClearActivities(self, sequence=None, sequence_list=None, 
                           **kw):
