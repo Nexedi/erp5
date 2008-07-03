@@ -211,7 +211,9 @@ class SimpleQuery(QueryMixin):
       # do not further generate sql expressions because
       # we ignore empty strings by default
       return sql_expressions
-    elif ignore_empty_string==0 and isinstance(value, basestring) and value.strip() == '':
+    elif (not ignore_empty_string) \
+        and isinstance(value, basestring) \
+        and value.strip() == '':
       # explicitly requested not to ignore empty strings
       sql_expressions = {'where_expression': "%s = ''" %key, 
                          'select_expression_list': []}
