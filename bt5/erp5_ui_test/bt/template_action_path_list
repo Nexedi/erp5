@@ -8,6 +8,7 @@ Foo Module | list_ui
 Foo Module | search
 Foo Module | sort_on
 Foo Module | view
+Foo | dummy_report
 Foo | list
 Foo | select_bar
 Foo | view

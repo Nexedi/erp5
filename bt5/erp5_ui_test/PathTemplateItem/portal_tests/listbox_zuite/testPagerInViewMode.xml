@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Pager</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Pager</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Created Successfully.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Done.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/ListBoxZuite_resetReportSelections</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Done.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/0/Foo_viewListBoxInReportMode</td>\n
+\t<td></td>\n
+</tr>\n
+<tal:block tal:define="prefix string:x0_listbox;\n
+                       list_start python:0">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:repeat="prefix python:range(3)">\n
+<tr>\n
+\t<td>verifyElementPresent</td>\n
+\t<td tal:content="python: \'id=x%s_listbox_next_page\' % (prefix, )"></td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyElementNotPresent</td>\n
+\t<td tal:content="python: \'id=x%s_listbox_previous_page\' % (prefix, )"></td>\n
+\t<td></td>\n
+</tr>\n
+</tal:block>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=x0_listbox_next_page</td>\n
+\t<td></td>\n
+</tr>\n
+<tal:block tal:define="prefix string:x0_listbox;\n
+                       list_start python:1">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x1_listbox;\n
+                       list_start python:0">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x2_listbox;\n
+                       list_start python:0">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>name=x1_listbox_list_start</td>\n
+\t<td>5 of 10</td>\n
+</tr>\n
+<tal:block tal:define="prefix string:x0_listbox;\n
+                       list_start python:1">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x1_listbox;\n
+                       list_start python:4">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x2_listbox;\n
+                       list_start python:0">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=x1_listbox_previous_page</td>\n
+\t<td></td>\n
+</tr>\n
+<tal:block tal:define="prefix string:x0_listbox;\n
+                       list_start python:1">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x1_listbox;\n
+                       list_start python:3">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x2_listbox;\n
+                       list_start python:0">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testPagerInViewMode</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
