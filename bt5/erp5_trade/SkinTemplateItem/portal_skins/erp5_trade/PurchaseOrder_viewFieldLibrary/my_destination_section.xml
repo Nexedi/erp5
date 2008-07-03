@@ -20,6 +20,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>description</string>
                 <string>items</string>
               </list>
             </value>
@@ -132,6 +133,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>The invoiced person or organisation.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -146,13 +151,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key>                 <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Client</string> </value>
                 </item>
               </dictionary>
