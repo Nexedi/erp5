@@ -1915,7 +1915,7 @@ msgid "Post Code"
 msgstr "Code Postal"
 
 msgid "Post a Query"
-msgstr ""
+msgstr "Poser une question"
 
 msgid "Preferences"
 msgstr "Préférences"
