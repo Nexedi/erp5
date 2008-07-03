@@ -132,24 +132,6 @@ msgstr "Comptes"
 msgid "Action"
 msgstr ""
 
-msgid "Action impossible : credit is greater than debit"
-msgstr "Action impossible : l'écriture n'est pas équilibrée"
-
-msgid "Action impossible : credit is smaller than debit"
-msgstr "Action impossible : l'écriture n'est pas équilibrée"
-
-msgid "Action impossible : destination_section is not defined"
-msgstr "Action impossible : le tiers n'est pas spécifié"
-
-msgid "Action impossible : source_section is not defined"
-msgstr "Action impossible : La source n'est pas spécifiée"
-
-msgid "Action impossible : transaction is not balanced for destination section"
-msgstr "Action impossible : l'écriture n'est pas équilibrée"
-
-msgid "Action impossible : transaction is not balanced for source section"
-msgstr "Action impossible : l'écriture n'est pas équilibrée"
-
 msgid "Action..."
 msgstr "Action ..."
 
@@ -879,6 +861,12 @@ msgstr "Nom de la variante"
 msgid "Components"
 msgstr "Fournitures"
 
+msgid "Component Individual Variation"
+msgstr "Variation Individuelle de Fourniture"
+
+msgid "Individual Variation Base Category"
+msgstr "Categorie de variation individuelle"
+
 msgid "Configure"
 msgstr "Configurer"
 
@@ -1596,9 +1584,6 @@ msgstr "Situation Familliale"
 msgid "Max Amount"
 msgstr "Montant Max."
 
-msgid "Max. delay (day)"
-msgstr "Délai Max (jours)"
-
 msgid "Measure"
 msgstr "Mesure"
 
@@ -1625,9 +1610,6 @@ msgstr "Deuxième Prénom"
 
 msgid "Min Amount"
 msgstr "Montant Min."
-
-msgid "Min. delay (day)"
-msgstr "Délai min (jours)"
 
 msgid "Min. flow"
 msgstr "Minimum de commande"
@@ -2086,7 +2068,7 @@ msgid "Quantity unit"
 msgstr "Unité"
 
 msgid "Queries"
-msgstr ""
+msgstr "Questions"
 
 msgid "Ratio"
 msgstr "Taux (%)"
@@ -2577,15 +2559,6 @@ msgstr "Compte en banque chez le tiers"
 msgid "Third Party Transaction Reference"
 msgstr "Référence pour le tiers"
 
-msgid "This price is not defined in tariff. Enter a value."
-msgstr "Ce prix n'est pas dans le tarif. Veuillez saisir le prix."
-
-msgid "This price is not equal to tariff price. Are you sure of your price ?"
-msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
-
-msgid "This price is not equal to tariff price. Check your price !"
-msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
-
 msgid "This size is not possible."
 msgstr "Cette taille est hors standard"
 
@@ -2836,7 +2809,7 @@ msgid "You did not enter a floating point number."
 msgstr "Vous devez entrer un numérique."
 
 msgid "You did not enter a valid date and time."
-msgstr "La date n'est pas correcte !"
+msgstr "La date n'est pas correcte"
 
 msgid "You did not enter an integer."
 msgstr "Vous devez saisir un nombre entier."
@@ -3206,4 +3179,133 @@ msgstr "Mode international"
 
 msgid "Include english and translated version of all terms."
 msgstr "Présente la version en anglais et la version traduite de chaque terme"
+
+msgid "Print Order"
+msgstr "Imprimer le bon de commande"
+
+msgid "EAN 13 Code"
+msgstr "Code EAN 13"
+
+msgid "EAN-13 Code"
+msgstr "Code EAN-13"
+
+msgid "Min. Delay (Day)"
+msgstr "Delai Min. (Jour)"
+
+msgid "Max. Delay (Day)"
+msgstr "Delai Max. (Jour)"
+
+msgid "Min. Flow"
+msgstr "Débit Minimum"
+
+msgid "Account must be defined"
+msgstr "Le Compte doit être défini"
+
+msgid "Supplier must be defined"
+msgstr "Le fournisseur doit être defini"
+
+msgid "Client must be defined"
+msgstr "Le client doit être défini"
+
+msgid "Sender or Provider must be defined"
+msgstr "Expéditeur ou Prestataire doit être défini"
+
+msgid "Currency must be defined"
+msgstr "Devise doit être définie"
+
+msgid "Total Quantity must not be 0"
+msgstr "Quantité Totale doit être différente de 0"
+
+msgid "Shipping Date must be defined"
+msgstr "La date d'expédition doit être définie"
+
+msgid "Delivery Date must be defined"
+msgstr "La dte de livraison souhaitée doit être définie"
+
+msgid "Delivery Date must be after Shipping Date"
+msgstr "Date de livraison souhaitée doit être postèrieure à la date d'expédition"
+
+msgid "Your Item no."
+msgstr "Votre réf."
+
+msgid "Our Item no."
+msgstr "Notre réf."
+
+msgid "Line"
+msgstr "Ligne"
+
+msgid "Tax"
+msgstr "Taxe"
+
+msgid "Tax Lines"
+msgstr "Lignes de Taxe"
+
+msgid "Discount Lines"
+msgstr "Lignes de Remise"
+
+msgid "Purchase Order Lines"
+msgstr "Lignes de Commande"
+
+msgid "Accounts to Validate"
+msgstr "Comptes à valider"
+
+msgid "Accounting Period"
+msgstr "Période comptable"
+
+msgid "Chat Address"
+msgstr "Adresse de tchat"
+
+msgid "Link"
+msgstr "Lien"
+
+msgid "Credit Card"
+msgstr "Carte de crédit"
+
+msgid "Cash Register"
+msgstr "Caisse"
+
+msgid "Default Accounting Currency"
+msgstr "Devise de la comptabilité par défaut"
+
+msgid "Sale Packing List"
+msgstr "Livraison de vente"
+
+msgid "-- Purchase Order Workflow --"
+msgstr "-- Workflow de Commande d'Achat --"
+
+msgid "Financial Information"
+msgstr "Informations financiaires"
+
+msgid "of"
+msgstr "sur"
+
+msgid "Total Excluding VAT"
+msgstr "Total Hors Taxes"
+
+msgid "Total Including VAT"
+msgstr "Total TTC"
+
+msgid "Recipient"
+msgstr "Destinataire"
+
+msgid "Recipient or Beneficiary must be defined"
+msgstr "Le destinataire ou bénéficiaire doit être défini"
+
+msgid "Client must be validated"
+msgstr "Le client doit être validé"
+
+msgid "Quantity Unit must be defined"
+msgstr "L'unité doit être définie"
+
+msgid "Component must be validated"
+msgstr "La fourniture doit être validée"
+
+msgid "Price Variation Axes"
+msgstr "Axes de variation du prix"
+
+msgid "Base Contribution must be defined"
+msgstr "La contribution doit être définie"
+
+msgid "Select Print"
+msgstr "Type d'impression"
 
