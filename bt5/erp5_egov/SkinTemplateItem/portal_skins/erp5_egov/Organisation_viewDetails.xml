@@ -106,13 +106,10 @@
                         <string>my_social_form</string>
                         <string>my_social_capital</string>
                         <string>my_start_date</string>
-                        <string>my_modification_date</string>
                         <string>my_skill_list</string>
                         <string>my_reference</string>
                         <string>my_password</string>
                         <string>password_confirm</string>
-                        <string>my_contribution</string>
-                        <string>my_creation</string>
                       </list>
                     </value>
                 </item>
@@ -126,9 +123,11 @@
                         <string>my_ean13_code</string>
                         <string>my_activity_code</string>
                         <string>my_social_code</string>
+                        <string>my_purchase</string>
+                        <string>my_contribution</string>
+                        <string>my_creation</string>
                         <string>my_other</string>
                         <string>my_other_reason</string>
-                        <string>my_purchase</string>
                       </list>
                     </value>
                 </item>

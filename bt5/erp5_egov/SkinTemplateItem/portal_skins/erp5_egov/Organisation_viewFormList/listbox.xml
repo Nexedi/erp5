@@ -546,7 +546,16 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>portal_type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
