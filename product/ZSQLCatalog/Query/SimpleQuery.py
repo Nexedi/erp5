@@ -96,7 +96,7 @@ class SimpleQuery(QueryMixin):
     table_alias_list = self.getTableAliasList()
     if table_alias_list is not None:
       result[self.getKey()] = table_alias_list
-    return result  
+    return result
     
   def getSQLKeyList(self):
     """
@@ -135,7 +135,7 @@ class SimpleQuery(QueryMixin):
       else:
         search_key_class = DefaultKey
     elif isinstance(value, DateTime):
-      search_key_class = DateTimeKey      
+      search_key_class = DateTimeKey
     elif isinstance(value, (int, long,)):
       search_key_class = DefaultKey
     elif isinstance(value, float):
@@ -182,8 +182,8 @@ class SimpleQuery(QueryMixin):
 
     search_key_class = None
     where_expression_list = []
-    select_expression_list = []    
-    sql_expressions = {'where_expression': '1', 
+    select_expression_list = []
+    sql_expressions = {'where_expression': '1',
                        'select_expression_list': []}
     
     # try to get search key type by the key definitions passed
@@ -215,7 +215,7 @@ class SimpleQuery(QueryMixin):
         and isinstance(value, basestring) \
         and value.strip() == '':
       # explicitly requested not to ignore empty strings
-      sql_expressions = {'where_expression': "%s = ''" %key, 
+      sql_expressions = {'where_expression': "%s = ''"  % key,
                          'select_expression_list': []}
       return sql_expressions
     else:
@@ -223,7 +223,7 @@ class SimpleQuery(QueryMixin):
       if value is None:
         sql_expressions = {'where_expression':  "%s is NULL" % (key),
                            'select_expression_list': [],}
-        return sql_expressions                 
+        return sql_expressions
             
       # we have a list of values and respective operator defined
       if isinstance(value, (tuple, list)):
@@ -235,7 +235,7 @@ class SimpleQuery(QueryMixin):
             if len(value) > 1:
               if search_key_class is None:
                 # no explicitly defined, try to find by value
-                search_key_class = self._getSearchKeyClassByValue(value[0]) 
+                search_key_class = self._getSearchKeyClassByValue(value[0])
               search_key_instance = getSearchKeyInstance(search_key_class)
               escaped_value_list = [search_key_instance.quoteSQLString(x, format) for x in value]
               escaped_value_string = ', '.join(escaped_value_list)
@@ -244,12 +244,12 @@ class SimpleQuery(QueryMixin):
               if search_key_class is None:
                 # no explicitly defined, try to find by value            
                 search_key_class = self._getSearchKeyClassByValue(value[0])
-              search_key_instance = getSearchKeyInstance(search_key_class)               
+              search_key_instance = getSearchKeyInstance(search_key_class)
               where_expression_list.append("%s = %s" 
                                            %(key, search_key_instance.quoteSQLString(value[0], format)))
             else:
               # empty list
-              where_expression_list.append("0")          
+              where_expression_list.append("0")
           elif operator in ('OR', 'AND',):
             # each of the list elements can be treated as a Key, so 
             # leave SQL generation to Key itself
@@ -257,7 +257,7 @@ class SimpleQuery(QueryMixin):
               sql_logical_sub_expressions = []
               if search_key_class is None:
                 # no explicitly defined, try to find by value
-                search_key_class = self._getSearchKeyClassByValue(value[0]) 
+                search_key_class = self._getSearchKeyClassByValue(value[0])
               for item in value:
                 list_item_sql_expressions = self._asSQLExpression(search_key_class, key, \
                                                                    item, format, search_mode, range_value, stat__)
@@ -267,8 +267,8 @@ class SimpleQuery(QueryMixin):
               where_expression_list.append("(%s)" % (where_expression))
             elif len(value) == 1:
               if search_key_class is None:
-                # no explicitly defined, try to find by value            
-                search_key_class = self._getSearchKeyClassByValue(value[0])            
+                # no explicitly defined, try to find by value
+                search_key_class = self._getSearchKeyClassByValue(value[0])
               item_sql_expressions = self._asSQLExpression(search_key_class, key, \
                                                             value[0], format, search_mode, range_value, stat__)
               where_expression_list.append(item_sql_expressions['where_expression'])
@@ -291,8 +291,8 @@ class SimpleQuery(QueryMixin):
       if search_key_class is None:
         search_key_class = DefaultKey
         
-      # use respective search key.       
-      sql_expressions = self._asSQLExpression(search_key_class, key, 
+      # use respective search key.
+      sql_expressions = self._asSQLExpression(search_key_class, key,
                                                 value, format, search_mode, range_value, stat__)
       return sql_expressions
 
