@@ -277,7 +277,10 @@ class EmailDocument(File, TextDocument):
       elif part.get_content_type() == 'text/html' and not html_result and not part.is_multipart():
         part_encoding = part.get_content_charset()
         if part_encoding not in (None, 'utf-8',):
-          return part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
+          try:
+            return part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
+          except UnicodeDecodeError:
+            return part.get_payload(decode=1)
         return part.get_payload(decode=1)
     return text_result
 
