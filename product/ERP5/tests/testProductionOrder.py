@@ -76,6 +76,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     system_preference.edit(
       preferred_product_individual_variation_base_category = ('variation',),
       preferred_component_individual_variation_base_category = ('variation',),
+      preferred_product_variation_base_category = ('colour', 'size'),
+      preferred_component_variation_base_category = ('colour', 'size'),
       priority = 1,
     )
 
@@ -113,7 +115,7 @@ class TestProductionOrderMixin(TestOrderMixin):
       title = "ColourSizeVariatedComponent1",
       variation_base_category_list = ['colour','size'],
     )
-    resource.setVariationCategoryList(['colour/'+q for q in self.mrp_size_list] + ['size/'+q for q in self.colour_list])
+    resource.setVariationCategoryList(['size/'+q for q in self.mrp_size_list] + ['colour/'+q for q in self.colour_list])
     sequence.edit(component1=resource)
 
   def stepCreateColourSizeVariatedResource(self, sequence=None, sequence_list=None, \
@@ -297,6 +299,46 @@ class TestProductionOrderMixin(TestOrderMixin):
                                    portal_type=self.transformation_portal_type)
     sequence.edit(transformation=transformation)
 
+
+  def stepSetTransformationTransformedResourceQuantityMatrix(self, sequence=None, sequence_list=None,
+                               **kw):
+
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+    colour_count = size_count = 0
+
+    for colour in self.colour_list:
+      for size in self.mrp_size_list:
+        id = 'quantity_%s_%s'%(colour_count,size_count)
+        transformation_transformed_resource.newContent(
+          portal_type = 'Mapped Value',
+          id = id,
+          membership_criterion_base_category = ('colour', 'size'),
+          membership_criterion_category = ('colour/%s'%(colour,), 'size/%s'%(size,)),
+          quantity = self.colour_size_quantity_dict[colour][size]
+        )
+        size_count +=1
+      size_count = 0
+      colour_count +=1
+
+  def stepSetTransformationTransformedResourceVariationMatrix(self, sequence=None, sequence_list=None,
+                               **kw):
+
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+    colour_count = size_count = 0
+
+    for colour in self.colour_list:
+      for size in self.mrp_size_list:
+        id = 'variation_%s_%s'%(colour_count,size_count)
+        transformation_transformed_resource.newContent(
+          portal_type = 'Mapped Value',
+          id = id,
+          membership_criterion_base_category = ('colour', 'size'),
+          membership_criterion_category = ('colour/%s'%(colour,), 'size/%s'%(size,)),
+          categories = self.colour_size_variation_dict[colour][size]
+        )
+        size_count +=1
+      size_count = 0
+      colour_count +=1
 
   def stepSetTransformationTransformedResourceVariation(self, sequence=None, sequence_list=None,
                                **kw):
@@ -1524,6 +1566,28 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     self.production_order_line_quantity = 0.0
     self.variation_category_list = ['colour','size']
 
+    self.colour_size_quantity_dict = {
+      'green' : {
+        'Man' : 1.0,
+        'Woman' : 2.0
+      },
+      'blue' : {
+        'Man' : 3.0,
+        'Woman' : 4.0
+      },
+    }
+
+    self.colour_size_variation_dict = {
+      'green' : {
+        'Man' : ('colour/green','size/Man'),
+        'Woman' : ('colour/green','size/Woman')
+      },
+      'blue' : {
+        'Man' : ('colour/blue','size/Man'),
+        'Woman' : ('colour/blue','size/Woman')
+      },
+    }
+
     sequence_string = '\
                       ClearActivities \
                       CreateProductionOrganisation1 \
@@ -1541,6 +1605,9 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       FillTransformationTransformedResourceWithComponent1 \
                       SetTransformationTransformedResourceVariation \
                       SetTransformationTransformedResourceIndustrialPhaseList \
+                      Tic \
+                      SetTransformationTransformedResourceQuantityMatrix \
+                      SetTransformationTransformedResourceVariationMatrix \
                       Tic \
                       CreateOrganisation \
                       CreateOrder \
