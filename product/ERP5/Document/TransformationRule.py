@@ -201,7 +201,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
             'stop_date': stop_date,
             "resource": parent_movement.getResource(),
             # XXX Is the quantity value correct ?
-            "quantity": parent_movement.getQuantity(),
+            "quantity": parent_movement.getNetQuantity(), # getNetQuantity to support efficency from transformation
             "quantity_unit": parent_movement.getQuantityUnit(),
             "destination_list": (),
             "destination_section_list": (),
@@ -253,7 +253,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
         resource_price = amount.getResourcePrice()
         price = None
         if resource_price is not None:
-          price = amount.getQuantity() * resource_price
+          price = amount.getNetQuantity() * resource_price # getNetQuantity to support efficency from transformation
         consumed_movement_dict[consumed_mvt_id] = {
           'start_date': current_supply_link.calculateStartDate(stop_date),
           'stop_date': stop_date,
@@ -262,7 +262,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
                         amount.getVariationCategoryList(),
           "variation_property_dict": \
                         amount.getVariationPropertyDict(),
-          "quantity": amount.getQuantity() * parent_movement.getQuantity(),
+          "quantity": amount.getNetQuantity() * parent_movement.getQuantity(), # getNetQuantity to support efficency from transformation
           "price": price,
           "quantity_unit": amount.getQuantityUnit(),
           "destination_list": (),

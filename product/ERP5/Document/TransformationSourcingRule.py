@@ -194,7 +194,7 @@ class TransformationSourcingRule(TransformationSourcingRuleMixin, Rule):
                                             getVariationCategoryList(),
               "variation_property_dict": \
                             parent_movement.getVariationPropertyDict(),
-              'quantity': parent_movement.getQuantity(),
+              'quantity': parent_movement.getNetQuantity(), # getNetQuantity to support efficency from transformation
               'price': parent_movement.getPrice(),
               'quantity_unit': parent_movement.getQuantityUnit(),
               'start_date': previous_supply_link.calculateStartDate(stop_date),
