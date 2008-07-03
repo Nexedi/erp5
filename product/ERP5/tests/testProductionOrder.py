@@ -51,6 +51,14 @@ class TestProductionOrderMixin(TestOrderMixin):
                         'Transformation Transformed Resource'
   operation_line_portal_type = 'Transformation Operation'
 
+  operation_category_list = ['operation1', 'operation2']
+
+  colour_list = ['green','blue']
+  mrp_size_list = ['Man','Woman']
+  brand_list = ['new',]
+  composition_list = ['full',]
+
+
   def getBusinessTemplateList(self):
     """
     """
@@ -94,6 +102,54 @@ class TestProductionOrderMixin(TestOrderMixin):
                                                portal_type='Category',
                                                id=category_id)
 
+    if len(self.category_tool.brand.contentValues()) == 0:
+      for category_id in self.brand_list:
+        o = self.category_tool.brand.newContent(
+                                               portal_type='Category',
+                                               id=category_id)
+
+    if len(self.category_tool.composition.contentValues()) == 0:
+      for category_id in self.composition_list:
+        o = self.category_tool.composition.newContent(
+                                               portal_type='Category',
+                                               id=category_id)
+
+  def stepCreateBrandCompositionVariatedComponent1(self,sequence=None, sequence_list=None, \
+                                    **kw):
+    """
+      Create a resource with no variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.component_portal_type)
+    resource = resource_module.newContent(
+                                  portal_type=self.component_portal_type)
+    resource.edit(
+      title = "ColourSizeVariatedComponent1",
+      variation_base_category_list = ['brand','composition'],
+    )
+    resource.setVariationCategoryList(['brand/'+q for q in self.mrp_size_list] + ['composition/'+q for q in self.colour_list])
+    sequence.edit(component1=resource)
+
+  def stepCreateColourSizeVariatedResource(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    """
+      Create a resource with colour and size variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      title = "ColourSizeVariatedResource",
+      industrial_phase_list=["phase1", "phase2"],
+      variation_base_category_list = ['size','colour'],
+    )
+    resource.setVariationCategoryList(['size/'+q for q in self.mrp_size_list] + ['colour/'+q for q in self.colour_list])
+
+    sequence.edit( resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
+
   def stepCreateVariatedResource(self, sequence=None, sequence_list=None, \
                                  **kw):
     """
@@ -107,7 +163,6 @@ class TestProductionOrderMixin(TestOrderMixin):
       industrial_phase_list=["phase1", "phase2"],
       product_line = 'apparel'
     )
-
 #    resource.setSizeList(self.size_list)
     # Add colour variation
     colour_variation_count = 3
@@ -257,6 +312,25 @@ class TestProductionOrderMixin(TestOrderMixin):
     sequence.edit(transformation=transformation)
 
 
+  def stepSetTransformationTransformedResourceVariation(self, sequence=None, sequence_list=None,
+                               **kw):
+
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+
+    transformation_transformed_resource.edit(
+        v_variation_base_category_list = self.variation_category_list,
+        q_variation_base_category_list = self.variation_category_list,
+    )
+
+  def stepSetTransformationVariation(self, sequence=None, sequence_list=None,
+                               **kw):
+
+    transformation = sequence.get('transformation')
+
+    transformation.edit(
+        variation_base_category_list = self.variation_category_list
+    )
+    
   def stepFillTransformationWithResource(self, sequence=None, sequence_list=None,
                                **kw):
 
@@ -1446,6 +1520,53 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
     self.production_order_line_quantity = 1.0
     self.quantity_after_efficiency_calculation = -12.5 # (1.0 * 10.0) / -0.8
+
+    sequence_list.play(self)
+
+  def test_09_testTransformationWithVariation(self, quiet=0, run=run_all_test):
+    """
+    Test, that variation from transformation works correctly on order
+
+    Case:
+     - we will produce resource with ColourVariation[1,2,3] - quantity 
+     - for colour1 we use component size1, colour2 - size2, colour3 - size3
+    """
+    if not run: return
+
+    self.transformation_transformed_resource_quantity = 0.0
+    self.transformation_transformed_resource_industrial_phase_list = ['supply_phase1',]
+    self.production_order_line_quantity = 0.0
+    self.variation_category_list = ['colour','size']
+
+    sequence_string = '\
+                      ClearActivities \
+                      CreateProductionOrganisation1 \
+                      CreateSupplyOrganisation1 \
+                      CreateSourcingSC \
+                      Tic \
+                      CreateColourSizeVariatedResource \
+                      CreateBrandCompositionVariatedComponent1 \
+                      Tic \
+                      CreateEmptyTransformation \
+                      FillTransformationWithResource \
+                      SetTransformationVariation \
+                      Tic \
+                      CreateTransformationTransformedResource \
+                      FillTransformationTransformedResourceWithComponent1 \
+                      SetTransformationTransformedResourceVariation \
+                      SetTransformationTransformedResourceIndustrialPhaseList \
+                      Tic \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      SetOrderLineQuantity \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckVariationSimulation \
+                      '
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
 
