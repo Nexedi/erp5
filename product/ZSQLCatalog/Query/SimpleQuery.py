@@ -153,9 +153,9 @@ class SimpleQuery(QueryMixin):
                        'select_expression_list': select_expression_list,}
     return sql_expressions
     
-  def asSQLExpression(self, key_alias_dict = None, keyword_search_keys = [],
-                      datetime_search_keys = [], full_text_search_keys = [],
-                      ignore_empty_string = 1, stat__ = 0):
+  def asSQLExpression(self, key_alias_dict=None, keyword_search_keys=None,
+                      datetime_search_keys=None, full_text_search_keys=None,
+                      ignore_empty_string=1, stat__=0):
     """
     Build the sql expressions string
     """
@@ -168,6 +168,13 @@ class SimpleQuery(QueryMixin):
     search_mode = self.getSearchMode()
     range_value = self.getRange()
     search_key = self.getSearchKey()
+
+    if keyword_search_keys is None:
+      keyword_search_keys = []
+    if datetime_search_keys is None:
+      datetime_search_keys = []
+    if full_text_search_keys is None:
+      full_text_search_keys = []
 
     # key can have an alias definition which we should acquire
     if key_alias_dict is not None:
