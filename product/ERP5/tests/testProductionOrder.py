@@ -186,6 +186,78 @@ class TestProductionOrderMixin(TestOrderMixin):
 
     self.assertEquals('validated',transformation.getValidationState())
 
+  def stepCreateEmptyTransformation(self, sequence=None, sequence_list=None,
+                               **kw):
+    portal = self.getPortal()
+    transformation_module = portal.getDefaultModule(
+                                     self.transformation_portal_type)
+    transformation = transformation_module.newContent(
+                                   portal_type=self.transformation_portal_type)
+    sequence.edit(transformation=transformation)
+
+
+  def stepFillTransformationWithResource(self, sequence=None, sequence_list=None,
+                               **kw):
+
+    transformation = sequence.get('transformation')
+
+    resource = sequence.get('resource')
+
+    self.assertNotEquals(None, resource)
+
+    transformation.edit(
+      resource_value = resource
+    )
+
+  def stepSetOrderLineQuantity(self, sequence=None, sequence_list=None,
+                               **kw):
+    order_line = sequence.get('order_line')
+    order_line.edit(
+        quantity = self.production_order_line_quantity
+    )
+
+  def stepSetTransformationTransformedResourceQuantity(self, sequence=None, sequence_list=None,
+                               **kw):
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+    transformation_transformed_resource.edit(
+      quantity = self.transformation_transformed_resource_quantity
+    )
+
+  def stepSetTransformationTransformedResourceEfficiency(self, sequence=None, sequence_list=None,
+                               **kw):
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+    transformation_transformed_resource.edit(
+      efficiency = self.transformation_transformed_resource_efficiency
+    )
+
+  def stepSetTransformationTransformedResourceIndustrialPhaseList(self, sequence=None, sequence_list=None,
+                               **kw):
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+    transformation_transformed_resource.edit(
+      industrial_phase_list = self.transformation_transformed_resource_industrial_phase_list
+    )
+
+  def stepFillTransformationTransformedResourceWithComponent1(self, sequence=None, sequence_list=None,
+                               **kw):
+    transformation_transformed_resource = sequence.get('transformation_transformed_resource')
+    component1 = sequence.get('component1')
+
+    self.assertNotEquals(None, component1)
+
+    transformation_transformed_resource.edit(
+      resource_value = component1,
+    )
+
+  def stepCreateTransformationTransformedResource(self, sequence=None, sequence_list=None,
+                               **kw):
+
+    transformation = sequence.get('transformation')
+    transformation_transformed_resource = transformation.newContent(
+      portal_type = self.transformed_resource_portal_type,
+        )
+
+    sequence.edit(transformation_transformed_resource = transformation_transformed_resource)
+
   def stepCreateTransformation(self, sequence=None, sequence_list=None,
                                **kw):
     """
@@ -289,6 +361,45 @@ class TestProductionOrderMixin(TestOrderMixin):
       quantity=5
     )
     sequence.edit(order_line=order_line)
+
+  def stepCheckEfficiencySimulation(self, sequence=None, sequence_list=None, **kw):
+    """Check that efficiency is applied where is it needed"""
+
+    # XXX: This test is not testing too much, beside for efficiency related quantity
+    #      in just two places.
+    order = sequence.get('order')
+
+    applied_rule = order.getCausalityRelatedValue(portal_type = self.applied_rule_portal_type)
+
+    production_movement_list = applied_rule.contentValues()
+
+    # XXX: hardcode
+    self.assertEquals(
+        1,
+        len(production_movement_list)
+    )
+
+    production_movement = production_movement_list[0]
+
+    transformation_applied_rule = production_movement.contentValues()[0]
+
+    consumed_movement = [q for q in transformation_applied_rule.contentValues() \
+        if q.getId().startswith('cr')][0]
+
+    self.assertEquals(
+        consumed_movement.getQuantity(),
+        self.quantity_after_efficiency_calculation
+    )
+
+    transformation_sourcing_rule = consumed_movement.contentValues()[0]
+
+    consumption_delivery_movement = [q for q in transformation_sourcing_rule.contentValues() \
+        if q.getId().startswith('ts')][0]
+    
+    self.assertEquals(
+        consumption_delivery_movement.getQuantity(),
+        self.quantity_after_efficiency_calculation
+    )
 
   def stepCheckOrderLineTransformationIsSet(self, sequence=None, sequence_list=None, **kw):
     order_line = sequence.get('order_line')
@@ -1192,6 +1303,91 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
     
+  def test_08_testTransformationWithEfficiency(self, quiet=0, run=run_all_test):
+    """
+    Test, that efficiency from transformation applies correctly
+    """
+    if not run: return
+
+    sequence_string = '\
+                      ClearActivities \
+                      CreateProductionOrganisation1 \
+                      CreateSupplyOrganisation1 \
+                      CreateSourcingSC \
+                      Tic \
+                      CreateNotVariatedResource \
+                      CreateComponent1 \
+                      CreateEmptyTransformation \
+                      FillTransformationWithResource \
+                      Tic \
+                      CreateTransformationTransformedResource \
+                      FillTransformationTransformedResourceWithComponent1 \
+                      SetTransformationTransformedResourceQuantity \
+                      SetTransformationTransformedResourceEfficiency \
+                      SetTransformationTransformedResourceIndustrialPhaseList \
+                      Tic \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      SetOrderLineQuantity \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckEfficiencySimulation \
+                      '
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(sequence_string)
+
+    # case - we need Q:10.0, efficiency is 80% (we need more), producing 1.0
+    self.transformation_transformed_resource_quantity = 10.0
+    self.transformation_transformed_resource_efficiency = 0.8 # 80%
+    self.transformation_transformed_resource_industrial_phase_list = ['supply_phase1',]
+
+    self.production_order_line_quantity = 1.0
+    self.quantity_after_efficiency_calculation = 12.5 # (1.0 * 10.0) / 0.8
+
+    sequence_list.play(self)
+
+    # case - we need Q:10.0, efficiency is None (normal, nothing set), producing 1.0
+    self.transformation_transformed_resource_quantity = 10.0
+    self.transformation_transformed_resource_efficiency = None
+    self.transformation_transformed_resource_industrial_phase_list = ['supply_phase1',]
+
+    self.production_order_line_quantity = 1.0
+    self.quantity_after_efficiency_calculation = 10.0 # (1.0 * 10.0) / 1.0
+
+    sequence_list.play(self)
+
+    # case - we need Q:10.0, efficiency is 100% (normal), producing 1.0
+    self.transformation_transformed_resource_quantity = 10.0
+    self.transformation_transformed_resource_efficiency = 1.0
+    self.transformation_transformed_resource_industrial_phase_list = ['supply_phase1',]
+
+    self.production_order_line_quantity = 1.0
+    self.quantity_after_efficiency_calculation = 10.0 # (1.0 * 10.0) / 1.0
+
+    sequence_list.play(self)
+
+    # case - we need Q:10.0, efficiency is 125% (miracle?), producing 1.0
+    self.transformation_transformed_resource_quantity = 10.0
+    self.transformation_transformed_resource_efficiency = 1.25
+    self.transformation_transformed_resource_industrial_phase_list = ['supply_phase1',]
+
+    self.production_order_line_quantity = 1.0
+    self.quantity_after_efficiency_calculation = 8.0 # (1.0 * 10.0) / 1.25
+
+    sequence_list.play(self)
+
+    # case - we need Q:10.0, efficiency is -80% (nonsense?), producing 1.0
+    self.transformation_transformed_resource_quantity = 10.0
+    self.transformation_transformed_resource_efficiency = -0.8
+    self.transformation_transformed_resource_industrial_phase_list = ['supply_phase1',]
+
+    self.production_order_line_quantity = 1.0
+    self.quantity_after_efficiency_calculation = -12.5 # (1.0 * 10.0) / -0.8
+
+    sequence_list.play(self)
+
   def test_50_testCopyPaste(self, quiet=0, run=run_all_test):
     """
     Check that relation are changed when doing a copy/paste,
