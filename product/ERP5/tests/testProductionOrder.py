@@ -55,8 +55,6 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   colour_list = ['green','blue']
   mrp_size_list = ['Man','Woman']
-  brand_list = ['new',]
-  composition_list = ['full',]
 
 
   def getBusinessTemplateList(self):
@@ -102,18 +100,6 @@ class TestProductionOrderMixin(TestOrderMixin):
                                                portal_type='Category',
                                                id=category_id)
 
-    if len(self.category_tool.brand.contentValues()) == 0:
-      for category_id in self.brand_list:
-        o = self.category_tool.brand.newContent(
-                                               portal_type='Category',
-                                               id=category_id)
-
-    if len(self.category_tool.composition.contentValues()) == 0:
-      for category_id in self.composition_list:
-        o = self.category_tool.composition.newContent(
-                                               portal_type='Category',
-                                               id=category_id)
-
   def stepCreateBrandCompositionVariatedComponent1(self,sequence=None, sequence_list=None, \
                                     **kw):
     """
@@ -125,9 +111,9 @@ class TestProductionOrderMixin(TestOrderMixin):
                                   portal_type=self.component_portal_type)
     resource.edit(
       title = "ColourSizeVariatedComponent1",
-      variation_base_category_list = ['brand','composition'],
+      variation_base_category_list = ['colour','size'],
     )
-    resource.setVariationCategoryList(['brand/'+q for q in self.mrp_size_list] + ['composition/'+q for q in self.colour_list])
+    resource.setVariationCategoryList(['colour/'+q for q in self.mrp_size_list] + ['size/'+q for q in self.colour_list])
     sequence.edit(component1=resource)
 
   def stepCreateColourSizeVariatedResource(self, sequence=None, sequence_list=None, \
