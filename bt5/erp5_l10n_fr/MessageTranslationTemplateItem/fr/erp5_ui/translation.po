@@ -3200,3 +3200,10 @@ msgstr "Matricule"
 
 msgid "Input data has errors. Please look at error messages below."
 msgstr "Les données entrées comportent des erreurs. Regardez les messages d'erreur ci-dessous."
+
+msgid "International Form"
+msgstr "Mode international"
+
+msgid "Include english and translated version of all terms."
+msgstr "Présente la version en anglais et la version traduite de chaque terme"
+
