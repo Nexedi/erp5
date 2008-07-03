@@ -281,6 +281,7 @@ class ReportSection:
       selection_name = context[self.getFormId()].listbox.get_value('selection_name')
       if render_prefix is not None:
         selection_name = '%s_%s' % (render_prefix, selection_name)
+        REQUEST.other['prefixed_selection_name'] = selection_name
       selection_list += [selection_name]
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
@@ -356,6 +357,7 @@ class ReportSection:
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_name = context[self.getFormId()].listbox.get_value('selection_name')
       if render_prefix is not None:
+        del REQUEST.other['prefixed_selection_name']
         # Return before cleanup, because there is no interest in cleaning up
         # what won't be shared.
         return
