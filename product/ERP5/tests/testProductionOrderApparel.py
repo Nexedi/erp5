@@ -38,6 +38,7 @@ from testOrder import TestOrderMixin
 class TestProductionOrderApparelMixin(TestOrderMixin):
 
   run_all_test = 1
+  resource_portal_type = 'Apparel Model'
   order_portal_type = 'Production Order'
   order_line_portal_type = 'Production Order Line'
   supply_chain_portal_type = 'Supply Chain'
