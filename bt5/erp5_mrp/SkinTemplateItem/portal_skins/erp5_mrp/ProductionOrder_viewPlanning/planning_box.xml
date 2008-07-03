@@ -17,6 +17,7 @@
                 <string>report_root_list</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>round_script</string>
               </list>
             </value>
         </item>
@@ -114,6 +115,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key>                 <string>round_script</string> </key>
+                    <value> <string>Planning_roundBoundToMinute</string> </value>
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
