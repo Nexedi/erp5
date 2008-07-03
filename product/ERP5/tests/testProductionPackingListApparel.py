@@ -33,10 +33,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
-from testProductionOrder import TestProductionOrderMixin
+from testProductionOrderApparel import TestProductionOrderApparelMixin
 from testPackingList import TestPackingListMixin
 
-class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPackingListMixin, \
+class TestProductionPackingReportListMixin(TestProductionOrderApparelMixin, TestPackingListMixin, \
                           ERP5TypeTestCase):
   """Mixin for testing Production Packing Lists and Production Reports"""
 
@@ -368,7 +368,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
       packing_list.getCausalityState()
     )
 
-class TestProductionDelivery(TestProductionPackingReportListMixin):
+class TestProductionDeliveryApparel(TestProductionPackingReportListMixin):
   """Test Production Packing Lists and Reports, mostly based on Production Orders"""
 
   run_all_test = 1
@@ -621,5 +621,5 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionDelivery))
+  suite.addTest(unittest.makeSuite(TestProductionDeliveryApparel))
   return suite

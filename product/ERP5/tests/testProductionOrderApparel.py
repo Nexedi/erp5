@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class TestProductionOrderMixin(TestOrderMixin):
+class TestProductionOrderApparelMixin(TestOrderMixin):
 
   run_all_test = 1
   order_portal_type = 'Production Order'
@@ -908,7 +908,7 @@ class TestProductionOrderMixin(TestOrderMixin):
                       CheckSourcingSimulation \
                       '
     
-class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
+class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCase):
   """
     Test business template erp5_mrp
   """
@@ -1289,5 +1289,5 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionOrder))
+  suite.addTest(unittest.makeSuite(TestProductionOrderApparel))
   return suite
