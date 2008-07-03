@@ -1656,3 +1656,11 @@ def LinesTextAreaWidget_render_view(self, field, value, REQUEST=None, render_pre
   return original_LinesTextAreaWidget_render_view(self, field, value)
 LinesTextAreaWidget.render_view = LinesTextAreaWidget_render_view
 
+from Products.Formulator.Validator import EmailValidator
+import re
+# This regexp is based on the default Formulator regexp, and add the
+# possibility to allow ' in the email address
+# see: http://www.regular-expressions.info/email.html
+EmailValidator.pattern = \
+  re.compile('^[0-9a-zA-Z_\'&.%+-]+@([0-9a-zA-Z]([0-9a-zA-Z-]*[0-9a-zA-Z])?\.)+[a-zA-Z]{2,6}$')
+
