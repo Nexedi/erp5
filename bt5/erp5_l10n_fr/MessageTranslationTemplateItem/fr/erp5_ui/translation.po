@@ -3199,7 +3199,7 @@ msgid "Min. Flow"
 msgstr "Débit Minimum"
 
 msgid "Account must be defined"
-msgstr "Le Compte doit être défini"
+msgstr "Le compte doit être défini"
 
 msgid "Supplier must be defined"
 msgstr "Le fournisseur doit être defini"
@@ -3208,22 +3208,22 @@ msgid "Client must be defined"
 msgstr "Le client doit être défini"
 
 msgid "Sender or Provider must be defined"
-msgstr "Expéditeur ou Prestataire doit être défini"
+msgstr "L'expéditeur ou le prestataire doit être défini"
 
 msgid "Currency must be defined"
-msgstr "Devise doit être définie"
+msgstr "La devise doit être définie"
 
 msgid "Total Quantity must not be 0"
-msgstr "Quantité Totale doit être différente de 0"
+msgstr "La quantité totale doit être différente de 0"
 
 msgid "Shipping Date must be defined"
 msgstr "La date d'expédition doit être définie"
 
 msgid "Delivery Date must be defined"
-msgstr "La dte de livraison souhaitée doit être définie"
+msgstr "La date de livraison souhaitée doit être définie"
 
 msgid "Delivery Date must be after Shipping Date"
-msgstr "Date de livraison souhaitée doit être postèrieure à la date d'expédition"
+msgstr "La date de livraison souhaitée doit être postèrieure à la date d'expédition"
 
 msgid "Your Item no."
 msgstr "Votre réf."
@@ -3238,13 +3238,13 @@ msgid "Tax"
 msgstr "Taxe"
 
 msgid "Tax Lines"
-msgstr "Lignes de Taxe"
+msgstr "Lignes de taxe"
 
 msgid "Discount Lines"
-msgstr "Lignes de Remise"
+msgstr "Lignes de remise"
 
 msgid "Purchase Order Lines"
-msgstr "Lignes de Commande"
+msgstr "Lignes de commande"
 
 msgid "Accounts to Validate"
 msgstr "Comptes à valider"
@@ -3269,9 +3269,6 @@ msgstr "Devise de la comptabilité par défaut"
 
 msgid "Sale Packing List"
 msgstr "Livraison de vente"
-
-msgid "-- Purchase Order Workflow --"
-msgstr "-- Workflow de Commande d'Achat --"
 
 msgid "Financial Information"
 msgstr "Informations financiaires"
