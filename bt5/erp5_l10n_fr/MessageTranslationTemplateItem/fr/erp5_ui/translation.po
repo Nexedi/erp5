@@ -1456,13 +1456,13 @@ msgid "Invoice Number"
 msgstr "Numéro de Facture"
 
 msgid "Invoice Recipient"
-msgstr "Destinataire facture"
+msgstr "Destinataire de la Facture"
 
 msgid "Invoice Rule"
 msgstr "Règle de Facture"
 
 msgid "Invoice Sender"
-msgstr "Emetteur facture"
+msgstr "Emetteur de la Facture"
 
 msgid "Invoice View"
 msgstr "Vue de Facture"
@@ -3305,4 +3305,28 @@ msgstr "La contribution doit être définie"
 
 msgid "Select Print"
 msgstr "Type d'impression"
+
+msgid "The invoicing person or organisation."
+msgstr "La personne ou l'organisation qui facture la livraison ou prestation."
+
+msgid "The person or organisation in charge of handling the sales process or of taking the sales decision."
+msgstr "La personne ou l'organisation en charge de la gestion commerciale ou responsable de la vente."
+
+msgid "The organisation or person who sends merchandise or provides service."
+msgstr "La personne ou l'organisation qui expédie la marchandise ou fournit le service." 
+
+msgid "The person or organisation in charge of selecting the supplier or taking the decision to place the order."
+msgstr "La personne ou l'organisation qui a choisi le fournisseur et a pris la décision de lui passer commande."
+
+msgid "The organisation or person to whom merchandise or service is delivered over or provided to."
+msgstr "La personne ou l'organisation à qui la marchandise est livrée ou le service est rendu."
+
+msgid "The invoiced person or organisation."
+msgstr "La personne ou l'organisation facturée."
+
+msgid "The person or organisation which the invoice should be sent to and who is in charge of handling administrative paperwork for the client."
+msgstr "La personne ou l'organisation à qui la facture doit être adressée et qui est chargée de la gestion administrative pour le client."
+
+msgid "The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier."
+msgstr "La personne ou l'organisation qui envoie la facture ou est en charge de la gestion administrative pour le fournisseur."
 
