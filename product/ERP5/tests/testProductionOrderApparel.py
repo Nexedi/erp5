@@ -915,7 +915,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
   run_all_test = 1
 
   def getTitle(self):
-    return "Production Order"
+    return "Production Order for Apparel"
 
   def test_01_testProductionSimulationExpand(self, quiet=0, run=run_all_test):
     """
