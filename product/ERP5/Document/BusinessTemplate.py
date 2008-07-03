@@ -66,7 +66,7 @@ customImporters={
     XMLExportImport.magic: XMLExportImport.importXML,
     }
 
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, PROBLEM
 from warnings import warn
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
