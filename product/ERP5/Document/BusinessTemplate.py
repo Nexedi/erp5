@@ -667,10 +667,57 @@ class ObjectTemplateItem(BaseTemplateItem):
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0, **kw)
     return subobjects_dict
 
+  def beforeInstall(self):
+    """
+      Installation hook.
+      Called right at the begining of "install" method.
+      Can be overridden by subclasses.
+    """
+    pass
+
+  def afterInstall(self):
+    """
+      Installation hook.
+      Called right before returning in "install" method.
+      Can be overridden by subclasses.
+    """
+    pass
+
+  def onNewObject(self):
+    """
+      Installation hook.
+      Called when installation process determined that object to install is
+      new on current site (it's not replacing an existing object).
+      Can be overridden by subclasses.
+    """
+    pass
+
   def install(self, context, trashbin, **kw):
+    self.beforeInstall()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
+      def recurse(hook, document, prefix=''):
+        my_prefix = '%s/%s' % (prefix, document.id)
+        if (hook(document, my_prefix)):
+          for subdocument in document.objectValues():
+            recurse(hook, subdocument, my_prefix)
+      def saveHook(document, prefix):
+        uid = getattr(document, 'uid', None)
+        if uid is None:
+          return 0
+        else:
+          LOG('BusinessTemplate', 0, 'Saved %r: %r' % (prefix, uid))
+          saved_uid_dict[prefix] = uid
+          return 1
+      def restoreHook(document, prefix):
+        uid = saved_uid_dict.get(prefix)
+        if uid is None:
+          return 0
+        else:
+          LOG('BusinessTemplate', 0, 'Restored %r: %r' % (prefix, uid))
+          document.uid = uid
+          return 1
       groups = {}
       old_groups = {}
       portal = context.getPortalObject()
@@ -709,10 +756,12 @@ class ObjectTemplateItem(BaseTemplateItem):
                 container = portal.unrestrictedTraverse(container_path)
             else:
               raise
+          saved_uid_dict = {}
           subobjects_dict = {}
           # Object already exists
           old_obj = container._getOb(object_id, None)
           if old_obj is not None:
+            recurse(saveHook, old_obj)
             if getattr(aq_base(old_obj), 'groups', None) is not None:
               # we must keep original order groups
               # from old form in case we keep some
@@ -722,6 +771,8 @@ class ObjectTemplateItem(BaseTemplateItem):
             subobjects_dict = self._backupObject(action, trashbin,
                                                  container_path, object_id)
             container.manage_delObjects([object_id])
+          else:
+            self.onNewObject()
           # install object
           obj = self._objects[path]
           if getattr(obj, 'meta_type', None) == 'Script (Python)':
@@ -807,6 +858,17 @@ class ObjectTemplateItem(BaseTemplateItem):
             # skip transforms that couldn't have been initialized
             if obj.title != 'BROKEN':
               container._mapTransform(obj)
+          recurse(restoreHook, obj)
+          # Reindex created object (if possible) after all unindexObject
+          # activites are finished, to make sure it is indexed in the end.
+          recursiveReindexObject = getattr(obj, 'recursiveReindexObject', None)
+          if recursiveReindexObject is not None:
+            LOG('BusinessTemplate', 0, 'Reindexing %r' % (obj, ))
+            # XXX: Using SQLQueue to make sure this activity does not get
+            # merged and dropped because of another existing
+            # 'recursiveReindexObject' on same path.
+            recursiveReindexObject(activate_kw={'activity': 'SQLQueue',
+              'after_method_id': 'unindexObject'})
       # now put original order group
       # we remove object not added in forms
       # we put old objects we have kept
@@ -878,6 +940,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.wl_clearLocks()
         if obj.meta_type in ('Z SQL Method',):
           fixZSQLMethod(portal, obj)
+    self.afterInstall()
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
@@ -1093,121 +1156,16 @@ class CategoryTemplateItem(ObjectTemplateItem):
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
-  def install(self, context, trashbin, **kw):
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    new_category = False
-    if context.getTemplateFormatVersion() == 1:
-      portal = context.getPortalObject()
-      category_tool = portal.portal_categories
-      tool_id = self.tool_id
-      keys = self._objects.keys()
-      keys.sort()
-      for path in keys:
-        if update_dict.has_key(path) or force:
-          if not force:
-            action = update_dict[path]
-            if action == 'nothing':
-              continue
-          else:
-            action = 'backup'
-          # Wrap the object by an aquisition wrapper for _aq_dynamic.
-          obj = self._objects[path]
-          obj = obj.__of__(category_tool)
-          container_path = path.split('/')[:-1]
-          category_id = path.split('/')[-1]
-          try:
-            container = category_tool.unrestrictedTraverse(container_path)
-          except KeyError:
-            # parent object can be set to nothing, in this case just go on
-            container_url = '/'.join(container_path)
-            if update_dict.has_key(container_url):
-              if update_dict[container_url] == 'nothing':
-                continue
-            raise
-          container_ids = container.objectIds()
-          # Object already exists
-          object_uid = None
-          subobjects_dict = {}
-          if category_id in container_ids:
-            object_uid = container[category_id].getUid()
-            subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
-            container.manage_delObjects([category_id])
-          else:
-            # mark that we installed a new category to call aq_reset later
-            new_category = True
-          category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
-          if object_uid is not None:
-            category.setUid(object_uid)
-          for prop in obj.propertyIds():
-            if prop not in ('id', 'uid'):
-              try:
-                prop_value = obj.getProperty(prop, evaluate=0)
-              except TypeError: # the getter doesn't support evaluate=
-                prop_value = obj.getProperty(prop)
-              category.setProperty(prop, prop_value)
-          # import sub objects if there is
-          if len(subobjects_dict) > 0:
-            # get a jar
-            connection = obj._p_jar
-            o = category
-            while connection is None:
-              o = o.aq_parent
-              connection = o._p_jar
-            # import subobjects
-            for subobject_id in subobjects_dict.keys():
-              subobject_data = subobjects_dict[subobject_id]
-              subobject_data.seek(0)
-              subobject = connection.importFile(subobject_data)
-              if subobject_id not in category.objectIds():
-                category._setObject(subobject_id, subobject)
-    else:
-      BaseTemplateItem.install(self, context, trashbin, **kw)
-      portal = context.getPortalObject()
-      category_tool = portal.portal_categories
-      tool_id = self.tool_id
-      for relative_url in self._archive.keys():
-        obj = self._archive[relative_url]
-        # Wrap the object by an aquisition wrapper for _aq_dynamic.
-        obj = obj.__of__(category_tool)
-        container_path = relative_url.split('/')[0:-1]
-        category_id = relative_url.split('/')[-1]
-        container = category_tool.unrestrictedTraverse(container_path)
-        container_ids = container.objectIds()
-        if category_id in container_ids:    # Object already exists
-          # XXX call backup here
-          subobjects_dict = self._backupObject('backup', trashbin, container_path, category_id)
-          container.manage_delObjects([category_id])
-        else:
-          # mark that we installed a new category to call aq_reset later
-          new_category = True
-        category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
-        for prop in obj.propertyIds():
-          if prop not in ('id', 'uid'):
-            try:
-              prop_value = obj.getProperty(prop, evaluate=0)
-            except TypeError: # the getter doesn't support evaluate=
-              prop_value = obj.getProperty(prop)
-            category.setProperty(prop, prop_value)
-        # import sub objects if there is
-        if len(subobjects_dict) > 0:
-          # get a jar
-          connection = obj._p_jar
-          o = category
-          while connection is None:
-            o = o.aq_parent
-            connection = o._p_jar
-          # import subobjects
-          for subobject_id in subobjects_dict.keys():
-            subobject_data = subobjects_dict[subobject_id]
-            subobject_data.seek(0)
-            subobject = connection.importFile(subobject_data)
-            if subobject_id not in category.objectIds():
-              category._setObject(subobject_id, subobject)
-    if new_category:
+  def beforeInstall(self):
+    self._installed_new_category = False
+
+  def onNewObject(self):
+    self._installed_new_category = True
+
+  def afterInstall(self):
+    if self._installed_new_category:
       # reset accessors if we installed a new category
       _aq_reset()
-              
 
 class SkinTemplateItem(ObjectTemplateItem):
 
