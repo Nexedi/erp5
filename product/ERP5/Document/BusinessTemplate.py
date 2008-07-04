@@ -707,7 +707,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         if uid is None:
           return 0
         else:
-          LOG('BusinessTemplate', 0, 'Saved %r: %r' % (prefix, uid))
           saved_uid_dict[prefix] = uid
           return 1
       def restoreHook(document, prefix):
@@ -715,7 +714,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         if uid is None:
           return 0
         else:
-          LOG('BusinessTemplate', 0, 'Restored %r: %r' % (prefix, uid))
           document.uid = uid
           return 1
       groups = {}
@@ -863,7 +861,6 @@ class ObjectTemplateItem(BaseTemplateItem):
           # activites are finished, to make sure it is indexed in the end.
           recursiveReindexObject = getattr(obj, 'recursiveReindexObject', None)
           if recursiveReindexObject is not None:
-            LOG('BusinessTemplate', 0, 'Reindexing %r' % (obj, ))
             # XXX: Using SQLQueue to make sure this activity does not get
             # merged and dropped because of another existing
             # 'recursiveReindexObject' on same path.
