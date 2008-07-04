@@ -204,7 +204,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     supply_chain = supply_chain_module.newContent( \
                                    portal_type=self.supply_chain_portal_type)
     supply_chain.edit(
-      title = "Supply Chain Test",
+      title = "Supply Chain Generic",
     )
     sequence.edit(supply_chain=supply_chain)
 
@@ -217,6 +217,9 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.stepCreateGenericSC(sequence=sequence, sequence_list=sequence_list,
                              **kw)
     supply_chain = sequence.get('supply_chain')
+    supply_chain.edit(
+      title = 'Supply Chain Production'
+    )
     # Create production node
     production_organisation  = sequence.get('production_organisation1')
     production_node = supply_chain.newContent(
@@ -791,6 +794,9 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.stepCreateProductionSC(sequence=sequence, sequence_list=sequence_list,
                                 **kw)
     supply_chain = sequence.get('supply_chain')
+    supply_chain.edit(
+      title = 'Supply Chain Sourcing',
+    )
     # Create supply node
     supply_organisation  = sequence.get('supply_organisation1')
     supply_node = supply_chain.newContent(
@@ -961,6 +967,9 @@ class TestProductionOrderMixin(TestOrderMixin):
     self.stepCreateSourcingSC(sequence=sequence, sequence_list=sequence_list,
                               **kw)
     supply_chain = sequence.get('supply_chain')
+    supply_chain.edit(
+      title = 'Supply Chain Two Phases',
+    )
     # Create production node
     production_organisation2  = sequence.get('production_organisation2')
     production_node2 = supply_chain.newContent(
