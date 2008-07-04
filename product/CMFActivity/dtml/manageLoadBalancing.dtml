@@ -47,13 +47,56 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <form action="&dtml-URL1;">
 
 <table cellspacing="0" cellpadding="2" border="0" width="100%">
+  <dtml-if expr="_.len(getNodeList()) == 0">
+    <tr class="list-header">
+      <td align="left" valign="top" colspan=2>
+        <div class="form-label" style="color: #F00">Warning: No node has been found yet.</div>
+      </td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" colspan=2>
+        <p>
+        This can be the sign of a missconfigured zope.
+        Please make sure you have enabled timerserver in your zope.conf:
+        </p>
+<pre>%import timerserver
+&lt;timer-server&gt;
+  interval 5
+&lt;/timer-server&gt;</pre>
+        <b>CMFActivity wil not work until at least one node is known.</b>
+        <p>
+        If it is already configured properly, then chances are you accesed
+        this page before timeserver had the chance to trigger, or you just
+        deleted the last known nodes.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </dtml-if>
   <tr class="list-header">
     <td align="left" valign="top" colspan=2>
       <div class="form-label">This node</div>
     </td>
   </tr>
   <tr>
-    <td colspan=2>Current node is <b><dtml-var getCurrentNode></b></td>
+    <td>Current node is <b><dtml-var getCurrentNode></b></td>
+    <dtml-if expr="getCurrentNode() not in getNodeList()">
+      <td align="left" valign="top" colspan=2>
+        <p style="color: #F00"><b>Warning: Current node is not known to distribution system.</b></p>
+        <p>
+          The current node is not registered as an available node on current instance.
+          This can be normal if this node is part of a cluster, but it can also happen
+          if its hostname and/or IP address changed.
+          I the latter case, you must reconfigure this page acordignly, and can safely delete
+          the old IP address if it's still listed on this page.
+        </p>
+      </td>
+    <dtml-else>
+      <td>&nbsp;</td>
+    </dtml-if>
   </tr>
   <tr>
     <td>&nbsp;</td>
