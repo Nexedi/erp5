@@ -109,6 +109,8 @@
                         <string>my_variation_category_list</string>
                         <string>my_int_index</string>
                         <string>my_reference</string>
+                        <string>my_q_variation_base_category_list</string>
+                        <string>my_specialise_title_list</string>
                       </list>
                     </value>
                 </item>
