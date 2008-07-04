@@ -42,6 +42,7 @@ class TestProductionOrderMixin(TestOrderMixin):
   resource_portal_type = 'Product'
   order_portal_type = 'Production Order'
   order_line_portal_type = 'Production Order Line'
+  order_cell_portal_type = 'Production Order Cell'
   supply_chain_portal_type = 'Supply Chain'
   supply_node_portal_type = 'Supply Node'
   supply_link_portal_type = 'Supply Link'
@@ -312,9 +313,10 @@ class TestProductionOrderMixin(TestOrderMixin):
         transformation_transformed_resource.newContent(
           portal_type = 'Mapped Value',
           id = id,
+          mapped_value_property_list = ('quantity',),
           membership_criterion_base_category = ('colour', 'size'),
           membership_criterion_category = ('colour/%s'%(colour,), 'size/%s'%(size,)),
-          quantity = self.colour_size_quantity_dict[colour][size]
+          quantity = self.colour_size_quantity_dict[colour][size],
         )
         size_count +=1
       size_count = 0
@@ -332,13 +334,43 @@ class TestProductionOrderMixin(TestOrderMixin):
         transformation_transformed_resource.newContent(
           portal_type = 'Mapped Value',
           id = id,
+          mapped_value_property_list = (),
           membership_criterion_base_category = ('colour', 'size'),
           membership_criterion_category = ('colour/%s'%(colour,), 'size/%s'%(size,)),
-          categories = self.colour_size_variation_dict[colour][size]
+          categories = self.colour_size_variation_dict[colour][size],
         )
         size_count +=1
       size_count = 0
       colour_count +=1
+
+  def stepSetOrderLineQuantityMatrix(self, sequence=None, sequence_list=None,
+                               **kw):
+    order_line = sequence.get('order_line')
+    colour_count = size_count = 0
+
+    for colour in self.colour_list:
+      for size in self.mrp_size_list:
+        id = 'movement_%s_%s'%(colour_count,size_count)
+        order_line.newContent(
+          portal_type = self.order_cell_portal_type,
+          id = id,
+          mapped_value_property_list = ('quantity', 'price'),
+          membership_criterion_base_category = ('colour', 'size'),
+          membership_criterion_category = ('colour/%s'%(colour,), 'size/%s'%(size,)),
+          categories_list = ('colour/%s'%(colour,), 'size/%s'%(size,)),
+          quantity = self.order_line_colour_size_quantity_dict[colour][size]
+        )
+        size_count +=1
+      size_count = 0
+      colour_count +=1
+
+  def stepSetOrderLineVariationCategories(self, sequence=None, sequence_list=None,
+                               **kw):
+    order_line = sequence.get('order_line')
+
+    order_line.setVariationCategoryList(
+      value = self.order_line_variation_category_list
+    )
 
   def stepSetTransformationTransformedResourceVariation(self, sequence=None, sequence_list=None,
                                **kw):
@@ -525,10 +557,57 @@ class TestProductionOrderMixin(TestOrderMixin):
     )
     sequence.edit(order_line=order_line)
 
+  def stepCheckVariationSimulation(self, sequence=None, sequence_list=None, **kw):
+    # XXX: This check is not testing too much, beside for variation system
+    #      used in production simulations.
+    order = sequence.get('order')
+
+    for order_movement in order.getMovementList():
+      size = order_movement.getSize()
+      colour = order_movement.getColour()
+
+      want_produced_quantity = self.order_line_colour_size_quantity_dict[colour][size]
+      want_consume_quantity = self.colour_size_quantity_dict[colour][size]
+      want_consume_for_production = want_produced_quantity * want_consume_quantity
+      
+      produced_movement = order_movement.getOrderRelatedValue(\
+          portal_type='Simulation Movement')
+
+      self.assertEquals(
+        want_produced_quantity,
+        produced_movement.getQuantity()
+      )
+
+      transformation_rule = produced_movement.contentValues()[0]
+
+      consumption_movement = [q for q in transformation_rule.contentValues() \
+          if q.getId().startswith('cr')][0]
+      production_delivery_movement = [q for q in transformation_rule.contentValues() \
+          if q.getId().startswith('pr')][0]
+
+      self.assertEquals(
+          want_consume_for_production,
+          consumption_movement.getQuantity()
+      )
+
+      self.assertEquals(
+        want_produced_quantity,
+        production_delivery_movement.getQuantity()
+      )
+
+      transformation_sourcing_rule = consumption_movement.contentValues()[0]
+
+      consume_delivery_movement = transformation_sourcing_rule.contentValues()[0]
+
+      self.assertEquals(
+        want_consume_for_production,
+        consume_delivery_movement.getQuantity()
+      )
+
   def stepCheckEfficiencySimulation(self, sequence=None, sequence_list=None, **kw):
     """Check that efficiency is applied where is it needed"""
 
-    # XXX: This test is not testing too much, beside for efficiency related quantity
+    # XXX: This check is not testing too much, beside for efficiency related quantity
     #      in just two places.
     order = sequence.get('order')
 
@@ -1555,9 +1634,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     """
     Test, that variation from transformation works correctly on order
 
-    Case:
-     - we will produce resource with ColourVariation[1,2,3] - quantity 
-     - for colour1 we use component size1, colour2 - size2, colour3 - size3
+    Note: Read below variables to know, what and how was defined
     """
     if not run: return
 
@@ -1588,6 +1665,24 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
       },
     }
 
+    self.order_line_variation_category_list = [
+      'size/Man',
+      'size/Woman',
+      'colour/green',
+      'colour/blue',
+    ]
+
+    self.order_line_colour_size_quantity_dict = {
+      'green' : {
+        'Man' : 9.0,
+        'Woman' : 8.0
+      },
+      'blue' : {
+        'Man' : 7.0,
+        'Woman' : 6.0
+      },
+    }
+
     sequence_string = '\
                       ClearActivities \
                       CreateProductionOrganisation1 \
@@ -1612,11 +1707,14 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       CreateOrganisation \
                       CreateOrder \
                       CreateOrderLine \
-                      SetOrderLineQuantity \
+                      SetOrderLineVariationCategories \
+                      SetOrderLineQuantityMatrix \
                       Tic \
                       OrderOrder \
                       Tic \
                       CheckVariationSimulation \
+                      ConfirmOrder \
+                      Tic \
                       '
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
