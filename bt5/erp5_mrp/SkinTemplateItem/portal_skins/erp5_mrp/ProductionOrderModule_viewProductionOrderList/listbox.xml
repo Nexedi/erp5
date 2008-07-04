@@ -109,7 +109,7 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>supply_chain_title</string>
+                          <string>specialise_title</string>
                           <string>Supply Chain</string>
                         </tuple>
                         <tuple>
@@ -160,7 +160,7 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>supply_chain_title</string>
+                          <string>specialise_title</string>
                           <string>Supply Chain</string>
                         </tuple>
                         <tuple>
@@ -233,7 +233,7 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>supply_chain_title</string>
+                          <string>specialise_title</string>
                           <string>Supply Chain</string>
                         </tuple>
                         <tuple>
@@ -247,18 +247,6 @@
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -299,7 +287,7 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>supply_chain_title</string>
+                          <string>specialise_title</string>
                           <string>Supply Chain</string>
                         </tuple>
                         <tuple>
@@ -313,18 +301,6 @@
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
