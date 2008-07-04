@@ -1535,7 +1535,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
         result['from_expression'] = {catalog_table_name:
           ('\nLEFT JOIN `%s` AS ' % (query_table, )).join(left_join_list)}
         result['where_expression'] = '(%s)' % (' AND '.join(where_expression_list), )
-        LOG('buildAdvancedSQLSelector', 0, repr(result))
       else:
         result['where_expression'] = \
           ' OR '.join(['(%s.category_uid %s AND %s.base_category_uid %s)' %\
