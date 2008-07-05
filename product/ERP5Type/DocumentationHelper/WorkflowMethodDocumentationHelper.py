@@ -59,7 +59,7 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "__name__", '')
+    return getattr(self.getDocumentedObject(), "_transition_id", '')
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
   def getSectionList(self):
@@ -67,37 +67,6 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
     Returns a list of documentation sections
     """
     return []
-
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationState' )
-  #def getDestinationState(self):
-  #  """
-  #  Returns the destination_state of the transition workflow method
-  #  """
-  #  return self.getDocumentedObject().__dict__['new_state_id']
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType' )
-  #def getTriggerType(self):
-  #  """
-  #  Returns the trigger type of the workflow method
-  #  """
-  #  TT = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-  #  TT_id = self.getDocumentedObject().__dict__['trigger_type']
-  #  return TT[TT_id]
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getLocalRoles' )
-  #def getLocalRoles(self):
-  #  """
-  #  Returns the local roles of the workflow method
-  #  """
-  #  return self.getDocumentedObject().__ac_local_roles__
-
-  #security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds' )
-  #def getAvailableStateIds(self):
-  #  """
-  #  Returns available states in the workflow
-  #  """
-  #  return self.getDocumentedObject().getAvailableStateIds()
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
   def getDefinition(self):

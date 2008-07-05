@@ -46,7 +46,8 @@ class TempObjectLibrary(object):
   def __init__(self, container):
     # Folder objects doesn't filter content types.
     # Objects are created in a folder when there is no other choice.
-    self.root = container.newContent(portal_type='Folder', temp_object=1)
+    self.root = container.newContent(portal_type='Folder', temp_object=1, id='temp_instance')
+    #self.root = container.newContent(portal_type='Folder', temp_object=1)
     self.portal_type_dict = {}
     self.dependency_dict = {}
     for type_info in container._getTypesTool().listTypeInfo():
@@ -65,7 +66,7 @@ class TempObjectLibrary(object):
         container = self(random.choice(possible_parent_list))
       else:
         container = self.root
-      temp_object = container.newContent(portal_type=portal_type, temp_object=1)
+      temp_object = container.newContent(portal_type=portal_type, temp_object=1, id=portal_type)
       self.portal_type_dict[portal_type] = temp_object
     return temp_object
 
@@ -103,7 +104,6 @@ class DocumentationHelper(Implicit):
     if self.uri.startswith('portal_classes/temp_instance'):
       url, method = self.uri.split('#')
       portal_type = url.split('/')[-1]
-      self.getTempInstance = TempObjectLibrary(self.getPortalObject().portal_classes)
       temp_object = self.getTempInstance(portal_type)
       if '/' not in method:
         documented_object = getattr(temp_object, method, None)
@@ -147,8 +147,12 @@ class DocumentationHelper(Implicit):
         url, method = self.uri.split('#')
         documented_object = self.getPortalObject().unrestrictedTraverse(url, None)
         if '/' not in method:
-          documented_object = self.getPortalObject().unrestrictedTraverse(url, None)
-          documented_object = getattr(documented_object, method, None)
+	  if documented_object is not None:	
+            if documented_object.getId() in self.getPortalObject().portal_types.objectIds():
+              temp_object = self.getTempInstance(documented_object.getId())
+              documented_object = getattr(temp_object, method, None)
+            else:
+              documented_object = getattr(documented_object, method, None)
         else:
           path_method = method.split('/')
           wf_method = path_method[len(path_method)-1]
