@@ -175,22 +175,23 @@ class WebSection(Domain, PermanentURLMixIn):
         custom_render_method_id = self.getCustomRenderMethodId()
         if custom_render_method_id is not None:
           return getattr(self, custom_render_method_id)()
-        # The following could be moved to a typed based method for more flexibility
-        document = self.getDefaultDocumentValue()
-        if document is None:
-          # no document found for current user, still such document may exists
-          # in some cases user (like Anonymous) can not view document according to portal catalog
-          # but we may ask him to login if such a document exists
-          isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
-          if isAuthorizationForced is not None and isAuthorizationForced():
-            getDefaultDocumentValue = UnrestrictedMethod(self.getDefaultDocumentValue)
-            if getDefaultDocumentValue() is not None:
-              # force user to login as specified in Web Section
-              raise Unauthorized
-        if document is not None:
-          self.REQUEST.set('current_web_document', document.__of__(self)) # Used to be document
-          self.REQUEST.set('is_web_section_default_document', 1)
-          return document.__of__(self)()
+        if self.isDefaultPageDisplayed():
+          # The following could be moved to a typed based method for more flexibility
+          document = self.getDefaultDocumentValue()
+          if document is None:
+            # no document found for current user, still such document may exists
+            # in some cases user (like Anonymous) can not view document according to portal catalog
+            # but we may ask him to login if such a document exists
+            isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
+            if isAuthorizationForced is not None and isAuthorizationForced():
+              getDefaultDocumentValue = UnrestrictedMethod(self.getDefaultDocumentValue)
+              if getDefaultDocumentValue() is not None:
+                # force user to login as specified in Web Section
+                raise Unauthorized
+          if document is not None:
+            self.REQUEST.set('current_web_document', document.__of__(self)) # Used to be document
+            self.REQUEST.set('is_web_section_default_document', 1)
+            return document.__of__(self)()
       return Domain.__call__(self)
 
     # Layout Selection API
@@ -222,8 +223,6 @@ class WebSection(Domain, PermanentURLMixIn):
 
       result = self._getTypeBasedMethod('getDefaultDocumentValue',
                      fallback_script_id='WebSection_getDefaultDocumentValue')()
-      if result is not None:
-        result = result.__of__(self)
 
       if cache is not None:
         cache[key] = result
@@ -253,8 +252,6 @@ class WebSection(Domain, PermanentURLMixIn):
 
       result = self._getTypeBasedMethod('getDocumentValueList',
                      fallback_script_id='WebSection_getDocumentValueList')(**kw)
-      if result is not None:
-        result = [doc.__of__(self) for doc in result]
 
       if cache is not None:
         cache[key] = result

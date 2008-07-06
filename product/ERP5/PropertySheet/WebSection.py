@@ -57,6 +57,11 @@ class WebSection:
             'description' : 'Defines visibility of current section.',
             'type'        : 'boolean',
             'mode'        : 'rw' },
+        {   'id'          : 'default_page_displayed',
+            'description' : 'Defines whether the default page should be displayed.',
+            'type'        : 'boolean',
+            'default'     : 1,
+            'mode'        : 'rw' },
         {   'id'          : 'custom_render_method_id',
             'description' : 'ID of a page template, script, form or any callable object'
                             'which overrides the default rendering of the section',
@@ -74,10 +79,10 @@ class WebSection:
             'acquisition_accessor_id'       : 'getLayoutConfigurationFormId',
             'acquisition_depends'           : None,
             'mode'        : '' },
-          {   'id'          : 'authorization_forced',
+        {   'id'          : 'authorization_forced',
             'description' : 'Force authorization for anonymous user if document can not be found.',
             'type'        : 'boolean',
-            'default':  0, 
+            'default'     : 0,
             'mode'        : 'rw' },
     )
 
