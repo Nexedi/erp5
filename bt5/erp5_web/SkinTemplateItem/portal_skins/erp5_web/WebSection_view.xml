@@ -68,7 +68,6 @@
                 <string>right (Layout)</string>
                 <string>center (Description)</string>
                 <string>bottom (Subsections)</string>
-                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -102,15 +101,8 @@
                         <string>my_aggregate_title_list</string>
                         <string>my_int_index</string>
                         <string>my_visible</string>
+                        <string>my_default_page_displayed</string>
                         <string>my_authorization_forced</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>not_assigned</string> </key>
-                    <value>
-                      <list>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -123,6 +115,7 @@
                         <string>my_custom_render_method_id</string>
                         <string>my_layout_configuration_form_id</string>
                         <string>my_subject_list</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
