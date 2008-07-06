@@ -102,6 +102,7 @@
                         <string>my_int_index</string>
                         <string>my_version</string>
                         <string>my_language</string>
+                        <string>my_effective_date</string>
                       </list>
                     </value>
                 </item>

@@ -1,4 +1,7 @@
 2008-07-06 yo
+* Add effective date into Web Page.
+
+2008-07-06 yo
 * Use getDocumentValue instead of restrictedTraverse again, as the acquisition problem has been fixed in the Product.
 
 2008-07-01
