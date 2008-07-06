@@ -102,27 +102,24 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     web_site_module = self.portal.getDefaultModule('Web Site')
     website = web_site_module[self.website_id]
-    websection = website.newContent(portal_type = 'Web Section', **kw)
+    websection = website.newContent(portal_type='Web Section', **kw)
     self.websection = websection
     kw = dict(criterion_property_list = 'portal_type',
-              membership_criterion_base_category_list = '',
-              membership_criterion_category_list = '',)
+              membership_criterion_base_category_list='',
+              membership_criterion_category_list='')
     websection.edit(**kw)
-    websection.setCriterion(property = 'portal_type',
-                            identity = ['Web Page'],
-                            max = '', 
-                            min = '')
+    websection.setCriterion(property='portal_type',
+                            identity=['Web Page'],
+                            max='', 
+                            min='')
                             
     get_transaction().commit()
     self.tic()
     return websection
    
 
-  def setupWebSitePages(self,
-                        prefix,
-                        suffix = None, 
-                        version = '0.1', 
-                        language_list = LANGUAGE_LIST):
+  def setupWebSitePages(self, prefix, suffix=None, version='0.1', 
+                        language_list=LANGUAGE_LIST, **kw):
     """
       Setup some Web Pages.
     """
@@ -135,23 +132,23 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     # create sample web pages
     for language in language_list:
       if suffix is not None:
-        reference = '%s-%s' %(prefix, language)
+        reference = '%s-%s' % (prefix, language)
       else:
         reference = prefix
-      webpage = self.web_page_module.newContent(portal_type = 'Web Page', 
-                                                reference = reference,
-                                                version = version,
-                                                language = language)
+      webpage = self.web_page_module.newContent(portal_type='Web Page', 
+                                                reference=reference,
+                                                version=version,
+                                                language=language,
+                                                **kw)
       webpage.publish()
-      webpage.reindexObject()
+      get_transaction().commit()
+      self.tic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
       self.assertEquals(version, webpage.getVersion())
       self.assertEquals('published', webpage.getValidationState())
       webpage_list.append(webpage)
     
-    get_transaction().commit()
-    self.tic()
     return webpage_list
     
 
@@ -710,6 +707,64 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       self.web_page_module.manage_delObjects(list(self.web_page_module.objectIds()))
 
+  def test_12_AcquisitionWrappers(self, quiet=quiet, run=run_all_test):
+    """Test acquisition wrappers of documents.
+    Check if documents obtained by getDefaultDocumentValue, getDocumentValue
+    and getDocumentValueList are wrapped appropriately.
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_12_AcquisitionWrappers'
+      ZopeTestCase._print(message)    
+
+    portal = self.getPortal()
+
+    # Make its own publication section category.
+    publication_section = portal.portal_categories['publication_section']
+    if publication_section._getOb('my_test_category', None) is None:
+      publication_section.newContent(portal_type='Category',
+                                     id='my_test_category',
+                                     title='Test')
+      get_transaction().commit()
+      self.tic()
+
+    website = self.setupWebSite()
+    websection = self.setupWebSection(
+            membership_criterion_base_category_list=('publication_section',),
+            membership_criterion_category=('publication_section/my_test_category',),
+            )
+    
+    # Create at least two documents which belong to the publication section
+    # category.
+    web_page_list = self.setupWebSitePages('test1',
+            language_list=('en',),
+            publication_section_list=('my_test_category',))
+    web_page_list2 = self.setupWebSitePages('test2',
+            language_list=('en',),
+            publication_section_list=('my_test_category',))
+
+    # We need a default document.
+    websection.setAggregateValue(web_page_list[0])
+    get_transaction().commit()
+    self.tic()
+    
+    # Obtain documens in various ways.
+    default_document = websection.getDefaultDocumentValue()
+    self.assertNotEquals(default_document, None)
+
+    document1 = websection.getDocumentValue('test1')
+    self.assertNotEquals(document1, None)
+    document2 = websection.getDocumentValue('test2')
+    self.assertNotEquals(document2, None)
+
+    document_list = websection.getDocumentValueList()
+    self.assertNotEquals(document_list, None)
+    self.assertNotEquals(len(document_list), 0)
+
+    # Check if they have good acquisition wrappers.
+    for doc in (default_document, document1, document2) + tuple(document_list):
+      self.assertEquals(doc.aq_parent, websection)
+      self.assertEquals(doc.aq_parent.aq_parent, website)
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
