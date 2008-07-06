@@ -84,6 +84,11 @@ class WebSection:
             'type'        : 'boolean',
             'default'     : 0,
             'mode'        : 'rw' },
+        {   'id'          : 'available_language',
+            'description' : 'Languages available in the Web Section or Web Site (subset of Localizer languages)',
+            'type'        : 'tokens',
+            'default'     : (),
+            'mode'        : 'w' },
     )
 
     _categories = ('aggregate', )
