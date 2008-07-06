@@ -88,7 +88,13 @@ class WebSection:
             'description' : 'Languages available in the Web Section or Web Site (subset of Localizer languages)',
             'type'        : 'tokens',
             'default'     : (),
-            'mode'        : 'w' },
+            'acquisition_base_category'     : ('parent',),
+            'acquisition_portal_type'       : ('Web Section', 'Web Site'),
+            'acquisition_copy_value'        : 0,
+            'acquisition_mask_value'        : 1,
+            'acquisition_accessor_id'       : 'getAvailableLanguageList',
+            'acquisition_depends'           : None,
+            'mode'        : 'rw' },
     )
 
     _categories = ('aggregate', )
