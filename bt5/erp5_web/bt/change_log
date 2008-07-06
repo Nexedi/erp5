@@ -1,3 +1,6 @@
+2008-07-06 yo
+* Use getDocumentValue instead of restrictedTraverse again, as the acquisition problem has been fixed in the Product.
+
 2008-07-01
 * Fix WebSection_viewInlinePageRenderer. Prevent to get a non document object. Thank you for Thomas Nouret.
 

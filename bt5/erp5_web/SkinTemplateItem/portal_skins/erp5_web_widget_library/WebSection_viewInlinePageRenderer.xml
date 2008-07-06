@@ -74,7 +74,7 @@
 \n
 def getInlinePage(reference, language):\n
  if reference:\n
-   page = context.restrictedTraverse(reference)\n
+   page = context.getDocumentValue(reference)\n
    if page is not None:\n
      return page.asStrippedHTML()\n
  return None\n
@@ -158,6 +158,12 @@ return getInlinePage(reference, language)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_viewInlinePageRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
