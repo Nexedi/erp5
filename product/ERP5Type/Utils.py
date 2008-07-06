@@ -1457,6 +1457,14 @@ def createDefaultAccessors(property_holder, id, prop = None,
     accessor_name = '_baseGet' + UpperCase(id) + 'List'
     if not hasattr(property_holder, accessor_name) or prop.get('override',0):
       property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
+    # Set Getter
+    accessor_name = 'get' + UpperCase(id) + 'Set'
+    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      property_holder.registerAccessor(accessor_name, id, Acquired.SetGetter, accessor_args)
+      property_holder.declareProtected( read_permission, accessor_name )
+    accessor_name = '_baseGet' + UpperCase(id) + 'Set'
+    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      property_holder.registerAccessor(accessor_name, id, Acquired.SetGetter, accessor_args)
     if prop['type'] == 'content':
       #LOG('Value Object Accessor', 0, prop['id'])
       # Base Getter
