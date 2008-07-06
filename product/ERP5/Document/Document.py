@@ -362,12 +362,18 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
       except KeyError:
         pass
 
-    if method is None: method = self._getTypeBasedMethod('getDocumentValue',
-                                      fallback_script_id='WebSection_getDocumentValue')
+    if method is None:
+      method = self._getTypeBasedMethod('getDocumentValue', 
+              fallback_script_id='WebSection_getDocumentValue')
 
     if cache is not None:
-      if cache.get(key, _MARKER) is _MARKER: cache[key] = method
-    return method(name, portal=portal, **kw)
+      if cache.get(key, _MARKER) is _MARKER:
+        cache[key] = method
+
+    document = method(name, portal=portal, **kw)
+    if document is not None:
+      document = document.__of__(self)
+    return document
 
 class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
   """

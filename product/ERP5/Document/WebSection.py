@@ -222,6 +222,8 @@ class WebSection(Domain, PermanentURLMixIn):
 
       result = self._getTypeBasedMethod('getDefaultDocumentValue',
                      fallback_script_id='WebSection_getDefaultDocumentValue')()
+      if result is not None:
+        result = result.__of__(self)
 
       if cache is not None:
         cache[key] = result
@@ -251,6 +253,8 @@ class WebSection(Domain, PermanentURLMixIn):
 
       result = self._getTypeBasedMethod('getDocumentValueList',
                      fallback_script_id='WebSection_getDocumentValueList')(**kw)
+      if result is not None:
+        result = [doc.__of__(self) for doc in result]
 
       if cache is not None:
         cache[key] = result
