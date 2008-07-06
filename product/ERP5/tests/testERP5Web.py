@@ -37,6 +37,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 
@@ -765,6 +766,65 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     for doc in (default_document, document1, document2) + tuple(document_list):
       self.assertEquals(doc.aq_parent, websection)
       self.assertEquals(doc.aq_parent.aq_parent, website)
+
+  def test_13_WebSiteSkinSelection(self, quiet=quiet, run=run_all_test):
+    """Test skin selection through a Web Site.
+    Check if a Web Site can change a skin selection based on a property.
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_13_WebSiteSkinSelection'
+      ZopeTestCase._print(message)    
+
+    portal = self.getPortal()
+    ps = portal.portal_skins
+    website = self.setupWebSite()
+
+    # First, make sure that we use the default skin selection.
+    portal.changeSkin(ps.getDefaultSkin())
+    get_transaction().commit()
+    self.tic()
+
+    # Make some skin stuff.
+    if ps._getOb('test_erp5_web', None) is not None:
+      ps.manage_delObjects(['test_erp5_web'])
+
+    addFolder = ps.manage_addProduct['OFSP'].manage_addFolder
+    addFolder(id='test_erp5_web')
+
+    if ps.getSkinPath('Test ERP5 Web') is not None:
+      ps.manage_skinLayers(del_skin=1, chosen=('Test ERP5 Web',))
+      
+    path = ps.getSkinPath(ps.getDefaultSkin())
+    self.assertNotEquals(path, None)
+    ps.manage_skinLayers(add_skin=1, skinname='Test ERP5 Web',
+            skinpath=['test_erp5_web'] + path.split(','))
+
+    # Now we need skins which don't conflict with any other.
+    createZODBPythonScript(ps.erp5_web,
+            'WebSite_test_13_WebSiteSkinSelection',
+            '', 'return "foo"')
+    createZODBPythonScript(ps.test_erp5_web,
+            'WebSite_test_13_WebSiteSkinSelection',
+            '', 'return "bar"')
+
+    get_transaction().commit()
+    self.tic()
+
+    path = website.absolute_url_path() + '/WebSite_test_13_WebSiteSkinSelection'
+    request = portal.REQUEST
+
+    # With the default skin.
+    request['PARENTS'] = [self.app]
+    self.assertEquals(request.traverse(path)(), 'foo')
+
+    # With the test skin.
+    website.setSkinSelectionName('Test ERP5 Web')
+    get_transaction().commit()
+    self.tic()
+
+    request['PARENTS'] = [self.app]
+    self.assertEquals(request.traverse(path)(), 'bar')
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
