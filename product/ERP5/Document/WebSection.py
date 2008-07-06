@@ -227,6 +227,9 @@ class WebSection(Domain, PermanentURLMixIn):
       if cache is not None:
         cache[key] = result
 
+      if result is not None:
+        result = result.__of__(self)
+
       return result
 
     security.declareProtected(Permissions.View, 'getDocumentValueList')
@@ -255,6 +258,9 @@ class WebSection(Domain, PermanentURLMixIn):
 
       if cache is not None:
         cache[key] = result
+
+      if result is not None:
+        result = [doc.__of__(self) for doc in result]
 
       return result
 
