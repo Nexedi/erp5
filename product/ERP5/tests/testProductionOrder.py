@@ -521,7 +521,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     organisation = sequence.get('organisation')
     supply_chain = sequence.get('supply_chain')
     order.edit(
-      title = "Production Order",
       start_date = self.datetime + 10,
       stop_date = self.datetime + 20,
       destination_value=organisation,
@@ -539,7 +538,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     resource = sequence.get('resource')
     transformation = sequence.get('transformation')
     order_line.edit(
-      title="Order Line",
       resource_value=resource,
       specialise_value=transformation,
       quantity=5
@@ -554,7 +552,6 @@ class TestProductionOrderMixin(TestOrderMixin):
     order_line = order.newContent(portal_type=self.order_line_portal_type)
     resource = sequence.get('resource')
     order_line.edit(
-      title="Order Line",
       resource_value=resource,
       quantity=5
     )
