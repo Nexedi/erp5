@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns list of resources\' inventories used in consumption for production\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Returns list of resources\' inventories used in consumption for production\n
 \n
 Args:\n
  - omit_order_resources [default: 1]\n
@@ -95,8 +97,11 @@ kw[\'group_by_node\'] = 1\n
 kw[\'group_by_variation\'] = 1\n
 kw[\'group_by_resource\'] = 1\n
 kwargs.update(**kw)\n
-return simulation_tool.getFutureInventoryList(*args,**kwargs)\n
-</string> </value>
+# XXX: below filtering to be replaced by HAVING expression\n
+return [q for q in simulation_tool.getFutureInventoryList(*args,**kwargs) if q.inventory < 0.0]\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
