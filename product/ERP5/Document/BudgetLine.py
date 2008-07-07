@@ -68,4 +68,4 @@ class BudgetLine(Predicate, XMLMatrix, Variated):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)

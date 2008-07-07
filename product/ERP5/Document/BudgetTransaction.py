@@ -59,7 +59,8 @@ class BudgetTransaction(DeliveryLine):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
+
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'isAccountable')
