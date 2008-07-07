@@ -147,7 +147,7 @@ class DocumentationHelper(Implicit):
         url, method = self.uri.split('#')
         documented_object = self.getPortalObject().unrestrictedTraverse(url, None)
         if '/' not in method:
-	  if documented_object is not None:	
+          if documented_object is not None:
             if documented_object.getId() in self.getPortalObject().portal_types.objectIds():
               temp_object = self.getTempInstance(documented_object.getId())
               documented_object = getattr(temp_object, method, None)
