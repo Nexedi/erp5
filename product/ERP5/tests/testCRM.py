@@ -485,16 +485,27 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     self.assertEqual(document.getSourceValue().getTitle(), 'Sender')
     self.assertEqual(document.getDestinationValue().getTitle(), 'Me')
 
+  def test_encoding(self):
+    document = self._ingestMail(filename='encoded')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(document.getContentInformation().get('To'),
+                     'Me <me@erp5.org>')
+    self.assertEqual(document.getSourceValue().getTitle(), 'Sender')
+    self.assertEqual(document.getDestinationValue().getTitle(), 'Me')
+    self.assertEqual(document.getContentInformation().get('Subject'),
+                     'Test éncödèd email')
+    self.assertEqual(document.getTitle(), 'Test éncödèd email')
+    self.assertEqual(document.getTextContent(), 'cöntént\n')
+
 
 ## TODO:
 ##
 ##  def test_attachements(self):
 ##    event = self._ingestMail('with_attachements')
 ##
-##  def test_encoding(self):
-##    event = self._ingestMail('utf8')
-##
-
 
 class TestCRMMailSend(ERP5TypeTestCase):
   """Test Mail Sending for CRM

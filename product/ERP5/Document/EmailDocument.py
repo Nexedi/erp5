@@ -125,9 +125,11 @@ class EmailDocument(File, TextDocument):
     for (name, value) in self._getMessage().items():
       for text, encoding in decode_header(value):
         if encoding is not None:
-          result[name] = result.get(name, '') + text.decode(encoding).encode('utf-8')
+          text = text.decode(encoding).encode('utf-8')
+        if name in result:
+          result[name] = '%s %s' % (result[name], text)
         else:
-          result[name] = result.get(name, '') + text
+          result[name] = text
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentInformationList')
