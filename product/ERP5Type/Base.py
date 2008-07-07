@@ -1096,7 +1096,22 @@ class Base( CopyContainer,
           econtext = createExpressionContext(self)
           return expression(econtext)
         else:
-          return value
+          if is_list_type:
+            # We must provide the first element of the acquired list
+            if value in null_value:
+              result = None
+            else:
+              if isinstance(value, (list, tuple)):
+                if len(value) is 0:
+                  result = None
+                else:
+                  result = value[0]
+              else:
+                result = value
+          else:
+            # Value is a simple type
+            result = value
+          return result
 
       #Look at acquisition object before call acquisition
       if acquisition_object_id is not None:
@@ -2523,7 +2538,7 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.View, '__call__')
 
   security.declareProtected(Permissions.View, 'list')
-  def list(self,reset=0):
+  def list(self, reset=0):
     """
     Returns the default list even if folder_contents is overridden.
     """
