@@ -65,15 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = context\n
+            <value> <string>from Products.ERP5Type.Message import Message\n
+packing_list = context\n
  \n
 packing_list_state = packing_list.getSimulationState()\n
 if packing_list_state == "draft":\n
   packing_list.portal_workflow.doActionFor(\n
                                   packing_list,\n
                                   \'confirm_action\',\n
-                                  wf_id=\'production_packing_list_workflow\',\n
-                                  comment="Initialized by Delivery Builder")\n
+                                  comment=Message(\'erp5_ui\', \'Initialized by Delivery Builder\'))\n
 </string> </value>
         </item>
         <item>
@@ -116,6 +116,8 @@ if packing_list_state == "draft":\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
