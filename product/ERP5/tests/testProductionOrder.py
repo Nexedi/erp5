@@ -103,10 +103,10 @@ class TestProductionOrderMixin(TestOrderMixin):
                                                portal_type='Category',
                                                id=category_id)
 
-  def stepCreateBrandCompositionVariatedComponent1(self,sequence=None, sequence_list=None, \
+  def stepCreateColourSizeVariatedComponent1(self,sequence=None, sequence_list=None, \
                                     **kw):
     """
-      Create a resource with no variation
+      Create a resource with colour and size variation
     """
     portal = self.getPortal()
     resource_module = portal.getDefaultModule(self.component_portal_type)
@@ -306,6 +306,9 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepSetTransformationTransformedResourceQuantityMatrix(self, sequence=None, sequence_list=None,
                                **kw):
+    """
+      Fills variation based quantity matrix
+    """
 
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
     colour_count = size_count = 0
@@ -327,6 +330,9 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepSetTransformationTransformedResourceVariationMatrix(self, sequence=None, sequence_list=None,
                                **kw):
+    """
+      Fills variation matrix
+    """
 
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
     colour_count = size_count = 0
@@ -348,6 +354,9 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepSetOrderLineQuantityMatrix(self, sequence=None, sequence_list=None,
                                **kw):
+    """
+      Fills variation based quantity matrix
+    """
     order_line = sequence.get('order_line')
     colour_count = size_count = 0
 
@@ -377,6 +386,9 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepSetTransformationTransformedResourceVariation(self, sequence=None, sequence_list=None,
                                **kw):
+    """
+      Fills categories of variation
+    """
 
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
 
@@ -387,6 +399,9 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepSetTransformationVariation(self, sequence=None, sequence_list=None,
                                **kw):
+    """
+      Fills categories of variation
+    """
 
     transformation = sequence.get('transformation')
 
@@ -513,7 +528,7 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepCreateOrder(self, sequence=None, sequence_list=None, **kw):
     """
-      Create a empty order
+      Create a filled order
     """
     portal = self.getPortal()
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
@@ -531,7 +546,7 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def stepCreateOrderLine(self, sequence=None, sequence_list=None, **kw):
     """
-      Create a empty order line
+      Create a filled order line
     """
     order = sequence.get('order')
     order_line = order.newContent(portal_type=self.order_line_portal_type)
@@ -1696,7 +1711,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       CreateSourcingSC \
                       Tic \
                       CreateColourSizeVariatedResource \
-                      CreateBrandCompositionVariatedComponent1 \
+                      CreateColourSizeVariatedComponent1 \
                       Tic \
                       CreateEmptyTransformation \
                       FillTransformationWithResource \
