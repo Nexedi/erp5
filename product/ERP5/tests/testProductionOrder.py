@@ -77,7 +77,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     system_preference.edit(
       preferred_product_individual_variation_base_category = ('variation',),
       preferred_component_individual_variation_base_category = ('variation',),
-      preferred_product_variation_base_category = ('colour', 'size'),
+      preferred_product_variation_base_category = ('industrial_phase', 'colour', 'size'),
       preferred_component_variation_base_category = ('colour', 'size'),
       priority = 1,
     )
