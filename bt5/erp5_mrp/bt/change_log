@@ -1,3 +1,6 @@
+2008-07-07 luke
+* added material and service consumption views
+
 2008-07-01 luke
 * added support for automatic numeration using int_index
 * restricted specialise (transformation) on order line to be chosen only for those defined by resource, made them automatic set in some cases
