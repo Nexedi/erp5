@@ -1,3 +1,6 @@
+2008-07-07 yusei
+* Added an action to ticket portal types which clone ticket and related events.
+
 2008-07-02 yusei
 * when ingest email message, find sender from person document first and organisation later.
 
