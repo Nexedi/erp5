@@ -571,12 +571,14 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                       '11' : dict(language = 'ja' , version = "3" , reference = "E"),
                       '12' : dict(language = 'pt' , version = "3" , reference = "F"),
                       '13' : dict(language = 'en' , version = "3" , reference = "D"),
+                      '14' : dict(language = 'ja' , version = "2" , reference = "E"),
+                      '15' : dict(language = 'pt' , version = "2" , reference = "F"),
                     }
     sequence_one = property_dict.keys()
-    sequence_two = ['01', '13', '12', '09', '06', '04', '11', '02', '05', '03',
-                    '07', '10', '08' ]
-    sequence_three = ['05', '12', '13', '06', '09', '10', '07', '03', '01', '02',
-                    '11', '04', '08' ]
+    sequence_two = ['01', '13', '12', '09', '06', '15' , '04', '11', '02', '05', '03',
+                    '07', '10', '08', '14' ]
+    sequence_three = ['05', '12', '13', '14',  '06', '09', '10', '07', '03', '01', '02',
+                    '11', '04', '08' , '15']
     
     sequence_count = 0
     for sequence in [ sequence_one , sequence_two , sequence_three ]:
@@ -608,23 +610,43 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       get_transaction().commit()
       self.tic()
       
+      # Test for limit parameter
       self.assertEqual(2, len(websection.getDocumentValueList(limit=2)))
-      #Testing default behaviour
+
+      # Testing for language parameter
       self.assertEqual(4, len(websection.getDocumentValueList()))
       self.assertEqual(['en' , 'en', 'en', 'en'], 
                        [ w.getLanguage()  for w in websection.getDocumentValueList()])
   
       pt_document_value_list = websection.getDocumentValueList(language='pt')
-      self.assertEqual(4, len(websection.getDocumentValueList()))
+      self.assertEqual(4, len(pt_document_value_list))
       self.assertEqual(['pt' , 'pt', 'pt', 'pt'],
                            [ w.getObject().getLanguage() for w in pt_document_value_list])
   
       ja_document_value_list = websection.getDocumentValueList(language='ja')
-      self.assertEqual(4, len(websection.getDocumentValueList()))
+      self.assertEqual(4, len(ja_document_value_list))
       self.assertEqual(['ja' , 'ja', 'ja', 'ja'],
                            [ w.getLanguage() for w in ja_document_value_list])
-  
-      #Testing default behaviour
+
+      # Testing for all_versions parameter
+      en_document_value_list = websection.getDocumentValueList(all_versions=1)
+      self.assertEqual(5, len(en_document_value_list))
+      self.assertEqual(['en' , 'en', 'en', 'en', 'en'],
+                       [ w.getLanguage()  for w in en_document_value_list])
+
+      pt_document_value_list = websection.getDocumentValueList(language='pt',
+                                                               all_versions=1)
+      self.assertEqual(5, len(pt_document_value_list))
+      self.assertEqual(['pt' , 'pt', 'pt', 'pt', 'pt'],
+                           [ w.getObject().getLanguage() for w in pt_document_value_list])
+
+      ja_document_value_list = websection.getDocumentValueList(language='ja', 
+                                                               all_versions=1)
+      self.assertEqual(5, len(ja_document_value_list))
+      self.assertEqual(['ja' , 'ja', 'ja', 'ja', 'ja'],
+                           [ w.getLanguage() for w in ja_document_value_list])
+
+      # Tests for all_languages parameter
       en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1)
       self.assertEqual(6, len(en_document_value_list))
       self.assertEqual(4, len([ w.getLanguage() for w in en_document_value_list \
@@ -666,6 +688,30 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertEqual(['3'], [ w.getVersion() for w in ja_document_value_list \
                             if w.getLanguage() == 'en'])
 
+      # Tests for all_languages and all_versions 
+      en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
+                                                                              all_versions=1)
+
+      pt_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
+                                                                              all_versions=1,
+                                                                              language='pt')
+
+      ja_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
+                                                                              all_versions=1,
+                                                                              language='ja')
+
+      for document_value_list in [ en_document_value_list, pt_document_value_list , 
+                                   ja_document_value_list]:
+
+        self.assertEqual(15, len(document_value_list))
+        self.assertEqual(5, len([ w.getLanguage() for w in document_value_list \
+                                if w.getLanguage() == 'en']))
+        self.assertEqual(5, len([ w.getLanguage() for w in en_document_value_list \
+                                if w.getLanguage() == 'pt']))
+        self.assertEqual(5, len([ w.getLanguage() for w in en_document_value_list \
+                                if w.getLanguage() == 'ja']))
+
+      # Tests for sort_on parameter
       self.assertEqual(['A' , 'B', 'C', 'D'],
                        [ w.getReference()  for w in \
                          websection.getDocumentValueList(sort_on=[('reference', 'ASC')])])
@@ -703,8 +749,6 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                        [ w.getTitle()  for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('title', 'DESC')])])
-
-
 
       self.web_page_module.manage_delObjects(list(self.web_page_module.objectIds()))
 
