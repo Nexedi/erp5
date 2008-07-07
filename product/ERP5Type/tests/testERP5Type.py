@@ -1210,6 +1210,42 @@ class TestPropertySheet:
       self.assertEquals('The organisation title',
                         person.getDefaultOrganisationTitle())
     
+    DEFAULT_LANGUAGE_PROP = '''
+          { 'id':         'available_language',
+            'type':       'tokens',
+            'default'     : (),
+            'acquired_property_id': ('subject', ),
+            'acquisition_base_category': ( 'parent', ),
+            'acquisition_portal_type'  : ( 'Person', ),
+            'acquisition_copy_value'   : 0,
+            'acquisition_mask_value'   : 1,
+            'acquisition_accessor_id'  : 'getAvailableLanguageList',
+            'acquisition_depends'      : None,
+            'mode':       'rw', }'''
+    
+    def test_19c_AcquiredTokensAccessor(self,quiet=quiet, run=run_all_test):
+      """Tests an acquired tokens accessor.
+         We check in particular that getDefault[Property] and 
+         setDefault[Property] are working correctly
+      """
+      if not run: return
+      self._addProperty('Person', self.DEFAULT_LANGUAGE_PROP)
+      self._addProperty('Email', self.DEFAULT_LANGUAGE_PROP)
+
+      # Category setters (list, set, default)
+      person = self.getPersonModule().newContent(id='1', portal_type='Person')
+      email = person.newContent(portal_type='Email')
+
+      self.assertEquals(0, len(email.getAvailableLanguageList()))
+      email.setAvailableLanguageSet(['fr', 'en', 'ja'])
+      self.assertEquals(email.getAvailableLanguageList(), ('fr', 'en', 'ja'))
+      self.assertEquals(email.getAvailableLanguage(), 'fr')
+      self.assertEquals(email.getDefaultAvailableLanguage(), 'fr')
+      email.setDefaultAvailableLanguage('ja')
+      self.assertEquals(email.getAvailableLanguage(), 'ja')
+      self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
+      self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
+
     def test_20_AsContext(self,quiet=quiet, run=run_all_test):
       """asContext method return a temporary copy of an object.
       Any modification made to the copy does not change the original object.
