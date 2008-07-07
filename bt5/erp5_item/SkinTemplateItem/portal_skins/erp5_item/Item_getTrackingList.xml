@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
 catalog = context.portal_catalog.getResultValue\n
-if current == 1:\n
+if current:\n
   method = context.portal_simulation.getCurrentTrackingList\n
 else:\n
   method = context.portal_simulation.getTrackingList\n
@@ -84,16 +84,18 @@ kw[\'item.simulation_state\'] = simulation_state\n
 for res in method(aggregate_uid=uid, **kw):\n
   history = newTempBase(context, str(len(history_list)))\n
   explanation = catalog(uid=res.delivery_uid).getExplanationValue()\n
-\n
+  node_value = catalog(uid=res.node_uid)\n
+  section_value = catalog(uid=res.section_uid)\n
+  resource_value = catalog(uid=res.resource_uid)\n
   history.edit(\n
       #uid = catalog(uid=res.uid).getTitle(),\n
       date=res.date,\n
-      node_uid=catalog(uid=res.node_uid).getTitle(),\n
-      section_uid=catalog(uid=res.section_uid).getTitle(),\n
-      resource_uid=catalog(uid=res.resource_uid).getTitle(),\n
+      node_title=node_value is not None and node_value.getTitle() or None,\n
+      section_title=section_value is not None and section_value.getTitle() or None,\n
+      resource_title=resource_value is not None and resource_value.getTitle() or None,\n
       explanation=explanation.getTitle(),\n
       url=explanation.absolute_url(),\n
-      simulation_state = explanation.getTranslatedSimulationState(),\n
+      simulation_state=explanation.getTranslatedSimulationState(),\n
   )\n
   history_list.append(history)\n
   \n
@@ -120,7 +122,7 @@ return history_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>current=1,*args, **kw</string> </value>
+            <value> <string>current=1, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -166,6 +168,10 @@ return history_list\n
                             <string>len</string>
                             <string>history</string>
                             <string>explanation</string>
+                            <string>node_value</string>
+                            <string>section_value</string>
+                            <string>resource_value</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
