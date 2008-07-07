@@ -65,10 +65,48 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.edit(\n
-  variation_base_category_list=[\'group\']\n
-)\n
-# variation_base_category_list=[\'financial_section\', \'function\']\n
+            <value> <string>variation_base_category_list = [\'resource\']\n
+\n
+if context.isMemberOf(\'budget_cell_variation/budget_variation/node_from_node_category\'):\n
+  variation_base_category_list.append(\'destination\') # XXX will it be enough ? can we have conflicts ?\n
+\n
+if context.isMemberOf(\'budget_cell_variation/budget_variation/section_category_group\'):\n
+  variation_base_category_list.append(\'group\')\n
+\n
+if context.isMemberOf(\'budget_cell_variation/budget_variation/mirror_section_category_region\'):\n
+  variation_base_category_list.append(\'region\')\n
+\n
+if context.isMemberOf(\'budget_cell_variation/budget_variation/section_category_region\'):\n
+  variation_base_category_list.append(\'region\')\n
+\n
+if context.isMemberOf(\'budget_cell_variation/budget_variation/node_category_budget_section\'):\n
+  variation_base_category_list.append(\'budget_section\')\n
+\n
+if context.isMemberOf(\'budget_cell_variation/budget_variation/node_category_financial_section\'):\n
+  variation_base_category_list.append(\'financial_section\')\n
+\n
+\n
+\n
+if context.isMemberOf(\'budget_line_variation/budget_variation/node_from_node_category\'):\n
+  variation_base_category_list.append(\'destination\') # XXX will it be enough ? can we have conflicts ?\n
+\n
+if context.isMemberOf(\'budget_line_variation/budget_variation/section_category_group\'):\n
+  variation_base_category_list.append(\'group\')\n
+\n
+if context.isMemberOf(\'budget_line_variation/budget_variation/mirror_section_category_region\'):\n
+  variation_base_category_list.append(\'region\')\n
+\n
+if context.isMemberOf(\'budget_line_variation/budget_variation/section_category_region\'):\n
+  variation_base_category_list.append(\'region\')\n
+\n
+if context.isMemberOf(\'budget_line_variation/budget_variation/node_category_budget_section\'):\n
+  variation_base_category_list.append(\'budget_section\')\n
+\n
+if context.isMemberOf(\'budget_line_variation/budget_variation/node_category_financial_section\'):\n
+  variation_base_category_list.append(\'financial_section\')\n
+\n
+\n
+context.setVariationBaseCategoryList(variation_base_category_list)\n
 </string> </value>
         </item>
         <item>
@@ -119,6 +157,7 @@
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>variation_base_category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>

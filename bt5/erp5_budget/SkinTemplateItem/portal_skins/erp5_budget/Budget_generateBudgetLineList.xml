@@ -65,55 +65,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>traverse = context.getPortalObject().portal_categories.restrictedTraverse\n
+            <value> <string>from Products.CMFCore.utils import getToolByName\n
 \n
-cell_range = []\n
-base_category_list = context.getVariationBaseCategoryList()\n
+ctool = getToolByName(context, \'portal_categories\')\n
+_ = context.Base_translateString\n
 \n
+if context.isMemberOf(\n
+      \'budget_line_variation/budget_variation/node_category_financial_section\'):\n
+  for cat in ctool.financial_section.getCategoryChildValueList(include_if_child=0):\n
+    context.newContent(portal_type=\'Budget Line\',\n
+                       title=cat.getTitle(),\n
+                       financial_section_value=cat)\n
 \n
-def getRangeBaseCategoryFromBudgetLineVariation(budget_line):\n
-  # Returns the base category to use for cell (XXX ?) if we use nodes member of\n
-  # the budget line variation category\n
-  budget_line_variation = context.getBudgetLineVariation()\n
-  if budget_line_variation == \'budget_variation/node_category_budget_section\':\n
-    return \'budget_section\'\n
-  if budget_line_variation == \'budget_variation/node_category_financial_section\':\n
-    return \'financial_section\'\n
-  else:\n
-    raise ValueError(\'Unknown budget line variation: %s\' %\n
-                           budget_line_variation)\n
+if context.isMemberOf(\n
+      \'budget_line_variation/budget_variation/node_category_budget_section\'):\n
+  for cat in ctool.budget_section.getCategoryChildValueList(include_if_child=0):\n
+    context.newContent(portal_type=\'Budget Line\',\n
+                       title=cat.getTitle(),\n
+                       budget_section_value=cat)\n
 \n
-def getTitle(obj):\n
-  if obj.getPortalType() == \'Account\':\n
-    return obj.Account_getFormattedTitle()\n
-  return obj.getTranslatedTitle()\n
-\n
-for base_category in base_category_list:\n
-  url_list = context.getVariationCategoryList(base_category_list=(base_category,))\n
-  if base_category == \'resource\':\n
-    # we usually ignore resource\n
-    continue\n
-  if base_category == \'destination\':\n
-    # this means we use nodes from category defined in budget line variation\n
-    budget_line_category = getRangeBaseCategoryFromBudgetLineVariation(context)\n
-    account_url_list = []\n
-    for category in context.getVariationCategoryList(\n
-                              base_category_list=(budget_line_category,)):\n
-      # XXX is it always account portal type ?\n
-      for account in traverse(category).getRelatedValueList(\n
-                                            id=budget_line_category,\n
-                                            portal_type=\'Account\',\n
-                                            checked_permission=\'View\'):\n
-        account_url_list.append(\'destination/%s\' % account.getRelativeUrl())\n
-    url_list = account_url_list\n
-    # TODO: this can be organisations from current group or something else\n
-\n
-  if matrixbox:\n
-    cell_range.append([(url, getTitle(traverse(url))) for url in url_list])\n
-  else:\n
-    cell_range.append(url_list)\n
-\n
-return [x for x in cell_range if x != []]\n
+return context.Base_redirect(form_id,\n
+    keep_items=dict(portal_status_message=_(\'Budget Lines generated\')))\n
 </string> </value>
         </item>
         <item>
@@ -129,24 +101,8 @@ return [x for x in cell_range if x != []]\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -172,26 +128,16 @@ return [x for x in cell_range if x != []]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>matrixbox</string>
-                            <string>kw</string>
+                            <string>form_id</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
+<string>context</string>
+                            <string>ctool</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>traverse</string>
-                            <string>cell_range</string>
-                            <string>base_category_list</string>
-                            <string>getRangeBaseCategoryFromBudgetLineVariation</string>
-                            <string>getTitle</string>
+                            <string>_</string>
                             <string>_getiter_</string>
-                            <string>base_category</string>
-                            <string>url_list</string>
-                            <string>budget_line_category</string>
-                            <string>account_url_list</string>
-                            <string>category</string>
-                            <string>account</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>url</string>
-                            <string>x</string>
+                            <string>cat</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -204,13 +150,13 @@ return [x for x in cell_range if x != []]\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>0</int>
+                <string>view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BudgetLine_asCellRange</string> </value>
+            <value> <string>Budget_generateBudgetLineList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

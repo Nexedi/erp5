@@ -14,15 +14,14 @@
             <value>
               <list>
                 <string>title</string>
-                <string>default</string>
-                <string>precision</string>
-                <string>editable</string>
+                <string>description</string>
+                <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_total_initial_budget</string> </value>
+            <value> <string>my_budget_line_variation</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,10 +58,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key>                 <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -73,9 +70,9 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>precision</string> </key>
+                    <key>                 <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -83,7 +80,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -94,24 +91,22 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>Variations used for lines of this budget</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_money_quantity</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -119,7 +114,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Total Initial Budget</string> </value>
+                    <value> <string>Budget Line Variation</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -138,23 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: sum([cell.getQuantity() for cell in context.getCellValueList()])</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getQuantityPrecisionFromResource(here.getResource())</string> </value>
+            <value> <string>python: getattr(here.portal_categories.budget_variation, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\', base=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

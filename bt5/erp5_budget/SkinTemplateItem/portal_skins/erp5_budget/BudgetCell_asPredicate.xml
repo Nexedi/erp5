@@ -65,40 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.generatePredicate(multimembership_criterion_base_category_list = (\'resource\',),\n
-                                 criterion_property_list = (\'start_date\', \'stop_date\'))\n
+            <value> <string># XXX strict membership is missing ?\n
+# ideally strict membership should be an option for each category, but this API\n
+# does not exist in predicates.\n
 \n
-\n
-\n
-context = context.asContext(\n
-             multimembership_criterion_base_category_list = (\'resource\',),\n
-             _range_criterion = {\'start_date\': (context.getStartDate(),\n
-                                               context.getStopDate())\n
-                               })\n
-return context\n
-\n
-\n
-\n
-return context.generatePredicate(criterion_property_list=(\'start_date\', \'stop_date\'))\n
-\n
-return context.generatePredicate(_range_criterion = {\'start_date\': (context.getStartDate(),\n
-                                               context.getStopDate())\n
-                               })\n
-\n
-return context.generatePredicate(criterion_property_list=(\'start_date\',))\n
-\n
-return context.generatePredicate(multimembership_criterion_base_category_list = (\'resource\',),\n
-                                                      criterion_property_list = (\'start_date\',))\n
-\n
-\n
-\n
-\n
-context = context.asContext(\n
-             criterion_property_list=[\'start_date\'], \n
-             range_criterion = {\'start_date\': (context.getStartDate(),\n
-                                               context.getStopDate())\n
-                               })\n
-return context\n
+return context.generatePredicate(\n
+      multimembership_criterion_base_category_list = (\'resource\',),\n
+      criterion_property_list = (\'start_date\', \'stop_date\'))\n
 </string> </value>
         </item>
         <item>

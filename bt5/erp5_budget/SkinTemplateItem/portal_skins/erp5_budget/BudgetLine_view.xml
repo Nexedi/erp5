@@ -108,7 +108,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_resource_title</string>
+                        <string>my_financial_section</string>
+                        <string>my_budget_section</string>
+                        <string>my_group</string>
                         <string>your_total_initial_budget</string>
                       </list>
                     </value>
@@ -117,7 +119,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_group_title_list</string>
+                        <string>my_group_list</string>
+                        <string>my_region_list</string>
+                        <string>my_financial_section_list</string>
                       </list>
                     </value>
                 </item>
