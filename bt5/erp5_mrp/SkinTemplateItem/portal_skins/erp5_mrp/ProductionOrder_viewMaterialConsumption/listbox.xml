@@ -105,7 +105,7 @@
                         </tuple>
                         <tuple>
                           <string>quantity_unit</string>
-                          <string>UOM</string>
+                          <string>Unit</string>
                         </tuple>
                         <tuple>
                           <string>getCurrentInventory</string>
