@@ -186,7 +186,8 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     else:
       filename = self.getId()
     if format is None:
-      RESPONSE.setHeader('Content-Disposition','Attachment;Filename=%s' %filename)
+      RESPONSE.setHeader('Content-Disposition',
+                         'attachment; filename="%s"' % filename)
       return File.index_html(self, REQUEST, RESPONSE)
     # Make sure file is converted to base format
     if not self.hasBaseData():
@@ -199,7 +200,8 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     RESPONSE.setHeader('Content-Length', len(result))
     RESPONSE.setHeader('Content-Type', mime)
     RESPONSE.setHeader('Accept-Ranges', 'bytes')
-    RESPONSE.setHeader('Content-Disposition','Attachment;Filename=%s' %converted_filename)
+    RESPONSE.setHeader('Content-Disposition',
+                       'attachment; filename="%s"' % converted_filename)
     return result
 
   # Format conversion implementation
