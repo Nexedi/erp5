@@ -117,6 +117,9 @@
                         <string>my_purchase_quantity_step_list</string>
                         <string>my_sale_matrixbox</string>
                         <string>my_sale_quantity_step_list</string>
+                        <string>my_max_delay</string>
+                        <string>my_min_delay</string>
+                        <string>my_min_flow</string>
                       </list>
                     </value>
                 </item>

@@ -53,6 +53,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -111,6 +121,9 @@
                         <string>my_sale_supply_line_price_currency</string>
                         <string>my_sale_supply_line_priced_quantity</string>
                         <string>my_sale_supply_line_start_date_range_max</string>
+                        <string>my_sale_supply_line_min_delay</string>
+                        <string>my_sale_supply_line_max_delay</string>
+                        <string>my_sale_supply_line_min_flow</string>
                       </list>
                     </value>
                 </item>
@@ -153,7 +166,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Price</string> </value>
+            <value> <string>Sale</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
