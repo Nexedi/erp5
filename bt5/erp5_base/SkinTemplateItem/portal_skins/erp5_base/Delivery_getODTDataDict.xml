@@ -1,0 +1,381 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>T_ = context.Base_translateString\n
+request = context.REQUEST\n
+\n
+def getFieldAsString(field):\n
+  field = field or \'\'\n
+  text = field.replace(\'\\r\', \'\')\n
+  text_list = text.split(\'\\n\')\n
+  text_list = [x for x in text_list if x]\n
+  return \', \'.join(text_list)\n
+\n
+def getProductAndLineDesc(prod_desc, line_desc):\n
+  if prod_desc:\n
+    if line_desc:\n
+      return \' - \'.join([getFieldAsString(prod_desc), getFieldAsString(line_desc)])\n
+    return getFieldAsString(prod_desc)\n
+  return getFieldAsString(line_desc)\n
+\n
+def getOneLineAddress(text, region):\n
+  text_list = [getFieldAsString(text)]\n
+  if region:\n
+    text_list.append(region)\n
+  return \', \'.join(text_list)\n
+\n
+def getPhoneAndFax(phone, fax):\n
+  s = \'\'\n
+  if phone:\n
+    s += \'%s: %s\' % (T_(\'tel.\'), phone)\n
+  if fax:\n
+    if s: s += \', \'\n
+    s += \'%s: %s\' % (T_(\'fax\'), fax)\n
+  return s\n
+\n
+def getEmail(email):\n
+  s = \'\'\n
+  if email:\n
+    s += \'%s: %s\' % (T_(\'email\'), email)\n
+  return s\n
+\n
+def getVatId(vat_id):\n
+  s = \'\'\n
+  if vat_id:\n
+    s += \'%s: %s\' % (T_(\'VAT ID\'), vat_id)\n
+  return s\n
+\n
+preferred_date_order = context.getPortalObject().portal_preferences.getPreferredDateOrder() or \'ymd\'\n
+separator = \'/\'\n
+def getOrderedDate(date):\n
+  if date is None:\n
+    return \'\'\n
+  pattern = separator.join([\'%%%s\' % s for s in list(preferred_date_order)])\n
+  pattern = pattern.replace(\'y\', \'Y\')\n
+  return date.strftime(pattern)\n
+\n
+def getPaymentConditionText(order):\n
+  if order.getPaymentConditionPaymentEndOfMonth():\n
+    return T_("End of Month")\n
+  days = order.getPaymentConditionPaymentTerm()\n
+  if days:\n
+    return \'%s %s\' % (days, T_(\'Days\'))\n
+  return \'\'\n
+\n
+line_list = []\n
+total_price = 0.0\n
+total_vat = 0.0\n
+\n
+def unicodeDict(d):\n
+  for k, v in d.items():\n
+    if isinstance(v, str):\n
+      d.update({k:unicode(v, \'utf8\')})\n
+  return d\n
+\n
+\n
+for line in getSubLineList(context):\n
+  prod_desc = line.getResource() is not None and \\\n
+           line.getResourceValue().getDescription() or line.getResourceTitle()\n
+  desc = getProductAndLineDesc(prod_desc, line.getDescription())\n
+  if getattr(line, \'hasLineContent\', None) is not None and line.hasLineContent()\\\n
+  or getattr(line, \'hasCellContent\', None) is not None and line.hasCellContent():\n
+    # summary\n
+    line_dict = {\n
+      \'style_name\': \'Item_20_Table_20_Title\',\n
+      \'left_style_name\': \'Item_20_Table_20_Title_20_Left\',\n
+      \'right_style_name\': \'Item_20_Table_20_Title_20_Right\',\n
+      \'index\': line.getReference() or line.getIntIndex(),\n
+      \'source_reference\': getSourceReference(line),\n
+      \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
+      \'description\': desc,\n
+      \'total_quantity\': \'\',\n
+      \'quantity_unit\': \'\',\n
+      \'stop_date\': \'\',\n
+      \'base_price\': \'\',\n
+      \'total_price\': \'\',\n
+    }\n
+  else:\n
+    if line.getPortalType().endswith(\'Cell\'):\n
+      display_id = \'translated_title\'\n
+      if request.get(\'international_form\'):\n
+        display_id = \'title\'\n
+      desc = \', \'.join([x[0] for x in\n
+                        line.getVariationCategoryItemList(display_id=display_id)])\n
+    line_dict = {\n
+      \'style_name\': \'Table_20_Contents\',\n
+      \'left_style_name\': \'Table_20_Contents_20_Left\',\n
+      \'right_style_name\': \'Table_20_Contents_20_Right\',\n
+      \'index\': line.getReference() or line.getIntIndex(),\n
+      \'source_reference\': getSourceReference(line),\n
+      \'reference\': line.getResource() is not None and line.getResourceValue().getReference() or \'\',\n
+      \'description\': desc,\n
+      \'total_quantity\': line.getTotalQuantity() or \'\',\n
+      \'quantity_unit\': line.getQuantityUnitTitle() or (line.getResource() and line.getResourceValue().getQuantityUnitTitle()) or \'\',\n
+      \'stop_date\': getOrderedDate(line.getStopDate()) or \'\',\n
+      \'base_price\': line.getPrice() or \'\',\n
+      \'total_price\': line.getTotalPrice() or \'\',\n
+    }\n
+    total_price += line.getTotalPrice() or 0.0\n
+  line_list.append(unicodeDict(line_dict.copy()))\n
+inch_cm_ratio = 2.54 / 100.0\n
+data_dict = {\n
+  \'source_section_title\': context.getSourceSectionTitle() or \'\',\n
+  \'source_section_image_path\': context.getSourceSectionValue() is not None and context.getSourceSectionValue().getDefaultImagePath() or \'\',\n
+  \'source_section_image_width\': context.getSourceSectionValue() is not None\\\n
+  and context.getSourceSectionValue().getDefaultImageWidth()  is not None\\\n
+  and context.getSourceSectionValue().getDefaultImageWidth() * inch_cm_ratio or \'\',\n
+  \'source_section_image_height\': context.getSourceSectionValue() is not None\\\n
+  and context.getSourceSectionValue().getDefaultImageHeight()  is not None\\\n
+  and context.getSourceSectionValue().getDefaultImageHeight() * inch_cm_ratio or \'\',\n
+  \'source_section_address\': getOneLineAddress(\n
+      context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressText() or \'\',\n
+      context.getSourceSection() and context.getSourceSectionValue().getDefaultAddressRegionTitle() or \'\'),\n
+  \'source_section_telfax\': getPhoneAndFax(context.getSourceSection() and context.getSourceSectionValue().getTelephoneText() or \'\',\n
+      context.getSourceSection() and context.getSourceSectionValue().getFaxText() or \'\'),\n
+  \'source_section_email\': getEmail(context.getSourceSection() and context.getSourceSectionValue().getEmailText() or \'\'),\n
+  \'source_section_vatid\': getVatId(context.getSourceSection() and\\\n
+                           getattr(context.getSourceSectionValue(), \'getVatCode\', None)\\\n
+                           is not None and\\\n
+                           context.getSourceSectionValue().getVatCode() or \'\'),\n
+\n
+  \'source_decision_title\': context.getSourceDecisionTitle() or \'\',\n
+  \'source_decision_image_path\': context.getSourceDecisionValue() is not None and context.getSourceDecisionValue().getDefaultImagePath() or \'\',\n
+  \'source_decision_image_width\': context.getSourceDecisionValue() is not None\\\n
+  and context.getSourceDecisionValue().getDefaultImageWidth() is not None\\\n
+  and context.getSourceDecisionValue().getDefaultImageWidth() * inch_cm_ratio or \'\',\n
+  \'source_decision_image_height\': context.getSourceDecisionValue() is not None\\\n
+  and context.getSourceDecisionValue().getDefaultImageHeight() is not None\\\n
+  and context.getSourceDecisionValue().getDefaultImageHeight() * inch_cm_ratio or \'\',\n
+  \'source_decision_address\':getOneLineAddress(\n
+      context.getSourceDecision() and context.getSourceDecisionValue().getDefaultAddressText() or \'\',\n
+      context.getSourceDecision() and context.getSourceDecisionValue().getDefaultAddressRegionTitle() or \'\'),\n
+  \'source_decision_telfax\': getPhoneAndFax(context.getSourceDecision() and context.getSourceDecisionValue().getTelephoneText() or \'\',\n
+      context.getSourceDecision() and context.getSourceDecisionValue().getFaxText() or \'\'),\n
+  \'source_decision_email\': getEmail(context.getSourceDecision() and context.getSourceDecisionValue().getEmailText() or \'\'),\n
+  \'source_decision_vatid\': getVatId(context.getSourceDecision() and\\\n
+                           getattr(context.getSourceDecisionValue(), \'getVatCode\', None)\\\n
+                           is not None and\\\n
+                           context.getSourceDecisionValue().getVatCode() or \'\'),\n
+\n
+  \'destination_title\': context.getDestinationTitle() or \'\',\n
+  \'destination_address\': getOneLineAddress(\n
+      context.getDestination() and context.getDestinationValue().getDefaultAddressText() or \'\',\n
+      context.getDestination() and context.getDestinationValue().getDefaultAddressRegionTitle() or \'\'),\n
+  \'destination_telfax\': getPhoneAndFax(context.getDestination() and context.getDestinationValue().getTelephoneText() or \'\',\n
+      context.getDestination() and context.getDestinationValue().getFaxText() or \'\'),\n
+  \'destination_email\': getEmail(context.getDestination() and context.getDestinationValue().getEmailText() or \'\'),\n
+\n
+  \'destination_section_title\': context.getDestinationSectionTitle() or \'\',\n
+  \'destination_section_image_path\': context.getDestinationSectionValue() is not None and context.getDestinationSectionValue().getDefaultImagePath() or \'\',\n
+  \'destination_section_image_width\': context.getDestinationSectionValue() is not None\\\n
+  and context.getDestinationSectionValue().getDefaultImageWidth() is not None\\\n
+  and context.getDestinationSectionValue().getDefaultImageWidth() * inch_cm_ratio or \'\',\n
+  \'destination_section_image_height\': context.getDestinationSectionValue() is not None\\\n
+  and context.getDestinationSectionValue().getDefaultImageHeight() is not None\\\n
+  and context.getDestinationSectionValue().getDefaultImageHeight() * inch_cm_ratio or \'\',\n
+  \'destination_section_address\': getOneLineAddress(\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressText() or \'\',\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressRegionTitle() or \'\'),\n
+  \'destination_section_telfax\': getPhoneAndFax(\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\',\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'),\n
+  \'destination_section_email\': getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'),\n
+  \'destination_section_vatid\': getVatId(context.getDestinationSection() and\n
+      context.getDestinationSectionValue().getProperty(\'vat_code\') or \'\'),\n
+\n
+  \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
+  \'destination_decision_telfax\': getPhoneAndFax(context.getDestinationDecision() and context.getDestinationDecisionValue().getTelephoneText() or \'\',\n
+      context.getDestinationDecision() and context.getDestinationDecisionValue().getFaxText() or \'\'),\n
+  \'destination_decision_email\': getEmail(context.getDestinationDecision() and context.getDestinationDecisionValue().getEmailText() or \'\'),\n
+\n
+  \'reference\': context.getReference() or \'\',\n
+  \'start_date\': getOrderedDate(context.getStartDate()) or \'\',\n
+  \'stop_date\': getOrderedDate(context.getStopDate()) or \'\',\n
+  \'currency\': context.getPriceCurrencyReference() or \'\',\n
+  \'payment_condition\': getPaymentConditionText(context),\n
+  \'delivery_mode\': context.getDeliveryModeTitle() or \'\',\n
+  \'incoterm\': context.getIncoterm() and context.getIncotermValue().getCodification() or \'\',\n
+\n
+  \'total_price_novat\': total_price,\n
+  \'vat_list\': context.searchFolder(portal_type=context.getPortalTaxMovementTypeList(), order_by=\'title\'),\n
+  \'description\': getFieldAsString(context.getDescription()),\n
+\n
+  \'line_list\': line_list,\n
+}\n
+\n
+return unicodeDict(data_dict)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>getSourceReference, getSubLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>getSourceReference</string>
+                            <string>getSubLineList</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>T_</string>
+                            <string>request</string>
+                            <string>getFieldAsString</string>
+                            <string>getProductAndLineDesc</string>
+                            <string>getOneLineAddress</string>
+                            <string>getPhoneAndFax</string>
+                            <string>getEmail</string>
+                            <string>getVatId</string>
+                            <string>preferred_date_order</string>
+                            <string>separator</string>
+                            <string>getOrderedDate</string>
+                            <string>getPaymentConditionText</string>
+                            <string>line_list</string>
+                            <string>total_price</string>
+                            <string>total_vat</string>
+                            <string>unicodeDict</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>None</string>
+                            <string>prod_desc</string>
+                            <string>desc</string>
+                            <string>getattr</string>
+                            <string>line_dict</string>
+                            <string>display_id</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>_inplacevar_</string>
+                            <string>inch_cm_ratio</string>
+                            <string>data_dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_getODTDataDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
