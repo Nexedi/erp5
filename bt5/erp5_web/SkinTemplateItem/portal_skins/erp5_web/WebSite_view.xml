@@ -53,6 +53,19 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list>
+                <string>available_language_list</string>
+                <string>default_available_language</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -110,6 +123,8 @@
                     <key> <string>right (Layout)</string> </key>
                     <value>
                       <list>
+                        <string>my_available_language_set</string>
+                        <string>my_default_available_language</string>
                         <string>my_skin_selection_name</string>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
