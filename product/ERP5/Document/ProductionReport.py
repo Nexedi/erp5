@@ -57,4 +57,5 @@ class ProductionReport(Delivery):
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
                       , PropertySheet.Reference
+                      , PropertySheet.TradeCondition
                       )
