@@ -7,6 +7,7 @@ Component | sale_price_view
 Component | view
 Component | view_flow_capacity
 Component | view_measure
+Component | view_stock
 Measure | view
 Product Individual Variation | view
 Product Module | converted_inventory_report
