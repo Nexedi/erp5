@@ -65,13 +65,6 @@ class TaskConstraint:
       'message_property_not_set': 'Begin Date must be defined',
       'message_no_such_property' : 'Begin Date must be defined' 
     },
-    { 'id'            : 'stop_date_existence',
-      'description'   : 'Property stop date must be defined',
-      'type'          : 'PropertyExistence',
-      'stop_date'     : None,
-      'message_property_not_set': 'End Date must be defined',
-      'message_no_such_property' : 'End Date must be defined'
-    },
     { 'id'            : 'date_coherency',
       'description'   : 'Stop Date must be after Start Date',
       'type'          : 'TALESConstraint',
