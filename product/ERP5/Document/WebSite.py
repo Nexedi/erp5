@@ -156,7 +156,7 @@ class WebSite(WebSection):
         else:
           if request.get('AcceptLanguage') is not None:
             request['AcceptLanguage'].set(language_list[0], 80)
-      return PermanentURLMixIn._getExtensibleContent(self, request, name)
+      return WebSection._getExtensibleContent(self, request, name)
 
     # Virtual Hosting Support
     security.declarePrivate( 'manage_beforeDelete' )
