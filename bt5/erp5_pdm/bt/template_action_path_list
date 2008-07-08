@@ -5,7 +5,6 @@ Component | jump_to_related_transformation
 Component | purchase_price_view
 Component | sale_price_view
 Component | view
-Component | view_flow_capacity
 Component | view_measure
 Component | view_stock
 Measure | view
