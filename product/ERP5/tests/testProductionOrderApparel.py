@@ -49,6 +49,9 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
   transformed_resource_portal_type = \
                         'Apparel Transformation Transformed Resource'
   operation_line_portal_type = 'Apparel Transformation Operation'
+  colour_variation_portal_type = 'Apparel Model Colour Variation'
+  morphology_variation_portal_type = 'Apparel Model Morphology Variation'
+
 
   def getBusinessTemplateList(self):
     """
