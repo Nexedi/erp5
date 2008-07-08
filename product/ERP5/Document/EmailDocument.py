@@ -225,7 +225,13 @@ class EmailDocument(File, TextDocument):
         return self._baseGetTitle()
       else:
         return self._baseGetTitle(default)
-    return self.getContentInformation().get('Subject', '')
+    subject = self.getContentInformation().get('Subject', '')
+    # Remove all newlines
+    if '\r' in subject:
+      subject = ''.join(subject.split('\r'))
+    if '\n' in subject:
+      subject = ''.join(subject.split('\n'))
+    return subject
   
   def title_or_id(self):
     """Return the title if it is not blank and the id otherwise.
