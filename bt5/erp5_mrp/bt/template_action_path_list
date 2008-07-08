@@ -6,6 +6,7 @@ Production Order Module | view
 Production Order Rule | view
 Production Order | jump_to_related_production_packing_list
 Production Order | jump_to_related_production_report
+Production Order | order_print
 Production Order | payment_condition
 Production Order | production_order_material_consumption
 Production Order | production_order_operation_consumption
