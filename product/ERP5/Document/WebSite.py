@@ -142,6 +142,18 @@ class WebSite(WebSection):
         """
         return self
 
+    # Static Language Selection support
+    def _getExtensibleContent(self, request, name):
+      language_list = self.getAvailableLanguageList()
+      if language_list:
+        # Interprete names which could be a language
+        # as a language selection only if language_list
+        # was defined or set default language
+        if name in language_list:
+          request['AcceptLanguage'].set(name, 100)
+          return self.asContext(id=name, title='', short_title='')
+      return PermanentURLMixIn._getExtensibleContent(self, request, name)
+
     # Virtual Hosting Support
     security.declarePrivate( 'manage_beforeDelete' )
     def manage_beforeDelete(self, item, container):
