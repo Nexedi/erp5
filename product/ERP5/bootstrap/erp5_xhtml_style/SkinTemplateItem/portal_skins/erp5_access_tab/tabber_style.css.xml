@@ -157,7 +157,13 @@ ul.tabbernav li.tabberactive a:hover\n
  display: none;\n
 }\n
 \n
+table {\n
+  width:100%;\n
+}\n
 \n
+table tr td {\n
+  vertical-align:top;\n
+}\n
 \n
 </string> </value>
         </item>

@@ -54,42 +54,51 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
            tal:define="info_dict here/ERP5Site_getCategorizedModuleActionInformationDict;\n
-                       module_category_list info_dict/print">\n
-  <tal:block tal:repeat="module_category module_category_list">\n
-    <div style="width:25%; min-width:150px; float:left;"\n
-         class="tabbertabcont"\n
-         tal:define="module_list python:module_category[1]">\n
-      <ul style="list-style-type:none; padding-left:10px;"\n
-          tal:condition="python:module_list">\n
-        <li style="font-weight:bold; color:#002e3f;"\n
-            tal:content="python:module_category[0]" />\n
-        <ul style="list-style-type:none; padding-left:0;">\n
-          <tal:block tal:repeat="module module_list">\n
-            <tal:block tal:define="action_list python:module[1];\n
-                                   default_action python:test(len(action_list) > 1, None, action_list[0])"\n
-                       tal:condition="python:action_list">\n
-              <li style="color:#002e3f;">\n
-                <span style="color:#002e3f;"\n
-                      tal:condition="not:default_action"\n
-                      tal:content="python:module[0]"></span>\n
-                <a tal:condition="default_action"\n
-                   tal:content="python:module[0]"\n
-                   tal:attributes="href python:default_action[1]"></a>\n
-              </li>\n
-              <ul tal:condition="not:default_action"\n
-                  style="list-style-type:none; padding-left:15px;">\n
-                <li tal:repeat="action action_list">\n
-                  <a style="color:#3d7474"\n
-                     tal:content="python:action[0]"\n
-                     tal:attributes="href python:action[1]"></a>\n
-                </li>\n
-              </ul>\n
-            </tal:block>\n
-          </tal:block>\n
-        </ul>\n
-      </ul>\n
-    </div>\n
-  </tal:block>\n
+           module_category_list info_dict/print;\n
+           dummy python:module_category_list.sort()">\n
+  <table tal:define="max_per_line python: 4;\n
+         cell_number python: len(module_category_list);\n
+         row_number python: (cell_number/max_per_line+1)">\n
+    <tr tal:repeat="row python: xrange(row_number)">\n
+      <tal:block tal:repeat="module_category python: module_category_list[(row*max_per_line):((row+1)*max_per_line)]">\n
+        <td>\n
+        <div style="width:25%; min-width:150px; float:left;"\n
+            class="tabbertabcont"\n
+            tal:define="module_list python:module_category[1]">\n
+          <ul style="list-style-type:none; padding-left:10px;"\n
+              tal:condition="python:module_list">\n
+            <li style="font-weight:bold; color:#002e3f;"\n
+                tal:content="python:module_category[0]" />\n
+            <ul style="list-style-type:none; padding-left:0;">\n
+              <tal:block tal:repeat="module module_list">\n
+                <tal:block tal:define="action_list python:module[1];\n
+                                      default_action python:test(len(action_list) > 1, None, action_list[0])"\n
+                          tal:condition="python:action_list">\n
+                  <li style="color:#002e3f;">\n
+                    <span style="color:#002e3f;"\n
+                          tal:condition="not:default_action"\n
+                          tal:content="python:module[0]"></span>\n
+                    <a tal:condition="default_action"\n
+                      tal:content="python:module[0]"\n
+                      tal:attributes="href python:default_action[1]"></a>\n
+                  </li>\n
+                  <ul tal:condition="not:default_action"\n
+                      style="list-style-type:none; padding-left:15px;">\n
+                    <li tal:repeat="action action_list">\n
+                      <a style="color:#3d7474"\n
+                        tal:content="python:action[0]"\n
+                        tal:attributes="href python:action[1]"></a>\n
+                    </li>\n
+                  </ul>\n
+                </tal:block>\n
+              </tal:block>\n
+            </ul>\n
+          </ul>\n
+        </div>\n
+      </td>\n
+    </tal:block>\n
+    </tr>\n
+  </table>\n
 </tal:block>\n
 
 
