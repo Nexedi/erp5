@@ -53,6 +53,8 @@ class TestProductionOrderMixin(TestOrderMixin):
   operation_line_portal_type = 'Transformation Operation'
 
   operation_category_list = ['operation1', 'operation2']
+  colour_variation_portal_type = 'Product Individual Variation'
+  morphology_variation_portal_type = 'Product Individual Variation'
 
   colour_list = ['green','blue']
   mrp_size_list = ['Man','Woman']
@@ -154,10 +156,10 @@ class TestProductionOrderMixin(TestOrderMixin):
     )
 #    resource.setSizeList(self.size_list)
     # Add colour variation
+    
     colour_variation_count = 3
     for i in range(colour_variation_count):
-      variation_portal_type = 'Product Individual Variation'
-      variation = resource.newContent(portal_type = variation_portal_type)
+      variation = resource.newContent(portal_type = self.colour_variation_portal_type)
       variation.edit(
         title = 'ColourVariation%s' % str(i),
         variation_base_category_list = ('variation',)
@@ -165,8 +167,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     # Add morphology variation
     morphology_variation_count = 2
     for i in range(morphology_variation_count) :
-      variation_portal_type = 'Product Individual Variation'
-      variation = resource.newContent(portal_type=variation_portal_type)
+      variation = resource.newContent(portal_type=self.morphology_variation_portal_type)
       variation.edit(
         title = 'MorphologyVariation%s' % str(i),
         variation_base_category_list = ('variation',)
