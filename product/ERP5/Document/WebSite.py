@@ -150,8 +150,12 @@ class WebSite(WebSection):
         # as a language selection only if language_list
         # was defined or set default language
         if name in language_list:
-          request['AcceptLanguage'].set(name, 100)
+          if request.get('AcceptLanguage') is not None:
+            request['AcceptLanguage'].set(name, 100)
           return self.asContext(id=name, title='', short_title='')
+        else:
+          if request.get('AcceptLanguage') is not None:
+            request['AcceptLanguage'].set(language_list[0], 80)
       return PermanentURLMixIn._getExtensibleContent(self, request, name)
 
     # Virtual Hosting Support
