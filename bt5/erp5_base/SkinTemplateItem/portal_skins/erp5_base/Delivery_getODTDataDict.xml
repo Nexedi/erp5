@@ -157,6 +157,7 @@ for line in getSubLineList(context):\n
       \'stop_date\': \'\',\n
       \'base_price\': \'\',\n
       \'total_price\': \'\',\n
+      \'specialise_title\': \'\',\n
     }\n
   else:\n
     if line.getPortalType().endswith(\'Cell\'):\n
@@ -178,6 +179,7 @@ for line in getSubLineList(context):\n
       \'stop_date\': getOrderedDate(line.getStopDate()) or \'\',\n
       \'base_price\': line.getPrice() or \'\',\n
       \'total_price\': line.getTotalPrice() or \'\',\n
+      \'specialise_title\' : getattr(line,\'getSpecialiseTitle\',None) is not None and (line.getSpecialiseTitle() or \'\') or \'\',\n
     }\n
     total_price += line.getTotalPrice() or 0.0\n
   line_list.append(unicodeDict(line_dict.copy()))\n
@@ -263,6 +265,7 @@ data_dict = {\n
   \'total_price_novat\': total_price,\n
   \'vat_list\': context.searchFolder(portal_type=context.getPortalTaxMovementTypeList(), order_by=\'title\'),\n
   \'description\': getFieldAsString(context.getDescription()),\n
+  \'specialise_title\': context.getProperty(\'specialise_title\',\'\'),\n
 \n
   \'line_list\': line_list,\n
 }\n
