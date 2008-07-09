@@ -106,6 +106,10 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string>Delivery_generateReference</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
