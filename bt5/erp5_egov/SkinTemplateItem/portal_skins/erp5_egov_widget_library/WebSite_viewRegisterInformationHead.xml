@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
+            <value> <string encoding="cdata"><![CDATA[
 
 <!-- ============================================================== -->\n
 <!--\n
@@ -59,14 +59,14 @@ Description:\n
 \n
 <tal:block metal:define-macro="main">\n
   <div class="become_member_head section_explanation" i18n:translate="" i18n:domain="ui">\n
-    Le portail SAFI permet d\'effectuer des formalit\xc3\xa9s administratives en ligne.\n
-    Il est possible d\'effectuer des demandes sans \xc3\xaatre inscrit (demande\n
-    anonymes), toutefois, l\'inscription est vivement conseill\xc3\xa9e.\n
+    The SAFI portal allows to make on-line administratives formalities.\n
+    It is possible to make requests without being registred (anonymous request).\n
+    However the registration is deeply advised.\n
   </div>\n
 </tal:block>\n
 
 
-]]></unicode> </value>
+]]></string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

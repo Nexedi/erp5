@@ -1,11 +1,11 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2008-06-04 19:06+CET\n"
-"PO-Revision-Date: 2008-06-04 19:06+CET\n"
+"POT-Creation-Date: 2008-07-09 09:07+CET\n"
+"PO-Revision-Date: 2008-07-09 09:07+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 
@@ -363,6 +363,9 @@ msgstr ""
 msgid "Accept"
 msgstr "Accepter"
 
+msgid "Accomplishment of all administratives procedures on the same platform"
+msgstr "réalisation de toutes les procédures administratives sur une seule et même plateforme."
+
 msgid "Account"
 msgstr "Compte"
 
@@ -413,6 +416,9 @@ msgstr "Vue de la Comptabilité"
 
 msgid "Accounts"
 msgstr "Comptes"
+
+msgid "Acitivty"
+msgstr ""
 
 msgid "Acknowledged"
 msgstr ""
@@ -473,12 +479,6 @@ msgstr "Action ..."
 
 msgid "Actions"
 msgstr "Actions"
-
-msgid "Active"
-msgstr ""
-
-msgid "Activity"
-msgstr "Activité"
 
 msgid "Activity Code"
 msgstr "Code A.P.E."
@@ -954,9 +954,6 @@ msgstr ""
 msgid "August"
 msgstr "Août"
 
-msgid "Aujourd'hui, il est souvent facile de se perdre dans toutes les différentes formatlités administrative. Il n'est pas forcément évident de suivre toutes les procédures. Le portail SAFI apporte d'une part, un gain de temps car il n'est plus nécessaire de se déplacer, un gain de sécurité, et permet de suivre très facilement les demande en cours dès que l'on est devenu membre enregistré. De plus, certaines demandes ne peuvent être effectuées que par des membres enregistrés"
-msgstr ""
-
 msgid "Authenticate"
 msgstr "Authentifier"
 
@@ -1293,9 +1290,6 @@ msgstr "Fin de carrière"
 msgid "Carte ID"
 msgstr "Carte d'identité"
 
-msgid "Carte d'identité"
-msgstr ""
-
 msgid "Case sensitive search"
 msgstr "Recherche sensible à la casse"
 
@@ -1398,6 +1392,9 @@ msgstr "Changement de page"
 msgid "Change Password"
 msgstr ""
 
+msgid "Change the state to Imported"
+msgstr "change l'état à importé"
+
 msgid "ChangeLog"
 msgstr ""
 
@@ -1406,6 +1403,9 @@ msgstr ""
 
 msgid "Check All"
 msgstr "Cocher Tous"
+
+msgid "Check the authencity of the documents"
+msgstr "Vérification de l'authenticité des documents."
 
 msgid "Checkbook"
 msgstr "Formules numérotées"
@@ -2301,13 +2301,7 @@ msgstr "Ref Dessin"
 msgid "Duration"
 msgstr "Temps"
 
-msgid "Déclaration De Tva"
-msgstr ""
-
-msgid "Déclaration de TVA"
-msgstr ""
-
-msgid "Détail des éxonératations"
+msgid "Duree"
 msgstr ""
 
 msgid "EAN 13 Code"
@@ -2700,6 +2694,9 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
+msgid "Go back to the homepage"
+msgstr "Retour à l'accueil"
+
 msgid "Godfather"
 msgstr "Parrain"
 
@@ -2829,6 +2826,9 @@ msgstr "Importer / Exporter"
 msgid "Import Categories"
 msgstr ""
 
+msgid "Imported"
+msgstr "Importé"
+
 msgid "Income"
 msgstr "Produits"
 
@@ -2933,6 +2933,9 @@ msgstr "Facturé à "
 
 msgid "Invoicing Rule"
 msgstr "Régle de Facturation"
+
+msgid "It is possible to make requests without being registred (anonymous request)."
+msgstr "Il est possible d'effectuer des demandes sans être inscrit (demande anonymes)."
 
 msgid "Item(s)+Copied."
 msgstr "Eléments+copiés"
@@ -3144,7 +3147,16 @@ msgstr "Déconnexion"
 msgid "Long Title"
 msgstr ""
 
+msgid "M0"
+msgstr ""
+
 msgid "M0 Form"
+msgstr ""
+
+msgid "M2"
+msgstr ""
+
+msgid "M4"
 msgstr ""
 
 msgid "MIME Type"
@@ -3432,6 +3444,12 @@ msgstr ""
 msgid "Nothing+To+Paste."
 msgstr ""
 
+msgid "Notification Message Module"
+msgstr ""
+
+msgid "Notification Messages"
+msgstr ""
+
 msgid "Number"
 msgstr "Numéro"
 
@@ -3473,6 +3491,9 @@ msgstr "Sans compte soldés"
 
 msgid "Omit Empty Accounts"
 msgstr "Sans comptes vides"
+
+msgid "Once register you can benefit from following avantages :"
+msgstr "Une fois inscrit, vous pouvez bénéficier des avantages suivants:"
 
 msgid "One or more of these words"
 msgstr ""
@@ -3610,6 +3631,18 @@ msgid "Outsourcing Sort Line Out"
 msgstr "Résultat de tri tiers"
 
 msgid "Overdraft Facility"
+msgstr ""
+
+msgid "Overview on all pending cases"
+msgstr "Vue d'ensemble sur toutes les procédures en cours."
+
+msgid "P0"
+msgstr ""
+
+msgid "P2"
+msgstr ""
+
+msgid "P4"
 msgstr ""
 
 msgid "PDF"
@@ -3900,6 +3933,9 @@ msgstr ""
 msgid "Preferences"
 msgstr "Préférences"
 
+msgid "Preferences control and selection the means of procedures follow-up (email, sms)"
+msgstr "Réglage des préférences et séléction d'un moyen de suivi des procédures (mail, sms)."
+
 msgid "Preferred Classification"
 msgstr ""
 
@@ -4151,6 +4187,9 @@ msgstr "Laize commerciale (cm)"
 
 msgid "Re-install Business Template"
 msgstr ""
+
+msgid "Re-use easy documents already used in a procedure"
+msgstr "Réutilisation facile de documents déjà utilisés dans une procédure."
 
 msgid "Realm Server"
 msgstr ""
@@ -4447,6 +4486,12 @@ msgid "Rule Tool"
 msgstr ""
 
 msgid "Run Unit Tests"
+msgstr ""
+
+msgid "S1"
+msgstr ""
+
+msgid "S5"
 msgstr ""
 
 msgid "SQL Cache"
@@ -4899,9 +4944,6 @@ msgstr ""
 msgid "Split"
 msgstr ""
 
-msgid "Spreadsheet"
-msgstr ""
-
 msgid "Start Date"
 msgstr "Date de début"
 
@@ -5142,6 +5184,9 @@ msgstr ""
 msgid "The Person's Social Code."
 msgstr ""
 
+msgid "The SAFI portal allows to make on-line administratives formalities. It is possible to make requests without being registred (anonymous request). However the registration is deeply advised."
+msgstr "Le portail SAFI permet d'effectuer des formalités administratives en ligne. Il est possible d'effectuer des demandes sans être inscrit (demande anonyme). Toutefois, l'inscription est vivement conseillée."
+
 msgid "The Subversion working copies"
 msgstr ""
 
@@ -5296,9 +5341,6 @@ msgid "The middle name of the person."
 msgstr ""
 
 msgid "The mobile telephone number."
-msgstr ""
-
-msgid "The name of the collective agreement."
 msgstr ""
 
 msgid "The number of children this person have."
@@ -5498,6 +5540,9 @@ msgstr ""
 
 msgid "Time"
 msgstr "Temps"
+
+msgid "Time-saving: no longer a need to move to line up in the reception desk"
+msgstr "Gain de temps: plus besoin de se déplacer pour faire la queue au guichet."
 
 msgid "Timezone"
 msgstr ""
@@ -6147,6 +6192,9 @@ msgstr ""
 msgid "action"
 msgstr "Action"
 
+msgid "active"
+msgstr ""
+
 msgid "actor"
 msgstr "Utilisateur"
 
@@ -6309,9 +6357,6 @@ msgstr ""
 msgid "file"
 msgstr "Fichier Image"
 
-msgid "gain de temps : plus besoin de se déplacer pour faire la queue au guichet"
-msgstr ""
-
 msgid "getOwner"
 msgstr ""
 
@@ -6362,6 +6407,12 @@ msgstr ""
 
 msgid "if a bug is tested or not"
 msgstr ""
+
+msgid "if checked, if will install all the missing tools in the site when installing the business template"
+msgstr ""
+
+msgid "imported"
+msgstr "importé"
 
 msgid "in"
 msgstr ""
@@ -6508,9 +6559,6 @@ msgid "rien pour le moment"
 msgstr ""
 
 msgid "réalisation de toutes les procédures administratives sur une seule et même plateforme"
-msgstr ""
-
-msgid "réglage des préférences et séléction d'un moyen de suivi des procédures (mail, sms)"
 msgstr ""
 
 msgid "réutilisation facile de documents déjà utilisés dans une procédure"
