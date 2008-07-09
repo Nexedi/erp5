@@ -77,7 +77,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type=Production+Packing+List
+string:${portal_url}/production_packing_list_module/view?reset:int=1&causality_uid=${object/getUid}
 
 ]]></string> </value>
         </item>
