@@ -43,6 +43,7 @@ from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
 from OFS.Traversable import NotFound
+import types
 
 import re
 
@@ -582,12 +583,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 LOG('WARNING: CategoriesTool',0, 'Unable to find object for path %s' % path)
       # We must include parent if specified explicitely
       if 'parent' in category_list:
-        parent = context.aq_parent
-        if parent.portal_type in spec:
-          if base:
-            membership.append('parent/' + parent.getRelativeUrl())
-          else:
-            membership.append(parent.getRelativeUrl())
+        # Handle parent base category is a special way
+        membership.append(parent.getParentValue())
       return membership
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setCategoryMembership' )
@@ -780,7 +777,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
             return category
           else:
             return None
-            
 
       # We must treat parent in a different way
       #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_inner.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_inner.aq_parent)))
@@ -1603,6 +1599,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
           Finds an object from a relative_url
           Method is public since we use restrictedTraverse
         """
+        if not isinstance(relative_url, str):
+          # Handle parent base category is a special way
+          return relative_url
         cache = getReadOnlyTransactionCache(self)
         if cache is not None:
           key = ('resolveCategory', relative_url)
@@ -1686,6 +1685,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # XXX Currently, resolveCategory accepts that a category might
         # not start with a Base Category, but with a Module. This is
         # probably wrong. For compatibility, this behavior is retained.
+        # JPS: I confirm that category should always start with a base
+        # category
         obj = self
         if stack:
           portal = aq_inner(self.getPortalObject())
