@@ -99,8 +99,8 @@
                         <string>my_int_index</string>
                         <string>my_source_title</string>
                         <string>my_source_section_title</string>
-                        <string>my_max_delay</string>
                         <string>my_min_delay</string>
+                        <string>my_max_delay</string>
                       </list>
                     </value>
                 </item>
