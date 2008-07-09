@@ -12,14 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>editable</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity_unit</string> </value>
+            <value> <string>my_variation_matrixbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,16 +73,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity_unit</string> </value>
+                    <value> <string>my_variation_matrixbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>TransformationOperation_viewFieldLibrary</string> </value>
+                    <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

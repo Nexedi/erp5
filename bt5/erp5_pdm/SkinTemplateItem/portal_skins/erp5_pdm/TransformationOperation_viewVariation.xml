@@ -80,8 +80,8 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>matrixbox</string>
                         <string>mapped_value_property_list</string>
+                        <string>matrixbox</string>
                         <string>membership_criterion_base_category_list</string>
                       </list>
                     </value>
@@ -97,7 +97,7 @@
                     <value>
                       <list>
                         <string>matrixbox_membership_criterion_category_list</string>
-                        <string>matrixbox_quantity</string>
+                        <string>matrixbox_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -107,8 +107,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
-                        <string>my_quantity</string>
-                        <string>my_quantity_unit</string>
+                        <string>my_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -116,8 +115,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_q_variation_base_category_list</string>
-                        <string>my_specialise_title_list</string>
+                        <string>my_v_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -126,7 +124,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TransformationOperation_viewQuantity</string> </value>
+            <value> <string>TransformationOperation_viewVariation</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -134,7 +132,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TransformationTransformedResource_viewQuantity</string> </value>
+            <value> <string>TransformationTransformedResource_viewVariation</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -150,7 +148,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Quantity</string> </value>
+            <value> <string>Variation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

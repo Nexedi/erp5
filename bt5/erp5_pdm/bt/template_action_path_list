@@ -57,6 +57,7 @@ Transformation Module | view
 Transformation Operation | complete_quantity_matrix
 Transformation Operation | view
 Transformation Operation | view_quantity
+Transformation Operation | view_variation
 Transformation Optional Resource | view
 Transformation Transformed Resource | complete_quantity_matrix
 Transformation Transformed Resource | complete_variation_matrix
