@@ -17,7 +17,6 @@
                 <string>columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>default_params</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
                 <string>list_action</string>
@@ -127,25 +126,6 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>default_params</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>group_by_node</string>
-                          <string>1</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_by_variation</string>
-                          <string>1</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_by_section</string>
-                          <string>0</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key>                 <string>domain_root_list</string> </key>
                     <value>
                       <list>
@@ -207,7 +187,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getFutureInventoryList</string> </value>
+            <value> <string>ProductionDelivery_getFutureInventoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
