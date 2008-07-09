@@ -117,9 +117,6 @@ def _generateErrorXML(error_message):
   log_message = traceback.format_exc()
   return '<table><tr><td class="error">%s</td></tr></table>' % error_message
       
-## temporary storage or arguments passed from client to server
-#_v_server_buffer = {}
-
 ## server to local preferences id translation table
 _server_to_preference_ids_map = {'client_id': 'preferred_express_client_uid',
                                  'current_bc_index': 'preferred_express_erp5_uid',
@@ -344,7 +341,6 @@ class WizardTool(BaseTool):
 
   def _setServerInfo(self, **kw):
     """ Save to local Zope client address info. """
-    #global _v_server_buffer
     global _server_to_preference_ids_map 
     for item, value in kw.items():
       if item in _server_to_preference_ids_map.keys():
@@ -357,8 +353,6 @@ class WizardTool(BaseTool):
     global _server_to_preference_ids_map
     for key, value in _server_to_preference_ids_map.items():
       parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
-    #for key, value in _v_server_buffer.items():
-    #  parameter_dict[key] = value
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
       
@@ -460,11 +454,6 @@ class WizardTool(BaseTool):
   security.declareProtected(Permissions.ModifyPortalContent, 'init')
   def init(self, REQUEST=None, **kw):
     """ Unconditionaly reset client_id and start new configuration process. """
-    #global _v_server_buffer
-    #reset_credentials = int(REQUEST.get('reset_credentials', 1))
-    #if reset_credentials!=0:
-    #  ## reset username/password sent to remote server
-    #  _v_server_buffer = {}
     #user_id = REQUEST.get('field_my_ac_name', '')
     #password = REQUEST.get('field_my_ac_password', '')
     return self.next(REQUEST, **kw)
