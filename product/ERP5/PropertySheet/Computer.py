@@ -51,4 +51,4 @@ class Computer:
     },
   )
 
-  _categories = ('product_line', 'role', 'function',)
+  _categories = ('product_line', 'role', 'function', 'group',)
