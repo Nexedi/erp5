@@ -43,11 +43,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>

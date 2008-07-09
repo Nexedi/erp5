@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Error message if validation failed</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>

@@ -65,17 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-object = state_change[\'object\']\n
-error_msg = \'Please correct the following errors:\'\n
-\n
-consistency = object.checkConsistency()\n
-for elem in consistency:\n
-  error_msg =error_msg+\' \'+elem[4]\n
-\n
-if consistency != []:\n
-  raise ValidationFailed, str(error_msg)\n
+            <value> <string>object = state_change[\'object\']\n
+object.Base_checkConsistency()\n
 </string> </value>
         </item>
         <item>
@@ -119,16 +110,9 @@ if consistency != []:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
                             <string>_getitem_</string>
                             <string>object</string>
-                            <string>error_msg</string>
                             <string>_getattr_</string>
-                            <string>consistency</string>
-                            <string>_getiter_</string>
-                            <string>elem</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +129,7 @@ if consistency != []:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Budget_checkConsistency</string> </value>
+            <value> <string>checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

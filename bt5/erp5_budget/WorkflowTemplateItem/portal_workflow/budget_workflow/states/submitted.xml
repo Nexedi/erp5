@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>submitted</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,16 +31,16 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Submitted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>submit</string>
-                <string>submit_action</string>
+                <string>cancel</string>
+                <string>cancel_action</string>
+                <string>validate</string>
+                <string>validate_action</string>
               </tuple>
             </value>
         </item>
@@ -73,7 +73,6 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -83,7 +82,6 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -93,7 +91,6 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -103,7 +100,6 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -114,7 +110,6 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
