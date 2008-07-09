@@ -50,6 +50,26 @@ class TimerService(SimpleItem):
         self._subscribers = []
         self._version = 1
     
+    security.declarePublic('process_shutdown')
+    def process_shutdown(self, phase, time_in_phase):
+        """ """
+        subscriptions = []
+        try:
+          subscriptions = [self.unrestrictedTraverse(path)
+                           for path in self._subscribers]
+        except KeyError:
+          pass
+        for subscriber in subscriptions:
+            process_shutdown = getattr(subscriber, 'process_shutdown', None)
+            if process_shutdown is not None:
+                try:
+                    subscriber.process_shutdown(phase=phase,
+                        time_in_phase=time_in_phase)
+                except:
+                    LOG('TimerService', ERROR, 'Process shutdown error',
+                        error = sys.exc_info())
+                    raise
+
     security.declarePublic('process_timer')
     def process_timer(self, interval):
         """ """
