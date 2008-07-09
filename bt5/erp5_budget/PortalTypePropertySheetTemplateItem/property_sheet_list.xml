@@ -1,8 +1,0 @@
-<property_sheet_list>
- <portal_type id="Budget">
-  <item>BudgetConstraint</item>
- </portal_type>
- <portal_type id="Budget Transaction">
-  <item>BudgetTransactionConstraint</item>
- </portal_type>
-</property_sheet_list>
