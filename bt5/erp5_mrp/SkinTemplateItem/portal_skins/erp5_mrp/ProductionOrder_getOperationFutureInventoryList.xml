@@ -138,7 +138,7 @@ return context.ProductionOrder_getConsumptionMovementList(*args,**kwargs)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProductionOrder_viewOperationConsumptionListMethod</string> </value>
+            <value> <string>ProductionOrder_getOperationFutureInventoryList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

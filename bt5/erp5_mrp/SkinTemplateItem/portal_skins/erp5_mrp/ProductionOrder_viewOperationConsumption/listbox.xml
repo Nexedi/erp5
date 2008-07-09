@@ -149,7 +149,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>Operation Consumption</string> </value>
+                    <value> <string>Consumption</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -168,7 +168,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>ProductionOrder_viewOperationConsumptionListMethod</string> </value>
+            <value> <string>ProductionOrder_getOperationFutureInventoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
