@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -158,7 +155,7 @@ for listboxline in listboxline_list:\n
     if isinstance(column_property, number):\n
       string_property = "%0.2f+++++++" % (column_property)\n
     elif isinstance(column_property, DateTime):\n
-      string_property = column_property.strftime(\'%Y/%m/%d++++++\')\n
+      string_property = "%s++++++" % column_property.Date()\n
     else:\n
       string_property = str(column_property or \'\')[:max_column_property_len]\n
     if listboxline.isStatLine():\n
@@ -246,6 +243,7 @@ return result\n
                             <string>listboxline</string>
                             <string>line_width</string>
                             <string>col_count</string>
+                            <string>_inplacevar_</string>
                             <string>column_property</string>
                             <string>string_property</string>
                             <string>str</string>
