@@ -53,6 +53,16 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -123,7 +133,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Delivery_viewInventory</string> </value>
+            <value> <string>ProductionDelivery_viewInventory</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
