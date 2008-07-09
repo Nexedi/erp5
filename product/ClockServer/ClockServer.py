@@ -39,6 +39,13 @@ wait_for_close_lock = thread.allocate_lock()
 class ClockServer(OriginalClockServer):
   running = True
 
+  def __init__(self, *args, **kw):
+    self.shutdown_method = kw.pop('shutdown_method')
+    OriginalClockServer.__init__(self, *args, **kw)
+    if self.shutdown_method is None:
+      self.log_info('ClockServer shutdown_method is not set in configuration'\
+                    'file. Unclean shutdown can happen.', type='warning')
+
   def readable(self):
     """
       Avoid starting a new tic if shutdown started.
@@ -73,31 +80,29 @@ class ClockServer(OriginalClockServer):
          closed.
     """
     self.running = False
-    separator = '?' in self.method and '&' or '?'
-    # XXX: should use a float for time representation
-    # TODO: allow user to specify a separate shutdown method instead of
-    # reusing regular one.
-    method = '%s%sshutdown:int=1&phase:int=%i&time_in_phase:int=%i' % \
-      (self.method, separator, _shutdown_phase, time_in_this_phase)
+    if self.shutdown_method is not None:
+      # XXX: should use a float for time representation
+      method = '%s?phase:int=%i&time_in_phase:float=%f' % \
+        (self.shutdown_method, _shutdown_phase, time_in_this_phase)
 
-    stdin = StringIO.StringIO()
-    request_string = 'GET %s HTTP/1.0' % (method, )
-    request = http_request(DummyChannel(self), request_string, 'GET', method,
-                           '1.0', self.headers)
-    environment = self.get_env(request)
-    response = make_response(request, environment)
-    # Hook response._finish to get a notification when request is over.
-    def _finish():
-      response.__class__._finish(response)
+      stdin = StringIO.StringIO()
+      request_string = 'GET %s HTTP/1.0' % (method, )
+      request = http_request(DummyChannel(self), request_string, 'GET', method,
+                             '1.0', self.headers)
+      environment = self.get_env(request)
+      response = make_response(request, environment)
+      # Hook response._finish to get a notification when request is over.
+      def _finish():
+        response.__class__._finish(response)
+        wait_for_close_lock.release()
+      response._finish = _finish
+      # (end of hook)
+      zope_request = HTTPRequest(stdin, environment, response)
+      wait_for_close_lock.acquire()
+      self.zhandler('Zope2', zope_request, response)
+      self.log_info('ClockServer: Waiting for shutdown handler.')
+      wait_for_close_lock.acquire()
+      self.log_info('ClockServer: Going on.')
       wait_for_close_lock.release()
-    response._finish = _finish
-    # (end of hook)
-    zope_request = HTTPRequest(stdin, environment, response)
-    wait_for_close_lock.acquire()
-    self.zhandler('Zope2', zope_request, response)
-    self.log_info('ClockServer: Waiting for shutdown handler.')
-    wait_for_close_lock.acquire()
-    self.log_info('ClockServer: Going on.')
-    wait_for_close_lock.release()
     return 0 # TODO: detect an error to allow taking the veto.
 

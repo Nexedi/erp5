@@ -9,6 +9,19 @@
       method, etc).  The method must take no arguments.  Ex: "/site/methodname"
       </description>
     </key>
+    <key name="shutdown_method" datatype="string">
+      <description>
+      The traversal path (from the Zope root) to an
+      executable Zope method (Python Script, external method, product
+      method, etc).  The method must take the following arguments:
+        phase (number)
+          Shutdown phase number.
+          See Lifetime.py .
+        time_in_phase (number)
+        Time spent in current phase, in seconds.
+      Given method path must not contain any argument.  Ex: "/site/methodname"
+      </description>
+    </key>
     <key name="period" datatype="integer" default="60">
     <description>
       The number of seconds between each clock "tick" (and

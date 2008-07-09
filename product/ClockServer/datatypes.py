@@ -18,6 +18,7 @@ class ClockServerFactory(ServerFactory):
     def __init__(self, section):
         ServerFactory.__init__(self)
         self.method = section.method
+        self.shutdown_method = section.shutdown_method
         self.period = section.period
         self.user = section.user
         self.password = section.password
@@ -28,5 +29,6 @@ class ClockServerFactory(ServerFactory):
         from Products.ClockServer.ClockServer import ClockServer
         from ZServer.AccessLogger import access_logger
         return ClockServer(self.method, self.period, self.user,
-                           self.password, self.hostheader, access_logger)
+                           self.password, self.hostheader, access_logger,
+                           shutdown_method=self.shutdown_method)
 

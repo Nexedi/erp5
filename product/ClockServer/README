@@ -29,6 +29,7 @@ ERP5 users: You are strongly encouraged to kee TimerService (but to stop using
 timerserver) and use the following configuration:
 
   method /Control_Panel/timer_service/process_timer?interval:int=5
+  shutdown_method /Control_Panel/timer_service/process_shutdown
   period 5
 
 Note: Because ClockServer uses asyncore's "readable" method polling,
