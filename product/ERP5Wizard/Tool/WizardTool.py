@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from ZPublisher.HTTPRequest import FileUpload
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -306,6 +307,8 @@ class WizardTool(BaseTool):
     parameter_dict = self.REQUEST.form
     ## add client arguments
     self._updateParameterDictWithServerInfo(parameter_dict)
+    ## handle file upload
+    self._updateParameterDictWithFileUpload(parameter_dict)
     ## call remote method 
     try:
       method = getattr(witch_tool, distant_method)     
@@ -359,6 +362,17 @@ class WizardTool(BaseTool):
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
       
+  def _updateParameterDictWithFileUpload(self, parameter_dict):
+    """Updates parameter_dict to replace file upload with their file content,
+    encoded as XML-RPC Binary
+    """
+    for key, value in parameter_dict.items():
+      if isinstance(value, FileUpload):
+        pos = value.tell()
+        value.seek(0)
+        parameter_dict[key] = xmlrpclib.Binary(value.read())
+        value.seek(pos)
+
   def _importBT5FileData(self, bt5_filename, bt5_filedata):
     """ Import bt5 file content. """
     bt5_io = StringIO(bt5_filedata)
