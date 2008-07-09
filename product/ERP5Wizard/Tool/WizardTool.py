@@ -202,8 +202,8 @@ class WizardTool(BaseTool):
   # and errors automatically. This is necessary because the proxy
   # should pass all results to a client as they are.
   simple_opener_director = urllib2.OpenerDirector()
-  for name in ('ProxyHandler', 'UnknownHandler', 'HTTPHandler', 
-        'FTPHandler', 'FileHandler', 'HTTPSHandler'):
+  for name in ('ProxyHandler', 'UnknownHandler', 'HTTPHandler',
+               'FTPHandler', 'FileHandler', 'HTTPSHandler'):
     handler = getattr(urllib2, name, None)
     if handler is not None:
       simple_opener_director.add_handler(handler())
@@ -235,7 +235,7 @@ class WizardTool(BaseTool):
         content_type_dict = None
         if content_type:
           content_type_value, content_type_dict = cgi.parse_header(content_type)
-        if content_type_value=='multipart/form-data':
+        if content_type_value == 'multipart/form-data':
           fp = StringIO(user_input)
           user_input_dict = cgi.parse_multipart(fp, content_type_dict)
         else:
@@ -258,7 +258,8 @@ class WizardTool(BaseTool):
     user_and_password = self._getSubsribedUserAndPassword()
     if (len(user_and_password)==2 and
         user_and_password[0] and user_and_password[1]):
-      auth = 'Basic %s' % base64.encodestring('%s:%s' % user_and_password).strip()
+      auth = 'Basic %s' % base64.encodestring(
+                              '%s:%s' % user_and_password).strip()
       header_dict['Authorization'] = auth
 
     if content_type:
@@ -308,30 +309,30 @@ class WizardTool(BaseTool):
     self._updateParameterDictWithFileUpload(parameter_dict)
     ## call remote method 
     try:
-      method = getattr(witch_tool, distant_method)     
+      method = getattr(witch_tool, distant_method)
       html = method(parameter_dict)
     except socket.error, message:
       html = _generateErrorXML("""Cannot contact the server: %s.
                                   Please check your network settings."""  %server_url)
       zLOG.LOG('Wizard Tool socket error', zLOG.ERROR, message)
-      result_call.update({"command":"show", 
-                          "data": html, 
-                          "next": None, 
+      result_call.update({"command": "show",
+                          "data": html,
+                          "next": None,
                           "previous": None})
     except xmlrpclib.ProtocolError, message:
       html = _generateErrorXML("""The server %s refused to reply.
                                   Please contact erp5-dev@erp5.org""" % server_url)
       zLOG.LOG('Wizard Tool xmlrpc protocol error', zLOG.ERROR, message)
-      result_call.update({"command":"show", 
-                          "data": html, 
-                          "next": None, 
+      result_call.update({"command": "show",
+                          "data": html,
+                          "next": None,
                           "previous": None})
     except xmlrpclib.Fault, message:
       html = _generateErrorXML("Error/bug inside the server: %s." % server_url)
       zLOG.LOG('Wizard Tool xmlrpc fault', zLOG.ERROR, message)
-      result_call.update({"command":"show", 
-                          "data": html, 
-                          "next": None, 
+      result_call.update({"command": "show",
+                          "data": html,
+                          "next": None,
                           "previous": None})
     else:
       result_call.load(html)
@@ -341,7 +342,7 @@ class WizardTool(BaseTool):
 
   def _setServerInfo(self, **kw):
     """ Save to local Zope client address info. """
-    global _server_to_preference_ids_map 
+    global _server_to_preference_ids_map
     for item, value in kw.items():
       if item in _server_to_preference_ids_map.keys():
         ## save persistently (as preference)
@@ -383,13 +384,14 @@ class WizardTool(BaseTool):
     portal_workflow =  getToolByName(self.getPortalObject(), 'portal_workflow')
     business_template.install()
   
-  security.declareProtected(Permissions.ModifyPortalContent, 'installBT5FilesFromServer')    
-  def installBT5FilesFromServer(self, 
-                                server_response, 
-                                execute_after_setup_script = True, 
-                                install_standard_bt5 = True,
-                                install_customer_bt5 = True,
-                                use_super_manager = True):
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'installBT5FilesFromServer')
+  def installBT5FilesFromServer(self,
+                                server_response,
+                                execute_after_setup_script=True,
+                                install_standard_bt5=True,
+                                install_customer_bt5=True,
+                                use_super_manager=True):
     """ Install or update BT5 files which we get from remote server. """
     if use_super_manager:
       # set current security manager to owner of site
@@ -400,8 +402,8 @@ class WizardTool(BaseTool):
     bt5_filenames = server_response["server_buffer"].get("filenames", [])
     portal_templates = getToolByName(portal, 'portal_templates')
     counter = 0
-    LOG("Wizard", INFO, 
-              "Starting installation for %s" %' '.join(bt5_filenames))
+    LOG("Wizard", INFO,
+        "Starting installation for %s" %' '.join(bt5_filenames))
     #execute_after_setup_script = install_standard_bt5 =  install_customer_bt5 = False # dev mode
     for bt5_id in bt5_filenames:
       if bt5_id.startswith('http://'):
@@ -409,23 +411,26 @@ class WizardTool(BaseTool):
         if install_standard_bt5:
           bt  = portal_templates.download(bt5_id)
           bt.install()
-          LOG("Wizard", INFO, 
+          LOG("Wizard", INFO,
               "[OK] standard bt5 installation (HTTP) from %s" %bt5_id)
       else:
         ## remote system supplied file content
         if install_customer_bt5:
           bt5_filedata = bt5_files[counter]
           self._importBT5FileData(bt5_id, bt5_filedata)
-          LOG("Wizard", INFO, 
-              "[OK] customized bt5 installation (XML-RPC) %s, %s bytes" %(bt5_id,len(bt5_filedata)))
+          LOG("Wizard", INFO,
+              "[OK] customized bt5 installation (XML-RPC) %s, %s bytes" %
+               (bt5_id, len(bt5_filedata)))
       ## ..
       counter += 1
     ## can we execute after setup script that will finish installation on client side?
     bt5_after_setup_script_id = server_response["server_buffer"].get("after_setup_script_id", None)
     if bt5_after_setup_script_id is None and \
-        self.getExpressConfigurationPreference('preferred_express_configuration_status', False):
+        self.getExpressConfigurationPreference(
+                           'preferred_express_configuration_status', False):
       ## we already have stored after setup script id
-      bt5_after_setup_script_id = self.getExpressConfigurationPreference('preferred_express_after_setup_script_id', None)      
+      bt5_after_setup_script_id = self.getExpressConfigurationPreference(
+                           'preferred_express_after_setup_script_id', None)
       
     if execute_after_setup_script and bt5_after_setup_script_id is not None:
       ## Execute script provided (if) in customer specific business template.
@@ -437,14 +442,14 @@ class WizardTool(BaseTool):
         LOG("Wizard", INFO,"[OK] execution of afer setup script %s (for bt5 %s)\n%s"
              %(after_script.getId(), bt5_customer_template_id, after_script_result))
     ## mark this ERP5 instance as configured
-    self.setExpressConfigurationPreference('preferred_express_configuration_status', 
-                                           1)
-    self.setExpressConfigurationPreference('preferred_express_after_setup_script_id', 
-                                           bt5_after_setup_script_id)
+    self.setExpressConfigurationPreference(
+        'preferred_express_configuration_status', 1)
+    self.setExpressConfigurationPreference(
+        'preferred_express_after_setup_script_id', bt5_after_setup_script_id)
     # Make sure that the site status is reloaded.
     portal.portal_caches.clearAllCache()
-    LOG("Wizard", INFO, 
-              "Completed installation for %s" %' '.join(bt5_filenames))  
+    LOG("Wizard", INFO,
+              "Completed installation for %s" %' '.join(bt5_filenames))
     if use_super_manager:
       noSecurityManager()
                   
@@ -473,10 +478,10 @@ class WizardTool(BaseTool):
       ## selection of working business configuration
       if response.get('server_buffer', None) is not None:
         client_id = response['server_buffer'].get('client_id', None)
-      self._setServerInfo(user_id = user_id, 
-                          password = password, 
-                          client_id = client_id)
-      return self.WizardTool_dialogForm(form_html = response["data"])
+      self._setServerInfo(user_id=user_id,
+                          password=password,
+                          client_id=client_id)
+      return self.WizardTool_dialogForm(form_html=response["data"])
     elif command == "next":
       self._setServerInfo(user_id=user_id, \
                           password=password, \
@@ -501,8 +506,8 @@ class WizardTool(BaseTool):
     command = response["command"]
     html = response["data"]
     if command == "show":
-      return self.WizardTool_dialogForm(previous = response['previous'], \
-                                        form_html = html, \
+      return self.WizardTool_dialogForm(previous=response['previous'],
+                                        form_html=html,
                                         next = response['next'])
     elif command == "update":
       return self.next(REQUEST=REQUEST)
@@ -519,15 +524,17 @@ class WizardTool(BaseTool):
     command = response["command"]
     html = response['data']
     if command == "show":
-      return self.WizardTool_dialogForm(previous = response['previous'], \
-                                        form_html = html, \
-                                        next = response['next']) 
+      return self.WizardTool_dialogForm(previous=response['previous'],
+                                        form_html=html,
+                                        next=response['next'])
     elif command == "login":
       REQUEST.set('portal_status_message', html)
       return self.view(REQUEST=REQUEST)
       
-  security.declarePublic(Permissions.AccessContentsInformation, 'getInstallationStatusReportFromClient')
-  def getInstallationStatusReportFromClient(self, active_process_id=None, REQUEST=None):
+  security.declarePublic(Permissions.AccessContentsInformation,
+                         'getInstallationStatusReportFromClient')
+  def getInstallationStatusReportFromClient(self,
+                          active_process_id=None, REQUEST=None):
     """ Query local ERP5 instance for installation status.
         If installation is over the installation activities and reindexing
         activities should not exists.
@@ -579,26 +586,26 @@ class WizardTool(BaseTool):
     self._setServerInfo(current_bc_index = current_bc_index)
     self.installBT5FilesFromServer(server_response, True)
     server_response = self._callRemoteMethod('finalizeInstallation', server_url)
-    LOG("Wizard", INFO, 
+    LOG("Wizard", INFO,
         "Successfuly installed generated business configuration from %s" %self.getServerUrl())
 
   security.declareProtected(Permissions.ModifyPortalContent, 'repair')
   def repair(self):
     """ Repair broken ERP5 instance. This will install all business templates 
-    for ERP5 instance as specified in its business configuration. """	  
+    for ERP5 instance as specified in its business configuration. """
     self.REQUEST.form['wizard_request_type'] = 'repair'
     server_response = self._callRemoteMethod('getBT5FilesForBusinessConfiguration')
     if server_response['command'] == "install":
       active_process = self.portal_activities.newActiveProcess()
       self.activate(active_process=active_process).installBT5FilesFromServer(server_response, True)
     html = server_response['data']
-    LOG("Wizard", INFO, 
+    LOG("Wizard", INFO,
         "Start repair process for ERP5 instance from %s" %self.getServerUrl())
     return self.WizardTool_dialogForm(form_html = html)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'update')
   def update(self):
-    """ Update ERP5's instance standard business templates. """	  
+    """ Update ERP5's instance standard business templates. """
     self.REQUEST.form['wizard_request_type'] = 'update'
     server_response = self._callRemoteMethod('getBT5FilesForBusinessConfiguration')
     if server_response['command'] == "install":
@@ -606,7 +613,7 @@ class WizardTool(BaseTool):
       self.activate(active_process=active_process).installBT5FilesFromServer(server_response,
                                                                              execute_after_setup_script = False)
     html = server_response['data']
-    LOG("Wizard", INFO, 
+    LOG("Wizard", INFO,
         "Start update process for ERP5 instance from %s" %self.getServerUrl())
     return self.WizardTool_dialogForm(form_html = html)
 
@@ -629,4 +636,4 @@ class WizardTool(BaseTool):
     """ Set Express configuration preference """
     portal_preferences = getToolByName(self, 'portal_preferences')
     if portal_preferences.getActivePreference() is not None:
-      portal_preferences.setPreference(preference_id, value)    
+      portal_preferences.setPreference(preference_id, value)
