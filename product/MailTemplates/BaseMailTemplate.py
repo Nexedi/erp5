@@ -133,16 +133,14 @@ class BaseMailTemplate:
 
     security.declareProtected('View', 'as_message')
     def as_message(self,**kw):
-
         msg,values,headers = self._process(kw)
-
         multipart_kw = {}
-        subtype = kw.get('subtype')
-        if subtype:
-            multipart_kw['_subtype'] = subtype
-        boundary = kw.get('boundary')
-        if boundary:
-            multipart_kw['boundary'] = boundary
+        #subtype = kw.get('subtype')
+        #if subtype:
+        #    multipart_kw['_subtype'] = subtype
+        #boundary = kw.get('boundary')
+        #if boundary:
+        #    multipart_kw['boundary'] = boundary
             
         multipart = MTMultipart(self,
                                 values['mfrom'],
@@ -150,7 +148,7 @@ class BaseMailTemplate:
                                 **multipart_kw)
 
         # set the encoding for the container
-        multipart.set_charset(msg.get_charset())
+        #multipart.set_charset(msg.get_charset())
         
         for header,value in headers:
             multipart[header]=value
