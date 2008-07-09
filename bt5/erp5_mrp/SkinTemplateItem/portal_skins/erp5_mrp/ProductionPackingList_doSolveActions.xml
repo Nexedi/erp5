@@ -76,50 +76,53 @@ tag = context.getPath() + \'_split\'\n
 portal = context.getPortalObject()\n
 packing_list_portal_type = context.getPortalType()\n
 \n
+simulation_tool = portal.portal_simulation\n
+\n
 split_and_defer = 0\n
 \n
 packing_list_portal_type_delivery_builder_mapping = {\n
   \'Production Packing List\' : \'production_packing_list_builder\',\n
   \'Production Report\' : \'production_report_builder\',\n
 }\n
+order = context.getCausalityValue()\n
+applied_rule = order.getCausalityRelatedValue(portal_type="Applied Rule")\n
+\n
+builder_id = packing_list_portal_type_delivery_builder_mapping.get(\n
+  packing_list_portal_type, None)\n
+if builder_id is not None:\n
+  delivery_builder = getattr(portal.portal_deliveries,builder_id,None)\n
+  if delivery_builder is None:\n
+    log(\'ProductionPackingList_doSolveActions\',\'Builder %s not found\'%(builder_id,),200)\n
+\n
+else:\n
+  log(\'ProductionPackingList_doSolveActions\',\'Portal type %s has no builder\'%(packing_list_portal_type,),200)\n
 \n
 if listbox is not None:\n
-    context.updateAppliedRule()\n
-    for line_key in listbox:\n
-        line = listbox[line_key]\n
-        url = line[\'listbox_key\']\n
-        quantity = line[\'quantity\']\n
-        movement = context.restrictedTraverse(url)\n
-        movement.setProperty(\'quantity\', quantity, type=\'float\')\n
-        choice = line[\'choice\']        \n
-        if choice == \'SplitAndDefer\':\n
-            split_and_defer = 1\n
-            context.portal_simulation.solveMovement(movement, None, "SplitAndDefer", start_date=start_date, stop_date=stop_date, activate_kw={\'tag\':tag})\n
-        elif choice == \'CopyToTarget\':\n
-            context.portal_simulation.solveMovement(movement, None,"CopyToTarget")\n
-        #elif XXX: support for adopt\n
+  context.updateAppliedRule()\n
+  for line_key in listbox:\n
+    line = listbox[line_key]\n
+    url = line[\'listbox_key\']\n
+    quantity = line[\'quantity\']\n
+    movement = context.restrictedTraverse(url)\n
+    choice = line[\'choice\']    \n
+    if choice == \'SplitAndDefer\':\n
+      movement.setProperty(\'quantity\', quantity, type=\'float\')\n
+      split_and_defer = 1\n
+      simulation_tool.solveMovement(movement, None, "SplitAndDefer", start_date=start_date, stop_date=stop_date, activate_kw={\'tag\':tag})\n
+    elif choice == \'CopyToTarget\':\n
+      movement.setProperty(\'quantity\', quantity, type=\'float\')\n
+      simulation_tool.solveMovement(movement, None,"CopyToTarget")\n
+    elif choice == \'AdoptPrevision\':\n
+      prevision_quantity = sum([x.getQuantity() for x in movement.getDeliveryRelatedValueList()])\n
+      movement.setProperty(\'quantity\', prevision_quantity, type=\'float\')\n
 \n
-    context.updateCausalityState()\n
+  context.activate().updateCausalityState()\n
 \n
-    if split_and_defer:\n
-        # Create delivery\n
-        order = context.getCausalityValue()\n
-        applied_rule = order.getCausalityRelatedValue(portal_type="Applied Rule")\n
-\n
-        builder_id = packing_list_portal_type_delivery_builder_mapping.get(\n
-            packing_list_portal_type, None)\n
-\n
-        if builder_id is not None:\n
-          delivery_builder = getattr(portal.portal_deliveries,builder_id,None)\n
-          if delivery_builder is not None:\n
-            explanation_uid_list = [order.getUid(),context.getUid()]\n
-            delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation_uid=explanation_uid_list)\n
-          else:\n
-            log(\'ProductionPackingList_doSolveActions\',\'Builder %s not found\'%(builder_id,),200)\n
-        else:\n
-          log(\'ProductionPackingList_doSolveActions\',\'Portal type %s has no builder\'%(packing_list_portal_type,),200)\n
-\n
-\n
+  if split_and_defer:\n
+    # Create delivery\n
+      if delivery_builder is not None:\n
+        explanation_uid_list = [order.getUid(),context.getUid()]\n
+        delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation_uid=explanation_uid_list)\n
 \n
 message = context.Base_translateString(\'%s updated.\'%(packing_list_portal_type,))\n
 return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : message} )\n
@@ -185,9 +188,15 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
                             <string>tag</string>
                             <string>portal</string>
                             <string>packing_list_portal_type</string>
+                            <string>simulation_tool</string>
                             <string>split_and_defer</string>
                             <string>packing_list_portal_type_delivery_builder_mapping</string>
+                            <string>order</string>
+                            <string>applied_rule</string>
                             <string>None</string>
+                            <string>builder_id</string>
+                            <string>getattr</string>
+                            <string>delivery_builder</string>
                             <string>_getiter_</string>
                             <string>line_key</string>
                             <string>_getitem_</string>
@@ -196,11 +205,11 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
                             <string>quantity</string>
                             <string>movement</string>
                             <string>choice</string>
-                            <string>order</string>
-                            <string>applied_rule</string>
-                            <string>builder_id</string>
-                            <string>getattr</string>
-                            <string>delivery_builder</string>
+                            <string>sum</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>prevision_quantity</string>
                             <string>explanation_uid_list</string>
                             <string>message</string>
                           </tuple>

@@ -88,12 +88,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Split and defer</string>
+                          <string>Split and Defer</string>
                           <string>SplitAndDefer</string>
                         </tuple>
                         <tuple>
                           <string>Accept</string>
                           <string>CopyToTarget</string>
+                        </tuple>
+                        <tuple>
+                          <string>Adopt</string>
+                          <string>AdoptPrevision</string>
                         </tuple>
                       </list>
                     </value>
