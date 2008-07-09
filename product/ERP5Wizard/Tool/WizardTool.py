@@ -305,7 +305,7 @@ class WizardTool(BaseTool):
     witch_tool = self._getRemoteWitchTool(server_url)
     parameter_dict = self.REQUEST.form
     ## add client arguments
-    self._getServerInfo(parameter_dict)
+    self._updateParameterDictWithServerInfo(parameter_dict)
     ## call remote method 
     try:
       method = getattr(witch_tool, distant_method)     
@@ -349,9 +349,9 @@ class WizardTool(BaseTool):
         self.setExpressConfigurationPreference(_server_to_preference_ids_map[item],
                                                value)
       
-  def _getServerInfo(self, parameter_dict):
-    """ Return local saved server info settings. """
-    global _server_to_preference_ids_map 
+  def _updateParameterDictWithServerInfo(self, parameter_dict):
+    """Updates parameter_dict to include local saved server info settings. """
+    global _server_to_preference_ids_map
     for key, value in _server_to_preference_ids_map.items():
       parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
     #for key, value in _v_server_buffer.items():
