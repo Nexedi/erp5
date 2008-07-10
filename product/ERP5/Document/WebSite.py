@@ -39,6 +39,7 @@ from ZPublisher import BeforeTraverse
 from zLOG import LOG
 
 WEBSITE_KEY = 'web_site_value'
+WEBSITE_LANGUAGE_KEY = 'web_site_language'
 
 class WebSiteTraversalHook(Persistent):
   """
@@ -62,10 +63,13 @@ class WebSiteTraversalHook(Persistent):
     # Only consider Web Site for absolute_url
     request = getattr(self, '_v_request', None)
     if request is None: request = self._v_request = get_request()
-    website_path = request.get(WEBSITE_KEY, None) 
+    website_path = request.get(WEBSITE_KEY, None)
+    select_language = request.get(WEBSITE_LANGUAGE_KEY, None)
     if website_path:
       website_path = tuple(website_path)    # Make sure all path are tuples
       path = tuple(path)                    # Make sure all path are tuples
+      if select_language:
+        website_path = website_path + (select_language,)      # Add the language part
       # Search for the common part index
       # XXX more testing should be added to check
       # if the URL is the kind of URL which is a Web Site
@@ -98,15 +102,22 @@ class WebSiteTraversalHook(Persistent):
   def __call__(self, container, request):
     """
       Each time we are traversed, we patch the request instance with our
-      own version of physicalPathToVirtualPath
+      own version of physicalPathToVirtualPath and we set a default
+      language
     """
     self._v_request = request
     request.physicalPathToVirtualPath = self._physicalPathToVirtualPath
 
     # If a skin selection is defined in this web site, change the skin now.
     skin_selection_name = container.getSkinSelectionName()
-    if skin_selection_name:
+    if skin_selection_name: # XXX missing support to portal_skin parameter
       container.getPortalObject().changeSkin(skin_selection_name)
+
+    # Set default language if any
+    default_language = container.getDefaultAvailableLanguage()
+    if default_language:
+      if request.get('AcceptLanguage') is not None:
+        request['AcceptLanguage'].set(default_language, 80)
 
 class WebSite(WebSection):
     """
@@ -152,10 +163,8 @@ class WebSite(WebSection):
         if name in language_list:
           if request.get('AcceptLanguage') is not None:
             request['AcceptLanguage'].set(name, 100)
-          return self.asContext(id=name, title='', short_title='')
-        else:
-          if request.get('AcceptLanguage') is not None:
-            request['AcceptLanguage'].set(language_list[0], 80)
+            request.set(WEBSITE_LANGUAGE_KEY, name)
+          return self.asContext(id=name)
       return WebSection._getExtensibleContent(self, request, name)
 
     # Virtual Hosting Support
