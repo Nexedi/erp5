@@ -17,6 +17,7 @@
                 <string>report_root_list</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>list_method</string>
                 <string>color_script</string>
                 <string>round_script</string>
               </list>
@@ -96,6 +97,12 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -127,7 +134,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>production_order_selection</string> </value>
+                    <value> <string>production_order_planning_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -139,6 +146,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>ProductionOrderModule_getSelectionProductionOrderList</string> </value>
         </item>
       </dictionary>
     </pickle>
