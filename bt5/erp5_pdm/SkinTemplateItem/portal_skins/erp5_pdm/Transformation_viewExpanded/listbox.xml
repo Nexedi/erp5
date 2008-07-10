@@ -101,7 +101,7 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>getVariationCategoryList</string>
+                          <string>Base_getVariationCategoryTranslatedTitleString</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>
