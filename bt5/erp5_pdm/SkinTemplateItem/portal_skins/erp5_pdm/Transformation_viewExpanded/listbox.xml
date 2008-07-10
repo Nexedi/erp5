@@ -105,8 +105,8 @@
                           <string>Variation</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
