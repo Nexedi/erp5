@@ -247,7 +247,6 @@ class Person(XMLObject):
         calendar_uid_list.extend(assignment.getCalendarUidList())
       kw['node'] = [self.getUid()] + calendar_uid_list
 
-      # Call getSequence
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getAvailableTimeSequence(*args, **kw)
 
