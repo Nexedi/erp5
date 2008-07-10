@@ -323,6 +323,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         # Store values in Amount
         tmp_amount._edit(
           # Properties define on transformation line
+          title =  self.getTitle(),
           description =  self.getDescription(),
           efficiency = efficiency,
           quantity = quantity,
