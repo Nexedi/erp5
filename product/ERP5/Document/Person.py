@@ -222,8 +222,7 @@ class Person(XMLObject):
       """
       Calculate available time for a person
 
-      XXX What are the parameters - documentation needed
-      What is the result ?
+      See SimulationTool.getAvailableTime
       """
       assignment_list = self.contentValues(portal_type='Assignment')
       calendar_uid_list = []
@@ -239,9 +238,8 @@ class Person(XMLObject):
     def getAvailableTimeSequence(self, *args, **kw):
       """
       Calculate available time for a person in a sequence
-
-      XXX What are the parameters - documentation needed
-      What is the result ?
+      
+      See SimulationTool.getAvailableTimeSequence
       """
       assignment_list = self.contentValues(portal_type='Assignment')
       calendar_uid_list = []
