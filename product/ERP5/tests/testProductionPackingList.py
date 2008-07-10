@@ -151,7 +151,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
     self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'delivered')
 
-  def stepDeceraseProducedDeliveryPackingListQuantity(self, sequence=None, sequence_list=None, **kw):
+  def stepDecreaseProducedDeliveryPackingListQuantity(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
     
     for line in packing_list.getMovementList():
@@ -159,7 +159,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
         quantity = line.getQuantity() - 1.0
       )
 
-  def stepDeceraseSupplyDeliveryPackingListQuantity(self, sequence=None, sequence_list=None, **kw):
+  def stepDecreaseSupplyDeliveryPackingListQuantity(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
     
     for line in packing_list.getMovementList():
@@ -167,7 +167,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
         quantity = line.getQuantity() - 1.0
       )
 
-  def stepCheckSourcingDeliverySimulationDecerasedQuantity(self, sequence=None, \
+  def stepCheckSourcingDeliverySimulationDecreasedQuantity(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
     TODO
@@ -525,7 +525,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
     # then accept this decision, next deliver it, then adopt prevision
     # on rest of documents and deliver them - do it one by one
     sequence_string = delivery_check_sequence_string + '\
-                      DeceraseProducedDeliveryPackingListQuantity \
+                      DecreaseProducedDeliveryPackingListQuantity \
                       \
                       CheckProducedDeliveryPackingListIsCalculating \
                       Tic \
@@ -533,7 +533,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       AcceptDecisionProducedDeliveryPackingList \
                       Tic \
                       CheckProducedDeliveryPackingListIsSolved \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckSupplyDeliveryPackingListIsConfirmed \
                       CheckSupplyDeliveryPackingListIsDiverged\
@@ -550,7 +550,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverProducedDeliveryPackingList \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
@@ -580,7 +580,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverSupplyDeliveryPackingList \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
@@ -607,7 +607,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverProducedReport \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
@@ -631,7 +631,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverConsumedReport \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
@@ -652,7 +652,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
     # then accept this decision, next deliver it, then adopt prevision
     # on rest of documents and deliver them - do it one by one
     sequence_string = delivery_check_sequence_string + '\
-                      DeceraseSupplyDeliveryPackingListQuantity \
+                      DecreaseSupplyDeliveryPackingListQuantity \
                       \
                       CheckSupplyDeliveryPackingListIsCalculating \
                       Tic \
@@ -660,7 +660,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       AcceptDecisionSupplyDeliveryPackingList \
                       Tic \
                       CheckSupplyDeliveryPackingListIsSolved \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsConfirmed \
                       CheckProducedDeliveryPackingListIsDiverged\
@@ -677,7 +677,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverSupplyDeliveryPackingList \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckSupplyDeliveryPackingListIsDelivered \
                       CheckSupplyDeliveryPackingListIsSolved\
@@ -707,7 +707,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverProducedDeliveryPackingList \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
@@ -734,7 +734,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverProducedReport \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
@@ -758,7 +758,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
                       DeliverConsumedReport \
                       Tic \
                       \
-                      CheckSourcingDeliverySimulationDecerasedQuantity \
+                      CheckSourcingDeliverySimulationDecreasedQuantity \
                       \
                       CheckProducedDeliveryPackingListIsDelivered \
                       CheckProducedDeliveryPackingListIsSolved\
