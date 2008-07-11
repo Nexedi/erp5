@@ -281,7 +281,7 @@ class EmailDocument(File, TextDocument):
         if part_encoding not in (None, 'utf-8',):
           try:
             text_result = part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
-          except UnicodeDecodeError:
+          except (UnicodeDecodeError, LookupError):
             text_result = part.get_payload(decode=1)
         else:
           text_result = part.get_payload(decode=1)
@@ -290,7 +290,7 @@ class EmailDocument(File, TextDocument):
         if part_encoding not in (None, 'utf-8',):
           try:
             return part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
-          except UnicodeDecodeError:
+          except (UnicodeDecodeError, LookupError):
             return part.get_payload(decode=1)
         return part.get_payload(decode=1)
     return text_result
