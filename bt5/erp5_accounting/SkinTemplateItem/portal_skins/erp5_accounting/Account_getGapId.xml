@@ -66,13 +66,26 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># This script returns the gap id for this account according to the current gap\n
+# XXX This script is badly name, as it does not truly return a category ID.\n
+# XXX Instead, the purpose of this script is more to return an account number to display\n
 \n
-current_gap = context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap()\n
+preference_tool = context.getPortalObject().portal_preferences\n
 \n
-for gap in context.getGapValueList() : \n
-  if current_gap in gap.getPath() : \n
-     return gap.getId()\n
-return \'\'\n
+number_method = preference_tool.getPreferredAccountNumberMethod()\n
+\n
+if number_method == \'account_reference\':\n
+  return context.getReference(\'\')\n
+\n
+# elif number_method == \'gap_id\':\n
+else:\n
+  # GAP id is the default rendering\n
+\n
+  current_gap = preference_tool.getPreferredAccountingTransactionGap()\n
+\n
+  for gap in context.getGapValueList() : \n
+    if current_gap in gap.getPath() : \n
+       return gap.getId()\n
+  return \'\'\n
 </string> </value>
         </item>
         <item>
@@ -83,6 +96,12 @@ return \'\'\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -117,6 +136,8 @@ return \'\'\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>preference_tool</string>
+                            <string>number_method</string>
                             <string>current_gap</string>
                             <string>_getiter_</string>
                             <string>gap</string>
