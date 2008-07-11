@@ -1,6 +1,9 @@
 import re
 import cgi
 from Acquisition import aq_base
+from AccessControl import Unauthorized
+from Products.CMFCore.utils import _checkPermission
+from Products.ERP5Type import Permissions
 
 try:
   from Products import ExternalEditor
@@ -32,6 +35,8 @@ def traverse(ob, r, result, command_line_arguments):
         break
 
 def grep(self, pattern, A=0, B=0, r=1, i=0):
+  if not _checkPermission(Permissions.ManagePortal, self):
+    raise Unauthorized(self)
   command_line_arguments = {} # emulate grep command line args
   command_line_arguments['A'] = int(A)
   command_line_arguments['B'] = int(B)
