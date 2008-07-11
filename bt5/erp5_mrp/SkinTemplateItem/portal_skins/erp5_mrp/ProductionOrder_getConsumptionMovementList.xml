@@ -85,19 +85,22 @@ if omit_order_resources:\n
       if q.getResourceUid() is not None]\n
 \n
   query = NegatedQuery(\n
-      Query(operator=\'IN\',**{\'movement.resource_uid\':ignored_resource_uid_list})\n
+      Query(operator=\'IN\',**{\'stock.resource_uid\':ignored_resource_uid_list})\n
       )\n
 \n
   kw.update(**query.asSQLExpression())\n
 \n
 kw[\'explanation_uid\'] = [context.getUid()] + [q.getUid() for q in \\\n
   context.getCausalityRelatedValueList(portal_type=context.getPortalDeliveryTypeList())]\n
+\n
 kw[\'group_by_date\'] = 1\n
 kw[\'group_by_node\'] = 1\n
 kw[\'group_by_variation\'] = 1\n
 kw[\'group_by_resource\'] = 1\n
 kwargs.update(**kw)\n
 # XXX: below filtering to be replaced by HAVING expression\n
+if kwargs.get(\'src__\',0) == 1:\n
+  return simulation_tool.getFutureInventoryList(*args,**kwargs)\n
 return [q for q in simulation_tool.getFutureInventoryList(*args,**kwargs) if q.inventory < 0.0]\n
 
 
