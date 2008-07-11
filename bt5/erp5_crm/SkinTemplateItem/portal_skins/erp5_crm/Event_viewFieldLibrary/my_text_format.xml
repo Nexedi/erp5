@@ -240,6 +240,10 @@
                           <string>Structured Text</string>
                           <string>text/structured</string>
                         </tuple>
+                        <tuple>
+                          <string>reStructuredText</string>
+                          <string>text/x-rst</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
