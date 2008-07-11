@@ -127,6 +127,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.unittest_module.newContent(id='document', portal_type='UnitTest')
     self.portal.unittest_module.document.view()
 
+    # make sure translation domains are set correctly
+    self.assertEquals('erp5_ui',
+        self.portal.unittest_module.getTitleTranslationDomain())
+    self.assertEquals('erp5_ui',
+        self.portal.unittest_module.getShortTitleTranslationDomain())
     
   
   def test_02_FavouritesMenu(self, quiet=quiet, run=run_all_test):
