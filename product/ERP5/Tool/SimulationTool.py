@@ -46,7 +46,7 @@ from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, QueryMixin
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
@@ -1642,23 +1642,15 @@ class SimulationTool(BaseTool):
 
       """
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
-      at_date = kw.get('at_date',None)
-      if at_date is not None:
-        query_mixin = QueryMixin()
-        at_date = query_mixin._quoteSQLString(at_date)
-        at_date = at_date.strip("'")
-      # Do not remove at_date in new_kw, it is required in 
-      # order to do a "select item left join item on date"
-      new_kw['at_date'] = at_date
-
-      to_date = kw.get('to_date',None)
-      if to_date is not None:
-        query_mixin = QueryMixin()
-        to_date = query_mixin._quoteSQLString(to_date)
-        to_date = to_date.strip("'")
-      # Do not remove to_date in new_kw, it is required in 
-      # order to do a "select item left join item on date"
-      new_kw['to_date'] = to_date
+      for key in ('at_date', 'to_date'):
+        value = kw.get(key, None)
+        if value is not None:
+          if isinstance(value, DateTime):
+            value = value.toZone('UTC').ISO()
+          value = '%s' % (value, )
+        # Do not remove dates in new_kw, they are required in 
+        # order to do a "select item left join item on date"
+        new_kw[key] = value
 
       # Extra parameters for the SQL Method
       new_kw['join_on_item'] = not history and (new_kw.get('at_date') or \
