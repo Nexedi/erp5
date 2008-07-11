@@ -331,6 +331,7 @@ class Alarm(XMLObject, PeriodicityMixin):
 
     The process parameter can be used to retrive sense values for 
     past processes.
+    If it is None, it will return the status of last completed active result.
     """
     method_id = self.getSenseMethodId()
     if process is None:
@@ -479,16 +480,16 @@ Alarm URL: %s
     This returns the last active process finished. So it will
     not returns the current one
     """
-    active_process_list = self.getCausalityRelatedValueList(
-                                  portal_type='Active Process')
-
-    def sort_date(a, b):
-      return cmp(a.getStartDate(), b.getStartDate())
-
-    active_process_list.sort(sort_date)
-    if len(active_process_list) > 0:
-      return active_process_list[-1]
-    return None
+    limit = self.isActive() and 2 or 1
+    active_process_list = self.getPortalObject().portal_catalog(
+      portal_type='Active Process', limit=limit,
+      sort_on=(('creation_date', 'DESC'), ),
+      causality_uid=self.getUid())
+    if len(active_process_list) < limit:
+      process = None
+    else:
+      process = active_process_list[-1].getObject()
+    return process
 
   security.declareProtected(Permissions.ModifyPortalContent, 
                             'newActiveProcess')
