@@ -70,6 +70,11 @@ class AccountingPreference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+    { 'id'          : 'preferred_account_number_method',
+      'description' : 'The method used to display the account number.',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w' },
 
     # Those preferences are used to configure behaviour for the site
     { 'id'          : 'preferred_grouping_with_different_quantities',
