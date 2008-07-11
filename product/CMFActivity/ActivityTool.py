@@ -333,6 +333,13 @@ class ActiveWrapper:
                   self.__dict__['__active_process'],
                   self.__dict__['__kw'], id)
 
+# Set to False when shutting down. Access outside of process_shutdown must
+# be done under the protection of is_running_lock lock.
+is_running = True
+# True when activities cannot be executing any more.
+has_processed_shutdown = False
+
+
 class ActivityTool (Folder, UniqueObject):
     """
     ActivityTool is the central point for activity management.
@@ -376,11 +383,6 @@ class ActivityTool (Folder, UniqueObject):
     
     distributingNode = ''
     _nodes = ()
-    # Set to False when shutting down. Access outside of process_shutdown must
-    # be done under the protection of is_running_lock lock.
-    _is_running = True
-    # True when activities cannot be executing any more.
-    _has_processed_shutdown = False
 
     def __init__(self):
         return Folder.__init__(self, ActivityTool.id)
@@ -603,9 +605,9 @@ class ActivityTool (Folder, UniqueObject):
           Prevent shutdown from happening while an activity queue is
           processing a batch.
         """
-        self._is_running = False
-        if phase == 3 and not self._has_processed_shutdown:
-          self._has_processed_shutdown = True
+        is_running = False
+        if phase == 3 and not has_processed_shutdown:
+          has_processed_shutdown = True
           LOG('CMFActivity', INFO, "Shutdown: Waiting for activities to finish.")
           is_running_lock.acquire()
           LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
@@ -727,7 +729,7 @@ class ActivityTool (Folder, UniqueObject):
           for activity in activity_list:
             is_running_lock.acquire()
             try:
-              if self._is_running:
+              if is_running:
                 activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
                 has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
             finally:
