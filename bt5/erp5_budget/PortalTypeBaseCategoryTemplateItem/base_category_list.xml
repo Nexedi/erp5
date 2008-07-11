@@ -1,6 +1,12 @@
 <base_category_list>
+ <portal_type id="Budget Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Budget Transaction">
   <item>group</item>
+ </portal_type>
+ <portal_type id="Budget Transaction Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Budget Transfer Line">
   <item>group</item>
