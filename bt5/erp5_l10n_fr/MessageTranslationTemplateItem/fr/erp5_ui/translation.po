@@ -1911,7 +1911,7 @@ msgstr ""
 msgid "Portal Types"
 msgstr ""
 
-msgid "Post Code"
+msgid "Postal Code"
 msgstr "Code Postal"
 
 msgid "Post a Query"
