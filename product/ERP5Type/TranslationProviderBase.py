@@ -153,9 +153,10 @@ class TranslationProviderBase:
     if properties is None:
       properties = REQUEST
     
-    for prop_name in self._property_domain_dict.keys():
+    property_domain_dict = self.getPropertyTranslationDomainDict()
+    for prop_name in property_domain_dict.keys():
       new_domain_name = properties.get(prop_name)
-      prop_object = self._property_domain_dict[prop_name]
+      prop_object = property_domain_dict[prop_name]
       if new_domain_name != prop_object.getDomainName():
         prop_object.setDomainName(new_domain_name)
 
