@@ -16,6 +16,7 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>list_method</string>
+                <string>count_method</string>
                 <string>selection_name</string>
               </list>
             </value>
@@ -100,7 +101,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -139,6 +140,10 @@
                     </value>
                 </item>
                 <item>
+                    <key>                 <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
@@ -155,7 +160,7 @@
                     <value> <string>ORGANISATION_LIST</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -165,7 +170,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>person_detail_event_module_selection</string> </value>
                 </item>
                 <item>
@@ -173,7 +178,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Events</string> </value>
                 </item>
                 <item>
