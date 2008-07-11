@@ -69,8 +69,8 @@
 
 """Initialise int_index and reference of object\n
 It will set reference to int_index, as string.\n
-In case if container is same type is its children, reference is generated as\n
-<container_reference>.<children_reference>:\n
+In case if container is same type is its children, or context is cell,\n
+reference is generated as <container_reference>.<children_index>:\n
   1\n
   1.1\n
   1.2\n
@@ -85,7 +85,7 @@ portal_type = context.getPortalType()\n
 \n
 index = len(parent.contentValues(filter={"portal_type": portal_type}))\n
 \n
-if parent.getPortalType() == portal_type:\n
+if parent.getPortalType() == portal_type or portal_type.endswith(\'Cell\'):\n
   reference = "%s.%s" % (parent.getReference(), index)\n
 else:\n
   reference = str(index)\n
