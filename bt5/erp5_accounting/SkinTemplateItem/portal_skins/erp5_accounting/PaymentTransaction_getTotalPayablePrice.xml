@@ -65,9 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-if brain is not None:\n
+            <value> <string>if brain is not None:\n
   transaction = brain.getObject()\n
 else:\n
   transaction = context\n
@@ -86,8 +84,7 @@ def getTotalPrice(transaction_path):\n
       if node is not None and  node.isMemberOf(\'account_type/asset/cash\'):\n
         total_price -= mvt.getDestinationInventoriatedTotalAssetPrice() or 0\n
   return total_price\n
-  \n
-getTotalPrice = CachingMethod(getTotalPrice, id=\'PaymentTransaction_getTotalPayablePrice\')\n
+\n
 return getTotalPrice(transaction.getPath())\n
 </string> </value>
         </item>
@@ -140,8 +137,6 @@ return getTotalPrice(transaction.getPath())\n
                             <string>brain</string>
                             <string>selection</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>transaction</string>
