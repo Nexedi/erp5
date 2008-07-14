@@ -307,7 +307,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(here.hasFile() and \'page\') or \'\'</string> </value>
+            <value> <string>python:((here.hasFile() and here.getSimulationState() not in (\'draft\', \'outgoing\', \'pending\')) and \'page\') or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -323,7 +323,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Event_getTextContentCorrespondToFormat(editable=not here.hasFile())</string> </value>
+            <value> <string>python:here.Event_getTextContentCorrespondToFormat(editable=(not here.hasFile() or here.getSimulationState() in (\'draft\', \'outgoing\', \'pending\')))</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -339,7 +339,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not:here/hasFile</string> </value>
+            <value> <string>python:not here.hasFile() or here.getSimulationState() in (\'draft\', \'outgoing\', \'pending\')</string> </value>
         </item>
       </dictionary>
     </pickle>
