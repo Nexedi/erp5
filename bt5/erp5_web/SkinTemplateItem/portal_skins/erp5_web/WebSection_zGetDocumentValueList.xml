@@ -44,6 +44,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>all_versions</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>kw</string> </key>
                                 <value>
                                   <dictionary/>
@@ -75,6 +81,7 @@
                           <list>
 <string>language</string>
 <string>all_languages</string>
+<string>all_versions</string>
 <string>validation_state</string>
 <string>kw</string>
                           </list>
@@ -101,6 +108,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>language\r\n
 all_languages\r\n
+all_versions\r\n
 validation_state:list\r\n
 kw</string> </value>
         </item>
@@ -118,7 +126,9 @@ kw</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -142,13 +152,25 @@ kw</string> </value>
 
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
 \n
+<dtml-comment>\n
+   the subquery is named catalog to prevent use another LEFT JOIN.\n
+</dtml-comment>\n
+\n
 SELECT\n
-  t.path AS path, t.uid AS uid, t.version AS version\n
+  catalog.path AS path, catalog.uid AS uid, catalog.modification_date,\n
+  catalog.reference, catalog.int_index,  catalog.creation_date , catalog.title, \n
+  catalog.priority\n
 FROM\n
   (\n
     SELECT\n
-      catalog.uid, catalog.path, catalog.int_index,\n
-      catalog.reference, my_versioning.language, my_versioning.version\n
+      catalog.uid, catalog.path, catalog.int_index, catalog.modification_date,\n
+      catalog.reference, my_versioning.language, my_versioning.version,\n
+      catalog.creation_date, catalog.title\n
+      , MAX(CONCAT(CASE my_versioning.language\n
+                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
+                                       WHEN \'en\' THEN \'2\'\n
+                                       ELSE \'1\' END,\n
+                            my_versioning.version)) AS priority\n
     FROM\n
       <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
@@ -157,29 +179,46 @@ FROM\n
     WHERE\n
       my_versioning.uid = catalog.uid\n
       <dtml-if "query[\'where_expression\']">\n
-        AND <dtml-var "query[\'where_expression\']">\n
+          AND <dtml-var "query[\'where_expression\']">\n
       </dtml-if>\n
 <dtml-if all_languages>\n
-    GROUP BY\n
-      catalog.reference\n
-    HAVING\n
-      MAX(CASE my_versioning.language WHEN <dtml-sqlvar language type="string"> THEN 3 WHEN \'en\' THEN 2 ELSE 1 END)\n
-        = CASE my_versioning.language WHEN <dtml-sqlvar language type="string"> THEN 3 WHEN \'en\' THEN 2 ELSE 1 END\n
+\n
 <dtml-else>\n
-      AND my_versioning.language = <dtml-sqlvar language type="string">\n
+      AND my_versioning.language = <dtml-sqlvar language type="string"> \n
 </dtml-if>\n
-  ) AS t\n
-GROUP BY\n
-  t.reference\n
-  HAVING\n
-    MAX(t.version) = t.version\n
-ORDER BY\n
-  t.int_index, t.reference\n
+    GROUP BY\n
+      catalog.uid\n
+    ORDER BY\n
+      priority DESC\n
+  ) AS catalog, versioning AS my_versioning\n
+     WHERE\n
+          catalog.uid = my_versioning.uid\n
+<dtml-if all_versions>\n
+    GROUP BY\n
+      catalog.uid\n
+<dtml-else>\n
+     GROUP BY\n
+       catalog.reference\n
+     HAVING \n
+         MAX(CONCAT(CASE my_versioning.language\n
+                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
+                                       WHEN \'en\' THEN \'2\'\n
+                                       ELSE \'1\' END,\n
+                            my_versioning.version)) = catalog.priority\n
+</dtml-if>\n
+  ORDER BY\n
+<dtml-if "query[\'order_by_expression\']">\n
+   <dtml-var "query[\'order_by_expression\']">\n
+<dtml-else>\n
+   catalog.int_index, catalog.reference\n
+</dtml-if>\n
+\n
 <dtml-if "query[\'limit_expression\']">\n
   LIMIT <dtml-var "query[\'limit_expression\']">\n
 <dtml-else>\n
   LIMIT 1000\n
 </dtml-if>\n
+\n
 </dtml-let>
 
 ]]></string> </value>
@@ -222,13 +261,25 @@ ORDER BY\n
 
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
 \n
+<dtml-comment>\n
+   the subquery is named catalog to prevent use another LEFT JOIN.\n
+</dtml-comment>\n
+\n
 SELECT\n
-  t.path AS path, t.uid AS uid, t.version AS version\n
+  catalog.path AS path, catalog.uid AS uid, catalog.modification_date,\n
+  catalog.reference, catalog.int_index,  catalog.creation_date , catalog.title, \n
+  catalog.priority\n
 FROM\n
   (\n
     SELECT\n
-      catalog.uid, catalog.path, catalog.int_index,\n
-      catalog.reference, my_versioning.language, my_versioning.version\n
+      catalog.uid, catalog.path, catalog.int_index, catalog.modification_date,\n
+      catalog.reference, my_versioning.language, my_versioning.version,\n
+      catalog.creation_date, catalog.title\n
+      , MAX(CONCAT(CASE my_versioning.language\n
+                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
+                                       WHEN \'en\' THEN \'2\'\n
+                                       ELSE \'1\' END,\n
+                            my_versioning.version)) AS priority\n
     FROM\n
       <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
@@ -237,29 +288,46 @@ FROM\n
     WHERE\n
       my_versioning.uid = catalog.uid\n
       <dtml-if "query[\'where_expression\']">\n
-        AND <dtml-var "query[\'where_expression\']">\n
+          AND <dtml-var "query[\'where_expression\']">\n
       </dtml-if>\n
 <dtml-if all_languages>\n
-    GROUP BY\n
-      catalog.reference\n
-    HAVING\n
-      MAX(CASE my_versioning.language WHEN <dtml-sqlvar language type="string"> THEN 3 WHEN \'en\' THEN 2 ELSE 1 END)\n
-        = CASE my_versioning.language WHEN <dtml-sqlvar language type="string"> THEN 3 WHEN \'en\' THEN 2 ELSE 1 END\n
+\n
 <dtml-else>\n
-      AND my_versioning.language = <dtml-sqlvar language type="string">\n
+      AND my_versioning.language = <dtml-sqlvar language type="string"> \n
 </dtml-if>\n
-  ) AS t\n
-GROUP BY\n
-  t.reference\n
-  HAVING\n
-    MAX(t.version) = t.version\n
-ORDER BY\n
-  t.int_index, t.reference\n
+    GROUP BY\n
+      catalog.uid\n
+    ORDER BY\n
+      priority DESC\n
+  ) AS catalog, versioning AS my_versioning\n
+     WHERE\n
+          catalog.uid = my_versioning.uid\n
+<dtml-if all_versions>\n
+    GROUP BY\n
+      catalog.uid\n
+<dtml-else>\n
+     GROUP BY\n
+       catalog.reference\n
+     HAVING \n
+         MAX(CONCAT(CASE my_versioning.language\n
+                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
+                                       WHEN \'en\' THEN \'2\'\n
+                                       ELSE \'1\' END,\n
+                            my_versioning.version)) = catalog.priority\n
+</dtml-if>\n
+  ORDER BY\n
+<dtml-if "query[\'order_by_expression\']">\n
+   <dtml-var "query[\'order_by_expression\']">\n
+<dtml-else>\n
+   catalog.int_index, catalog.reference\n
+</dtml-if>\n
+\n
 <dtml-if "query[\'limit_expression\']">\n
   LIMIT <dtml-var "query[\'limit_expression\']">\n
 <dtml-else>\n
   LIMIT 1000\n
 </dtml-if>\n
+\n
 </dtml-let>
 
 ]]></string> </value>

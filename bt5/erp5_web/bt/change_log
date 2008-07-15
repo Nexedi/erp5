@@ -1,3 +1,6 @@
+2008-07-15 rafael
+* Updated WebSection_zGetDocumentValueList to support more params and fix some issues.
+
 2008-07-06 yo
 * Add effective date into Web Page.
 
