@@ -61,6 +61,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>chart_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>colour_column_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,14 +77,20 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>grid_graph</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>listbox_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key>                 <string>user_column_id_list</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -130,7 +144,7 @@
                 </item>
                 <item>
                     <key>                 <string>title</string> </key>
-                    <value> <string>TALES</string> </value>
+                    <value> <string>Stock Graph</string> </value>
                 </item>
                 <item>
                     <key>                 <string>user_column_id_list</string> </key>
@@ -153,22 +167,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getTitle</string> </value>
         </item>
       </dictionary>
     </pickle>
