@@ -153,7 +153,11 @@ kw</string> </value>
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
 \n
 <dtml-comment>\n
-   the subquery is named catalog to prevent use another LEFT JOIN.\n
+  Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
+  can support more features which are needed here. Once SQLCatalog supports those feature, \n
+  this method should be refactored to use catalog only.\n
+  \n
+   The subquery is named catalog to prevent use another LEFT JOIN.\n
 </dtml-comment>\n
 \n
 SELECT\n
@@ -262,7 +266,11 @@ FROM\n
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
 \n
 <dtml-comment>\n
-   the subquery is named catalog to prevent use another LEFT JOIN.\n
+  Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
+  can support more features which are needed here. Once SQLCatalog supports those feature, \n
+  this method should be refactored to use catalog only.\n
+  \n
+   The subquery is named catalog to prevent use another LEFT JOIN.\n
 </dtml-comment>\n
 \n
 SELECT\n
