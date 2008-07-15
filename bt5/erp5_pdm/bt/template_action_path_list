@@ -1,6 +1,7 @@
 Component Individual Variation | view
 Component Module | converted_inventory_report
 Component Module | view
+Component | inventory_chart
 Component | jump_to_related_transformation
 Component | purchase_price_view
 Component | sale_price_view
@@ -11,6 +12,7 @@ Measure | view
 Product Individual Variation | view
 Product Module | converted_inventory_report
 Product Module | view
+Product | inventory_chart
 Product | jump_to_related_transformation
 Product | purchase_price_view
 Product | sale_price_view
