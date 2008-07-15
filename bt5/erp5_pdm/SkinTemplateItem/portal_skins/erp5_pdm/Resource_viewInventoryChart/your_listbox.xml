@@ -463,7 +463,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>testing</string> </value>
+                    <value> <string>resource_view_inventory_chart_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
