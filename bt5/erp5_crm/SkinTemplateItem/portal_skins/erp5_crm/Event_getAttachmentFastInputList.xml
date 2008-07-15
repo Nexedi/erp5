@@ -76,10 +76,7 @@ for attachment in context.getAttachmentInformationList():\n
     filename  = context.getTitle()\n
     if attachment.has_key("file_name"):\n
        filename=attachment["file_name"]\n
-    if attachment.has_key("content_type"):\n
-       pt = contribution_registry.findPortalTypeName(mime_type=attachment["content_type"])\n
-    else:\n
-       pt = "File"\n
+    pt = "File"\n
     temp_base_id = \'index_\'.join([attachment["uid"], str(attachment["index"])])\n
     base_list.append(newTempBase(context, id=temp_base_id,\n
                                               uid=temp_base_id,\n
