@@ -434,7 +434,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     notification_mode = self.getAlarmNotificationMode()
     if notification_mode == 'never':
       return
-    # Grab real latest result. Otherwise, we wuld chack n-1 execution as n is
+    # Grab real latest result. Otherwise, we would check n-1 execution as n is
     # still considered running, and its result would be skipped.
     active_process = self.getLastActiveProcess(include_active=True)
     if self.sense(process=active_process):
