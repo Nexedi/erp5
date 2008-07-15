@@ -3330,3 +3330,15 @@ msgstr "La personne ou l'organisation à qui la facture doit être adressée et 
 msgid "The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier."
 msgstr "La personne ou l'organisation qui envoie la facture ou est en charge de la gestion administrative pour le fournisseur."
 
+msgid "Change Function"
+msgstr "Changer la fonction"
+
+msgid "Coordinate Function"
+msgstr "Fonction de la coordonnée"
+
+msgid "Tax Model Line"
+msgstr "Ligne de modèle de taxe"
+
+
+
+
