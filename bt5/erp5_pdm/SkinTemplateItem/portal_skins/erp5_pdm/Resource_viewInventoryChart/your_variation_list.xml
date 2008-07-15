@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/variation_list | None</string> </value>
+            <value> <string>python: \' \'.join([context.restrictedTraverse(\'portal_categories/%s\'%(q,)).getTranslatedTitle() for q in context.REQUEST.get(\'variation_list\')])</string> </value>
         </item>
       </dictionary>
     </pickle>
