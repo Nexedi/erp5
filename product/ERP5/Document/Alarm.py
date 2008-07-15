@@ -317,7 +317,7 @@ class Alarm(XMLObject, PeriodicityMixin):
         # Old API
         getattr(self.activate(tag=tag), method_id)()
       if self.isAlarmNotificationMode():
-        self.activate(after_tag=tag).notify()
+        self.activate(after_tag=tag).notify(include_active=True)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'sense')
   def sense(self, process=None):
@@ -424,7 +424,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     return self.activeSense(fixit=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'notify')
-  def notify(self):
+  def notify(self, include_active=False):
     """
     This method is called to notify people that some alarm has
     been sensed. Notification consists of sending an email
@@ -436,7 +436,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       return
     # Grab real latest result. Otherwise, we would check n-1 execution as n is
     # still considered running, and its result would be skipped.
-    active_process = self.getLastActiveProcess(include_active=True)
+    active_process = self.getLastActiveProcess(include_active=include_active)
     if self.sense(process=active_process):
       prefix = 'ERROR'
     else:
