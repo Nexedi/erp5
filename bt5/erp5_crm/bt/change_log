@@ -1,3 +1,6 @@
+2008-07-15 yo
+* Preserve whitespace in the text content of an event.
+
 2008-07-15 rafael
 * Added Event_afterClone to make cloned Events editable.
 
