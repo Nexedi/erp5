@@ -434,7 +434,10 @@ class Alarm(XMLObject, PeriodicityMixin):
     notification_mode = self.getAlarmNotificationMode()
     if notification_mode == 'never':
       return
-    if self.sense():
+    # Grab real latest result. Otherwise, we wuld chack n-1 execution as n is
+    # still considered running, and its result would be skipped.
+    active_process = self.getLastActiveProcess(include_active=True)
+    if self.sense(process=active_process):
       prefix = 'ERROR'
     else:
       if notification_mode != 'always':
@@ -444,7 +447,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     candidate_list = self.getDestinationValueList()
     if not candidate_list:
       candidate_list = None
-    result_list = [x for x in self.getLastActiveProcess().getResultList() if x is not None]
+    result_list = [x for x in active_process.getResultList() if x is not None]
     attachment_list = []
     if len(result_list):
       def sort_result_list(a, b):
@@ -475,12 +478,15 @@ Alarm URL: %s
                                   attachment_list=attachment_list)
 
   security.declareProtected(Permissions.View, 'getLastActiveProcess')
-  def getLastActiveProcess(self):
+  def getLastActiveProcess(self, include_active=False):
     """
     This returns the last active process finished. So it will
     not returns the current one
     """
-    limit = self.isActive() and 2 or 1
+    if include_active:
+      limit = 1
+    else:
+      limit = self.isActive() and 2 or 1
     active_process_list = self.getPortalObject().portal_catalog(
       portal_type='Active Process', limit=limit,
       sort_on=(('creation_date', 'DESC'), ),
