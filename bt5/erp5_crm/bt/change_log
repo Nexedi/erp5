@@ -1,5 +1,5 @@
 2008-07-15 rafael
-* Added MailMessage_afterClone to make cloned Mail Messages editable.
+* Added Event_afterClone to make cloned Events editable.
 
 2008-07-07 yusei
 * Added an action to ticket portal types which clone ticket and related events.

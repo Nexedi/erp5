@@ -127,7 +127,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MailMessage_afterClone</string> </value>
+            <value> <string>Event_afterClone</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
