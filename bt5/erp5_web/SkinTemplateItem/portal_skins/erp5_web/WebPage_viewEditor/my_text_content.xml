@@ -301,18 +301,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getTextContent().replace(\'\\\\\', \'\\\\\\\\\')</string> </value>
+            <value> <string>python: (lambda x: field.get_value(\'text_editor\') == \'fck_editor\' and x.replace(\'\\\\\', \'\\\\\\\\\') or x)(here.getTextContent())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -320,18 +317,15 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(here.getTextFormat() == \'text/html\' and here.portal_preferences.getPreferredTextEditor()) or \'text_area\'</string> </value>
+            <value> <string>python: here.getTextFormat() == \'text/html\' and here.portal_preferences.getPreferredTextEditor() or \'text_area\'</string> </value>
         </item>
       </dictionary>
     </pickle>
