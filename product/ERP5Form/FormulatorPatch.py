@@ -144,41 +144,6 @@ ProxyField._render_helper = Field_render_helper
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
-
-def SelectionValidator_validate(self, field, key, REQUEST):
-    value = StringBaseValidator.validate(self, field, key, REQUEST)
-
-    if value == "" and not field.get_value('required'):
-        return value
-
-    # get the text and the value from the list of items
-    # Patch by JPS for Listbox cell
-    for item in field.get_value('items', cell=getattr(REQUEST,'cell',None)):
-        try:
-            item_text, item_value = item
-        except ValueError:
-            item_text = item
-            item_value = item
-
-        # check if the value is equal to the string/unicode version of
-        # item_value; if that's the case, we can return the *original*
-        # value in the list (not the submitted value). This way, integers
-        # will remain integers.
-        # XXX it is impossible with the UI currently to fill in unicode
-        # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, unicode):
-            str_value = item_value.encode(field.get_form_encoding())
-        else:
-            str_value = str(item_value)
-
-        if str_value == value:
-            return item_value
-
-    # if we didn't find the value, return error
-    self.raise_error('unknown_selection', field)
-
-SelectionValidator.validate = SelectionValidator_validate
-
 # The required field should have a default value to 0
 from Products.Formulator.DummyField import fields
 
@@ -189,8 +154,6 @@ StringBaseValidator_required = fields.CheckBoxField('required',
     "data."),
                                 default=0)
 StringBaseValidator.required = StringBaseValidator_required
-
-from Products.Formulator.Validator import SelectionValidator
 
 def SelectionValidator_validate(self, field, key, REQUEST):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
