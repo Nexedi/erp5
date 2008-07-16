@@ -181,6 +181,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -237,8 +243,8 @@
                           <string>text/plain</string>
                         </tuple>
                         <tuple>
-                          <string>Structured Text</string>
-                          <string>text/structured</string>
+                          <string>reStructuredText</string>
+                          <string>text/x-rst</string>
                         </tuple>
                       </list>
                     </value>
