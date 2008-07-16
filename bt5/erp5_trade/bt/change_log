@@ -1,5 +1,8 @@
+2008-07-16 Jerome
+Add worklists for diverged packing lists.
+
 2008-07-09 Nicolas
-use standart packing_list_workflow for Internal Packing Lists
+use standard packing_list_workflow for Internal Packing Lists
 
 2008-07-07 Nicolas
 Proxify Internal Packing List
