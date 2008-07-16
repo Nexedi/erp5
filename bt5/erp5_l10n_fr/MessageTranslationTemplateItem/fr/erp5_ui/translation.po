@@ -3387,3 +3387,12 @@ msgstr "Livraisons de vente à résoudre"
 msgid "Packing List Causality Workflow"
 msgstr "Workflow de divergences sur les livraisons"
 
+msgid "Receive"
+msgstr "Recevoir"
+
+msgid "Received"
+msgstr "Reçu"
+
+msgid "Diverged"
+msgstr "Divergent"
+
