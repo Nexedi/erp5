@@ -74,6 +74,8 @@ kwargs.update(\n
           node_uid = context.restrictedTraverse(kw[\'node\']).getUid(),\n
           at_date = kw.get(\'at_date\'),\n
 )\n
+\n
+# getAllInventoryList used to fetch all results using one query\n
 return context.getPortalObject().portal_simulation.getAllInventoryList(**kwargs)\n
 </string> </value>
         </item>
