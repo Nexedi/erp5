@@ -18,4 +18,5 @@ Service | Sale Supply Line
 Service | Supply Line
 Supply Line | Predicate
 Supply Line | Supply Cell
+Transformation Operation | Mapped Value
 Transformation Transformed Resource | Mapped Value

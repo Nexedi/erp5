@@ -1,17 +1,17 @@
 <hidden_content_type_list>
  <portal_type id="Component">
-  <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
   <item>Image</item>
+  <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Measure">
   <item>Measure Cell</item>
  </portal_type>
  <portal_type id="Product">
-  <item>Image</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
+  <item>Image</item>
   <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Purchase Supply">
@@ -25,17 +25,20 @@
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Sale Supply Line">
-  <item>Sale Supply Cell</item>
   <item>Predicate</item>
+  <item>Sale Supply Cell</item>
  </portal_type>
  <portal_type id="Service">
-  <item>Purchase Supply Line</item>
-  <item>Sale Supply Line</item>
   <item>Supply Line</item>
+  <item>Sale Supply Line</item>
+  <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Supply Line">
   <item>Supply Cell</item>
   <item>Predicate</item>
+ </portal_type>
+ <portal_type id="Transformation Operation">
+  <item>Mapped Value</item>
  </portal_type>
  <portal_type id="Transformation Transformed Resource">
   <item>Mapped Value</item>
