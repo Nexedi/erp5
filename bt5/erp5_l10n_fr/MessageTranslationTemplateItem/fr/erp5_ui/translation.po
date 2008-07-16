@@ -1720,7 +1720,7 @@ msgid "Operation Title"
 msgstr "Opération"
 
 msgid "Order Workflow"
-msgstr ""
+msgstr "Workflow des commandes"
 
 msgid "Order date"
 msgstr "Date de la commande"
@@ -2566,7 +2566,7 @@ msgid "Thumbnail"
 msgstr "Aperçu"
 
 msgid "Ticket Workflow"
-msgstr ""
+msgstr "workflow des tickets"
 
 msgid "Time"
 msgstr "Temps"
@@ -3339,6 +3339,51 @@ msgstr "Fonction de la coordonnée"
 msgid "Tax Model Line"
 msgstr "Ligne de modèle de taxe"
 
+msgid "Purchase Supply Lines"
+msgstr "Lignes tarifaires d'achat"
 
+msgid "Sale Supply Lines"
+msgstr "Lignes tarifaires de vente"
 
+msgid "Packing List Workflow"
+msgstr "Workflow des livraisons"
+
+# packing_list_workflow/worklists/1_draft_purchase_packing_list_list
+msgid "Purchase Packing List to Confirm"
+msgstr "Livraisons d'achat à confirmer"
+
+# packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
+msgid "Purchase Packing List to receive"
+msgstr "Livraisons d'achat à recevoir"
+
+# packing_list_workflow/worklists/3_stopped_purchase_packing_list_list
+msgid "Purchase Packing List to validate"
+msgstr "Livraisons d'achat à valider"
+
+# packing_list_workflow/worklists/4_draft_sale_packing_list_list
+msgid "Sale Packing List to process"
+msgstr "Livraisons de vente à créer"
+
+# packing_list_workflow/worklists/5_confirmed_sale_packing_list_list
+msgid "Sale Packing List to prepare"
+msgstr "Livraisons de vente à préparer"
+
+# packing_list_workflow/worklists/6_ready_sale_packing_list_list
+msgid "Sale Packing List to ship"
+msgstr "Livraisons de vente à envoyer"
+
+# packing_list_workflow/worklists/7_started_sale_packing_list_list
+msgid "Sale Packing List to validate"
+msgstr "Livraisons de vente à valider"
+
+# packing_list_causality_workflow/worklists/1_diverged_purchase_packing_list_list
+msgid "Purchase Packing List to Solve"
+msgstr "Livraisons d'achat à résoudre"
+
+# packing_list_causality_workflow/worklists/2_diverged_sale_packing_list_list
+msgid "Sale Packing List to Solve"
+msgstr "Livraisons de vente à résoudre"
+
+msgid "Packing List Causality Workflow"
+msgstr "Workflow de divergences sur les livraisons"
 
