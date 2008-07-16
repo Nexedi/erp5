@@ -62,7 +62,7 @@ Test quantity steps for price on purchase supply line\n
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Purchase Price</td>\n
+  <td>link=Purchase</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

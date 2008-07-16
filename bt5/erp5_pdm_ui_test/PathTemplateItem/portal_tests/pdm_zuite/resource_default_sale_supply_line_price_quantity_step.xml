@@ -62,7 +62,7 @@ Test quantity steps for price on sale supply line\n
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Sales Price</td>\n
+  <td>link=Sale</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
