@@ -506,7 +506,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>packing_list_solve_action_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
