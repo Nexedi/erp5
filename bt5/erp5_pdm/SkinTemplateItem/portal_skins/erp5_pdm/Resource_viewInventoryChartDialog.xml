@@ -133,7 +133,7 @@
         </item>
         <item>
             <key> <string>method</string> </key>
-            <value> <string>POST</string> </value>
+            <value> <string>GET</string> </value>
         </item>
         <item>
             <key> <string>name</string> </key>
