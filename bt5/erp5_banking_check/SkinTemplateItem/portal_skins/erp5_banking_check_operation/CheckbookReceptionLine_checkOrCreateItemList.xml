@@ -141,18 +141,18 @@ def assertReferenceMatchListEmpty(match_list, destination_payment_uid):\n
                       mapping={\'reference_list\': matched_reference_list})\n
     raise ValidationFailed, (message,)\n
 \n
-def checkReferenceListUniqueness(reference_list, model, destination_payment_uid):\n
+def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid):\n
   """\n
     Check each given reference not to already exist.\n
   """\n
   if destination_payment_uid is None:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_url=model, simulation_state=\'!=deleted\')\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_uid=model_uid, simulation_state=\'!=deleted\')\n
   else:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_url=model,\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_uid=model_uid,\n
                                        simulation_state=\'!=deleted\')\n
   assertReferenceMatchListEmpty(match_list, destination_payment_uid)\n
   for reference in reference_list:\n
-    tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference)\n
+    tag = \'check_%s_%s_%s\' % (model_uid, destination_payment_uid, reference)\n
     if encountered_check_identifiers_dict.has_key(tag):\n
       account = context.portal_catalog(uid=destination_payment_uid)[0].getObject()\n
       message = Message(domain=\'ui\', message=\'The following references are already allocated : $reference_list\',\n
@@ -160,11 +160,11 @@ def checkReferenceListUniqueness(reference_list, model, destination_payment_uid)
       raise ValidationFailed, (message,)\n
     encountered_check_identifiers_dict[tag] = None\n
 \n
-def checkReferenceUniqueness(reference, model, destination_payment_uid):\n
+def checkReferenceUniqueness(reference, model_uid, destination_payment_uid):\n
   """\n
     Check the given reference not to already exist.\n
   """\n
-  checkReferenceListUniqueness([reference, ], model, destination_payment_uid)\n
+  checkReferenceListUniqueness([reference, ], model_uid, destination_payment_uid)\n
 \n
 start_date = checkbook_reception.getStartDate()\n
 destination = checkbook_reception.getDestination()\n
@@ -181,7 +181,9 @@ resource_portal_type = resource.getPortalType()\n
 if resource_portal_type == \'Checkbook Model\':\n
   is_checkbook = True\n
   module = portal.checkbook_module\n
+  model_value = resource.getCompositionValue()\n
   model = resource.getComposition()\n
+  model_uid = model_value.getUid()\n
   # XXX: portal_type value is hardcoded because I don\'t want to get the\n
   # portaltype on each created object as it will always be the same.\n
   # We need a method to get the default content portaltype on a Folder.\n
@@ -193,6 +195,7 @@ else:\n
   is_checkbook = False\n
   module = portal.check_module\n
   model = resource.getRelativeUrl()\n
+  model_uid = resource.getUid()\n
   # XXX: portal_type value is hardcoded, see XXX above.\n
   if resource_portal_type == \'Check Model\' and resource.isFixedPrice():\n
     reference_to_int = getTravelerCheckReferenceNumber\n
@@ -229,7 +232,7 @@ for i in xrange(quantity):\n
     reference_list = [int_to_reference(x, reference_range_min) for x in range(reference_to_int(reference_range_min), last_reference_value + 1)]\n
     reference_range_max = int_to_reference(last_reference_value, reference_range_min)\n
     if check == 1:\n
-      checkReferenceListUniqueness(reference_list, model, destination_payment_uid)\n
+      checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid)\n
     if create == 1:\n
       item.setReferenceRangeMax(reference_range_max)\n
       item.setReferenceRangeMin(reference_range_min)\n
@@ -241,7 +244,7 @@ for i in xrange(quantity):\n
       if confirm_check:\n
         item.confirm()\n
       for j in reference_list:\n
-        #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, j)\n
+        #tag = \'check_%s_%s_%s\' % (model_uid, destination_payment_uid, j)\n
         #encountered_check_identifiers_dict[tag] = None\n
         check = item.newContent(portal_type=\'Check\', title=j, activate_kw={\'tag\': tag, \'priority\':4})\n
         context.log(\'New Sub Item created with Id\', check.getId())\n
@@ -254,7 +257,7 @@ for i in xrange(quantity):\n
   else:\n
     last_reference_value = reference_to_int(reference_range_min)\n
     if check == 1:\n
-      checkReferenceUniqueness(reference_range_min, model, destination_payment_uid)\n
+      checkReferenceUniqueness(reference_range_min, model_uid, destination_payment_uid)\n
     if create == 1:\n
       item.setReference(reference_range_min)\n
       item.setResource(model)\n
@@ -266,7 +269,7 @@ for i in xrange(quantity):\n
       if confirm_check:\n
         item.setStartDate(start_date)\n
         item.confirm()\n
-      #tag = \'check_%s_%s_%s\' % (model, destination_payment_uid, reference_range_min)\n
+      #tag = \'check_%s_%s_%s\' % (model_uid, destination_payment_uid, reference_range_min)\n
       #encountered_check_identifiers_dict[tag] = None\n
   # update reference_range_min for the next pass\n
   reference_range_min = int_to_reference(last_reference_value + 1, reference_range_min)\n
@@ -374,7 +377,9 @@ return encountered_check_identifiers_dict\n
                             <string>True</string>
                             <string>is_checkbook</string>
                             <string>module</string>
+                            <string>model_value</string>
                             <string>model</string>
+                            <string>model_uid</string>
                             <string>check_amount</string>
                             <string>int</string>
                             <string>check_quantity</string>
