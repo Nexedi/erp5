@@ -70,6 +70,7 @@ class SupplyLink(Path, XMLObject):
                       , PropertySheet.TransformedResource
                       , PropertySheet.Delivery
                       , PropertySheet.Simulation
+                      , PropertySheet.Reference
                       )
 
     security.declareProtected(Permissions.AccessContentsInformation,
