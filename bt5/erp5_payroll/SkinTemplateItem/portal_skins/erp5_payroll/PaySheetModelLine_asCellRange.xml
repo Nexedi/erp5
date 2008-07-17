@@ -80,7 +80,8 @@ def framing(cell, name):\n
   if cell is None:\n
     # This error happens when the cell is not found in the parent model or any\n
     # inherited model.\n
-    raise ValueError, "PaySheetModelLine_asCellRange: cell is None for %s" % name\n
+    return "%s (slice not defined)" % name\n
+\n
   return \'%s <= %s < %s\' % (cell.getQuantityRangeMin(),\n
                             name,\n
                             cell.getQuantityRangeMax())\n
@@ -213,6 +214,12 @@ else:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>PaySheetModelLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
