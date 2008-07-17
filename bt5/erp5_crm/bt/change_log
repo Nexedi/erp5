@@ -1,3 +1,6 @@
+2008-07-17 jerome
+Remove portal transforms, they are also in core
+
 2008-07-17 nicolas
 Get Forwarded data from attachments if required
 
