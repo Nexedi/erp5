@@ -83,6 +83,7 @@ if subject is not None and \':\' in subject:\n
     if subject.startswith(mark+\':\'):\n
       forwarded_mail = True\n
       break\n
+\n
 if forwarded_mail is True:\n
   # find original recipient\n
   source = context.getSource()\n
@@ -95,14 +96,22 @@ if forwarded_mail is True:\n
   from_header_length = len(from_header)\n
   Base_getEntityListFromFromHeader = context.Base_getEntityListFromFromHeader\n
   line = \'\'\n
+  entity_list = []\n
   for line in body.split(\'\\n\'):\n
     if line.startswith(from_header):\n
       break\n
   if line:\n
     from_text = line[from_header_length:]\n
-    entity_list = Base_getEntityListFromFromHeader(from_text)\n
-    if entity_list:\n
-      context.setSource(entity_list[0].getRelativeUrl())\n
+    entity_list.extend(Base_getEntityListFromFromHeader(from_text))\n
+  if not entity_list:\n
+    #Get data from attachments\n
+    for attachment in context.getAttachmentInformationList():\n
+      if \'From\' in attachment:\n
+        entity_list.extend(Base_getEntityListFromFromHeader(attachment[\'From\']))\n
+        break\n
+  if entity_list:\n
+    source = entity_list[0].getRelativeUrl()\n
+    context.setSource(source)\n
 </string> </value>
         </item>
         <item>
@@ -169,8 +178,9 @@ if forwarded_mail is True:\n
                             <string>from_header_length</string>
                             <string>Base_getEntityListFromFromHeader</string>
                             <string>line</string>
-                            <string>from_text</string>
                             <string>entity_list</string>
+                            <string>from_text</string>
+                            <string>attachment</string>
                           </tuple>
                         </value>
                     </item>
