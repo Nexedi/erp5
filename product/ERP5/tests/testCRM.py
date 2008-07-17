@@ -485,6 +485,22 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     self.assertEqual(document.getSourceValue().getTitle(), 'Sender')
     self.assertEqual(document.getDestinationValue().getTitle(), 'Me')
 
+  def test_forwarder_mail_with_attachment(self):
+    """
+    Make sure that if ingested email is forwarded one, the sender of
+    original mail should be the sender of event and the sender of
+    forwarded mail should be the recipient of event.
+    """
+    document = self._ingestMail(filename='forwarded_attached')
+
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEqual(document.getContentInformation().get('From'), 'Me <me@erp5.org>')
+    self.assertEqual(document.getContentInformation().get('To'), 'crm@erp5.org')
+    self.assertEqual(document.getSourceValue().getTitle(), 'Sender')
+    self.assertEqual(document.getDestinationValue().getTitle(), 'Me')
+
   def test_encoding(self):
     document = self._ingestMail(filename='encoded')
 
