@@ -1,0 +1,43 @@
+Return-Path: <me@erp5.org>
+X-Original-To: me@erp5.org
+Delivered-To: me@erp5.org
+Message-ID: <487F439C.1050604@erp5.org>
+Date: Thu, 17 Jul 2008 15:05:32 +0200
+From: Me <me@erp5.org>
+User-Agent: Thunderbird 2.0.0.12 (X11/20080305)
+To: crm@erp5.org
+Subject: [Fwd: subject]
+Content-Type: multipart/mixed;
+ boundary="------------040506080806090606030403"
+X-Bogosity: Ham, tests=bogofilter, spamicity=0.000016, version=1.1.3
+
+This is a multi-part message in MIME format.
+--------------040506080806090606030403
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+
+--------------040506080806090606030403
+Content-Type: message/rfc822;
+ name="subject.eml"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="subject.eml"
+
+Return-Path: Sender <sender@customer.com>
+X-Original-To: sender@customer.com
+Delivered-To: sender@customer.com
+Message-ID: <487F438E.1040505@erp5.org>
+Date: Thu, 17 Jul 2008 15:05:18 +0200
+From: Sender <sender@customer.com>
+User-Agent: Thunderbird 2.0.0.12 (X11/20080305)
+MIME-Version: 1.0
+To: Me <me@erp5.org>
+Subject: subject
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.1.3
+
+
+--------------040506080806090606030403--
