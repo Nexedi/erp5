@@ -2102,6 +2102,14 @@ class Catalog(Folder,
       for table in index_from_table.keys():
         available_index_list = self.getIndex(table, index_from_table[table], key_list)
         if len(available_index_list) > 0:
+          # Always give MySQL a chance to use PRIMARY key. It is much faster if
+          # current table is used in a join on primary key than forcing it to
+          # use another index.
+          # Note: due to a bug (?) in MySQL (at least 5.0.45 community), it is
+          # a syntax error to put "PRIMARY" keyword anywere besides at first
+          # position. Hence the "insert(0".
+          if 'PRIMARY' not in available_index_list:
+            available_index_list.insert(0, 'PRIMARY')
           # tell mysql to use these index
           table = from_table_dict.pop(related_table)
           index_list_string = ', '.join(available_index_list)
