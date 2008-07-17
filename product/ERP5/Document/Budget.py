@@ -51,6 +51,7 @@ class Budget(Predicate):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Budget
+                      , PropertySheet.Path
                       )
 
     # CMF Type Definition

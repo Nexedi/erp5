@@ -31,5 +31,5 @@ class Budget:
   Budget properties
   """
 
-  _categories = ('function', 'financial_section', 'budget_type', 
-                 'budget_priority', 'budget_severity', 'budget_group')
+  _categories = ( 'budget_type', 'budget_line_variation',
+                  'budget_cell_variation', )
