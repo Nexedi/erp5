@@ -1,4 +1,10 @@
 <base_category_list>
+ <portal_type id="Budget Line">
+  <item>group</item>
+  <item>region</item>
+  <item>budget_section</item>
+  <item>financial_section</item>
+ </portal_type>
  <portal_type id="Budget Module">
   <item>business_application</item>
  </portal_type>

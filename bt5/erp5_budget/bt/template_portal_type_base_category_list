@@ -1,3 +1,7 @@
+Budget Line | budget_section
+Budget Line | financial_section
+Budget Line | group
+Budget Line | region
 Budget Module | business_application
 Budget Transaction Module | business_application
 Budget Transaction | group
