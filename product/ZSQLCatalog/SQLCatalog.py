@@ -2104,12 +2104,7 @@ class Catalog(Folder,
         if len(available_index_list) > 0:
           # tell mysql to use these index
           table = from_table_dict.pop(related_table)
-          index_list_string = ""
-          for index in available_index_list:
-            if len(index_list_string) == 0:
-              index_list_string += "%s" %index
-            else:
-              index_list_string += ", %s" %index
+          index_list_string = ', '.join(available_index_list)
           table_with_index =  "%s use index(%s)"  %(related_table, index_list_string)
           from_table_dict[table_with_index] = table
 
