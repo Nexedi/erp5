@@ -911,7 +911,7 @@ class PlanningBoxWidget(Widget.Widget):
       # XXX Instead of harcoding library name
       # it should be better to call a python script, as
       # it is done on type base method.
-      return ['%s/wz_dragdrop.js' % context.portal_url.getPortalPath()]
+      return ['%s/wz_dragdrop.js' % context.portal_url()]
     else:
       return []
 
