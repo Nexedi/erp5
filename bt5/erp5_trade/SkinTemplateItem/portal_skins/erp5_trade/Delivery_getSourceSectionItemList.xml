@@ -77,14 +77,17 @@ if section_cat is not None:\n
   section_cat_obj = context.portal_categories.resolveCategory(section_cat)\n
 \n
 if section_cat_obj is not None:\n
-  result = section_cat_obj.getGroupRelatedValueList(portal_type=\'Organisation\')\n
+  result = section_cat_obj.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                                    checked_permission=\'View\')\n
+  result = [r for r in result\n
+            if r.getProperty(\'validation_state\') not in (\'invalidated\', \'deleted\')]\n
 \n
 current_source_section = context.getSourceSectionValue()\n
 if current_source_section is not None and current_source_section not in result:\n
   result.append(current_source_section)\n
 \n
 # convert to ListField format\n
-return [(\'\', \'\')]+[(i.getTitle(), i.getRelativeUrl()) for i in result]\n
+return [(\'\', \'\')] + [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
 </string> </value>
         </item>
         <item>
@@ -139,10 +142,11 @@ return [(\'\', \'\')]+[(i.getTitle(), i.getRelativeUrl()) for i in result]\n
                             <string>None</string>
                             <string>section_cat_obj</string>
                             <string>result</string>
-                            <string>current_source_section</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>r</string>
+                            <string>current_source_section</string>
                             <string>i</string>
                           </tuple>
                         </value>
