@@ -25,7 +25,6 @@
                 <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
-                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -128,25 +127,6 @@
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key>                 <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Shipping Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
                         </tuple>
                       </list>
                     </value>
