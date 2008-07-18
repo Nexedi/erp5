@@ -94,7 +94,9 @@ for content_type in content_type_list:\n
         result_dict.update({content_type_id: portal_type_dict})\n
 \n
 state_list_dict = {}\n
-for portal_type in result_dict.keys():\n
+portal_type_list = result_dict.keys()\n
+portal_type_list.sort()\n
+for portal_type in portal_type_list:\n
   listbox.append({\'portal_type\': portal_type,\n
                   \'state\'      : \'\',\n
                   \'count\'      : \'\'})\n
@@ -194,6 +196,7 @@ return context.Folder_viewWorkflowReport()\n
                             <string>portal_type_dict</string>
                             <string>count</string>
                             <string>state_list_dict</string>
+                            <string>portal_type_list</string>
                             <string>portal_type</string>
                             <string>state_list</string>
                             <string>state</string>
