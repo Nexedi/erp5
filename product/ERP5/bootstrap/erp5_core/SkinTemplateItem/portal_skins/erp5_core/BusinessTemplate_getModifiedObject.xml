@@ -97,35 +97,22 @@ for object_id in keys:\n
   object_state, object_class = modified_object_list[object_id]\n
   line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
   if object_state == \'New\':\n
-    line.edit(object_id=object_id, object_state=object_state,\n
-              object_class=object_class,\n
-              choice_item_list=[[\'Install\', \'install\'],\n
-                                [\'Do Nothing\', \'nothing\']])\n
+    choice_item_list=[[\'Install\', \'install\']]\n
   elif object_state == \'Modified\':\n
     if object_class in no_backup_dict:\n
-      line.edit(object_id=object_id, object_state=object_state,\n
-                object_class=object_class,\n
-                choice_item_list=[[\'Upgrade\', \'install\'],\n
-                                  [\'Keep Original\', \'nothing\']])\n
+      choice_item_list=[[\'Upgrade\', \'install\']]\n
     else:\n
-      line.edit(object_id=object_id, object_state=object_state,\n
-                object_class=object_class,\n
-                choice_item_list=[[\'Backup And Upgrade\', \'backup\'],\n
-                                  [\'Upgrade\', \'install\'],\n
-                                  [\'Keep Original\', \'nothing\']])\n
+      choice_item_list=[[\'Backup And Upgrade\', \'backup\']]\n
   elif object_state == \'Removed\':\n
     if object_class in no_backup_dict:\n
-      line.edit(object_id=object_id,\n
+      choice_item_list=[[\'Remove\', \'remove\']]\n
+    else:\n
+      choice_item_list=[[\'Backup And Remove\', \'save_and_remove\']]\n
+\n
+  line.edit(object_id=object_id,\n
                 object_state=object_state,\n
                 object_class=object_class,\n
-                choice_item_list=[[\'Remove\', \'remove\'],\n
-                                  [\'Keep Original\', \'nothing\']])\n
-    else:\n
-      line.edit(object_id=object_id, object_state=object_state,\n
-                object_class=object_class,\n
-                choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'],\n
-                                  [\'Remove\', \'remove\'],\n
-                                  [\'Keep Original\', \'nothing\']])\n
+                choice_item_list=choice_item_list)\n
   line.setUid(\'new_%s\' % object_id)\n
   object_list.append(line)\n
   i += 1                                  \n
@@ -202,6 +189,7 @@ return object_list\n
                             <string>object_class</string>
                             <string>str</string>
                             <string>line</string>
+                            <string>choice_item_list</string>
                             <string>_inplacevar_</string>
                           </tuple>
                         </value>
@@ -220,6 +208,12 @@ return object_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessTemplate_getModifiedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

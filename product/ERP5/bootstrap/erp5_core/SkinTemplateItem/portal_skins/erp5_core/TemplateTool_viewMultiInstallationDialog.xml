@@ -96,8 +96,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_choice</string>
                         <string>listbox_object_id</string>
+                        <string>listbox_choice</string>
                       </list>
                     </value>
                 </item>
