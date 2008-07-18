@@ -70,8 +70,7 @@ domain_list = []\n
 supply_chain_module = context.getPortalObject().supply_chain_module\n
 if depth == 0:\n
   category_list = []\n
-  for q in context.portal_selections.getSelectionValueList(context=context,\n
-                                                selection_name= \'production_order_selection\'):\n
+  for q in context.ProductionOrderModule_getSelectionProductionOrderList():\n
     specialise = q.getSpecialiseValue()\n
     if specialise is not None and specialise not in category_list:\n
       category_list.append(specialise) \n
