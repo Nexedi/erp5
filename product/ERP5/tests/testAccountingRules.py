@@ -195,7 +195,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def stepTic(self, **kw):
     self.tic()
 
-  def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
+  def stepCreateInvoiceTransactionRule(self, sequence, **kw) :
     """ 
       Create some predicates in the Invoice Transaction Rule
     """
@@ -264,7 +264,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       predicate_region_africa  = predicate_region_africa,
     )
   
-  def stepUpdateSaleInvoiceTransactionRuleMatrix(self, sequence, **kw) :
+  def stepUpdateInvoiceTransactionRuleMatrix(self, sequence, **kw) :
     """Creates/updates the matrix of the sale invoice transaction rule """
     invoice_transaction_rule = sequence.get('invoice_transaction_rule')
     base_id = 'movement'
@@ -303,7 +303,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_barebone_region_africa_cell = product_barebone_region_africa_cell,
     )
     
-  def stepValidateSaleInvoiceTransaction(self, sequence, **kw) :
+  def stepValidateInvoiceTransaction(self, sequence, **kw) :
     """validates the sale invoice transaction rule"""
     sequence.get('invoice_transaction_rule').validate()
 
@@ -514,10 +514,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       invoice = empty_invoice,
     )
     
-  def stepCreateSimpleSaleInvoice(self, sequence, **kw) :
+  def stepCreateSimpleInvoice(self, sequence, **kw) :
     """ creates a simple sale invoice for non varianted notebook product.
       The invoice is from `vendor` to `client_fr`, so the cell defined in
-      stepUpdateSaleInvoiceTransactionRuleMatrix should match. 
+      stepUpdateInvoiceTransactionRuleMatrix should match. 
       This invoice containts one line, 10 notebook * 10 EUR, so total price
       is 100
     """
@@ -553,7 +553,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       invoice_lines = [invoice_line]
     )
   
-  def stepCreateOtherSimpleSaleInvoice(self, sequence, **kw) :
+  def stepCreateOtherSimpleInvoice(self, sequence, **kw) :
     """ creates a simple sale invoice for non varianted notebook product.
       It will contain one line that will later be changed.
     """
@@ -641,9 +641,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice=sequence.get('invoice')
     invoice.edit()
     
-  def stepCreateSimpleSaleInvoiceTwoLines(self, sequence, **kw) :
+  def stepCreateSimpleInvoiceTwoLines(self, sequence, **kw) :
     """ 
-      similar to stepCreateSimpleSaleInvoice, but replace 
+      similar to stepCreateSimpleInvoice, but replace 
       "10 notebook * 10 EUR, so total price is 100" by :
       "5 notebook * 10 EUR + 5 notebook * 10 EUR , so total price is 100"
     """
@@ -685,9 +685,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       invoice_lines = [invoice_line1, invoice_line2]
     )
 
-  def stepCreateSimpleSaleInvoiceTwoCells(self, sequence, **kw) :
+  def stepCreateSimpleInvoiceTwoCells(self, sequence, **kw) :
     """ 
-      similar to stepCreateSimpleSaleInvoiceTwoLines, but use two
+      similar to stepCreateSimpleInvoiceTwoLines, but use two
       differents cells on the same line instead of two differents lines. 
     """
     vendor = sequence.get('vendor')
@@ -753,7 +753,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # then we must have 2 cells inside our line
     self.assertEqual(len(invoice_line.objectIds()), 2)
 
-  def stepCreateMultiLineSaleInvoice(self, sequence, **kw) :
+  def stepCreateMultiLineInvoice(self, sequence, **kw) :
     """ create an invoice with varianted products 
       The invoice is from `vendor` to `client_fr`, so the cell defined in
       This invoice containts two lines :
@@ -856,7 +856,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                    )
     sequence.edit(invoice = invoice)
     
-  def stepCreateMatchableSaleInvoiceMovements(self, sequence, **kw) :
+  def stepCreateMatchableInvoiceMovements(self, sequence, **kw) :
     """ Create a temp movement that will be matched by the
       default_invoice_transaction_rule """
     from Products.ERP5Type.Document import newTempMovement
@@ -879,7 +879,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                   product_barebone_region_france_movement ,
     )
   
-  def stepCheckMatchableSaleInvoiceMovements(self, sequence, **kw) :
+  def stepCheckMatchableInvoiceMovements(self, sequence, **kw) :
     """ Check that we have a matching cell for the movement """
     invoice_transaction_rule = sequence.get("invoice_transaction_rule")
     product_barebone_region_france_movement  = sequence.get(
@@ -960,7 +960,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
               invoice_transaction_rule._getMatchingCell(
                 product_barebone_region_france_movement ))
   
-  def stepCreateNotMatchableSaleInvoiceMovements(self, sequence, **kw) :
+  def stepCreateNotMatchableInvoiceMovements(self, sequence, **kw) :
     """ create a temp movement that not any cell could match. """
     from Products.ERP5Type.Document import newTempMovement
     bad_movement1 = newTempMovement(
@@ -980,7 +980,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       bad_movement2 = bad_movement2,
     )
 
-  def stepCheckNotMatchableSaleInvoiceMovements(self, sequence, **kw) :
+  def stepCheckNotMatchableInvoiceMovements(self, sequence, **kw) :
     """ check that temp movement that cannot be matched is not matched. """
     invoice_transaction_rule = sequence.get('invoice_transaction_rule')
     self.assertEqual(None,
@@ -1415,9 +1415,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       LOG('Testing... ', INFO, message)
     
     self.playSequence("""
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepTic
       stepCheckAddPredicate
       stepTic
@@ -1442,16 +1442,16 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepTic
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateProducts
       stepTic
       stepCreateDummyInvoice
-      stepCreateMatchableSaleInvoiceMovements
-      stepCheckMatchableSaleInvoiceMovements
-      stepCreateNotMatchableSaleInvoiceMovements
-      stepCheckNotMatchableSaleInvoiceMovements
+      stepCreateMatchableInvoiceMovements
+      stepCheckMatchableInvoiceMovements
+      stepCreateNotMatchableInvoiceMovements
+      stepCheckNotMatchableInvoiceMovements
     """, quiet=quiet)
   
   def test_04_SimpleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
@@ -1471,14 +1471,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleSaleInvoice
+      stepCreateSimpleInvoice
       stepPlanInvoice
       stepTic
       stepCheckFirstRuleIsApplied 
@@ -1506,14 +1506,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleSaleInvoice
+      stepCreateSimpleInvoice
       stepConfirmInvoice
       stepTic
       stepCheckNoAccountingLinesBuiltYet
@@ -1540,14 +1540,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleSaleInvoiceTwoLines
+      stepCreateSimpleInvoiceTwoLines
       stepConfirmInvoice
       stepTic
       stepCheckNoAccountingLinesBuiltYet
@@ -1574,14 +1574,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleSaleInvoiceTwoCells
+      stepCreateSimpleInvoiceTwoCells
       stepConfirmInvoice
       stepTic
       stepCheckNoAccountingLinesBuiltYet
@@ -1611,9 +1611,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
@@ -1646,14 +1646,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateOtherSimpleSaleInvoice
+      stepCreateOtherSimpleInvoice
       stepPlanInvoice
       stepTic
       stepEditInvoiceLine
@@ -1681,14 +1681,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleSaleInvoice
+      stepCreateSimpleInvoice
       stepAddInvoiceLine
       stepPlanInvoice
       stepTic
@@ -1718,14 +1718,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateOtherSimpleSaleInvoice
+      stepCreateOtherSimpleInvoice
       stepPlanInvoice
       stepTic
       stepAddCellsInInvoiceLine
@@ -1754,14 +1754,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepCreateInvoiceTransactionRule
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleSaleInvoice 
+      stepCreateSimpleInvoice 
       stepPlanInvoice
       stepTic """ +
       ("""
@@ -1795,17 +1795,17 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateEntities
       stepCreateCurrencies
       stepCreateProducts
-      stepCreateSaleInvoiceTransactionRule
+      stepCreateInvoiceTransactionRule
       stepTic
-      stepUpdateSaleInvoiceTransactionRuleMatrix
-      stepValidateSaleInvoiceTransaction
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
       stepTic
       stepCreateNotebookFranceCell
       stepCreateBareboneFranceCell
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateMultiLineSaleInvoice
+      stepCreateMultiLineInvoice
       stepPlanInvoice
       stepConfirmInvoice
       stepTic
