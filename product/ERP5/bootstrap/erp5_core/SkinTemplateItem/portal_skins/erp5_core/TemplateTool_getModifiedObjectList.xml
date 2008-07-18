@@ -116,24 +116,20 @@ for bt in bt_id_list:\n
                 bt_title = bt_title, \n
                 object_state=object_state, \n
                 object_class=object_class, \n
-                choice_item_list=[[\'Install\', \'install\'], \n
-                                  [\'Do Nothing\', \'nothing\']])\n
+                choice_item_list=[[\'Install\', \'install\']])\n
     elif object_state == \'Modified\':\n
       if object_class in no_backup_list:\n
         line.edit(object_id=object_id, \n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Upgrade\', \'install\'], \n
-                                    [\'Keep Original\', \'nothing\']])\n
+                  choice_item_list=[[\'Upgrade\', \'install\']])\n
       else:\n
         line.edit(object_id=object_id, \n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Backup And Upgrade\', \'backup\'], \n
-                                    [\'Upgrade\', \'install\'], \n
-                                    [\'Keep Original\', \'nothing\']])\n
+                  choice_item_list=[[\'Backup And Upgrade\', \'backup\']])\n
     \n
     elif object_state == \'Removed\':\n
       if object_class in no_backup_list:\n
@@ -141,16 +137,13 @@ for bt in bt_id_list:\n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Remove\', \'remove\'], \n
-                              [\'Keep Original\', \'nothing\']])\n
+                  choice_item_list=[[\'Remove\', \'remove\']])\n
       else:\n
         line.edit(object_id=object_id, \n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'], \n
-                                    [\'Remove\', \'remove\'], \n
-                                    [\'Keep Original\', \'nothing\']])\n
+                  choice_item_list=[[\'Backup And Remove\', \'save_and_remove\']])\n
     line.setUid(\'new_%s\' % object_id)\n
     object_list.append(line)\n
   i += 1 \n
