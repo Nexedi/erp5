@@ -134,7 +134,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>production_order_planning_selection</string> </value>
+                    <value> <string>production_order_module_planning_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
