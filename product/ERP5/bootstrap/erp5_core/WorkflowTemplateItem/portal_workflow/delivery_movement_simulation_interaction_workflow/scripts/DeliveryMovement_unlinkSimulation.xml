@@ -65,7 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery_movement = state_change[\'object\']\n
+            <value> <string>"""Unlink simulation movements when delivery movement is deleted.\n
+This way when a delivery movement is deleted, corresponding simulation movement\n
+will again be candidates for building in another delivery.\n
+\n
+XXX: security (future) bug: this requires that the system is configured in a way where \n
+simulation movement can be accessed in restrictred mode. For now this script has a proxy\n
+role, but someday we\'ll have to move this to unrestricted environment.\n
+"""\n
+delivery_movement = state_change[\'object\']\n
 \n
 # Clean simulation\n
 simulation_movement_list = delivery_movement.getDeliveryRelatedValueList(\n
@@ -90,6 +98,14 @@ for simulation_movement in simulation_movement_list:\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
