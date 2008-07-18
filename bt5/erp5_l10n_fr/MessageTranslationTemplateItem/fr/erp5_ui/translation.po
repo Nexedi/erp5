@@ -1087,7 +1087,7 @@ msgid "Delivered Quantity"
 msgstr "Qté livrée"
 
 msgid "Delivery Date"
-msgstr "Date de livraison souhaitée"
+msgstr "Date de livraison"
 
 msgid "Delivery Line"
 msgstr "Ligne de commande"
@@ -3193,10 +3193,10 @@ msgid "Shipping Date must be defined"
 msgstr "La date d'expédition doit être définie"
 
 msgid "Delivery Date must be defined"
-msgstr "La date de livraison souhaitée doit être définie"
+msgstr "La date de livraison doit être définie"
 
 msgid "Delivery Date must be after Shipping Date"
-msgstr "La date de livraison souhaitée doit être postèrieure à la date d'expédition"
+msgstr "La date de livraison doit être postèrieure à la date d'expédition"
 
 msgid "Your Item no."
 msgstr "Votre réf."
