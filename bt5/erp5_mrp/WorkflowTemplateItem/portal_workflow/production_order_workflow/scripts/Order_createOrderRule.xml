@@ -69,7 +69,7 @@
 \n
 tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
 activate_kw = {\'tag\':tag,\'priority\':3}\n
-order.activate(tag=tag).updateAppliedRule(rule_id = \'default_production_order_rule\',activate_kw=activate_kw)\n
+order.activate(tag=tag).updateAppliedRule(rule_reference = \'default_production_order_rule\',activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
