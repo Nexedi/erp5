@@ -1816,9 +1816,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
     
-  def test_07_PaymentRuleForSaleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
+  def TODO_test_07_PaymentRuleForInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Payment Rule.
-      checks the payment rule is applied on sale invoice simulation
+      checks the payment rule is applied on invoice simulation
       movement. """
     # checks :
     #   date from trade condition
