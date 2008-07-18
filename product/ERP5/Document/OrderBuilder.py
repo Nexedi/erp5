@@ -271,6 +271,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # Parameter initialization
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
+    if movement_list is None:
+      movement_list = []
     # Module where we can create new deliveries
     portal = self.getPortalObject()
     delivery_module = getattr(portal, self.getDeliveryModule())
@@ -529,6 +531,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
       Call script on each delivery built
     """
+    # Parameter initialization
+    if movement_list is None:
+      movement_list = []
     delivery_after_generation_script_id = \
                               self.getDeliveryAfterGenerationScriptId()
     related_simulation_movement_path_list = \
