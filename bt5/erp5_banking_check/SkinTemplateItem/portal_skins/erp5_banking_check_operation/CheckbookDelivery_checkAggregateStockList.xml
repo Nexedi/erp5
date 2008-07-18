@@ -68,14 +68,12 @@
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
-current_tracking_list = [x.getObject() for x in context.portal_simulation.getCurrentTrackingList(\n
+aggregate_uid_list = [x.uid for x in context.portal_simulation.getCurrentTrackingList(\n
                          at_date=at_date, node=node_url,\n
-                         where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
-aggregate_uid_list = [x.uid for x in current_tracking_list]\n
+                         where_expression="item_catalog.portal_type IN (\'Check\', \'Checkbook\')")]\n
 for line in context.getMovementList():\n
-  for aggregate_uid in line.getAggregateUidList():\n
-    if aggregate_uid not in aggregate_uid_list:\n
-      aggregate_value = context.portal_catalog(uid=aggregate_uid)[0].getObject()\n
+  for aggregate_value in line.getAggregateValueList():\n
+    if aggregate_value.getUid() not in aggregate_uid_list:\n
       reference = aggregate_value.getReference()\n
       if reference is None:\n
         reference = \'%s - %s\' % (aggregate_value.getReferenceRangeMin() or \'\', aggregate_value.getReferenceRangeMax() or \'\')\n
@@ -142,11 +140,8 @@ for line in context.getMovementList():\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>x</string>
-                            <string>current_tracking_list</string>
                             <string>aggregate_uid_list</string>
                             <string>line</string>
-                            <string>aggregate_uid</string>
-                            <string>_getitem_</string>
                             <string>aggregate_value</string>
                             <string>reference</string>
                             <string>None</string>
