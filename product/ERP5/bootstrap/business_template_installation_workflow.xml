@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.DCWorkflow</string>
-          <string>DCWorkflowDefinition</string>
-        </tuple>
-        <none/>
+        <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -89,10 +86,9 @@
             <value>
               <tuple>
                 <list>
-                  <string>baobab</string>
                   <string>acl_users</string>
                 </list>
-                <string>seb</string>
+                <string>rm</string>
               </tuple>
             </value>
         </item>
@@ -161,11 +157,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Scripts</string>
-          <string>Scripts</string>
-        </tuple>
-        <none/>
+        <global name="Scripts" module="Products.DCWorkflow.Scripts"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -214,11 +207,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>States</string>
-        </tuple>
-        <none/>
+        <global name="States" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -315,11 +305,8 @@
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>Transitions</string>
-        </tuple>
-        <none/>
+        <global name="Transitions" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -496,11 +483,8 @@
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Variables</string>
-          <string>Variables</string>
-        </tuple>
-        <none/>
+        <global name="Variables" module="Products.DCWorkflow.Variables"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -613,11 +597,8 @@
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Worklists</string>
-          <string>Worklists</string>
-        </tuple>
-        <none/>
+        <global name="Worklists" module="Products.DCWorkflow.Worklists"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -648,11 +629,8 @@
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -733,6 +711,8 @@ if listbox is not None and len(listbox) > 0:\n
   for item in listbox:\n
     if item[\'choice\']:\n
       object_to_update[item[\'listbox_key\']] = item[\'choice\']\n
+    else:\n
+      object_to_update[item[\'listbox_key\']] = "nothing"\n
 \n
 if workflow_action == \'install_action\':\n
   business_template.install(force=0, object_to_update=object_to_update, \\\n
@@ -747,27 +727,28 @@ elif workflow_action == \'reinstall_action\':\n
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA4AAAAPAAAAQwAA
-AHN0AQAAdAAAfAAAZAEAgwIAfQIAdAMAdAMAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQQAdAMAdAMA
+AHONAQAAdAAAfAAAZAEAgwIAfQIAdAMAdAMAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQQAdAMAdAMA
 fAAAZAIAgwIAZAMAgwIAZAUAgwEAfQUAdAMAdAMAfAAAZAIAgwIAZAMAgwIAZAYAgwEAfQYAdAMA
 dAMAfAAAZAIAgwIAZAMAgwIAZAcAgwEAfQcAaAAAfQgAfAQAdAkAagkAbxAAAXQKAHwEAIMBAGQI
-AGoEAG9RAAF4SgB0CwB8BACDAQBEXTwAfQwAdAAAfAwAZAkAgwIAbyYAAXQAAHwMAGQJAIMCAHQN
-AHwIAIMBAHQAAHwMAGQKAIMCADxuAQABcboAV24BAAF8BwBkCwBqAgBvLAABdAMAfAIAZAwAgwIA
-ZA0AZAgAZA4AfAgAZAUAfAUAZAYAfAYAgwAEAW46AAF8BwBkDwBqAgBvLAABdAMAfAIAZBAAgwIA
-ZA0AZAgAZA4AfAgAZAUAfAUAZAYAfAYAgwAEAW4BAAFkAABTKBEAAABOdAYAAABvYmplY3R0BgAA
-AGt3YXJnc3QDAAAAZ2V0dAcAAABsaXN0Ym94dA4AAAB1cGRhdGVfY2F0YWxvZ3QSAAAAdXBkYXRl
-X3RyYW5zbGF0aW9udA8AAAB3b3JrZmxvd19hY3Rpb25pAAAAAHQGAAAAY2hvaWNldAsAAABsaXN0
-Ym94X2tleXQOAAAAaW5zdGFsbF9hY3Rpb250BwAAAGluc3RhbGx0BQAAAGZvcmNldBAAAABvYmpl
-Y3RfdG9fdXBkYXRldBAAAAByZWluc3RhbGxfYWN0aW9udAkAAAByZWluc3RhbGwoDgAAAHQJAAAA
-X2dldGl0ZW1fdAwAAABzdGF0ZV9jaGFuZ2V0EQAAAGJ1c2luZXNzX3RlbXBsYXRldAkAAABfZ2V0
-YXR0cl9SAwAAAFIEAAAAUgUAAABSBgAAAFIMAAAAdAQAAABOb25ldAMAAABsZW50CQAAAF9nZXRp
-dGVyX3QEAAAAaXRlbXQHAAAAX3dyaXRlXygOAAAAUhAAAABSDwAAAFIRAAAAUhIAAABSAwAAAFIE
-AAAAUgUAAABSBgAAAFIMAAAAUhMAAABSFAAAAFIVAAAAUhYAAABSFwAAACgAAAAAKAAAAABzYAAA
-AC9iYW9iYWIvcG9ydGFsX3dvcmtmbG93L2J1c2luZXNzX3RlbXBsYXRlX2luc3RhbGxhdGlvbl93
-b3JrZmxvdy9zY3JpcHRzL0J1c2luZXNzVGVtcGxhdGVfaW5zdGFsbHQYAAAAQnVzaW5lc3NUZW1w
-bGF0ZV9pbnN0YWxsAQAAAHMgAAAADwEeAR4BHgEeAgYBIAENAAkBDQEuAg0BGwERAQ0BGwEoAQAA
-AFIYAAAAKAEAAABSGAAAACgAAAAAKAAAAABzYAAAAC9iYW9iYWIvcG9ydGFsX3dvcmtmbG93L2J1
-c2luZXNzX3RlbXBsYXRlX2luc3RhbGxhdGlvbl93b3JrZmxvdy9zY3JpcHRzL0J1c2luZXNzVGVt
-cGxhdGVfaW5zdGFsbHMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
+AGoEAG9qAAF4YwB0CwB8BACDAQBEXVUAfQwAdAAAfAwAZAkAgwIAbyYAAXQAAHwMAGQJAIMCAHQN
+AHwIAIMBAHQAAHwMAGQKAIMCADxuGgABZAsAdA0AfAgAgwEAdAAAfAwAZAoAgwIAPHG6AFduAQAB
+fAcAZAwAagIAbywAAXQDAHwCAGQNAIMCAGQOAGQIAGQPAHwIAGQFAHwFAGQGAHwGAIMABAFuOgAB
+fAcAZBAAagIAbywAAXQDAHwCAGQRAIMCAGQOAGQIAGQPAHwIAGQFAHwFAGQGAHwGAIMABAFuAQAB
+ZAAAUygSAAAATnQGAAAAb2JqZWN0dAYAAABrd2FyZ3N0AwAAAGdldHQHAAAAbGlzdGJveHQOAAAA
+dXBkYXRlX2NhdGFsb2d0EgAAAHVwZGF0ZV90cmFuc2xhdGlvbnQPAAAAd29ya2Zsb3dfYWN0aW9u
+aQAAAAB0BgAAAGNob2ljZXQLAAAAbGlzdGJveF9rZXl0BwAAAG5vdGhpbmd0DgAAAGluc3RhbGxf
+YWN0aW9udAcAAABpbnN0YWxsdAUAAABmb3JjZXQQAAAAb2JqZWN0X3RvX3VwZGF0ZXQQAAAAcmVp
+bnN0YWxsX2FjdGlvbnQJAAAAcmVpbnN0YWxsKA4AAAB0CQAAAF9nZXRpdGVtX3QMAAAAc3RhdGVf
+Y2hhbmdldBEAAABidXNpbmVzc190ZW1wbGF0ZXQJAAAAX2dldGF0dHJfUgMAAABSBAAAAFIFAAAA
+UgYAAABSDQAAAHQEAAAATm9uZXQDAAAAbGVudAkAAABfZ2V0aXRlcl90BAAAAGl0ZW10BwAAAF93
+cml0ZV8oDgAAAFIRAAAAUhAAAABSEgAAAFITAAAAUgMAAABSBAAAAFIFAAAAUgYAAABSDQAAAFIU
+AAAAUhUAAABSFgAAAFIXAAAAUhgAAAAoAAAAACgAAAAAc14AAAAvZXJwNS9wb3J0YWxfd29ya2Zs
+b3cvYnVzaW5lc3NfdGVtcGxhdGVfaW5zdGFsbGF0aW9uX3dvcmtmbG93L3NjcmlwdHMvQnVzaW5l
+c3NUZW1wbGF0ZV9pbnN0YWxscxgAAABCdXNpbmVzc1RlbXBsYXRlX2luc3RhbGwBAAAAcyIAAAAP
+AR4BHgEeAR4CBgEgAQ0ACQENASYCIQINARsBEQENARsBKAEAAAB0GAAAAEJ1c2luZXNzVGVtcGxh
+dGVfaW5zdGFsbCgBAAAAUhkAAAAoAAAAACgAAAAAc14AAAAvZXJwNS9wb3J0YWxfd29ya2Zsb3cv
+YnVzaW5lc3NfdGVtcGxhdGVfaW5zdGFsbGF0aW9uX3dvcmtmbG93L3NjcmlwdHMvQnVzaW5lc3NU
+ZW1wbGF0ZV9pbnN0YWxscwgAAAA8bW9kdWxlPgEAAAB0AAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
