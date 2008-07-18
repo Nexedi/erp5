@@ -66,29 +66,58 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>listbox = []\n
-\n
+result_dict = {}\n
 portal_workflow = context.portal_workflow\n
 content_type_list = context.allowedContentTypes()\n
+content_type_list.sort()\n
 \n
 # XXX better implementation is required, but I do not know how to get workflows related to a portal type\n
-possible_state_name_list = ["validation_state", "simulation_state"]\n
+possible_state_name_list = (\'validation_state\',\n
+                            \'simulation_state\',\n
+                            \'causality_state\',\n
+                            \'invoice_state\',\n
+                            \'payment_state\',\n
+                            \'event_state\',\n
+                            \'opportunity_state\',\n
+                            \'immobilisation_state\',)\n
 \n
 for content_type in content_type_list:\n
   content_type_id = content_type.id\n
-\n
   for state_name in possible_state_name_list:\n
-    result_list = context.Base_zCountByWorkflowState(portal_type=content_type_id, state_name=state_name)\n
-\n
+    result_list = context.Base_zCountByWorkflowState(portal_type=content_type_id,\n
+                                                     state_name=state_name)\n
     if not ((len(result_list) == 1) and (result_list[0][0] is None)):\n
       for result in result_list:\n
+        portal_type_dict = result_dict.get(content_type_id, {})\n
+        count = portal_type_dict.get(result[0], 0) + result[1]\n
+        portal_type_dict.update({result[0]: count})\n
+        result_dict.update({content_type_id: portal_type_dict})\n
 \n
-        listbox.append({"portal_type":content_type_id,\n
-                        "state":result[0],\n
-                        "count":result[1] })\n
+state_list_dict = {}\n
+for portal_type in result_dict.keys():\n
+  listbox.append({\'portal_type\': portal_type,\n
+                  \'state\'      : \'\',\n
+                  \'count\'      : \'\'})\n
+  state_list = result_dict[portal_type].keys()\n
+  state_list.sort()\n
+  for state in state_list:\n
+    count = state_list_dict.get(state, 0) + result_dict[portal_type][state]\n
+    state_list_dict.update({state:count})\n
+    listbox.append({\'portal_type\': \'\',\n
+                    \'state\'      : state,\n
+                    \'count\'      : result_dict[portal_type][state]})\n
 \n
-context.Base_updateDialogForm(listbox = listbox,\n
-                              empty_line_number = 0)\n
+listbox.append({\'portal_type\': \'All\',\n
+                \'state\'      : \'\',\n
+                \'count\'      : \'\'})\n
+state_list = state_list_dict.keys()\n
+state_list.sort()\n
+for state in state_list:\n
+  listbox.append({\'portal_type\': \'\',\n
+                  \'state\'      : state,\n
+                  \'count\'      : state_list_dict[state]})\n
 \n
+context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
 return context.Folder_viewWorkflowReport()\n
 </string> </value>
         </item>
@@ -100,6 +129,12 @@ return context.Folder_viewWorkflowReport()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -141,6 +176,7 @@ return context.Folder_viewWorkflowReport()\n
                         <value>
                           <tuple>
                             <string>listbox</string>
+                            <string>result_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_workflow</string>
@@ -155,6 +191,12 @@ return context.Folder_viewWorkflowReport()\n
                             <string>_getitem_</string>
                             <string>None</string>
                             <string>result</string>
+                            <string>portal_type_dict</string>
+                            <string>count</string>
+                            <string>state_list_dict</string>
+                            <string>portal_type</string>
+                            <string>state_list</string>
+                            <string>state</string>
                           </tuple>
                         </value>
                     </item>
