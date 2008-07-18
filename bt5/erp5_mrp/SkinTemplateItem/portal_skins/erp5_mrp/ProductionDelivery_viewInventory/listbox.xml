@@ -160,7 +160,7 @@
                 </item>
                 <item>
                     <key>                 <string>selection_name</string> </key>
-                    <value> <string>delivery_current_inventory</string> </value>
+                    <value> <string>production_delivery_current_inventory</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
