@@ -52,6 +52,22 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG, INFO
 from DateTime import DateTime
 
+
+class PurchaseInvoiceTest:
+  invoice_transaction_portal_type = 'Sale Invoice Transaction'
+  invoice_transaction_line_portal_type \
+                     = "Sale Invoice Transaction Line"
+  invoice_line_portal_type = "Invoice Line"
+  invoice_cell_portal_type = "Invoice Cell"
+
+class SaleInvoiceTest:
+  invoice_transaction_portal_type = 'Sale Invoice Transaction'
+  invoice_transaction_line_portal_type \
+                     = "Sale Invoice Transaction Line"
+  invoice_line_portal_type = "Invoice Line"
+  invoice_cell_portal_type = "Invoice Cell"
+
+
 class TestAccountingRulesMixin:
   # define portal_types 
   account_module_portal_type           = "Account Module"
@@ -66,16 +82,9 @@ class TestAccountingRulesMixin:
   applied_rule_portal_type             = "Applied Rule"
   simulation_movement_portal_type      = "Simulation Movement"
   accounting_rule_cell_portal_type     = "Accounting Rule Cell"
-  sale_invoice_transaction_portal_type = "Sale Invoice Transaction"
-  sale_invoice_transaction_line_portal_type \
-                     = "Sale Invoice Transaction Line"
-  sale_invoice_line_portal_type        = "Invoice Line"
-  sale_invoice_cell_portal_type        = "Invoice Cell"
   invoice_transaction_rule_portal_type \
                     = "Invoice Transaction Rule"
   
-  purchase_invoice_transaction_portal_type \
-                      = "Purchase Invoice Transaction"
   payment_transaction_portal_type      = "Payment Transaction"
 
   def getBusinessTemplateList(self):
@@ -108,11 +117,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   invoice.
 
   """
-
   RUN_ALL_TESTS = 1
   QUIET = 1
-  RUN_BROKEN_TESTS = os.getenv('RUN_BROKEN_TESTS', 0)
-
   
   def getTitle(self):
     return "Accounting Rules"
@@ -494,7 +500,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     empty_invoice = self.getAccountingModule().newContent(
                 id = 'empty_invoice',
-                portal_type = self.sale_invoice_transaction_portal_type,
+                portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -522,7 +528,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice',
-                portal_type = self.sale_invoice_transaction_portal_type,
+                portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -536,7 +542,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       resource = product_notebook.getRelativeUrl(),
       quantity = 10,
       price = 10,
-      portal_type = self.sale_invoice_line_portal_type)
+      portal_type = self.invoice_line_portal_type)
 
     self.assertEqual(invoice_line.getTotalPrice(), 100)
     
@@ -558,7 +564,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'other_simple_invoice',
-                portal_type = self.sale_invoice_transaction_portal_type,
+                portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -572,7 +578,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       resource = product_notebook.getRelativeUrl(),
       quantity = 123,
       price = 456,
-      portal_type = self.sale_invoice_line_portal_type)
+      portal_type = self.invoice_line_portal_type)
 
     sequence.edit(
       simple_invoice = simple_invoice,
@@ -590,7 +596,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     invoice_line = invoice.newContent(
       id = 'invoice_line_%s'%(int(random.random()*1000)),
-      portal_type = self.sale_invoice_line_portal_type)
+      portal_type = self.invoice_line_portal_type)
 
     invoice_line.edit(
       resource = product_notebook.getRelativeUrl(),
@@ -648,7 +654,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice_two_lines',
-                portal_type = self.sale_invoice_transaction_portal_type,
+                portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -662,13 +668,13 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       resource = product_notebook.getRelativeUrl(),
       quantity = 5,
       price = 10,
-      portal_type = self.sale_invoice_line_portal_type)
+      portal_type = self.invoice_line_portal_type)
     invoice_line2 = simple_invoice.newContent(
       id = 'invoice_line2',
       REsource = product_notebook.getRelativeUrl(),
       quantity = 5,
       price = 10,
-      portal_type = self.sale_invoice_line_portal_type)
+      portal_type = self.invoice_line_portal_type)
 
     self.assertEqual(invoice_line1.getTotalPrice()
             + invoice_line2.getTotalPrice(), 100)
@@ -691,7 +697,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice_two_cells',
-                portal_type = self.sale_invoice_transaction_portal_type,
+                portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -703,7 +709,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_line = simple_invoice.newContent(
       id = 'invoice_line',
       resource = product_notebook.getRelativeUrl(),
-      portal_type = self.sale_invoice_line_portal_type)
+      portal_type = self.invoice_line_portal_type)
       
     sequence.edit(
       simple_invoice = simple_invoice,
@@ -732,7 +738,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     quantity = 5
     for cell_key in cell_key_list:
       cell = invoice_line.newCell(base_id = base_id,
-             portal_type = self.sale_invoice_cell_portal_type, *cell_key)
+             portal_type = self.invoice_cell_portal_type, *cell_key)
       cell.edit(mapped_value_property_list = ['price','quantity'],
                 price = price, quantity = quantity,
                 predicate_category_list = cell_key,
@@ -765,7 +771,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     multi_line_invoice = self.getAccountingModule().newContent(
                 id = 'multi_line_invoice',
-                portal_type = self.sale_invoice_transaction_portal_type,
+                portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
                 price_currency = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
@@ -776,14 +782,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
               )
     
     notebook_line = multi_line_invoice.newContent(
-      portal_type = self.sale_invoice_line_portal_type,
+      portal_type = self.invoice_line_portal_type,
       id = 'notebook_line',
       resource = product_notebook.getRelativeUrl(),
       quantity = 10,
       price = 10)
 
     barebone_line = multi_line_invoice.newContent(
-      portal_type = self.sale_invoice_line_portal_type,
+      portal_type = self.invoice_line_portal_type,
       id = 'barebone_line',
       resource = product_barebone.getRelativeUrl(),
       quantity = 10,
@@ -1030,7 +1036,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     for simulation_movement in simulation_movement_list :
       self.assertNotEquals(simulation_movement.getOrderValue(), None)
       if simulation_movement.getOrderValue().getPortalType() == \
-              self.sale_invoice_line_portal_type :
+              self.invoice_line_portal_type :
         invoice_line_simulation_movement_list.append(simulation_movement)
     
     self.assertEqual( len(invoice_line_simulation_movement_list), 1)
@@ -1223,7 +1229,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                           'invoice_transaction_rule_cell')
     invoice_transaction_line_list = invoice.contentValues(
         filter = {'portal_type':
-                  self.sale_invoice_transaction_line_portal_type})
+                  self.invoice_transaction_line_portal_type})
     self.assertEquals( len(invoice_transaction_line_list),
                        len(simulation_movement_list))
     
@@ -1273,7 +1279,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_lines = sequence.get('invoice_lines')
     
     invoice_transaction_line_list = invoice.contentValues(
-        filter = {'portal_type': self.sale_invoice_transaction_line_portal_type})
+        filter = {'portal_type': self.invoice_transaction_line_portal_type})
     self.assertEquals(len(invoice_transaction_line_list), 3)
     
     accounting_lines_layout = {
@@ -1317,7 +1323,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_lines = sequence.get('invoice_lines')
     
     invoice_transaction_line_list = invoice.contentValues(
-        filter = {'portal_type': self.sale_invoice_transaction_line_portal_type})
+        filter = {'portal_type': self.invoice_transaction_line_portal_type})
     self.assertEquals(len(invoice_transaction_line_list), 4)
     
     accounting_lines_layout = {
@@ -1346,7 +1352,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       transaction_dict = {}
       for accounting_line in transaction.objectValues() :
         if accounting_line.getPortalType() != \
-                          self.sale_invoice_line_portal_type :
+                          self.invoice_line_portal_type :
           transaction_dict[accounting_line.getId()] = \
                 accounting_line.getTotalQuantity()
       accounting_lines_dict[transaction.getId()] = transaction_dict
@@ -1370,7 +1376,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       transaction_dict = accounting_lines_dict[transaction.getId()]
       for accounting_line in transaction.objectValues() :
         if accounting_line.getPortalType() != \
-                          self.sale_invoice_line_portal_type :
+                          self.invoice_line_portal_type :
           self.assertEquals(
               transaction_dict[accounting_line.getId()],
               accounting_line.getTotalQuantity())
@@ -1819,8 +1825,17 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     #   quantity from sum of receivable movement
     #   link to sale invoice
  
+
+class TestSaleAccountingRules(SaleInvoiceTest, TestAccountingRules):
+  pass
+
+
+class TestPurchaseAccountingRules(PurchaseInvoiceTest, TestAccountingRules):
+  pass
+
+
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccountingRules))
+  suite.addTest(unittest.makeSuite(TestSaleAccountingRules))
+  suite.addTest(unittest.makeSuite(TestPurchaseAccountingRules))
   return suite
-
