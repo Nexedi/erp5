@@ -180,7 +180,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>bt_install_checkbox</string> </value>
+                    <value> <string>shift_check_support</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -206,7 +206,7 @@
                 </item>
                 <item>
                     <key> <string>extra_item</string> </key>
-                    <value> <string>tabindex=1000 onclick="clickage(event)"</string> </value>
+                    <value> <string>tabindex=1000 onclick="shiftCheck(event)"</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
