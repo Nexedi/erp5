@@ -1831,6 +1831,10 @@ class TestSaleAccountingRules(SaleInvoiceTest, TestAccountingRules):
 
 
 class TestPurchaseAccountingRules(PurchaseInvoiceTest, TestAccountingRules):
+  # XXX this test is not really complete, originally we were testing Sale only,
+  # so the test steps just test that source is correct, and not the
+  # destination. For now it just tests that workflows for Purchase invokes
+  # building correctly ...
   pass
 
 
