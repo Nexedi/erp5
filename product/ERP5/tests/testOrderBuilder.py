@@ -230,7 +230,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     )
 
     self.assertEquals(
-      order_line.getQuantity(),
+      order_line.getTotalQuantity(),
       self.wanted_quantity
     )
     
