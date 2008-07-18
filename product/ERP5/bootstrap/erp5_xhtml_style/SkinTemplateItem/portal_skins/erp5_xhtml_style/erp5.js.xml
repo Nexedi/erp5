@@ -196,7 +196,36 @@ function submitFormOnEnter(event, main_form_id, method_name){\n
   if(key_code == 13){\n
     var main_form = getElement(main_form_id)\n
     main_form.action=method_name;};\n
-} 
+}\n
+\n
+var old_index=0;\n
+function shiftCheck(evt) {\n
+  evt=(evt)?evt:event;\n
+  var target=(evt.target)?evt.target:evt.srcElement;\n
+  // remove "checkbox" part from ID\n
+  // This part can be reused easilly by usual left column\n
+  var target_index= target.id.substr(8);\n
+  if(!evt.shiftKey) {\n
+    old_index= target_index\n
+    check_option = target.checked;\n
+    return false;\n
+    }\n
+  target.checked=1;\n
+  var low=Math.min(target_index , old_index);\n
+  var high=Math.max(target_index , old_index);\n
+  for(var i=low;i<=high;i++) {\n
+    document.getElementById("checkbox" + i ).checked = check_option;\n
+   }\n
+  return true;\n
+  }\n
+\n
+var indexAllCheckBoxesAtBTInstallationOnLoad = function() {\n
+    // This Part is used basically for Business Template Installation.\n
+    var inputs = window.getElementsByTagAndClassName("input", "shift_check_support");\n
+    for(i=0;i<=inputs.length-1;i++) { inputs[i].id = "checkbox" + i; }\n
+}\n
+\n
+addLoadEvent(indexAllCheckBoxesAtBTInstallationOnLoad)
 
 ]]></string> </value>
         </item>
