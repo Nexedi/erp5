@@ -29,6 +29,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Form.Form import ERP5Form
 
 from xml.dom.minidom import parseString
 
@@ -74,36 +75,61 @@ class TestRSS(ERP5TypeTestCase):
   def makeDataObjects(self, quiet=0, run=run_all_test):
     """
       Create some Pesons so that we have something to feed.
-      (we create only one because we'd have sorting problems)
     """
     if hasattr(self.portal.person_module, 'one'):
       self.portal.person_module.manage_delObjects(['one'])
+    if hasattr(self.portal.person_module, 'two'):
+      self.portal.person_module.manage_delObjects(['two'])
     one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
+    two = self.portal.person_module.newContent(id="two", title="Two", description="Person Two")
     get_transaction().commit()
     one.reindexObject()
+    two.reindexObject()
     self.tic()
-
+    
   def test_00_haveData(self, quiet=0, run=run_all_test):
     """
       Check we have people.
     """
     module = self.portal.person_module
     self.assertEquals(module.one.getTitle(), "One")
-
+    self.assertEquals(module.two.getTitle(), "Two")
+  
   def test_01_renderRSS(self, quiet=0, run=run_all_test):
     """
       View person module as RSS, parse XML, see if everything is there.
     """
+    portal=self.getPortal()
+    request=self.app.REQUEST
+    
+    request.set('portal_skin', 'RSS');
+    portal.portal_skins.changeSkin('RSS');
+    
     one = self.portal.person_module.one
+    two = self.portal.person_module.two
+    
     feed_string = self.portal.person_module.Folder_viewContentListAsRSS()
     doc = parseString(feed_string)
     rss = doc.childNodes[0]
     channel = rss.getElementsByTagName('channel')[0]
+    self.assertEquals(len(rss.getElementsByTagName('channel')), 1)
+    self.assertEquals(len(channel.getElementsByTagName('item')), 2)
+    
     titles = [getNodeContent(n) for n in channel.getElementsByTagName('title')]
     titles.sort()
-    self.assertEquals(titles, ['One', 'Persons']) # there is channel title and person title
-    self.assertEquals(len(channel.getElementsByTagName('item')), 1)
-    item = channel.getElementsByTagName('item')[0] # the one person
+    self.assertEquals(titles, ['One', 'Persons',  'Two']) # there is channel title and person titles
+   
+    item = channel.getElementsByTagName('item')[0] # the two person, because we have default sorting in form 
+    self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
+    self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
+    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    expected_link = two.absolute_url() + '/view'
+    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    # is date formatted correctly?
+    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    
+    item = channel.getElementsByTagName('item')[1] # the one person
     self.assertEquals(getSubnodeContent(item, 'title'), 'One')
     self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
     self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
@@ -111,9 +137,81 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
 
+  def test_02_renderRSS(self, quiet=0, run=run_all_test):
+    """
+      View person module as RSS, parse XML, see if everything is there.
+      In this case pt for render current form('Test_view') is default page template
+      and some listbox's columns(i.e. description) label not present in required channel fields
+    """
+    portal=self.getPortal()
+    request=self.app.REQUEST
+    
+    request.set('portal_skin', 'RSS');
+    portal.portal_skins.changeSkin('RSS');
+    
+    self.getPortal()._setObject('Test_view',
+                      ERP5Form('Test_view', 'View'))
+    portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
+    portal.Test_view.manage_addField('listbox_link',  'listbox_link',  'StringField')
+    
+    listbox=portal.Test_view.listbox
+    self.assertNotEquals(listbox, None)
+    listbox_link=portal.Test_view.listbox_link
+    self.assertNotEquals(listbox_link,  None)
+    
+    listbox.manage_edit_xmlrpc(
+        dict(columns=[('title', 'Title'),
+                      ('creation_date', 'pubDate'),
+                      ('Base_getRSSAuthor','author'),
+                      ('link','link'), 
+                      ('absolute_url', 'guid')],
+             sort=[('creation_date | descending')], 
+             list_action='list',
+             search=1,
+             select=1,
+             list_method='searchFolder',
+             count_method='countFolder',
+             selection_name='rss_folder_selection'))
 
+    listbox_link.manage_tales_xmlrpc(
+        dict(default="python: cell.absolute_url() + '/view'"))
+    
+    one = self.portal.person_module.one
+    two = self.portal.person_module.two
+    
+    feed_string = self.portal.person_module.Test_view()
+    doc = parseString(feed_string)
+    rss = doc.childNodes[0]
+    channel = rss.getElementsByTagName('channel')[0]
+    self.assertEquals(len(rss.getElementsByTagName('channel')), 1)
+    self.assertEquals(len(channel.getElementsByTagName('item')), 2)
+    
+    titles = [getNodeContent(n) for n in channel.getElementsByTagName('title')]
+    titles.sort()
+    self.assertEquals(titles, ['One', 'Persons',  'Two']) # there is channel title and person titles
+   
+    item = channel.getElementsByTagName('item')[0] # the two person, because we have default sorting in form 
+    self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
+    self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
+    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    expected_link = two.absolute_url() + '/view'
+    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    # is date formatted correctly?
+    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    
+    item = channel.getElementsByTagName('item')[1] # the one person
+    self.assertEquals(getSubnodeContent(item, 'title'), 'One')
+    self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
+    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    expected_link = one.absolute_url() + '/view'
+    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    # is date formatted correctly?
+    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestRSS))
