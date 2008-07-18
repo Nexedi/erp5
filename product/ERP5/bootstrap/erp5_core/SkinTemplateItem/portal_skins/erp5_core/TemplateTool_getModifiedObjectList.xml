@@ -83,7 +83,8 @@ from Products.ERP5Type.Cache import CachingMethod\n
 def getModifiedObjectList(bt):\n
   return bt.preinstall(check_dependencies = check_dependencies)\n
 \n
-getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', \\\n
+getModifiedObjectList = CachingMethod(getModifiedObjectList, \n
+                                      id=\'BusinessTemplate_getModifiedObjectList\',\n
                                       cache_factory=\'erp5_ui_medium\')\n
 \n
 bt_objects = {}\n
@@ -93,9 +94,13 @@ for bt_id in bt_id_list:\n
   bt_objects[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]\n
 \n
 object_list = []\n
-no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
-                 \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\', \n
-                 \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
+no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \n
+                  \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
+                  \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \n
+                  \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\', \n
+                  \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \n
+                  \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
+\n
 for bt in bt_id_list:\n
   modified_object_list = bt_objects[bt][1]  \n
   bt_title = bt_objects[bt][0]\n
@@ -107,20 +112,48 @@ for bt in bt_id_list:\n
     object_id = bt+\'|\'+object_id\n
     line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
     if object_state == \'New\':\n
-      line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Install\', \'install\'], [\'Do Nothing\', \'nothing\']])\n
+      line.edit(object_id=object_id,\n
+                bt_title = bt_title, \n
+                object_state=object_state, \n
+                object_class=object_class, \n
+                choice_item_list=[[\'Install\', \'install\'], \n
+                                  [\'Do Nothing\', \'nothing\']])\n
     elif object_state == \'Modified\':\n
       if object_class in no_backup_list:\n
-        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, \n
+                  bt_title = bt_title, \n
+                  object_state=object_state, \n
+                  object_class=object_class, \n
+                  choice_item_list=[[\'Upgrade\', \'install\'], \n
+                                    [\'Keep Original\', \'nothing\']])\n
       else:\n
-        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Upgrade\', \'backup\'], [\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, \n
+                  bt_title = bt_title, \n
+                  object_state=object_state, \n
+                  object_class=object_class, \n
+                  choice_item_list=[[\'Backup And Upgrade\', \'backup\'], \n
+                                    [\'Upgrade\', \'install\'], \n
+                                    [\'Keep Original\', \'nothing\']])\n
+    \n
     elif object_state == \'Removed\':\n
       if object_class in no_backup_list:\n
-        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, \n
+                  bt_title = bt_title, \n
+                  object_state=object_state, \n
+                  object_class=object_class, \n
+                  choice_item_list=[[\'Remove\', \'remove\'], \n
+                              [\'Keep Original\', \'nothing\']])\n
       else:\n
-        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'], [\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, \n
+                  bt_title = bt_title, \n
+                  object_state=object_state, \n
+                  object_class=object_class, \n
+                  choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'], \n
+                                    [\'Remove\', \'remove\'], \n
+                                    [\'Keep Original\', \'nothing\']])\n
     line.setUid(\'new_%s\' % object_id)\n
     object_list.append(line)\n
-  i += 1                                  \n
+  i += 1 \n
 \n
 return object_list\n
 </string> </value>
@@ -220,6 +253,12 @@ return object_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>TemplateTool_getModifiedObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
