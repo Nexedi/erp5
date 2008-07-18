@@ -616,7 +616,7 @@ msgid "Calculated Price"
 msgstr "Prix calculé"
 
 msgid "Campaigns"
-msgstr ""
+msgstr "Campagnes"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -1155,18 +1155,6 @@ msgstr "N'oubliez pas de vous déconnecter ou de fermer votre navigateur quand v
 msgid "Draft"
 msgstr "Brouillon"
 
-msgid "Draft Campaigns"
-msgstr ""
-
-msgid "Draft Events"
-msgstr ""
-
-msgid "Drafts of purchase orders"
-msgstr ""
-
-msgid "Drafts of sale orders"
-msgstr ""
-
 msgid "Drafts to Validate"
 msgstr "Brouillons à valider"
 
@@ -1240,7 +1228,7 @@ msgid "Errand ratio"
 msgstr "Taux de commission repr."
 
 msgid "Events"
-msgstr ""
+msgstr "Évenements"
 
 msgid "Expanded transformation"
 msgstr "Nomenclature"
@@ -1252,9 +1240,6 @@ msgid "Expiration Date"
 msgstr "Expire le"
 
 msgid "Extensions"
-msgstr ""
-
-msgid "Fake Site Module"
 msgstr ""
 
 msgid "Family"
@@ -1399,7 +1384,7 @@ msgid "Income"
 msgstr "Produits"
 
 msgid "Incoming and Outgoing Events"
-msgstr ""
+msgstr "Événements entrants et sortants"
 
 msgid "Industrial Description"
 msgstr "Données techniques"
@@ -1438,7 +1423,7 @@ msgid "Invalidated"
 msgstr "Invalidé"
 
 msgid "Inventories"
-msgstr ""
+msgstr "Inventaires"
 
 msgid "Inventory"
 msgstr "Inventaire"
@@ -1746,9 +1731,6 @@ msgstr "Module Sociétés"
 msgid "Organisations"
 msgstr "Organisations"
 
-msgid "Organisations to validate"
-msgstr ""
-
 msgid "Origin"
 msgstr "Origine"
 
@@ -1881,9 +1863,6 @@ msgstr "Prénom"
 msgid "Persons"
 msgstr "Personnes"
 
-msgid "Persons to validate"
-msgstr ""
-
 msgid "Phone"
 msgstr "Téléphone"
 
@@ -2008,22 +1987,16 @@ msgid "Purchase Orders"
 msgstr "Commandes d'achat"
 
 msgid "Purchase Packing List"
-msgstr "Réception commande"
+msgstr "Livraison d'achat"
 
 msgid "Purchase Packing List Line"
 msgstr "Ligne"
 
-msgid "Purchase Packing List List"
-msgstr "Réceptions"
-
 msgid "Purchase Packing Lists"
-msgstr ""
+msgstr "Livraisons d'achat"
 
 msgid "Purchase Price"
 msgstr "Prix d'achat"
-
-msgid "Purchase Supplies"
-msgstr ""
 
 msgid "Purchase Trade Condition"
 msgstr "Conditions d'achat"
@@ -2245,7 +2218,7 @@ msgid "Sale Orders"
 msgstr "Commandes de vente"
 
 msgid "Sale Packing Lists"
-msgstr ""
+msgstr "Livraisons de vente"
 
 msgid "Sale Price"
 msgstr "Prix de vente"
@@ -2302,7 +2275,7 @@ msgid "Select Favorite"
 msgstr "Sélectionner un favori"
 
 msgid "Select Language"
-msgstr ""
+msgstr "Langue"
 
 msgid "Select Module"
 msgstr "Sélectionner un module"
@@ -3395,4 +3368,40 @@ msgstr "Reçu"
 
 msgid "Diverged"
 msgstr "Divergent"
+
+msgid "Ship"
+msgstr "Expédier" 
+
+msgid "Shipped"
+msgstr "Expédié"
+
+msgid "Set ready"
+msgstr "Déclarer prêt"
+
+msgid "Ready"
+msgstr "Prêt"
+
+msgid "Purchase Packing List Movements"
+msgstr "Mouvements de livraisons d'achat"
+
+msgid "Choose Solve Actions"
+msgstr "Solutionner la divergence"
+
+msgid "Solved"
+msgstr "Cohérant"
+
+msgid "Calculating"
+msgstr "En cours de calcul"
+
+msgid "Split and Defer"
+msgstr "Créer un reliquat" 
+
+msgid "Keeps the current decision and creates a new one with the difference between prevision and current"
+msgstr "Conserve la décision et crée une nouvelle livraison pour la différence entre la prévision et la décision"
+
+msgid "Prevision Quantity"
+msgstr "Quantité prévue"
+
+msgid "Choice"
+msgstr "Choix"
 
