@@ -1081,6 +1081,12 @@ class ERP5Site(FolderMixIn, CMFSite):
       new_instance.immediateReindexObject()
     return new_instance
 
+  security.declarePublic('getVisibleAllowedContentTypeList')
+  def getVisibleAllowedContentTypeList(self):
+    """Users cannot add anything in an ERP5Site using standard interface.
+    """
+    return ()
+
   def log(self, description, content='', level=INFO):
     """Put a log message """
     warnings.warn("The usage of ERP5Site.log is deprecated.\n"
