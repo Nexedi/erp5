@@ -530,6 +530,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 id = 'simple_invoice',
                 portal_type = self.invoice_transaction_portal_type,
                 resource = currency.getRelativeUrl(),
+                price_currency = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
@@ -1181,8 +1182,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice = sequence.get('invoice')
     self.getPortal().portal_workflow.doActionFor(
       invoice, 'plan_action',
-      wf_id = 'accounting_workflow',
-      skip_period_validation = 1
+      skip_period_validation=1
     )
     self.assertEquals(invoice.getSimulationState(), 'planned')
 
@@ -1381,6 +1381,86 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
               transaction_dict[accounting_line.getId()],
               accounting_line.getTotalQuantity())
     
+  def stepCheckInvoiceSimulation(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    invoice = sequence.get('invoice')
+
+    applied_rule_list = invoice.getCausalityRelatedValueList(
+      portal_type = self.applied_rule_portal_type,
+        )
+
+    self.assertEquals(
+        1,
+        len(applied_rule_list)
+    )
+
+    applied_rule = applied_rule_list[0]
+
+    self.assertEquals(
+      'portal_rules/default_invoice_rule',
+      applied_rule.getSpecialise()
+    )
+
+    self.assertEquals(
+      # reduntant?
+      invoice.getRelativeUrl(),
+      applied_rule.getCausality()
+    )
+
+    simulation_movement_list = applied_rule.objectValues()
+
+    self.assertEquals(
+        1,
+        len(simulation_movement_list)
+    )
+
+    simulation_movement = simulation_movement_list[0]
+
+    invoice_line = sequence.get('invoice_line')
+    resource = sequence.get('product_notebook')
+    vendor = sequence.get('vendor')
+    client = sequence.get('client')
+    currency = sequence.get('currency')
+
+    self.assertEquals(
+      resource.getRelativeUrl(),
+      simulation_movement.getResource()
+    )
+
+    self.assertEquals(
+      currency.getRelativeUrl(),
+      simulation_movement.getPriceCurrency()
+    )
+
+    self.assertEquals(
+      vendor.getRelativeUrl(),
+      simulation_movement.getSourceSection()
+    )
+
+    self.assertEquals(
+      client.getRelativeUrl(),
+      simulation_movement.getDestinationSection()
+    )
+
+    self.assertEquals(
+      invoice_line.getRelativeUrl(),
+      simulation_movement.getOrder()
+    )
+
+    self.assertEquals(
+      invoice_line.getRelativeUrl(),
+      simulation_movement.getDelivery()
+    )
+
+    self.assertEquals(
+      10,
+      simulation_movement.getQuantity()
+    )
+
+    self.assertEquals(
+      10,
+      simulation_movement.getPrice()
+    )
     
   def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ check necessary tools and modules are present. """
@@ -1825,6 +1905,29 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     #   quantity from sum of receivable movement
     #   link to sale invoice
  
+  def test_planning_invoice_creates_simulation(self, quiet=QUIET):
+    # http://mail.nexedi.com/pipermail/erp5-dev/2008-June/001969.html
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateInvoiceTransactionRule
+      stepTic
+      stepUpdateInvoiceTransactionRuleMatrix
+      stepValidateInvoiceTransaction
+      stepTic
+      stepCreateNotebookFranceCell
+      stepCreateBareboneFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateSimpleInvoice
+      stepTic
+      stepPlanInvoice
+      stepTic
+      stepCheckInvoiceSimulation
+      """, quiet=quiet)
 
 class TestSaleAccountingRules(SaleInvoiceTest, TestAccountingRules):
   pass
