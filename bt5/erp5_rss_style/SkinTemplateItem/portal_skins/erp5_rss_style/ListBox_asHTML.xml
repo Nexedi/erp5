@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -176,29 +173,17 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<?xml version="1.0"?>\n
-<rss version="2.0" \n
-  xmlns:dc="http://purl.org/dc/elements/1.1/" \n
-  xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"\n
-  xmlns:tal="http://xml.zope.org/namespaces/tal">\n
-  <tal:block tal:define="\n
-      field_id here/getId;\n
-      line_list here/query;\n
-      label_list here/getLabelValueList;\n
-      real_context here/getContext;\n
-      feed_data python: real_context.Listbox_asRSS(label_list, line_list);\n
-     ">\n
-    <channel tal:define="channel_info feed_data/channel_info" >\n
-      <title tal:content="channel_info/title">TITLE</title>\n
-      <link tal:content="channel_info/url">URL</link>\n
-      <description tal:content="channel_info/description">DESCRIPTION</description>\n
-      <item tal:repeat="item_info feed_data/listItemInfos" >\n
-        <tal:block tal:replace="structure item_info"/>\n
-      </item>\n
-    </channel>\n
-  </tal:block>\n
-</rss>\n
-
+<tal:block \n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="line_list here/query;\n
+              label_list here/getLabelValueList;\n
+              real_context here/getContext;\n
+              feed_data python: real_context.Listbox_asRSS(label_list, line_list);">\n
+  <item tal:repeat="item_info feed_data/listItemInfos" >\n
+    <tal:block tal:replace="structure item_info"/>\n
+  </item>\n
+</tal:block>
 
 ]]></string> </value>
         </item>
@@ -212,7 +197,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Listbox_viewAsRSS</string> </value>
+            <value> <string>ListBox_asHTML</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

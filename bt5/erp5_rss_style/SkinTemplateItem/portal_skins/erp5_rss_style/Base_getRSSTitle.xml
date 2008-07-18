@@ -66,13 +66,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Overwrite this script to get more meaningful information about author\n
-  for RSS feeds.\n
-  It is highly recommended to return a valid email address here, to make the\n
-  feed 100% standard-compliant.\n
+  Pre-process a title before putting it into RSS feed.\n
 """\n
+from Products.PythonScripts.standard import html_quote\n
 \n
-return context.getOwnerInfo().get(\'id\', \'\')\n
+title = context.Title()\n
+return html_quote(title)\n
 </string> </value>
         </item>
         <item>
@@ -115,8 +114,11 @@ return context.getOwnerInfo().get(\'id\', \'\')\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>html_quote</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>title</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,7 +135,7 @@ return context.getOwnerInfo().get(\'id\', \'\')\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getRSSAuthor</string> </value>
+            <value> <string>Base_getRSSTitle</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

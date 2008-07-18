@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -322,32 +319,36 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
+                          <string>Base_getRSSTitle</string>
                           <string>title</string>
-                          <string>rss_title</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>rss_pubDate</string>
+                          <string>pubDate</string>
                         </tuple>
                         <tuple>
                           <string>Base_getRSSAuthor</string>
-                          <string>rss_author</string>
+                          <string>author</string>
                         </tuple>
                         <tuple>
                           <string>link</string>
-                          <string>rss_link</string>
+                          <string>link</string>
                         </tuple>
                         <tuple>
                           <string>Base_getRSSDescription</string>
-                          <string>rss_description</string>
+                          <string>description</string>
                         </tuple>
                         <tuple>
                           <string>absolute_url</string>
-                          <string>rss_guid</string>
+                          <string>guid</string>
                         </tuple>
                       </list>
                     </value>
@@ -435,7 +436,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>Listbox_viewAsRSS</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -536,11 +537,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
