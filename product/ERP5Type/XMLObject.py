@@ -90,6 +90,17 @@ class XMLObject( Folder ):
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject )
 
+    # Inheritance fixes
+    security.declareProtected( Permissions.ModifyPortalContent, 'setDescription' )
+    def setDescription(self, value):
+      """
+          Sets the description by invoking the Accessor
+          based method rather than the one inherited from CMF.
+          This is require to make sure that value is casted
+      """
+      self._setDescription(value)
+      self.reindexObject()
+
     security.declareProtected( Permissions.ModifyPortalContent, 'XUpdateDocument' )
     def XUpdateDocument(self, xupdate):
       """
