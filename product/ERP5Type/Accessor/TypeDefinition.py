@@ -93,6 +93,8 @@ def asString(value):
       result = ''
     else:
       result = str(value)
+      if isinstance(result, unicode):
+        result = result.encode('utf-8')
   except TypeError:
     result = type_definition['string']['default']
   return result
