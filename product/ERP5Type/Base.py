@@ -1410,14 +1410,14 @@ class Base( CopyContainer,
       return
     # Try to get a portal_type property (Implementation Dependent)
     aq_key = self._aq_key()
-    if not Base.aq_portal_type.has_key(aq_key):
+    if getattr(Base.aq_portal_type, aq_key, None) is not None:
       self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
-    if hasattr(Base.aq_portal_type[aq_key], accessor_name):
+    if getattr(Base.aq_portal_type[aq_key], accessor_name, None) is not None:
       method = getattr(self, accessor_name)
       # LOG("Base.py", 0, "method = %s, name = %s" %(method, accessor_name))
       method(value, **kw)
       return
-    if hasattr(Base.aq_portal_type[aq_key], public_accessor_name):
+    if getattr(Base.aq_portal_type[aq_key], public_accessor_name, None) is not None:
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
