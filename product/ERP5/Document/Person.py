@@ -120,51 +120,31 @@ class Person(XMLObject):
         return ' '.join(name_list)
       else:
         return self.title
-      
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'title_or_id')
     def title_or_id(self):
       return self.getTitleOrId()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'setTitle')
-    def setTitle(self, value):
-      """
-        Updates the title if necessary
-      """
-      self._setTitle(value)
-      self.reindexObject()
-
     def _setFirstName(self, value):
       """
         Update Title if first_name is modified
       """
-      self.first_name = value
-      if self.getFirstName()!=None and self.getLastName()!=None:
-        self._setTitle(self.getFirstName()+' '+self.getLastName())
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setFirstName')
-    def setFirstName(self, value):
-      """
-        Updates the first_name if necessary
-      """
-      self._setFirstName(value)
-      self.reindexObject()
+      self._baseSetFirstName(value)
+      name_list = []
+      if self.getFirstName(): name_list.append(self.getFirstName())
+      if self.getLastName(): name_list.append(self.getLastName())
+      if name_list: self._setTitle(' '.join(name_list))
 
     def _setLastName(self, value):
       """
         Update Title if last_name is modified
       """
-      self.last_name = value
-      if self.getFirstName()!=None and self.getLastName()!=None:
-        self._setTitle(self.getFirstName()+' '+self.getLastName())
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setLastName')
-    def setLastName(self, value):
-      """
-        Updates the last_name if necessary
-      """
-      self._setLastName(value)
-      self.reindexObject()
+      self._baseSetLastName(value)
+      name_list = []
+      if self.getFirstName(): name_list.append(self.getFirstName())
+      if self.getLastName(): name_list.append(self.getLastName())
+      if name_list: self._setTitle(' '.join(name_list))
 
     security.declareProtected('Manage users', 'setReference')
     def setReference(self, value):
@@ -203,7 +183,7 @@ class Person(XMLObject):
       if value is not None :
         return pw_validate(self.getPassword(), value)
       return False
-    
+
     security.declarePublic('setPassword')
     def setPassword(self, value) :
       """
@@ -214,7 +194,7 @@ class Person(XMLObject):
           raise AccessControl_Unauthorized('setPassword')
         self._setPassword(pw_encrypt(value))
         self.reindexObject()
-    
+
     # Time management
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAvailableTime')
