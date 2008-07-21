@@ -147,6 +147,12 @@ return context.getAggregatedAmountList(tmp_context)\n
             <value> <string>Transformation_getAggregatedAmountList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

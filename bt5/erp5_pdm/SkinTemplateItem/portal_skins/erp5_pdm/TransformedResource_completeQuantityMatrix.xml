@@ -202,6 +202,12 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <value> <string>TransformedResource_completeQuantityMatrix</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

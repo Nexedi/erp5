@@ -259,6 +259,12 @@ return return_list\n
             <value> <string>Resource_getScaledInventoryList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

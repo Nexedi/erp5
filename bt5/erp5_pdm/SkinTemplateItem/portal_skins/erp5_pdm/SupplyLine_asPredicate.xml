@@ -154,6 +154,12 @@ return context.generatePredicate(membership_criterion_base_category_list = base_
             <value> <string>SupplyLine_asPredicate</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

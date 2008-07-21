@@ -187,6 +187,12 @@ return sub_field_dict.values()\n
             <value> <string>Amount_hashVariationCategoryItemList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

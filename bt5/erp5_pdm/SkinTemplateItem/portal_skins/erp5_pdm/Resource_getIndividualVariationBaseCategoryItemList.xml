@@ -161,6 +161,12 @@ return getIndividualVariationBaseCategoryList(portal_type)\n
             <value> <string>Resource_getIndividualVariationBaseCategoryItemList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

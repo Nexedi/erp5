@@ -149,6 +149,12 @@ return context.getPortalObject().portal_simulation.getAllInventoryList(**kwargs)
             <value> <string>Resource_getVariatedInventoryList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
