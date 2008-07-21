@@ -212,7 +212,9 @@ def parseField(f):\n
    Parse given form field, to put them in\n
    kw or in encapsulated_editor_list\n
   """\n
-  k = f.get_value(\'alternate_name\') or f.id\n
+  k = f.id\n
+  if f.has_value(\'alternate_name\'):\n
+    k = f.get_value(\'alternate_name\')\n
   v = getattr(request, k, MARKER)\n
   if hasattr(v, \'edit\'):\n
     # This is an encapsulated editor\n
@@ -407,6 +409,12 @@ return result\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
