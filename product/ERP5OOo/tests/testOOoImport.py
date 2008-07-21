@@ -195,6 +195,30 @@ class TestOOoImport(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_Base_getCategoriesSpreadSheetMapping(self):
+    # test structure returned by Base_getCategoriesSpreadSheetMapping
+    mapping = self.portal.Base_getCategoriesSpreadSheetMapping(
+        import_file=makeFileUpload('import_region_category.sxc'))
+    self.assertTrue(isinstance(mapping, dict))
+    self.assertEquals(['region'], list(mapping.keys()))
+    region = mapping['region']
+    self.assertTrue(isinstance(region, list))
+    self.assertEquals(6, len(region))
+    # base category is contained in the list
+    self.assertEquals(dict(path='region',
+                           title='region'),
+                      region[0])
+    self.assertEquals(dict(path='region/europe',
+                           title='Europe'),
+                      region[1])
+    self.assertEquals(dict(codification='FR',
+                           description='A Country',
+                           int_index='1',
+                           path='region/europe/france',
+                           title='France'),
+                      region[2])
+    # strings are encoded in UTF8
+    self.assertTrue(isinstance(region[1]['title'], str))
 
   def test_CategoryTool_importCategoryFile(self):
     # tests simple use of CategoryTool_importCategoryFile script
