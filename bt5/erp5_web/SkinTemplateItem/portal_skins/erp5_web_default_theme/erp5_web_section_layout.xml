@@ -128,7 +128,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left column (Sections)</string> </key>
+                    <key> <string>left column (Sections)</string> </key>
                     <value>
                       <list>
                         <string>subsection_list</string>
@@ -144,7 +144,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right column (Highlight)</string> </key>
+                    <key> <string>right column (Highlight)</string> </key>
                     <value>
                       <list>
                         <string>website_highlight</string>
@@ -152,7 +152,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right column (News)</string> </key>
+                    <key> <string>right column (News)</string> </key>
                     <value>
                       <list>
                         <string>website_news</string>

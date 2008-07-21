@@ -81,25 +81,25 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left (Style)</string> </key>
+                    <key> <string>left (Style)</string> </key>
                     <value>
                       <list>
                         <string>my_layout_body_background</string>
@@ -117,7 +117,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right (Widgets)</string> </key>
+                    <key> <string>right (Widgets)</string> </key>
                     <value>
                       <list>
                         <string>my_layout_footer_reference</string>

@@ -128,7 +128,7 @@ return dict(website_url=website.absolute_url(),\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>website</string>
                             <string>websection</string>
                             <string>dict</string>

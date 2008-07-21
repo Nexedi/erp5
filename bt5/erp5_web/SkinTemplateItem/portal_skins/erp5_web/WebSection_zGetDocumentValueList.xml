@@ -79,11 +79,11 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>language</string>
-<string>all_languages</string>
-<string>all_versions</string>
-<string>validation_state</string>
-<string>kw</string>
+                            <string>language</string>
+                            <string>all_languages</string>
+                            <string>all_versions</string>
+                            <string>validation_state</string>
+                            <string>kw</string>
                           </list>
                         </value>
                     </item>
