@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CategoryTool_importCategoryFileForm</string> </value>
+            <value> <string>CategoryTool_viewImportCategoryFileDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
