@@ -228,6 +228,8 @@ for table_name in spreadsheets.keys():\n
       if cell_id not in (\'\', None):\n
         # Handle normal properties\n
         if not property_id.startswith(\'path_\'):\n
+          if same_type(cell_data, u\'\'):\n
+            cell_data = cell_data.encode(\'utf8\')\n
           category_properties[property_id] = cell_data\n
         # Handle \'path\' property\n
         else:\n
@@ -358,6 +360,7 @@ return categories_spreadsheet_mapping\n
                             <string>cell_data</string>
                             <string>cell_id</string>
                             <string>alt_id_source</string>
+                            <string>same_type</string>
                             <string>path_element_id</string>
                             <string>absolut_path_element_list</string>
                             <string>int</string>
