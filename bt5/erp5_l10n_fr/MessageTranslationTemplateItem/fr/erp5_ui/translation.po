@@ -1078,7 +1078,10 @@ msgid "Deleted."
 msgstr "Eléments supprimés"
 
 msgid "Deliver"
-msgstr "Valider"
+msgstr "Livrer"
+
+msgid "Delivered"
+msgstr "Livré"
 
 msgid "Deliver to"
 msgstr "Livrez à "
