@@ -79,7 +79,7 @@ respond_event = event_module.newContent(\n
       causality=context.getRelativeUrl(),\n
       follow_up=context.getFollowUp(),\n
       text_content=respond_event_text_content,\n
-      text_format=\'text/plain\'\n
+      text_format=context.getTextFormat()\n
       )\n
 \n
 # Change the state to posted\n
@@ -88,7 +88,7 @@ respond_event.start()\n
 if respond_event.portal_type==\'Mail Message\' and respond_event.getSource():\n
   respond_event.send()\n
 else:\n
-  respond_event.send(mfrom=object.portal_preferences.getPreferredEventSenderEmail())\n
+  respond_event.send(mfrom=context.portal_preferences.getPreferredEventSenderEmail())\n
 </string> </value>
         </item>
         <item>
@@ -147,7 +147,6 @@ else:\n
                             <string>event_module</string>
                             <string>DateTime</string>
                             <string>respond_event</string>
-                            <string>object</string>
                           </tuple>
                         </value>
                     </item>
