@@ -247,7 +247,10 @@ for table_name in spreadsheets.keys():\n
                 absolut_path_element_list.append(element[\'value\'])\n
                 # Get the next depth\n
                 break\n
-          category_properties[\'path\'] = \'/\'.join([base_category_id,] + absolut_path_element_list[::-1])\n
+          path = \'/\'.join([base_category_id,] + absolut_path_element_list[::-1])\n
+          if same_type(path, u\'\'):\n
+            path = path.encode(\'utf8\')\n
+          category_properties[\'path\'] = path\n
 \n
           # Save the current raw path item value as title if no title column defined\n
           if \'title\' not in category_properties.keys():\n
@@ -281,6 +284,12 @@ return categories_spreadsheet_mapping\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -368,6 +377,7 @@ return categories_spreadsheet_mapping\n
                             <string>range</string>
                             <string>searched_depth</string>
                             <string>element</string>
+                            <string>path</string>
                             <string>clean_title</string>
                           </tuple>
                         </value>
@@ -386,6 +396,12 @@ return categories_spreadsheet_mapping\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getCategoriesSpreadSheetMapping</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
