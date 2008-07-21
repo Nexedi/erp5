@@ -404,6 +404,9 @@ div.input > select, div.input > input {\n
   max-width:320px;\n
 }\n
 \n
+div.page > div.input {\n
+  width:100%;\n
+}\n
 option {\n
   white-space: pre;\n
 }\n
