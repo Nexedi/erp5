@@ -155,6 +155,12 @@ return getSectionUidListForSectionCategory(section_category)\n
             <value> <string>Base_getSectionUidListForSectionCategory</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

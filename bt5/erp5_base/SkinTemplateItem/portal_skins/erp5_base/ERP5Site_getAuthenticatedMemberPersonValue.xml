@@ -162,6 +162,12 @@ return found_user_list[0].getObject()\n
             <value> <string>Get current logged in user\'s Person object</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

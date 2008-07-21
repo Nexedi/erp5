@@ -186,6 +186,12 @@ for (module_url, per_portal_type_data) in object_list.items():\n
             <value> <string>ERP5Site_importObjectFromOOoActivity</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

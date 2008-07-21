@@ -177,6 +177,12 @@ return result_dict\n
             <value> <string>ERP5Site_getCategoriesFullPath</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

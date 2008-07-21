@@ -155,6 +155,12 @@ return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x,x), property_
             <value> <string>ERP5Site_getModulePortalTypeSortedPropertyList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

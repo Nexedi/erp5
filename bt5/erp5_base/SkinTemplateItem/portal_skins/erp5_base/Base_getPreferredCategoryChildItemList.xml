@@ -159,6 +159,12 @@ return method(local_sort_id=local_sort_id_list, checked_permission=\'View\', **k
             <value> <string>Base_getPreferredCategoryChildItemList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

@@ -203,6 +203,12 @@ user_folder.setGroupsOfUser(security_group_list, user_name)\n
             <value> <string>Person_updateUserSecurityGroup</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

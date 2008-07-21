@@ -140,6 +140,12 @@ if telephone is not None:\n
             <value> <string>Entity_getDefaultTelephoneAsURL</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

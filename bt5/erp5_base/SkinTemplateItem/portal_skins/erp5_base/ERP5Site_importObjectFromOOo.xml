@@ -304,6 +304,12 @@ return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
             <value> <string>ERP5Site_importObjectFromOOo</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

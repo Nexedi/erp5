@@ -167,6 +167,12 @@ return N_("${year} Years Old", mapping=interval_dict)\n
             <value> <string>Person_getAge</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

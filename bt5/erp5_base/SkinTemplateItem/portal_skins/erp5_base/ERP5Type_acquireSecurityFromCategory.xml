@@ -181,6 +181,12 @@ return category_dict\n
             <value> <string>ERP5Type_acquireSecurityFromCategory</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

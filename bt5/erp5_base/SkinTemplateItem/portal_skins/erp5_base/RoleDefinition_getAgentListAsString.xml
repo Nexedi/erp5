@@ -139,6 +139,12 @@ return \', \'.join(context.getAgentTitleList([]))\n
             <value> <string>RoleDefinition_getAgentListAsString</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

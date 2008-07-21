@@ -152,6 +152,12 @@ if not is_business_template_installation:\n
             <value> <string>Person_afterClone</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
