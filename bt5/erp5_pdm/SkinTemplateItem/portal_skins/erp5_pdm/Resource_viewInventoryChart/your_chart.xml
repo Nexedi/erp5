@@ -61,11 +61,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>chart_type</string> </key>
+                    <key> <string>chart_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>colour_column_list</string> </key>
+                    <key> <string>colour_column_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -77,11 +77,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>grid_graph</string> </key>
+                    <key> <string>grid_graph</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>listbox_id</string> </key>
+                    <key> <string>listbox_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -89,7 +89,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>user_column_id_list</string> </key>
+                    <key> <string>user_column_id_list</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -100,11 +100,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>chart_type</string> </key>
+                    <key> <string>chart_type</string> </key>
                     <value> <string>chart:line</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>colour_column_list</string> </key>
+                    <key> <string>colour_column_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -131,11 +131,11 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>grid_graph</string> </key>
+                    <key> <string>grid_graph</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>listbox_id</string> </key>
+                    <key> <string>listbox_id</string> </key>
                     <value> <string>your_listbox</string> </value>
                 </item>
                 <item>
@@ -143,11 +143,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Stock Graph</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>user_column_id_list</string> </key>
+                    <key> <string>user_column_id_list</string> </key>
                     <value>
                       <list>
                         <tuple>

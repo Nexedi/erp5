@@ -93,7 +93,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -148,17 +148,17 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>transformation_expanded_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort</string> </key>
+                    <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -169,7 +169,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>stat_columns</string> </key>
+                    <key> <string>stat_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -184,7 +184,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>stat_method</string> </key>
+                    <key> <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -194,7 +194,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Expanded Transformation</string> </value>
                 </item>
               </dictionary>
