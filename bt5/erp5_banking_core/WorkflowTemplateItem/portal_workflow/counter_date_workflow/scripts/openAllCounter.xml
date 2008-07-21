@@ -105,12 +105,8 @@ if listbox is not None:\n
 \n
 \n
 # Set a reference\n
-site_id = counter_date.getSiteId()\n
-if site_id is None:\n
-  msg = Message(domain=\'ui\',message="You must define the site")\n
-  raise ValidationFailed (msg,)\n
 counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
-                                           portal_type=\'Counter Date\',site_id=site_id,\n
+                                           portal_type=\'Counter Date\',site_uid=site_uid,\n
                                            sort_on=[(\'start_date\',\'descending\')],limit=1,\n
                                            simulation_state=(\'open\',\'closed\'))]\n
 previous_reference = None\n
@@ -193,7 +189,6 @@ counter_date.setReference(reference)\n
                             <string>line</string>
                             <string>context</string>
                             <string>counter</string>
-                            <string>site_id</string>
                             <string>previous_reference</string>
                             <string>len</string>
                             <string>previous_counter_date</string>
