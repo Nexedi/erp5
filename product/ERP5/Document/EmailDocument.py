@@ -352,7 +352,8 @@ class EmailDocument(File, TextDocument):
       if body:
         return '> ' + str(body).replace('\n', '\n> ')
     elif self.getTextFormat() == 'text/html':
-      return self.serializeAndCleanHtmlContentForFCKEditor()
+      return '<br/><blockquote type="cite">\n%s\n</blockquote>' %\
+                                self.serializeAndCleanHtmlContentForFCKEditor()
     return ''
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -364,6 +365,8 @@ class EmailDocument(File, TextDocument):
     """
     if html_text is None:
       html_text = self.getTextContent()
+    if html_text is None:
+      return None
     if not import_libxml2:
       return html_text
     exclude_tag_list = ('html', 'head', 'body',)
