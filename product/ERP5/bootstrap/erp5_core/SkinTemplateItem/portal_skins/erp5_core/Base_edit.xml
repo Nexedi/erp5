@@ -214,7 +214,7 @@ def parseField(f):\n
   """\n
   k = f.id\n
   if f.has_value(\'alternate_name\'):\n
-    k = f.get_value(\'alternate_name\')\n
+    k = f.get_value(\'alternate_name\') or f.id\n
   v = getattr(request, k, MARKER)\n
   if hasattr(v, \'edit\'):\n
     # This is an encapsulated editor\n
