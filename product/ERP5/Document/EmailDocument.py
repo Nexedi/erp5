@@ -49,7 +49,12 @@ except ImportError:
     A dummy exception class which is used when MimetypesRegistry product is
     not installed yet.
     """
-
+try:
+  import libxml2
+  import libxslt
+  import_libxml2 = 1
+except ImportError:
+  import_libxml2 = 0
 
 from email import message_from_string
 from email.Header import decode_header
@@ -342,10 +347,64 @@ class EmailDocument(File, TextDocument):
       This is used in order to respond to a mail,
       this put a '> ' before each line of the body
     """
-    body = self.asText()
-    if body:
-      return '> ' + str(body).replace('\n', '\n> ')
+    if self.getTextFormat() == 'text/plain':
+      body = self.asText()
+      if body:
+        return '> ' + str(body).replace('\n', '\n> ')
+    elif self.getTextFormat() == 'text/html':
+      return self.serializeAndCleanHtmlContentForFCKEditor()
     return ''
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'serializeAndCleanHtmlContentForFCKEditor')
+  def serializeAndCleanHtmlContentForFCKEditor(self, html_text=None):
+    """
+    For FCKEditor Compatibility, we should remove DTD,
+    blank lines and some tags in html document
+    """
+    if html_text is None:
+      html_text = self.getTextContent()
+    if not import_libxml2:
+      return html_text
+    exclude_tag_list = ('html', 'head', 'body',)
+    xsl_as_string = """<?xml version="1.0" ?>
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output omit-xml-declaration="yes" indent="no"/>
+  <xsl:template match="/">
+    <xsl:apply-templates select="*|@*|text()|comment()|processing-instruction()"/>
+  </xsl:template>
+
+  <xsl:template match="*|@*|text()|comment()|processing-instruction()">
+    <xsl:copy select=".">
+      <xsl:apply-templates select="*|@*|text()|comment()|processing-instruction()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="%s">
+    <xsl:apply-templates select="*|text()|comment()|processing-instruction()"/>
+  </xsl:template>
+
+</xsl:stylesheet>
+  """ % ('|'.join(exclude_tag_list))
+    html_doc = libxml2.htmlParseDoc(html_text, None)
+    stylesheet_doc = libxml2.parseDoc(xsl_as_string)
+    stylesheet = libxslt.parseStylesheetDoc(stylesheet_doc)
+    result_doc = stylesheet.applyStylesheet(html_doc, None)
+    clean_text = result_doc.serialize('utf-8', 0)
+    html_doc.freeDoc()
+    result_doc.freeDoc()
+    stylesheet.freeStylesheet()
+    #Remove All xml declarations
+    clean_text = re.sub('<\?xml.*\?>', '', clean_text).strip()
+    #Remove blank and new Lines
+    new_text_list = []
+    for line in clean_text.split('\n'):
+      line = line.strip()
+      if line:
+        new_text_list.append(line)
+    clean_text = ''.join(new_text_list)
+    return clean_text
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplySubject')
   def getReplySubject(self):
