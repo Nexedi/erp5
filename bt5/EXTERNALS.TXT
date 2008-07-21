@@ -6,5 +6,7 @@
 # svn propset svn:externals -F ./EXTERNALS.TXT .
 #
 
-erp5_accounting_l10n_fr_m9 https://admisource.gouv.fr/svn/erp5-m9/trunk/bt5/erp5_accounting_l10n_fr_m9
+erp5_accounting_l10n_fr_m9 svn://svn.adullact.net/svnroot/erp5-m9/trunk/bt5/erp5_accounting_l10n_fr_m9
+# developers should use
+# svn+ssh://(developername)@svn.adullact.net/svnroot/erp5-m9/trunk/bt5/erp5_accounting_l10n_fr_m9
 
