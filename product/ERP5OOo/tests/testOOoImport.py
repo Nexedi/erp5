@@ -219,6 +219,7 @@ class TestOOoImport(ERP5TypeTestCase):
                       region[2])
     # strings are encoded in UTF8
     self.assertTrue(isinstance(region[1]['title'], str))
+    self.assertTrue(isinstance(region[1]['path'], str))
 
   def test_CategoryTool_importCategoryFile(self):
     # tests simple use of CategoryTool_importCategoryFile script
