@@ -66,19 +66,34 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Create new Content by cloning an existing document\n
-  or by creating a new document.\n
-\n
-  This script is called by the admin toolbox.\n
-\n
-  Cloning or creation is prevented if document already exists\n
-  with same reference, version, language. Pretty messages\n
-  are provided to the user.\n
+  Currently it is not possible to change it to checkConsistency.\n
+  If it added similar constraints at Documents will break archive \n
+  behaviour. \n
 """\n
-context.Base_createCloneDocument(web_mode=1, \n
-                                                                    clone=clone, \n
-                                                                    form_id=form_id, \n
-                                                                    editable_mode=editable_mode)\n
+form_data = context.REQUEST.form\n
+translateString =  context.Base_translateString\n
+\n
+if clone:\n
+  portal_type = context.getPortalType()\n
+else:\n
+  portal_type = form_data[\'clone_portal_type\']\n
+\n
+# prepare query params\n
+kw = {\'portal_type\' : portal_type}\n
+if form_data.get(\'clone_reference\'): \n
+  kw[\'reference\'] = form_data[\'clone_reference\']\n
+if form_data.get(\'clone_version\'): \n
+  kw[\'version\'] = form_data[\'clone_version\']\n
+if form_data.get(\'clone_language\'): \n
+  kw[\'language\'] = form_data[\'clone_language\']\n
+\n
+# Count documents of same reference and prepare kw\n
+count = int(context.portal_catalog.countResults(**kw)[0][0])\n
+\n
+if count:\n
+  return translateString("Sorry, a ${portal_type} with reference \'${reference}\' and version \'${version} [${language}]\' already exists. Please select another reference or version.", mapping = kw)\n
+\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -95,15 +110,7 @@ context.Base_createCloneDocument(web_mode=1, \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>clone=1, form_id, editable_mode=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>clone=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,17 +130,25 @@ context.Base_createCloneDocument(web_mode=1, \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>clone</string>
-                            <string>form_id</string>
-                            <string>editable_mode</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>form_data</string>
+                            <string>translateString</string>
+                            <string>portal_type</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>int</string>
+                            <string>_apply_</string>
+                            <string>count</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -147,18 +162,12 @@ context.Base_createCloneDocument(web_mode=1, \n
             <value>
               <tuple>
                 <int>1</int>
-                <none/>
-                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_cloneContent</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Clone or Create new content</string> </value>
+            <value> <string>Base_checkCloneConsistency</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
