@@ -54,14 +54,14 @@ from DateTime import DateTime
 
 
 class PurchaseInvoiceTest:
-  invoice_transaction_portal_type = 'Sale Invoice Transaction'
+  invoice_portal_type = 'Sale Invoice Transaction'
   invoice_transaction_line_portal_type \
                      = "Sale Invoice Transaction Line"
   invoice_line_portal_type = "Invoice Line"
   invoice_cell_portal_type = "Invoice Cell"
 
 class SaleInvoiceTest:
-  invoice_transaction_portal_type = 'Sale Invoice Transaction'
+  invoice_portal_type = 'Sale Invoice Transaction'
   invoice_transaction_line_portal_type \
                      = "Sale Invoice Transaction Line"
   invoice_line_portal_type = "Invoice Line"
@@ -500,7 +500,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     empty_invoice = self.getAccountingModule().newContent(
                 id = 'empty_invoice',
-                portal_type = self.invoice_transaction_portal_type,
+                portal_type = self.invoice_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -528,7 +528,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice',
-                portal_type = self.invoice_transaction_portal_type,
+                portal_type = self.invoice_portal_type,
                 resource = currency.getRelativeUrl(),
                 price_currency = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
@@ -565,7 +565,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'other_simple_invoice',
-                portal_type = self.invoice_transaction_portal_type,
+                portal_type = self.invoice_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -655,7 +655,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice_two_lines',
-                portal_type = self.invoice_transaction_portal_type,
+                portal_type = self.invoice_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -698,7 +698,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice_two_cells',
-                portal_type = self.invoice_transaction_portal_type,
+                portal_type = self.invoice_portal_type,
                 resource = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),
                 start_date = DateTime(2004, 01, 01),
@@ -772,7 +772,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     
     multi_line_invoice = self.getAccountingModule().newContent(
                 id = 'multi_line_invoice',
-                portal_type = self.invoice_transaction_portal_type,
+                portal_type = self.invoice_portal_type,
                 resource = currency.getRelativeUrl(),
                 price_currency = currency.getRelativeUrl(),
                 stop_date = DateTime(2004, 01, 01),

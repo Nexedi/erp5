@@ -335,7 +335,7 @@ class TestInvoiceMixin(TestPackingListMixin,
     """
     packing_list = sequence.get('packing_list')
     related_invoice_list = packing_list.getCausalityRelatedValueList(
-                     portal_type=self.invoice_transaction_portal_type)
+                     portal_type=self.invoice_portal_type)
 
     packing_list_building_state = 'started'
     packing_list_state = packing_list.getSimulationState()
@@ -535,7 +535,7 @@ class TestInvoiceMixin(TestPackingListMixin,
         coping the atributes from packing list to invoice."""
     packing_list = sequence.get('packing_list') 
     related_invoice_list = packing_list.getCausalityRelatedValueList(
-                     portal_type=self.invoice_transaction_portal_type)
+                     portal_type=self.invoice_portal_type)
     self.assertEquals(len(related_invoice_list), 1)
     invoice = related_invoice_list[0]
     self.assertEquals(packing_list.getSource(), invoice.getSource())
@@ -625,14 +625,14 @@ class TestInvoiceMixin(TestPackingListMixin,
     # Now we will check that we have two invoices created
     packing_list = sequence.get('packing_list')
     invoice_list = packing_list.getCausalityRelatedValueList(
-         portal_type=self.invoice_transaction_portal_type)
+         portal_type=self.invoice_portal_type)
     self.assertEquals(len(invoice_list),1)
     invoice = invoice_list[0]
     self.assertEquals(invoice.getSimulationState(), 'confirmed')
     sequence.edit(invoice=invoice)
     new_packing_list = sequence.get('new_packing_list')
     new_invoice_list = new_packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_transaction_portal_type)
+        portal_type=self.invoice_portal_type)
     self.assertEquals(len(new_invoice_list),1)
     new_invoice = new_invoice_list[0]
     self.assertEquals(new_invoice.getSimulationState(), 'confirmed')
