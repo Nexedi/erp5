@@ -110,6 +110,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_group</string>
                       </list>
                     </value>
                 </item>

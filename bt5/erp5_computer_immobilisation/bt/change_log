@@ -1,3 +1,7 @@
+2008-7-22 vincentd
+* Show free partition in listbox
+* Allow to chose group in partition and computer
+
 2008-5-21 yusei
 * Show validation state title in view form.
 * Added sortable, searchable columns in list view.
