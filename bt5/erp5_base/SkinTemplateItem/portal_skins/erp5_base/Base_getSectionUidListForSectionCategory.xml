@@ -65,20 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns the list of section_uid for a section_category.\n
+            <value> <string>"""Returns the list of section_uid for a group section_category.\n
 \n
 This will only return organisation member of this section category.\n
 """\n
 portal = context.getPortalObject()\n
 \n
-def getSectionUidListForSectionCategory(section_category):\n
-  section = portal.portal_categories.restrictedTraverse(section_category)\n
-  return [x.getUid() for x in section.getGroupRelatedValueList(portal_type=\'Organisation\')]\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-getCurrencyForSection = CachingMethod(getSectionUidListForSectionCategory,\n
-                                      id=script.getId())\n
-return getSectionUidListForSectionCategory(section_category)\n
+section = portal.portal_categories.restrictedTraverse(section_category)\n
+return [x.getUid() for x in\n
+            section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                             checked_permission=\'View\')]\n
 </string> </value>
         </item>
         <item>
@@ -131,11 +127,11 @@ return getSectionUidListForSectionCategory(section_category)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>getSectionUidListForSectionCategory</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>script</string>
-                            <string>getCurrencyForSection</string>
+                            <string>section</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
