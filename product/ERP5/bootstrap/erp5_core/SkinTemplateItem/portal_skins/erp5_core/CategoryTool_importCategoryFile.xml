@@ -155,8 +155,6 @@ for base_category, categories in \\\n
           key = str(key)\n
           if key not in [\'path\', \'id\']:\n
             value = category[key]\n
-            if value is not None:\n
-              value = str(value.encode(\'UTF-8\'))\n
             if update_existing_property or is_new_category:\n
               # Always update properties if update_existing_property is set or if this a new category\n
               category_update_dict[key] = value\n
