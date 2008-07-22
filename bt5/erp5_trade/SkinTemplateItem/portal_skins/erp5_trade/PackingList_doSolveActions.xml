@@ -82,7 +82,7 @@ if listbox is not None:\n
         quantity = line[\'quantity\']\n
         movement = context.restrictedTraverse(url)\n
         movement.setProperty(\'quantity\', quantity, type=\'float\')\n
-        choice = line[\'choice\']        \n
+        choice = line[\'choice\']\n
         if choice == \'SplitAndDefer\':\n
             split_and_defer = 1\n
             context.portal_simulation.solveMovement(movement, None, "SplitAndDefer", start_date=start_date, stop_date=stop_date, activate_kw={\'tag\':tag})\n
@@ -106,9 +106,9 @@ if listbox is not None:\n
         delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation_uid=explanation_uid_list)\n
    \n
 \n
-redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id, \n
-                               \'portal_status_message=Sale+Packing+List+updated.\')\n
-context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+_ = context.Base_translateString\n
+return context.Base_redirect(form_id, keep_items=\n
+               dict(portal_status_message=_(\'Packing List updated.\')))\n
 </string> </value>
         </item>
         <item>
@@ -182,7 +182,8 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>order_portal_type</string>
                             <string>delivery_builder</string>
                             <string>explanation_uid_list</string>
-                            <string>redirect_url</string>
+                            <string>_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
