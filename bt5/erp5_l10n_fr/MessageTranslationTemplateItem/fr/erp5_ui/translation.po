@@ -3408,3 +3408,6 @@ msgstr "Quantité prévue"
 msgid "Choice"
 msgstr "Choix"
 
+msgid "Packing List updated."
+msgstr "Livraison mise à jour."
+
