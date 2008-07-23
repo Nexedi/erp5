@@ -106,6 +106,7 @@ if create_event:\n
 \n
   if quote_original_message:\n
     new_event.edit(text_format=event.getTextFormat(),\n
+                   title=event.getReplySubject(),\n
                    text_content=event.getReplyBody())\n
 </string> </value>
         </item>
