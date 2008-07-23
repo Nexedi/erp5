@@ -303,7 +303,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: int(here.getBaobabDestinationPaymentValue().getPriceCurrencyValue().getQuantityPrecision())</string> </value>
+            <value> <string>python: int(((here.getBaobabDestinationPaymentValue() is None) and (here.Baobab_getPortalReferenceCurrencyValue().getQuantityPrecision(), ) or (here.getBaobabDestinationPaymentValue().getPriceCurrencyValue().getQuantityPrecision(), ))[0])</string> </value>
         </item>
       </dictionary>
     </pickle>
