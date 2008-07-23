@@ -157,7 +157,7 @@ msgid "Add Apparel Fabric Colour Variation"
 msgstr "Ajouter Coloris"
 
 msgid "Additional Payments"
-msgstr "Echéancier"
+msgstr "Échéancier"
 
 msgid "Additional Term (days)"
 msgstr "Terme additionnel (jours)"
@@ -280,7 +280,7 @@ msgid "Apparel Fabric Module"
 msgstr "Module Tissus"
 
 msgid "Apparel Fabric Title"
-msgstr "Ref Qualité Tissu"
+msgstr "Réf Qualité Tissu"
 
 msgid "Apparel Fabric to validate"
 msgstr "Tissus à définir"
@@ -340,7 +340,7 @@ msgid "Apparel Shape Owner"
 msgstr "Appartient au modèle"
 
 msgid "Apparel Shape Reference"
-msgstr "Ref Modèle"
+msgstr "Réf Modèle"
 
 msgid "Apparel Shape Taken"
 msgstr "Vêtements repris"
@@ -370,7 +370,7 @@ msgid "Apparel Transformation"
 msgstr "Nomenclatures"
 
 msgid "Apparel Transformation List"
-msgstr "Eléments de la Nomenclature"
+msgstr "Éléments de la Nomenclature"
 
 msgid "Apparel Transformation Module"
 msgstr "Nomenclatures"
@@ -382,7 +382,7 @@ msgid "Apparel Transformation Operation List"
 msgstr "Liste des Opérations"
 
 msgid "Apparel Transformation State"
-msgstr "Etat Nomenclature"
+msgstr "État Nomenclature"
 
 msgid "Apparel Transformation Template"
 msgstr "Nomenclature(s) à inclure"
@@ -448,7 +448,7 @@ msgid "Assignment Stop Date"
 msgstr "Fin de l'affectation"
 
 msgid "At Date"
-msgstr "Date de fin (inclu)"
+msgstr "Date de fin (inclus)"
 
 msgid "August"
 msgstr "Août"
@@ -559,10 +559,10 @@ msgid "Budget Module"
 msgstr "Budget"
 
 msgid "Budget Start Date"
-msgstr "Debut periode budgetaire"
+msgstr "Début période budgétaire"
 
 msgid "Budget Stop Date"
-msgstr "Fin periode budgetaire"
+msgstr "Fin période budgétaire"
 
 msgid "Budget Transaction"
 msgstr "Transaction Budgétaire"
@@ -577,7 +577,7 @@ msgid "Budget Transfert"
 msgstr "Transfert Budgétaire"
 
 msgid "Budget Transfert Line"
-msgstr "Ligne de Tranfert Budgétaire"
+msgstr "Ligne de Transfert Budgétaire"
 
 msgid "Budget title"
 msgstr "Intitule du budget"
@@ -646,7 +646,7 @@ msgid "Career Step"
 msgstr "Étape De Carrière"
 
 msgid "Career Steps"
-msgstr "Etapes de Carrière"
+msgstr "Étapes de Carrière"
 
 msgid "Career Title"
 msgstr "Carrière"
@@ -673,7 +673,7 @@ msgid "Cash Extraction Module"
 msgstr "Module de retrait des externes"
 
 msgid "Cash Status"
-msgstr "Etat de valeur"
+msgstr "État de valeur"
 
 msgid "Cash To Currency Purchase"
 msgstr "Achat de devises contre espèces"
@@ -682,13 +682,13 @@ msgid "Cash To Currency Sale"
 msgstr "Vente de devises contre espèces"
 
 msgid "Cash Transfer"
-msgstr "Transfert Intercaisse"
+msgstr "Transfert Inter-caisse"
 
 msgid "Cash Transfer Line"
-msgstr "ligne de transfert intercaisse"
+msgstr "ligne de transfert inter-caisse"
 
 msgid "Cash Transfers"
-msgstr "Transfert Intercaisse"
+msgstr "Transfert Inter-caisse"
 
 msgid "Catalog Methods"
 msgstr ""
@@ -718,13 +718,13 @@ msgid "Checkbook"
 msgstr "Formules numérotées"
 
 msgid "Checkbook Deliveries"
-msgstr "Delivrance de formules numérotées"
+msgstr "Délivrance de formules numérotées"
 
 msgid "Checkbook Delivery"
-msgstr "Delivrance de formules numérotées"
+msgstr "Délivrance de formules numérotées"
 
 msgid "Checkbook Delivery Module"
-msgstr "Delivrance de formules numérotées"
+msgstr "Délivrance de formules numérotées"
 
 msgid "Checkbook Reception"
 msgstr "Réception de formules numérotées"
@@ -772,7 +772,7 @@ msgid "Client Project"
 msgstr "Projet client"
 
 msgid "Closing Date"
-msgstr "Date de Cloture"
+msgstr "Date de Clôture"
 
 msgid "Cloth"
 msgstr "Vêtement"
@@ -787,10 +787,10 @@ msgid "Collection Net width (cm)"
 msgstr "Laize collection (cm)"
 
 msgid "Collection Order Date"
-msgstr "Collection cdée le"
+msgstr "Collection commandée le"
 
 msgid "Collection Order Quantity"
-msgstr "Métrage cdé"
+msgstr "Métrage commandé"
 
 msgid "Collection Path"
 msgstr "Saison/Collection"
@@ -811,7 +811,7 @@ msgid "Color Range"
 msgstr "Coloris"
 
 msgid "Color Reference"
-msgstr "Ref coloris"
+msgstr "Réf coloris"
 
 msgid "Color count"
 msgstr "Nb de coloris"
@@ -826,7 +826,7 @@ msgid "Colour Range Created."
 msgstr "Coloris ajouté"
 
 msgid "Colour Title"
-msgstr "Ref Coloris"
+msgstr "Réf Coloris"
 
 msgid "Colour Variation"
 msgstr "Coloris"
@@ -865,7 +865,7 @@ msgid "Component Individual Variation"
 msgstr "Variation Individuelle de Fourniture"
 
 msgid "Individual Variation Base Category"
-msgstr "Categorie de variation individuelle"
+msgstr "Catégorie de variation individuelle"
 
 msgid "Configure"
 msgstr "Configurer"
@@ -943,7 +943,7 @@ msgid "Create New Document(s)"
 msgstr "Création"
 
 msgid "Create Related Payment"
-msgstr "Créer la transaction de payment correspondante"
+msgstr "Créer la transaction de règlement correspondante"
 
 msgid "Created by"
 msgstr "Créé par"
@@ -1072,10 +1072,10 @@ msgid "Delete The Objects"
 msgstr "Supprimer les objets"
 
 msgid "Deleted objects: ${object_ids}"
-msgstr "Objets suprimés: ${object_ids}"
+msgstr "Objets supprimés: ${object_ids}"
 
 msgid "Deleted."
-msgstr "Eléments supprimés"
+msgstr "Éléments supprimés"
 
 msgid "Deliver"
 msgstr "Déclarer livré"
@@ -1096,7 +1096,7 @@ msgid "Delivery Line"
 msgstr "Ligne de commande"
 
 msgid "Delivery State"
-msgstr "Etat livraison"
+msgstr "État livraison"
 
 msgid "Destination"
 msgstr "Destination"
@@ -1150,7 +1150,7 @@ msgid "Document Classes"
 msgstr ""
 
 msgid "Domain Tree"
-msgstr "Filtres pré-déterminés"
+msgstr "Filtres prédétermines"
 
 msgid "Don't forget to logout or exit your browser when you're done."
 msgstr "N'oubliez pas de vous déconnecter ou de fermer votre navigateur quand vous avez terminé."
@@ -1165,10 +1165,10 @@ msgid "Drawing"
 msgstr "Dessin"
 
 msgid "Drawing Reference"
-msgstr "Ref Dessin"
+msgstr "Réf Dessin"
 
 msgid "Drawing reference"
-msgstr "Ref Dessin"
+msgstr "Réf Dessin"
 
 msgid "Duration"
 msgstr "Temps"
@@ -1231,7 +1231,7 @@ msgid "Errand ratio"
 msgstr "Taux de commission repr."
 
 msgid "Events"
-msgstr "Évenements"
+msgstr "Évènements"
 
 msgid "Expanded transformation"
 msgstr "Nomenclature"
@@ -1408,7 +1408,7 @@ msgid "Install Business Template"
 msgstr ""
 
 msgid "Installation State"
-msgstr "Etat de l'Installation"
+msgstr "État de l'installation"
 
 msgid "Internal Money Deposit"
 msgstr "Dépôt sur compte d'ordre"
@@ -1450,7 +1450,7 @@ msgid "Invoice Rule"
 msgstr "Règle de Facture"
 
 msgid "Invoice Sender"
-msgstr "Emetteur de la Facture"
+msgstr "Émetteur de la Facture"
 
 msgid "Invoice View"
 msgstr "Vue de Facture"
@@ -1459,25 +1459,25 @@ msgid "Invoice to"
 msgstr "Facturé à "
 
 msgid "Invoicing Rule"
-msgstr "Régle de Facturation"
+msgstr "Règle de Facturation"
 
 msgid "Item(s)+Copied."
-msgstr "Eléments+copiés"
+msgstr "Éléments+copiés"
 
 msgid "Item(s)+Cut."
-msgstr "Eléments+coupés"
+msgstr "Éléments+coupés"
 
 msgid "Item(s)+Pasted."
-msgstr "Eléments+collés"
+msgstr "Éléments+collés"
 
 msgid "Items+Copied."
-msgstr "Eléments+copiés"
+msgstr "Éléments+copiés"
 
 msgid "Items+Cut."
-msgstr "Eléments+coupés"
+msgstr "Éléments+coupés"
 
 msgid "Items+Pasted."
-msgstr "Eléments+collés"
+msgstr "Éléments+collés"
 
 msgid "Journal Type"
 msgstr "Type d'écriture"
@@ -1531,7 +1531,7 @@ msgid "List Mode"
 msgstr ""
 
 msgid "List Report"
-msgstr "Edition"
+msgstr "Édition"
 
 msgid "Local Roles"
 msgstr ""
@@ -1567,7 +1567,7 @@ msgid "Manage Business Templates"
 msgstr ""
 
 msgid "Marital Status"
-msgstr "Situation Familliale"
+msgstr "Situation Familiale"
 
 msgid "Max Amount"
 msgstr "Montant Max."
@@ -1591,7 +1591,7 @@ msgid "Message Translations"
 msgstr ""
 
 msgid "Metadata"
-msgstr "Métadonnées"
+msgstr "Méta-données"
 
 msgid "Middle Name"
 msgstr "Deuxième Prénom"
@@ -1609,7 +1609,7 @@ msgid "Monetary Destruction"
 msgstr "Destruction de billets"
 
 msgid "Monetary Issue"
-msgstr "Emission"
+msgstr "Émission"
 
 msgid "Monetary Recall"
 msgstr "Retrait de circulation"
@@ -1696,7 +1696,7 @@ msgid "Operation"
 msgstr "Opérations"
 
 msgid "Operation Date"
-msgstr "Date d'Opération"
+msgstr "Date d'opération"
 
 msgid "Operation List"
 msgstr "Liste des Opérations"
@@ -1714,7 +1714,7 @@ msgid "Order date"
 msgstr "Date de la commande"
 
 msgid "Order reference"
-msgstr "N° d'Ordre"
+msgstr "N° d'ordre"
 
 msgid "Order type"
 msgstr "Type d'ordre"
@@ -1738,7 +1738,7 @@ msgid "Origin"
 msgstr "Origine"
 
 msgid "Origin Reference"
-msgstr "Ref. Commande client"
+msgstr "Réf. Commande client"
 
 msgid "Original Supplier or Worker"
 msgstr "Fournisseur d'origine ou agent"
@@ -1909,7 +1909,7 @@ msgid "Previous"
 msgstr "Précédent"
 
 msgid "Previous Page"
-msgstr "Page précédante"
+msgstr "Page précédente"
 
 msgid "Price"
 msgstr "Prix"
@@ -2011,7 +2011,7 @@ msgid "Purchase orders not confirmed"
 msgstr "Commandes non confirmées"
 
 msgid "Purchase trade condition"
-msgstr "Conditions d'Achat"
+msgstr "Conditions d'achat"
 
 msgid "Quality"
 msgstr "Qualité"
@@ -2020,13 +2020,13 @@ msgid "Quality Reference"
 msgstr "Qualité"
 
 msgid "Quality reference"
-msgstr "Ref Qualité Support"
+msgstr "Réf Qualité Support"
 
 msgid "Quantity"
 msgstr "Quantité"
 
 msgid "Quantity Step"
-msgstr "Echelle de prix"
+msgstr "Échelle de prix"
 
 msgid "Quantity Unit"
 msgstr "Unité de gestion"
@@ -2146,7 +2146,7 @@ msgid "Remember my name."
 msgstr "Mémoriser mon Nom"
 
 msgid "Report"
-msgstr "Editions"
+msgstr "Éditions"
 
 msgid "Report Select:"
 msgstr "Type d'édition"
@@ -2158,7 +2158,7 @@ msgid "Resource"
 msgstr "Nature"
 
 msgid "Resource List"
-msgstr "Eléments"
+msgstr "Éléments"
 
 msgid "Resource Title"
 msgstr "Article"
@@ -2194,7 +2194,7 @@ msgid "Salary coefficient"
 msgstr "Coefficient"
 
 msgid "Salary level"
-msgstr "Echelon"
+msgstr "Échelon"
 
 msgid "Sale Invoice Lines"
 msgstr "Lignes de facture"
@@ -2356,10 +2356,10 @@ msgid "Social code"
 msgstr "Numéro de Sécurité Sociale"
 
 msgid "Social form"
-msgstr "Forme de la Sté"
+msgstr "Forme de la Société"
 
 msgid "Sorry your selection has changed"
-msgstr "Désolé, votre séléction a changé"
+msgstr "Désolé, votre sélection a changé"
 
 msgid "Sorry+You+Can+Not+Delete+${count}+Item."
 msgstr "Vous+ne+pouvez+pas+supprimer+${count}+document."
@@ -2392,7 +2392,7 @@ msgid "Source Group"
 msgstr "Groupement"
 
 msgid "Source Ref"
-msgstr "Ref Fourn."
+msgstr "Réf Fournisseur."
 
 msgid "Source Reference"
 msgstr "Référence"
@@ -2434,7 +2434,7 @@ msgid "Status"
 msgstr "État"
 
 msgid "Status changed."
-msgstr "Etat modifié."
+msgstr "État modifié."
 
 msgid "Stock"
 msgstr "Stock"
@@ -2464,7 +2464,7 @@ msgid "Supplier / Worker"
 msgstr "Origine / Personnel "
 
 msgid "Supplier Colour Reference"
-msgstr "Ref Coloris Fourn"
+msgstr "Réf Coloris Fournisseur"
 
 msgid "Supplier Price"
 msgstr "Prix Fournisseur"
@@ -2473,19 +2473,19 @@ msgid "Supplier Project"
 msgstr "Projet fournisseur"
 
 msgid "Supplier Ref"
-msgstr "Ref Fourn"
+msgstr "Réf Fournisseur"
 
 msgid "Supplier Reference"
 msgstr "Référence fournisseur"
 
 msgid "Supplier colour"
-msgstr "Coloris Fourn"
+msgstr "Coloris Fournisseur"
 
 msgid "Supplier price"
-msgstr "Prix d'Achat"
+msgstr "Prix d'achat"
 
 msgid "Supplier reference"
-msgstr "Ref Fournisseur"
+msgstr "Réf Fournisseur"
 
 msgid "Support Requests"
 msgstr ""
@@ -2503,7 +2503,7 @@ msgid "Technical Drawing"
 msgstr "Dossier Technique"
 
 msgid "Technical drawing type"
-msgstr "Elémént du dossier"
+msgstr "Élément du dossier"
 
 msgid "Telephone"
 msgstr "Téléphone"
@@ -2614,7 +2614,7 @@ msgid "Transformation"
 msgstr "Nomenclature"
 
 msgid "Transformation State"
-msgstr "Etat"
+msgstr "État"
 
 msgid "Transformation description"
 msgstr "Libellé pour nomenclatures"
@@ -2662,7 +2662,7 @@ msgid "Update Business Template from SVN"
 msgstr ""
 
 msgid "Update Relation"
-msgstr "Etablir le lien"
+msgstr "Établir le lien"
 
 msgid "Update Tools"
 msgstr ""
@@ -2704,13 +2704,13 @@ msgid "Validate Transaction"
 msgstr "Passer l'écriture au brouillard"
 
 msgid "Validate Workflow Action"
-msgstr "Valider le Changement d'État"
+msgstr "Valider le Changement d'état"
 
 msgid "Validated"
 msgstr "Validé"
 
 msgid "Validation State"
-msgstr "Etat"
+msgstr "État"
 
 msgid "Validation Workflow"
 msgstr "Workflow de Validation"
@@ -2779,7 +2779,7 @@ msgid "You are not currently logged in. Your username and or password may be inc
 msgstr "Vous n'êtes pas connecté. Votre Nom ou votre Mot de passe sont peut-être incorrects. En cas de besoin, contactez  ${admin_email}."
 
 msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
-msgstr "Vous pouvez vous connecter sous un autre profil ou <a href=\"javascript:history.back();\">retourner à la page précédante</a>."
+msgstr "Vous pouvez vous connecter sous un autre profil ou <a href=\"javascript:history.back();\">retourner à la page précédente</a>."
 
 msgid "You did not enter a floating point number."
 msgstr "Vous devez entrer un numérique."
@@ -2791,7 +2791,7 @@ msgid "You did not enter an integer."
 msgstr "Vous devez saisir un nombre entier."
 
 msgid "You don't have enough permissions to access this page"
-msgstr "Vous n'avez pas la permission d'acceder à cette page"
+msgstr "Vous n'avez pas la permission d'accéder à cette page"
 
 msgid "You don't have the permissions to edit the object."
 msgstr "Vous n'avez pas la permission d'éditer l'objet"
@@ -2818,10 +2818,10 @@ msgid "actor"
 msgstr "Utilisateur"
 
 msgid "auto_planned"
-msgstr "Plannifié (automatiquement)"
+msgstr "Planifié (automatiquement)"
 
 msgid "cash_status"
-msgstr "Etat de valeur"
+msgstr "État de valeur"
 
 msgid "collection"
 msgstr "Collection"
@@ -2866,7 +2866,7 @@ msgid "state"
 msgstr "État"
 
 msgid "status"
-msgstr "Etat"
+msgstr "État"
 
 msgid "time"
 msgstr "Date"
@@ -2908,10 +2908,10 @@ msgid "Delivery Mode"
 msgstr "Mode de livraison"
 
 msgid "Emit"
-msgstr "Emettre"
+msgstr "Émettre"
 
 msgid "Emitted"
-msgstr "Emis"
+msgstr "Émis"
 
 msgid "Approve"
 msgstr "Approuver"
@@ -3025,7 +3025,7 @@ msgid "Non Tax Withholding"
 msgstr "Retenues sur salaire"
 
 msgid "Non Taxable Bonus"
-msgstr "Indemnitée non imposable"
+msgstr "Indemnité non imposable"
 
 msgid "Overtime"
 msgstr "Heures supplémentaires"
@@ -3118,7 +3118,7 @@ msgid "Inherited Models"
 msgstr "Modèles hérités"
 
 msgid "Payment Date"
-msgstr "Date de réglement"
+msgstr "Date de règlement"
 
 msgid "Salary Ranges"
 msgstr "Tranches"
@@ -3142,7 +3142,7 @@ msgid "${tax_category_title} (Amount or Percent)"
 msgstr "${tax_category_title} (Montant ou Taux)"
 
 msgid "Annotation Line Reference for Payroll Service Provider"
-msgstr "Reference de l'annotation pour l'organisme collecteur"
+msgstr "Référence de l'annotation pour l'organisme collecteur"
 
 msgid "Employee Number"
 msgstr "Matricule"
@@ -3166,10 +3166,10 @@ msgid "EAN-13 Code"
 msgstr "Code EAN-13"
 
 msgid "Min. Delay (Day)"
-msgstr "Delai Min. (Jour)"
+msgstr "Délai Min. (Jour)"
 
 msgid "Max. Delay (Day)"
-msgstr "Delai Max. (Jour)"
+msgstr "Délai Max. (Jour)"
 
 msgid "Min. Flow"
 msgstr "Débit Minimum"
@@ -3178,7 +3178,7 @@ msgid "Account must be defined"
 msgstr "Le compte doit être défini"
 
 msgid "Supplier must be defined"
-msgstr "Le fournisseur doit être defini"
+msgstr "Le fournisseur doit être défini"
 
 msgid "Client must be defined"
 msgstr "Le client doit être défini"
@@ -3199,7 +3199,7 @@ msgid "Delivery Date must be defined"
 msgstr "La date de livraison doit être définie"
 
 msgid "Delivery Date must be after Shipping Date"
-msgstr "La date de livraison doit être postèrieure à la date d'expédition"
+msgstr "La date de livraison doit être postérieure à la date d'expédition"
 
 msgid "Your Item no."
 msgstr "Votre réf."
@@ -3247,7 +3247,7 @@ msgid "Sale Packing List"
 msgstr "Livraison de vente"
 
 msgid "Financial Information"
-msgstr "Informations financiaires"
+msgstr "Informations financières"
 
 msgid "of"
 msgstr "sur"
@@ -3289,7 +3289,7 @@ msgid "The person or organisation in charge of handling the sales process or of 
 msgstr "La personne ou l'organisation en charge de la gestion commerciale ou responsable de la vente."
 
 msgid "The organisation or person who sends merchandise or provides service."
-msgstr "La personne ou l'organisation qui expédie la marchandise ou fournit le service." 
+msgstr "La personne ou l'organisation qui expédie la marchandise ou fournit le service."
 
 msgid "The person or organisation in charge of selecting the supplier or taking the decision to place the order."
 msgstr "La personne ou l'organisation qui a choisi le fournisseur et a pris la décision de lui passer commande."
@@ -3373,7 +3373,7 @@ msgid "Diverged"
 msgstr "Divergent"
 
 msgid "Ship"
-msgstr "Expédier" 
+msgstr "Expédier"
 
 msgid "Shipped"
 msgstr "Expédié"
@@ -3391,13 +3391,13 @@ msgid "Choose Solve Actions"
 msgstr "Solutionner la divergence"
 
 msgid "Solved"
-msgstr "Cohérant"
+msgstr "Cohérent"
 
 msgid "Calculating"
 msgstr "En cours de calcul"
 
 msgid "Split and Defer"
-msgstr "Créer un reliquat" 
+msgstr "Créer un reliquat"
 
 msgid "Keeps the current decision and creates a new one with the difference between prevision and current"
 msgstr "Conserve la décision et crée une nouvelle livraison pour la différence entre la prévision et la décision"
