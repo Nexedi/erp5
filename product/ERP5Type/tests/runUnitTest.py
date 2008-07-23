@@ -242,10 +242,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     from ZConfig.components.logger.handlers import FileHandlerFactory
     from ZConfig.components.logger.logger import EventLogFactory
     import logging
-    section = SectionValue({'dateformat': '%Y-%m-%dT%H:%M:%S', 
-                            'format': '------\n%(asctime)s %(levelname)s %(name)s %(message)s', 
-                            'level': logging.INFO, 
-                            'path': os.environ['EVENT_LOG_FILE']}, 
+    section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
+                            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+                            'level': logging.INFO,
+                            'path': os.environ['EVENT_LOG_FILE']},
                            None, None)
     section.handlers = [FileHandlerFactory(section)]
     eventlog = EventLogFactory(section)
