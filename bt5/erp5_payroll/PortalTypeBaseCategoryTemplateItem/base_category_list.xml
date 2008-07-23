@@ -9,6 +9,9 @@
   <item>base_amount</item>
   <item>tax_category</item>
  </portal_type>
+ <portal_type id="Pay Sheet Model Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Pay Sheet Model Slice">
   <item>salary_range</item>
   <item>product_line</item>
@@ -23,5 +26,6 @@
  </portal_type>
  <portal_type id="Payroll Service Module">
   <item>role</item>
+  <item>business_application</item>
  </portal_type>
 </base_category_list>

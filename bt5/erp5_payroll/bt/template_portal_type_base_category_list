@@ -4,10 +4,12 @@ Pay Sheet Cell | tax_category
 Pay Sheet Line | base_amount
 Pay Sheet Line | salary_range
 Pay Sheet Line | tax_category
+Pay Sheet Model Module | business_application
 Pay Sheet Model Slice | product_line
 Pay Sheet Model Slice | salary_range
 Pay Sheet Model Slice | tax_category
 Pay Sheet Transaction | quantity_unit
 Pay Sheet Transaction | specialise
+Payroll Service Module | business_application
 Payroll Service Module | role
 Payroll Service | base_amount
