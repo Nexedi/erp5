@@ -106,7 +106,7 @@ class TestOOoImport(ERP5TypeTestCase):
     # Enable oood on localhost:8008
     # This should probably become a test runner option
     self.pref = self.portal.portal_preferences.newContent(
-                          portal_type='Preference')
+                          portal_type='System Preference')
     self.pref.setPreferredOoodocServerAddress('localhost')
     self.pref.setPreferredOoodocServerPortNumber(8008)
     self.pref.enable()
