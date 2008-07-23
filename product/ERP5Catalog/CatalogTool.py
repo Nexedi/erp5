@@ -621,7 +621,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     __call__ = searchResults
 
-    security.declarePrivate('clear')
+    security.declarePrivate('beforeCatalogClear')
     def beforeCatalogClear(self):
       """
       Clears the catalog by calling a list of methods
