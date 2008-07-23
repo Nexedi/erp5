@@ -76,28 +76,28 @@ def destinationSortMethod(a, b):\n
   return 1 # a defines no destination ans loses\n
 \n
 def resourcePurchasePriceSortMethod(a, b):\n
-   if "Purchase" in a.getPortalType():\n
-     if "Purchase" in b.getPortalType():\n
-       return sourceSortMethod(a, b)\n
-     else:\n
-       return -1\n
-   else:\n
-     if "Purchase" in b.getPortalType():\n
-       return 1\n
-     else:\n
-       return destinationSortMethod(a, b)\n
+  if "Purchase" in a.getPortalType():\n
+    if "Purchase" in b.getPortalType():\n
+      return sourceSortMethod(a, b)\n
+    else:\n
+      return -1\n
+  else:\n
+    if "Purchase" in b.getPortalType():\n
+      return 1\n
+    else:\n
+      return destinationSortMethod(a, b)\n
 \n
 def resourceSalePriceSortMethod(a, b):\n
-   if "Sale" in a.getPortalType():\n
-     if "Sale" in b.getPortalType():\n
-       return destinationSortMethod(a, b)\n
-     else:\n
-       return -1\n
-   else:\n
-     if "Sale" in b.getPortalType():\n
-       return 1\n
-     else:\n
-       return sourceSortMethod(a, b)\n
+  if "Sale" in a.getPortalType():\n
+    if "Sale" in b.getPortalType():\n
+      return destinationSortMethod(a, b)\n
+    else:\n
+      return -1\n
+  else:\n
+    if "Sale" in b.getPortalType():\n
+      return 1\n
+    else:\n
+      return sourceSortMethod(a, b)\n
 \n
 try:\n
   explanation = context.getExplanationValue()\n
@@ -115,9 +115,9 @@ if explanation is not None:\n
 \n
 resource = context.getResourceValue()\n
 if resource is not None:\n
-  return resource.getPriceCalculationOperandDict(default=default, context=context, **kw)\n
-else:\n
-  return default\n
+  return resource.getPriceCalculationOperandDict(\n
+                default=default, context=context, **kw)\n
+return default\n
 </string> </value>
         </item>
         <item>
@@ -200,6 +200,12 @@ else:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Movement_getPriceCalculationOperandDict</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
