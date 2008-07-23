@@ -25,7 +25,6 @@
   <item>base_amount</item>
  </portal_type>
  <portal_type id="Payroll Service Module">
-  <item>role</item>
   <item>business_application</item>
  </portal_type>
 </base_category_list>

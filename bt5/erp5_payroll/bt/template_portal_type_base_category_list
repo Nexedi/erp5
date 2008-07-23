@@ -11,5 +11,4 @@ Pay Sheet Model Slice | tax_category
 Pay Sheet Transaction | quantity_unit
 Pay Sheet Transaction | specialise
 Payroll Service Module | business_application
-Payroll Service Module | role
 Payroll Service | base_amount
