@@ -25,6 +25,7 @@ from ZPublisher.HTTPRequest import trusted_proxies
 import string
 import base64
 import time
+from urllib import quote
 
 def log (self, bytes):
     # The purpose of this patch is to emit original IP addresses in Z2.log
@@ -63,7 +64,12 @@ def log (self, bytes):
         '- %s [%s] "%s" %d %d "%s" "%s"\n' % (
             name,
             self.log_date_string (time.time()),
-            self.request,
+            # Originally, an unquoted request string was logged, but
+            # it only confuses log analysis programs! Note that Apache
+            # HTTP Server never unquote URIs in the access log.
+            # <patch>
+            quote(self.request),
+            # </patch>
             self.reply_code,
             bytes,
             referer,
