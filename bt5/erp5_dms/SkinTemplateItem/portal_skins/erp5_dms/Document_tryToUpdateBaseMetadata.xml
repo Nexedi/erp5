@@ -65,11 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5.Document.Document import ConversionError\n
+            <value> <string>from ZODB.POSException import ConflictError\n
+from Products.ERP5.Document.Document import ConversionError\n
 \n
 message = None\n
 try:\n
   return context.updateBaseMetadata(**kw)\n
+except ConflictError:\n
+  raise\n
 except ConversionError, e:\n
   message = \'Conversion Error: %s\' % (str(e) or \'undefined.\')\n
 except Exception, e:\n
@@ -125,6 +128,8 @@ return message\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
                             <string>Products.ERP5.Document.Document</string>
                             <string>ConversionError</string>
                             <string>None</string>
@@ -153,6 +158,12 @@ return message\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Document_tryToUpdateBaseMetadata</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

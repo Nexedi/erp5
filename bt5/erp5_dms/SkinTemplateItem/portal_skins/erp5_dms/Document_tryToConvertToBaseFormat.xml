@@ -66,12 +66,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5.Document.Document import ConversionError\n
+from ZODB.POSException import ConflictError\n
 from xmlrpclib import Fault\n
 from socket import error as SocketError\n
 \n
 message = None\n
 try:\n
   return context.convertToBaseFormat()\n
+except ConflictError:\n
+  raise\n
 except ConversionError, e:\n
   message = \'Conversion Error: %s\' % (str(e) or \'undefined.\')\n
 except Fault, e:\n
@@ -132,6 +135,8 @@ return message\n
                           <tuple>
                             <string>Products.ERP5.Document.Document</string>
                             <string>ConversionError</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
                             <string>xmlrpclib</string>
                             <string>Fault</string>
                             <string>socket</string>
@@ -162,6 +167,12 @@ return message\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Document_tryToConvertToBaseFormat</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
