@@ -37,7 +37,7 @@ from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexa
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
 from Globals import InitializeClass, DTMLFile, package_home
-from Acquisition import aq_base, aq_inner, aq_parent
+from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -81,7 +81,7 @@ except ImportError:
   pass
 
 from Persistence import Persistent
-from Acquisition import Implicit, Explicit
+from Acquisition import Implicit
 
 def getSecurityProduct(acl_users):
   """returns the security used by the user folder passed.
@@ -93,15 +93,7 @@ def getSecurityProduct(acl_users):
     return SECURITY_USING_NUX_USER_GROUPS
 
 
-class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper, Explicit):
-
-
-    def __getattr__(self, name):
-        vars = self.__vars
-        if vars.has_key(name):
-            return vars[name]
-        ob = aq_inner(self.__ob)
-        return getattr(ob, name)
+class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
     def __setattr__(self, name, value):
       # We need to update the uid during the cataloging process
@@ -754,7 +746,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if predicate_property_dict is not None:
           vars['predicate_property_dict'] = predicate_property_dict
         vars['security_uid'] = security_uid
-        return w.__of__(object.aq_parent)
+
+        return ImplicitAcquisitionWrapper(w, aq_parent(document_object))
 
     security.declarePrivate('reindexObject')
     def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
