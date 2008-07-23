@@ -57,6 +57,12 @@ def log (self, bytes):
             else:
                 name = t[0]
 
+    # Originally, an unquoted request string was logged, but
+    # it only confuses log analysis programs! Note that Apache
+    # HTTP Server never unquote URIs in the access log.
+    t = self.request.split(' ')
+    quoted_request = '%s %s %s' % (t[0], quote(' '.join(t[1:-1])), t[-1])
+
     self.channel.server.logger.log (
         # <patch>
         addr,
@@ -64,11 +70,8 @@ def log (self, bytes):
         '- %s [%s] "%s" %d %d "%s" "%s"\n' % (
             name,
             self.log_date_string (time.time()),
-            # Originally, an unquoted request string was logged, but
-            # it only confuses log analysis programs! Note that Apache
-            # HTTP Server never unquote URIs in the access log.
             # <patch>
-            quote(self.request),
+            quoted_request,
             # </patch>
             self.reply_code,
             bytes,
