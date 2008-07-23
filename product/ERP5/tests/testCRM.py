@@ -286,6 +286,33 @@ class TestCRM(ERP5TypeTestCase):
       new_event = event.getCausalityRelatedValue()
       self.assertEqual(new_event.getFollowUp(), ticket_url)
 
+    # if quote_original_message option is true, the new event content will be
+    # the current event message quoted.
+    for portal_type in self.portal.getPortalEventTypeList():
+      ticket = self.portal.meeting_module.newContent(portal_type='Meeting',
+                                                     title='Meeting1')
+      ticket_url = ticket.getRelativeUrl()
+      event = self.portal.event_module.newContent(portal_type=portal_type,
+                                                  follow_up=ticket_url,
+                                                  title='Event Title',
+                                                  text_content='Event Content',
+                                                  text_format='text/plain')
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
+      event.receive()
+      portal_workflow.doActionFor(event, 'acknowledge_action',
+                                  create_event=1,
+                                  quote_original_message=1)
+      get_transaction().commit()
+      self.tic()
+      self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
+      new_event = event.getCausalityRelatedValue()
+      self.assertEqual(new_event.getFollowUp(), ticket_url)
+      self.assertEqual(new_event.getTextFormat(), 'text/plain')
+      self.assertEqual(new_event.getTextContent(), '> Event Content')
+      self.assertEqual(new_event.getTitle(), 'Re: Event Title')
+
 
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for standalone CRM.
