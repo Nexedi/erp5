@@ -95,56 +95,77 @@ http_parameters = http_parameters.replace(\'editable_mode\', \'dummy_editable_mo
 absolute_url = context.absolute_url()\n
 editable_absolute_url = getattr(context, \'editable_absolute_url\', absolute_url)\n
 \n
+# action title based on security\n
+def getActionTitleForContext(context, portal_type):\n
+  if context.portal_membership.checkPermission(\'Modify portal content\', context):\n
+    edit_title = translateString("Edit ${portal_type}", \n
+                                 mapping=dict(portal_type=portal_type))\n
+  else:\n
+    edit_title = translateString("Access ${portal_type} details",\n
+                                 mapping=dict(portal_type=portal_type))\n
+  return edit_title\n
 \n
 # Append a button to edit the current document\n
 if not request.form.get(\'editable_mode\', 0):\n
   # The title is called Edit only if the document can be edited\n
-  if context.portal_membership.checkPermission(\'Modify portal content\', context):\n
-    edit_title = translateString("Edit ${portal_type}", mapping=dict(portal_type=portal_type))\n
+\n
+  if portal_type == \'Web Section\' and context.getDefaultDocumentValue() is not None:\n
+    # try to show link to default page\n
+    default_document = context.getDefaultDocumentValue()\n
+    # change portal_type, this will be taken into account when determining parent action (below)\n
+    portal_type = default_document.getPortalType() \n
+    edit_title = getActionTitleForContext(context, portal_type)\n
+    result.append(dict(\n
+      url = "%s/view?editable_mode:int=1&%s" \n
+              %(default_document.absolute_url(), http_parameters),\n
+      icon = default_document.getIcon() or \'file_icon.gif\',\n
+      title = edit_title,\n
+      label = "%s Icon" % portal_type,))\n
   else:\n
-    edit_title = translateString("Access ${portal_type} details", mapping=dict(portal_type=portal_type))\n
+    edit_title = getActionTitleForContext(context, portal_type)\n
+    result.append(dict(\n
+      url = "%s/view?editable_mode:int=1&%s" \n
+              %(editable_absolute_url, http_parameters),\n
+      icon = context.getIcon() or \'file_icon.gif\',\n
+      title = edit_title,\n
+      label = "%s Icon" % portal_type,))\n
+\n
+else: \n
   result.append(dict(\n
-  url   = "%s/view?editable_mode:int=1&%s" % (editable_absolute_url, http_parameters),\n
-  icon  = context.getIcon() or \'file_icon.gif\',\n
-  title = edit_title,\n
-  label = "%s Icon" % portal_type,\n
-))\n
-else: result.append(dict(\n
-  url   = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),\n
-  icon  = context.getIcon() or \'file_icon.gif\',\n
-  title = translateString("View ${portal_type}", mapping=dict(portal_type=portal_type)),\n
-  label = "%s Icon" % portal_type,\n
-))\n
+    url = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),\n
+    icon  = context.getIcon() or \'file_icon.gif\',\n
+    title = translateString("View ${portal_type}", \n
+                            mapping=dict(portal_type=portal_type)),\n
+                            label = "%s Icon" % portal_type,))\n
 \n
 # Append a button to edit the parent section\n
-if portal_type not in (\'Web Section\', \'Web Site\'): result.append(dict(\n
-  url   = "%s/view?editable_mode=1" % current_web_section.absolute_url(),\n
-  icon  = current_web_section.getIcon(),\n
-  title = translateString("Edit parent ${portal_type}", mapping=dict(portal_type=current_web_section_pt)),\n
-  label = "%s Icon" % current_web_section_pt,\n
-))\n
+if portal_type not in (\'Web Section\', \'Web Site\'): \n
+  result.append(dict(\n
+    url = "%s/view?editable_mode=1" % current_web_section.absolute_url(),\n
+    icon = current_web_section.getIcon(),\n
+    title = translateString("Edit parent ${portal_type}",\n
+                             mapping=dict(portal_type=current_web_section_pt)),\n
+    label = "%s Icon" % current_web_section_pt,))\n
 \n
 # Append all icon buttons\n
 for action in button_action_list:\n
   if action[\'id\'] == \'webdav\':\n
     result.append(dict(\n
-      url   = action[\'url\'].replace(absolute_url, editable_absolute_url),\n
-      icon  = action[\'icon\'],\n
+      url = action[\'url\'].replace(absolute_url, editable_absolute_url),\n
+      icon = action[\'icon\'],\n
       title = translateString(action[\'title\']),\n
-      label = "WebDAV Icon",\n
-    ))\n
+      label = "WebDAV Icon",))\n
 \n
 # Append an exchange button\n
 if len(exchange_action_list):\n
   action = exchange_action_list[0]\n
-  url   = action[\'url\'].replace(absolute_url, editable_absolute_url)\n
+  url = action[\'url\'].replace(absolute_url, editable_absolute_url)\n
   url = \'%s?dialog_category=object_exchange&cancel_url=%s/view\' % (url, absolute_url)\n
   result.append(dict(\n
-      url = url,\n
+    url = url,\n
     icon  = \'%s/images/imp-exp.png\' % portal_url,\n
     title = translateString(\'Import / Export\'),\n
-    label = "Import / Export Icon",\n
-  ))\n
+    label = "Import / Export Icon",))\n
 \n
 return result\n
 
@@ -159,6 +180,12 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -207,8 +234,11 @@ return result\n
                             <string>absolute_url</string>
                             <string>getattr</string>
                             <string>editable_absolute_url</string>
-                            <string>dict</string>
+                            <string>getActionTitleForContext</string>
+                            <string>None</string>
+                            <string>default_document</string>
                             <string>edit_title</string>
+                            <string>dict</string>
                             <string>_getiter_</string>
                             <string>action</string>
                             <string>_getitem_</string>

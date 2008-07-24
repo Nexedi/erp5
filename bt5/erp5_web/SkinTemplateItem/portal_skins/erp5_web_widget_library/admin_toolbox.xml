@@ -42,6 +42,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -54,16 +60,17 @@
      TODO: Is this case should be handle by automaticcaly by erp5_xhtml_style ?\n
 -->\n
 \n
-\n
 <tal:block\n
   tal:define="is_web_mode  python: True;\n
               portal_type  python: here.getPortalType();\n
               actions      request/actions | python:\n
-                           here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
+                           here.Base_filterDuplicateActions(\n
+                             here.portal_actions.listFilteredActionsFor(here));\n
               dummy        python:request.set(\'actions\', actions);">\n
 \n
   <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->\n
   <!-- <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/> -->\n
+\n
 \n
   <!-- Edit button menu -->\n
   <div name="adminSection" class="adminSection">\n
