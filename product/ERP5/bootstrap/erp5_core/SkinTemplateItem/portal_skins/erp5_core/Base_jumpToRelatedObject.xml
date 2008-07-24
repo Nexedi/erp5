@@ -69,6 +69,7 @@
 N_ = context.Base_translateString\n
 checkPerm = context.portal_membership.checkPermission\n
 \n
+# FIXME: performance problem getting *all* related documents URL is not scalable.\n
 if related:\n
   search_method = getattr(context, \'get%sRelatedList\' %\n
           string.join([string.capitalize(x) for x in base_category.split(\'_\')], \'\'))\n
@@ -110,7 +111,15 @@ elif len(related_list) == 1:\n
     url = context.absolute_url()\n
     message = N_("You are not authorized to view the related document.")\n
     relation_found = 0\n
-else :\n
+\n
+else:\n
+  # jump to the module if we can guess it\n
+  if related and len(portal_type) == 1:\n
+    module_id = context.getPortalObject().getDefaultModuleId(portal_type[0], None)\n
+    if module_id is not None:\n
+      return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
+                 \'view\', keep_items={\'%s_uid\' % base_category: context.getUid(), })\n
+\n
   # compute the list of objects we are actually authorized to view\n
   related_object_list = []\n
   for path in search_method(portal_type=portal_type) :\n
@@ -218,6 +227,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>message</string>
                             <string>None</string>
                             <string>related_object</string>
+                            <string>module_id</string>
                             <string>related_object_list</string>
                             <string>path</string>
                             <string>obj</string>
@@ -255,6 +265,12 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         <item>
             <key> <string>title</string> </key>
             <value>                 <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
