@@ -2127,8 +2127,14 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           error_text = error_dict[key].error_text
           error_text = cgi.escape(error_text)
           if isinstance(error_text, str):
-            error_text = u'%s' % Message(domain=ui_domain,
-                                         message=error_text)
+            error_mapping = getattr(error_dict[key], 'error_mapping', None)
+            if error_mapping is not None:
+              error_text = u'%s' % Message(domain=ui_domain,
+                                           message=error_text,
+                                           mapping=error_mapping)
+            else:
+              error_text = u'%s' % Message(domain=ui_domain,
+                                           message=error_text)
           error_message = u'<br />' + error_text
         else:
           error_message = u''
