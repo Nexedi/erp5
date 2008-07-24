@@ -137,7 +137,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEquals(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
 
   def test_02_renderRSS(self, quiet=0, run=run_all_test):
     """
@@ -210,7 +210,7 @@ class TestRSS(ERP5TypeTestCase):
     self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
     self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEquals(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
     
 def test_suite():
   suite = unittest.TestSuite()
