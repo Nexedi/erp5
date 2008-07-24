@@ -250,7 +250,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     def DeferredSetDescription(self,value):
-      self.setDescription(value)
+      self._setDescription(value)
     def DeferredSetTitle(self,value):
       self._setTitle(value)
     from Products.ERP5Type.Document.Organisation import Organisation
@@ -278,7 +278,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     def DeferredSetTitle(self,value):
       self.activate(activity=activity)._setTitle(value)
     def DeferredSetDescription(self,value):
-      self.activate(activity=activity).setDescription(value)
+      self.activate(activity=activity)._setDescription(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
@@ -309,7 +309,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     def DeferredSetDescription(self,value,commit_sub=0):
       if commit_sub:
         get_transaction().commit(1)
-      self.activate(activity=second or activity,priority=4).setDescription(value)
+      self.activate(activity=second or activity,priority=4)._setDescription(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
