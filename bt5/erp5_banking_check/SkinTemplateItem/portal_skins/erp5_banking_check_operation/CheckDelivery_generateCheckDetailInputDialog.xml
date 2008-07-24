@@ -173,11 +173,11 @@ else:\n
       try:\n
         reference_range_min = convert_func(reference_range_min)\n
       except ValueError:\n
-        generate_error(line, \'reference_range_min\', \'%s is not a valid %s\' % (reference_range_min, value_denomination))\n
+        generate_error(line, \'reference_range_min\', \'This is not a valid %s\' % (value_denomination, ))\n
       try:\n
         reference_range_max = convert_func(reference_range_max)\n
       except ValueError:\n
-        generate_error(line, \'reference_range_max\', \'%s is not a valid %s\' % (reference_range_max, value_denomination))\n
+        generate_error(line, \'reference_range_max\', \'This is not a valid %s\' % (value_denomination, ))\n
       if check_amount is not None: # In the case of a check book\n
         check_amount_relative_url = \'/\'.join(check_amount.split(\'/\')[1:])\n
         line[\'check_amount_relative_url\'] = check_amount_relative_url\n
