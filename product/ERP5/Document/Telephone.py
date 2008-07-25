@@ -72,64 +72,67 @@ class Telephone(Coordinate, Base):
   # be carefull to add a new regex.
   regex_list = [
     # Country, Area, Number, Extension*
-    # +33(0)2-27224896/999 or +33(0)2-27224896/ or +33(0)2-27224896
-    "\+(?P<country>\d+)\(0\)(?P<area>\d+)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+    # +11(0)1-11111111/111      or +11(0)1-11111111/      or +11(0)1-11111111
+    # + 11 (0)1-11 11 01 01/111 or + 11 (0)1-11 11 01 01/ or + 11 (0)1-11 11 01 01
+    # +11 (0)11 1011 1100/111   or +11 (0)11 1011 1100/   or +11 (0)11 1011 1100
+    "\+(?P<country>[\d\ ]*)\(0\)(?P<area>\d+)(\-|\ )(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
     # Country, Area, Number, Extension*
-    # +81-2-27224896/999 or +81-2-27224896/ or +81-2-27224896
+    # +11-1-11111111/111 or +11-1-11111111/ or +11-1-11111111
     "\+(?P<country>\d+)-(?P<area>\d+)-(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
 
     # Missing area
-    # +33(0)-27224896/999" or +33(0)-27224896/ or +33(0)-27224896
+    # +11(0)-11111111/111" or +11(0)-11111111/ or +11(0)-11111111
     "\+(?P<country>\d+)\(0\)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
     # Country, Area, Number, Extension*
-    # +55(2)27224896/999 or +55(2)27224896/ or +55(2)27224896
+    # +11(1)11111111/111 or +11(1)11111111/ or +11(1)11111111
     "\+(?P<country>\d+)\((?P<area>\d+)\)(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
     # Country, Area, Number, Extension*
-    # +221-2-27224896/999 or +221-2-27224896/ or +221-2-27224896
+    # +111-1-11111111/111 or +111-1-11111111/ or +111-1-11111111
     "\+(?P<country>\d+)-(?P<area>\d+)-(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
 
     # Missing country
-    # +(0)2-27224896/999" or +(0)2-27224896/ or +(0)2-27224896
+    # +(0)1-11111111/111" or +(0)1-11111111/ or +(0)1-11111111
     "\+\(0\)(?P<area>\d+)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
     # Missing Country and Area 
-    # +(0)-27224896/999" or +(0)-27224896/ or +(0)-27224896
+    # +(0)-11111111/111" or +(0)-11111111/ or +(0)-11111111
     "\+\(0\)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
     # Area, Number Extension*
     # Area between parenthesis.
-    # (22)27224897/333 or (22)27224897/ or (22)27224897
+    # (11)11111111/111 or (11)11111111/ or (11)11111111
     "\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
 
     # Missing country
-    # +(2)27224896/999" or +(2)27224896/ or +(2)27224896
+    # +(1)11111111/111" or +(1)11111111/ or +(1)11111111
     "\+\((?P<area>\d+)\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
 
     # Country, Area, Number and Extension*
     # Country space area space number slash extension or not
-    # +33 2 098765432/1 or +33 2 098765432/ or +33 2 098765432
-    "\+(?P<country>\d+)\ (?P<area>\d+)\ (?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
+    # +11 1 011111111/1    or +11 1 011111111/  or +11 1 011111111
+    # + 111 1 1101 101/111 or + 111 1 1101 101/ or + 111 1 1101 101/111
+    "\+(?P<space>[\ ]*)(?P<country>\d+)\ (?P<area>\d+)\ (?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
     # This regex is to handle two inputs very similar
     # but with different behavior
-    # 631 22 43/999 or 631 22 43 or 631 22 43 
-    # will result in {'area':'', 'number':'631 22 43', 'ext':'999 or empty'}
+    # 111 11 11/111 or 111 11 11 or 111 11 11 
+    # will result in {'area':'', 'number':'111 11 11', 'ext':'111 or empty'}
     #
-    # 631-22 43/999 or 631-22 43 or 631-22 43 
-    # will result in {'area':'631', 'number':'22 43', 'ext':'999 or empty'} 
+    # 111-11 11/111 or 111-11 11 or 111-11 11 
+    # will result in {'area':'111', 'number':'11 11', 'ext':'111 or empty'} 
     "^(?:0)?((?P<area>\d+)-)?(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
 
     # Area, Number, Extension*
     # It is a common input in France 
     # and in Japan but with different behavior.
-    # 047-336-5411/999 or 047-336-5411/ or 047-336-5411
-    # will result in {'area':'47', 'number':'336-5411', \
-    #                  'ext':'999 or empty'} <= France
-    # will result in {'area':'047', 'number':'336-5411', 
-    #                  'ext':'999 or empty'} <= Japan
+    # 011-111-1111/111 or 011-111-1111/ or 011-111-1111
+    # will result in {'area':'11', 'number':'111-1111', \
+    #                  'ext':'111 or empty'} <= France
+    # will result in {'area':'011', 'number':'111-1111', 
+    #                  'ext':'111 or empty'} <= Japan
     # so we have here two regex:
     # To France: "^0(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
     # To Japan: "^(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
@@ -137,11 +140,11 @@ class Telephone(Coordinate, Base):
 
     # Area, Number, Extension*
     # It is a common input in France and in Japan but with different behavior.
-    # 047(336)5411/999 or 047(336)5411/ or 047(336)5411
-    # will result in {'area':'47', 'number':'336)5411', 
-    #                  'ext':'999 or empty'} <= France
-    # will result in {'area':'047', 'number':'336)5411', 
-    #                  'ext':'999 or empty'} <= Japan
+    # 011(111)1111/111 or 011(111)1111/ or 011(111)1111
+    # will result in {'area':'11', 'number':'111)1111', 
+    #                  'ext':'111 or empty'} <= France
+    # will result in {'area':'011', 'number':'111)1111', 
+    #                  'ext':'111 or empty'} <= Japan
     # so we have here two regex:
     #To France: 
     # "^0(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$",
@@ -150,8 +153,75 @@ class Telephone(Coordinate, Base):
     "^0(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$",
 
     # Missing area
-    # +55()27224896/999" or +55()27224896/ or +55()27224896
-    "\+(?P<country>\d+)\(\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)"
+    # +11()11111111/111" or +11()11111111/ or +11()11111111
+    "\+(?P<country>\d+)\(\)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country, area, number, extension*
+    # Space between country and (0).
+    # Space between (0) and area.
+    # Space between area and number.
+    # +111 (0) 1 111 11011/111 or +111 (0) 1 111 11011/ or +111 (0) 1 111 11011
+    "\+(?P<country>\d+)\ \(0\)\ (?P<area>\d+)\ (?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country and number
+    # (0) between country and number
+    # +111 (0) 111111101-01/111 or +111 (0) 111111101-01/ or +111 (0) 111111101-01
+    "\+(?P<country>\d+)\ \(0\)\ (?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country, area, number and extension*
+    # +11 (11) 1111 1111/111 or +11 (11) 1111 1111/ or +11 (11) 1111 1111
+    # +11 (11)-10111111/111  or +11 (11)-10111111/  or +11 (11)-10111111
+    # +11(11)-10111111/111   or +11(11)-10111111/   or +11(11)-10111111
+    # 1 (111) 1101-101/111   or 1 (111) 1101-101/   or 1 (111) 1101-101/
+    "(\+|)(?P<country>\d+)\ \((?P<area>\d+)\)(\ |\-|)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # +110 1111111/111 or +110 1111111/ or +110 1111111
+    "\+(?P<country>\d+)\ (?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Missing country
+    # 111/111-1111/111 or 111/111-1111/ or 111/111-1111
+    "(?P<area>\d+)\/(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+    
+    # Country, area, number, extension*
+    # Hyphen between country and area.
+    # +11-1 11 11 01 11/111 or +11-1 11 11 01 11/ or +11-1 11 11 01 11
+    "\+(?P<country>\d+)\-(?P<area>\d+)\ (?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Missing area
+    # +111-1101110/111 or +111-1101110/ or +111-1101110
+    "\+(?P<country>\d+)\-(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Missing country
+    # Dot between area number and telephone number.
+    # 111.111.1111/111 or 111.111.1111/ or 111.111.1111
+    "(?P<area>\d+)\.(?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country, area, number and extensioin*
+    # (111 11) 111111/111     or (111 11) 111111/    or (111 11) 111111
+    # (111 11) 111-11-11/111  or (111 11) 111-11-11/ or (111 11) 111-11-11
+    # (111 11)101011/111      or (111 11)101011/     or (111 11)101011
+    # +(111 11) 100-11-11/111 or +(111 11) 100-11-11 or +(111 11) 100-11-11
+    "(\+|)\((?P<country>\d+)\ (?P<area>\d+)\)(\ |)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country and number
+    # (+111)101111111/111  or (+111)101111111/  or (+111)101111111
+    # (+111) 101111111/111 or (+111) 101111111/ or (+111) 101111111
+    "\(\+(?P<country>\d+)\)(\ |)(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country, area, number and extension*
+    # (+11-111) 1111111/111 or (+11-111) 1111111/ or (+11-111) 1111111
+    # (11-11) 111-1111/111  or (11-11) 111-1111/  or (11-11) 111-1111
+    # (11-1) 1.111.111/111  or (11-1) 1.111.111/  or (11-1) 1.111.111
+    "\((\+|)(?P<country>\d+)\-(?P<area>\d+)\)(\ |\-|)(?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Country, area, number and extersion*
+    # + 111-11-1110111/111 or + 111-11-1110111/ or + 111-11-1110111
+    # +111-11-1110111/111  or +111-11-1110111/  or +111-11-1110111
+    # +111/1/1111 1100/111 or +111/1/1111 1100/ or +111/1/1111 1100
+    "\+(?P<spaces>[\ ]*)(?P<country>\d+)(\-|\/)(?P<area>\d+)(\-|\/)(?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)",
+
+    # + (111) 111-111/111 or + (111) 111-111/  or + (111) 111-111
+    "\+(?P<spaces>[\ ]*)\((?P<country>\d+)\)\ (?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)"
   ]
   
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
@@ -164,6 +234,9 @@ class Telephone(Coordinate, Base):
     if coordinate_text is None:
       coordinate_text = ''
 
+    # Removing the spaces of the begin and end.
+    coordinate_text = coordinate_text.strip()
+    
     # This regexp get the coordinate text 
     # and extract number and letters
     input_regex_without_markup = '[0-9A-Za-z]'
@@ -176,15 +249,14 @@ class Telephone(Coordinate, Base):
         possible_number_match = re.match(regex, coordinate_text)
         if possible_number_match not in [None]:
           number_match = possible_number_match
+          number_dict = number_match.groupdict()
           break
       if number_match == None:
         from zLOG import LOG, WARNING
         msg = "Doesn't exist a regex to handle this telephone: ", \
                                                                coordinate_text
         LOG('Telephone.fromText', WARNING, msg) 
-        self.edit(telephone_number = input_without_markup)
-        return
-      number_dict = number_match.groupdict()
+        number_dict = {'number' : input_without_markup}
     else:
       number_dict = {'number' : coordinate_text}
 
@@ -199,7 +271,7 @@ class Telephone(Coordinate, Base):
         (extension in ['', None])):
       country = area = number = extension = ''
     else:
-      # The country and area is trying to get from dict, 
+      # Trying to get the country and area from dict, 
       # but if it fails must be get from preference
       preference_tool = self.portal_preferences
       if country in ['', None]:
@@ -213,8 +285,9 @@ class Telephone(Coordinate, Base):
       extension = extension.strip()
 
       # Formating the number.
-      # Removing any ")", "(", "-" and " "
-      for token in [")", "(", "-" ," "]:
+      # Removing any ")", "(", "-", "." and " "
+      for token in [")", "(", "-" ,"." ," "]:
+        country = country.replace(token, '')
         number = number.replace(token, '')
 
     self.edit(telephone_country = country,
