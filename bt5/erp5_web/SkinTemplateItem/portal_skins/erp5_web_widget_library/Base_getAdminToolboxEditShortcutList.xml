@@ -106,9 +106,8 @@ def getActionTitleForContext(context, portal_type):\n
   return edit_title\n
 \n
 # Append a button to edit the current document\n
-if not request.form.get(\'editable_mode\', 0):\n
+if not bool(request.get(\'editable_mode\', 0)):\n
   # The title is called Edit only if the document can be edited\n
-\n
   if portal_type == \'Web Section\' and context.getDefaultDocumentValue() is not None:\n
     # try to show link to default page\n
     default_document = context.getDefaultDocumentValue()\n
@@ -129,7 +128,6 @@ if not request.form.get(\'editable_mode\', 0):\n
       icon = context.getIcon() or \'file_icon.gif\',\n
       title = edit_title,\n
       label = "%s Icon" % portal_type,))\n
-\n
 else: \n
   result.append(dict(\n
     url = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),\n
@@ -235,6 +233,7 @@ return result\n
                             <string>getattr</string>
                             <string>editable_absolute_url</string>
                             <string>getActionTitleForContext</string>
+                            <string>bool</string>
                             <string>None</string>
                             <string>default_document</string>
                             <string>edit_title</string>

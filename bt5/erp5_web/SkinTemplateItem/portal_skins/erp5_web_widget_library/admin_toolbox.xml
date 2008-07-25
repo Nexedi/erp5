@@ -66,7 +66,10 @@
               actions      request/actions | python:\n
                            here.Base_filterDuplicateActions(\n
                              here.portal_actions.listFilteredActionsFor(here));\n
-              dummy        python:request.set(\'actions\', actions);">\n
+              dummy        python:request.set(\'actions\', actions);\n
+              is_default_document_available \n
+                python: getattr(here,\'getDefaultDocumentValue\', None) is not None and\n
+                        here.getDefaultDocumentValue() is not None;">\n
 \n
   <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->\n
   <!-- <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/> -->\n
@@ -107,64 +110,83 @@
              Behaviour should be to create content in section / site\n
   -->\n
   <div name="adminSection" class="adminSection"\n
-       tal:condition="here/isDocument | python: (portal_type in [\'Web Site\', \'Web Section\']\n
-                                             and here.getDefaultWebPageValue() is not None)">\n
-\n
+       tal:condition="python: is_default_document_available or here.isDocument"\n
+       tal:define="document python: test(is_default_document_available, \n
+                                         here.getDefaultDocumentValue(), \n
+                                         here);\n
+                   portal_type document/getPortalType;">\n
       <h3>\n
         <span id="create_new_document_title"></span>\n
-        <span id="clone_document_title"><tal:block tal:replace="python: \'Clone %s %s\' % ((portal_type in [\'Web Site\', \'Web Section\'] and \'Default\') or \'Current\', portal_type)"/></span>\n
+        <span id="clone_document_title">\n
+          <tal:block \n
+            tal:replace="python: \'Clone %s %s\' % \n
+            ((portal_type in [\'Web Site\', \'Web Section\'] and \'Default\') or \'Current\', portal_type)"/>\n
+        </span>\n
       </h3>\n
 \n
       <fieldset style="display:block;">\n
-        <!--legend class="group_title">left</legend-->\n
 \n
-          <div class="field">\n
-            <label>Title</label>\n
-            <div class="input"><input class="input" size="12" type="text" name="clone_title"\n
-                                      tal:attributes="value here/getTitle | nothing"/></div>\n
+        <div class="field">\n
+          <label>Title</label>\n
+          <div class="input">\n
+            <input class="input" size="12" \n
+                    type="text" name="clone_title"\n
+                    tal:attributes="value document/getTitle | nothing"/>\n
           </div>\n
+        </div>\n
 \n
-          <div class="field">\n
-            <label>Reference</label>\n
-            <div class="input"><input class="input" size="12" type="text" name="clone_reference"\n
-                                      tal:attributes="value here/getReference | nothing"/></div>\n
+        <div class="field">\n
+          <label>Reference</label>\n
+          <div class="input">\n
+            <input class="input" size="12" \n
+                    type="text" name="clone_reference"\n
+                    tal:attributes="value document/getReference | nothing"/>\n
           </div>\n
+        </div>\n
 \n
-          <div class="field">\n
-            <label>Version</label>\n
-            <div class="input"><input class="input" size="5" type="text" name="clone_version"\n
-                                      tal:attributes="value here/getVersion | nothing"/></div>\n
+        <div class="field">\n
+          <label>Version</label>\n
+          <div class="input">\n
+            <input class="input" size="5" \n
+                    type="text" name="clone_version"\n
+                    tal:attributes="value document/getVersion | nothing"/>\n
           </div>\n
+        </div>\n
 \n
-          <div class="field">\n
-            <label>Language</label>\n
-            <div class="input"><input class="input" size="5"  type="text" name="clone_language"\n
-                                      tal:attributes="value here/getLanguage | nothing"/></div>\n
+        <div class="field">\n
+          <label>Language</label>\n
+          <div class="input">\n
+            <input class="input" size="5"  \n
+                    type="text" name="clone_language"\n
+                    tal:attributes="value document/getLanguage | nothing"/>\n
           </div>\n
+        </div>\n
 \n
-          <div class="field hiddenLabel">\n
-            <label>Type</label>\n
-            <div class="input">\n
-              <select class="input" name="clone_portal_type" size="1" onchange="setCreationMode(this)">\n
-                <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
-                <tal:block tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()">\n
-                  <option tal:content="portal_type"\n
-                          tal:attributes="value portal_type"/>\n
-                </tal:block>\n
-              </select>\n
-            </div>\n
+        <div class="field hiddenLabel">\n
+          <label>Type</label>\n
+          <div class="input">\n
+            <select class="input" name="clone_portal_type" \n
+                    size="1" onchange="setCreationMode(this)">\n
+              <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
+              <tal:block tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()">\n
+                <option tal:content="portal_type"\n
+                        tal:attributes="value portal_type"/>\n
+              </tal:block>\n
+            </select>\n
           </div>\n
+        </div>\n
 \n
-          <div class="field hiddenLabel">\n
-            <label> </label>\n
-            <div class="input">\n
-              <button alt=\'Clone &amp; Edit\' id="clone_action_button" title=\'Clone &amp; Edit\'\n
-                      name="Base_cloneContent:method">\n
-                <img src="admin_toolbox_clone_document.png" id="clone_action_icon"/>\n
-                <span id="duplicate_document_action">Clone &amp; Edit</span>\n
-              </button>\n
-            </div>\n
+        <div class="field hiddenLabel">\n
+          <label> </label>\n
+          <div class="input">\n
+            <button alt=\'Clone &amp; Edit\' id="clone_action_button" \n
+                    title=\'Clone &amp; Edit\'\n
+                    name="Base_cloneContent:method">\n
+              <img src="admin_toolbox_clone_document.png" id="clone_action_icon"/>\n
+              <span id="duplicate_document_action">Clone &amp; Edit</span>\n
+            </button>\n
           </div>\n
+        </div>\n
 \n
       </fieldset>\n
 \n
