@@ -393,7 +393,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.workflow_tool.doActionFor(self.checkbook_reception5, 'deliver_action', 
                                    wf_id='checkbook_reception_workflow')
-    self.assertEqual(self.checkbook_reception3.getSimulationState(), 'delivered')
+    self.assertEqual(self.checkbook_reception5.getSimulationState(), 'delivered')
 
   def stepDeliverCheckbookReception6(self, sequence=None, sequence_list=None, **kwd):
     """
