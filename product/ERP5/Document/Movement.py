@@ -911,6 +911,7 @@ class Movement(XMLObject, Amount):
       Set the source total asset price
     """
     if source_debit in (None, ''):
+      self.setSourceTotalAssetPrice(None)
       return
     try:
       source_debit = float(source_debit)
@@ -925,6 +926,7 @@ class Movement(XMLObject, Amount):
       Set the source total asset price
     """
     if source_credit in (None, ''):
+      self.setSourceTotalAssetPrice(None)
       return
     try:
       source_credit = float(source_credit)
@@ -939,6 +941,7 @@ class Movement(XMLObject, Amount):
       Set the destination total asset price
     """
     if destination_debit in (None, ''):
+      self.setDestinationTotalAssetPrice(None)
       return
     try:
       destination_debit = float(destination_debit)
@@ -953,6 +956,7 @@ class Movement(XMLObject, Amount):
       Set the destination total asset price
     """
     if destination_credit in (None, ''):
+      self.setDestinationTotalAssetPrice(None)
       return
     try:
       destination_credit = float(destination_credit)

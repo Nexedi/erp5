@@ -333,7 +333,57 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(0, mvt.getDestinationCredit())
     self.assertEquals(10, mvt.getQuantity())
   
-  # TODO: test asset price
+  def testSourceAssetCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_credit=100)
+    self.assertEquals(100, mvt.getSourceAssetCredit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(source_asset_credit=None, source_credit=200)
+    self.assertEquals(0.0, mvt.getSourceAssetCredit())
+    self.assertEquals(200, mvt.getSourceCredit())
+
+  def testSourceAssetDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_debit=100)
+    self.assertEquals(100, mvt.getSourceAssetDebit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(source_asset_debit=None, source_debit=200)
+    self.assertEquals(0.0, mvt.getSourceAssetDebit())
+    self.assertEquals(200, mvt.getSourceDebit())
+
+  def testDestinationAssetCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_credit=100)
+    self.assertEquals(100, mvt.getDestinationAssetCredit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(destination_asset_credit=None, destination_credit=200)
+    self.assertEquals(0.0, mvt.getDestinationAssetCredit())
+    self.assertEquals(200, mvt.getDestinationCredit())
+
+  def testDestinationAssetDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_debit=100)
+    self.assertEquals(100, mvt.getDestinationAssetDebit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(destination_asset_debit=None, destination_debit=200)
+    self.assertEquals(0.0, mvt.getDestinationAssetDebit())
+    self.assertEquals(200, mvt.getDestinationDebit())
 
 
 class TestAccountingTransactionLine(TestMovement):
@@ -366,6 +416,10 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetDebit())
     self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
     self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetPrice())
+    self.assertEquals(None, mvt.getSourceTotalAssetPrice())
+    self.assertEquals(None, mvt.getDestinationTotalAssetPrice())
+    self.assertEquals(0.0, mvt.getSourceAssetDebit())
+    self.assertEquals(0.0, mvt.getSourceAssetCredit())
     
   def testDefautSourceTotalAssetCredit(self):
     mvt = self._makeOne('mvt')
@@ -373,13 +427,21 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
     self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetCredit())
     self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetPrice())
-  
+    self.assertEquals(None, mvt.getSourceTotalAssetPrice())
+    self.assertEquals(None, mvt.getDestinationTotalAssetPrice())
+    self.assertEquals(0.0, mvt.getSourceAssetDebit())
+    self.assertEquals(0.0, mvt.getSourceAssetCredit())
+ 
   def testDefautDestinationTotalAssetDebit(self):
     mvt = self._makeOne('mvt')
     mvt.edit(destination_debit=100)
     self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetDebit())
     self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
     self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    self.assertEquals(None, mvt.getSourceTotalAssetPrice())
+    self.assertEquals(None, mvt.getDestinationTotalAssetPrice())
+    self.assertEquals(0.0, mvt.getDestinationAssetDebit())
+    self.assertEquals(0.0, mvt.getDestinationAssetCredit())
     
   def testDefautDestinationTotalAssetCredit(self):
     mvt = self._makeOne('mvt')
@@ -387,9 +449,78 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
     self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetCredit())
     self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    self.assertEquals(None, mvt.getSourceTotalAssetPrice())
+    self.assertEquals(None, mvt.getDestinationTotalAssetPrice())
+    self.assertEquals(0.0, mvt.getDestinationAssetDebit())
+    self.assertEquals(0.0, mvt.getDestinationAssetCredit())
   
-  # TODO: more asset price tests
+  def testSourceAssetCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_credit=100)
+    self.assertEquals(100, mvt.getSourceAssetCredit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(source_asset_credit=None, source_credit=200)
+    self.assertEquals(0.0, mvt.getSourceAssetCredit())
+    self.assertEquals(200, mvt.getSourceCredit())
+    # this is only true for Accounting Transaction Line:
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(200, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(-200, mvt.getSourceInventoriatedTotalAssetPrice())
 
+  def testSourceAssetDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_debit=100)
+    self.assertEquals(100, mvt.getSourceAssetDebit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(source_asset_debit=None, source_debit=200)
+    self.assertEquals(0.0, mvt.getSourceAssetDebit())
+    self.assertEquals(200, mvt.getSourceDebit())
+    # this is only true for Accounting Transaction Line:
+    self.assertEquals(200, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(200, mvt.getSourceInventoriatedTotalAssetPrice())
+
+  def testDestinationAssetCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_credit=100)
+    self.assertEquals(100, mvt.getDestinationAssetCredit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(destination_asset_credit=None, destination_credit=200)
+    self.assertEquals(0.0, mvt.getDestinationAssetCredit())
+    self.assertEquals(200, mvt.getDestinationCredit())
+    # this is only true for Accounting Transaction Line:
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(200, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(-200, mvt.getDestinationInventoriatedTotalAssetPrice())
+
+  def testDestinationAssetDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_debit=100)
+    self.assertEquals(100, mvt.getDestinationAssetDebit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetPrice())
+    # reset and set quantity instead
+    mvt.edit(destination_asset_debit=None, destination_debit=200)
+    self.assertEquals(0.0, mvt.getDestinationAssetDebit())
+    self.assertEquals(200, mvt.getDestinationDebit())
+    # this is only true for Accounting Transaction Line:
+    self.assertEquals(200, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(200, mvt.getDestinationInventoriatedTotalAssetPrice())
 
 def test_suite():
   suite = unittest.TestSuite()
