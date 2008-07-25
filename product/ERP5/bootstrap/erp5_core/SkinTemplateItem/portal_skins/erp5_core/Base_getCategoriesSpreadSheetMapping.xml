@@ -174,7 +174,7 @@ for table_name in spreadsheets.keys():\n
       # started, that seems the path definition has ended\n
       if \'path_0\' in property_map.values():\n
         path_index == None\n
-      property_map[column_index] = column_id\n
+      property_map[column_index] = column_id.encode(\'utf8\')\n
     column_index += 1\n
 \n
   # Construct categories data (with absolute path) from table lines\n
