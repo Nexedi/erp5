@@ -569,8 +569,11 @@ class SQLDict(RAMDict, SQLBase):
           method_dict[line_method_id] = 1
           m = self.loadMessage(line.message, uid = line.uid)
           if invoke:
-            # First Validate
-            validate_value = m.validate(self, activity_tool)
+            # First Validate (only if message is marked as new)
+            if line.processing_node == -1:
+              validate_value = m.validate(self, activity_tool)
+            else:
+              validate_value = VALID
 #             LOG('SQLDict.flush validate_value',0,validate_value)
             if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
