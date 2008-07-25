@@ -1375,10 +1375,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
+      sql_kw = {}
+      if 'limit' in kw:
+        sql_kw['limit'] = kw['limit']
+
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
                            category_list=category_list,
                            portal_type=portal_type,
-                           strict_membership=strict_membership)
+                           strict_membership=strict_membership,
+                           **sql_kw)
 
       result = []
       if checked_permission is None:
