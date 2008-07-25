@@ -15,7 +15,6 @@
               <list>
                 <string>title</string>
                 <string>description</string>
-                <string>required</string>
               </list>
             </value>
         </item>
@@ -77,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key>                 <string>description</string> </key>
                     <value> <string>The name of the Account</string> </value>
                 </item>
                 <item>
@@ -89,15 +88,11 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Account Name</string> </value>
                 </item>
               </dictionary>
