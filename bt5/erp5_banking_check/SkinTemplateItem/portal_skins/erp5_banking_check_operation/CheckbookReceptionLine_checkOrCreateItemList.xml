@@ -146,9 +146,9 @@ def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_
     Check each given reference not to already exist.\n
   """\n
   if destination_payment_uid is None:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_relative_uid=model_uid, simulation_state=\'!=deleted\')\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, resource_uid=model_uid, simulation_state=\'!=deleted\')\n
   else:\n
-    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_relative_uid=model_uid,\n
+    match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, resource_uid=model_uid,\n
                                        simulation_state=\'!=deleted\')\n
   assertReferenceMatchListEmpty(match_list, destination_payment_uid)\n
   for reference in reference_list:\n
