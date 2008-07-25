@@ -1376,8 +1376,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
       sql_kw = {}
-      if 'limit' in kw:
-        sql_kw['limit'] = kw['limit']
+      for sql_key in ('limit', 'order_by_expression'):
+        if sql_key in kw:
+          sql_kw[sql_key] = kw[sql_key]
 
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
                            category_list=category_list,
