@@ -387,9 +387,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_ptype_id')
     module_type = pt._getOb(module_id, None)
     self.failUnless(module_type is not None)
-    self.failUnless(module_type.allowed_content_types,
+    self.assertEquals(module_type.allowed_content_types,
         sequence.get('module_ptype_allowed_content_types'))
-    self.failUnless(module_type.filter_content_types,
+    self.assertEquals(module_type.filter_content_types,
         sequence.get('module_ptype_filter_content_types'))
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is not None)
