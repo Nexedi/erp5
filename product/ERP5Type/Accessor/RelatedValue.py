@@ -98,15 +98,7 @@ class ListGetter(BaseGetter):
   def __call__(self, instance, *args, **kw):
     if self._warning:
       LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
-    return instance._getRelatedValueList(
-                           self._key,
-                           spec=kw.get('spec',()),
-                           filter=kw.get('filter', None),
-                           portal_type=kw.get('portal_type',()),
-                           strict_membership=kw.get('strict_membership',
-                                                    # 'strict' is deprecated
-                                                    kw.get('strict', None)),
-                           checked_permission=kw.get('checked_permission', None))
+    return instance._getRelatedValueList(self._key, *args, **kw)
 
   psyco.bind(__call__)
 

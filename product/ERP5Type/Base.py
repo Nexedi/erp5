@@ -2072,17 +2072,11 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.View, 'getDefaultRelatedValue')
   getDefaultRelatedValue = _getDefaultRelatedValue
 
-  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(),
-                           strict_membership=0, strict="deprecated", 
-                           checked_permission=None):
+  def _getRelatedValueList(self, *args, **kw):
     # backward compatibility to keep strict keyword working
-    if strict != "deprecated" : 
-      strict_membership = strict
-    return self._getCategoryTool().getRelatedValueList(
-                          self, id,
-                          spec=spec, filter=filter, portal_type=portal_type,
-                          strict_membership=strict_membership,
-                          checked_permission=checked_permission)
+    if 'strict' in kw:
+      kw['strict_membership'] = kw.pop('strict')
+    return self._getCategoryTool().getRelatedValueList(self, *args, **kw)
 
   security.declareProtected(Permissions.View, 'getRelatedValueList')
   getRelatedValueList = _getRelatedValueList
