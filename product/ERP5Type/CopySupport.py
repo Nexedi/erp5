@@ -358,7 +358,8 @@ class CopyContainer:
           # Then start activty in order to remove lines in catalog,
           # sql wich generate locks
           catalog.activate(activity='SQLQueue',
-                           tag='%s' % uid).unindexObject(None, 
+                           tag='%s' % uid,
+                           serialization_tag=self.getRootDocumentPath()).unindexObject(None, 
                                            path=path,uid=uid)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
