@@ -903,11 +903,12 @@ class TestERP5BankingMixin:
     """
     self.check_model = self.createCheckModel(id='check_model')
     self.check_model_1 = self.check_model
+    self.check_model_2 = self.createCheckModel(id='check_model_2')
     self.checkbook_model = self.createCheckbookModel(
            id='checkbook_model', check_model=self.check_model)
     self.checkbook_model_1 = self.checkbook_model
     self.checkbook_model_2 = self.createCheckbookModel(
-           id='checkbook_model_2', check_model=self.check_model)
+           id='checkbook_model_2', check_model=self.check_model_2)
 
   def createCheck(self, id, reference, checkbook, bank_account=None,
                         resource_value=None, destination_value=None):
