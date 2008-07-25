@@ -326,9 +326,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(module_type is not None)
     module_type.filter_content_types = 1
     module_type.allowed_content_types = ('Geek Object',)
+    module_type.hidden_content_type_list = ('Geek Object',)
     sequence.edit(module_ptype_id=module_type.getId(),
           module_ptype_filter_content_types=module_type.filter_content_types,
-          module_ptype_allowed_content_types=module_type.allowed_content_types)
+          module_ptype_allowed_content_types=module_type.allowed_content_types,
+          module_ptype_hidden_content_type_list=module_type.hidden_content_type_list)
 
   def stepAddPortalTypeToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -389,6 +391,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(module_type is not None)
     self.assertEquals(module_type.allowed_content_types,
         sequence.get('module_ptype_allowed_content_types'))
+    self.assertEquals(module_type.hidden_content_type_list,
+        sequence.get('module_ptype_hidden_content_type_list'))
     self.assertEquals(module_type.filter_content_types,
         sequence.get('module_ptype_filter_content_types'))
     object_type = pt._getOb(object_id, None)
