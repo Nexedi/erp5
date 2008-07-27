@@ -583,8 +583,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 LOG('WARNING: CategoriesTool',0, 'Unable to find object for path %s' % path)
       # We must include parent if specified explicitely
       if 'parent' in category_list:
+        parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
+                                            # just as in ERP5Type.Base.getParentValue
         # Handle parent base category is a special way
-        membership.append(parent.getParentValue())
+        membership.append(parent)
       return membership
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setCategoryMembership' )
@@ -772,7 +774,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if checked_permission is not None:
         checkPermission = self.portal_membership.checkPermission
         def permissionFilter(category):
-          object = self.unrestrictedTraverse(category)
+          object = self.unrestrictedTraverse(category) # XXX Why unrestrictedTraverse and not resolveCategory ?
           if object is not None and checkPermission(checked_permission, object):
             return category
           else:
@@ -782,14 +784,21 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_inner.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_inner.aq_parent)))
       if base_category == 'parent':
         parent = context.aq_inner.aq_parent # aq_inner is required to make sure we use containment
+                                            # just as in Base.getParentValue
         if parent.portal_type in spec:
           parent_relative_url = parent.getRelativeUrl()
           if (checked_permission is None) or \
             (permissionFilter(parent_relative_url) is not None):
+            # We do not take into account base here
+            # because URL categories tend to fail
+            # if temp objects are used and generated through
+            # traversal (see WebSite and WebSection in ERP5)
+            return [parent] # A hack to be able to handle temp objects
+            # Previous code bellow for information
             if base:
-              return ['parent/%s' % parent_relative_url]
+              return ['parent/%s' % parent_relative_url] # This will fail if temp objects are used
             else:
-              return [parent_relative_url]
+              return [parent_relative_url] # This will fail if temp objects are used
         #LOG('getSingleCategoryMembershipList', 0, 'not in spec: parent.portal_type = %s, spec = %s' % (repr(parent.portal_type), repr(spec)))
         return []
 
