@@ -3411,3 +3411,32 @@ msgstr "Choix"
 msgid "Packing List updated."
 msgstr "Livraison mise à jour."
 
+msgid "No ${portal_type} Related."
+msgstr "Pas de ${portal_type} lié."
+
+msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
+msgstr "${this_portal_type} lié au ${that_portal_type} : ${that_title}."
+
+msgid "Related Sale Invoice Transaction"
+msgstr "Écriture de vente liée"
+
+msgid "Related Sale Packing List"
+msgstr "Livraison de vente liée"
+
+msgid "Created Clone ${portal_type}."
+msgstr "${portal_type} cloné."
+
+msgid "Edit Workflow"
+msgstr "Éditions"
+
+msgid "Initialized by Delivery Builder"
+msgstr "Initialisé par le système"
+
+msgid "Generate References"
+msgstr "Générer les références"
+
+msgid "Reference Prefix"
+msgstr "Prefixe pour les références"
+
+msgid "Reference generated for all order lines and milestones."
+msgstr "Références générées pour toutes les lignes."
