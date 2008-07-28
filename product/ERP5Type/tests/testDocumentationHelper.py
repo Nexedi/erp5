@@ -31,17 +31,15 @@ import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.DocumentationHelper import *
-from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 
-HTTP_OK = 200
 
-class TestDocumentationHelper(ERP5TypeTestCase, ZopeTestCase.Functional):
+class TestDocumentationHelper(ERP5TypeTestCase):
   """
   This is the list of test
 
   """
- 
+  auth = "ERP5TypeTestCase:"
   run_all_test = 1
  
   def getTitle(self):
@@ -49,13 +47,6 @@ class TestDocumentationHelper(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def afterSetUp(self):
     self.login()
-    self.auth = "mayoro:"
-
-  def login(self,  run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('mayoro', '', ['Manager'], [])
-    user = uf.getUserById('mayoro').__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplateList(self):
     """return list of business templates to be installed. """
@@ -64,55 +55,40 @@ class TestDocumentationHelper(ERP5TypeTestCase, ZopeTestCase.Functional):
              'erp5_xhtml_style',
              'erp5_ui_test',
             )
-    
-  def test_01_HasEverything(self):
-    # Test if portal_class was created
-    ZopeTestCase._print('\nTest Has Everything ')
-    LOG('Testing... ',0,'testHasEverything')
-    self.assertNotEquals(self.portal._getOb('portal_classes', None), None)
 
-  def test_02_ERP5Site(self):
+  def test_01_ERP5Site(self):
     ZopeTestCase._print('\nTest Documentation ERP5Site')
-    LOG('Testing... ',0,'Documentation of test_02_ERP5Site')
+    LOG('Testing... ', 0, 'Documentation of test_01_ERP5Site')
     site_uri = self.portal.getUrl()
     site_do = ERP5SiteDocumentationHelper(site_uri).__of__(self.portal)
-    self.assertNotEquals(site_do, None)
     self.assertEquals(len(site_do.getSectionList()), 1)
     #just erp5_core, erp5_mysql_innodb_catalog, erp5_documentation
     #, erp5_xhtml_style and erp5_ui_test are installed 
     self.assertEquals(len(site_do.getBusinessTemplateIdList()), 5)
-    response = self.publish( \
-        '/%s/portal_classes/getDocumentationHelper?uri=%s&class_name=ERP5SiteDocumentationHelper' % \
-        (self.portal.getId(), site_uri), self.auth, handle_errors=False)
-    self.assertEquals(HTTP_OK, response.getStatus())
-    #test the report mode of the documentation of the whoole site
-    response_report = self.publish( \
-        '/%s/portal_classes/DocumentationHelper_viewReport?uri=%s&class_name=ERP5SiteDocumentationHelper' % \
-        (self.portal.getId(), site_uri), self.auth, handle_errors=False)
-    self.assertEquals(HTTP_OK, response_report.getStatus())
+    self.portal.portal_classes.getDocumentationHelper(
+        'ERP5SiteDocumentationHelper', site_uri)
+    #test the report mode of the documentation of the whole site
+    self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
+    self.portal.REQUEST['uri'] = site_uri
+    self.portal.portal_classes.DocumentationHelper_viewReport()
 
   def test_02_bt(self):
     ZopeTestCase._print('\nTest Documentation Business Template')
-    LOG('Testing... ',0,'Documentation of test_02_bt')
+    LOG('Testing... ', 0, 'Documentation of test_02_bt')
     bt_ui_test = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_ui_test')
     bt_uri = bt_ui_test.getUrl()
     #do means documented_object
     bt_do = BusinessTemplateDocumentationHelper(bt_uri).__of__(self.portal)
-    self.assertNotEquals(bt_do, None)
     self.assertEquals(len(bt_do.getSectionList()), 7)
-    self.assertEquals('Foo' in bt_do.getPortalTypeIdList(), True)
-    self.assertEquals('Bar' in bt_do.getPortalTypeIdList(), True)
-    self.assertEquals('foo_module' in bt_do.getModuleIdList(), True)
-    self.assertEquals('bar_module' in bt_do.getModuleIdList(), True)
-    response = self.publish( \
-        '/%s/portal_classes/getDocumentationHelper?uri=%s&class_name=BusinessTemplateDocumentationHelper' % \
-        (self.portal.getId(), bt_uri), self.auth, handle_errors=False)
-    self.assertEquals(HTTP_OK, response.getStatus())
-    response_report = self.publish( \
-        '/%s/portal_classes/DocumentationHelper_viewReport?uri=%s&class_name=BusinessTemplateDocumentationHelper' % \
-        (self.portal.getId(), bt_uri), self.auth, handle_errors=False)
-    self.assertEquals(HTTP_OK, response_report.getStatus())
-
+    self.assertTrue('Foo' in bt_do.getPortalTypeIdList())
+    self.assertTrue('Bar' in bt_do.getPortalTypeIdList())
+    self.assertTrue('foo_module' in bt_do.getModuleIdList())
+    self.assertTrue('bar_module' in bt_do.getModuleIdList())
+    self.portal.portal_classes.getDocumentationHelper(
+        'BusinessTemplateDocumentationHelper', bt_uri)
+    self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
+    self.portal.REQUEST['uri'] = bt_uri
+    self.portal.portal_classes.DocumentationHelper_viewReport()
 
 def test_suite():
   suite = unittest.TestSuite()
