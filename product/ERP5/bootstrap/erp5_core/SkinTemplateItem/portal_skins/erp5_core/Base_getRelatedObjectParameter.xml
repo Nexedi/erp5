@@ -74,7 +74,8 @@ if parameter is not None:\n
   result = listbox.get_value(parameter)\n
 \n
   if result in [ [], (), None, \'\']:\n
-    \n
+    if parameter == \'proxy_listbox_ids\':\n
+      return context.REQUEST.get(\'proxy_listbox_ids\', [])\n
     result = getattr(context, dialog_id, None).get_field( \'listbox\' ).get_orig_value(parameter)\n
 \n
 return result\n
@@ -154,6 +155,12 @@ return result\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getRelatedObjectParameter</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
