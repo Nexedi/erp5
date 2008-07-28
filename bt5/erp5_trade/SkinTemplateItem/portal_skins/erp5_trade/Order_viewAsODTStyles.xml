@@ -372,8 +372,7 @@ AAA=</string> </value>
               <text:p tal:replace="my_page"/>\n
                 <text:page-number text:select-page="current">1</text:page-number>\n
                 <text:p tal:replace="my_of"/>\n
-                <text:page-count>1</text:page-count>\n
-              </text:p>\n
+                <text:page-count>1</text:page-count></text:p>\n
             </table:table-cell>\n
           </table:table-row>\n
         </table:table>\n
