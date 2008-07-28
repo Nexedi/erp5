@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_bar_category_title_list</string> </value>
+            <value> <string>my_bar_category_id_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -470,7 +470,9 @@
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -498,6 +500,10 @@
                           <string>Foo</string>
                           <string>Foo</string>
                         </tuple>
+                        <tuple>
+                          <string>Foo Line</string>
+                          <string>Foo Line</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -519,7 +525,16 @@
                 <item>
                     <key> <string>proxy_listbox_ids</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Foo_view/listbox</string>
+                          <string>Foo Line Listbox</string>
+                        </tuple>
+                        <tuple>
+                          <string>FooModule_viewFooList/listbox</string>
+                          <string>Foo Listbox</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -546,7 +561,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Bar Titles</string> </value>
+                    <value> <string>Bar Ids</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -574,6 +589,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>
