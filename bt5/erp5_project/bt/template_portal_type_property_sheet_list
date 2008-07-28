@@ -10,4 +10,7 @@ Requirement | Folder
 Requirement | Reference
 Requirement | SortIndex
 Requirement | XMLObject
+Sale Order Line | OutcomeDescription
+Sale Order Milestone | OutcomeDescription
+Sale Packing List Line | OutcomeDescription
 Task | TaskOrder

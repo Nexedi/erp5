@@ -23,12 +23,15 @@
   <item>business_application</item>
  </portal_type>
  <portal_type id="Sale Order Line">
+  <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Sale Order Milestone">
   <item>predecessor</item>
+  <item>requirement</item>
  </portal_type>
  <portal_type id="Sale Packing List Line">
+  <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Task">
@@ -42,9 +45,9 @@
   <item>business_application</item>
  </portal_type>
  <portal_type id="Task Report">
+  <item>requirement</item>
   <item>predecessor</item>
   <item>aggregate</item>
-  <item>requirement</item>
  </portal_type>
  <portal_type id="Task Report Line">
   <item>requirement</item>
