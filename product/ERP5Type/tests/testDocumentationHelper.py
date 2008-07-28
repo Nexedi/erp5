@@ -30,7 +30,10 @@ import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.DocumentationHelper import *
+from Products.ERP5Type.DocumentationHelper.ERP5SiteDocumentationHelper \
+    import ERP5SiteDocumentationHelper
+from Products.ERP5Type.DocumentationHelper.BusinessTemplateDocumentationHelper \
+    import BusinessTemplateDocumentationHelper
 from zLOG import LOG
 
 
