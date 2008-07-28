@@ -62,9 +62,10 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   local_property_names = ['update_method', 'jump_method', 'allow_jump', 
                           'base_category', 'portal_type', 'allow_creation', 
                           'container_getter_id', 'catalog_index',
-                          'relation_setter_id', 'relation_form_id', 'columns', 'sort',
-                          'parameter_list','list_method',
-                          'first_item', 'items', 'size', 'extra_item',
+                          'relation_setter_id', 'relation_form_id', 'columns', 
+                          'sort', 'parameter_list','list_method', 
+                          'first_item', 'items', 'proxy_listbox_ids', 
+                          'size', 'extra_item',
                           ]
 
   property_names = Widget.LinesTextAreaWidget.property_names + \
@@ -177,6 +178,12 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                title='List Method',
                                description=('The method to use to list'
                                             'objects'),
+                               default='',
+                               required=0)
+
+  proxy_listbox_ids = fields.ListTextAreaField('proxy_listbox_ids',
+                               title='Proxy Listbox IDs',
+                               description=('A list of listbox that can be used as proxy'),
                                default='',
                                required=0)
 

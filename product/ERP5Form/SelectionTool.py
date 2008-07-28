@@ -1072,7 +1072,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # Field found
         field_key = field.generate_field_key()
         field_value = REQUEST.form[field_key]
-        dialog_id = field.get_value('relation_form_id') or 'Base_viewRelatedObjectList'
+        dialog_id = field.get_value('relation_form_id') or \
+                                                   'Base_viewRelatedObjectList'
         redirect_form = getattr(o, dialog_id)
         # XXX Hardcoded listbox field
         selection_name = redirect_form.listbox.get_value('selection_name')
@@ -1108,6 +1109,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
             field_value = ''
           if len(field_value) == 1:
             field_value = field_value[0]
+          if len(field_value) > 1 and isinstance(field_value, type([])):
+            field_value = ' OR '.join(field_value)
           REQUEST.form[field_key] = field_value
           portal_status_message = Message(
                           domain='erp5_ui',
@@ -1143,7 +1146,15 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         kw['portal_status_message'] = portal_status_message
         kw['saved_form_data'] = saved_form_data
 
-         # Empty the selection (uid)
+        proxy_listbox_ids = field.get_value('proxy_listbox_ids')
+        REQUEST.set('proxy_listbox_ids', proxy_listbox_ids)
+        if len(proxy_listbox_ids) > 0:
+          REQUEST.set('proxy_listbox_id', proxy_listbox_ids[0][0])
+        else:
+          REQUEST.set('proxy_listbox_id', \
+                       "Base_viewRelatedObjectListBase/listbox")
+
+        # Empty the selection (uid)
         REQUEST.form = kw # New request form
         # Define new HTTP_REFERER
         REQUEST.HTTP_REFERER = '%s/%s' % (o.absolute_url(),
