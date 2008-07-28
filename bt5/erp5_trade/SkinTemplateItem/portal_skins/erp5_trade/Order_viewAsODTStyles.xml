@@ -197,6 +197,9 @@ AAA=</string> </value>
     <style:style style:name="Big_20_Table_20_Content" style:display-name="Big Table Content" style:family="paragraph" style:parent-style-name="Table_20_Contents">\n
       <style:text-properties fo:font-size="8pt" fo:font-weight="bold"/>\n
     </style:style>\n
+    <style:style style:name="Big_20_Table_20_Content_20_Left" style:display-name="Big Table Content Left" style:family="paragraph" style:parent-style-name="Big_20_Table_20_Content">\n
+      <style:paragraph-properties fo:margin-left="0.049cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="0cm" style:auto-text-indent="false"/>\n
+    </style:style>\n
     <style:style style:name="Item_20_Table_20_Title" style:display-name="Item Table Title" style:family="paragraph" style:parent-style-name="Table_20_Heading" style:class="extra">\n
       <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>\n
       <style:text-properties fo:font-size="7pt" style:font-weight-asian="normal" style:font-weight-complex="normal"/>\n
@@ -345,20 +348,20 @@ AAA=</string> </value>
               </text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name="Tableau4.A2" office:value-type="string">\n
-              <text:p text:style-name="Header"\n
-                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_title\'] or data_dict[\'source_decision_title\']">\n
+              <text:p text:style-name="Big_20_Table_20_Content_20_Left"\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_title\'] or data_dict[\'source_administration_title\']">\n
               </text:p>\n
               <text:p text:style-name="Header"\n
-                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_address\'] or data_dict[\'source_decision_address\']">\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_address\'] or data_dict[\'source_administration_address\']">\n
               </text:p>\n
               <text:p text:style-name="Header"\n
-                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_telfax\'] or data_dict[\'source_decision_telfax\']">\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_telfax\'] or data_dict[\'source_administration_telfax\']">\n
               </text:p>\n
               <text:p text:style-name="Header"\n
-                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_email\'] or data_dict[\'source_decision_email\']">\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_email\'] or data_dict[\'source_administration_email\']">\n
               </text:p>\n
               <text:p text:style-name="Header"\n
-                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_vatid\'] or data_dict[\'source_decision_vatid\']">\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_vatid\'] or data_dict[\'source_administration_vatid\']">\n
               </text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n

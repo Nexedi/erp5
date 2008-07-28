@@ -313,26 +313,31 @@ AAA=</string> </value>
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Tableau2.A1\'\n
                                       office:value-type=\'string\'>\n
-                      <text:p text:style-name=\'Table_20_Contents\'\n
+                      <text:p text:style-name=\'Big_20_Table_20_Content_20_Left\'\n
                               tal:content=\'python:data_dict["source_section_title"]\'>source_section</text:p>\n
-                      <text:p text:style-name=\'Table_20_Contents\'\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
                               tal:content=\'python:data_dict["source_section_address"]\'>address</text:p>\n
-                      <text:p text:style-name=\'Table_20_Contents\'\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
                               tal:content=\'python:data_dict["source_section_telfax"]\'>tel, fax</text:p>\n
-                      <text:p text:style-name=\'Table_20_Contents\'\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
                               tal:content=\'python:data_dict["source_section_email"]\'>email</text:p>\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                              tal:condition=\'data_dict/source_section_vatid\'\n
+                              tal:content=\'python:data_dict["source_section_vatid"]\'>vat ID</text:p>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Tableau2.A1\'\n
                                       office:value-type=\'string\'\n
-                                      tal:define=\'orig_string string:Recipient; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                                      tal:define=\'orig_string string:Client; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                       <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/>:</text:p>\n
                       <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Tableau2.A1\' office:value-type=\'string\'>\n
-                      <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_title"]\'>destination</text:p>\n
-                      <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_address"]\'>address</text:p>\n
-                      <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_telfax"]\'>tel, fax</text:p>\n
-                      <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_email"]\'>email</text:p>\n
+                      <text:p text:style-name=\'Big_20_Table_20_Content_20_Left\' tal:content=\'python:data_dict["destination_section_title"]\'>destination</text:p>\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["destination_section_address"]\'>address</text:p>\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["destination_section_telfax"]\'>tel, fax</text:p>\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["destination_section_email"]\'>email</text:p>\n
+                      <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["destination_section_vatid"]\'\n
+                              tal:condition="data_dict/destination_section_vatid">vat ID</text:p>\n
                     </table:table-cell>\n
                     <table:table-cell>\n
                       <table:table table:is-sub-table=\'true\'>\n
@@ -373,23 +378,29 @@ AAA=</string> </value>
                   </table:table-row>\n
                 </table:table-header-rows>\n
                 <table:table-row table:style-name=\'Tableau2.1\'>\n
-                  <table:table-cell table:style-name=\'Tableau2.E1.1.2\' office:value-type=\'string\' tal:define=\'orig_string string:Seller; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                  <table:table-cell table:style-name=\'Tableau2.E1.1.2\' office:value-type=\'string\' tal:define=\'orig_string string:Ship From; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                     <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/>:</text:p>\n
                     <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>\n
                   </table:table-cell>\n
                   <table:table-cell table:style-name=\'Tableau2.E1.1.2\' office:value-type=\'string\'>\n
-                    <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["source_decision_title"]\'>name</text:p>\n
-                    <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["source_decision_telfax"]\'>tel, fax</text:p>\n
-                    <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["source_decision_email"]\'>email</text:p>\n
+                    <text:p text:style-name=\'Big_20_Table_20_Content_20_Left\' tal:content=\'python:data_dict["source_title"]\'>name</text:p>\n
+                    <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["source_address"]\'>address</text:p>\n
+                    <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["source_telfax"]\'>tel, fax</text:p>\n
+                    <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                            tal:condition="data_dict/source_vatid"\n
+                            tal:content=\'python:data_dict["source_vatid"]\'>vat id</text:p>\n
                   </table:table-cell>\n
-                  <table:table-cell table:style-name=\'Tableau2.E1.1.2\' office:value-type=\'string\' tal:define=\'orig_string string:Buyer; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                  <table:table-cell table:style-name=\'Tableau2.E1.1.2\' office:value-type=\'string\' tal:define=\'orig_string string:Ship To; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                     <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/>:</text:p>\n
                     <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>\n
                   </table:table-cell>\n
                   <table:table-cell table:style-name=\'Tableau2.E1.1.2\' office:value-type=\'string\'>\n
-                    <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_decision_title"]\'>name</text:p>\n
-                    <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_decision_telfax"]\'>tel, fax</text:p>\n
-                    <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:data_dict["destination_decision_email"]\'>email</text:p>\n
+                    <text:p text:style-name=\'Big_20_Table_20_Content_20_Left\' tal:content=\'python:data_dict["destination_title"]\'>name</text:p>\n
+                    <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["destination_address"]\'>address</text:p>\n
+                    <text:p text:style-name=\'Table_20_Contents_20_Left\' tal:content=\'python:data_dict["destination_telfax"]\'>tel, fax</text:p>\n
+                    <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                            tal:condition="data_dict/destination_vatid"\n
+                            tal:content=\'python:data_dict["destination_vatid"]\'>vat id</text:p>\n
                   </table:table-cell>\n
                   <table:table-cell>\n
                     <table:table table:is-sub-table=\'true\'>\n
@@ -442,11 +453,11 @@ AAA=</string> </value>
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Your Item no.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Your Item No.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Our Item no.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Our Item No.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
