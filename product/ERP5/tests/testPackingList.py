@@ -920,6 +920,38 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                ).newContent(portal_type=self.packing_list_portal_type)
     self.failUnless(hasattr(pl, 'getPriceCurrency'))
     
+  def test_PackingList_viewAsODT(self):
+    # tests packing list printout
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    packing_list = self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
+                              portal_type=self.packing_list_portal_type,
+                              title='Packing List',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = packing_list.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    packing_list.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = packing_list.PackingList_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+  
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
