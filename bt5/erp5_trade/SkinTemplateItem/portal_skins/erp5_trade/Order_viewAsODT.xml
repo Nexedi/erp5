@@ -251,7 +251,7 @@ AAA=</string> </value>
       <style:paragraph-properties fo:text-align=\'start\' style:justify-single-word=\'false\'/>\n
     </style:style>\n
     <style:style style:parent-style-name=\'Table_20_Contents\' style:family=\'paragraph\' style:name=\'P3\'>\n
-      <style:paragraph-properties fo:text-align=\'justify\' style:justify-single-word=\'false\'/>\n
+      <style:paragraph-properties fo:text-align=\'left\' style:justify-single-word=\'false\'/>\n
     </style:style>\n
     <style:style style:parent-style-name=\'Text_20_body\' style:family=\'paragraph\' style:name=\'P4\'>\n
       <style:text-properties style:font-size-complex=\'6pt\' style:font-size-asian=\'6pt\' style:font-weight-complex=\'normal\' style:font-weight-asian=\'normal\' fo:font-size=\'6pt\' fo:font-weight=\'normal\'/>\n
@@ -494,9 +494,8 @@ AAA=</string> </value>
                       tal:attributes=\'text:style-name style_name\'>ref</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-              <text:p text:style-name=\'Table_20_Contents\'\n
-                      tal:content=\'python:line_dict["description"]\'\n
-                      tal:attributes=\'text:style-name left_style_name\'>desc</text:p>\n
+              <text:p text:style-name=\'Table_20_Contents\' tal:attributes="text:style-name left_style_name"><tal:block tal:repeat="line line_dict/description"><tal:block\n
+                    tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
                               office:value-type=\'float\'\n
@@ -667,7 +666,9 @@ AAA=</string> </value>
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.7\'>\n
                 <table:table-cell table:style-name=\'Tableau3.A7\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'P3\' tal:content=\'python: data_dict["description"]\'>my_description</text:p>\n
+                  <text:p text:style-name=\'P3\'><tal:block tal:repeat="line data_dict/description"><tal:block\n
+                          tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block>\n
+                </text:p>\n
                 </table:table-cell>\n
                 <table:covered-table-cell/>\n
                 <table:covered-table-cell/>\n
