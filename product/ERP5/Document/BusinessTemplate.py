@@ -1770,7 +1770,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           for id in object_property_list:
             if id not in property_list:
               property_list.append(id)
-        setattr(portal_type, self.class_property, list(property_list))
+        setattr(portal_type, self.class_property, tuple(property_list))
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -1793,7 +1793,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       for id in property_list:
         if id in original_property_list:
           original_property_list.remove(id)
-      setattr(portal_type, self.class_property, list(original_property_list))
+      setattr(portal_type, self.class_property, tuple(original_property_list))
 
 
 class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
