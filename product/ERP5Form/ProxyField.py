@@ -422,7 +422,7 @@ class ProxyField(ZMIField):
       proxy_form = getattr(object, self.get_value('form_id'))
       proxy_field = aq_base(getattr(proxy_form, self.get_value('field_id')))
       proxy_field = proxy_field.__of__(form)
-    except AttributeError:
+    except AttributeError, TypeError:
       LOG('ProxyField', WARNING, 
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
