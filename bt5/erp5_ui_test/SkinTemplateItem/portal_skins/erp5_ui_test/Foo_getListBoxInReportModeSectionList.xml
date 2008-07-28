@@ -119,7 +119,7 @@ return [ReportSection(**kw) for x in xrange(3)]\n
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>kw</string>
                             <string>append</string>
                             <string>$append0</string>

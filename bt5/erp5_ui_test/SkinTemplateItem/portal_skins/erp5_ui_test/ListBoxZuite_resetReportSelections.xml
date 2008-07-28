@@ -112,7 +112,7 @@ return "Done."\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>manage_deleteSelection</string>
                             <string>_getiter_</string>
                             <string>xrange</string>

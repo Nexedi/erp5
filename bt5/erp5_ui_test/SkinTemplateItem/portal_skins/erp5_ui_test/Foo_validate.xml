@@ -112,7 +112,7 @@ return context.getSimulationStateTitle()\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>AssertionError</string>
                           </tuple>
                         </value>
