@@ -3201,10 +3201,10 @@ msgstr "La date de livraison doit être définie"
 msgid "Delivery Date must be after Shipping Date"
 msgstr "La date de livraison doit être postérieure à la date d'expédition"
 
-msgid "Your Item no."
+msgid "Your Item No."
 msgstr "Votre réf."
 
-msgid "Our Item no."
+msgid "Our Item No."
 msgstr "Notre réf."
 
 msgid "Line"
@@ -3440,3 +3440,19 @@ msgstr "Prefixe pour les références"
 
 msgid "Reference generated for all order lines and milestones."
 msgstr "Références générées pour toutes les lignes."
+
+msgid "Print Packing List"
+msgstr "Imprimer le bon de livraison"
+
+msgid "Order"
+msgstr "Commande"
+
+msgid "Document Date"
+msgstr "Date du document"
+
+msgid "Ship From"
+msgstr "Expediteur"
+
+msgid "Ship To"
+msgstr "Destinataire"
+
