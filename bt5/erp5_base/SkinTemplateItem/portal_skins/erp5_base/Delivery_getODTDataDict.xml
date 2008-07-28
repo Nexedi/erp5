@@ -69,18 +69,25 @@
 request = context.REQUEST\n
 \n
 def getFieldAsString(field):\n
+  return \', \'.join(getFieldAsLineList(field))\n
+\n
+def getFieldAsLineList(field):\n
+  """Returns the text as a list of lines."""\n
   field = field or \'\'\n
   text = field.replace(\'\\r\', \'\')\n
   text_list = text.split(\'\\n\')\n
-  text_list = [x for x in text_list if x]\n
-  return \', \'.join(text_list)\n
+  return [x for x in text_list if x]\n
 \n
 def getProductAndLineDesc(prod_desc, line_desc):\n
+  if prod_desc and line_desc and \'\\n\' not in prod_desc and \'\\n\' not in line_desc:\n
+    return (\' - \'.join([getFieldAsString(prod_desc),\n
+            getFieldAsString(line_desc)]),)\n
+  line_list = []\n
   if prod_desc:\n
-    if line_desc:\n
-      return \' - \'.join([getFieldAsString(prod_desc), getFieldAsString(line_desc)])\n
-    return getFieldAsString(prod_desc)\n
-  return getFieldAsString(line_desc)\n
+    line_list.extend(getFieldAsLineList(prod_desc))\n
+  if line_desc:\n
+    line_list.extend(getFieldAsLineList(line_desc))\n
+  return line_list\n
 \n
 def getOneLineAddress(text, region):\n
   text_list = [getFieldAsString(text)]\n
@@ -164,8 +171,8 @@ for line in getSubLineList(context):\n
       display_id = \'translated_title\'\n
       if request.get(\'international_form\'):\n
         display_id = \'title\'\n
-      desc = \', \'.join([x[0] for x in\n
-                        line.getVariationCategoryItemList(display_id=display_id)])\n
+      desc = (\', \'.join([x[0] for x in\n
+                        line.getVariationCategoryItemList(display_id=display_id)]),)\n
     line_dict = {\n
       \'style_name\': \'Table_20_Contents\',\n
       \'left_style_name\': \'Table_20_Contents_20_Left\',\n
@@ -264,7 +271,7 @@ data_dict = {\n
 \n
   \'total_price_novat\': total_price,\n
   \'vat_list\': context.searchFolder(portal_type=context.getPortalTaxMovementTypeList(), order_by=\'title\'),\n
-  \'description\': getFieldAsString(context.getDescription()),\n
+  \'description\': getFieldAsLineList(context.getDescription()),\n
   \'specialise_title\': context.getProperty(\'specialise_title\',\'\'),\n
 \n
   \'line_list\': line_list,\n
@@ -325,6 +332,7 @@ return unicodeDict(data_dict)\n
                             <string>context</string>
                             <string>T_</string>
                             <string>request</string>
+                            <string>getFieldAsLineList</string>
                             <string>getFieldAsString</string>
                             <string>getProductAndLineDesc</string>
                             <string>getOneLineAddress</string>
