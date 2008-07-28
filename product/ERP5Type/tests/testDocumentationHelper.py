@@ -66,10 +66,10 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     site_do = ERP5SiteDocumentationHelper(site_uri).__of__(self.portal)
     self.assertEquals(len(site_do.getSectionList()), 1)
     #just erp5_core, erp5_mysql_innodb_catalog, erp5_documentation
-    #, erp5_xhtml_style and erp5_ui_test are installed 
+    #, erp5_xhtml_style and erp5_ui_test are installed
     self.assertEquals(len(site_do.getBusinessTemplateIdList()), 5)
     self.portal.portal_classes.getDocumentationHelper(
-        'ERP5SiteDocumentationHelper', site_uri)
+        'ERP5SiteDocumentationHelper', site_uri).view()
     #test the report mode of the documentation of the whole site
     self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
     self.portal.REQUEST['uri'] = site_uri
@@ -88,7 +88,7 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.assertTrue('foo_module' in bt_do.getModuleIdList())
     self.assertTrue('bar_module' in bt_do.getModuleIdList())
     self.portal.portal_classes.getDocumentationHelper(
-        'BusinessTemplateDocumentationHelper', bt_uri)
+        'BusinessTemplateDocumentationHelper', bt_uri).view()
     self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
     self.portal.REQUEST['uri'] = bt_uri
     self.portal.portal_classes.DocumentationHelper_viewReport()
