@@ -98,7 +98,7 @@ def getOneLineAddress(text, region):\n
 def getPhoneAndFax(phone, fax):\n
   s = \'\'\n
   if phone:\n
-    s += \'%s: %s\' % (translateString(\'tel.\'), phone)\n
+    s += \'%s: %s\' % (translateString(\'tel\'), phone)\n
   if fax:\n
     if s: s += \', \'\n
     s += \'%s: %s\' % (translateString(\'fax\'), fax)\n
@@ -196,7 +196,35 @@ for line in getSubLineList(context):\n
     }\n
     total_price += line.getTotalPrice() or 0.0\n
   line_list.append(unicodeDict(line_dict.copy()))\n
+\n
 inch_cm_ratio = 2.54 / 100.0\n
+\n
+class EmptyOrganisation:\n
+  """Used for default when organisation is not found.\n
+  """\n
+  def getTitle(self):\n
+    return \'\'\n
+  def getDefaultAddressText(self):\n
+    return \'\'\n
+  def getDefaultAddressRegionTitle(self):\n
+    return \'\'\n
+  def getProperty(self, prop, d=\'\'):\n
+    return d\n
+\n
+source_administration = context.getSourceAdministrationValue(\n
+                              portal_type=\'Organisation\')\n
+if source_administration is None:\n
+  source_administration = context.getSourceSectionValue()\n
+if source_administration is None:\n
+  source_administration = EmptyOrganisation()\n
+\n
+destination_administration = context.getDestinationAdministrationValue(\n
+                              portal_type=\'Organisation\')\n
+if destination_administration is None:\n
+  destination_administration = context.getDestinationSectionValue()\n
+if destination_administration is None:\n
+  destination_administration = EmptyOrganisation()\n
+\n
 data_dict = {\n
   \'source_section_title\': context.getSourceSectionTitle() or \'\',\n
   \'source_section_image_path\': context.getSourceSectionValue() is not None\\\n
@@ -224,6 +252,33 @@ data_dict = {\n
                            getattr(context.getSourceSectionValue(), \'getVatCode\', None)\\\n
                            is not None and\\\n
                            context.getSourceSectionValue().getVatCode() or \'\'),\n
+\n
+  \'source_administration_title\': source_administration.getTitle(),\n
+  \'source_administration_address\': getOneLineAddress(\n
+                                      source_administration.getDefaultAddressText(),\n
+                                      source_administration.getDefaultAddressRegionTitle()),\n
+  \'source_administration_telfax\':\n
+          getPhoneAndFax(source_administration.getProperty(\'telephone_text\', \'\'),\n
+                         source_administration.getProperty(\'fax_text\', \'\')),\n
+  \'source_administration_email\':\n
+          getEmail(source_administration.getProperty(\'email_text\', \'\')),\n
+  \'source_administration_vatid\':\n
+          getVatId(source_administration.getProperty(\'vat_code\', \'\')),\n
+\n
+  \'source_title\': context.getSourceTitle() or \'\',\n
+  \'source_address\': getOneLineAddress(\n
+          context.getSource() and\n
+              context.getSourceValue().getDefaultAddressText() or \'\',\n
+          context.getSource() and \n
+              context.getSourceValue().getDefaultAddressRegionTitle() or \'\'),\n
+  \'source_telfax\': getPhoneAndFax(context.getSource() and \\\n
+                        context.getSourceValue().getTelephoneText() or \'\',\n
+          context.getSource() and \\\n
+              context.getSourceValue().getFaxText() or \'\'),\n
+  \'source_email\': getEmail(context.getSource() and\n
+          context.getSourceValue().getEmailText() or \'\'),\n
+  \'source_vatid\': getVatId(context.getSource() and\n
+      context.getSourceValue().getProperty(\'vat_code\', \'\') or \'\'),\n
 \n
   \'source_decision_title\': context.getSourceDecisionTitle() or \'\',\n
   \'source_decision_image_path\': context.getSourceDecisionValue() is not None\\\n
@@ -263,6 +318,8 @@ data_dict = {\n
       context.getDestination() and context.getDestinationValue().getFaxText() or \'\'),\n
   \'destination_email\': getEmail(context.getDestination() and \\\n
       context.getDestinationValue().getEmailText() or \'\'),\n
+  \'destination_vatid\': getVatId(context.getDestination() and\n
+      context.getDestinationValue().getProperty(\'vat_code\', \'\') or \'\'),\n
 \n
   \'destination_section_title\': context.getDestinationSectionTitle() or \'\',\n
   \'destination_section_image_path\': context.getDestinationSectionValue() is not None \\\n
@@ -391,6 +448,9 @@ return unicodeDict(data_dict)\n
                             <string>_getitem_</string>
                             <string>_inplacevar_</string>
                             <string>inch_cm_ratio</string>
+                            <string>EmptyOrganisation</string>
+                            <string>source_administration</string>
+                            <string>destination_administration</string>
                             <string>data_dict</string>
                           </tuple>
                         </value>
