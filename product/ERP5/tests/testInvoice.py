@@ -528,6 +528,18 @@ class TestInvoiceMixin(TestPackingListMixin,
           resource_precision = line.getResourceValue().getQuantityPrecision()
           self.assertEquals(round(line.getQuantity(), resource_precision),
               round(expected_price * line_ratio, resource_precision))
+  
+  def stepCheckInvoiceLineHasReferenceAndIntIndex(self, sequence=None, **kw):
+    """Check that the unique invoice line in the invoice has reference and int
+    index.
+    """
+    invoice = sequence.get('invoice')
+    invoice_line_list = invoice.contentValues(
+                            portal_type=self.invoice_line_portal_type)
+    self.assertEquals(1, len(invoice_line_portal_type))
+    invoice_line = invoice_line_list[0]
+    self.assertEquals(1, invoice_line.getIntIndex())
+    self.assertEquals('1', invoice_line.getReference())
 
   def stepCheckPackingListInvoice(
                       self, sequence=None, sequence_list=None, **kw):
@@ -1170,6 +1182,7 @@ class TestInvoice(TestInvoiceMixin):
         stepCheckInvoiceBuilding
         stepRebuildAndCheckNothingIsCreated
         stepCheckInvoicesConsistency
+        stepCheckInvoiceLineHasReferenceAndIntIndex
       """)
     sequence_list.play(self, quiet=quiet)
 
