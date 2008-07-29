@@ -65,19 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>line = context\n
-parent = context.getParentValue()\n
-\n
-line_pt = line.getPortalType()\n
-\n
-index = len(parent.contentValues(filter={"portal_type": line_pt}))\n
-\n
-if parent.getPortalType() == line_pt:\n
-  reference = "%s.%s" % (parent.getReference(), index)\n
-else:\n
-  reference = str(index)\n
-\n
-line.edit(reference=reference, int_index=index)\n
+            <value> <string>context.Base_initIntIndexAndReference(*args, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -88,6 +76,12 @@ line.edit(reference=reference, int_index=index)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -122,15 +116,9 @@ line.edit(reference=reference, int_index=index)\n
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>context</string>
-                            <string>line</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
-                            <string>parent</string>
-                            <string>line_pt</string>
-                            <string>len</string>
-                            <string>index</string>
-                            <string>reference</string>
-                            <string>str</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
