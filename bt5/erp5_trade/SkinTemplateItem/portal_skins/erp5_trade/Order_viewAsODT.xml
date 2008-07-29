@@ -510,10 +510,16 @@ AAA=</string> </value>
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
                               office:value-type=\'float\'\n
+                              tal:condition="python: line_dict[\'total_quantity\'] != \'\'"\n
                               tal:attributes=\'office:value line_dict/total_quantity\'> \n
               <text:p text:style-name=\'Table_20_Contents\'\n
                       tal:content="python: quantity_renderer(line_dict[\'total_quantity\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>qty</text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: line_dict[\'total_quantity\'] == \'\'"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
               <text:p text:style-name=\'Table_20_Contents\'\n
@@ -526,6 +532,7 @@ AAA=</string> </value>
                       tal:attributes=\'text:style-name style_name\'>stop_date</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              tal:condition="python: line_dict[\'base_price\'] != \'\'"\n
                               office:value-type=\'float\'\n
                               tal:attributes="office:value line_dict/base_price">\n
               <text:p text:style-name=\'Table_20_Contents\'\n
@@ -533,11 +540,22 @@ AAA=</string> </value>
                       tal:attributes=\'text:style-name right_style_name\'>base_price</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: line_dict[\'base_price\'] == \'\'"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              tal:condition="python: line_dict[\'total_price\'] != \'\'"\n
                               office:value-type=\'float\'\n
                               tal:attributes=\'office:value line_dict/total_price\'>\n
               <text:p text:style-name=\'Table_20_Contents\'\n
                       tal:content="python: price_renderer(line_dict[\'total_price\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>total_price</text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: line_dict[\'total_price\'] == \'\'"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
           </div>\n
         </table:table-row>\n
