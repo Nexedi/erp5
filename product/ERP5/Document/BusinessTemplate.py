@@ -2604,6 +2604,8 @@ class ModuleTemplateItem(BaseTemplateItem):
     else:
       items = self._archive
 
+    valid_permissions = dict.fromkeys([x[0] for x in
+                                       context.ac_inherited_permissions(all=1)])
     for id in items.keys():
       if update_dict.has_key(id) or force:
         if not force:
@@ -2620,13 +2622,8 @@ class ModuleTemplateItem(BaseTemplateItem):
         module.setTitle(str(mapping['title']))
         for name, role_list in list(mapping['permission_list']):
           acquire = (type(role_list) == type([]))
-          try:
+          if name in valid_permissions:
             module.manage_permission(name, roles=role_list, acquire=acquire)
-          except ValueError:
-            # Ignore a permission not present in this system.
-            LOG('ERP5', PROBLEM,
-                'Unable to update module permission "%s" with roles %s' % (
-                  name, role_list), error=sys.exc_info())
 
   def _importFile(self, file_name, file):
     dict = {}
