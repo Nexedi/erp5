@@ -286,6 +286,26 @@ class InventoryListBrain(ZSQLBrain):
                     mapping = mapping )
     return N_('Unknown')
 
+class TrackingListBrain(InventoryListBrain):
+  """
+  List of aggregated movements
+  """
+  def __init__(self):
+    if not self.date:
+      return
+    # convert the date in the movement's original timezone.
+    # This is a somehow heavy operation, but fortunatly it's only called when
+    # the brain is accessed from the Shared.DC.ZRDB.Results.Results instance
+    obj = self.getObject()
+    if obj is not None:
+      movement_list = obj.getAggregateRelatedValueList()
+      for movement in movement_list:
+        date = movement.getStartDate() or movement.getStopDate()
+        if date is not None:
+          timezone = date.timezone()
+          self.date = self.date.toZone(timezone)
+          break
+
 class DeliveryListBrain(InventoryListBrain):
   """
     Lists each variation
