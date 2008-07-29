@@ -937,7 +937,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = packing_list.newContent(portal_type=self.order_line_portal_type,
+    line = packing_list.newContent(
+                            portal_type=self.packing_list_line_portal_type,
                             resource_value=resource,
                             quantity=10,
                             price=3)
