@@ -79,14 +79,11 @@ def getFieldAsLineList(field):\n
   return [x for x in text_list if x]\n
 \n
 def getProductAndLineDesc(prod_desc, line_desc):\n
-  if prod_desc and line_desc and \'\\n\' not in prod_desc and \'\\n\' not in line_desc:\n
-    return (\' - \'.join([getFieldAsString(prod_desc),\n
-            getFieldAsString(line_desc)]),)\n
   line_list = []\n
-  if prod_desc:\n
-    line_list.extend(getFieldAsLineList(prod_desc))\n
   if line_desc:\n
     line_list.extend(getFieldAsLineList(line_desc))\n
+  elif prod_desc:\n
+    line_list.extend(getFieldAsLineList(prod_desc))\n
   return line_list\n
 \n
 def getOneLineAddress(text, region):\n
