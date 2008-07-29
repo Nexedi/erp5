@@ -20,6 +20,7 @@
 ##############################################################################
 
 from Acquisition import aq_base
+from webdav.NullResource import NullResource
 
 class ExtensibleTraversableMixIn:
 
