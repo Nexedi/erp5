@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>input_style</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -81,10 +79,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>OrderLine_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
