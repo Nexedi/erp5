@@ -540,11 +540,8 @@ class SQLDict(RAMDict, SQLBase):
           if not method_dict.has_key(m.method_id):
             method_dict[m.method_id] = 1 # Prevents calling invoke twice
             if invoke:
-              # First Validate (only if message is marked as new)
-              if line.processing_node == -1:
-                validate_value = m.validate(self, activity_tool)
-              else:
-                validate_value = VALID
+              # First Validate
+              validate_value = m.validate(self, activity_tool)
               if validate_value is VALID:
                 activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
                 if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
