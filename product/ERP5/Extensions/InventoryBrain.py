@@ -298,13 +298,11 @@ class TrackingListBrain(InventoryListBrain):
     # the brain is accessed from the Shared.DC.ZRDB.Results.Results instance
     obj = self.getObject()
     if obj is not None:
-      movement_list = obj.getAggregateRelatedValueList()
-      for movement in movement_list:
-        date = movement.getStartDate() or movement.getStopDate()
-        if date is not None:
-          timezone = date.timezone()
-          self.date = self.date.toZone(timezone)
-          break
+      movement = obj.portal_catalog.getObject(self.delivery_uid)
+      date = movement.getStartDate() or movement.getStopDate()
+      if date is not None:
+        timezone = date.timezone()
+        self.date = self.date.toZone(timezone)
 
 class DeliveryListBrain(InventoryListBrain):
   """
