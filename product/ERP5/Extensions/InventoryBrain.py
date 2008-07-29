@@ -290,7 +290,7 @@ class TrackingListBrain(InventoryListBrain):
   """
   List of aggregated movements
   """
-  def __init__(self):
+  def getDate(self):
     if not self.date:
       return
     # convert the date in the movement's original timezone.
@@ -302,7 +302,8 @@ class TrackingListBrain(InventoryListBrain):
       date = movement.getStartDate() or movement.getStopDate()
       if date is not None:
         timezone = date.timezone()
-        self.date = self.date.toZone(timezone)
+        return self.date.toZone(timezone)
+    return self.date
 
 class DeliveryListBrain(InventoryListBrain):
   """
