@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -21,6 +18,7 @@
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -107,6 +105,17 @@
                       <list>
                         <tuple>
                           <string>Organisation</string>
+                          <string>Organisation</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>OrganisationModule_viewOrganisationList/listbox</string>
                           <string>Organisation</string>
                         </tuple>
                       </list>
