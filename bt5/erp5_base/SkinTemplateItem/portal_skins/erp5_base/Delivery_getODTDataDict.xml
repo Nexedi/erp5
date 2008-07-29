@@ -340,6 +340,18 @@ data_dict = {\n
   \'destination_section_vatid\': getVatId(context.getDestinationSection() and\n
       context.getDestinationSectionValue().getProperty(\'vat_code\') or \'\'),\n
 \n
+  \'destination_administration_title\': destination_administration.getTitle(),\n
+  \'destination_administration_address\': getOneLineAddress(\n
+                                      destination_administration.getDefaultAddressText(),\n
+                                      destination_administration.getDefaultAddressRegionTitle()),\n
+  \'destination_administration_telfax\':\n
+          getPhoneAndFax(destination_administration.getProperty(\'telephone_text\', \'\'),\n
+                         destination_administration.getProperty(\'fax_text\', \'\')),\n
+  \'destination_administration_email\':\n
+          getEmail(destination_administration.getProperty(\'email_text\', \'\')),\n
+  \'destination_administration_vatid\':\n
+          getVatId(destination_administration.getProperty(\'vat_code\', \'\')),\n
+\n
   \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
   \'destination_decision_telfax\': getPhoneAndFax(context.getDestinationDecision() and\n
       context.getDestinationDecisionValue().getTelephoneText() or \'\',\n
