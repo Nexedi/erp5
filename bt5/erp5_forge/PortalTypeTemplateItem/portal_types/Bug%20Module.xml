@@ -131,6 +131,12 @@ be a problem).</string> </value>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

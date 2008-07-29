@@ -21,11 +21,11 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Cancel Bug</string> </value>
+            <value> <string>Cancel</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=cancel_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=cancel_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Use the Cancel action to stop any further processing for this ticket yet keep a trace of it (unlike the Delete action).</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -55,17 +55,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Cancel</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>
@@ -86,6 +80,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Owner</string>
+                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
             </value>

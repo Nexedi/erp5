@@ -1,4 +1,9 @@
+Bug Line | document_list
+Bug Line | new_file
+Bug Line | view
 Bug Module | view
+Bug | document_list
+Bug | new_file
 Bug | view
 Business Template | commit
 Business Template | svn_cleanup_locks

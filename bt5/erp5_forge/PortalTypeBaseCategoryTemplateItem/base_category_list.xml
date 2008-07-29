@@ -1,4 +1,9 @@
 <base_category_list>
+ <portal_type id="Bug">
+  <item>bug_priority</item>
+  <item>bug_difficulty</item>
+  <item>bug_severity</item>
+ </portal_type>
  <portal_type id="Bug Module">
   <item>business_application</item>
  </portal_type>

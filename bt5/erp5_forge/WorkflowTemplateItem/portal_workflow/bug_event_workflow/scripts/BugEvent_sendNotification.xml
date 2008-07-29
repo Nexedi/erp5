@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>bug_message = state_change["object"]\n
+\n
+body = """\n
+Reporter: %s\n
+Date: %s\n
+Follow Up: %s\n
+\n
+Bug Message:\n
+\n
+""" % (bug_message.getSourceTitle(\'\'), bug_message.getStartDate(\'\'), \n
+       bug_message.getFollowUpTitle(\'\'))\n
+\n
+#XXX This does not support structured text format.\n
+body += bug_message.getTextContent("") \n
+\n
+# Bug Information\n
+bug = bug_message.getParentValue()\n
+body += """\n
++----------------------- Bug Informations ----------------------+\n
+\n
+  Bug: %s\n
+  Status: %s \n
+  Reporter: %s\n
+  Submitted Date: %s\n
+""" %  (bug.getTitle(\'\'), bug.getSimulationState(), \n
+        bug.getSourceTradeTitle(\'\'), bug.getStartDate(\'\'))\n
+\n
+if bug.getSourceTitle() is not None:\n
+  body += """  Requester: %s\n
+  Assignee: %s\n
+  Reporter: %s\n
+""" % (bug.getDestinationDecisionTitle(\'\'), bug.getSourceTitle(\'\'),\n
+           bug.getSourceTradeTitle(\'\'))\n
+\n
+body += """ Link: %s\n
+  Request Project: %s\n
+  Assigned Project: %s\n
+  Follow Up: %s\n
+  Description: \n
+%s\n
+""" % (bug.getAbsoluteUrl(), bug.getDestinationProjectTitle(\'\'), \n
+           bug.getSourceProjectTitle(\'\'), \n
+           \' / \'.join(bug.getCausalityTitleList(\'\')), bug.getDescription(\'\'))\n
+\n
+body += """\n
++---------------------- Messages Related -----------------------+\n
+"""\n
+# Messages Information \n
+message_count = 0\n
+for message in bug.searchFolder(portal_type=\'Bug Line\'):\n
+  if message.getSimulationState() == \'deliveried\':\n
+    message_count += 1\n
+    body += """\n
+++++++ Message #%s submitted by %s on %s ++++++\n
+%s\n
+""" % (message_count, bug_message.getSourceTitle(\'\'), \n
+            bug_message.getStartDate(),  message.getTextContent(\'\') )\n
+\n
+portal = bug_message.getPortalObject()\n
+portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
+                          recipient=bug_message.getDestinationValueList(), \n
+                          subject="[ERP5 Bug] [Message] %s" % bug_message.getTitle(), \n
+                          message=body)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>bug_message</string>
+                            <string>_getattr_</string>
+                            <string>body</string>
+                            <string>_inplacevar_</string>
+                            <string>bug</string>
+                            <string>None</string>
+                            <string>message_count</string>
+                            <string>_getiter_</string>
+                            <string>message</string>
+                            <string>portal</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BugEvent_sendNotification</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

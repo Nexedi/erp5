@@ -1,6 +1,11 @@
 <allowed_content_type_list>
  <portal_type id="Bug">
   <item>File</item>
+  <item>Bug Line</item>
+ </portal_type>
+ <portal_type id="Bug Line">
+  <item>File</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Bug Module">
   <item>Bug</item>

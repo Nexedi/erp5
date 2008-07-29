@@ -29,11 +29,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>sendNotification</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The cancel logical transition sets the ticket state to cancelled.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>setCloseDate</string> </value>
+            <value> <string>Bug_sendNotification</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -60,12 +60,6 @@
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>

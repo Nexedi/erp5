@@ -1,4 +1,7 @@
 Bug Module | business_application
+Bug | bug_difficulty
+Bug | bug_priority
+Bug | bug_severity
 Glossary Module | business_application
 Glossary Term | business_field
 Glossary Term | language
