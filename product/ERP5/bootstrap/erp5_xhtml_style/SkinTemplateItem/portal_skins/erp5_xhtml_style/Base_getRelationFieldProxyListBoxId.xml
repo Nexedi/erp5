@@ -71,7 +71,7 @@ proxy_listbox_id = request.get(\'proxy_listbox_id\', None)\n
 if proxy_listbox_id is None:\n
   proxy_listbox_id = request.get(\'select_dialog\', None)\n
 if proxy_listbox_id is None:\n
-  proxy_listbox_id = "Base_viewRelationObjectListBase/listbox"\n
+  proxy_listbox_id = "Base_viewRelatedObjectListBase/listbox"\n
 \n
 return proxy_listbox_id\n
 </string> </value>
