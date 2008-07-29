@@ -70,6 +70,9 @@ N_ = portal.Base_translateString\n
 preserved_parameters={\'form_id\': form_id, \'cancel_url\': cancel_url}\n
 request = context.REQUEST\n
 \n
+if select_action is None:\n
+  select_action = request.form["Base_doAction"]\n
+\n
 # prevent lose checked itens after select action\n
 # For backward compatibility, do nothing if\n
 # Base_updateListboxSelection cannot be found.\n
@@ -147,7 +150,7 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_action, form_id, cancel_url, **kw</string> </value>
+            <value> <string>select_action=None, form_id, cancel_url, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -183,12 +186,12 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
                             <string>N_</string>
                             <string>preserved_parameters</string>
                             <string>request</string>
-                            <string>getattr</string>
                             <string>None</string>
+                            <string>_getitem_</string>
+                            <string>getattr</string>
                             <string>Base_updateListboxSelection</string>
                             <string>Base_doAction</string>
                             <string>len</string>
-                            <string>_getitem_</string>
                             <string>doAction0</string>
                             <string>redirect_url</string>
                             <string>_write_</string>
@@ -213,7 +216,11 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if select_module == \'\':\n
+            <value> <string>if select_module == None:\n
+  select_module = context.REQUEST.form["Base_doModule"]\n
+if select_module == \'\':\n
   return\n
 return context.ERP5Site_redirect(\'%s/view\' % select_module, **kw)\n
 </string> </value>
@@ -90,7 +92,7 @@ return context.ERP5Site_redirect(\'%s/view\' % select_module, **kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_module, **kw</string> </value>
+            <value> <string>select_module=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,9 +120,11 @@ return context.ERP5Site_redirect(\'%s/view\' % select_module, **kw)\n
                           <tuple>
                             <string>select_module</string>
                             <string>kw</string>
-                            <string>_apply_</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -132,7 +136,9 @@ return context.ERP5Site_redirect(\'%s/view\' % select_module, **kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
