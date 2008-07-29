@@ -1,9 +1,8 @@
-# -*- coding: UTF-8 -*-
-
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
-#                    Kevin Deldycke <kevin_AT_nexedi_DOT_com>
+# Copyright (c) 2007-2008 Nexedi SA and Contributors. All Rights Reserved.
+#                       Kevin Deldycke <kevin_AT_nexedi_DOT_com>
+#                       Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -41,15 +40,12 @@ class TestBug(ERP5TypeTestCase):
   """
     ERP5 unit tests for Bug module (part of erp5_forge business template).
   """
-
   # pseudo constants
   RUN_ALL_TEST = 1
   QUIET = 1
-
-
-  ##################################
-  ##  ZopeTestCase Skeleton
-  ##################################
+  person_portal_type = "Person" 
+  project_portal_type = "Project"
+  organisation_portal_type  = "Organisation"
 
   def getTitle(self):
     """
@@ -57,57 +53,187 @@ class TestBug(ERP5TypeTestCase):
     """
     return "Bug"
 
-
   def getBusinessTemplateList(self):
     """
       Return the list of required business templates.
     """
     return ( 'erp5_base'
            , 'erp5_forge'
+           , 'erp5_base'
+           , 'erp5_pdm'
+           , 'erp5_trade'
+           , 'erp5_project'
            )
-
 
   def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Initialize the ERP5 site.
     """
     self.login()
-    self.datetime      = DateTime()  # Save today at initialisation to "freeze" the time
-    self.portal        = self.getPortal()
+    self.datetime = DateTime() 
+    self.portal = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
     # Use a dummy mailhost to not send mail notification to the guy how run unit test
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
       self.portal._setObject('MailHost', DummyMailHost('MailHost'))
 
-
-
   ##################################
   ##  Usefull methods
   ##################################
-
-  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a new manager user and login.
-    """
-    user_name = 'kevin'
-    user_folder = self.getPortal().acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
-
-
-
+#  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
+#    """
+#      Create a new manager user and login.
+#    """
+#    user_name = 'kevin'
+#    user_folder = self.getPortal().acl_users
+#    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
+#    user = user_folder.getUserById(user_name).__of__(user_folder)
+#    newSecurityManager(None, user)
+#
   ##################################
   ##  Basic steps
   ##################################
-
   def stepTic(self, **kw):
     """
       Flush activity queue.
     """
     self.tic()
 
+  def stepLoginUsualUser(self, **kw):
+    portal = self.getPortal()
+    uf = portal.acl_users
+    if not uf.getUser('dummy'):
+      uf._doAddUser('manager', '', ['Manager'], [])
+      self.login('manager')
+      person_module = portal.getDefaultModule(self.person_portal_type)
+      person = person_module.newContent(id='dummy', title='dummy',
+                                        reference='dummy')
+      portal.portal_categories.group.newContent(id='dummy',
+                                                codification='DUMMY')
+      
+      person.setEmailText('loggedperson@localhost')
+      assignment = person.newContent(title='dummy', group='dummy',
+                                     portal_type='Assignment',
+                                     start_date='1980-01-01',
+                                     stop_date='2099-12-31')
+      assignment.open()
+      get_transaction().commit()
+      self.tic()
+      module_list = []
+      portal_type_list = []
+      for portal_type in (self.project_portal_type,
+                          self.organisation_portal_type,):
+        module = portal.getDefaultModule(portal_type)
+        module_list.append(module)
+        portal_type_list.append(portal_type)
+        portal_type_list.append(module.getPortalType())
+
+      for portal_type in portal_type_list:
+        ti = portal.portal_types[portal_type]
+        ti.addRole('Auditor;Author;Assignee;Assignor,Manager', '', 'Dummy',
+                   '', 'group/dummy', 'ERP5Type_getSecurityCategoryFromAssignment',
+                   '')
+        ti.updateRoleMapping()
+
+      get_transaction().commit()
+      self.tic()
+      portal.portal_caches.clearAllCache()
+
+    self.login('dummy')
+
+  def stepCreateProject(self,sequence=None, sequence_list=None, \
+                        **kw):
+    """
+    Create a project
+    """
+    project_portal_type = "Project"
+    portal = self.getPortal()
+    module = portal.getDefaultModule(project_portal_type)
+    project = module.newContent(
+        portal_type=project_portal_type,
+        title = 'Project')
+    sequence.edit(project=project) 
+
+  def createPerson(self):
+    """
+      Create a person.
+    """
+    portal_type = 'Person'
+    person_module = self.portal.getDefaultModule(portal_type)
+    person = person_module.newContent(portal_type = portal_type )
+    return person
+
+  def stepCreatePerson1(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create one Person
+    """
+    person = self.createPerson()
+    project = sequence.get("project")
+    self.createPersonAssignment(person=person, project=project)
+    person.setDefaultEmailText("person1@localhost")
+    sequence.edit(person1 = person)
+
+  def stepCreatePerson2(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create Person 2
+    """
+    person = self.createPerson()
+    project = sequence.get("project")
+    person.setDefaultEmailText("person2@localhost")
+    sequence.edit(person2 = person)
+
+  def createPersonAssignment(self,person=None,project=None ):
+    """
+      Create a person Assigment and Assign to a Project.
+    """
+    # Create Assignment
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.setDestinationProjectValue(project)
+    assignment.setStartDate(DateTime()-365)
+    assignment.setStopDate(DateTime()+365)
+    self.portal.portal_workflow.doActionFor(assignment, 'open_action')
+
+  def stepCheckBugNotification(self, sequence=None,
+                                         sequence_list=None, **kw):
+    """
+    Check that notification works
+    """
+    bug = sequence.get('bug')
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('postmaster@localhost', mfrom)
+    self.assertEquals(['person1@localhost'], mto)
+    self.failUnless(bug.getSimulationStateTitle() in messageText)
+
+  def stepCheckBugMessageNotification(self, sequence=None,
+                                         sequence_list=None, **kw):
+    """
+    Check that notification works
+    """
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    self.assertEquals('person2@localhost', mfrom)
+    self.assertEquals(['person1@localhost'], mto)
+    self.failUnless("Message" in messageText)
+
+  def stepSetSourceProject(self, sequence=None, sequence_list=None, **kw):
+    """
+      Set Source Project to a Bug
+    """
+    bug = sequence.get('bug')
+    project = sequence.get('project')
+    bug.setSourceProjectValue(project)
+
+  def stepSetRequester(self, sequence=None, sequence_list=None, **kw):
+    """
+      Set Source Project to a Bug
+    """
+    bug = sequence.get('bug')
+    person2 = sequence.get('person2')
+    bug.setDestinationValue(person2)
 
   def stepCreateBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -115,23 +241,86 @@ class TestBug(ERP5TypeTestCase):
     """
     portal_type = 'Bug'
     bug_module = self.portal.getDefaultModule(portal_type)
-    bug = bug_module.newContent( portal_type       = portal_type
-                               , immediate_reindex = 1
-                               , title             = 'This is an important bug'
-                               , description       = 'This %µ&~#^@! bug always happend on ERP5 start. The solution consist to kill the developper.'
-                               , start_date        = self.datetime  # Today
-                               , stop_date         = self.datetime  # Today
+    bug = bug_module.newContent( portal_type = portal_type
+                               , title  = 'Bug Title'
+                               , description = 'Bug Description'
+                               , start_date = self.datetime
+                               , stop_date = self.datetime
                                )
     sequence.edit(bug = bug)
 
+  def stepCreateBugMessage(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a dummy Bug Message
+    """
+    portal_type = 'Bug Line'
+    bug = sequence.get('bug')
+    person2 = sequence.get('person2')
+    bug_message = bug.newContent( portal_type = portal_type
+                                  , title  = 'Bug Message'
+                                  , text_content = 'Bug Description'
+                                )
+    # usually the person who is creates the message is setted as source
+    # by BugLine_init
+    bug_message.setSourceValue(person2)
+    sequence.edit(bug_message = bug_message)
+
+  def stepPostBugMessage(self, sequence=None, sequence_list=None, **kw):
+    """
+      Post the bug message.
+    """
+    bug_message = sequence.get('bug_message')
+    self.workflow_tool.doActionFor(bug_message, 'start_action')
+
+  def stepCheckBugMessageIsDeliveried(self, sequence=None, \
+                                                     sequence_list=None, **kw):
+    """
+      check if the message is deliveried the bug.
+    """
+    bug_message = sequence.get('bug_message')
+    self.assertEquals(bug_message.getSimulationState(), 'deliveried') 
+
+  def stepCheckBugMessage(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check a dummy bug message
+    """
+    bug_message = sequence.get('bug_message')
+    person = sequence.get('person1')
+    self.assertEquals( [ person ] , bug_message.getDestinationValueList())
+    self.failUnless( bug_message.getStartDate() is not None)
+    #self.assertEquals(bug_message.getSourceValue().getTitle(), 'dummy')
+
+  def stepCheckBugInit(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a dummy bug
+    """
+    bug = sequence.get('bug')
+    self.assertEquals("B-ERP5-%s" % bug.getId(), bug.getReference())
+    #self.assertEquals(bug_message.getSourceTradeValue().getTitle(), 'dummy')
 
   def stepOpenBug(self, sequence=None, sequence_list=None, **kw):
     """
       Open the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'open_action')
-    self.assertEquals(bug.getValidationState(), 'open')
+    self.workflow_tool.doActionFor(bug, 'confirm_action')
+    self.assertEquals(bug.getSimulationState(), 'confirmed')
+
+  def stepAssignBug(self, sequence=None, sequence_list=None, **kw):
+    """
+      Close the bug.
+    """
+    bug = sequence.get('bug')
+    self.workflow_tool.doActionFor(bug, 'set_ready_action')
+    self.assertEquals(bug.getSimulationState(), 'ready')
+
+  def stepResolveBug(self, sequence=None, sequence_list=None, **kw):
+    """
+      Close the bug.
+    """
+    bug = sequence.get('bug')
+    self.workflow_tool.doActionFor(bug, 'stop_action')
+    self.assertEquals(bug.getSimulationState(), 'stopped')
 
 
   def stepCloseBug(self, sequence=None, sequence_list=None, **kw):
@@ -139,9 +328,8 @@ class TestBug(ERP5TypeTestCase):
       Close the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'close_action')
-    self.assertEquals(bug.getValidationState(), 'closed')
-
+    self.workflow_tool.doActionFor(bug, 'delivery_action')
+    self.assertEquals(bug.getSimulationState(), 'deliveried')
 
   def stepCancelBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -149,16 +337,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'cancel_action')
-    self.assertEquals(bug.getValidationState(), 'cancelled')
-
-
-  def stepFollowBug(self, sequence=None, sequence_list=None, **kw):
-    """
-      The bug reporter don't know how to nicely report a bug. Tell him.
-    """
-    bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'follow_action', comment="Your Bug report is bad. You don't know how to report a bug. Please read http://www.chiark.greenend.org.uk/~sgtatham/bugs.html and resubmit your bug.")
-
+    self.assertEquals(bug.getSimulationState(), 'cancelled')
 
   def stepSetTestedBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -168,7 +347,6 @@ class TestBug(ERP5TypeTestCase):
     bug.setTested(True)
     self.assertEquals(bug.getTested(), True)
 
-
   def stepSetOldClosedDate(self, sequence=None, sequence_list=None, **kw):
     """
       Change Closed Date to a funky old value.
@@ -177,7 +355,6 @@ class TestBug(ERP5TypeTestCase):
     bug.setStopDate(self.datetime - 10)
     self.assertEquals(bug.getStopDate().Date(), (self.datetime - 10).Date()) # Check that datetime is fixed
 
-
   def stepCheckClosedDate(self, sequence=None, sequence_list=None, **kw):
     """
       Check that the closed date is set as today.
@@ -185,12 +362,9 @@ class TestBug(ERP5TypeTestCase):
     bug = sequence.get('bug')
     self.assertEquals(bug.getStopDate().Date(), self.datetime.Date())
 
-
-
   ##################################
   ##  Tests
   ##################################
-
   def test_01_StopDateUpdatedOnClose(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
       Test that a closed bug has its stop date property updated.
@@ -198,10 +372,18 @@ class TestBug(ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepCreateBug'
+                , 'stepCheckBugInit'
                 , 'stepOpenBug'
                 , 'stepTic'
                 , 'stepSetOldClosedDate'
-                , 'stepSetTestedBug'
+                , 'stepAssignBug'
+                , 'stepTic'
+                , 'stepResolveBug'
+                , 'stepTic'
+                , 'stepAssignBug'
+                , 'stepTic'
+                , 'stepResolveBug'
+                , 'stepTic'
                 , 'stepCloseBug'
                 , 'stepTic'
                 , 'stepCheckClosedDate'
@@ -210,25 +392,89 @@ class TestBug(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-
-  def test_02_StopDateUpdatedOnCancel(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_02_setCheckBugNotification(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-      Same test as above but on cancel action (test bug #600).
+      Test that a closed bug has its stop date property updated.
     """
     if not run: return
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateBug'
+    step_list = [ 'stepLoginUsualUser'
+                , 'stepCreateBug'
+                , 'stepCreateProject'
+                , 'stepCreatePerson1'
+                , 'stepCreatePerson2'
+                , 'stepSetSourceProject'
+                , 'stepSetRequester'
+                , 'stepTic'
                 , 'stepOpenBug'
                 , 'stepTic'
-                , 'stepSetOldClosedDate'
-                , 'stepCancelBug'
+                , 'stepCheckBugNotification'
+                , 'stepAssignBug'
                 , 'stepTic'
-                , 'stepCheckClosedDate'
+                , 'stepCheckBugNotification'
+                , 'stepResolveBug'
+                , 'stepTic'
+                , 'stepCheckBugNotification'
+                , 'stepAssignBug'
+                , 'stepTic'
+                , 'stepCheckBugNotification'
+                , 'stepResolveBug'
+                , 'stepTic'
+                , 'stepCheckBugNotification'
+                , 'stepCloseBug'
+                , 'stepTic'
+                , 'stepCheckBugNotification'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_03_setCheckBugNotification(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Test that a closed bug has its stop date property updated.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateBug'
+                , 'stepCreateProject'
+                , 'stepCreatePerson1'
+                , 'stepCreatePerson2'
+                , 'stepSetSourceProject'
+                , 'stepSetRequester'
+                , 'stepTic'
+                , 'stepOpenBug'
+                , 'stepTic'
+                , 'stepCheckBugNotification'
+                , 'stepCreateBugMessage'
+                , 'stepCheckBugMessage'
+                , 'stepTic'
+                , 'stepPostBugMessage'
+                , 'stepTic'
+                , 'stepCheckBugMessageIsDeliveried'
+                , 'stepCheckBugMessageNotification'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+# This tests is not Appliable anymore. It will be kept for a while.
+#  def test_04_StopDateUpdatedOnCancel(self, quiet=QUIET, run=RUN_ALL_TEST):
+#    """
+#      Same test as above but on cancel action (test bug #600).
+#    """
+#    if  not run: return
+#    sequence_list = SequenceList()
+#    step_list = [ 'stepCreateBug'
+#                , 'stepOpenBug'
+#                , 'stepTic'
+#                , 'stepSetOldClosedDate'
+#                , 'stepCancelBug'
+#                , 'stepTic'
+#                , 'stepCheckClosedDate'
+#                ]
+#    sequence_string = ' '.join(step_list)
+#    sequence_list.addSequenceString(sequence_string)
+#    sequence_list.play(self, quiet=quiet)
 
 def test_suite():
   suite = unittest.TestSuite()

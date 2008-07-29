@@ -29,40 +29,35 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Core.Folder import Folder
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.Document.Ticket import Ticket
 
-from zLOG import LOG
-
-class Bug(XMLObject, Folder):
+class Bug(Ticket):
     """
-       Bug means a bug report, a feature request or an issue.
+    LEGACY
+
+    This class is superceded by the Ticket class. Legacy
+    Bug data should still be usable.
     """
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Bug
-                      )
-
-    # CMF Type Definition
-    meta_type='ERP5 Bug'
-    portal_type='Bug'    
+    meta_type = 'ERP5 Bug'
+    portal_type = 'Bug'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-    
-    def SearchableText(self):
-      """ Used by the catalog for basic full text indexing """
-      return """ %s %s %s """ % ( self.getTitle(),
-                                  self.getDescription(),
-                                  self.Bug_getFollowUpListAsText() )
 
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.DublinCore
+                      , PropertySheet.Amount
+                      , PropertySheet.Arrow
+                      , PropertySheet.Price
+                      , PropertySheet.Movement
+                      , PropertySheet.Bug
+                      )
