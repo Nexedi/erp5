@@ -2526,6 +2526,46 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if err_list:
       self.fail(''.join(err_list))
 
+  def test_Order_viewAsODT_hierarchical(self):
+    # tests order printout with hierearchical order (with lines inside lines)
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Order',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            description='Content')
+    if self.order_line_portal_type not in [x.getId() for x in 
+                                           line.allowedContentTypes()]:
+      return # skip this test if hierarchical orders are not available (eg.
+             # for Purchase Order)
+
+    line = line.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
+  # TODO: test with cells ?
 
 
 def test_suite():
