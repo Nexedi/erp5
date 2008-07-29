@@ -113,6 +113,8 @@
                         <string>my_total_price</string>
                         <string>my_total_quantity</string>
                         <string>my_aggregate_title_list</string>
+                        <string>my_int_index</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>

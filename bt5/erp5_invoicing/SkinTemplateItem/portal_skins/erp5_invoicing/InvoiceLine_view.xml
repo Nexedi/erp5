@@ -53,6 +53,19 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>reference</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -101,6 +114,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_int_index</string>
                         <string>my_resource_title</string>
                         <string>my_variation_category_list</string>
                         <string>my_base_contribution_list</string>
