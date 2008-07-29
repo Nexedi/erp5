@@ -1,5 +1,8 @@
+2007-07-22 zstoinov
+* Make iCal bt5 more generic and add support for dynamic skin selection from URL.
+
 2007-08-29
-Release-ready.
+* Release-ready.
 
 2007-08-13
-First working version.
+* First working version.

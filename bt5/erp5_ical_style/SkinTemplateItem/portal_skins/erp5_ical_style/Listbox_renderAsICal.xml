@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.DTMLMethod</string>
-          <string>DTMLMethod</string>
-        </tuple>
-        <none/>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -38,39 +35,110 @@
             <key> <string>raw</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-BEGIN:VCALENDAR\n
-VERSION:2.0\n
-PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN\n
 <dtml-in prefix="loop" expr="items">\n
+<dtml-if expr="loop_item[\'COMPONENT\']==\'journal\'">\n
+BEGIN:VJOURNAL\n
+<dtml-if expr="loop_item.get(\'CREATED\')">\n
+CREATED:<dtml-var expr="loop_item[\'CREATED\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'LAST-MODIFIED\')">\n
+LAST-MODIFIED:<dtml-var expr="loop_item[\'LAST-MODIFIED\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTSTAMP\')">\n
+DTSTAMP:<dtml-var expr="loop_item[\'DTSTAMP\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'UID\')">\n
+UID:uuid<dtml-var expr="loop_item[\'UID\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'SUMMARY\')">\n
+SUMMARY:<dtml-var expr="loop_item[\'SUMMARY\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DESCRIPTION\')">\n
+DESCRIPTION:<dtml-var expr="loop_item[\'DESCRIPTION\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTSTART\')">\n
+DTSTART:<dtml-var expr="loop_item[\'DTSTART\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'URL\')">\n
+URL:<dtml-var expr="loop_item[\'URL\']">\n
+</dtml-if>\n
+END:VJOURNAL\n
+</dtml-if>\n
 <dtml-if expr="loop_item[\'COMPONENT\']==\'event\'">\n
 BEGIN:VEVENT\n
+<dtml-if expr="loop_item.get(\'CREATED\')">\n
 CREATED:<dtml-var expr="loop_item[\'CREATED\']">\n
-LAST-MODIFIED:<dtml-var expr="loop_item[\'LAST-MODIFIED\']">\n
-DTSTAMP:<dtml-var expr="loop_item[\'CREATED\']">\n
-UID:uuid<dtml-var expr="loop_item[\'UID\']">\n
-SUMMARY:<dtml-var expr="loop_item[\'SUMMARY\']">\n
-DTSTART:<dtml-var expr="loop_item[\'DTSTART\']">\n
-DTEND:<dtml-var expr="loop_item[\'DTEND\']">\n
-<dtml-if expr="loop_item.get(\'LOCATION\', \'\')">\n
-LOCATION:<dtml-var expr="loop_item[\'LOCATION\']">\n
 </dtml-if>\n
-<dtml-if expr="loop_item.get(\'CATEGORIES\', \'\')">\n
+<dtml-if expr="loop_item.get(\'LAST-MODIFIED\')">\n
+LAST-MODIFIED:<dtml-var expr="loop_item[\'LAST-MODIFIED\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTSTAMP\')">\n
+DTSTAMP:<dtml-var expr="loop_item[\'DTSTAMP\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'UID\')">\n
+UID:uuid<dtml-var expr="loop_item[\'UID\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'SUMMARY\')">\n
+SUMMARY:<dtml-var expr="loop_item[\'SUMMARY\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DESCRIPTION\')">\n
+DESCRIPTION:<dtml-var expr="loop_item[\'DESCRIPTION\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'STATUS\')">\n
+STATUS:<dtml-var expr="loop_item[\'STATUS\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTSTART\')">\n
+DTSTART:<dtml-var expr="loop_item[\'DTSTART\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTEND\')">\n
+DTEND:<dtml-var expr="loop_item[\'DTEND\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'URL\')">\n
+URL:<dtml-var expr="loop_item[\'URL\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'CATEGORIES\')">\n
 CATEGORIES:<dtml-var expr="loop_item[\'CATEGORIES\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'LOCATION\')">\n
+LOCATION:<dtml-var expr="loop_item[\'LOCATION\']">\n
 </dtml-if>\n
 END:VEVENT\n
 </dtml-if>\n
 <dtml-if expr="loop_item[\'COMPONENT\']==\'todo\'">\n
 BEGIN:VTODO\n
+<dtml-if expr="loop_item.get(\'CREATED\')">\n
 CREATED:<dtml-var expr="loop_item[\'CREATED\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'LAST-MODIFIED\')">\n
 LAST-MODIFIED:<dtml-var expr="loop_item[\'LAST-MODIFIED\']">\n
-DTSTAMP:<dtml-var expr="loop_item[\'CREATED\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTSTAMP\')">\n
+DTSTAMP:<dtml-var expr="loop_item[\'DTSTAMP\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'UID\')">\n
 UID:uuid<dtml-var expr="loop_item[\'UID\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'SUMMARY\')">\n
 SUMMARY:<dtml-var expr="loop_item[\'SUMMARY\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DESCRIPTION\')">\n
+DESCRIPTION:<dtml-var expr="loop_item[\'DESCRIPTION\']">\n
+</dtml-if>\n
 <dtml-if expr="loop_item.get(\'STATUS\')">\n
 STATUS:<dtml-var expr="loop_item[\'STATUS\']">\n
 </dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTSTART\')">\n
 DTSTART:<dtml-var expr="loop_item[\'DTSTART\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'DTEND\')">\n
 DUE:<dtml-var expr="loop_item[\'DTEND\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'URL\')">\n
+URL:<dtml-var expr="loop_item[\'URL\']">\n
+</dtml-if>\n
+<dtml-if expr="loop_item.get(\'CATEGORIES\')">\n
+CATEGORIES:<dtml-var expr="loop_item[\'CATEGORIES\']">\n
+</dtml-if>\n
 <dtml-if expr="loop_item.get(\'COMPLETED\')">\n
 COMPLETED:<dtml-var expr="loop_item[\'COMPLETED\']">\n
 </dtml-if>\n
@@ -80,14 +148,9 @@ PERCENT-COMPLETE:<dtml-var expr="loop_item[\'PERCENT-COMPLETE\']">\n
 <dtml-if expr="loop_item.get(\'LOCATION\')">\n
 LOCATION:<dtml-var expr="loop_item[\'LOCATION\']">\n
 </dtml-if>\n
-<dtml-if expr="loop_item.get(\'CATEGORIES\')">\n
-CATEGORIES:<dtml-var expr="loop_item[\'CATEGORIES\']">\n
-</dtml-if>\n
 END:VTODO\n
 </dtml-if>\n
-</dtml-in>\n
-END:VCALENDAR\n
-
+</dtml-in>
 
 ]]></string> </value>
         </item>

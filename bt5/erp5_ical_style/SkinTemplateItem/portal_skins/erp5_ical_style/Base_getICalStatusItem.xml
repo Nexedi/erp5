@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,17 +66,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Give an ICal status and percent-completed for a todo entry.\n
+  Give an ICal status and percent-completed for a todo entry and status for a event entry.\n
   Return a tuple of (status, percent_complete).\n
-  Status is one of: \'needs-action\', \'in-process\', \'completed\' and \'cancelled\'\n
-  or nothing, then we\'ll assume it is \'needs-action\'.\n
-  Sample implementation for a Task:\n
+  For todo status is one of: \'needs-action\', \'in-process\', \'completed\' and \'cancelled\' or nothing,\n
+  then we\'ll assume it is \'needs-action\'.\n
+  For event status is one of: \'cancelled\', \'confirmed\', \'tentative\' or nothing, \n
+  then we\'ll assume it is \'tentative\'.\n
 """\n
-\n
-if context.getPortalType() != \'Task\':\n
-  return (\'\', 0)\n
-\n
-status_map = {\n
+status = \'\'\n
+status_map_task = {\n
   \'draft\' : (\'needs-action\', 0),\n
   \'planned\' : (\'needs-action\', 33),\n
   \'ordered\' : (\'in-process\', 66),\n
@@ -87,7 +82,26 @@ status_map = {\n
   \'cancelled\' : (\'cancelled\', 0)\n
 }\n
 \n
-return status_map.get(context.getSimulationState(), (\'\', 0))\n
+status_map_event = {\n
+  \'CANCELLED\' : (\'expired\', \'deleted\', \'cancelled\'),\n
+  \'CONFIRMED\' : (\'started\', \'responded\', \'delivered\', \'assigned\', \'acknowledged\'),\n
+  \'TENTATIVE\' : (\'draft\', \'planned\', \'new\', \'ordered\')\n
+}\n
+\n
+if brainObject is not None:\n
+  real_context = brainObject\n
+else:\n
+  real_context = context\n
+\n
+portal_type = real_context.getPortalType()\n
+if portal_type == \'Task\':\n
+  return status_map_task.get(real_context.getSimulationState(), (\'\', 0))\n
+elif portal_type in context.getPortalEventTypeList():\n
+  for status_item in status_map_event:\n
+    if real_context.getSimulationState() in status_map_event[status_item]:\n
+      status = status_item\n
+      break\n
+return (status, 0)\n
 </string> </value>
         </item>
         <item>
@@ -104,7 +118,7 @@ return status_map.get(context.getSimulationState(), (\'\', 0))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>brainObject=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,15 +138,24 @@ return status_map.get(context.getSimulationState(), (\'\', 0))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
+                            <string>brainObject</string>
+                            <string>status</string>
+                            <string>status_map_task</string>
+                            <string>status_map_event</string>
+                            <string>None</string>
+                            <string>real_context</string>
                             <string>context</string>
-                            <string>status_map</string>
+                            <string>_getattr_</string>
+                            <string>portal_type</string>
+                            <string>_getiter_</string>
+                            <string>status_item</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,7 +167,9 @@ return status_map.get(context.getSimulationState(), (\'\', 0))\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

@@ -16,23 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>business_template_registered_skin_selections</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -45,12 +28,8 @@
             </value>
         </item>
         <item>
-            <key> <string>business_template_registered_skin_selections</string> </key>
-            <value> <string>iCal</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_ical_style</string> </value>
+            <value> <string>erp5_ical_core</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  An ICal data format implementation.\n
+  USAGE\n
+    Data are drawn from a listbox as they are;\n
+    mandatory columns: (\'summary\', \'description\', \'created\', \'dtstamp\', \'last-modified\', \'uid\', \'dtstart\', \'dtend\', \'component\', \'url\')\n
+    optional columns: (\'location\', \'status\', \'completed\', \'percent-complete\', \'categories\')\n
+    Title (summary) can be anything, same for description, location and categories (categories can be one word or a comma-separated list, although not all clients can use multiple categories).\n
+    Component can be "journal", "event" or "todo".\n
+    Dates should be returned by listbox with no extra processing - the script formats them appropriately.\n
+    \'completed\' and \'percent-complete\' is valid only for todo\n
+    \'status\' is valid for todo and can be: needs-action|completed|in-process|cancelled (default is needs-action)\n
+    \'status\' is valid for event and can be: tentative|confirmed|cancelled\n
+  PREPROCESSING\n
+    If no start date is given, we take created\n
+    If no stop date is given, we take start date\n
+    For "todo" if status is \'completed\' and no percent-complete is given, we take 100%.\n
+    For "todo" if status is \'completed\' and no completed date is given, we take dtend.\n
+  IMPLEMENTATION DETAILS:\n
+    dtstamp = indicates the date/time that the instance of the iCalendar object was created.\n
+    due (in VTODO) = dtend\n
+    dates are formatted "YYYYMMDDTHHMMSSZ" (which is HTML4 without separators).\n
+    all dates are converted to GMT, then the client will adjust them to its local timezone\n
+"""\n
+from DateTime import DateTime\n
+now = DateTime()\n
+allowed_field_list = (\'summary\', \'description\', \'created\', \n
+                      \'last-modified\', \'uid\', \'dtstamp\', \n
+                      \'dtstart\', \'dtend\', \'component\', \'url\', \n
+                      \'location\', \'categories\', \'status\', \n
+                      \'completed\', \'percent-complete\')\n
+allowed_status_list_todo = (\'COMPLETED\', \'IN-PROCESS\', \n
+                            \'CANCELLED\', \'NEEDS-ACTION\')\n
+\n
+# mapping listbox column headers with iCalendar properties\n
+# if listbox column headers are more than one the index of first occured in listbox columns is getting\n
+related_column_map = {\n
+  \'summary\' : (\'title\',),\n
+  \'created\' : (\'creation date\',),\n
+  \'last-modified\' : (\'modification date\',),\n
+  \'dtstart\' : (\'start date\', \'begin date\',),\n
+  \'dtend\' : (\'stop date\', \'end date\',)\n
+}\n
+\n
+def convertDate(value):\n
+  """ Format dates. """\n
+  if hasattr(value, \'toZone\'):\n
+    # we dont specify time zone in the file, \n
+    # but recalculate everything into UTC\n
+    value = value.toZone(\'UTC\')\n
+    value = value.HTML4()\n
+    value = value.replace(\'-\', \'\')\n
+    value = value.replace(\':\', \'\')\n
+  return value\n
+\n
+# figure out which column is which, by using column titles\n
+ical_column_mapping = {}\n
+for index, column_item in enumerate(label_list):\n
+  column_header = column_item[1].lower()\n
+  if column_header in allowed_field_list:\n
+    ical_column_mapping[column_header] = index\n
+    continue\n
+  for related_column in related_column_map:\n
+    if column_header in related_column_map[related_column] and \\\n
+       related_column not in ical_column_mapping:\n
+      ical_column_mapping[related_column] = index\n
+      break\n
+\n
+for index, column_item in enumerate(label_list):\n
+  column_header = column_item[1].lower()\n
+  if column_header == \'date\':\n
+    if column_item[0].find(\'start_date\') or column_item[0].find(\'startdate\'):\n
+      if not ical_column_mapping.get(\'dtstart\', None):\n
+        ical_column_mapping[\'dtstart\'] = index\n
+    elif column_item[0].find(\'end_date\') or column_item[0].find(\'enddate\'):\n
+      if not ical_column_mapping.get(\'dtstart\', None):\n
+        ical_column_mapping[\'dtend\'] = index\n
+\n
+items = []\n
+for line in line_list:\n
+  brainObject = line.getBrain()\n
+  column_item_list = line.getValueList()\n
+  ical_item_dict = {}\n
+  # collect values\n
+  for header, index in ical_column_mapping.items():\n
+    value_tuple = column_item_list[index]\n
+    # the [0] is a raw value, the [1] is rendered; we want strings rendered (as unicode),\n
+    # but other stuff (like int or DateTime) we want as they are\n
+    if hasattr(value_tuple[0], \'lower\'):\n
+      value = value_tuple[1]\n
+    else:\n
+      if isinstance(value_tuple[0], DateTime):\n
+        value = convertDate(value_tuple[0])\n
+      else:\n
+        value = value_tuple[0]\n
+    ical_item_dict[header.upper()] = value\n
+\n
+  for field in allowed_field_list:\n
+    field_upper = field.upper()\n
+    if field_upper not in ical_item_dict:\n
+      if field_upper == \'SUMMARY\' and hasattr(brainObject, \'getTitle\'):\n
+        ical_item_dict[\'SUMMARY\'] = brainObject.getTitle()\n
+      elif field_upper == \'DESCRIPTION\' and hasattr(brainObject, \'getDescription\'):\n
+        ical_item_dict[\'DESCRIPTION\'] = brainObject.getDescription()\n
+      elif field_upper == \'CREATED\' and hasattr(brainObject, \'getCreationDate\'):\n
+        ical_item_dict[\'CREATED\'] = convertDate(brainObject.getCreationDate())\n
+      elif field_upper == \'LAST-MODIFIED\' and hasattr(brainObject, \'getModificationDate\'):\n
+        ical_item_dict[\'LAST-MODIFIED\'] = convertDate(brainObject.getModificationDate())\n
+      elif field_upper == \'UID\' and hasattr(brainObject, \'getUid\'):\n
+        ical_item_dict[\'UID\'] = brainObject.getUid()\n
+      elif field_upper == \'COMPONENT\':\n
+        if hasattr(brainObject, \'getPortalType\'):\n
+          ical_item_dict[\'COMPONENT\'] = context.Base_getICalComponent(brainObject)\n
+        else:\n
+          ical_item_dict[\'COMPONENT\'] = \'journal\'\n
+      elif field_upper == \'URL\' and hasattr(brainObject, \'absolute_url\'):\n
+        ical_item_dict[\'URL\'] = brainObject.absolute_url() + \'/view\'\n
+      elif field_upper == \'DTSTAMP\':\n
+        ical_item_dict[\'DTSTAMP\'] = convertDate(now)\n
+      elif field_upper == \'DTSTART\':\n
+        if hasattr(line.getBrain(), \'getCreationDate\'):\n
+          ical_item_dict[\'DTSTART\'] = convertDate(brainObject.getCreationDate())\n
+        else:\n
+          ical_item_dict[\'DTSTART\'] = convertDate(now)\n
+      elif field_upper == \'DTEND\':\n
+        ical_item_dict[\'DTEND\'] = ical_item_dict[\'DTSTART\']\n
+      elif field_upper == \'CATEGORIES\' and ical_item_dict[\'COMPONENT\'] != \'journal\' and \\\n
+           hasattr(brainObject, \'getPortalType\'):\n
+        ical_item_dict[\'CATEGORIES\'] = context.Base_getICalCategory(brainObject)\n
+      elif field_upper == \'STATUS\' and ical_item_dict[\'COMPONENT\'] != \'journal\'  and \\\n
+           hasattr(brainObject, \'getPortalType\'):\n
+        ical_item_dict[\'STATUS\'] = context.Base_getICalStatus(brainObject)\n
+      elif field_upper == \'PERCENT-COMPLETE\' and ical_item_dict[\'COMPONENT\'] == \'todo\' and \\\n
+           hasattr(brainObject, \'getPortalType\'):\n
+        ical_item_dict[\'PERCENT-COMPLETE\'] = context.Base_getICalPercentComplete(brainObject)\n
+\n
+  # check and process\n
+  if ical_item_dict[\'DTSTART\'] is None:\n
+    ical_item_dict[\'DTSTART\'] = ical_item_dict[\'CREATED\']\n
+  if ical_item_dict[\'DTEND\'] is None:\n
+    ical_item_dict[\'DTEND\'] = ical_item_dict[\'DTSTART\']\n
+\n
+  # check and fix for todo and event\n
+  if ical_item_dict[\'COMPONENT\'] == \'todo\':\n
+    status = ical_item_dict.get(\'STATUS\', False)\n
+    if status:\n
+      status = status.upper()\n
+      ical_item_dict[\'STATUS\'] = status\n
+      if status not in allowed_status_list_todo:\n
+        raise ValueError(\'ICal status %s is not allowed\' % status)\n
+      if status == \'COMPLETED\':\n
+        if not ical_item_dict.get(\'PERCENT-COMPLETE\', False):\n
+          ical_item_dict[\'PERCENT-COMPLETE\'] = 100\n
+        if not ical_item_dict.get(\'COMPLETED\', False):\n
+          ical_item_dict[\'COMPLETED\'] = ical_item_dict[\'DTEND\']\n
+    else:\n
+      ical_item_dict[\'STATUS\'] = \'NEEDS-ACTION\'\n
+      if not ical_item_dict.get(\'PERCENT-COMPLETE\', False):\n
+          ical_item_dict[\'PERCENT-COMPLETE\'] = 0\n
+  elif ical_item_dict[\'COMPONENT\'] == \'event\':\n
+    status = ical_item_dict.get(\'STATUS\', False)\n
+    if not status:\n
+      ical_item_dict[\'STATUS\'] = \'TENTATIVE\'\n
+  items.append(ical_item_dict)\n
+\n
+return context.Listbox_renderAsICal(items=items)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>label_list, line_list</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>label_list</string>
+                            <string>line_list</string>
+                            <string>DateTime</string>
+                            <string>now</string>
+                            <string>allowed_field_list</string>
+                            <string>allowed_status_list_todo</string>
+                            <string>related_column_map</string>
+                            <string>convertDate</string>
+                            <string>ical_column_mapping</string>
+                            <string>_getiter_</string>
+                            <string>enumerate</string>
+                            <string>index</string>
+                            <string>column_item</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>column_header</string>
+                            <string>_write_</string>
+                            <string>related_column</string>
+                            <string>None</string>
+                            <string>items</string>
+                            <string>line</string>
+                            <string>brainObject</string>
+                            <string>column_item_list</string>
+                            <string>ical_item_dict</string>
+                            <string>header</string>
+                            <string>value_tuple</string>
+                            <string>hasattr</string>
+                            <string>value</string>
+                            <string>isinstance</string>
+                            <string>field</string>
+                            <string>field_upper</string>
+                            <string>context</string>
+                            <string>False</string>
+                            <string>status</string>
+                            <string>ValueError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_asICal</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

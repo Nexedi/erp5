@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,17 +66,21 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Figure out if it is an event or a todo.\n
+  Figure out if it is an journal, event or a todo.\n
   Sample implementation: Task is a todo, event is an event, \n
-  anything else is an event too.\n
+  anything else is an journal.\n
 """\n
+portal_type = None\n
+if brainObject is not None:\n
+  portal_type = brainObject.getPortalType()\n
+else:\n
+  portal_type = context.getPortalType()\n
 \n
-ptype = context.getPortalType()\n
-if ptype == \'Task\':\n
+if portal_type == \'Task\':\n
   return \'todo\'\n
-if ptype in context.getPortalEventTypeList():\n
+elif portal_type in context.getPortalEventTypeList():\n
   return \'event\'\n
-return \'event\'\n
+return \'journal\'\n
 </string> </value>
         </item>
         <item>
@@ -96,7 +97,7 @@ return \'event\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>brainObject=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,15 +117,17 @@ return \'event\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>brainObject</string>
+                            <string>None</string>
+                            <string>portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>ptype</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,7 +139,9 @@ return \'event\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
