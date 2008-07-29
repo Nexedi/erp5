@@ -89,7 +89,15 @@ def getSubLineList(obj):\n
     sub_list.extend(getSubLineList(x))\n
   return sub_list\n
 \n
-return context.Delivery_getODTDataDict(getSourceReference, getSubLineList)\n
+data_dict = context.Delivery_getODTDataDict(getSourceReference, getSubLineList)\n
+order = context.getCausalityValue(portal_type=(\'Sale Order\', \'Purchase Order\'))\n
+if order is not None:\n
+  order_date = order.getStopDate()\n
+  if context.getPortalType().startswith(\'Sale\'):\n
+    order_date = order.getStartDate()\n
+  data_dict.update(order_reference=order.getReference(),\n
+                   order_date=order_date)\n
+return data_dict\n
 </string> </value>
         </item>
         <item>
@@ -142,6 +150,10 @@ return context.Delivery_getODTDataDict(getSourceReference, getSubLineList)\n
                             <string>getSubLineList</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>data_dict</string>
+                            <string>order</string>
+                            <string>None</string>
+                            <string>order_date</string>
                           </tuple>
                         </value>
                     </item>
