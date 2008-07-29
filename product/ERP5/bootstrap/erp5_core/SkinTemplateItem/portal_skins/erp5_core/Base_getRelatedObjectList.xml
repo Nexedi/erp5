@@ -137,6 +137,12 @@ return category_tool.getRelatedValueList(context, base_category_list, portal_typ
             <value> <string>Base_getRelatedObjectList</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
