@@ -89,7 +89,7 @@ for res in method(aggregate_uid=uid, **kw):\n
   resource_value = catalog(uid=res.resource_uid)\n
   history.edit(\n
       #uid = catalog(uid=res.uid).getTitle(),\n
-      date=res.date,\n
+      date=res.getDate(),\n
       node_title=node_value is not None and node_value.getTitle() or None,\n
       section_title=section_value is not None and section_value.getTitle() or None,\n
       resource_title=resource_value is not None and resource_value.getTitle() or None,\n
@@ -191,6 +191,12 @@ return history_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Item_getTrackingList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
