@@ -26,7 +26,7 @@ class ExtensibleTraversableMixIn:
     def __bobo_traverse__(self, request, name):
       """
         If no subobject is found through Folder API
-        then try to lookup the object by invoking getDocumentValue
+        then try to lookup the object by invoking _getExtensibleContent
       """
       # Normal traversal
       try:
