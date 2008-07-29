@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>my_test</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script creates assignments based on the fast input information.\n
+  It should take into account any assignment which were already created\n
+  so that they are not duplicated.\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+portal = context.getPortalObject()\n
+person_module = context.getPortalObject().person_module\n
+items = []\n
+for line in listbox:\n
+  if line.has_key(\'listbox_key\') and line[\'last_name\'] not in (\'\', None):\n
+    line_id = int(line[\'listbox_key\'])\n
+    item = {}\n
+    item[\'id\'] = line_id\n
+   # item[\'title\']= line[\'title\']\n
+    item[\'first_name\'] = line[\'first_name\']\n
+    item[\'last_name\'] = line[\'last_name\']\n
+    item[\'start_date\'] = line[\'start_date\']\n
+    item[\'default_birthplace_address_city\']= line[\'default_birthplace_address_city\']\n
+    item[\'function\'] = line[\'function\']\n
+    item[\'choice\'] = line[\'choice\']\n
+    items.append(item)\n
+items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+context_obj = context.getObject()\n
+if context_obj.getPortalType()==\'M0 Bis\':\n
+   context_obj= context_obj.getParentValue()\n
+   form_id = \'M0Bis_view\'\n
+if context_obj.getDuration():\n
+  duration = context_obj.getDuration()\n
+  duration_length = int(duration.split(\' \').pop(0))\n
+else:\n
+  duration_length = int(\'99\')\n
+date = context_obj.getDate()\n
+beginning_date = context_obj.getBeginningDate()\n
+y = beginning_date.year()\n
+m = beginning_date.month()\n
+d = beginning_date.day()\n
+stop_year = y+duration_length\n
+\n
+# create corresponding assignment\n
+for item in items:\n
+  portal = context.getPortalObject()\n
+  new_items=[]\n
+#if the person in the fast input is a new person, create assignment\n
+  if item[\'choice\']==\'_action_create\':\n
+    person_module = context.getPortalObject().person_module\n
+#    query = ComplexQuery(Query(title=person_title),\n
+#                 Query(birth_date=item[\'start_date\']),\n
+#                 Query(birthplace_city=item[\'default_birthplace_address_city\']),\n
+#                 operator="AND")\n
+#    best_candidate_list=list(context.portal_catalog(portal_type=\'Person\',\n
+#                                        query=query))\n
+#verify that the new person is not selected more than once in the fast input \n
+    new_items_list = filter(lambda x:(x[\'first_name\']==item[\'first_name\'] \n
+                           and x[\'last_name\']==item[\'last_name\']\n
+                           and x[\'start_date\']==item[\'start_date\'] \n
+                           and x[\'default_birthplace_address_city\']==item[\'default_birthplace_address_city\']),items)\n
+    person_title = item[\'first_name\'] + \' \' + item[\'last_name\']\n
+#if the new person is selected only once then create the person and then the assignment\n
+    if len(new_items_list)==1:\n
+      person_third_party = person_module.newContent(portal_type=\'Person\',\n
+                                                   title=person_title,\n
+                                                   first_name=item[\'first_name\'],\n
+                                                   last_name =item[\'last_name\'],\n
+                                                   start_date=item[\'start_date\'],\n
+                                                   password=\'secret\',\n
+                                        default_birthplace_address_city=item[\'default_birthplace_address_city\'])\n
+      person_third_party_assignment = person_third_party.newContent(\\\n
+          portal_type=\'Assignment\',\n
+          function=item[\'function\'],\n
+          destination_form_value=context_obj,\n
+          start_date=context_obj.getBeginningDate(),\n
+          stop_date="%04d/%02d/%02d" % (stop_year, m, d),\n
+        )\n
+      person_third_party_assignment.openSubmit()\n
+#      if item[\'function\']==\'corporation/executive\':\n
+#         new_group = portal.portal_categories.group.newContent(portal_type=\'Category\',\n
+#                                                               id=context_obj.getReference())\n
+#         new_group.setCodification(new_group.getId())\n
+#         context_obj.setGroup(context_obj.getReference())\n
+#if the person is selected more than once,create the person only once and then create the assignment\n
+    elif len(new_items_list)>1:\n
+      new_items.append(new_items_list[0])\n
+      if item[\'id\']==new_items_list[0][\'id\']:\n
+        person_item =  person_module.newContent(portal_type =\'Person\',\n
+                                            first_name=new_items_list[0][\'first_name\'],\n
+                                            last_name=new_items_list[0][\'last_name\'],\n
+                                            start_date=new_items_list[0][\'start_date\'],\n
+                           default_birthplace_address_city=new_items_list[0][\'default_birthplace_address_city\'])\n
+        person_item_asgt = person_item.newContent(\\\n
+            portal_type=\'Assignment\',\n
+            function=item[\'function\'],\n
+            destination_form_value=context_obj,\n
+            start_date=context_obj.getBeginningDate(),\n
+            stop_date="%04d/%02d/%02d" % (stop_year, m, d),\n
+          )\n
+        person_item_asgt.openSubmit()\n
+        new_items_assgt_list =filter(lambda x:(x[\'first_name\']==item[\'first_name\'] \n
+                                     and x[\'last_name\'] ==item[\'last_name\'] \n
+                                     and x[\'start_date\']==item[\'start_date\']\n
+                                  and x[\'default_birthplace_address_city\']==item[\'default_birthplace_address_city\'] and x[\'function\']!=item[\'function\']),new_items_list)\n
+        for w in new_items_assgt_list:\n
+          w_assgmnt = person_item.newContent(\\\n
+              portal_type=\'Assignment\',\n
+              function=w[\'function\'],\n
+              destination_form_value=context_obj,\n
+              start_date=context_obj.getBeginningDate(),\n
+              stop_date="%04d/%02d/%02d" % (stop_year, m, d),\n
+            )\n
+          w_assgmnt.openSubmit()   \n
+  elif item[\'choice\']!=\'_action_create\':\n
+    result_list = portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
+                                        relative_url=item[\'choice\'])\n
+    function_relative_url = \'/\'.join((\'function\', item[\'function\']))\n
+    destination_form_uid = context.portal_categories.destination_form.getUid()\n
+    for object in result_list:\n
+      asst_list = [x.getObject() for x in context.portal_catalog(parent_uid=object.getUid(),\n
+                                                                 portal_type=\'Assignment\',\n
+                                                                 function_relative_url=function_relative_url,\n
+                                                                 destination_form_uid=context_obj.getUid())]\n
+      if asst_list ==[]:\n
+        assgment = object.newContent(\\\n
+            portal_type=\'Assignment\',\n
+            function=item[\'function\'],\n
+            destination_form_value=context_obj,\n
+            start_date=context_obj.getBeginningDate(),\n
+            stop_date="%04d/%02d/%02d" % (stop_year, m, d),\n
+          )\n
+        assgment.openSubmit()\n
+      else:\n
+        pass\n
+role_type = \'Assignment\' \n
+if context_obj.getPortalType()==\'M0\':\n
+ form_id = \'M0_view\'\n
+elif context_obj.getPortalType()==\'P0\':\n
+ form_id = \'P0_view\'\n
+ignore_layout = 0\n
+editable_mode = 1\n
+ignore_layout = int(ignore_layout)\n
+editable_mode = int(editable_mode)\n
+message = role_type.replace(\' \', \'+\') + \'(s)+added.\'\n
+redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
+                                  context.absolute_url(),\n
+                                  form_id,\n
+                                  ignore_layout,\n
+                                  editable_mode,\n
+                                  message)\n
+# return to the feature module\n
+return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>ComplexQuery</string>
+                            <string>Query</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>person_module</string>
+                            <string>items</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>int</string>
+                            <string>line_id</string>
+                            <string>item</string>
+                            <string>_write_</string>
+                            <string>context_obj</string>
+                            <string>form_id</string>
+                            <string>duration</string>
+                            <string>duration_length</string>
+                            <string>date</string>
+                            <string>beginning_date</string>
+                            <string>y</string>
+                            <string>m</string>
+                            <string>d</string>
+                            <string>stop_year</string>
+                            <string>new_items</string>
+                            <string>filter</string>
+                            <string>new_items_list</string>
+                            <string>person_title</string>
+                            <string>len</string>
+                            <string>person_third_party</string>
+                            <string>person_third_party_assignment</string>
+                            <string>person_item</string>
+                            <string>person_item_asgt</string>
+                            <string>new_items_assgt_list</string>
+                            <string>w</string>
+                            <string>w_assgmnt</string>
+                            <string>result_list</string>
+                            <string>function_relative_url</string>
+                            <string>destination_form_uid</string>
+                            <string>object</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>asst_list</string>
+                            <string>assgment</string>
+                            <string>role_type</string>
+                            <string>ignore_layout</string>
+                            <string>editable_mode</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>M0_setAssignmentList</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script collects *all* filled properties in the M0\n
+request_eform and creates a new Organisation record.\n
+"""\n
+\n
+# Initalize some useful variables\n
+\n
+request_eform = state_change[\'object\']\n
+portal = request_eform.getPortalObject()\n
+organisation_module = portal.organisation_module\n
+date = request_eform.getDate()\n
+# get duration length of the company\n
+duration = request_eform.getDuration()\n
+duration_length = int(duration.split(\' \').pop(0))\n
+beginning_date = request_eform.getBeginningDate()\n
+year = beginning_date.year()\n
+month = beginning_date.month()\n
+day = beginning_date.day()\n
+stop_year = year + duration_length\n
+# Create a new organisation based on eform data\n
+# we suppose here that all data in the form has\n
+# been validated - ex. by a constraint on the\n
+# validate transition or by any guard script\n
+organisation = organisation_module.newContent(portal_type=\'Organisation\')\n
+organisation.edit(\n
+  title=request_eform.getTitle(),\n
+  corporate_name=request_eform.getName(),\n
+  default_address_street_address=request_eform.getWorkAddress(),\n
+  default_address_city=request_eform.getDefaultAddressCity(),\n
+  social_form=\'%s\' % request_eform.getLegalForm().lower(),\n
+  price_currency=\'currency_module/XOF\',\n
+  site=\'dakar/pikine_guediawaye/tribunal\', #XXX this should not be hardcoded\n
+  start_date=request_eform.getBeginningDate(),\n
+  stop_date="%04d/%02d/%02d" % (stop_year, month, day),\n
+  social_capital=request_eform.getCapital(),\n
+  creation=request_eform.getCreationCheck(),\n
+  purchase=request_eform.getPurchaseCheck(),\n
+  contribution=request_eform.getContributionCheck(),\n
+  other=request_eform.getOtherCheck(),\n
+  other_reason=request_eform.getOtherCheckInfo(),\n
+)\n
+# if activity field on M0 too small, get activity from M0 bis\n
+M0_bis_list = [x.getObject() for x in request_eform.contentValues(portal_type=\'M0 Bis\')]\n
+if len(M0_bis_list) and request_eform.getActivityCheck():\n
+  m0_bis_activity_list = [m0_bis.getM0BisActivityFreeText() for m0_bis in M0_bis_list]\n
+  m0_bis_activities = \',\'.join(m0_bis_activity_list)\n
+  organisation.edit(activity_free_text=\',\'.join((request_eform.getActivityFreeText(), m0_bis_activities)))\n
+else:\n
+  organisation.edit(activity_free_text=request_eform.getActivityFreeText())\n
+\n
+# Custom method used to create custom-made corporate_registration_code for the companies\n
+def attachLocationYearInfo(last_id):\n
+  location_info = request_eform.getSite().split(\'/\')[0]\n
+  if location_info == \'dakar\':\n
+    location_initials = \'DKR\'\n
+  elif location_info == \'Thies\':\n
+    location_initials = \'TH\'\n
+  elif location_info == \'Saint-Louis\':\n
+    location_initials = \'SL\'\n
+  year = str(date.year())\n
+  if request_eform.getMoralPerson():\n
+    if request_eform.getLegalForm() and request_eform.getLegalForm().lower() == \'gie\':\n
+      type_of_form =\'C\'\n
+    else:\n
+      type_of_form = \'B\'\n
+  elif request_eform.getSecondCompany():\n
+    type_of_form = \'M\'\n
+  elif request_eform.getBranch():\n
+    type_of_form = \'E\'\n
+  else:\n
+    type_of_form = \'M\'\n
+  attach_info = \'SN\' + location_initials + year + type_of_form\n
+  last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
+  new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
+  return (\'-\'.join([\'SN\', location_initials, year,\n
+    type_of_form,new_corporate_registration_code]))\n
+\n
+# We shall now allocate a new registry number\n
+# using custom method attachLocationYearInfo\n
+# we use corporate_registry for corporations and\n
+# merchant_registry for merchants.\n
+# the id_group is extended with the group path so that\n
+# each local registry has a different sequence\n
+default_address_city = request_eform.getDefaultAddressCity()\n
+new_registry_number = request_eform.portal_ids.generateNewId(\n
+                                     id_group = \'sn-%s\' % request_eform.getGroup(),\n
+                                     method = attachLocationYearInfo)\n
+\n
+# Open all assignemnts that are in open_submitted state\n
+person_module = context.getPortalObject().person_module\n
+destination_form_uid = context.portal_categories.destination_form.getUid()\n
+assignment_list = [assignment.getObject() for assignment in context.portal_catalog(portal_type=\'Assignment\',\n
+                      validation_state = \'open_submitted\',\n
+                      destination_form_uid = request_eform.getUid())]\n
+for assignment in assignment_list:\n
+  assignment.open()\n
+  assignment.edit(destination_value=organisation,\n
+                   corporate_registration_code=new_registry_number)\n
+\n
+# Changes roles when secondaries organisations are created and update the organisation with\n
+# the corresponding corporate_registration_code number\n
+if request_eform.getMoralPerson():\n
+  organisation.edit(role=\'entreprise/siege\',\n
+                   corporate_registration_code=new_registry_number,\n
+  geographic_incorporate_code =\'-\'.join(str(new_registry_number).split(\'-\')[0:2]))\n
+  request_eform.edit(corporate_registration_code = new_registry_number)\n
+elif request_eform.getBranch():\n
+  organisation_list = [organisation.getObject() for organisation in\\\n
+      organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
+  for org in organisation_list:\n
+    organisation.edit(succursale_value = organisation,\n
+                  role=\'entreprise/succursale\')\n
+    request_eform.edit(succursale_value = organisation)\n
+elif request_eform.getSecondCompany():\n
+  organisation_list = [organisation.getObject() for organisation in \\\n
+      organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
+  for org in organisation_list:\n
+    organisation.edit(agence_value = organisation,\n
+                      role = \'entreprise/agence\')\n
+    request_eform.edit(agence_value = organisation)\n
+else:\n
+  organisation.edit(role = \'entreprise/siege\',\n
+                corporate_registration_code = request_eform.getCorporateRegistrationCode(),\n
+                description = "Harmonisation d\'une personne morale")\n
+\n
+#Activate Organisation and update security\n
+organisation.activerEntreprise()\n
+organisation.updateLocalRolesOnSecurityGroups()\n
+# Update the request_eform with the allocated number\n
+request_eform.edit(registration_number = new_registry_number,\n
+                   second_registration_number = new_registry_number,\n
+                   second_date = request_eform.getDate(),\n
+                   second_place = request_eform.getDefaultAddressCity(),\n
+)\n
+# Update the registration date of the request_eform with the time when the registry officer\n
+#validates the transition\n
+history_list = context.portal_workflow.getInfoFor(request_eform,\'history\', wf_id=\'egov_form_validation_workflow\')\n
+for history in history_list:\n
+  if history[\'action\'] == \'validate_action\':\n
+    request_eform.edit(registration_date=history[\'time\'],\n
+                       second_registration_date=history[\'time\'])\n
+# Get all M0 Bis attached to the request_eform and update them\n
+for M0_bis in M0_bis_list:\n
+  M0_bis.edit(title = request_eform.getTitle(),\n
+              second_registration_number = new_registry_number,\n
+              second_date = request_eform.getDate(),\n
+              second_place = request_eform.getDefaultAddressCity(),\n
+              second_registration_date = request_eform.getRegistrationDate(),\n
+              source_reference = request_eform.getSourceReference(),\n
+              corporate_registration_code=new_registry_number)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>request_eform</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>organisation_module</string>
+                            <string>date</string>
+                            <string>duration</string>
+                            <string>int</string>
+                            <string>duration_length</string>
+                            <string>beginning_date</string>
+                            <string>year</string>
+                            <string>month</string>
+                            <string>day</string>
+                            <string>stop_year</string>
+                            <string>organisation</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>M0_bis_list</string>
+                            <string>len</string>
+                            <string>m0_bis</string>
+                            <string>m0_bis_activity_list</string>
+                            <string>m0_bis_activities</string>
+                            <string>attachLocationYearInfo</string>
+                            <string>default_address_city</string>
+                            <string>new_registry_number</string>
+                            <string>context</string>
+                            <string>person_module</string>
+                            <string>destination_form_uid</string>
+                            <string>assignment</string>
+                            <string>assignment_list</string>
+                            <string>str</string>
+                            <string>organisation_list</string>
+                            <string>org</string>
+                            <string>history_list</string>
+                            <string>history</string>
+                            <string>M0_bis</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>createOrganisationFromM0</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

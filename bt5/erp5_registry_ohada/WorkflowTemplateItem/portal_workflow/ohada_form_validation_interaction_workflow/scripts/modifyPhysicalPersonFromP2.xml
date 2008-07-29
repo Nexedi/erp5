@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script collects *all* filled properties in the P2\n
+request_eform and updates the person and the organisation already created with the P0.\n
+"""\n
+\n
+# Initalize some useful variables\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+request_eform = state_change[\'object\']\n
+portal = request_eform.getPortalObject()\n
+organisation_module = portal.organisation_module\n
+person_module = portal.person_module\n
+\n
+date = request_eform.getDate()\n
+#Custom method used to create custom-made corporate_registration_codes for the companies\n
+def attachLocationYearInfo(last_id):\n
+  location_info = request_eform.getSite().split(\'/\')[0]\n
+  if location_info == \'dakar\':\n
+    location_initials = \'DKR\'\n
+  elif location_info == \'Thies\':\n
+    location_initials = \'TH\'\n
+  elif location_info == \'Saint-Louis\':\n
+    location_initials = \'SL\'\n
+  year = str(date.year())\n
+  type_of_form = \'M\'\n
+  attach_info = \'SN\' + location_initials + year + type_of_form\n
+  last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
+  new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
+  return (\'-\'.join([\'SN\', location_initials, year, type_of_form,new_corporate_registration_code]))\n
+\n
+# We shall now allocate a new registry number\n
+# using the custom method attachLocationYearInfo\n
+# we use corporate_registry for corporations and\n
+# merchant_registry for merchants.\n
+# the id_group is extended with the group path so that\n
+# each local registry has a different sequence\n
+default_address_city = request_eform.getPlace()\n
+new_registry_number = request_eform.portal_ids.generateNewId(\n
+        id_group=\'sn-%s\' % request_eform.getGroup(), method=attachLocationYearInfo)\n
+#variable used to store activity of the organisation,activities should be separated with commas, and no space between them\n
+activity_list=[]\n
+request_eform.setTitle(request_eform.getOwnerFirstName()+\' \'+request_eform.getOwnerLastName())\n
+#build a query to search for the merchant\n
+query=ComplexQuery(Query(title=request_eform.getTitle()),\n
+             Query(birth_date=request_eform.getOwnerBirthday()),\n
+             Query(birthplace_city=request_eform.getOwnerBirthplace()),\n
+             operator="AND")\n
+result=[person.getObject() for person in context.portal_catalog(portal_type=\'Person\',query=query)]\n
+# Modify person based on properties filled in P2\n
+for person in result:\n
+  person.edit(first_name=request_eform.getOwnerFirstName(),\n
+                last_name=request_eform.getOwnerLastName(),\n
+                start_date=request_eform.getOwnerBirthday(),\n
+                default_birthplace_address_city=request_eform.getOwnerBirthplace(),\n
+                default_address_street_address=request_eform.getOwnerAddress(),\n
+                nationality=request_eform.getOwnerCitizenship())\n
+  if request_eform.getOwnerMarriedCheck():\n
+    person.edit(marital_status=\'married\')\n
+  elif request_eform.getOwnerDivorcedCheck():\n
+    person.edit(marital_status=\'divorced\')\n
+  elif request_eform.getOwnerSingleCheck():\n
+    person.edit(marital_status=\'single\')\n
+  elif request_eform.getOwnerWidowerCheck():\n
+    person.edit(marital_status=\'widowed\')\n
+  # Modify also the person\'s organisation whether its activities are changed, or its\n
+  #address, or its corporate name or whether the P2 form is used to create another\n
+  #company for the person\n
+  if request_eform.getCompanyModifications():\n
+    organisation_list = [organisation.getObject() for organisation in \\\n
+        organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
+    for organisation in organisation_list:\n
+      activity_free_text = organisation.getActivityFreeText()\n
+      activity_list = activity_free_text and activity_free_text.split(\',\') or []\n
+      if request_eform.getTransferCheck():\n
+        organisation.edit(default_address_street_address = request_eform.getCompanyAddress())\n
+        organisation.getDefaultAddress().transfer()\n
+\n
+      elif request_eform.getActivityCheck():\n
+        if request_eform.getCompanyModifiedRemovedActivities() != None:\n
+          removed_activities_list = request_eform.getCompanyModifiedRemovedActivities().split(\',\')\n
+          for removed_activities in removed_activities_list:\n
+            if removed_activities in activity_list:\n
+              activity_list.remove(removed_activities)\n
+              organisation.edit(activity_free_text = \',\'.join(activity_list))\n
+        elif request_eform.getCompanyModifiedAddedActivities() != None:\n
+          activity_list.append(request_eform.getCompanyModifiedAddedActivities())\n
+          organisation.edit(activity_free_text = \',\'.join(activity_list))\n
+\n
+      elif request_eform.getCompanyModifiedName() != None:\n
+        if request_eform.getCompanyOldName() == None:\n
+          organisation_module = context.getPortalObject().organisation_module\n
+          second_organisation = organisation_module.newContent(portal_type=\'Organisation\')\n
+          second_organisation.edit(title=request_eform.getCompanyModifiedName(),\n
+                                   corporate_name = request_eform.getCompanyModifiedName(),\n
+                                   corporate_registration_code = new_registry_number,\n
+                                   activity_free_text = request_eform.getCompanyModifiedAddedActivities(),\n
+                                   role=\'commerce/siege\',)\n
+          assgt = person.newContent(portal_type=\'Assignment\')\n
+          assgt.edit(function = \'commerce/commercant\',\n
+                     destination_form_value = request_eform,\n
+                     destination_value = second_organisation)\n
+          assgt.openSubmit()\n
+          assgt.open()\n
+        else:\n
+          organisation.edit(title = request_eform.getCompanyModifiedName(),\n
+                            corporate_name = request_eform.getCompanyModifiedName())\n
+  #If the person has secondaries organisations,\n
+  #modify the secondaries organisations for the person\n
+  elif request_eform.getEstablishmentModification():\n
+    organisation_list = [organisation.getObject() for organisation in \\\n
+        organisation_module.searchFolder(corporate_registration_code=request_eform.getNewCorporateRegistrationCode())]\n
+    for organisation in organisation_list:\n
+      if request_eform.getClosingCheck():\n
+        organisation.getDefaultAddress().close()\n
+      elif request_eform.getTransferCheck():\n
+        organisation.edit(default_address_street_address = request_eform.getCompanyAddress())\n
+        organisation.getDefaultAddress().transfer()\n
+      elif request_eform.getBuyersName() != None:\n
+        organisation.getDefaultAddress().sell()\n
+      else:\n
+        organisation.edit(activity_free_text = request_eform.getModifiedAddedActivities())\n
+        organisation.getDefaultAddress().modify()\n
+# Update the request_eform with the allocated number\n
+request_eform.edit(registration_number = new_registry_number)\n
+# Update the registration date of the request_eform with the time when the registry officer\n
+#validates the transition\n
+history_list = context.portal_workflow.getInfoFor(request_eform,\n
+                                                  \'history\',\n
+                                                  wf_id=\'egov_form_validation_workflow\')\n
+for history in history_list:\n
+  if history[\'action\'] == \'validate_action\':\n
+    request_eform.edit(registration_date=history[\'time\'])\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>ComplexQuery</string>
+                            <string>Query</string>
+                            <string>_getitem_</string>
+                            <string>request_eform</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>organisation_module</string>
+                            <string>person_module</string>
+                            <string>date</string>
+                            <string>attachLocationYearInfo</string>
+                            <string>default_address_city</string>
+                            <string>new_registry_number</string>
+                            <string>activity_list</string>
+                            <string>query</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>context</string>
+                            <string>person</string>
+                            <string>result</string>
+                            <string>organisation</string>
+                            <string>organisation_list</string>
+                            <string>activity_free_text</string>
+                            <string>None</string>
+                            <string>removed_activities_list</string>
+                            <string>removed_activities</string>
+                            <string>second_organisation</string>
+                            <string>assgt</string>
+                            <string>history_list</string>
+                            <string>history</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>modifyPhysicalPersonFromP2</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

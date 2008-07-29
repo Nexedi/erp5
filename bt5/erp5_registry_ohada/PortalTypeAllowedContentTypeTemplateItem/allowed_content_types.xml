@@ -1,0 +1,74 @@
+<allowed_content_type_list>
+ <portal_type id="M0">
+  <item>File</item>
+  <item>M0 Bis</item>
+ </portal_type>
+ <portal_type id="M0 Module">
+  <item>M0</item>
+ </portal_type>
+ <portal_type id="M2">
+  <item>File</item>
+  <item>M2 Bis</item>
+ </portal_type>
+ <portal_type id="M2 Module">
+  <item>M2</item>
+ </portal_type>
+ <portal_type id="M4 Module">
+  <item>M4</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>Address</item>
+  <item>Link</item>
+  <item>Bank Account</item>
+  <item>Fax</item>
+  <item>Telephone</item>
+  <item>Credit Card</item>
+  <item>Document</item>
+  <item>Email</item>
+  <item>Image</item>
+  <item>File</item>
+ </portal_type>
+ <portal_type id="Organisation Module">
+  <item>Organisation</item>
+ </portal_type>
+ <portal_type id="P0">
+  <item>File</item>
+ </portal_type>
+ <portal_type id="P0 Module">
+  <item>P0</item>
+ </portal_type>
+ <portal_type id="P2">
+  <item>File</item>
+ </portal_type>
+ <portal_type id="P2 Module">
+  <item>P2</item>
+ </portal_type>
+ <portal_type id="P4">
+  <item>File</item>
+ </portal_type>
+ <portal_type id="P4 Module">
+  <item>P4</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Address</item>
+  <item>Assignment</item>
+  <item>Telephone</item>
+  <item>Image</item>
+  <item>Credit Card</item>
+  <item>File</item>
+  <item>Email</item>
+  <item>Fax</item>
+  <item>Link</item>
+  <item>Career</item>
+  <item>Bank Account</item>
+ </portal_type>
+ <portal_type id="Person Module">
+  <item>Person</item>
+ </portal_type>
+ <portal_type id="S1 Module">
+  <item>S1</item>
+ </portal_type>
+ <portal_type id="S5 Module">
+  <item>S5</item>
+ </portal_type>
+</allowed_content_type_list>

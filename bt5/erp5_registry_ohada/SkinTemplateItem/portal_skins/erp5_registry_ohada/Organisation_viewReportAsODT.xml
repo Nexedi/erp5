@@ -1,0 +1,686 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAMmKrzaD94KcTwEAAK0HAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVNbsMg
+EEb3OYXF3qbtqrLiRGqlniA9wASPHSQMiBmi+PbFkfLTNqqa1uxAgveGwf5Yrg+DKfYYSDvbiMfq
+QRRolWu17Rvxvnkrn8V6tVgOYHWHxPVpUKR9ls7TRsRgawekqbYwINWsaufRtk7FAS3Xn9fXk2m1
+KC7gThss08IwFhcZthpKHj02Arw3WgGnOuXettXRVV0rKsYDi8vuLhpTeuBdI6SQd8luU16d7XQf
+w7EIepLEwJG2EPLgQSk0mKYuSBVDmI6YupjdlUXQGQeMmeDe+ejTJxAz4YPrA1K+m55KzwZn50w2
+uB6gR5IvmgfwlNVxJ/trXlC0099TRV2pa8HvaviHfKsthPG2xsDoIpcK1A7vVExhJ6c4uAlOR+S/
+5cXPXOLRIM2OHZBhtmzb7OKwtaANST4NK2/7ueHzNhaZ05t7bu1SfntyVx9QSwECFAAUAAAACADJ
+iq82g/eCnE8BAACtBwAAFQAAAAAAAAAAAAAAAAAAAAAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsF
+BgAAAAABAAEAQwAAAIIBAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\'  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+          xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+          xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+          tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+         office:version=\'1.0\'\n
+\t tal:define="person_object_list python:here.contentValues(filter={\'portal_type\':\'Person\'});">\n
+  <office:scripts/>\n
+  <office:font-face-decls>\n
+    <style:font-face svg:font-family="\'URW Bookman L\'" style:name=\'URW Bookman L\' style:font-pitch=\'variable\'/>\n
+    <style:font-face svg:font-family="\'DejaVu Sans\'" style:font-family-generic=\'roman\' style:name=\'DejaVu Sans\' style:font-pitch=\'variable\'/>\n
+    <style:font-face svg:font-family="\'DejaVu Sans\'" style:font-family-generic=\'swiss\' style:name=\'DejaVu Sans1\' style:font-pitch=\'variable\'/>\n
+    <style:font-face svg:font-family="\'DejaVu Sans\'" style:font-family-generic=\'system\' style:name=\'DejaVu Sans2\' style:font-pitch=\'variable\'/>\n
+  </office:font-face-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:family=\'table\' style:name=\'Tableau1\'>\n
+      <style:table-properties table:align=\'margins\' style:width=\'6.6924in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau1.A\'>\n
+      <style:table-column-properties style:rel-column-width=\'12520*\' style:column-width=\'1.2785in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau1.B\'>\n
+      <style:table-column-properties style:rel-column-width=\'18172*\' style:column-width=\'1.8556in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau1.C\'>\n
+      <style:table-column-properties style:rel-column-width=\'34843*\' style:column-width=\'3.5583in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.B1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0347in solid #000000\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.C1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'0.0361in double #000000\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.B2\'>\n
+      <style:table-cell-properties fo:border-left=\'0.0347in solid #000000\' fo:border-right=\'0.0347in solid #000000\' fo:border-bottom=\'0.0069in solid #000000\' fo:padding=\'0.0382in\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.C2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'Tableau1.3\'>\n
+      <style:table-row-properties style:min-row-height=\'0.2958in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.B4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'none\' fo:border-left=\'0.0347in solid #000000\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.C4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table\' style:name=\'Tableau2\'>\n
+      <style:table-properties table:align=\'left\' style:width=\'6.6924in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau2.A\'>\n
+      <style:table-column-properties style:column-width=\'2.2306in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau2.C\'>\n
+      <style:table-column-properties style:column-width=\'2.2313in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.A1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.B1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0347in solid #000000\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.C1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'0.0361in double #000000\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.A2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.B2\'>\n
+      <style:table-cell-properties fo:border-left=\'0.0347in solid #000000\' fo:border-right=\'0.0347in solid #000000\' fo:border-bottom=\'0.0069in solid #000000\' fo:padding=\'0.0382in\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.C2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.A4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.B4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'none\' fo:border-left=\'0.0347in solid #000000\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.C4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table\' style:name=\'Tableau4\'>\n
+      <style:table-properties table:align=\'left\' style:width=\'6.6924in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau4.A\'>\n
+      <style:table-column-properties style:column-width=\'1.7563in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau4.B\'>\n
+      <style:table-column-properties style:column-width=\'1.5111in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau4.C\'>\n
+      <style:table-column-properties style:column-width=\'1.1938in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau4.D\'>\n
+      <style:table-column-properties style:column-width=\'2.2313in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.A1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.B1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0347in solid #000000\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.C1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0347in solid #000000\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.D1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'0.0361in double #000000\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.A2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.B2\'>\n
+      <style:table-cell-properties fo:border-left=\'0.0347in solid #000000\' fo:border-right=\'none\' fo:border-bottom=\'0.0069in solid #000000\' fo:padding=\'0.0382in\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.C2\'>\n
+      <style:table-cell-properties fo:border-left=\'0.0347in solid #000000\' fo:border-right=\'0.0347in solid #000000\' fo:border-bottom=\'0.0069in solid #000000\' fo:padding=\'0.0382in\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.D2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.A4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.B4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'none\' fo:border-left=\'0.0347in solid #000000\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.C4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'none\' fo:border-left=\'0.0347in solid #000000\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau4.D4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table\' style:name=\'Tableau3\'>\n
+      <style:table-properties table:align=\'left\' style:width=\'6.6924in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau3.A\'>\n
+      <style:table-column-properties style:column-width=\'2.2306in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau3.C\'>\n
+      <style:table-column-properties style:column-width=\'2.2313in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.A1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.B1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'0.0361in double #000000\' fo:border-left=\'0.0347in solid #000000\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.C1\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'0.0361in double #000000\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0347in solid #000000\' style:border-line-width-top=\'0.0007in 0.0347in 0.0007in\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.A2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.B2\'>\n
+      <style:table-cell-properties fo:border-left=\'0.0347in solid #000000\' fo:border-right=\'0.0347in solid #000000\' fo:border-bottom=\'0.0069in solid #000000\' fo:padding=\'0.0382in\' fo:border-top=\'none\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.C2\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' fo:border-bottom=\'0.0069in solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.A4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-top=\'none\' fo:border-left=\'0.0361in double #000000\' style:border-line-width-left=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.B4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0347in solid #000000\' fo:border-top=\'none\' fo:border-left=\'0.0347in solid #000000\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.C4\'>\n
+      <style:table-cell-properties fo:padding=\'0.0382in\' fo:border-right=\'0.0361in double #000000\' fo:border-top=\'none\' style:border-line-width-right=\'0.0007in 0.0347in 0.0007in\' fo:border-left=\'none\' style:border-line-width-bottom=\'0.0007in 0.0347in 0.0007in\' fo:border-bottom=\'0.0361in double #000000\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P1\'>\n
+      <style:text-properties style:font-size-asian=\'10.5pt\' fo:text-transform=\'uppercase\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P2\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' style:justify-single-word=\'false\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:type=\'center\' style:position=\'3.122in\'/>\n
+          <style:tab-stop style:type=\'right\' style:position=\'6.678in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:family=\'paragraph\' style:name=\'P3\'>\n
+      <style:paragraph-properties fo:text-align=\'center\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P4\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' fo:margin-bottom=\'0in\' style:justify-single-word=\'false\' fo:margin-top=\'0.1965in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:type=\'center\' style:position=\'0.9665in\'/>\n
+          <style:tab-stop style:type=\'center\' style:position=\'3.122in\'/>\n
+          <style:tab-stop style:type=\'right\' style:position=\'6.678in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:font-size-asian=\'10.5pt\' fo:text-transform=\'uppercase\' fo:font-size=\'10pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P5\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' fo:margin-bottom=\'0in\' style:justify-single-word=\'false\' fo:margin-top=\'0.7874in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:type=\'center\' style:position=\'4.378in\'/>\n
+          <style:tab-stop style:type=\'right\' style:position=\'6.678in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:font-size-asian=\'16pt\' style:font-size-complex=\'16pt\' fo:text-transform=\'uppercase\' fo:font-size=\'16pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P6\'>\n
+      <style:paragraph-properties fo:margin-bottom=\'0.7874in\' fo:margin-top=\'0.3937in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'4.5445in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P7\'>\n
+      <style:paragraph-properties>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'2.422in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P8\'>\n
+      <style:paragraph-properties fo:margin-bottom=\'0in\' fo:margin-top=\'0.3937in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'2.422in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P9\'>\n
+      <style:paragraph-properties fo:margin-bottom=\'0in\' fo:margin-top=\'1.1811in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'4.2335in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:font-name=\'URW Bookman L\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P10\'>\n
+      <style:paragraph-properties>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'4.2335in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:font-size-asian=\'9pt\' style:font-size-complex=\'9pt\' style:font-name=\'URW Bookman L\' fo:font-size=\'9pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P11\'>\n
+      <style:paragraph-properties>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'4.2335in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:font-size-asian=\'8pt\' style:font-size-complex=\'8pt\' fo:font-size=\'8pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P12\'>\n
+      <style:paragraph-properties fo:text-align=\'end\' fo:margin-bottom=\'0.3937in\' fo:break-before=\'page\' style:justify-single-word=\'false\' fo:margin-top=\'0in\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P13\'>\n
+      <style:paragraph-properties fo:text-align=\'center\' style:justify-single-word=\'false\'/>\n
+      <style:text-properties style:font-size-asian=\'10pt\' style:font-size-complex=\'10pt\' fo:text-transform=\'uppercase\' fo:font-size=\'10pt\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P14\'>\n
+      <style:paragraph-properties fo:text-align=\'center\' style:justify-single-word=\'false\'/>\n
+      <style:text-properties style:font-weight-complex=\'normal\' fo:text-transform=\'none\' style:font-size-complex=\'10pt\' style:font-size-asian=\'10pt\' fo:font-variant=\'normal\' style:font-weight-asian=\'normal\' fo:font-size=\'10pt\' fo:font-weight=\'normal\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Table_20_Contents\' style:family=\'paragraph\' style:name=\'P15\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' style:justify-single-word=\'false\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P16\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' style:justify-single-word=\'false\'/>\n
+      <style:text-properties style:font-name=\'URW Bookman L\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P17\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' style:justify-single-word=\'false\'/>\n
+      <style:text-properties style:font-weight-complex=\'normal\' fo:text-transform=\'none\' style:font-size-complex=\'10pt\' style:font-size-asian=\'10pt\' fo:font-variant=\'normal\' style:font-weight-asian=\'normal\' fo:font-size=\'10pt\' fo:font-weight=\'normal\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard_20_Gras\' style:family=\'paragraph\' style:name=\'P18\'>\n
+      <style:paragraph-properties fo:text-align=\'start\' fo:margin-bottom=\'0.3937in\' fo:break-before=\'page\' style:justify-single-word=\'false\' fo:margin-top=\'0in\'/>\n
+      <style:text-properties style:font-name=\'URW Bookman L\' fo:text-transform=\'uppercase\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard\' style:family=\'paragraph\' style:name=\'P19\'>\n
+      <style:paragraph-properties fo:margin-bottom=\'0.3937in\' fo:margin-top=\'0.3937in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'1.778in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard\' style:family=\'paragraph\' style:name=\'P20\'>\n
+      <style:paragraph-properties>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position=\'2.289in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard\' style:family=\'paragraph\' style:name=\'P21\'>\n
+      <style:paragraph-properties>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:type=\'center\' style:position=\'3.989in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties fo:font-style=\'italic\' style:font-style-asian=\'italic\' style:font-style-complex=\'italic\'/>\n
+    </style:style>\n
+    <style:style style:parent-style-name=\'Standard\' style:family=\'paragraph\' style:name=\'P22\'>\n
+      <style:paragraph-properties fo:margin-bottom=\'0in\' fo:margin-top=\'0.7874in\'>\n
+        <style:tab-stops>\n
+          <style:tab-stop style:type=\'center\' style:position=\'3.989in\'/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties fo:font-style=\'normal\' style:font-style-asian=\'normal\' style:font-style-complex=\'normal\'/>\n
+    </style:style>\n
+    <style:style style:family=\'text\' style:name=\'T1\'>\n
+      <style:text-properties style:font-name=\'DejaVu Sans1\'/>\n
+    </style:style>\n
+    <style:style style:family=\'text\' style:name=\'T2\'>\n
+      <style:text-properties style:font-name=\'URW Bookman L\'/>\n
+    </style:style>\n
+    <style:style style:family=\'text\' style:name=\'T3\'>\n
+      <style:text-properties style:font-weight-complex=\'bold\' fo:font-weight=\'bold\' style:font-weight-asian=\'bold\'/>\n
+    </style:style>\n
+    <style:style style:family=\'text\' style:name=\'T4\'>\n
+      <style:text-properties style:font-size-complex=\'8pt\' style:font-size-asian=\'8pt\' style:font-weight-complex=\'bold\' style:font-weight-asian=\'bold\' fo:font-size=\'8pt\' fo:font-weight=\'bold\'/>\n
+    </style:style>\n
+    <style:style style:family=\'graphic\' style:name=\'gr1\'>\n
+      <style:graphic-properties svg:stroke-width=\'0.0398in\' style:horizontal-rel=\'paragraph\' fo:padding-right=\'0.0193in\' fo:padding-left=\'0.0193in\' draw:wrap-influence-on-position=\'once-concurrent\' style:run-through=\'foreground\' style:vertical-pos=\'from-top\' style:wrap=\'run-through\' fo:padding-bottom=\'0.0193in\' style:number-wrapped-paragraphs=\'1\' draw:textarea-vertical-align=\'middle\' style:horizontal-pos=\'from-left\' fo:padding-top=\'0.0193in\' style:vertical-rel=\'paragraph\' draw:textarea-horizontal-align=\'center\' style:flow-with-text=\'false\'/>\n
+    </style:style>\n
+    <style:style style:family=\'graphic\' style:name=\'gr2\'>\n
+      <style:graphic-properties style:wrap=\'run-through\' draw:wrap-influence-on-position=\'once-concurrent\' style:run-through=\'foreground\' style:vertical-pos=\'from-top\' style:horizontal-rel=\'paragraph\' style:number-wrapped-paragraphs=\'no-limit\' style:horizontal-pos=\'from-left\' draw:textarea-vertical-align=\'middle\' style:vertical-rel=\'paragraph\' draw:textarea-horizontal-align=\'center\' style:flow-with-text=\'false\'/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <office:text>\n
+      <text:sequence-decls>\n
+        <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
+        <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Table\'/>\n
+        <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Text\'/>\n
+        <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
+      </text:sequence-decls>\n
+      <text:p text:style-name=\'P1\'>Registre de commerce</text:p>\n
+      <text:p text:style-name=\'Standard_20_Gras\'/>\n
+      <text:p text:style-name=\'P2\'>\n
+        <draw:line svg:y2=\'0.3583in\' svg:x1=\'0.0193in\' draw:style-name=\'gr1\' draw:z-index=\'0\' svg:x2=\'6.6972in\' svg:y1=\'0.3583in\' text:anchor-type=\'paragraph\' draw:text-style-name=\'P3\'>\n
+          <text:p/>\n
+        </draw:line>\n
+        <text:tab/>D\xc3\xa9cret du 23 Juillet 1976<text:tab/>Mod\xc3\xa8le R.C. 7</text:p>\n
+      <text:p text:style-name=\'P4\'>\n
+        <text:tab/>Tribunal de Commerce<text:line-break/>\n
+        <text:tab/>de Dakar</text:p>\n
+      <text:p text:style-name=\'P5\'>\n
+        <draw:line svg:y2=\'0.0646in\' svg:x1=\'0.6181in\' draw:style-name=\'gr2\' draw:z-index=\'1\' svg:x2=\'1.2846in\' svg:y1=\'0.0646in\' text:anchor-type=\'paragraph\' draw:text-style-name=\'P3\'>\n
+          <text:p/>\n
+        </draw:line>\n
+        <text:tab/>Copie des Inscriptions<text:line-break/>\n
+        <text:tab/>port\xc3\xa9es au<text:line-break/>\n
+        <text:tab/>Registre Analytique</text:p>\n
+      <text:p text:style-name=\'P8\'>\n
+      <text:tab/>Sous le n<text:span text:style-name=\'T1\'>\xc2\xb0 <tal:block tal:replace="here/getCorporateRegistrationCode">&lt;RC></tal:block></text:span>\n
+      </text:p>\n
+      <text:p text:style-name=\'P8\'>\n
+        <text:tab/>au nom de <tal:block tal:replace="here/getTitle">&lt;DENOMINATION></tal:block></text:p>\n
+      <text:p text:style-name=\'P8\'>\n
+        <text:tab/>\xc3\xa0 <tal:block tal:replace="here/getDefaultAddressText">&lt;LIEU></tal:block></text:p>\n
+      <text:p text:style-name=\'P9\'>\n
+        <text:tab/>N\xc2\xb0 <tal:block tal:replace="here/getCorporateRegistrationCode">&lt;RCNUM></tal:block></text:p>\n
+      <text:p text:style-name=\'P10\'>\n
+        <text:tab/>du Registre Chronologique</text:p>\n
+      <text:p text:style-name=\'P11\'>Timbre du Tribunal</text:p>\n
+      <text:p text:style-name=\'P11\'/>\n
+      <text:p text:style-name=\'P12\'>N<text:span text:style-name=\'T2\'>\xc2\xb0<tal:block tal:replace="here/getCorporateRegistrationCode"> &lt;RCNUM></tal:block> DU REGISTRE</text:span>\n
+      </text:p>\n
+      <table:table table:style-name=\'Tableau1\' table:name=\'Tableau1\'>\n
+        <table:table-column table:style-name=\'Tableau1.A\'/>\n
+        <table:table-column table:style-name=\'Tableau1.B\'/>\n
+        <table:table-column table:style-name=\'Tableau1.C\'/>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau1.A1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>Date</text:p>\n
+            <text:p text:style-name=\'P14\'>de l\'enregistrement au registre chronologique</text:p>\n
+            <text:p text:style-name=\'P14\'>1</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau1.B1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>Nom Commercial</text:p>\n
+            <text:p text:style-name=\'P14\'>Raison de commerce<text:line-break/>Raison sociale<text:line-break/>ou D\xc3\xa9nomination, Enseigne, Firme<text:line-break/>2</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau1.C1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>Nom, Pr\xc3\xa9noms, Pseudonymes, Etat-Civil</text:p>\n
+            <text:p text:style-name=\'P14\'>Qualit\xc3\xa9, Domicile, Nationalit\xc3\xa9<text:line-break/>des Commer\xc3\xa7ants ou des Associ\xc3\xa9s, ou Tiers autoris\xc3\xa9s \xc3\xa0 administrer, g\xc3\xa9rer ou signer pour la soci\xc3\xa9t\xc3\xa9</text:p>\n
+            <text:p text:style-name=\'P14\'>3</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+\t<table:table-row tal:repeat="pers here/getDestinationRelatedValueList">\n
+          <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'Table_20_Contents\'><tal:block tal:replace="python: here.Base_FormatDate(here.getCreationDate())">&lt;date1></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau1.B2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'P15\'><tal:block tal:replace="pers/getDestinationTitle">&lt;nom_commercial1></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau1.C2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'P15\'>\n
+\t\t\t  <tal:block tal:replace="pers/getFirstName">&lt;prenoms> </tal:block><text:p/>\n
+\t\t\t  <tal:block tal:replace="pers/getLastName">&lt;nom> </tal:block> \n
+\t\t\t  <text:p/>\n
+\t\t\t  <tal:block tal:replace="pers/getFunctionTitle"></tal:block>\n
+\t\t\t  <text:p/>n\xc3\xa9 le: \n
+\t\t\t<tal:block tal:replace="python:here.Base_FormatDate(pers.getStartDate())"></tal:block> <text:p/> \xc3\xa0 \n
+\t\t\t  <tal:block tal:replace="pers/getDefaultBirthplaceText"></tal:block>\n
+\t\t\t  \n
+\t\t   </text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table>\n
+      <text:p text:style-name=\'P16\'/>\n
+      <table:table table:style-name=\'Tableau2\' table:name=\'Tableau2\'>\n
+        <table:table-column table:style-name=\'Tableau2.A\' table:number-columns-repeated=\'2\'/>\n
+        <table:table-column table:style-name=\'Tableau2.C\'/>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau2.A1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>Etablissements</text:p>\n
+            <text:p text:style-name=\'P14\'>pr\xc3\xa9c\xc3\xa9demment ou actuellement exploit\xc3\xa9s dans le ressort d\'autres tribunaux</text:p>\n
+            <text:p text:style-name=\'P14\'>8</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau2.B1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>Capital Social Apports</text:p>\n
+            <text:p text:style-name=\'P17\'>a)en nature</text:p>\n
+            <text:p text:style-name=\'P17\'>b)en num\xc3\xa9raire</text:p>\n
+            <text:p text:style-name=\'P17\'>c)par les actionnaires</text:p>\n
+            <text:p text:style-name=\'P17\'>d)par les commanditaires</text:p>\n
+            <text:p text:style-name=\'P17\'>e)par les fondateurs</text:p>\n
+            <text:p text:style-name=\'P14\'>f)par actions \xc3\xa0 droits de valeurs<text:line-break/>9</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau2.C1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>Nature de l\'entreprise</text:p>\n
+            <text:p text:style-name=\'P14\'>ou de la soci\xc3\xa9t\xc3\xa9</text:p>\n
+            <text:p text:style-name=\'P14\'>commencement et fin</text:p>\n
+            <text:p text:style-name=\'P14\'>10</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau2.A2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'Table_20_Contents\'><tal:block tal:replace="here/getTitle">&lt;eta1></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau2.B2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'P15\'><tal:block tal:replace="python:here.getSocialCapital()">&lt;capital1></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau2.C2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'P15\'><tal:block tal:replace="here/getSocialFormTitle">&lt;nature1></tal:block>\n
+\t\t  <text:p/>\n
+\t\t  <tal:block tal:replace="python: here.Base_FormatDate(here.getStartDate())">&lt;nature1></tal:block>\n
+\t\t  <text:p/>--\n
+\t\t  <tal:block tal:replace="python: here.Base_FormatDate(here.getStopDate())">&lt;nature1></tal:block>\n
+\t\t  </text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+\t<table:table-row>\n
+\t\t<table:table-cell table:style-name=\'Tableau2.A2\' office:value-type=\'string\'>\n
+\t\t\t<text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+\t\t</table:table-cell>\n
+\t\t<table:table-cell table:style-name=\'Tableau2.B2\' office:value-type=\'string\'>\n
+\t\t\t<text:p text:style-name=\'P15\'></text:p>\n
+\t\t</table:table-cell>\n
+\t\t<table:table-cell table:style-name=\'Tableau2.C2\' office:value-type=\'string\'>\n
+\t\t\t<text:p text:style-name=\'P15\'></text:p>\n
+\t\t</table:table-cell>\n
+\t</table:table-row>\n
+\t<table:table-row>\n
+\t\t<table:table-cell table:style-name=\'Tableau2.A4\' office:value-type=\'string\'>\n
+\t\t\t<text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+\t\t</table:table-cell>\n
+\t\t<table:table-cell table:style-name=\'Tableau2.B4\' office:value-type=\'string\'>\n
+\t\t\t<text:p text:style-name=\'P15\'></text:p>\n
+\t\t</table:table-cell>\n
+\t\t<table:table-cell table:style-name=\'Tableau2.C4\' office:value-type=\'string\'>\n
+\t\t\t<text:p text:style-name=\'P15\'></text:p>\n
+\t\t</table:table-cell>\n
+        </table:table-row>\n
+      </table:table>\n
+      <text:p text:style-name=\'Standard\'/>\n
+      <text:p text:style-name=\'P18\'>Analytique</text:p>\n
+      <table:table table:style-name=\'Tableau4\' table:name=\'Tableau4\'>\n
+        <table:table-column table:style-name=\'Tableau4.A\'/>\n
+        <table:table-column table:style-name=\'Tableau4.B\'/>\n
+        <table:table-column table:style-name=\'Tableau4.C\'/>\n
+        <table:table-column table:style-name=\'Tableau4.D\'/>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau4.A1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>OBJET DU COMMERCE</text:p>\n
+            <text:p text:style-name=\'P14\'>Objet de la soci\xc3\xa9t\xc3\xa9</text:p>\n
+            <text:p text:style-name=\'P14\'>4</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau4.B1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>ETABLISSEMENT</text:p>\n
+            <text:p text:style-name=\'P14\'>Principal ou Si\xc3\xa9ge Social<text:line-break/>5</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau4.C1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'> ROLE</text:p>\n
+            <text:p text:style-name=\'P14\'> Succursale ou Agences<text:line-break/>6</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau4.D1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>FONDES DE POUVOIRS</text:p>\n
+            <text:p text:style-name=\'P14\'>Directeur de succursales (noms,pr\xc3\xa9noms, qualit\xc3\xa9, \xc3\xa9tat-civil et nationalit\xc3\xa9)</text:p>\n
+            <text:p text:style-name=\'P14\'>7</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+\t<table:table-row tal:repeat="org python:context.ERP5RegistryOhada_getRelatedOrganisationList()" >\n
+\t\t<table:table-cell table:style-name=\'Tableau4.A2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'Table_20_Contents\'><tal:block tal:replace="org/getActivityTitle">&lt;objet1></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau4.B2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'P15\'><tal:block tal:replace="org/getTitle"></tal:block><text:p/>\n
+\t\t\t  <tal:block tal:replace="python:org.getDefaultAddressText()">&lt;siege1></tal:block></text:p>\n
+          </table:table-cell>\n
+\t  <table:table-cell table:style-name=\'Tableau4.C2\' office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'Table_20_Contents\'><tal:block tal:replace="org/getTitle"></tal:block>\n
+\t\t\t  <text:p/><tal:block tal:replace="org/getRoleTitle" tal:on-error="nothing">&lt;succursale1></tal:block></text:p>\n
+          </table:table-cell>\n
+\t  <table:table-cell table:style-name=\'Tableau4.D2\' tal:repeat="org_agence python:filter(lambda x: x.getFunction()==\'corporation/executive\',org.getDestinationRelatedValueList())" office:value-type=\'string\'>\n
+\t\t  <text:p text:style-name=\'Table_20_Contents\' ><tal:block tal:replace="python:org_agence.getFirstName()"></tal:block>\n
+\t\t\t  <text:p/><tal:block tal:replace="python:org_agence.getLastName()" tal:on-error="nothing"></tal:block>\n
+\t\t<text:p/>n\xc3\xa9 le <tal:block tal:replace="python:org_agence.Base_FormatDate(org_agence.getStartDate())" tal:on-error="nothing"></tal:block>\n
+\t\t\t  <text:p/>\xc3\xa0 <tal:block tal:replace="python:org_agence.getDefaultBirthplaceText()" tal:on-error="nothing">\n
+\t\t\t\t  &lt;fond\xc3\xa9_de_pouvoir1></tal:block></text:p>\n
+          </table:table-cell>\n
+        </table:table-row>    \n
+      </table:table>\n
+      <text:p text:style-name=\'Standard\'/>\n
+      <table:table table:style-name=\'Tableau3\' table:name=\'Tableau3\'>\n
+        <table:table-column table:style-name=\'Tableau3.A\' table:number-columns-repeated=\'2\'/>\n
+        <table:table-column table:style-name=\'Tableau3.C\'/>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau3.A1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>BREVETS D\'INVENTION</text:p>\n
+            <text:p text:style-name=\'P14\'>EXPLOITES</text:p>\n
+            <text:p text:style-name=\'P14\'>11</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.B1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>MARQUES</text:p>\n
+            <text:p text:style-name=\'P14\'>de fabrique d\xc3\xa9pos\xc3\xa9es, employ\xc3\xa9es<text:line-break/>12</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.C1\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'P13\'>observations</text:p>\n
+            <text:p text:style-name=\'P14\'>(R\xc3\xa9gime matrimonial, autorisation de commerce, liquidation faillite,nantissement, date de d\xc3\xa9p\xc3\xb4t des actes, titre et date du journal de cessation de commerce</text:p>\n
+            <text:p text:style-name=\'P14\'>13</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau3.A2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.B2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.C2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau3.A2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.B2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.C2\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'Tableau3.A4\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.B4\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:style-name=\'Tableau3.C4\' office:value-type=\'string\'>\n
+            <text:p text:style-name=\'Table_20_Contents\'></text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table>\n
+      <text:p text:style-name=\'P19\'>\n
+        <text:tab/>pour copie certifi\xc3\xa9e conforme au Registre analytique</text:p>\n
+      <text:p text:style-name=\'P20\'>\n
+\t      <text:tab/>A <tal:block tal:replace="here/getDefaultAddressCity">&lt;LIEU_SIGNATURE></tal:block>, le <tal:block tal:replace="python: here.Base_FormatDate(request.date)">&lt;DATE_SIGNATURE></tal:block></text:p>\n
+      <text:p text:style-name=\'P21\'>\n
+        <text:tab/>Le Greffier en Chef</text:p>\n
+      <text:p text:style-name=\'P22\'>\n
+        <text:span text:style-name=\'T3\'>\n
+          <text:tab/>\n
+        </text:span>\n
+        <text:span text:style-name=\'T4\'>Timbre du Tribunal</text:span>\n
+      </text:p>\n
+    </office:text>\n
+  </office:body>\n
+</office:document-content>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.text</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Organisation_viewReportAsODT</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Organisation_getODTStylesheet</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Corporate Identity Report</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This script tries to find most appropriate persons\n
+  based on first name, last name, etc.\n
+\n
+  Current approach:\n
+  - find people with given first name and last name\n
+  - put in first position the one with same date\n
+\n
+  Issues: this will fail if many people share the same name.\n
+  Query performance will be miserable if the birthday is not \n
+  take into account. Also, if the system is not able to\n
+  search approximate choice, it will fail too because\n
+  users will just create persons.\n
+\n
+  TODO: improve the script so that the script always try\n
+  to find something to display. This may require to \n
+  do some full text search if the keyword based search fails.\n
+"""\n
+\n
+# Define portal\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+from string import capitalize\n
+from string import upper\n
+from string import lower\n
+portal = context.getPortalObject()\n
+result = []\n
+\n
+person_module = context.getPortalObject().person_module\n
+\n
+# Find candidate list\n
+#title=\' \'.join((person_firstname,person_last_name))\n
+if person_first_name.find(\'-\') != -1 and person_last_name.find(\' \') != -1:\n
+  person_first_name = person_first_name.replace(\'-\',\'%\')\n
+  person_last_name = person_last_name.replace(\' \',\'%\')\n
+elif person_first_name.find(\' \') != -1 and person_last_name.find("\'") != -1:\n
+  person_first_name = person_first_name.replace(\' \',\'%\')\n
+  person_last_name = person_last_name.replace("\'",\'%\')\n
+elif person_first_name.find(\' \') !=-1 and person_last_name.find(\' \') != -1:\n
+  person_first_name = person_first_name.replace(\' \',\'%\')\n
+  person_last_name = person_last_name.replace(\' \',\'%\')\n
+elif person_first_name.find(\'-\') != -1 or person_first_name.find(\' \') != -1:\n
+  person_first_name = person_first_name.replace(\'-\',\'%\')\n
+  person_first_name = person_first_name.replace(\' \',\'%\')\n
+elif person_last_name.find(\'-\')!=-1 or person_last_name.find(\' \') != -1 or person_last_name.find("\'") != -1:\n
+  person_last_name = person_last_name.replace(\'-\',\'%\')\n
+  person_last_name = person_last_name.replace(\' \',\'%\')\n
+  person_last_name = person_last_name.replace("\'",\'%\')\n
+\n
+person_title = \' \'.join((person_first_name,person_last_name))\n
+person_title_reversed = \' \'.join((person_last_name,person_first_name))\n
+if person_start_date == None or person_birthplace == None:\n
+  query = ComplexQuery(Query(title = person_title),\n
+                       Query(title = person_title_reversed),\n
+                       Query(title = person_first_name),\n
+                       Query(title = person_last_name),\n
+                       operator = "OR")\n
+else:\n
+  query = ComplexQuery(Query(title = person_title),\n
+                       ComplexQuery(\n
+                         Query(title = person_title),\n
+                         Query(birth_date = person_start_date),\n
+                         operator = "AND"),\n
+                       ComplexQuery(\n
+                         Query(title = person_title),\n
+                         Query(birthplace_city = person_birthplace),\n
+                         operator = "AND"),\n
+                       ComplexQuery(\n
+                         Query(start_date = person_start_date),\n
+                         Query(birthplace_city = person_birthplace),\n
+                         operator = "AND"),\n
+                       ComplexQuery(\n
+                         Query(title = person_title_reversed),\n
+                         Query(title = person_first_name),\n
+                         Query(title = person_last_name),\n
+                         operator = "OR"),\n
+                       ComplexQuery(\n
+                         Query(title = person_title),\n
+                         Query(birth_date = [DateTime(person_start_date.year(), 1, 1), DateTime(person_start_date.year(), 12, 31),],range = \'minmax\'),\n
+                         operator = "AND"),\n
+                         operator = "OR")\n
+select_expression = \\\n
+"""((title ="%s"))AS result_order\n
+""" % (person_title)\n
+#select_expression = \\\n
+#"""((title ="%s") + (start_date ="%s") + (birthplace_city ="%s"))AS result_order\n
+#""" % (person_title, person_start_date, person_birthplace)\n
+\n
+candidate_list = context.portal_catalog(portal_type = \'Person\',\n
+                                        query = query,\n
+                                        select_expression = select_expression,\n
+                                        sort_on = ((\'result_order\', \'DESC\', \'int\'),),\n
+                                        select_expression_key = \'result_order\')\n
+\n
+for candidate in candidate_list:\n
+  candidate_first_name = candidate.getFirstName()\n
+  candidate_last_name = candidate.getLastName()\n
+  if not candidate_first_name:\n
+    candidate_first_name = \'Pr\xc3\xa9nom non d\xc3\xa9finit\'\n
+  if not candidate_last_name:\n
+    candidate_last_name = \'Nom non d\xc3\xa9finit\'\n
+    \n
+  if candidate.getStartDate()==None and candidate.getDefaultBirthplaceAddressCity()==None:\n
+     candidate_start_date = \'Date non d\xc3\xa9finie\'\n
+     candidate_birthplace_address_city = \'Lieu non d\xc3\xa9fini\'\n
+  elif candidate.getDefaultBirthplaceAddressCity()==None:\n
+     candidate_birthplace_address_city = \'Lieu non d\xc3\xa9fini\'\n
+     candidate_start_date = str(candidate.getStartDate())\n
+  elif candidate.getStartDate()==None:\n
+     candidate_start_date = \'Date non d\xc3\xa9finie\'\n
+     candidate_birthplace_address_city = str(candidate.getDefaultBirthplaceAddressCity())\n
+  else:\n
+     candidate_start_date = str(candidate.getStartDate())\n
+     candidate_birthplace_address_city = str(candidate.getDefaultBirthplaceAddressCity())\n
+  result.append((\' \'.join((candidate_first_name,\n
+                           candidate_last_name,\n
+                           candidate_start_date,\n
+                           candidate_birthplace_address_city)),candidate.getRelativeUrl()))\n
+\n
+# Append extra actions\n
+result.append((\'-\', \'_no_action\'))\n
+result.append((\'New Person\', \'_action_create\'))\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>person_first_name,person_last_name,person_title,person_start_date,person_birthplace</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>person_first_name</string>
+                            <string>person_last_name</string>
+                            <string>person_title</string>
+                            <string>person_start_date</string>
+                            <string>person_birthplace</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>ComplexQuery</string>
+                            <string>Query</string>
+                            <string>string</string>
+                            <string>capitalize</string>
+                            <string>upper</string>
+                            <string>lower</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>result</string>
+                            <string>person_module</string>
+                            <string>person_title_reversed</string>
+                            <string>None</string>
+                            <string>query</string>
+                            <string>DateTime</string>
+                            <string>select_expression</string>
+                            <string>candidate_list</string>
+                            <string>_getiter_</string>
+                            <string>candidate</string>
+                            <string>candidate_first_name</string>
+                            <string>candidate_last_name</string>
+                            <string>candidate_start_date</string>
+                            <string>candidate_birthplace_address_city</string>
+                            <string>str</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PersonModule_getBestCandidateList</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

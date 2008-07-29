@@ -1,0 +1,31 @@
+Assignment | destination_form
+File | aggregate
+M0 | destination_form
+M0 | follow_up
+M2 | destination_form
+M2 | follow_up
+M4 | destination_form
+M4 | follow_up
+Mail Message | follow_up
+Organisation Module | business_application
+Organisation | collateral_parent
+Organisation | inscription_parent
+Organisation | role
+P0 | destination_form
+P0 | follow_up
+P2 | destination_form
+P2 | follow_up
+P4 | destination_form
+P4 | follow_up
+PDF | aggregate
+Person Module | business_application
+Person | collateral_parent
+Person | destination_form
+Person | destination_form
+Person | inscription_parent
+S1 | collateral_parent
+S1 | destination_form
+S1 | follow_up
+S5 | destination_form
+S5 | follow_up
+S5 | inscription_parent

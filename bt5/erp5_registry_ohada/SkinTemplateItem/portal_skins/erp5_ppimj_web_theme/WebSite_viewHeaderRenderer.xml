@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div>\n
+\n
+  <div style="background: url(ppimj_images/int_01.jpg) norepeat; height: 36px;">\n
+    <a name="dessus"></a>\n
+    <IMG SRC="ppimj_images/int_01.jpg" style="width: 700px"/>\n
+  </div>\n
+\n
+  <div style="background: url(ppimj_images/int_02.jpg) norepeat; height: 73px;">\n
+    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"\n
+            width="700" \n
+            height="73"\n
+          codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0">\n
+      <IMG SRC="ppimj_images/int_02.jpg" style="width: 700px"/>\n
+    </object>\n
+  </div>\n
+<div style="background: url(ppimj_images/int_03.jpg) norepeat; height:44px;">\n
+    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"\n
+             width="700" \n
+             height="24"\n
+             >\n
+      <IMG SRC="ppimj_images/int_03.jpg" style="width: 700px"/>\n
+    </object>\n
+  </div>\n
+\n
+\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewHeaderRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

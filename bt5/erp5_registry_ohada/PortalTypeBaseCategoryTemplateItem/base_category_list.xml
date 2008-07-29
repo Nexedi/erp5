@@ -1,0 +1,64 @@
+<base_category_list>
+ <portal_type id="Assignment">
+  <item>destination_form</item>
+ </portal_type>
+ <portal_type id="File">
+  <item>aggregate</item>
+ </portal_type>
+ <portal_type id="M0">
+  <item>destination_form</item>
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="M2">
+  <item>follow_up</item>
+  <item>destination_form</item>
+ </portal_type>
+ <portal_type id="M4">
+  <item>follow_up</item>
+  <item>destination_form</item>
+ </portal_type>
+ <portal_type id="Mail Message">
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>inscription_parent</item>
+  <item>role</item>
+  <item>collateral_parent</item>
+ </portal_type>
+ <portal_type id="Organisation Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="P0">
+  <item>follow_up</item>
+  <item>destination_form</item>
+ </portal_type>
+ <portal_type id="P2">
+  <item>follow_up</item>
+  <item>destination_form</item>
+ </portal_type>
+ <portal_type id="P4">
+  <item>destination_form</item>
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="PDF">
+  <item>aggregate</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>inscription_parent</item>
+  <item>collateral_parent</item>
+  <item>destination_form</item>
+ </portal_type>
+ <portal_type id="Person Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="S1">
+  <item>follow_up</item>
+  <item>destination_form</item>
+  <item>collateral_parent</item>
+ </portal_type>
+ <portal_type id="S5">
+  <item>destination_form</item>
+  <item>inscription_parent</item>
+  <item>follow_up</item>
+ </portal_type>
+</base_category_list>

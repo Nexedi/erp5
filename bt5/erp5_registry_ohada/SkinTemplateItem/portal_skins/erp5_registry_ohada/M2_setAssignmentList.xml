@@ -1,0 +1,303 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>my_test</string> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script creates assignments based on the fast input information.\n
+  It should take into account any assignment which were already created\n
+  so that they are not duplicated.\n
+"""\n
+portal = context.getPortalObject()\n
+person_module = context.getPortalObject().person_module\n
+items = []\n
+for line in listbox:\n
+  if line.has_key(\'listbox_key\') and line[\'last_name\'] not in (\'\', None):\n
+    line_id = int(line[\'listbox_key\'])\n
+    item = {}\n
+    item[\'id\'] = line_id\n
+   # item[\'title\']= line[\'title\']\n
+    item[\'first_name\'] = line[\'first_name\']\n
+    item[\'last_name\'] = line[\'last_name\']\n
+    item[\'start_date\'] = line[\'start_date\']\n
+    item[\'default_birthplace_address_city\']= line[\'default_birthplace_address_city\']\n
+    item[\'function\'] = line[\'function\']\n
+    item[\'choice\'] = line[\'choice\']\n
+    item[\'status\'] = line[\'status\']\n
+    item[\'old_function\'] = line[\'old_function\']\n
+    items.append(item)\n
+items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+context_obj = context.getObject()\n
+if context_obj.getPortalType()==\'M2 Bis\':\n
+   context_obj= context_obj.getParentValue()\n
+   form_id = \'M2Bis_view\'\n
+\n
+# create corresponding assignment\n
+for item in items:\n
+  portal = context.getPortalObject()\n
+  new_items=[]\n
+#if the person in the fast input is a new person, create assignment\n
+  if item[\'status\'] == \'_new_action\' :\n
+    if item[\'choice\'] == \'_action_create\':\n
+      person_module = context.getPortalObject().person_module\n
+      person_title = item[\'first_name\'] + \' \' + item[\'last_name\']\n
+      person_third_party = person_module.newContent(portal_type=\'Person\',\n
+                                                   title=person_title,\n
+                                                   first_name=item[\'first_name\'],\n
+                                                   last_name =item[\'last_name\'],\n
+                                                   start_date=item[\'start_date\'],\n
+                                        default_birthplace_address_city=item[\'default_birthplace_address_city\'])\n
+      person_third_party_assgmnt =person_third_party.newContent(portal_type=\'Assignment\',\n
+                                                                function=item[\'function\'],\n
+                                                              destination_form_value=context_obj)\n
+      person_third_party_assgmnt.openSubmit()\n
+    else:\n
+      result_list = portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
+                                        relative_url=item[\'choice\'])\n
+     \n
+      for object in result_list:\n
+        assgment = object.newContent(portal_type=\'Assignment\',\n
+                                     function=item[\'function\'],\n
+                                     destination_form_value=context_obj)\n
+        assgment.openSubmit()\n
+  elif item[\'status\'] == \'_action_maintain\':\n
+    pass\n
+  elif item[\'status\'] == \'_action_modify\':\n
+    result_list = [x.getObject() for x in portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
+                          relative_url=item[\'choice\'])]\n
+    corporate_registration_code = context_obj.getCorporateRegistrationCode()\n
+    organisation_list = [x.getObject() for x in portal.portal_catalog(parent_uid=portal.organisation_module.getUid(), \n
+                         corporate_registration_code=corporate_registration_code)]\n
+    function_relative_url = \'/\'.join((\'function\', item[\'old_function\']))\n
+    for org in organisation_list:\n
+      for object in result_list:\n
+        destination_uid = context.portal_categories.destination.getUid()\n
+        asst_list = list(context.portal_catalog(parent_uid=object.getUid(),\n
+                                             portal_type=\'Assignment\',\n
+                                             function_relative_url=function_relative_url,\n
+                                             destination_uid=org.getUid()))\n
+        for x in asst_list:\n
+           x.edit(function=item[\'function\'],\n
+                  destination_form_value=context_obj)\n
+  elif item[\'status\']==\'_go_action\':\n
+    result_list = portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
+                                        relative_url=item[\'choice\'])\n
+    corporate_registration_code = context_obj.getCorporateRegistrationCode()\n
+    organisation_list = [x.getObject() for x in portal.portal_catalog(parent_uid=portal.organisation_module.getUid(), \n
+                         corporate_registration_code=corporate_registration_code)]\n
+    for org in organisation_list:\n
+      for object in result_list:\n
+        destination_uid = context.portal_categories.destination.getUid()\n
+        asst_list = list(context.portal_catalog(parent_uid=object.getUid(),\n
+                                              portal_type=\'Assignment\',\n
+                                              destination_uid=org.getUid()))\n
+        for x in asst_list:\n
+          x.edit(destination_form_value=context_obj)\n
+          x.cancel()\n
+role_type = \'Assignment\' \n
+if context_obj.getPortalType()==\'M2\':\n
+ form_id = \'M2_view\'\n
+elif context_obj.getPortalType()==\'P2\':\n
+ form_id = \'P2_view\'\n
+ignore_layout = 0\n
+editable_mode = 1\n
+ignore_layout = int(ignore_layout)\n
+editable_mode = int(editable_mode)\n
+message = role_type.replace(\' \', \'+\') + \'(s)+added.\'\n
+redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
+                                  context.absolute_url(),\n
+                                  form_id,\n
+                                  ignore_layout,\n
+                                  editable_mode,\n
+                                  message)\n
+# return to the feature module\n
+return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>person_module</string>
+                            <string>items</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>int</string>
+                            <string>line_id</string>
+                            <string>item</string>
+                            <string>_write_</string>
+                            <string>context_obj</string>
+                            <string>form_id</string>
+                            <string>new_items</string>
+                            <string>person_title</string>
+                            <string>person_third_party</string>
+                            <string>person_third_party_assgmnt</string>
+                            <string>result_list</string>
+                            <string>object</string>
+                            <string>assgment</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>corporate_registration_code</string>
+                            <string>organisation_list</string>
+                            <string>function_relative_url</string>
+                            <string>org</string>
+                            <string>destination_uid</string>
+                            <string>list</string>
+                            <string>asst_list</string>
+                            <string>role_type</string>
+                            <string>ignore_layout</string>
+                            <string>editable_mode</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>M2_setAssignmentList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

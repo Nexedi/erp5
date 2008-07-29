@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This script is invoked at the end of ingestion process.\n
+  The default behaviour is to receive messages so that they\n
+  are marked as \'New\' and appear in the worklist.\n
+"""\n
+\n
+group_list = context.getGroupList()\n
+function_list = context.getFunctionList()\n
+site_list = context.getSiteList()\n
+classification = context.getClassification()\n
+publication_section_list = context.getPublicationSectionList()\n
+owner = context.getSourceValue()\n
+\n
+# Build metadata dict\n
+metadata = {}\n
+if group_list: metadata[\'group_list\'] = group_list\n
+if function_list: metadata[\'function_list\'] = function_list\n
+if site_list: metadata[\'site_list\'] = site_list \n
+if classification: metadata[\'classification\'] = classification \n
+if publication_section_list: metadata[\'publication_section_list\'] = publication_section_list\n
+\n
+contribution_tool = context.getPortalObject().portal_contributions\n
+\n
+# Ingest attachments\n
+for attachment_item in context.getAttachmentInformationList():\n
+  # We do not care about files without name\n
+  file_name = attachment_item.get(\'file_name\')\n
+  # We do not take into account the message itself\n
+  # XXX - this implementation is not acceptable in\n
+  # the long term. Better approach to defining the\n
+  # body of a message is required\n
+  if file_name and not file_name.startswith(\'part\'):\n
+    index = attachment_item[\'index\']\n
+    data = context.getAttachmentData(index)\n
+    # XXX - too bad we are not using content_type here\n
+    d = contribution_tool.newContent(data=data, file_name=file_name, **metadata)\n
+    context.setAggregateList(context.getAggregateList() + [d.getRelativeUrl()])\n
+\n
+return context.EmailDocument_viewAttachmentListRenderer()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>group_list</string>
+                            <string>function_list</string>
+                            <string>site_list</string>
+                            <string>classification</string>
+                            <string>publication_section_list</string>
+                            <string>owner</string>
+                            <string>metadata</string>
+                            <string>_write_</string>
+                            <string>contribution_tool</string>
+                            <string>_getiter_</string>
+                            <string>attachment_item</string>
+                            <string>file_name</string>
+                            <string>_getitem_</string>
+                            <string>index</string>
+                            <string>data</string>
+                            <string>_apply_</string>
+                            <string>d</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testMailIngestion</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,338 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script collects *all* filled properties in the M2\n
+request_eform and updates the organisation already created with the M0.\n
+"""\n
+# Initalize some useful variables\n
+request_eform = state_change[\'object\']\n
+portal = request_eform.getPortalObject()\n
+organisation_module = portal.organisation_module\n
+person_module = portal.person_module\n
+corporate_registration_code = request_eform.getCorporateRegistrationCode()\n
+new_corporate_name = request_eform.getTitle()\n
+new_headquarters = request_eform.getNewHeadquarters()\n
+old_headquarters = request_eform.getOldHeadquarters()\n
+old_legal_form = request_eform.getOldLegalForm()\n
+old_capital = request_eform.getOldCapital()\n
+added_activities = request_eform.getAddedActivities()\n
+removed_activities = request_eform.getDeletedActivities()\n
+application_date = request_eform.getDate()\n
+company_check = request_eform.getCompanyCheck()\n
+transfer_check = request_eform.getTransferCheck()\n
+transferred_address = request_eform.getTransferredAddress()\n
+closing_check = request_eform.getClosingCheck()\n
+default_address_city = request_eform.getDefaultAddressCity()\n
+new_address = request_eform.getNewAddress()\n
+\n
+caracteristic_property_dict={\\\n
+    \'social_form\':request_eform.getNewLegalForm(),\n
+    \'social_capital\':request_eform.getNewCapital(),\n
+    \'title\':request_eform.getNewTitle(),\n
+  }\n
+\n
+#Custom method used to create custom-made corporate_registration_codes for the companies\n
+def attachLocationYearInfo(last_id):\n
+  location_info = request_eform.getSite().split(\'/\')[0]\n
+  if location_info == \'dakar\':\n
+    location_initials = \'DKR\'\n
+  elif location_info == \'thies\':\n
+    location_initials = \'TH\'\n
+  elif location_info == \'saint-louis\':\n
+    location_initials = \'SL\'\n
+  year = str(application_date.year())\n
+  type_of_form = \'M\'\n
+  attach_info = \'SN\' + location_initials + year + type_of_form\n
+  last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
+  new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
+  return (\'-\'.join([\'SN\', location_initials, year,\n
+    type_of_form,new_corporate_registration_code]))\n
+\n
+# We shall now allocate a new registry number\n
+# using custom method attachLocationYearInfo\n
+# we use corporate_registry for corporations and\n
+# merchant_registry for merchants.\n
+new_registry_number = request_eform.portal_ids.generateNewId(method=attachLocationYearInfo)\n
+\n
+#variable used to store activity of the organisation,activities should be\n
+#separated with commas, and no space between them\n
+# Modify the organisation whether its activities are changed, or its address,\n
+#or its characteristics\n
+activity_list=[]\n
+organisation_list = [organisation.getObject() for organisation in \\\n
+                     organisation_module.searchFolder(corporate_registration_code=corporate_registration_code)]\n
+for organisation in organisation_list:\n
+  if organisation.getActivityFreeText()!= None:\n
+    activity_list = organisation.getActivityFreeText().split(\',\')\n
+  person_module = request_eform.getPortalObject().person_module\n
+  #destination_form_uid = request_eform.portal_categories.destination_form.getUid()\n
+  #person_object_list = [person.getObject() for person in context.portal_catalog(portal_type = \'Assignment\',\n
+  #                                                  destination_form_uid = request_eform.getUid())]\n
+  #for person_object in person_object_list:\n
+  #     person_object.edit(destination_value = organisation)\n
+  if request_eform.getMoralPersonCheck():\n
+    if request_eform.getCharacteristicsCheck():\n
+      for property, value in caracteristic_property_dict.items():\n
+        if value is not None: # check someting has been entered in the property field\n
+          organisation.setProperty(property, value)\n
+    if request_eform.getActivitiesCheck():\n
+      if removed_activities != None:\n
+        removed_activity_list = removed_activities.split(\',\')\n
+        for removed_activity in removed_activity_list:\n
+          if removed_activity in activity_list:\n
+            activity_list.remove(removed_activity)\n
+      if added_activities != None:\n
+        added_activity_list = added_activities.split(\',\')\n
+        for added_activity in added_activity_list:\n
+          if added_activity not in activity_list:\n
+            activity_list.append(added_activity)\n
+      organisation.edit(activity_free_text = \',\'.join(activity_list),\n
+                        org_modification_date = request_eform.getAddedActivitiesDate() or request_eform.getDeletedActivitiesDate())\n
+    if request_eform.getTransferCheck():\n
+      if request_eform.getClosingCheck():\n
+        organisation.edit(default_address_street_address = new_headquarters)\n
+        organisation.getDefaultAddress().close()\n
+      else:\n
+        organisation.edit(default_address_street_address = new_headquarters,\n
+             default_address_city = default_address_city)\n
+        organisation.getDefaultAddress().transfer()\n
+\n
+##Changes in secondaries organisations\n
+new_corporate_registration_code = request_eform.getNewCorporateRegistrationCode()\n
+if new_corporate_registration_code != None:\n
+  second_organisation_list = [organisation.getObject() for organisation in \\\n
+                              organisation_module.searchFolder(corporate_registration_code=new_corporate_registration_code)]\n
+  for second_organisation in second_organisation_list:\n
+    if request_eform.getCompanyCheck() and request_eform.getTransferCheck():\n
+      if request_eform.getClosingCheck():\n
+        second_organisation.edit(org_modification_date = request_eform.getClosedDate())\n
+        second_organisation.getDefaultAddress().close()\n
+      else: \n
+        second_organisation.edit( default_address_street_address = new_address,\n
+                                  default_address_city = default_address_city,\n
+                                  org_modification_date = request_eform.getTransferredDate())\n
+        second_organisation.getDefaultAddress().transfer()\n
+    elif request_eform.getCompanyCheck() and request_eform.getBuyersName() != None:\n
+      second_organisation.edit(org_modification_date = request_eform.getBuyersDate())\n
+      second_organisation.getDefaultAddress().sell()\n
+    else:\n
+      second_organisation.getDefaultAddress().modify()\n
+\n
+# Update the request_eform with the allocated number\n
+request_eform.edit(registration_number = new_registry_number,\n
+                   second_date = application_date,\n
+                   second_registration_number = new_registry_number,\n
+                   second_place = default_address_city)\n
+# Update the registration date of the request_eform with the time when the registry officer\n
+#validates the transition\n
+history_list = request_eform.portal_workflow.getInfoFor(request_eform,\n
+                                                \'history\',\n
+                                                wf_id = \'egov_form_validation_workflow\')\n
+for history in history_list:\n
+  if history[\'action\'] == \'validate_action\':\n
+    request_eform.edit(registration_date = history[\'time\'],\n
+                       second_registration_date = history[\'time\'])\n
+# Get all M2 Bis attached to the request_eform and update them\n
+m2_bis_result = request_eform.contentValues(portal_type=\'M2 Bis\')\n
+m2_bis_list = [form.getObject() for form in m2_bis_result]\n
+\n
+for m2_bis in m2_bis_list:\n
+  if request_eform.getActivityCheck():\n
+    activity_list = organisation.getActivityFreeText().split(\',\')\n
+    added_activities = m2_bis.getActivityFreeText()\n
+    if added_activities:\n
+      added_activity_list = added_activities.split(\',\')\n
+      for added_activity in added_activity_list:\n
+        if added_activity not in activity_list:\n
+          activity_list.append(added_activity)\n
+      organisation.edit(activity_free_text = \',\'.join(activity_list))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>request_eform</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
+                            <string>organisation_module</string>
+                            <string>person_module</string>
+                            <string>corporate_registration_code</string>
+                            <string>new_corporate_name</string>
+                            <string>new_headquarters</string>
+                            <string>old_headquarters</string>
+                            <string>old_legal_form</string>
+                            <string>old_capital</string>
+                            <string>added_activities</string>
+                            <string>removed_activities</string>
+                            <string>application_date</string>
+                            <string>company_check</string>
+                            <string>transfer_check</string>
+                            <string>transferred_address</string>
+                            <string>closing_check</string>
+                            <string>default_address_city</string>
+                            <string>new_address</string>
+                            <string>caracteristic_property_dict</string>
+                            <string>attachLocationYearInfo</string>
+                            <string>new_registry_number</string>
+                            <string>activity_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>organisation</string>
+                            <string>organisation_list</string>
+                            <string>None</string>
+                            <string>property</string>
+                            <string>value</string>
+                            <string>removed_activity_list</string>
+                            <string>removed_activity</string>
+                            <string>added_activity_list</string>
+                            <string>added_activity</string>
+                            <string>new_corporate_registration_code</string>
+                            <string>second_organisation_list</string>
+                            <string>second_organisation</string>
+                            <string>history_list</string>
+                            <string>history</string>
+                            <string>m2_bis_result</string>
+                            <string>form</string>
+                            <string>m2_bis_list</string>
+                            <string>m2_bis</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>modifyOrganisationFromM2</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
