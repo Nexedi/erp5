@@ -5,6 +5,7 @@ Invoice Transaction Rule | divergence
 Invoice Transaction Rule | view
 Invoicing Rule | view
 Purchase Invoice Transaction | apply_trade_condition
+Purchase Invoice Transaction | jump_related_order
 Purchase Invoice Transaction | jump_to_related_purchase_packing_list
 Purchase Invoice Transaction | trade_condition_profile_view
 Purchase Invoice Transaction | view_discount
@@ -13,6 +14,7 @@ Purchase Invoice Transaction | view_tax
 Sale Invoice Transaction | apply_trade_condition
 Sale Invoice Transaction | invoice_item_list
 Sale Invoice Transaction | invoice_print
+Sale Invoice Transaction | jump_related_order
 Sale Invoice Transaction | jump_to_related_sale_packing_list
 Sale Invoice Transaction | payment_condition
 Sale Invoice Transaction | trade_condition_profile_view
