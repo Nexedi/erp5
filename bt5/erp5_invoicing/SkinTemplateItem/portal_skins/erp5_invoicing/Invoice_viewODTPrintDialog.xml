@@ -88,6 +88,7 @@
                     <value>
                       <list>
                         <string>your_target_language</string>
+                        <string>your_international_form</string>
                       </list>
                     </value>
                 </item>
@@ -129,6 +130,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Print Invoice</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
