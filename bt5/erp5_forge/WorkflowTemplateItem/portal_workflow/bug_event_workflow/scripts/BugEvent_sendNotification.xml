@@ -115,7 +115,7 @@ body += """\n
 # Messages Information \n
 message_count = 0\n
 for message in bug.searchFolder(portal_type=\'Bug Line\'):\n
-  if message.getSimulationState() == \'deliveried\':\n
+  if message.getSimulationState() == \'delivered\':\n
     message_count += 1\n
     body += """\n
 ++++++ Message #%s submitted by %s on %s ++++++\n

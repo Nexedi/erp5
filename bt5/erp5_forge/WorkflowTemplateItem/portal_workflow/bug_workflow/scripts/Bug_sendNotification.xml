@@ -73,7 +73,7 @@ person_list = []\n
 \n
 history = state_change.getHistory()\n
 \n
-valid_transaction_list = ["confirm_action", "stop_action", "delivery_action", "set_ready_action"]\n
+valid_transaction_list = ["confirm_action", "stop_action", "deliver_action", "set_ready_action"]\n
 \n
 comment = ""\n
 message = [ h for h in history if h[\'action\'] in valid_transaction_list]\n

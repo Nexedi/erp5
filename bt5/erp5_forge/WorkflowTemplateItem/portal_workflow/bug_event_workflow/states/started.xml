@@ -33,8 +33,8 @@
               <tuple>
                 <string>cancel</string>
                 <string>cancel_action</string>
-                <string>delivery</string>
-                <string>delivery_action</string>
+                <string>deliver</string>
+                <string>deliver_action</string>
               </tuple>
             </value>
         </item>

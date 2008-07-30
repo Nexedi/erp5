@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Delivery</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=delivery_action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>delivery</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,15 +43,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivery_action</string> </value>
+            <value> <string>deliver</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>delivered</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>BugEvent_checkConsistency</string> </value>
+            <value> <string>BugEvent_sendNotification</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
