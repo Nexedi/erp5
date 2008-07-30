@@ -536,7 +536,7 @@ class TestInvoiceMixin(TestPackingListMixin,
     invoice = sequence.get('invoice')
     invoice_line_list = invoice.contentValues(
                             portal_type=self.invoice_line_portal_type)
-    self.assertEquals(1, len(invoice_line_portal_type))
+    self.assertEquals(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]
     self.assertEquals(1, invoice_line.getIntIndex())
     self.assertEquals('1', invoice_line.getReference())
