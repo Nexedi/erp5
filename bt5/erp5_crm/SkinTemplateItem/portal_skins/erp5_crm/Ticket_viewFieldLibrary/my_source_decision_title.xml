@@ -17,6 +17,7 @@
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -78,11 +79,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>base_category</string> </key>
+                    <key> <string>base_category</string> </key>
                     <value> <string>source_decision</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>catalog_index</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>
@@ -98,7 +99,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -113,11 +114,26 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PersonModule_viewPersonList/listbox</string>
+                          <string>Person View</string>
+                        </tuple>
+                        <tuple>
+                          <string>OrganisationModule_viewOrganisationList/listbox</string>
+                          <string>Organisation View</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Supervisor</string> </value>
                 </item>
               </dictionary>
