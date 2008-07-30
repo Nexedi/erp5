@@ -59,6 +59,7 @@ Purchase Packing List Line | view_price
 Purchase Packing List Module | view
 Purchase Packing List | choose_solve_actions
 Purchase Packing List | details
+Purchase Packing List | jump_related_order
 Purchase Packing List | jump_related_purchase_invoice
 Purchase Packing List | jump_related_purchase_order
 Purchase Packing List | packing_list_print
@@ -108,6 +109,7 @@ Sale Packing List Module | workflow_report
 Sale Packing List | choose_solve_actions
 Sale Packing List | container_fast_input
 Sale Packing List | details
+Sale Packing List | jump_related_order
 Sale Packing List | jump_related_sale_invoice
 Sale Packing List | packing_list_print
 Sale Packing List | view
