@@ -2371,6 +2371,36 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(DateTime(2002, 03, 04),
                  invoice_transaction_movement.getStopDate())
 
+  def test_Invoice_viewAsODT(self):
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    invoice = self.portal.getDefaultModule(self.invoice_portal_type).newContent(
+                              portal_type=self.invoice_portal_type,
+                              title='Invoice',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    invoice.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = invoice.Invoice_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
 
 
 #class TestPurchaseInvoice(TestInvoice):
