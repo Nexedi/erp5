@@ -21,11 +21,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliveried</string> </value>
+            <value> <string>delivered</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deliveried</string> </value>
+            <value> <string>Delivered</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
