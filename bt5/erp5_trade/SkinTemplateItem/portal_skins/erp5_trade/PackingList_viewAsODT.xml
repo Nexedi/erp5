@@ -111,7 +111,7 @@ AAA=</string> </value>
       <style:table-column-properties style:rel-column-width=\'5870*\' style:column-width=\'1.7cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'Tableau1.1\'>\n
-      <style:table-row-properties style:min-row-height=\'2.759cm\'/>\n
+      <style:table-row-properties style:min-row-height=\'5.0cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'Tableau1.A1\'>\n
       <style:table-cell-properties fo:padding=\'0cm\' fo:background-color=\'transparent\' fo:border=\'none\'>\n
@@ -161,7 +161,7 @@ AAA=</string> </value>
       <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'0.018cm solid #000000\' fo:border-top=\'none\' fo:border-left=\'0.018cm solid #000000\' fo:border-bottom=\'0.018cm solid #000000\' style:vertical-align=\'middle\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'Tableau1.A2\'>\n
-      <style:table-cell-properties fo:padding=\'0.049cm\' fo:border-right=\'none\' fo:border-top=\'none\' fo:background-color=\'transparent\' fo:border-left=\'none\' fo:border-bottom=\'0.018cm solid #000000\'>\n
+      <style:table-cell-properties fo:padding=\'0.049cm\' fo:border-right=\'none\' fo:border-top=\'none\' fo:background-color=\'#e6e6e6\' fo:border-left=\'none\' fo:border-bottom=\'0.018cm solid #000000\'>\n
         <style:background-image/>\n
       </style:table-cell-properties>\n
     </style:style>\n
@@ -200,7 +200,7 @@ AAA=</string> </value>
       <style:table-column-properties style:rel-column-width=\'5891*\' style:column-width=\'1.707cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'Tableau3.1\'>\n
-      <style:table-row-properties style:row-height=\'0.25cm\'/>\n
+      <style:table-row-properties style:row-height=\'0.5cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'Tableau3.A1\'>\n
       <style:table-cell-properties style:vertical-align=\'middle\' fo:padding=\'0.097cm\' fo:border=\'none\'/>\n

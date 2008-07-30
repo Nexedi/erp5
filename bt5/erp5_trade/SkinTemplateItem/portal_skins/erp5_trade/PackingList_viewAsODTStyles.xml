@@ -54,6 +54,12 @@ AAA=</string> </value>
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -186,7 +192,7 @@ AAA=</string> </value>
     </style:style>\n
     <style:style style:name="Header_20_Title" style:display-name="Header Title" style:family="paragraph" style:parent-style-name="Header_20_right" style:master-page-name="">\n
       <style:paragraph-properties style:page-number="auto" style:shadow="none"/>\n
-      <style:text-properties fo:text-transform="uppercase" fo:font-size="12pt"/>\n
+      <style:text-properties fo:text-transform="uppercase" fo:font-size="16pt"/>\n
     </style:style>\n
     <style:style style:name="Big_20_Table_20_Content" style:display-name="Big Table Content" style:family="paragraph" style:parent-style-name="Table_20_Contents">\n
       <style:text-properties fo:font-size="8pt" fo:font-weight="bold"/>\n
