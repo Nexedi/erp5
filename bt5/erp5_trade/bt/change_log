@@ -1,3 +1,6 @@
+2008-07-30 Jerome
+Add "offered" and "rejected" state on order workflow, to manage offers.
+
 2008-07-16 Jerome
 Add worklists for diverged packing lists.
 
