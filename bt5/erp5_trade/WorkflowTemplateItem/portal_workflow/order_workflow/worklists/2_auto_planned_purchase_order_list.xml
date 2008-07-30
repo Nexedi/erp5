@@ -27,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_order_module?simulation_state=auto_planned&portal_type=Purchase+Order&local_roles:list=Assignee&reset=1
+purchase_order_module/view?simulation_state=auto_planned&portal_type=Purchase+Order&local_roles:list=Assignee&reset=1
 
 ]]></string> </value>
         </item>

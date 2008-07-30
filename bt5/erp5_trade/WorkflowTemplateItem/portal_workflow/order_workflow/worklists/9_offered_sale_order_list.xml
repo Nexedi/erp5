@@ -21,13 +21,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Orders to Order (%(count)s)</string> </value>
+            <value> <string>Offered Sale Orders to Follow (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_order_module/view?simulation_state=planned&portal_type=Sale+Order&local_roles:list=Assignee&reset=1
+sale_order_module/view?simulation_state=offered&portal_type=Sale+Order&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
@@ -43,7 +43,7 @@ sale_order_module/view?simulation_state=planned&portal_type=Sale+Order&local_rol
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>7_planned_sale_order_list</string> </value>
+            <value> <string>9_offered_sale_order_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -68,6 +68,7 @@ sale_order_module/view?simulation_state=planned&portal_type=Sale+Order&local_rol
             <value>
               <tuple>
                 <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -99,7 +100,7 @@ sale_order_module/view?simulation_state=planned&portal_type=Sale+Order&local_rol
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>planned</string>
+                        <string>offered</string>
                       </tuple>
                     </value>
                 </item>
