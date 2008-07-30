@@ -2136,6 +2136,9 @@ msgstr "Conditions d'achat"
 msgid "Related Sale Trade Condition"
 msgstr "Conditions de vente"
 
+msgid "Related Purchase Order"
+msgstr "Commande d'achat liée"
+
 msgid "Related Transformation"
 msgstr "Nomenclatures dépendantes"
 
@@ -3423,6 +3426,9 @@ msgstr "Écriture de vente liée"
 msgid "Related Sale Packing List"
 msgstr "Livraison de vente liée"
 
+msgid "Related Sale Order"
+msgstr "Commande de vente liée"
+
 msgid "Created Clone ${portal_type}."
 msgstr "${portal_type} cloné."
 
@@ -3456,3 +3462,35 @@ msgstr "Expediteur"
 msgid "Ship To"
 msgstr "Destinataire"
 
+msgid "Order Reference"
+msgstr "Réf. commande"
+
+msgid "Order Date"
+msgstr "Date commande"
+
+msgid "Print Invoice"
+msgstr "Imprimer la facture"
+
+msgid "Ordered"
+msgstr "Commandé"
+
+msgid "Offered"
+msgstr "Proposé"
+
+msgid "Make Offer"
+msgstr "Proposer un devis"
+
+msgid "Accept Offer"
+msgstr "Accepter la proposition"
+
+msgid "Reject Offer"
+msgstr "Rejeter la proposition"
+
+msgid "Rejected"
+msgstr "Rejeté"
+
+msgid "Offer"
+msgstr "Devis"
+
+msgid "Invoice"
+msgstr "Facture"
