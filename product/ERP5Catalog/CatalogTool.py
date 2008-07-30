@@ -864,7 +864,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             # We have found a base_category
             end_key = '_'.join(splitted_key[i:])
             # accept only some catalog columns
-            if end_key in ('title', 'uid', 'description',
+            if end_key in ('title', 'uid', 'description', 'reference',
                            'relative_url', 'id', 'portal_type'):
               if strict:
                 related_key_list.append(
