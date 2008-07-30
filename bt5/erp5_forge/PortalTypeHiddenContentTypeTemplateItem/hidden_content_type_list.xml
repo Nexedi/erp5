@@ -1,4 +1,7 @@
 <hidden_content_type_list>
+ <portal_type id="Bug">
+  <item>File</item>
+ </portal_type>
  <portal_type id="Bug Line">
   <item>File</item>
   <item>Image</item>
