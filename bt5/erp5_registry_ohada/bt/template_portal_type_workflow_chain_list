@@ -25,7 +25,7 @@ P2 | ohada_form_validation_interaction_workflow
 P4 | edit_workflow
 P4 | egov_form_validation_workflow
 P4 | ohada_form_validation_interaction_workflow
-Person |  ohada_business_life_cycle_workflow
+Person |  psj_validation_workflow
 Person | -validation_workflow
 Person | edit_workflow
 Person | local_permission_interaction_workflow

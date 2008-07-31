@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>Person</type>
-  <workflow>edit_workflow, local_permission_interaction_workflow, ohada_business_life_cycle_workflow, -validation_workflow</workflow>
+  <workflow>edit_workflow, local_permission_interaction_workflow,  psj_validation_workflow, -validation_workflow</workflow>
  </chain>
  <chain>
   <type>S1</type>
