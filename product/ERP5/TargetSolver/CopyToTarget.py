@@ -142,7 +142,8 @@ class CopyToTarget(TargetSolver):
     if is_last_movement:
         delivery_quantity = \
             simulation_movement.getDeliveryValue().getQuantity()
-        simulation_movement.setDeliveryError(delivery_quantity -
+        delivery_ratio = simulation_movement.getDeliveryRatio()
+        simulation_movement.setDeliveryError(delivery_quantity * delivery_ratio -
             value_dict['quantity'])
     
     delivery = simulation_movement.getDeliveryValue()
