@@ -79,8 +79,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_registration_number</string>
                         <string>listbox_creation_date</string>
+                        <string>listbox_corporate_registration_code</string>
                       </list>
                     </value>
                 </item>

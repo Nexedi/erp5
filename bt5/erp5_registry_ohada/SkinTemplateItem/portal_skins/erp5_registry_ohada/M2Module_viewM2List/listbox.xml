@@ -315,8 +315,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>registration_number</string>
-                          <string>Registry Number</string>
+                          <string>corporate_registration_code</string>
+                          <string>Corporate Registration Code</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -346,8 +346,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>registration_number</string>
-                          <string>Registry Number</string>
+                          <string>corporate_registration_code</string>
+                          <string>Corporate Registration Code</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -476,8 +476,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>registration_number</string>
-                          <string>Registry Number</string>
+                          <string>corporate_registration_code</string>
+                          <string>Corporate Registration Code</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
