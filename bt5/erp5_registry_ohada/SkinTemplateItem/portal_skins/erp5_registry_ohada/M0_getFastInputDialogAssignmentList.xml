@@ -80,7 +80,7 @@ listbox = getattr(request, \'listbox\', None) # Retrieve the fast input data if 
 \n
 \n
 def addPerson(first_name=None, last_name=None,\n
-              start_date=None, default_birthplace_address_city=None,\n
+              start_date=None, default_birthplace_city=None,\n
               default_address_text=None, description=None, \n
               function=None, **kw):\n
   """\n
