@@ -903,7 +903,7 @@ class TestERP5BankingMixin:
     """
     self.check_model = self.createCheckModel(id='check_model')
     self.check_model_1 = self.check_model
-    self.check_model_2 = self.createCheckModel(id='check_model_2')
+    self.check_model_2 = self.createCheckModel(id='check_model_2', reference='CCCO')
     self.checkbook_model = self.createCheckbookModel(
            id='checkbook_model', check_model=self.check_model)
     self.checkbook_model_1 = self.checkbook_model
