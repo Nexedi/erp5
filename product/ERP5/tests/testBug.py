@@ -272,13 +272,13 @@ class TestBug(ERP5TypeTestCase):
     bug_message = sequence.get('bug_message')
     self.workflow_tool.doActionFor(bug_message, 'start_action')
 
-  def stepCheckBugMessageIsDeliveried(self, sequence=None, \
+  def stepCheckBugMessageIsDelivered(self, sequence=None, \
                                                      sequence_list=None, **kw):
     """
-      check if the message is deliveried the bug.
+      check if the message is delivered the bug.
     """
     bug_message = sequence.get('bug_message')
-    self.assertEquals(bug_message.getSimulationState(), 'deliveried') 
+    self.assertEquals(bug_message.getSimulationState(), 'delivered') 
 
   def stepCheckBugMessage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -328,8 +328,8 @@ class TestBug(ERP5TypeTestCase):
       Close the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'delivery_action')
-    self.assertEquals(bug.getSimulationState(), 'deliveried')
+    self.workflow_tool.doActionFor(bug, 'deliver_action')
+    self.assertEquals(bug.getSimulationState(), 'delivered')
 
   def stepCancelBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -450,7 +450,7 @@ class TestBug(ERP5TypeTestCase):
                 , 'stepTic'
                 , 'stepPostBugMessage'
                 , 'stepTic'
-                , 'stepCheckBugMessageIsDeliveried'
+                , 'stepCheckBugMessageIsDelivered'
                 , 'stepCheckBugMessageNotification'
                 ]
     sequence_string = ' '.join(step_list)
