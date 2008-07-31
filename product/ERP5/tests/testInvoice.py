@@ -2382,6 +2382,7 @@ class TestInvoice(TestInvoiceMixin):
                               portal_type='Organisation', title='Vendor')
     invoice = self.portal.getDefaultModule(self.invoice_portal_type).newContent(
                               portal_type=self.invoice_portal_type,
+                              start_date=DateTime(2008, 12, 31),
                               title='Invoice',
                               source_value=vendor,
                               source_section_value=vendor,
