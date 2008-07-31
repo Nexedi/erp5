@@ -45,32 +45,57 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Owner(s):</span>\n
-<tal:block tal:replace="options/owner|nothing"/>\n
-<br/>\n
-\n
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Last modified:</span>\n
-<tal:block tal:replace="options/modification_date|nothing"/>\n
-<br/>\n
-\n
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Released:</span>\n
-<tal:block tal:replace="options/release_date|nothing"/>\n
-<br/>\n
-\n
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Published:</span>\n
-<tal:block tal:replace="options/publication_date|nothing"/>\n
-<br/>\n
-\n
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Status:</span>\n
-<tal:block tal:replace="options/status|nothing"/>\n
-<br/>\n
-\n
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Group:</span>\n
-<tal:block tal:replace="options/group|nothing"/>\n
-<br/>\n
-\n
-<span class="popup_label" i18n:translate="" i18n:domain="ui">Project:</span>\n
-<tal:block tal:replace="options/project|nothing"/>
+<tal:block tal:define="owner python: options.get(\'owner\', None);\n
+                       modification_date python: options.get(\'modification_date\', None);\n
+                       release_date python: options.get(\'release_date\', None);\n
+                       publication_date python: options.get(\'publication_date\', None);\n
+                       status python: options.get(\'status\', None);\n
+                       group python: options.get(\'group\', None);\n
+                       project python: options.get(\'project\', None);">\n
+  \n
+  <div class="popup_row" tal:condition="owner">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Owners:</span>\n
+    <tal:block tal:replace="owner|nothing"/>\n
+  </div> \n
+  \n
+  <div class="popup_row" tal:condition="modification_date">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Last modified:</span>\n
+    <tal:block tal:replace="modification_date|nothing"/>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="release_date">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Released:</span>\n
+    <tal:block tal:replace="release_date|nothing"/>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="publication_date">  \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Published:</span>\n
+    <tal:block tal:replace="publication_date|nothing"/>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="status">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Status:</span>\n
+    <tal:block tal:replace="status|nothing"/>\n
+  </div>\n
+    \n
+  <div class="popup_row" tal:condition="group">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Group:</span>\n
+    <tal:block tal:replace="group|nothing"/>\n
+  </div>\n
+    \n
+  <div class="popup_row" tal:condition="project">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Project:</span>\n
+    <tal:block tal:replace="project|nothing"/>\n
+  </div>\n
+    \n
+</tal:block>
 
 ]]></string> </value>
         </item>
