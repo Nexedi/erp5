@@ -77,12 +77,6 @@ line_list = context.PaySheetTransaction_getMovementList(sort_on=[(\'int_index\',
 def addProperties(line, line_dict, property_list):\n
   for property in property_list:\n
     line_dict[property] = getattr(line, property, None)\n
-\n
-    #XXX this is a hack wich should be removed when the OOoTemplate will be\n
-    # rewireted\n
-    if line_dict[property] is not None and property in (\'employee_share_price\',\n
-                                                        \'employer_share_price\'):\n
-      line_dict[property] = \'%s %%\' % (float(line_dict[property])*100)\n
   return line_dict\n
 \n
 line_dict_list = []\n
