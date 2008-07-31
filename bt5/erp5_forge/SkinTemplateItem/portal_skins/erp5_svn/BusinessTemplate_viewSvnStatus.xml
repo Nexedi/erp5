@@ -123,7 +123,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <div id="splashScreen" style="position:absolute;z-index:5;top:40%;left:35%; width: 300px; background-color: #cccccc; opacity: 0.6; border-style: solid; vertical-align: middle; text-align: center; color: #000066; font-weight: bold; border-width: 1px;">\n
             <br/><br/><br/>\n
             Checking for changes.<br/><br/>\n
-            Please wait...<br/><br/><br/><br/>\n
+            <img src="ERP5Subversion_imgs/wait.gif" alt="Please wait..."/><br/><br/><br/><br/>\n
       </div>\n
       <div \n
         id="treebox1" \n
@@ -192,6 +192,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Subversion</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
