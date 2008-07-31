@@ -80,7 +80,7 @@ listbox = getattr(request, \'listbox\', None) # Retrieve the fast input data if 
 \n
 \n
 def addPerson(first_name=None, last_name=None,\n
-              start_date=None, default_birthplace_city=None,\n
+              start_date=None, default_birthplace_address_city=None,\n
               default_address_text=None, description=None, \n
               function=None, **kw):\n
   """\n
@@ -105,7 +105,7 @@ def addPerson(first_name=None, last_name=None,\n
     first_name=first_name,\n
     last_name=last_name,\n
     start_date=start_date,\n
-    default_birthplace_city=default_birthplace_city,\n
+    default_birthplace_address_city=default_birthplace_address_city,\n
     default_address_text=default_address_text,\n
     function=function,\n
     description=description,\n
@@ -122,19 +122,19 @@ addPerson(first_name=context.getFirstAssociateFirstname(),\n
           last_name=context.getFirstAssociateLastname(),\n
           start_date=context.getFirstAssociateBirthday(),\n
           default_address_text=context.getFirstAssociateAddress(),\n
-          default_birthplace_city=context.getFirstAssociateBirthplace(),)\n
+          default_birthplace_address_city=context.getFirstAssociateBirthplace(),)\n
 \n
 addPerson(first_name=context.getSecondAssociateFirstname(),\n
           last_name=context.getSecondAssociateLastname(),\n
           start_date=context.getSecondAssociateBirthday(),\n
           default_address_text=context.getSecondAssociateAddress(),\n
-          default_birthplace_city=context.getSecondAssociateBirthplace(),)\n
+          default_birthplace_address_city=context.getSecondAssociateBirthplace(),)\n
 \n
 addPerson(first_name=context.getThirdAssociateFirstname(),\n
           last_name=context.getThirdAssociateLastname(),\n
           start_date=context.getThirdAssociateBirthday(),\n
           default_address_text=context.getThirdAssociateAddress(),\n
-          default_birthplace_city=context.getThirdAssociateBirthplace(),)\n
+          default_birthplace_address_city=context.getThirdAssociateBirthplace(),)\n
 \n
 # only if there is M0 bis form :\n
 m0_bis_result = context.contentValues(portal_type=\'M0 Bis\')\n
@@ -155,7 +155,7 @@ if len(m0_bis_result):\n
       addPerson(first_name=associateFirstName(),\n
                 last_name=associateLastName(),\n
                 start_date=associateBirthday(),\n
-                default_birthplace_city=associateBirthPlace(),\n
+                default_birthplace_address_city=associateBirthPlace(),\n
                 description=associateAnotherInfo,)\n
 \n
 \n
@@ -165,14 +165,14 @@ if len(m0_bis_result):\n
 addPerson(first_name=context.getFirstAdministratorFirstname(),\n
           last_name=context.getFirstAdministratorLastname(),\n
           start_date=context.getFirstAdministratorBirthday(),\n
-          default_birthplace_city=context.getFirstAdministratorBirthplace(),\n
+          default_birthplace_address_city=context.getFirstAdministratorBirthplace(),\n
           default_address_text=context.getFirstAdministratorAddress(),\n
           function=context.getFirstAdministratorFunction(),)\n
 \n
 addPerson(first_name=context.getSecondAdministratorFirstname(),\n
           last_name=context.getSecondAdministratorLastname(),\n
           start_date=context.getSecondAdministratorBirthday(),\n
-          default_birthplace_city=context.getSecondAdministratorBirthplace(),\n
+          default_birthplace_address_city=context.getSecondAdministratorBirthplace(),\n
           default_address_text=context.getSecondAdministratorAddress(),\n
           function=context.getSecondAdministratorFunction(),)\n
 \n
@@ -193,7 +193,7 @@ if len(m0_bis_result):\n
       addPerson(first_name=administratorFirstName(),\n
                 last_name=administratorLastName(),\n
                 start_date=administratorBirthday(),\n
-                default_birthplace_city=administratorBirthPlace(),\n
+                default_birthplace_address_city=administratorBirthPlace(),\n
                 description=administratorAnotherInfo,)\n
 \n
 \n
@@ -201,13 +201,13 @@ if len(m0_bis_result):\n
 addPerson(first_name=context.getFirstAuditorFirstname(),\n
           last_name=context.getFirstAuditorLastname(),\n
           start_date=context.getFirstAuditorBirthday(),\n
-          default_birthplace_city=context.getFirstAuditorBirthplace(),\n
+          default_birthplace_address_city=context.getFirstAuditorBirthplace(),\n
           default_address_text=context.getFirstAuditorAddress(),)\n
 \n
 addPerson(first_name=context.getSecondAuditorFirstname(),\n
           last_name=context.getSecondAuditorLastname(),\n
           start_date=context.getSecondAuditorBirthday(),\n
-          default_birthplace_city=context.getSecondAuditorBirthplace(),\n
+          default_birthplace_address_city=context.getSecondAuditorBirthplace(),\n
           default_address_text=context.getSecondAuditorAddress(),)\n
 \n
 return result_list\n
