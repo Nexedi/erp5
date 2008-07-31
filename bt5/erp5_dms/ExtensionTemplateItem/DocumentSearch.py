@@ -82,7 +82,6 @@ paramsmap=dict(file=filestripper,type=type,reference='reference',filetype=filety
         language='language',version='version',created=dateRangeProc)
 
 def parsestates(s):
-    print s
     if s=='all':
         return ()
     if s[0]=='(' and s[-1]==')':
@@ -111,7 +110,6 @@ def analyze(params):
 def parseSearchString(searchstring):
     params={}
     l=r.split(searchstring)
-    print l
     map(analyze(params),l)
     params['searchabletext']=params['searchabletext'].strip()
     return params
