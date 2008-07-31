@@ -96,7 +96,7 @@ if bug.getSourceTitle() is not None:\n
   body += """  Requester: %s\n
   Assignee: %s\n
   Reporter: %s\n
-""" % (bug.getDestinationDecisionTitle(\'\'), bug.getSourceTitle(\'\'),\n
+""" % (bug.getDestinationTitle(\'\'), bug.getSourceTitle(\'\'),\n
            bug.getSourceTradeTitle(\'\'))\n
 \n
 body += """ Link: %s\n
