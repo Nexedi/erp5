@@ -112,7 +112,7 @@
 .my_first_associate_date_class {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:150.588235294px; margin-top:688.342042755px; background:#F5F5DC; margin-left:622.521008403px; position:absolute}\n
 .my_old_title_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:121.008403361px; margin-top:291.73871734px; background:#F5F5DC; margin-left:432.941176471px; position:absolute}\n
 .my_new_headquarters_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:567.394957983px; margin-top:134.441805226px; background:#F5F5DC; margin-left:203.025210084px; position:absolute}\n
-.my_date_class {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:86.0504201681px; margin-top:1040.57957245px; background:#F5F5DC; margin-left:685.714285714px; position:absolute}\n
+.my_date_class {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:86.0504201681px; margin-top:1040.57957245px; background:rgb(236,245,220); margin-left:685.714285714px; position:absolute}\n
 .my_second_administrator_birthday_class_1 {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:17.4789915966px; margin-top:868.494061758px; background:#F5F5DC; margin-left:274.285714286px; position:absolute}\n
 .my_first_administrator_date_class_2 {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:36.3025210084px; margin-top:846.983372922px; background:#F5F5DC; margin-left:664.201680672px; position:absolute}\n
 .my_second_administrator_birthday_class_3 {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:34.9579831933px; margin-top:868.494061758px; background:#F5F5DC; margin-left:309.243697479px; position:absolute}\n
@@ -194,9 +194,9 @@
 .my_signature_class {font-size:12px; height:29.5771971496px; padding:0px; width:44.3697478992px; margin-top:1059.40142518px; background:#F5F5DC; margin-left:726.050420168px; position:absolute}\n
 .my_new_legal_form_class {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:104.87394958px; margin-top:169.396674584px; background:#F5F5DC; margin-left:244.705882353px; position:absolute}\n
 .my_company_check_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:16.1344537815px; margin-top:34.9548693587px; background:#F5F5DC; margin-left:375.12605042px; position:absolute}\n
-.my_date_class_1 {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:#F5F5DC; margin-left:685.714285714px; position:absolute}\n
-.my_date_class_2 {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:#F5F5DC; margin-left:707.226890756px; position:absolute}\n
-.my_date_class_3 {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:43.025210084px; margin-top:1040.57957245px; background:#F5F5DC; margin-left:728.739495798px; position:absolute}\n
+.my_date_class_1 {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:rgb(236,245,220); margin-left:685.714285714px; position:absolute}\n
+.my_date_class_2 {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:rgb(236,245,220); margin-left:707.226890756px; position:absolute}\n
+.my_date_class_3 {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:43.025210084px; margin-top:1040.57957245px; background:rgb(236,245,220); margin-left:728.739495798px; position:absolute}\n
 .my_old_date_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:150.588235294px; margin-top:151.919239905px; background:#F5F5DC; margin-left:615.798319328px; position:absolute}\n
 \n
 /* error field classes */\n
@@ -270,7 +270,7 @@
 .my_first_associate_date_class_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:150.588235294px; margin-top:688.342042755px; background:rgb(255,64,64); margin-left:622.521008403px; position:absolute}\n
 .my_old_title_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:121.008403361px; margin-top:291.73871734px; background:rgb(255,64,64); margin-left:432.941176471px; position:absolute}\n
 .my_new_headquarters_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:567.394957983px; margin-top:134.441805226px; background:rgb(255,64,64); margin-left:203.025210084px; position:absolute}\n
-.my_date_class_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:86.0504201681px; margin-top:1040.57957245px; background:rgb(255,64,64); margin-left:685.714285714px; position:absolute}\n
+.my_date_class_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:86.0504201681px; margin-top:1040.57957245px; background:rgb(128,128,255); margin-left:685.714285714px; position:absolute}\n
 .my_second_administrator_birthday_class_1_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:17.4789915966px; margin-top:868.494061758px; background:rgb(255,64,64); margin-left:274.285714286px; position:absolute}\n
 .my_first_administrator_date_class_2_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:36.3025210084px; margin-top:846.983372922px; background:rgb(255,64,64); margin-left:664.201680672px; position:absolute}\n
 .my_second_administrator_birthday_class_3_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:34.9579831933px; margin-top:868.494061758px; background:rgb(255,64,64); margin-left:309.243697479px; position:absolute}\n
@@ -352,9 +352,9 @@
 .my_signature_class_error {font-size:12px; height:29.5771971496px; padding:0px; width:44.3697478992px; margin-top:1059.40142518px; background:rgb(255,64,64); margin-left:726.050420168px; position:absolute}\n
 .my_new_legal_form_class_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:104.87394958px; margin-top:169.396674584px; background:rgb(255,64,64); margin-left:244.705882353px; position:absolute}\n
 .my_company_check_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:16.1344537815px; margin-top:34.9548693587px; background:rgb(255,64,64); margin-left:375.12605042px; position:absolute}\n
-.my_date_class_1_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:rgb(255,64,64); margin-left:685.714285714px; position:absolute}\n
-.my_date_class_2_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:rgb(255,64,64); margin-left:707.226890756px; position:absolute}\n
-.my_date_class_3_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:43.025210084px; margin-top:1040.57957245px; background:rgb(255,64,64); margin-left:728.739495798px; position:absolute}\n
+.my_date_class_1_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:rgb(128,128,255); margin-left:685.714285714px; position:absolute}\n
+.my_date_class_2_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:21.512605042px; margin-top:1040.57957245px; background:rgb(128,128,255); margin-left:707.226890756px; position:absolute}\n
+.my_date_class_3_error {font-size:9.28859857482px; height:14.7885985748px; padding:0px; width:43.025210084px; margin-top:1040.57957245px; background:rgb(128,128,255); margin-left:728.739495798px; position:absolute}\n
 .my_old_date_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:150.588235294px; margin-top:151.919239905px; background:rgb(255,64,64); margin-left:615.798319328px; position:absolute}\n
 \n
 /* text_error field classes */ \n
