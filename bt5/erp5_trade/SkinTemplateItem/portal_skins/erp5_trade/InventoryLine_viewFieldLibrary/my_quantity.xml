@@ -56,7 +56,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
+                    <key>                 <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -81,10 +81,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Default quantity</string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -99,10 +95,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Quantity</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -121,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not: here/hasLineContent</string> </value>
+            <value> <string>not: here/hasCellContent</string> </value>
         </item>
       </dictionary>
     </pickle>
