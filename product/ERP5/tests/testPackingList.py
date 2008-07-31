@@ -41,13 +41,16 @@ class TestPackingListMixin(TestOrderMixin):
   container_line_portal_type = 'Container Line'
   container_cell_portal_type = 'Container Cell'
 
-  default_sequence = 'stepCreateOrganisation1 \
+  default_order_sequence = '\
+                      stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
                       stepCreateOrganisation3 \
                       stepCreateOrder \
                       stepCreateCurrency \
                       stepSetOrderPriceCurrency \
-                      stepSetOrderProfile \
+                      stepSetOrderProfile '
+
+  default_sequence = default_order_sequence + '\
                       stepCreateNotVariatedResource \
                       stepTic \
                       stepCreateOrderLine \
@@ -62,14 +65,26 @@ class TestPackingListMixin(TestOrderMixin):
                       stepCheckPackingListIsNotDivergent \
                       stepCheckOrderPackingList '
 
-  default_sequence_with_two_lines = '\
-                      stepCreateOrganisation1 \
-                      stepCreateOrganisation2 \
-                      stepCreateOrganisation3 \
-                      stepCreateOrder \
-                      stepCreateCurrency \
-                      stepSetOrderPriceCurrency \
-                      stepSetOrderProfile \
+  default_sequence_with_duplicated_lines = default_order_sequence + '\
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCheckDeliveryBuilding \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckOrderPackingList '
+
+  default_sequence_with_two_lines = default_order_sequence + '\
                       stepCreateNotVariatedResource \
                       stepTic \
                       stepCreateOrderLine \
@@ -89,14 +104,7 @@ class TestPackingListMixin(TestOrderMixin):
                       stepCheckPackingListIsNotDivergent \
                       stepCheckOrderPackingList'
 
-  variated_default_sequence = '\
-                      stepCreateOrganisation1 \
-                      stepCreateOrganisation2 \
-                      stepCreateOrganisation3 \
-                      stepCreateOrder \
-                      stepCreateCurrency \
-                      stepSetOrderPriceCurrency \
-                      stepSetOrderProfile \
+  variated_default_sequence = default_order_sequence + '\
                       stepCreateVariatedResource \
                       stepTic \
                       stepCreateOrderLine \
@@ -382,6 +390,30 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_line in simulation_line_list:
       self.assertEquals(simulation_line.getStartDate(),self.datetime + 15)
 
+  def stepCheckSimulationQuantityUpdated(self,sequence=None, sequence_list=None, **kw):
+    """
+      Test if the quantity of the simulation movement was changed
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    self.assertEquals(len(simulation_line_list),1)
+    for simulation_line in simulation_line_list:
+      self.assertEquals(simulation_line.getQuantity() + \
+                        simulation_line.getDeliveryError(),
+                        self.default_quantity)
+
+  def stepCheckSimulationQuantityUpdatedForMergedLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Test if the quantity of the simulation movement was changed
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    self.assertEquals(len(simulation_line_list),2)
+    for simulation_line in simulation_line_list:
+      self.assertEquals(simulation_line.getQuantity() + \
+                        simulation_line.getDeliveryError(),
+                        self.default_quantity)
+
   def stepEditPackingListLine(self,sequence=None, sequence_list=None, **kw):
     """
       Edits a Packing List Line
@@ -444,6 +476,16 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_line in simulation_line_list:
       simulation_line.edit(quantity=self.default_quantity-1)
 
+  def stepModifySimulationLineQuantityForMergedLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    self.assertEquals(len(simulation_line_list),2)
+    for simulation_line in simulation_line_list:
+      simulation_line.edit(quantity=self.default_quantity-1)
+
   def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
@@ -486,6 +528,13 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list_line = sequence.get('packing_list_line')
     self.assertEquals(packing_list_line.getQuantity(),self.default_quantity-1)
+
+  def stepCheckPackingListLineWithNewQuantityPrevisionForMergedLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Look if the packing list has new previsions
+    """
+    packing_list_line = sequence.get('packing_list_line')
+    self.assertEquals(packing_list_line.getQuantity(),(self.default_quantity-1)*2)
 
   def stepCheckNewPackingListAfterStartDateAdopt(self,sequence=None, sequence_list=None, **kw):
     """
@@ -748,6 +797,63 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
                       stepCheckPackingListLineWithNewQuantityPrevision \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05a_SimulationChangeQuantityAndAcceptDecision(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      stepModifySimulationLineQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionPackingList \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationQuantityUpdated \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05b_SimulationChangeQuantityForMergedLine(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence_with_duplicated_lines + '\
+                      stepModifySimulationLineQuantityForMergedLine \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevision \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListLineWithNewQuantityPrevisionForMergedLine \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05c_SimulationChangeQuantityAndAcceptDecisionForMergedLine(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence_with_duplicated_lines + '\
+                      stepModifySimulationLineQuantityForMergedLine \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionPackingList \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationQuantityUpdatedForMergedLine \
                       '
     sequence_list.addSequenceString(sequence_string)
 
