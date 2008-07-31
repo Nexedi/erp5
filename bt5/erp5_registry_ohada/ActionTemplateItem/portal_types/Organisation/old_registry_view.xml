@@ -93,7 +93,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object.getTranslatedValidationState()==\'imported\'</string> </value>
+            <value> <string>python:object.getValidationState()==\'imported\'</string> </value>
         </item>
       </dictionary>
     </pickle>

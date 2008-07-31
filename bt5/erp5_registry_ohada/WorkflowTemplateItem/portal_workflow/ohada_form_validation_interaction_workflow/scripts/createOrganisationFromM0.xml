@@ -95,7 +95,7 @@ organisation.edit(\n
   default_address_street_address=request_eform.getWorkAddress(),\n
   default_address_city=request_eform.getDefaultAddressCity(),\n
   social_form=\'%s\' % request_eform.getLegalForm().lower(),\n
-  price_currency=\'currency_module/XOF\',\n
+  price_currency=\'currency_module/1\', # object 1 is the devise XOF\n
   site=\'dakar/pikine_guediawaye/tribunal\', #XXX this should not be hardcoded\n
   start_date=request_eform.getBeginningDate(),\n
   stop_date="%04d/%02d/%02d" % (stop_year, month, day),\n
