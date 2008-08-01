@@ -317,7 +317,7 @@ AAA=</string> </value>
   <office:master-styles>\n
     <style:master-page style:name="Standard" style:page-layout-name="pm1">\n
       <style:header tal:define="default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language());\n
-                    orig_title string:Order;\n
+                    orig_title python: test(context.getSimulationState() == \'offered\', \'Offer\', \'Order\');\n
                     en_title python: unicode(here.Base_translateString(orig_title, lang=default_language), \'utf-8\');\n
                     my_title python: unicode(here.Base_translateString(orig_title), \'utf-8\');\n
                     orig_page string:Page;\n
