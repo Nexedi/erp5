@@ -82,10 +82,10 @@ d = beginning_date.day()\n
 stop_year = y+duration_length\n
 first_associate= person_module.newContent(portal_type =\'Person\')\n
 first_associate_assignment = first_associate.newContent(portal_type =\'Assignment\',\n
-  function = \'corporation/shareholder\',\n
+  function = \'entreprise/associe\',\n
   start_date =organisation.getStartDate(),\n
   stop_date ="%04d/%02d/%02d" % (stop_year, m, d),\n
-  destination_value = organisation,\n
+  destination_title = organisation,\n
 )\n
 #Second Associate\n
 second_associate= person_module.newContent(portal_type =\'Person\')\n
@@ -96,10 +96,10 @@ second_associate.edit(\n
   career_subordination_value = organisation,\n
 )\n
 second_associate_assignment = second_associate.newContent(portal_type =\'Assignment\',\n
-  function = \'corporation/shareholder\',\n
+  function = \'entreprise/associe\',\n
   start_date =organisation.getStartDate(),\n
   stop_date=organisation.getStopDate(),\n
-  destination_value = organisation,\n
+  destination_title = organisation,\n
 )\n
 </string> </value>
         </item>
