@@ -349,11 +349,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>getAggregateListText | Item\n
-movement_selection\n
-# Originaly, selection_namme was movement_selection, but this was changed to be the same as Resource_viewInventory (in order to keep the stock node)\n
-\n
-resource_current_inventory</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -361,7 +357,7 @@ resource_current_inventory</string> </value>
                       <list>
                         <tuple>
                           <string>site</string>
-                          <string>Site</string>
+                          <string>Site or Wharehouse</string>
                         </tuple>
                       </list>
                     </value>
