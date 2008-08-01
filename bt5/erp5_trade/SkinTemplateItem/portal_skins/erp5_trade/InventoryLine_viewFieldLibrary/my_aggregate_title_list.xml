@@ -15,7 +15,6 @@
               <list>
                 <string>title</string>
                 <string>portal_type</string>
-                <string>enabled</string>
               </list>
             </value>
         </item>
@@ -58,12 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,15 +65,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
+                    <key>                 <string>portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -91,10 +86,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_multi_relation_field</string> </value>
                 </item>
@@ -103,7 +94,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -118,7 +109,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Item</string> </value>
                 </item>
               </dictionary>
@@ -138,7 +129,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not: here/hasLineContent</string> </value>
+            <value> <string>python: [(x, x) for x in context.getPortalItemTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

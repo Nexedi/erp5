@@ -76,12 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key>                 <string>css_class</string> </key>
                     <value> <string>figure</string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>index used to sort document</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -96,7 +92,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Index</string> </value>
                 </item>
               </dictionary>
