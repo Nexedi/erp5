@@ -84,6 +84,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>navigation</string>
                         <string>body</string>
                       </list>
                     </value>

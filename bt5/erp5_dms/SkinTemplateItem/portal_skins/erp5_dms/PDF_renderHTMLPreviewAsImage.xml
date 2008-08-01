@@ -51,10 +51,14 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<div tal:define="frame request/frame|python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
+<div class="pdf-preview-content"\n
+     tal:define="frame request/frame|\n
+                   python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
                  display request/display|string:large;\n
                  format request/format|string:jpg;">\n
-<img src="" tal:attributes="src string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}">\n
+  <img src="" \n
+      tal:attributes="src\n
+        string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}">\n
 </div>
 
 ]]></string> </value>
