@@ -256,9 +256,11 @@ class EmailDocument(File, TextDocument):
         return self._baseGetStartDate(default)
     date_string = self.getContentInformation().get('Date', None)
     if date_string:
-      time = mktime(parsedate(date_string))
-      if time:
-        return DateTime(time)
+      parsed_date_string = parsedate(date_string)
+      if parsed_date_string is not None:
+        time = mktime(parsed_date_string)
+        if time:
+          return DateTime(time)
     return self.getCreationDate()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
