@@ -66,8 +66,20 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>return (\n
-  (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
-  (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\', \'group\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromEntity\', [\'role\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'group\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentParent\', [\'group\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentParent\', [\'role\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentParentGroup\', [\'group\', \'function\', \'site\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignment\', [\'group\', \'function\', \'site\'] ),\n
+)\n
+\n
+\n
+\n
+return (\n
+   (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
+   (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\', \'group\'] ),\n
 )\n
 </string> </value>
         </item>
