@@ -388,7 +388,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       if 'enc.txt' in format_list:
         format = 'enc.txt'
       elif format not in format_list:
-        return 'text/plain', self.asTextContent()
+        return self.asTextContent()
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
