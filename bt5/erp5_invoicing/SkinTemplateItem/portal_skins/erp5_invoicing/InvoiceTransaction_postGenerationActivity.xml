@@ -105,7 +105,14 @@ else:\n
     invoice.edit(\n
        resource=price_currency,\n
        price_currency=price_currency,)\n
-  \n
+\n
+\n
+# copy trade condition:\n
+if not context.getSpecialise():\n
+  related_order = related_packing_list.getDefaultCausalityValue()\n
+  if related_order is not None:\n
+    context.edit(specialise=related_order.getSpecialise())\n
+\n
 # copy title, if not updating a new delivery\n
 if not invoice.getTitle():\n
   invoice.setTitle(related_packing_list.getTitle())\n
@@ -215,6 +222,12 @@ invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list
         <item>
             <key> <string>id</string> </key>
             <value> <string>InvoiceTransaction_postGenerationActivity</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
