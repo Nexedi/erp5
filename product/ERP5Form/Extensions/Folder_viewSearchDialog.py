@@ -212,8 +212,8 @@ def getSearchDialog(self, REQUEST=None):
   column_list = ListBoxListRenderer(
                       listbox.widget, listbox, request).getAllColumnList()
 
-  search_list = [x[0] for x in ListBoxListRenderer(
-                      listbox.widget, listbox, request).getSearchValueList()]
+  search_list = ListBoxListRenderer(
+                      listbox.widget, listbox, request).getSearchColumnIdSet()
 
   for column_id, column_title in column_list:
     if column_id in search_list:
