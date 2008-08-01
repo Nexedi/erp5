@@ -161,7 +161,7 @@ assignment_list = [assignment.getObject() for assignment in context.portal_catal
                       destination_form_uid = request_eform.getUid())]\n
 for assignment in assignment_list:\n
   assignment.open()\n
-  assignment.edit(destination_title=organisation,\n
+  assignment.edit(destination_value=organisation,\n
                    corporate_registration_code=new_registry_number)\n
 \n
 # Changes roles when secondaries organisations are created and update the organisation with\n
