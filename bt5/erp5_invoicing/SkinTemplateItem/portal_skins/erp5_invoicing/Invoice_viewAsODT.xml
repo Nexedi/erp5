@@ -295,7 +295,6 @@ AAA=</string> </value>
         <table:table-column table:style-name=\'Tableau1.D\'/>\n
         <table:table-column table:style-name=\'Tableau1.E\'/>\n
         <table:table-column table:style-name=\'Tableau1.F\'/>\n
-        <table:table-column table:style-name=\'Tableau1.G\'/>\n
         <table:table-column table:style-name=\'Tableau1.H\'/>\n
         <table:table-column table:style-name=\'Tableau1.I\'/>\n
         <table:table-header-rows>\n
@@ -485,10 +484,6 @@ AAA=</string> </value>
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Delivery Date; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
-            </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Unit Price; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
@@ -537,11 +532,6 @@ AAA=</string> </value>
               <text:p text:style-name=\'Table_20_Contents\'\n
                       tal:content=\'python:line_dict["quantity_unit"]\'\n
                       tal:attributes=\'text:style-name style_name\'>qty_u</text:p>\n
-            </table:table-cell>\n
-            <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-              <text:p text:style-name=\'Table_20_Contents\'\n
-                      tal:content=\'python:line_dict["stop_date"]\'\n
-                      tal:attributes=\'text:style-name style_name\'>stop_date</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
                               tal:condition="python: line_dict[\'base_price\'] != \'\'"\n
