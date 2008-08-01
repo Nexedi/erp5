@@ -318,13 +318,14 @@ class ManageModule:
           access_field = getattr(form_view_id_object, field_id)
           if field_type == 'CheckBoxField':
             test_name = field_id[3:]
-            tales = {field_id : {'default' : 'python: here.getProperty('+ test_name + ', None)'}}
+            #tales = {field_id : {'default' : 'python: here.getProperty(' +\
+            #    test_name + ', None)'}}
 
             forms = [object_names['view_id']]
             form = form_view_id_object.restrictedTraverse(forms[0])
-            for k, v in tales.items() :
-              if hasattr(form, k) :
-                form[k].manage_tales_xmlrpc(v)
+            #for k, v in tales.items() :
+            #  if hasattr(form, k) :
+            #    form[k].manage_tales_xmlrpc(v)
           #if field_type == 'CheckBoxField':
           #  print "    dir(%s) > %s" % (field_id,dir(access_field))
           #  print "---manage_tales > %s \n\n" % dir(access_field.manage_tales)
