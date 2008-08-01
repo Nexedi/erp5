@@ -278,15 +278,15 @@ data_dict = {\n
       context.getSourceValue().getProperty(\'vat_code\', \'\') or \'\'),\n
 \n
   \'source_decision_title\': context.getSourceDecisionTitle() or \'\',\n
-  \'source_decision_image_path\': context.getSourceDecisionValue() is not None\\\n
-          and context.getSourceDecisionValue().getDefaultImagePath() or \'\',\n
-  \'source_decision_image_width\': context.getSourceDecisionValue() is not None\\\n
-          and context.getSourceDecisionValue().getDefaultImageWidth() is not None\\\n
-          and context.getSourceDecisionValue().getDefaultImageWidth() \\\n
+  \'source_decision_image_path\': context.getSourceDecisionValue(portal_type=\'Organisation\') is not None\\\n
+          and context.getSourceDecisionValue(portal_type=\'Organisation\').getDefaultImagePath() or \'\',\n
+  \'source_decision_image_width\': context.getSourceDecisionValue(portal_type=\'Organisation\') is not None\\\n
+          and context.getSourceDecisionValue(portal_type=\'Organisation\').getDefaultImageWidth() is not None\\\n
+          and context.getSourceDecisionValue(portal_type=\'Organisation\').getDefaultImageWidth() \\\n
               * inch_cm_ratio or \'\',\n
-  \'source_decision_image_height\': context.getSourceDecisionValue() is not None\\\n
-          and context.getSourceDecisionValue().getDefaultImageHeight() is not None\\\n
-          and context.getSourceDecisionValue().getDefaultImageHeight() \\\n
+  \'source_decision_image_height\': context.getSourceDecisionValue(portal_type=\'Organisation\') is not None\\\n
+          and context.getSourceDecisionValue(portal_type=\'Organisation\').getDefaultImageHeight() is not None\\\n
+          and context.getSourceDecisionValue(portal_type=\'Organisation\').getDefaultImageHeight() \\\n
               * inch_cm_ratio or \'\',\n
   \'source_decision_address\':getOneLineAddress(\n
           context.getSourceDecision() and \n
