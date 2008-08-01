@@ -16,6 +16,27 @@
             </value>
         </item>
         <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -54,7 +75,8 @@
                         <string>my_branch</string>
                         <string>my_title</string>
                         <string>my_name</string>
-                        <string>my_logo</string>
+                        <string>my_sign</string>
+                        <string>my_initials</string>
                         <string>my_head_office_address</string>
                         <string>my_work_address</string>
                         <string>my_legal_form</string>
@@ -63,6 +85,7 @@
                         <string>my_numerous_donations</string>
                         <string>my_donation</string>
                         <string>my_duration</string>
+                        <string>my_activity_check</string>
                         <string>my_activity_free_text</string>
                         <string>my_beginning_date</string>
                         <string>my_employees_number</string>
@@ -121,15 +144,14 @@
                         <string>my_second_auditor_birthplace</string>
                         <string>my_second_auditor_address</string>
                         <string>my_applicant</string>
-                        <string>my_rccm_check</string>
-                        <string>my_inscription_check</string>
                         <string>my_default_address_city</string>
                         <string>my_date</string>
                         <string>my_signature</string>
+                        <string>my_rccm_check</string>
+                        <string>my_inscription_check</string>
                         <string>my_registration_date</string>
                         <string>my_registration_number</string>
                         <string>my_source_reference</string>
-                        <string>my_activity_check</string>
                       </list>
                     </value>
                 </item>

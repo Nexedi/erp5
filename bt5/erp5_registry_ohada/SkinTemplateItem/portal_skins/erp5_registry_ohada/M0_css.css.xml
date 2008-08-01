@@ -45,6 +45,7 @@
 .my_rccm_check_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:16.1344537815px; margin-top:1021.75771971px; background:#F5F5DC; margin-left:204.369747899px; position:absolute}\n
 .my_second_associate_birthplace_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:135.798319328px; margin-top:680.275534442px; background:#F5F5DC; margin-left:478.655462185px; position:absolute}\n
 .my_second_auditor_lastname_class {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:108.907563025px; margin-top:950.503562945px; background:#F5F5DC; margin-left:20.1680672269px; position:absolute}\n
+.my_initials_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:134.453781513px; margin-top:151.919239905px; background:#F5F5DC; margin-left:641.344537815px; position:absolute}\n
 .my_registration_number_class {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:289.075630252px; margin-top:1095.70071259px; background:#F5F5DC; margin-left:349.579831933px; position:absolute}\n
 .my_name_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:149.243697479px; margin-top:151.919239905px; background:rgb(236,245,220); margin-left:169.411764706px; position:absolute}\n
 .my_first_associate_birthday_class_1 {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:33.6134453782px; margin-top:657.420427553px; background:#F5F5DC; margin-left:326.722689076px; position:absolute}\n
@@ -74,7 +75,6 @@
 .my_registration_date_class_1 {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:51.0924369748px; margin-top:1095.70071259px; background:#F5F5DC; margin-left:28.2352941176px; position:absolute}\n
 .my_registration_date_class_3 {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:102.18487395px; margin-top:1095.70071259px; background:#F5F5DC; margin-left:130.420168067px; position:absolute}\n
 .my_registration_date_class_2 {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:51.0924369748px; margin-top:1095.70071259px; background:#F5F5DC; margin-left:79.3277310924px; position:absolute}\n
-.my_logo_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:328.067226891px; margin-top:151.919239905px; background:#F5F5DC; margin-left:446.386554622px; position:absolute}\n
 .my_second_company_address_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:683.025210084px; margin-top:544.489311164px; background:#F5F5DC; margin-left:92.7731092437px; position:absolute}\n
 .my_third_associate_lastname_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:143.865546218px; margin-top:703.13064133px; background:#F5F5DC; margin-left:16.1344537815px; position:absolute}\n
 .my_activity_check_class {font-size:7.94418052257px; height:13.4441805226px; padding:0px; width:13.4453781513px; margin-top:282.327790974px; background:#F5F5DC; margin-left:517.647058824px; position:absolute}\n
@@ -83,6 +83,7 @@
 .my_head_office_address_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:605.042016807px; margin-top:170.741092637px; background:rgb(236,245,220); margin-left:168.067226891px; position:absolute}\n
 .my_second_administrator_address_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:112.941176471px; margin-top:822.783847981px; background:#F5F5DC; margin-left:533.781512605px; position:absolute}\n
 .my_first_auditor_firstname_class {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:106.218487395px; margin-top:923.6152019px; background:#F5F5DC; margin-left:139.831932773px; position:absolute}\n
+.my_sign_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:157.31092437px; margin-top:151.919239905px; background:#F5F5DC; margin-left:411.428571429px; position:absolute}\n
 .my_work_address_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:489.411764706px; margin-top:189.562945368px; background:rgb(236,245,220); margin-left:285.042016807px; position:absolute}\n
 .my_third_associate_address_class {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:141.176470588px; margin-top:703.13064133px; background:#F5F5DC; margin-left:630.588235294px; position:absolute}\n
 .my_activity_free_text_class {font-size:12px; height:52.432304038px; padding:0px; width:660.168067227px; margin-top:297.116389549px; background:rgb(236,245,220); margin-left:114.285714286px; position:absolute}\n
@@ -158,6 +159,7 @@
 .my_rccm_check_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:16.1344537815px; margin-top:1021.75771971px; background:rgb(255,64,64); margin-left:204.369747899px; position:absolute}\n
 .my_second_associate_birthplace_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:135.798319328px; margin-top:680.275534442px; background:rgb(255,64,64); margin-left:478.655462185px; position:absolute}\n
 .my_second_auditor_lastname_class_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:108.907563025px; margin-top:950.503562945px; background:rgb(255,64,64); margin-left:20.1680672269px; position:absolute}\n
+.my_initials_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:134.453781513px; margin-top:151.919239905px; background:rgb(255,64,64); margin-left:641.344537815px; position:absolute}\n
 .my_registration_number_class_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:289.075630252px; margin-top:1095.70071259px; background:rgb(255,64,64); margin-left:349.579831933px; position:absolute}\n
 .my_name_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:149.243697479px; margin-top:151.919239905px; background:rgb(128,128,255); margin-left:169.411764706px; position:absolute}\n
 .my_first_associate_birthday_class_1_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:33.6134453782px; margin-top:657.420427553px; background:rgb(255,64,64); margin-left:326.722689076px; position:absolute}\n
@@ -187,7 +189,6 @@
 .my_registration_date_class_1_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:51.0924369748px; margin-top:1095.70071259px; background:rgb(255,64,64); margin-left:28.2352941176px; position:absolute}\n
 .my_registration_date_class_3_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:102.18487395px; margin-top:1095.70071259px; background:rgb(255,64,64); margin-left:130.420168067px; position:absolute}\n
 .my_registration_date_class_2_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:51.0924369748px; margin-top:1095.70071259px; background:rgb(255,64,64); margin-left:79.3277310924px; position:absolute}\n
-.my_logo_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:328.067226891px; margin-top:151.919239905px; background:rgb(255,64,64); margin-left:446.386554622px; position:absolute}\n
 .my_second_company_address_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:683.025210084px; margin-top:544.489311164px; background:rgb(255,64,64); margin-left:92.7731092437px; position:absolute}\n
 .my_third_associate_lastname_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:143.865546218px; margin-top:703.13064133px; background:rgb(255,64,64); margin-left:16.1344537815px; position:absolute}\n
 .my_activity_check_class_error {font-size:7.94418052257px; height:13.4441805226px; padding:0px; width:13.4453781513px; margin-top:282.327790974px; background:rgb(255,64,64); margin-left:517.647058824px; position:absolute}\n
@@ -196,6 +197,7 @@
 .my_head_office_address_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:605.042016807px; margin-top:170.741092637px; background:rgb(128,128,255); margin-left:168.067226891px; position:absolute}\n
 .my_second_administrator_address_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:112.941176471px; margin-top:822.783847981px; background:rgb(255,64,64); margin-left:533.781512605px; position:absolute}\n
 .my_first_auditor_firstname_class_error {font-size:11.9774346793px; height:17.4774346793px; padding:0px; width:106.218487395px; margin-top:923.6152019px; background:rgb(255,64,64); margin-left:139.831932773px; position:absolute}\n
+.my_sign_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:157.31092437px; margin-top:151.919239905px; background:rgb(255,64,64); margin-left:411.428571429px; position:absolute}\n
 .my_work_address_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:489.411764706px; margin-top:189.562945368px; background:rgb(128,128,255); margin-left:285.042016807px; position:absolute}\n
 .my_third_associate_address_class_error {font-size:10.6330166271px; height:16.1330166271px; padding:0px; width:141.176470588px; margin-top:703.13064133px; background:rgb(255,64,64); margin-left:630.588235294px; position:absolute}\n
 .my_activity_free_text_class_error {font-size:12px; height:52.432304038px; padding:0px; width:660.168067227px; margin-top:297.116389549px; background:rgb(128,128,255); margin-left:114.285714286px; position:absolute}\n
@@ -276,15 +278,15 @@
 .my_first_administrator_address_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:798.58432304px; white-space:nowrap; position:absolute}\n
 .my_second_administrator_firstname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:822.783847981px; white-space:nowrap; position:absolute}\n
 .my_first_auditor_firstname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:923.6152019px; white-space:nowrap; position:absolute}\n
-.my_logo_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:151.919239905px; white-space:nowrap; position:absolute}\n
 .my_second_auditor_firstname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:950.503562945px; white-space:nowrap; position:absolute}\n
+.my_registration_date_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:1095.70071259px; white-space:nowrap; position:absolute}\n
 .my_capital_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:225.862232779px; white-space:nowrap; position:absolute}\n
 .my_corporate_registration_code_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:207.040380048px; white-space:nowrap; position:absolute}\n
 .my_second_administrator_lastname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:822.783847981px; white-space:nowrap; position:absolute}\n
 .my_first_administrator_birthday_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:798.58432304px; white-space:nowrap; position:absolute}\n
-.my_first_associate_address_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:657.420427553px; white-space:nowrap; position:absolute}\n
-.my_donation_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:225.862232779px; white-space:nowrap; position:absolute}\n
 .my_second_company_address_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:544.489311164px; white-space:nowrap; position:absolute}\n
+.my_donation_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:225.862232779px; white-space:nowrap; position:absolute}\n
+.my_sign_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:151.919239905px; white-space:nowrap; position:absolute}\n
 .my_legal_form_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:207.040380048px; white-space:nowrap; position:absolute}\n
 .my_first_auditor_lastname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:923.6152019px; white-space:nowrap; position:absolute}\n
 .my_loueur_de_fonds_extra_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:498.779097387px; white-space:nowrap; position:absolute}\n
@@ -303,14 +305,14 @@
 .my_applicant_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:985.458432304px; white-space:nowrap; position:absolute}\n
 .my_inscription_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:1040.57957245px; white-space:nowrap; position:absolute}\n
 .my_second_administrator_birthplace_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:822.783847981px; white-space:nowrap; position:absolute}\n
+.my_second_auditor_birthplace_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:950.503562945px; white-space:nowrap; position:absolute}\n
 .my_non_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:520.289786223px; white-space:nowrap; position:absolute}\n
 .my_second_associate_address_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:680.275534442px; white-space:nowrap; position:absolute}\n
-.my_registration_date_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:1095.70071259px; white-space:nowrap; position:absolute}\n
 .my_first_administrator_function_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:798.58432304px; white-space:nowrap; position:absolute}\n
 .my_first_auditor_birthday_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:923.6152019px; white-space:nowrap; position:absolute}\n
 .my_name_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:151.919239905px; white-space:nowrap; position:absolute}\n
 .my_beginning_date_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:353.581947743px; white-space:nowrap; position:absolute}\n
-.my_activity_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:282.327790974px; white-space:nowrap; position:absolute}\n
+.my_third_associate_birthday_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:703.13064133px; white-space:nowrap; position:absolute}\n
 .my_second_auditor_birthday_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:950.503562945px; white-space:nowrap; position:absolute}\n
 .my_first_associate_lastname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:657.420427553px; white-space:nowrap; position:absolute}\n
 .my_first_associate_birthplace_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:657.420427553px; white-space:nowrap; position:absolute}\n
@@ -320,13 +322,14 @@
 .my_loueur_de_fonds_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:479.957244656px; white-space:nowrap; position:absolute}\n
 .my_first_associate_firstname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:657.420427553px; white-space:nowrap; position:absolute}\n
 .my_numerous_donations_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:225.862232779px; white-space:nowrap; position:absolute}\n
-.my_second_associate_firstname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:680.275534442px; white-space:nowrap; position:absolute}\n
+.my_initials_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:151.919239905px; white-space:nowrap; position:absolute}\n
 .my_creation_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:419.458432304px; white-space:nowrap; position:absolute}\n
 .my_employees_number_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:353.581947743px; white-space:nowrap; position:absolute}\n
 .my_rccm_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:1021.75771971px; white-space:nowrap; position:absolute}\n
 .my_purchase_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:419.458432304px; white-space:nowrap; position:absolute}\n
 .my_head_office_address_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:170.741092637px; white-space:nowrap; position:absolute}\n
 .my_second_associate_birthday_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:680.275534442px; white-space:nowrap; position:absolute}\n
+.my_first_associate_address_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:657.420427553px; white-space:nowrap; position:absolute}\n
 .my_first_auditor_birthplace_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:923.6152019px; white-space:nowrap; position:absolute}\n
 .my_first_administrator_lastname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:798.58432304px; white-space:nowrap; position:absolute}\n
 .my_duration_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:244.684085511px; white-space:nowrap; position:absolute}\n
@@ -343,12 +346,12 @@
 .my_second_auditor_lastname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:950.503562945px; white-space:nowrap; position:absolute}\n
 .my_second_company_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:48.3990498812px; white-space:nowrap; position:absolute}\n
 .my_date_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:1004.28028504px; white-space:nowrap; position:absolute}\n
-.my_third_associate_birthday_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:703.13064133px; white-space:nowrap; position:absolute}\n
+.my_activity_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:282.327790974px; white-space:nowrap; position:absolute}\n
 .my_source_reference_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:21.5106888361px; white-space:nowrap; position:absolute}\n
 .my_oui_check_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:520.289786223px; white-space:nowrap; position:absolute}\n
 .my_signature_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:1024.44655582px; white-space:nowrap; position:absolute}\n
 .my_default_address_city_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:982.7695962px; white-space:nowrap; position:absolute}\n
-.my_second_auditor_birthplace_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:950.503562945px; white-space:nowrap; position:absolute}\n
+.my_second_associate_firstname_error_display {color:rgb(255,0,0); margin-left:820px; padding:0px; margin-top:680.275534442px; white-space:nowrap; position:absolute}\n
 </string> </value>
         </item>
         <item>
