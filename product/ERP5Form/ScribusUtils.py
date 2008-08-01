@@ -318,7 +318,7 @@ class ManageModule:
           access_field = getattr(form_view_id_object, field_id)
           if field_type == 'CheckBoxField':
             test_name = field_id[3:]
-            tales = {field_id : {'default' : 'here'+ '/'+ test_name}}
+            tales = {field_id : {'default' : 'python: here.getProperty('+ test_name + ', None)'}}
 
             forms = [object_names['view_id']]
             form = form_view_id_object.restrictedTraverse(forms[0])
