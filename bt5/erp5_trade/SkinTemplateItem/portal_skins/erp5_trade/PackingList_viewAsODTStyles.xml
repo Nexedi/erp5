@@ -326,9 +326,9 @@ AAA=</string> </value>
                     orig_of string:of;\n
                     en_of python: unicode(here.Base_translateString(orig_of, lang=default_language), \'utf-8\');\n
                     my_of python: unicode(here.Base_translateString(orig_of), \'utf-8\');\n
-                    image_path python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_path\'] or data_dict[\'source_decision_image_path\'];\n
-                    image_width python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_width\'] or data_dict[\'source_decision_image_width\'];\n
-                    image_height python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_height\'] or data_dict[\'source_decision_image_height\']">\n
+                    image_path python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_path\'] or (data_dict[\'source_decision_image_path\'] or data_dict[\'source_section_image_path\']);\n
+                    image_width python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_width\'] or (data_dict[\'source_decision_image_width\'] or data_dict[\'source_section_image_width\']);\n
+                    image_height python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_section_image_height\'] or (data_dict[\'source_decision_image_height\'] or data_dict[\'source_section_image_height\'])">\n
         <table:table table:name="Tableau4" table:style-name="Tableau4">\n
           <table:table-column table:style-name="Tableau4.A"/>\n
           <table:table-column table:style-name="Tableau4.B"/>\n
