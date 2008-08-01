@@ -75,6 +75,15 @@ from Products.ERP5.Document.Document import ConversionError\n
 from xmlrpclib import Fault\n
 from socket import error as SocketError\n
 \n
+translate = context.Base_translateString\n
+\n
+# return if no file was uploaded\n
+if contribute_file is None or contribute_file.filename in (\'\', None,):\n
+  return context.Base_redirect(\'view\',\n
+           keep_items = dict(\n
+             portal_status_message = translate(\'No file was selected for contribution.\'), \n
+             editable_mode = context.REQUEST.get(\'editable_mode\', 0)))\n
+\n
 # Do some processing of parameters cause we do not use ERP5 Form here\n
 if contribute_classification:\n
   kw[\'classification\'] = contribute_classification\n
@@ -125,16 +134,16 @@ else:\n
   target = context\n
 \n
 if failure:\n
-  msg = context.Base_translateString(msg)\n
+  msg = translate(msg)\n
   return target.Base_redirect(\'view\',\n
                               keep_items=dict(portal_status_message=msg,\n
                                               editable_mode=0))\n
 # successful ingestion, show appropriate message\n
 if merged_content is not None and merged_content is not new_content:\n
-  msg = context.Base_translateString(\'Document successfully updated\')\n
+  msg = translate(\'Document successfully updated\')\n
   target = merged_content\n
 else:\n
-  msg = context.Base_translateString(\'Document successfully created\')\n
+  msg = translate(\'Document successfully created\')\n
   target = new_content\n
 \n
 # Change acquisition context of document, in order to get web section layout\n
@@ -214,8 +223,12 @@ return target.view()\n
                             <string>socket</string>
                             <string>error</string>
                             <string>SocketError</string>
-                            <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>translate</string>
                             <string>None</string>
+                            <string>dict</string>
+                            <string>_write_</string>
                             <string>editable_mode</string>
                             <string>getattr</string>
                             <string>file_name</string>
@@ -223,14 +236,11 @@ return target.view()\n
                             <string>new_content</string>
                             <string>merged_content</string>
                             <string>_apply_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>msg</string>
                             <string>TypeError</string>
                             <string>KeyError</string>
                             <string>AttributeError</string>
                             <string>target</string>
-                            <string>dict</string>
                             <string>target_request</string>
                             <string>_getiter_</string>
                             <string>key</string>
