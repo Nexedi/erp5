@@ -147,13 +147,26 @@ getItemList = CachingMethod(getItemList,\n
 \n
 # the cache vary with the simulation state of the current transaction,\n
 # to display all accounts when the transaction is already delivered.\n
-return getItemList( category=category,\n
+item_list = getItemList( category=category,\n
                     portal_path=context.getPortalObject().getPhysicalPath(),\n
                     mirror=mirror,\n
                     omit_filter=omit_filter, # XXX possible optim: only one cache if omit_filter\n
                     user_name=str(getSecurityManager().getUser()),\n
                     simulation_state=context.getProperty(\n
                           \'simulation_state\', \'no_simulation_state\') )\n
+\n
+# make sure that the current value is included in this list, this is \n
+# mostly for compatibility with old versions. XXX This is slow. \n
+if omit_filter:\n
+  return item_list\n
+\n
+for node in (context.getSource(portal_type=\'Account\'),\n
+             context.getDestination(portal_type=\'Account\')):\n
+  if node:\n
+    if node not in [x[1] for x in item_list]:\n
+      return context.AccountingTransactionLine_getNodeItemList(mirror=mirror, omit_filter=1)\n
+\n
+return item_list\n
 </string> </value>
         </item>
         <item>
@@ -220,6 +233,13 @@ return getItemList( category=category,\n
                             <string>None</string>
                             <string>getItemList</string>
                             <string>str</string>
+                            <string>item_list</string>
+                            <string>_getiter_</string>
+                            <string>node</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
