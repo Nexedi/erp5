@@ -92,7 +92,7 @@ organisation = organisation_module.newContent(portal_type=\'Organisation\')\n
 organisation.edit(\n
   title=request_eform.getTitle(),\n
   corporate_name=request_eform.getName(),\n
-  acronym=request_eform.getInitals(),\n
+  acronym=request_eform.getInitials(),\n
   sign=request_eform.getSign(),\n
   default_address_street_address=request_eform.getWorkAddress(),\n
   default_address_city=request_eform.getDefaultAddressCity(),\n
