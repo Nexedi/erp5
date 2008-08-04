@@ -53,6 +53,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -111,7 +121,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_viewContentList</string> </value>
+            <value> <string>NotificationMessage_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -127,7 +137,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Notification Message Content List</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
