@@ -173,6 +173,24 @@ class SimulationMovement(Movement):
       return None
 
   security.declareProtected( Permissions.AccessContentsInformation,
+                             'getTranslatedSimulationStateTitle')
+  def getTranslatedSimulationStateTitle(self):
+    """Returns translated simulation state title, for user interface, such as
+    stock browser.
+    """
+    delivery = self.getDeliveryValue()
+    if delivery is not None:
+      return delivery.getTranslatedSimulationStateTitle()
+    order = self.getOrderValue()
+    if order is not None:
+      return order.getTranslatedSimulationStateTitle()
+    # The simulation_state of a simulation movement is calculated by a
+    # mapping, there's no reliable way of getting the translated title from a
+    # simulation state ID, so we just return the state ID because we got
+    # nothing better to return.
+    return self.getSimulationState()
+
+  security.declareProtected( Permissions.AccessContentsInformation,
                             'isAccountable')
   def isAccountable(self):
     """
