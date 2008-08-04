@@ -99,6 +99,7 @@
                         <string>listbox_inventory</string>
                         <string>listbox_getCurrentInventory</string>
                         <string>listbox_getAvailableInventory</string>
+                        <string>listbox_variation_category_item_list</string>
                       </list>
                     </value>
                 </item>

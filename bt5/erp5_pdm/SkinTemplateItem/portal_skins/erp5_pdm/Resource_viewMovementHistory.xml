@@ -98,6 +98,7 @@
                       <list>
                         <string>listbox_total_quantity</string>
                         <string>listbox_date</string>
+                        <string>listbox_variation_category_item_list</string>
                       </list>
                     </value>
                 </item>
