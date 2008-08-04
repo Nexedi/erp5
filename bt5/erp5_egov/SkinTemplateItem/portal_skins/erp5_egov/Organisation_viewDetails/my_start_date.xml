@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>input_order</string>
+              </list>
             </value>
         </item>
         <item>
@@ -79,6 +81,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Organisation_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>input_order</string> </key>
+                    <value> <string>dmy</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
