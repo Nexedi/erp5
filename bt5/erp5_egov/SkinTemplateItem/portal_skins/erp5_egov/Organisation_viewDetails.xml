@@ -110,6 +110,9 @@
                         <string>my_reference</string>
                         <string>my_password</string>
                         <string>password_confirm</string>
+                        <string>my_stop_date</string>
+                        <string>my_acronym</string>
+                        <string>my_sign</string>
                       </list>
                     </value>
                 </item>
@@ -161,6 +164,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
