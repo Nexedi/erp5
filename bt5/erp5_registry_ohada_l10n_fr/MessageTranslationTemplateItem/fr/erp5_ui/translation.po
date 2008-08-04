@@ -494,7 +494,7 @@ msgid "Assignment"
 msgstr "Affectation"
 
 msgid "Assignment(s) added."
-msgstr "Ajout affectation(s)"
+msgstr "Affectation ajoutée(s)"
 
 msgid "Assignment Start Date"
 msgstr "Date Début Affectation"
@@ -986,7 +986,7 @@ msgid "Children"
 msgstr "Nombre d'enfants"
 
 msgid "Choice"
-msgstr ""
+msgstr "Choix"
 
 msgid "Choose Import Report"
 msgstr ""
@@ -5506,6 +5506,9 @@ msgstr ""
 
 msgid "Workflow History"
 msgstr "Historique"
+
+msgid "Workflow Modification in Progress"
+msgstr "Modification de Workflow en cours"
 
 msgid "Workflows"
 msgstr "Workflows"
