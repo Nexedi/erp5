@@ -493,6 +493,9 @@ msgstr ""
 msgid "Assignment"
 msgstr "Affectation"
 
+msgid "Assignment(s) added."
+msgstr "Ajout affectation(s)"
+
 msgid "Assignment Start Date"
 msgstr "Date Début Affectation"
 
@@ -2511,7 +2514,7 @@ msgid "Missing"
 msgstr "Manquant"
 
 msgid "Mobile Telephone"
-msgstr "téléphone Mobile"
+msgstr "Téléphone mobile"
 
 msgid "Modification Date"
 msgstr ""
