@@ -491,9 +491,8 @@ AAA=</string> </value>
                       tal:attributes=\'text:style-name style_name\'>ref</text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-              <text:p text:style-name=\'Table_20_Contents\'\n
-                      tal:content=\'python:line_dict["description"]\'\n
-                      tal:attributes=\'text:style-name left_style_name\'>desc</text:p>\n
+              <text:p text:style-name=\'Table_20_Contents\' tal:attributes="text:style-name left_style_name"><tal:block tal:repeat="line line_dict/description"><tal:block\n
+                    tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'float\'>\n
               <text:p text:style-name=\'Table_20_Contents\'\n
@@ -657,7 +656,9 @@ AAA=</string> </value>
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau3.7\'>\n
                 <table:table-cell table:style-name=\'Tableau3.A7\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
-                  <text:p text:style-name=\'P3\' tal:content=\'python:data_dict["description"]\'>my_description</text:p>\n
+                  <text:p text:style-name=\'P3\'><tal:block tal:repeat="line data_dict/description"><tal:block\n
+                          tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block>\n
+                </text:p>\n
                 </table:table-cell>\n
                 <table:covered-table-cell/>\n
                 <table:covered-table-cell/>\n
