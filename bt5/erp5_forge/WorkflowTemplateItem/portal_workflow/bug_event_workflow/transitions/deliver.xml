@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The submit logical transition set the Bug Line state to delivered.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The confirm transition sets the bug to state opened.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

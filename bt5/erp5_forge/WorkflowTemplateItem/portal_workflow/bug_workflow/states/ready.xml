@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tickets in this state require processing.</string> </value>
+            <value> <string>Bug in this state require processing.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -62,17 +62,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -84,6 +81,25 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add Content Type Registrys</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -106,6 +122,7 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

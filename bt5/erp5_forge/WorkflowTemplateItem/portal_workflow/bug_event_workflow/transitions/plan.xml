@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The validate logical transition sets the Bug Line state to planned.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

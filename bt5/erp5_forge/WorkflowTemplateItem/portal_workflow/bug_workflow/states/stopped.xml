@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Bug in this states is already finished.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -37,8 +37,6 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>cancel</string>
-                <string>cancel_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
                 <string>set_ready</string>
@@ -74,8 +72,26 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add Content Type Registrys</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -83,6 +99,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -94,8 +111,10 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

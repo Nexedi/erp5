@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The validate logical transition sets the Ticket state to validated.</string> </value>
+            <value> <string>The validate logical transition sets the Bug state to validated.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

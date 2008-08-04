@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The delete logical transition sets the ticket state to deleted.</string> </value>
+            <value> <string>The delete logical transition sets the bug state to deleted.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

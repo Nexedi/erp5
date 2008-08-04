@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The cancel logical transition sets the ticket state to cancelled.</string> </value>
+            <value> <string>The cancel logical transition sets the bug state to cancelled.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

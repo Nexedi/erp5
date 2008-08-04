@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use the Submit action to request the approval of the Ticket manager (Assignor) and open the Ticket.</string> </value>
+            <value> <string>Use the Submit action to request the approval of the Bug manager (Assignor) and open the Ticket.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
