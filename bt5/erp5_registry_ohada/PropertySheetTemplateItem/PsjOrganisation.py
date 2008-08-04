@@ -69,6 +69,14 @@ class PsjOrganisation:
       'description' : 'Capital Social',
       'type'        : 'string',
       'mode'        : 'w'},
+      { 'id'          : 'sign',
+      'description' : 'Sign',
+      'type'        : 'string',
+      'mode'        : 'w'},
+      { 'id'          : 'acronym',
+      'description' : 'Acronym',
+      'type'        : 'string',
+      'mode'        : 'w'},
    )
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 

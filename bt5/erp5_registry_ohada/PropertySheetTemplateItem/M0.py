@@ -60,8 +60,13 @@ class M0:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'logo'
-    , 'description': 'Enseigne Sigle'
+    { 'id'         : 'initials'
+    , 'description': 'Acronym'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'sign'
+    , 'description': 'Sign'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
