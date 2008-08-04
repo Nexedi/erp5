@@ -15,7 +15,6 @@
               <list>
                 <string>title</string>
                 <string>description</string>
-                <string>input_order</string>
               </list>
             </value>
         </item>
@@ -58,6 +57,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -67,6 +70,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -83,7 +90,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>The date the organisation was stopped.</string> </value>
                 </item>
                 <item>
@@ -95,15 +102,11 @@
                     <value> <string>Organisation_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>input_order</string> </key>
-                    <value> <string>dmy</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Stop Date</string> </value>
                 </item>
               </dictionary>

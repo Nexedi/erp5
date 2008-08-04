@@ -108,11 +108,11 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_skill_list</string>
+                        <string>my_acronym</string>
+                        <string>my_sign</string>
                         <string>my_reference</string>
                         <string>my_password</string>
                         <string>password_confirm</string>
-                        <string>my_acronym</string>
-                        <string>my_sign</string>
                       </list>
                     </value>
                 </item>
