@@ -810,7 +810,8 @@ class Movement(XMLObject, Amount):
   security.declarePrivate('_edit')
   def _edit(self, **kw):
     """Overloaded _edit to support setting debit and credit at the same time,
-    which is required for the GUI.
+    which is required for the GUI. Also sets the resource first, because
+    _setVariationCategoryList needs the resource to be set.
     """
     quantity = 0
     if kw.has_key('source_debit') and kw.has_key('source_credit'):
@@ -821,7 +822,11 @@ class Movement(XMLObject, Amount):
       quantity += (kw.pop('destination_debit') or 0 -
                    kw.pop('destination_credit') or 0)
       kw['quantity'] = quantity
-    XMLObject._edit(self, **kw)
+    if 'resource' in kw:
+      self._setResource(kw.pop('resource'))
+    if 'resource_value' in kw:
+      self._setResourceValue(kw.pop('resource_value'))
+    return XMLObject._edit(self, **kw)
 
   # Debit and credit methods for asset
   security.declareProtected( Permissions.AccessContentsInformation,
