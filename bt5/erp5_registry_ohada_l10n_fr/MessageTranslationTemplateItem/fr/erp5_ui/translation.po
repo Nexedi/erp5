@@ -256,6 +256,9 @@ msgstr ""
 msgid "Acquisition Sync Value"
 msgstr ""
 
+msgid "Acronym"
+msgstr "Sigle"
+
 msgid "Action"
 msgstr ""
 
@@ -2508,10 +2511,7 @@ msgid "Missing"
 msgstr "Manquant"
 
 msgid "Mobile Telephone"
-msgstr ""
-
-msgid "Modificaiton Date"
-msgstr ""
+msgstr "téléphone Mobile"
 
 msgid "Modification Date"
 msgstr ""
@@ -3459,7 +3459,7 @@ msgid "RSS Feed"
 msgstr ""
 
 msgid "Radiee du RCCM"
-msgstr ""
+msgstr "Radiée du RCCM"
 
 msgid "Ram Cache"
 msgstr ""
@@ -3609,7 +3609,7 @@ msgid "Related Components"
 msgstr "Composants fournis"
 
 msgid "Related Documents"
-msgstr ""
+msgstr "Documents Liés"
 
 msgid "Related Forms"
 msgstr "Formulaires Créés"
@@ -4088,11 +4088,8 @@ msgstr ""
 msgid "Show All"
 msgstr "Tout Montrer"
 
-msgid "Si vous n'êtes pas un citoyen sénégalais, vous devez joindre votre carte d'identité"
-msgstr ""
-
 msgid "Sign"
-msgstr ""
+msgstr "Enseigne"
 
 msgid "Signature Preview"
 msgstr "Aperçu de la signature"
