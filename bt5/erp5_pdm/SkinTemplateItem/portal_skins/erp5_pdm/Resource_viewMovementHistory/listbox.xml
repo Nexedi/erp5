@@ -271,6 +271,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -315,7 +321,7 @@
                           <string>Owner</string>
                         </tuple>
                         <tuple>
-                          <string>variation_title</string>
+                          <string>variation_text</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>
@@ -323,7 +329,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -357,7 +363,7 @@
                       <list>
                         <tuple>
                           <string>site</string>
-                          <string>Site or Wharehouse</string>
+                          <string>Site</string>
                         </tuple>
                       </list>
                     </value>
@@ -373,7 +379,20 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_text</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -519,7 +538,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getMovementHistoryStat</string> </value>
+            <value> <string>Resource_getMovementHistoryStat</string> </value>
         </item>
       </dictionary>
     </pickle>

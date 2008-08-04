@@ -293,6 +293,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -398,7 +404,7 @@
                       <list>
                         <tuple>
                           <string>site</string>
-                          <string>Site or Warehouse</string>
+                          <string>Site</string>
                         </tuple>
                       </list>
                     </value>
@@ -414,7 +420,20 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>getCurrentInventory</string>
+                          <string>Current</string>
+                        </tuple>
+                        <tuple>
+                          <string>getAvailableInventory</string>
+                          <string>Available</string>
+                        </tuple>
+                        <tuple>
+                          <string>inventory</string>
+                          <string>Future</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -66,15 +66,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
-obj = Object(uid="new_")\n
-obj["node_title"] = ""\n
-obj["section_title"] = ""\n
-obj["variation_text"] = ""\n
-obj["getCurrentInventory"] = context.getCurrentInventory(selection_domain=kw.get(\'selection_domain\', None))\n
-obj["getAvailableInventory"] = context.getAvailableInventory(selection_domain=kw.get(\'selection_domain\', None))\n
-obj["inventory"] = context.getFutureInventory(selection_domain=kw.get(\'selection_domain\', None))\n
 \n
-return [obj,]\n
+return [Object(uid="new_",\n
+               total_quantity=context.getMovementHistoryStat(\n
+                            selection_domain=kw.get(\'selection_domain\', None))[0][\'total_quantity\'],) ]\n
 </string> </value>
         </item>
         <item>
@@ -85,12 +80,6 @@ return [obj,]\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -126,8 +115,7 @@ return [obj,]\n
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
-                            <string>obj</string>
-                            <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
@@ -147,13 +135,7 @@ return [obj,]\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Resource_statInventory</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Resource_getMovementHistoryStat</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

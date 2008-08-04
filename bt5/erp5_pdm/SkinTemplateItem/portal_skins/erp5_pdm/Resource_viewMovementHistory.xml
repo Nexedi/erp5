@@ -95,7 +95,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_total_quantity</string>
+                        <string>listbox_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -140,6 +143,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Resource Inventory</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
