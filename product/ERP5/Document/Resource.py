@@ -68,6 +68,7 @@ class Resource(XMLMatrix, Variated):
                       , PropertySheet.Price
                       , PropertySheet.Resource
                       , PropertySheet.Reference
+                      , PropertySheet.Comment
                       , PropertySheet.FlowCapacity
                       , PropertySheet.VariationRange
                       , PropertySheet.DefaultSupply
