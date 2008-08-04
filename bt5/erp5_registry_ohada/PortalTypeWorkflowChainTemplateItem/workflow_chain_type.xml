@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Assignment</type>
-  <workflow>ohada_assignment_workflow</workflow>
+  <workflow>ohada_assignment_workflow, -assignment_workflow</workflow>
  </chain>
  <chain>
   <type>M0</type>

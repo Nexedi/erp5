@@ -1,4 +1,5 @@
 Address | headquarters_status_workflow
+Assignment | -assignment_workflow
 Assignment | ohada_assignment_workflow
 M0 | edit_workflow
 M0 | egov_form_validation_workflow
@@ -25,10 +26,10 @@ P2 | ohada_form_validation_interaction_workflow
 P4 | edit_workflow
 P4 | egov_form_validation_workflow
 P4 | ohada_form_validation_interaction_workflow
-Person |  psj_validation_workflow
 Person | -validation_workflow
 Person | edit_workflow
 Person | local_permission_interaction_workflow
+Person | psj_validation_workflow
 S1 | edit_workflow
 S1 | egov_form_validation_workflow
 S1 | ohada_form_validation_interaction_workflow
