@@ -1,4 +1,7 @@
 2008-08-04 yusei
+* Remove text_content field from NotificationMessage_view. It was useless.
+
+2008-08-04 yusei
 * Add reference and remove subject in Notification Message Module List.
 
 2008-08-04 yusei

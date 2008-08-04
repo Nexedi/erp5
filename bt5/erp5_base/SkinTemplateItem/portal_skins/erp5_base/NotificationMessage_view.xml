@@ -89,9 +89,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
