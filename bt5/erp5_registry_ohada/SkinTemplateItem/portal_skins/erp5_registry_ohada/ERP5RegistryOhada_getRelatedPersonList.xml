@@ -67,11 +67,8 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 current_object = context.getObject()\n
-rccm = current_object.getCorporateRegistrationCode()\n
-pers_list = []\n
-pers_result = portal.person_module.searchFolder(corporate_registration_code=rccm)\n
-pers_list = [pers.getObject() for pers in pers_result]\n
-return org_list\n
+person_list = [assignment.getParentValue() for assignment in current_object.getDestinationRelatedValueList()]\n
+return pers_list\n
 </string> </value>
         </item>
         <item>
@@ -119,14 +116,12 @@ return org_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>current_object</string>
-                            <string>rccm</string>
-                            <string>pers_list</string>
-                            <string>pers_result</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>pers</string>
-                            <string>org_list</string>
+                            <string>assignment</string>
+                            <string>person_list</string>
+                            <string>pers_list</string>
                           </tuple>
                         </value>
                     </item>

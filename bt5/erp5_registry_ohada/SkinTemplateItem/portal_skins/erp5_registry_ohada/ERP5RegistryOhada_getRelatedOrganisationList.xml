@@ -67,9 +67,9 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 current_object = context.getObject()\n
-rccm = current_object.getCorporateRegistrationCode()\n
+rccm = current_object.getSourceReference()\n
 org_list = []\n
-org_result = portal.organisation_module.searchFolder(corporate_registration_code=rccm)\n
+org_result = portal.organisation_module.searchFolder(source_reference=rccm)\n
 org_list = [org.getObject() for org in org_result if org.getObject() != context.getObject()]\n
 return org_list\n
 </string> </value>

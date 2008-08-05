@@ -94,7 +94,6 @@ organisation.edit(\n
   corporate_name=request_eform.getName(),\n
   acronym=request_eform.getInitials(),\n
   sign=request_eform.getSign(),\n
-  default_address_street_address=request_eform.getWorkAddress(),\n
   default_address_city=request_eform.getDefaultAddressCity(),\n
   social_form=\'%s\' % request_eform.getLegalForm().lower(),\n
   price_currency=\'currency_module/1\', # object 1 is the devise XOF\n
@@ -171,25 +170,26 @@ for assignment in assignment_list:\n
 if request_eform.getMoralPerson():\n
   organisation.edit(role=\'entreprise/siege\',\n
                    corporate_registration_code=new_registry_number,\n
+                   source_reference=new_registry_number,\n
+                   default_address_street_address=request_eform.getHeadOfficeAddress(),\n
   geographic_incorporate_code =\'-\'.join(str(new_registry_number).split(\'-\')[0:2]))\n
   request_eform.edit(corporate_registration_code = new_registry_number)\n
 elif request_eform.getBranch():\n
-  organisation_list = [organisation.getObject() for organisation in\\\n
-      organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
-  for org in organisation_list:\n
-    organisation.edit(succursale_value = organisation,\n
-                  role=\'entreprise/succursale\')\n
-    request_eform.edit(succursale_value = organisation)\n
+  organisation.edit(role=\'entreprise/succursale\',\n
+                  default_address_street_address=request_eform.getFirstCompanyAddress(),\n
+                  corporate_registration_code = new_registry_number,\n
+                  source_reference=request_eform.getCorporateRegistrationCode())\n
 elif request_eform.getSecondCompany():\n
-  organisation_list = [organisation.getObject() for organisation in \\\n
-      organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
-  for org in organisation_list:\n
-    organisation.edit(agence_value = organisation,\n
-                      role = \'entreprise/agence\')\n
-    request_eform.edit(agence_value = organisation)\n
+  organisation.edit(role = \'entreprise/agence\',\n
+                    default_address_street_address=request_eform.getWorkAddress(),\n
+                    corporate_registration_code = new_registry_number,\n
+                    source_reference=request_eform.getCorporateRegistrationCode(),\n
+                    )\n
 else:\n
   organisation.edit(role = \'entreprise/siege\',\n
                 corporate_registration_code = request_eform.getCorporateRegistrationCode(),\n
+                source_reference = request_eform.getCorporateRegistrationCode(),\n
+                default_address_street_address=request_eform.getWorkAddress(),\n
                 description = "Harmonisation d\'une personne morale")\n
 \n
 #Activate Organisation and update security\n
@@ -308,8 +308,6 @@ for M0_bis in M0_bis_list:\n
                             <string>assignment</string>
                             <string>assignment_list</string>
                             <string>str</string>
-                            <string>organisation_list</string>
-                            <string>org</string>
                             <string>history_list</string>
                             <string>history</string>
                             <string>M0_bis</string>
