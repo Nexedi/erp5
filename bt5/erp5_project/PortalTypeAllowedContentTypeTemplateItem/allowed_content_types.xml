@@ -1,17 +1,16 @@
 <allowed_content_type_list>
  <portal_type id="Project">
-  <item>Project Milestone</item>
-  <item>File</item>
   <item>Project Line</item>
+  <item>File</item>
+  <item>Project Milestone</item>
   <item>Image</item>
  </portal_type>
  <portal_type id="Project Line">
+  <item>Project Line</item>
+  <item>Image</item>
   <item>Project Cell</item>
   <item>Folder</item>
-  <item>Project Line</item>
   <item>File</item>
-  <item>Document</item>
-  <item>Image</item>
  </portal_type>
  <portal_type id="Project Module">
   <item>Project</item>
@@ -29,9 +28,9 @@
   <item>Sale Order Milestone</item>
  </portal_type>
  <portal_type id="Task">
-  <item>Discount</item>
   <item>Task Line</item>
   <item>Payment Condition</item>
+  <item>Discount</item>
  </portal_type>
  <portal_type id="Task Module">
   <item>Task</item>

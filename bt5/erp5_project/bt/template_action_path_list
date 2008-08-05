@@ -6,7 +6,6 @@ Project Line | consumed_budget
 Project Line | contents
 Project Line | current_budget
 Project Line | documents
-Project Line | files
 Project Line | initial_budget
 Project Line | jump_to_related_sale_order_lines
 Project Line | task_fast_input_dialog
@@ -19,7 +18,6 @@ Project | add_task_related
 Project | content
 Project | detailed_report
 Project | documents
-Project | files
 Project | jump_to_related_sale_order_lines
 Project | milestone
 Project | planning

@@ -270,7 +270,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getFollowUpRelatedValueList</string> </value>
+            <value> <string>Entity_getRelatedDocumentList</string> </value>
         </item>
       </dictionary>
     </pickle>
