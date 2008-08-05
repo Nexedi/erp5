@@ -1,3 +1,6 @@
+2008-08-05 yusei
+* Remove subject field from NotificationMessage_view. It was useless.
+
 2008-08-04 yusei
 * Remove text_content field from NotificationMessage_view. It was useless.
 
