@@ -107,7 +107,7 @@ body += """ Link: %s\n
 %s\n
 """ % (bug.getAbsoluteUrl(), bug.getDestinationProjectTitle(\'\'), \n
            bug.getSourceProjectTitle(\'\'), \n
-           \' / \'.join(bug.getCausalityTitleList(\'\')), bug.getDescription(\'\'))\n
+           \' / \'.join(bug.getFollowUpTitleList(\'\')), bug.getDescription(\'\'))\n
 \n
 body += """\n
 +---------------------- Messages Related -----------------------+\n
