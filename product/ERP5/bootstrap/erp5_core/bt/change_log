@@ -1,3 +1,7 @@
+2008-08-05 vincentd
+* Add two new parameter for jumping with the method Base_jumpToRelatedObject, one for
+chose to take another item as context and another for choosing a different form_id if there is only one object for jump
+
 2008-07-29 nicolas
 Change brain class of TrackingList results
 

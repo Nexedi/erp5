@@ -69,12 +69,17 @@
 N_ = context.Base_translateString\n
 checkPerm = context.portal_membership.checkPermission\n
 \n
+if jump_from_relative_url is None:                                                                                                          \n
+  relation = context                                                                                                         \n
+else:                                                                                                                        \n
+  relation = context.getPortalObject().restrictedTraverse(jump_from_relative_url)\n
+\n
 # FIXME: performance problem getting *all* related documents URL is not scalable.\n
 getter_base_name = \'\'.join([x.capitalize() for x in base_category.split(\'_\')])\n
 if related:\n
-  search_method = getattr(context, \'get%sRelatedList\' % getter_base_name)\n
+  search_method = getattr(relation, \'get%sRelatedList\' % getter_base_name)\n
 else:\n
-  search_method = getattr(context, \'get%sList\' % getter_base_name)\n
+  search_method = getattr(relation, \'get%sList\' % getter_base_name)\n
 \n
 related_list = search_method(portal_type = portal_type)\n
 \n
@@ -97,6 +102,8 @@ elif len(related_list) == 1:\n
                            "%s/%s" % (base_category, related_list[0]))\n
 \n
   if related_object is not None and checkPerm("View", related_object) :\n
+    if target_form_id is not None:\n
+      form_id = target_form_id\n
     url = related_object.absolute_url()\n
     message = N_(\n
       # first, try to get a full translated message with portal types\n
@@ -118,9 +125,9 @@ else:\n
     if module_id is not None:\n
       if related:\n
         return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
-                 \'view\', keep_items={\'%s_uid\' % base_category: context.getUid(),\n
+                 \'view\', keep_items={\'%s_uid\' % base_category: relation.getUid(),\n
                                      \'reset\': 1})\n
-      get_uid_method = getattr(context, \'get%sUidList\' % getter_base_name)\n
+      get_uid_method = getattr(relation, \'get%sUidList\' % getter_base_name)\n
       return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
                  \'view\', keep_items=dict(\n
                            reset=1,\n
@@ -158,8 +165,6 @@ if selection_name and not relation_found:\n
   query_params[\'selection_name\'] = selection_name\n
   query_params[\'selection_index\'] = selection_index\n
 \n
-if relation_found:\n
-  form_id = \'view\'\n
 \n
 redirect_url = \'%s/%s?%s\' % (url, form_id, make_query(query_params))\n
 return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
@@ -185,7 +190,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category, portal_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\'</string> </value>
+            <value> <string>base_category, portal_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -205,7 +210,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -217,12 +222,16 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>selection_name</string>
                             <string>selection_index</string>
                             <string>form_id</string>
+                            <string>target_form_id</string>
+                            <string>jump_from_relative_url</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>N_</string>
                             <string>checkPerm</string>
+                            <string>None</string>
+                            <string>relation</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -238,7 +247,6 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>_getitem_</string>
                             <string>unicode</string>
                             <string>message</string>
-                            <string>None</string>
                             <string>related_object</string>
                             <string>module_id</string>
                             <string>get_uid_method</string>
@@ -269,6 +277,8 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                 <string></string>
                 <int>0</int>
                 <string>view</string>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>
