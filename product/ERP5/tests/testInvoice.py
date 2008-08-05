@@ -142,30 +142,6 @@ class TestInvoiceMixin(TestPackingListMixin,
     client2.validate()
     sequence.edit(client2=client2)
 
-#  def stepCreateCurrency(self, sequence, **kw) :
-#    """Create a default currency. """
-#    currency_module = self.getCurrencyModule()
-#    if len(currency_module.objectValues(id='EUR'))==0:
-#      currency = self.getCurrencyModule().newContent(
-#          portal_type='Currency',
-#          id="EUR",
-#          base_unit_quantity=0.01,
-#          )
-#    else:
-#      currency = currency_module.objectValues(id='EUR')[0]
-#    sequence.edit(currency=currency)
-#
-#  def stepSetOrderPriceCurrency(self, sequence, **kw) :
-#    """Set the price currency of the order.
-#
-#    This step is not necessary.
-#    TODO : - include a test without this step.
-#           - include a test with this step late.
-#    """
-#    currency = sequence.get('currency')
-#    order = sequence.get('order')
-#    order.setPriceCurrency(currency.getRelativeUrl())
-
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """Create the rule for accounting. """
     portal = self.getPortal()
@@ -2496,6 +2472,7 @@ class TestInvoice(TestInvoiceMixin):
     self.assertTrue('size/Child/32' in
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
+
 
 
 #class TestPurchaseInvoice(TestInvoice):
