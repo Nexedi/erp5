@@ -315,7 +315,7 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
             action_information['visible']==1 and
             action_information['text'].startswith('string:${object_url}/') and
             len(action_information['text'].split('/'))==2):
-          view_name = action_information['text'].split('/')[-1]
+          view_name = action_information['text'].split('/')[-1].split('?', 0)
           method = makeTestMethod(validator,
                                   module_id, 
                                   portal_path,
