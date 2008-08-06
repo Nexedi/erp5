@@ -67,13 +67,16 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 portal_catalog = portal.portal_catalog\n
+path = "%" + "%s" % (context.getRelativeUrl()) + "%"\n
 \n
-# XXX This is not efficient.\n
-document_in_entity_list = portal_catalog(parent_uid=context.getUid(),\n
-                                         portal_type=(\'File\', \'Image\'))\n
 \n
-follow_up_document_list = portal_catalog(portal_type=portal.getPortalDocumentTypeList(),\n
-                                         follow_up_uid=context.getUid())\n
+# Get The documents in all storage structure. ie.: This scripts get all Files and Images\n
+# distributed in many Project Lines in one Project.\n
+\n
+document_in_entity_list = portal_catalog(path=path , portal_type=portal_type)\n
+\n
+follow_up_document_list = portal_catalog(portal_type=portal_type,\n
+                                                                             follow_up_uid=context.getUid())\n
 \n
 return list(document_in_entity_list)+list(follow_up_document_list)\n
 </string> </value>
@@ -92,7 +95,7 @@ return list(document_in_entity_list)+list(follow_up_document_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>portal_type= [], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,17 +115,19 @@ return list(document_in_entity_list)+list(follow_up_document_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>portal_type</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>portal_catalog</string>
+                            <string>path</string>
                             <string>document_in_entity_list</string>
                             <string>follow_up_document_list</string>
                             <string>list</string>
@@ -137,7 +142,9 @@ return list(document_in_entity_list)+list(follow_up_document_list)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <list/>
+              </tuple>
             </value>
         </item>
         <item>
