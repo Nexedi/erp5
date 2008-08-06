@@ -40,12 +40,12 @@ except ImportError:
   LOG('XMLSyncUtils', INFO, "Can't import Parse")
   class Parse:
     def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library"
+      raise ImportError, '4Suite-XML is not installed'
 
 try:
-      from base64 import b16encode, b16decode
+  from base64 import b16encode, b16decode
 except ImportError:
-      from base64 import encodestring as b16encode, decodestring as b16decode
+  from base64 import encodestring as b16encode, decodestring as b16decode
 try:
   from Ft.Xml.Domlette import PrettyPrint
 except ImportError:

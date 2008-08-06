@@ -41,7 +41,6 @@ from Publication import Publication, Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription
 from XMLSyncUtils import Parse
-#from Ft.Xml import Parse
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization

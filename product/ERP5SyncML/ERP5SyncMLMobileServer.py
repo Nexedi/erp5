@@ -13,11 +13,11 @@ try:
 except ImportError:
   class Print:
     def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library"
+      raise ImportError, '4Suite-XML is not installed'
 
   class PrettyPrint:
     def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library"
+      raise ImportError, '4Suite-XML is not installed'
 
 
 class OptionParser(OptionParser):

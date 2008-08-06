@@ -45,14 +45,14 @@ from zLOG import LOG, INFO, DEBUG
 try:
   from Ft.Xml.Domlette import Print, PrettyPrint
 except ImportError:
-  LOG('ERP5Conduit',0,"Can't import Print and PrettyPrint")
+  LOG('ERP5Conduit', INFO, "Can't import Print and PrettyPrint")
   class Print:
     def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library"
+      raise ImportError, '4Suite-XML is not installed'
 
   class PrettyPrint:
     def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library"
+      raise ImportError, '4Suite-XML is not installed'
 
 
 class ERP5Conduit(XMLSyncUtilsMixin):
