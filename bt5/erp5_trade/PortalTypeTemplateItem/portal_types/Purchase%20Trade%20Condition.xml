@@ -97,7 +97,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>supply</string>
+              </tuple>
             </value>
         </item>
         <item>
