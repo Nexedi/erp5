@@ -1,7 +1,6 @@
 <base_category_list>
  <portal_type id="Bug">
   <item>bug_priority</item>
-  <item>follow_up</item>
   <item>bug_difficulty</item>
   <item>bug_severity</item>
  </portal_type>
