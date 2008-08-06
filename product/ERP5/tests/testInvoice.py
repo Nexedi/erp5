@@ -45,6 +45,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
 from testAccountingRules import TestAccountingRulesMixin
 
+
 class TestInvoiceMixin:
   """Test methods for invoices
   """
@@ -196,7 +197,8 @@ class TestInvoiceMixin:
 
 
 class TestInvoice(TestInvoiceMixin):
-  """Test methods for invoice. Subclasses must defines portal types to use.
+  """Test methods for sale and purchase invoice.
+  Subclasses must defines portal types to use.
   """
   def test_invoice_transaction_line_resource(self):
     """
@@ -755,19 +757,41 @@ class TestInvoice(TestInvoiceMixin):
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
 
+  def test_CopyAndPaste(self):
+    """Test copy on paste on Invoice.
+    When an invoice is copy/pasted, references should be resetted.
+    """
+    accounting_module = self.portal.accounting_module
+    invoice = accounting_module.newContent(
+                    portal_type=self.invoice_portal_type)
+    invoice.edit(reference='reference',
+                 source_reference='source_reference',
+                 destination_reference='destination_reference',)
+    cb_data = accounting_module.manage_copyObjects([invoice.getId()])
+    copied, = accounting_module.manage_pasteObjects(cb_data)
+    new_invoice = accounting_module[copied['new_id']]
+    self.assertNotEquals(invoice.getReference(),
+                         new_invoice.getReference())
+    self.assertNotEquals(invoice.getSourceReference(),
+                         new_invoice.getSourceReference())
+    self.assertNotEquals(invoice.getDestinationReference(),
+                         new_invoice.getDestinationReference())
 
-class TestSaleInvoiceMixin(TestPackingListMixin,
+
+class TestSaleInvoiceMixin(TestInvoiceMixin,
+                           TestPackingListMixin,
                            TestAccountingRulesMixin,
-                           TestInvoice,
                            ERP5TypeTestCase):
   """Test sale invoice are created from orders then packing lists.
 
     Those tests methods only work for sale, because sale and purchase invoice
     are not built at the same time on packing list workflow.
   """
-  RUN_ALL_TESTS = 1
-  quiet = 1
-
+  invoice_portal_type = 'Sale Invoice Transaction'
+  invoice_line_portal_type = 'Invoice Line'
+  invoice_cell_portal_type = 'Invoice Cell'
+  invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
+  
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateEntities
@@ -1740,6 +1764,24 @@ class TestSaleInvoiceMixin(TestPackingListMixin,
     for applied_rule in applied_rule_set:
       checkTree(applied_rule)
 
+
+
+class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
+  """Tests for sale invoice.
+  """
+  RUN_ALL_TESTS = 1
+  quiet = 1
+
+  # fix inheritance
+  login = TestInvoiceMixin.login
+  createCategories = TestInvoiceMixin.createCategories
+
+  def _createCategories(self):
+    TestPackingListMixin.createCategories(self)
+    TestInvoiceMixin._createCategories(self)
+
+  getNeededCategoryList = TestInvoiceMixin.getNeededCategoryList
+
   def test_01_SimpleInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that a Simple Invoice is created from a Packing List
@@ -2457,29 +2499,6 @@ class TestSaleInvoiceMixin(TestPackingListMixin,
     # We could generate a better reference here.
     self.assertEquals('1', invoice.getReference())
     
-
-  def test_15_CopyAndPaste(self, run=RUN_ALL_TESTS):
-    """Test copy on paste on Invoice.
-    When an invoice is copy/pasted, references should be resetted.
-    """
-    if not run:
-      return
-    accounting_module = self.getAccountingModule()
-    invoice = accounting_module.newContent(
-                    portal_type=self.invoice_portal_type)
-    invoice.edit(reference='reference',
-                 source_reference='source_reference',
-                 destination_reference='destination_reference',)
-    cb_data = accounting_module.manage_copyObjects([invoice.getId()])
-    copied, = accounting_module.manage_pasteObjects(cb_data)
-    new_invoice = accounting_module[copied['new_id']]
-    self.assertNotEquals(invoice.getReference(),
-                         new_invoice.getReference())
-    self.assertNotEquals(invoice.getSourceReference(),
-                         new_invoice.getSourceReference())
-    self.assertNotEquals(invoice.getDestinationReference(),
-                         new_invoice.getDestinationReference())
-
   def test_16_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that adding invoice lines and accounting lines to one invoice
@@ -2559,24 +2578,6 @@ class TestSaleInvoiceMixin(TestPackingListMixin,
       """)
     sequence_list.play(self, quiet=quiet)
 
-
-class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
-  """Tests for sale invoice.
-  """
-  invoice_portal_type = 'Sale Invoice Transaction'
-  invoice_line_portal_type = 'Invoice Line'
-  invoice_cell_portal_type = 'Invoice Cell'
-  invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
-  
-  # fix inheritance
-  login = TestInvoiceMixin.login
-  createCategories = TestInvoiceMixin.createCategories
-
-  def _createCategories(self):
-    TestPackingListMixin.createCategories(self)
-    TestInvoiceMixin._createCategories(self)
-
-  getNeededCategoryList = TestInvoiceMixin.getNeededCategoryList
 
 
 class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
