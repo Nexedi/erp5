@@ -79,33 +79,34 @@ class TestOrderMixin:
       Light install create only base categories, so we create
       some categories for testing them
     """
+    category_tool = self.portal.portal_categories
     size_category_list = ['Baby', 'Child', 'Man', 'Woman']
-    if len(self.category_tool.size.contentValues()) == 0 :
+    if len(category_tool.size.contentValues()) == 0 :
       for category_id in size_category_list:
-        o = self.category_tool.size.newContent(portal_type='Category',
+        o = category_tool.size.newContent(portal_type='Category',
                                                id=category_id)
       for category_id in ['32', '34']:
-        o = self.category_tool.size.Child.newContent(portal_type='Category',
+        o = category_tool.size.Child.newContent(portal_type='Category',
                                                      id=category_id)
 
     colour_category_list = ['blue', 'green']
-    if len(self.category_tool.colour.contentValues()) == 0 :
+    if len(category_tool.colour.contentValues()) == 0 :
       for category_id in colour_category_list:
-        o = self.category_tool.colour.newContent(portal_type='Category',
+        o = category_tool.colour.newContent(portal_type='Category',
                                                  id=category_id)
 
     industrial_phase_category_list = ['phase1', 'phase2',
                                       'supply_phase1', 'supply_phase2']
-    if len(self.category_tool.industrial_phase.contentValues()) == 0:
+    if len(category_tool.industrial_phase.contentValues()) == 0:
       for category_id in industrial_phase_category_list:
-        o = self.category_tool.industrial_phase.newContent(
+        o = category_tool.industrial_phase.newContent(
                                                  portal_type='Category',
                                                  id=category_id)
 
     product_line_category_list = ['apparel', ]
-    if len(self.category_tool.product_line.contentValues()) == 0:
+    if len(category_tool.product_line.contentValues()) == 0:
       for category_id in product_line_category_list:
-        o = self.category_tool.product_line.newContent(
+        o = category_tool.product_line.newContent(
                                                  portal_type='Category',
                                                  id=category_id)
 
