@@ -65,39 +65,70 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def sourceSortMethod(a, b):\n
-  if a.getSource():\n
-    return -1 # a defines a source and wins\n
-  return 1 # a defines no source ans loses\n
+            <value> <string>def sourceSectionSortMethod(a, b):\n
+  if a.getSourceSection():\n
+    return -1 # a defines a source section and wins\n
+  return 1 # a defines no source section and loses\n
 \n
-def destinationSortMethod(a, b):\n
-  if a.getDestination():\n
-    return -1 # a defines a destination and wins\n
-  return 1 # a defines no destination ans loses\n
 \n
-def resourcePurchasePriceSortMethod(a, b):\n
-  if "Purchase" in a.getPortalType():\n
-    if "Purchase" in b.getPortalType():\n
-      return sourceSortMethod(a, b)\n
-    else:\n
+def destinationSectionSortMethod(a, b):\n
+  if a.getDestinationSection():\n
+    return -1 # a defines a destination section and wins\n
+  return 1 # a defines no destination section and loses\n
+\n
+\n
+def getResourcePurchasePriceSortMethod(high_priority_supply_line_list):\n
+  def resourcePurchasePriceSortMethod(a, b):\n
+    if a in high_priority_supply_line_list:\n
       return -1\n
-  else:\n
-    if "Purchase" in b.getPortalType():\n
+    elif b in high_priority_supply_line_list:\n
       return 1\n
-    else:\n
-      return destinationSortMethod(a, b)\n
 \n
-def resourceSalePriceSortMethod(a, b):\n
-  if "Sale" in a.getPortalType():\n
-    if "Sale" in b.getPortalType():\n
-      return destinationSortMethod(a, b)\n
+    if "Purchase" in a.getPortalType():\n
+      if "Purchase" in b.getPortalType():\n
+        return sourceSectionSortMethod(a, b)\n
+      else:\n
+        return -1\n
     else:\n
+      if "Purchase" in b.getPortalType():\n
+        return 1\n
+      else:\n
+        return destinationSectionSortMethod(a, b)\n
+  return resourcePurchasePriceSortMethod\n
+\n
+\n
+def getResourceSalePriceSortMethod(high_priority_supply_line_list):\n
+  def resourceSalePriceSortMethod(a, b):\n
+    if a in high_priority_supply_line_list:\n
       return -1\n
-  else:\n
-    if "Sale" in b.getPortalType():\n
+    elif b in high_priority_supply_line_list:\n
       return 1\n
+\n
+    if "Sale" in a.getPortalType():\n
+      if "Sale" in b.getPortalType():\n
+        return destinationSectionSortMethod(a, b)\n
+      else:\n
+        return -1\n
     else:\n
-      return sourceSortMethod(a, b)\n
+      if "Sale" in b.getPortalType():\n
+        return 1\n
+      else:\n
+        return sourceSectionSortMethod(a, b)\n
+  return resourceSalePriceSortMethod\n
+\n
+\n
+def getRelatedTradeConditionList(trade_condition):\n
+  """Get all trade conditions related to an order.\n
+  trade_condition parameter can be a trade condition or an order/invoice\n
+  """\n
+  related_trade_condition_list = trade_condition.getSpecialiseValueList(\n
+        portal_type=(\'Sale Trade Condition\', \'Purchase Trade Condition\'))\n
+  for related_trade_condition in trade_condition.getSpecialiseValueList(\n
+        portal_type=(\'Sale Trade Condition\', \'Purchase Trade Condition\')):\n
+    related_trade_condition_list.extend(\n
+          getRelatedTradeConditionList(related_trade_condition))\n
+  return related_trade_condition_list\n
+\n
 \n
 try:\n
   explanation = context.getExplanationValue()\n
@@ -107,16 +138,31 @@ except AttributeError:\n
 \n
 if explanation is not None:\n
   explanation_type = explanation.getPortalType()\n
+  high_priority_supply_line_list = []\n
+  if explanation_type in context.getPortalInvoiceTypeList() +\\\n
+                              context.getPortalOrderTypeList():\n
+    # if there are trade conditions containing supply lines related to that\n
+    # order/invoice, we give high priority to those supply lines\n
+    for trade_condition in getRelatedTradeConditionList(explanation):\n
+      high_priority_supply_line_list.extend(\n
+          list(trade_condition.contentValues(\n
+                  portal_type=context.getPortalSupplyPathTypeList(),\n
+                  checked_permission=\'View\')))\n
+\n
   # XXX FIXME: Hardcoded values\n
   if "Purchase" in explanation_type:\n
-    kw[\'sort_method\'] = resourcePurchasePriceSortMethod\n
+    kw[\'sort_method\'] = getResourcePurchasePriceSortMethod(\n
+                                  high_priority_supply_line_list)\n
   elif "Sale" in explanation_type:\n
-    kw[\'sort_method\'] = resourceSalePriceSortMethod\n
+    kw[\'sort_method\'] = getResourceSalePriceSortMethod(\n
+                                  high_priority_supply_line_list)\n
 \n
 resource = context.getResourceValue()\n
 if resource is not None:\n
-  return resource.getPriceCalculationOperandDict(\n
+  r = resource.getPriceCalculationOperandDict(\n
                 default=default, context=context, **kw)\n
+  return r\n
+\n
 return default\n
 </string> </value>
         </item>
@@ -168,19 +214,25 @@ return default\n
                           <tuple>
                             <string>default</string>
                             <string>kw</string>
-                            <string>sourceSortMethod</string>
-                            <string>destinationSortMethod</string>
-                            <string>resourcePurchasePriceSortMethod</string>
-                            <string>resourceSalePriceSortMethod</string>
+                            <string>sourceSectionSortMethod</string>
+                            <string>destinationSectionSortMethod</string>
+                            <string>getResourcePurchasePriceSortMethod</string>
+                            <string>getResourceSalePriceSortMethod</string>
+                            <string>getRelatedTradeConditionList</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>explanation</string>
                             <string>AttributeError</string>
                             <string>None</string>
                             <string>explanation_type</string>
+                            <string>high_priority_supply_line_list</string>
+                            <string>_getiter_</string>
+                            <string>trade_condition</string>
+                            <string>list</string>
                             <string>_write_</string>
                             <string>resource</string>
                             <string>_apply_</string>
+                            <string>r</string>
                           </tuple>
                         </value>
                     </item>
@@ -200,6 +252,10 @@ return default\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Movement_getPriceCalculationOperandDict</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
