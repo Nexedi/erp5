@@ -54,6 +54,8 @@ Support Request Module | support_request_status
 Support Request Module | view
 Support Request | clone_ticket_and_event_list
 Support Request | document_list
+Support Request | jump_related_bug
+Support Request | new_bug
 Support Request | new_event
 Support Request | view
 System Preference | crm_preference
