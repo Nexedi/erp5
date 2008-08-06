@@ -1446,7 +1446,105 @@ class DiscountCalculation:
                     float_index=1,
                     efficiency=0.2,
                     resource_value=self.discount)
-    
+  
+
+class TestTradeConditionSupplyLine(TradeConditionTestCase):
+  """A trade condition can contain supply line and those supply lines are used
+  in priority, for example to calculate the price
+  """
+  def test_category_acquisition(self):
+    self.trade_condition.setSourceValue(self.vendor)
+    self.trade_condition.setSourceSectionValue(self.vendor)
+    self.trade_condition.setDestinationValue(self.client)
+    self.trade_condition.setDestinationSectionValue(self.client)
+    self.trade_condition.setPriceCurrencyValue(self.currency)
+
+    supply_line = self.trade_condition.newContent(
+                                    portal_type=self.supply_line_type)
+
+    self.assertEquals(self.vendor, supply_line.getSourceValue())
+    self.assertEquals(self.vendor, supply_line.getSourceSectionValue())
+    self.assertEquals(self.client, supply_line.getDestinationValue())
+    self.assertEquals(self.client, supply_line.getDestinationSectionValue())
+    self.assertEquals(self.client, supply_line.getPriceCurrencyValue())
+
+  def test_movement_price_assignment(self):
+    # supply line from the trade condition apply to the movements in order
+    # where this trade condition is used
+    supply_line = self.trade_condition.newContent(
+                                    portal_type=self.supply_line_type,
+                                    resource_value=self.resource,
+                                    base_price=123)
+
+    self.order.setSpecialiseValue(self.trade_condition)
+    get_transaction().commit()
+    self.tic()
+
+    line = self.order.newContent(portal_type=self.order_line_type,
+                                 resource_value=self.resource,
+                                 quantity=1)
+    self.assertEquals(123, line.getPrice())
+
+  def test_supply_line_priority(self):
+    # supply lines from related trade condition should have priority over
+    # supply lines from supply modules
+    other_supply = self.portal.getDefaultModule(self.supply_type
+                             ).newContent(portal_type=self.supply_type,
+                                          resource_value=self.resource,
+                                          source_section_value=self.vendor,
+                                          destination_section_value=self.client)
+    other_supply_line = other_supply.newContent(
+                                    portal_type=self.supply_line_type,
+                                    base_price=1)
+    supply_line = self.trade_condition.newContent(
+                                    portal_type=self.supply_line_type,
+                                    resource_value=self.resource,
+                                    base_price=2)
+    self.order.setSpecialiseValue(self.trade_condition)
+    self.order.setSourceSectionValue(self.vendor)
+    self.order.setDestinationSectionValue(self.vendor)
+    get_transaction().commit()
+    self.tic()
+
+    line = self.order.newContent(portal_type=self.order_line_type,
+                                 resource_value=self.resource,
+                                 quantity=1)
+    # using the supply line inside trade condition
+    self.assertEquals(2, line.getPrice())
+
+  # TODO: move to testSupplyLine ! (which does not exist yet)
+  def test_supply_line_section(self):
+    # if a supply lines defines a section, it has priority over supply lines
+    # not defining sections
+    other_entity = self.portal.organisation_module.newContent(
+                                      portal_type='Organisation',
+                                      title='Other')
+    supply = self.portal.getDefaultModule(self.supply_type
+                             ).newContent(portal_type=self.supply_type,
+                                          resource_value=self.resource,)
+    supply_line = supply.newContent(
+                                    portal_type=self.supply_line_type,
+                                    base_price=1)
+
+    other_supply = self.portal.getDefaultModule(self.supply_type
+                             ).newContent(portal_type=self.supply_type,
+                                          resource_value=self.resource,
+                                          destination_section_value=self.client,
+                                          source_section_value=self.vendor)
+    other_supply_line = other_supply.newContent(
+                                    portal_type=self.supply_line_type,
+                                    base_price=2)
+
+    self.order.setSourceSectionValue(self.vendor)
+    self.order.setDestinationSectionValue(self.client)
+    get_transaction().commit()
+    self.tic()
+
+    line = self.order.newContent(portal_type=self.order_line_type,
+                                 resource_value=self.resource,
+                                 quantity=1)
+    # using the supply line with section defined
+    self.assertEquals(2, line.getPrice())
 
 
 class TestWithSaleOrder:
@@ -1454,24 +1552,32 @@ class TestWithSaleOrder:
   order_line_type = 'Sale Order Line'
   order_cell_type = 'Sale Order Cell'
   trade_condition_type = 'Sale Trade Condition'
+  supply_type = 'Sale Supply'
+  supply_line_type = 'Sale Supply Line'
 
 class TestWithPurchaseOrder:
   order_type = 'Purchase Order'
   order_line_type = 'Purchase Order Line'
   order_cell_type = 'Purchase Order Cell'
   trade_condition_type = 'Purchase Trade Condition'
+  supply_type = 'Purchase Supply'
+  supply_line_type = 'Purchase Supply Line'
 
 class TestWithSaleInvoice:
   order_type = 'Sale Invoice Transaction'
   order_line_type = 'Invoice Line'
   order_cell_type = 'Invoice Cell'
   trade_condition_type = 'Sale Trade Condition'
+  supply_type = 'Sale Supply'
+  supply_line_type = 'Sale Supply Line'
 
 class TestWithPurchaseInvoice:
   order_type = 'Purchase Invoice Transaction'
   order_line_type = 'Invoice Line'
   order_cell_type = 'Invoice Cell'
   trade_condition_type = 'Purchase Trade Condition'
+  supply_type = 'Purchase Supply'
+  supply_line_type = 'Purchase Supply Line'
 
 
 class TestApplyTradeConditionSaleOrder(
@@ -1512,6 +1618,21 @@ class TestTaxLineInvoiceSimulationSaleInvoice(
       TestTaxLineInvoiceSimulation, TestWithSaleInvoice):
   pass
 
+class TestTradeConditionSupplyLineSaleOrder(
+      TestTradeConditionSupplyLine, TestWithSaleOrder):
+  pass
+class TestTradeConditionSupplyLinePurchaseOrder(
+      TestTradeConditionSupplyLine, TestWithPurchaseOrder):
+  pass
+class TestTradeConditionSupplyLineSaleInvoice(
+      TestTradeConditionSupplyLine, TestWithSaleInvoice):
+  pass
+class TestTradeConditionSupplyLinePurchaseInvoice(
+      TestTradeConditionSupplyLine, TestWithPurchaseInvoice):
+  pass
+
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestApplyTradeConditionSaleOrder))
@@ -1524,5 +1645,9 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestTaxLineOrderSimulationPurchaseOrder))
   suite.addTest(unittest.makeSuite(TestTaxLineInvoiceSimulationPurchaseInvoice))
   suite.addTest(unittest.makeSuite(TestTaxLineInvoiceSimulationSaleInvoice))
+  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLineSaleOrder))
+  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLinePurchaseOrder))
+  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLineSaleInvoice))
+  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLinePurchaseInvoice))
   return suite
 
