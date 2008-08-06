@@ -31,9 +31,9 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testInvoice import TestInvoiceMixin
+from testInvoice import TestSaleInvoiceMixin
 
-class TestItemMixin(TestInvoiceMixin):
+class TestItemMixin(TestSaleInvoiceMixin):
   """
     Test business template erp5_trade 
   """
@@ -42,7 +42,7 @@ class TestItemMixin(TestInvoiceMixin):
   def getBusinessTemplateList(self):
     """
     """
-    return TestInvoiceMixin.getBusinessTemplateList(self) + ('erp5_item',)
+    return TestSaleInvoiceMixin.getBusinessTemplateList(self) + ('erp5_item',)
   
   def stepCreateItemList(self, sequence=None, sequence_list=None, **kw):
     """ Create some items """

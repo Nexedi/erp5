@@ -48,12 +48,62 @@ from testAccountingRules import TestAccountingRulesMixin
 class TestInvoiceMixin:
   """Test methods for invoices
   """
+  default_region = "europe/west/france"
+  vat_gap = 'fr/pcg/4/44/445/4457/44571'
+  vat_rate = 0.196
+  sale_gap = 'fr/pcg/7/70/707/7071/70712'
+  customer_gap = 'fr/pcg/4/41/411'
+
+  # (account_id, account_gap, account_type)
+  account_definition_list = (
+      ('receivable_vat', vat_gap, 'liability/payable/collected_vat',),
+      ('sale', sale_gap, 'income'),
+      ('customer', customer_gap, 'asset/receivable'),
+      ('refundable_vat', vat_gap, 'asset/receivable/refundable_vat'),
+      ('purchase', sale_gap, 'expense'),
+      ('supplier', customer_gap, 'liability/payable'),
+      )
+  # (line_id, source_account_id, destination_account_id, line_quantity)
+  transaction_line_definition_list = (
+      ('income', 'sale', 'purchase', 1.0),
+      ('receivable', 'customer', 'supplier', -1.0 - vat_rate),
+      ('collected_vat', 'receivable_vat', 'refundable_vat', vat_rate),
+      )
+
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing')
 
   def createCategories(self):
-    pass
+    """Create the categories for our test. """
+    return UnrestrictedMethod(self._createCategories)()
+
+  def _createCategories(self):
+    # create categories
+    for cat_string in self.getNeededCategoryList() :
+      base_cat = cat_string.split("/")[0]
+      path = self.getPortal().portal_categories[base_cat]
+      for cat in cat_string.split("/")[1:] :
+        if not cat in path.objectIds() :
+          path = path.newContent(
+                    portal_type='Category',
+                    id=cat,)
+        else:
+          path = path[cat]
+    # check categories have been created
+    for cat_string in self.getNeededCategoryList() :
+      self.assertNotEquals(None,
+                self.getCategoryTool().restrictedTraverse(cat_string),
+                cat_string)
+
+  def getNeededCategoryList(self):
+    """return a list of categories that should be created."""
+    return ('region/%s' % self.default_region,
+            'gap/%s' % self.vat_gap,
+            'gap/%s' % self.sale_gap,
+            'gap/%s' % self.customer_gap,
+        )
+
 
   def afterSetUp(self):
     self.createCategories()
@@ -82,6 +132,72 @@ class TestInvoiceMixin:
     user = uf.getUserById('test_invoice_user').__of__(uf)
     newSecurityManager(None, user)
 
+  def createInvoiceTransactionRule(self, resource=None):
+    return UnrestrictedMethod(
+        self._createSaleInvoiceTransactionRule)(resource=resource)
+
+  def _createSaleInvoiceTransactionRule(self, resource=None):
+    """Create a sale invoice transaction rule with only one cell for
+    product_line/apparel and default_region
+    The accounting rule cell will have the provided resource, but this his more
+    or less optional (as long as price currency is set correctly on order)
+    """
+    portal = self.portal
+    account_module = portal.account_module
+    for account_id, account_gap, account_type \
+               in self.account_definition_list:
+      if not account_id in account_module.objectIds():
+        account = account_module.newContent(id=account_id)
+        account.setGap(account_gap)
+        account.setAccountType(account_type)
+        portal.portal_workflow.doActionFor(account, 'validate_action')
+
+    invoice_rule = portal.portal_rules.default_invoice_transaction_rule
+    invoice_rule.deleteContent([x.getId()
+                          for x in invoice_rule.objectValues()])
+    get_transaction().commit()
+    self.tic()
+    region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
+    product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
+    region_predicate.edit(
+      membership_criterion_base_category_list = ['destination_region'],
+      membership_criterion_category_list =
+                   ['destination_region/region/%s' % self.default_region ],
+      int_index = 1,
+      string_index = 'region'
+    )
+    product_line_predicate.edit(
+      membership_criterion_base_category_list = ['product_line'],
+      membership_criterion_category_list =
+                            ['product_line/apparel'],
+      int_index = 1,
+      string_index = 'product'
+    )
+    product_line_predicate.immediateReindexObject()
+    region_predicate.immediateReindexObject()
+
+    invoice_rule.updateMatrix()
+    cell_list = invoice_rule.getCellValueList(base_id='movement')
+    self.assertEquals(len(cell_list),1)
+    cell = cell_list[0]
+
+    for line_id, line_source_id, line_destination_id, line_ratio in \
+        self.transaction_line_definition_list:
+      line = cell.newContent(id=line_id,
+          portal_type='Accounting Transaction Line', quantity=line_ratio,
+          resource_value=resource,
+          source_value=account_module[line_source_id],
+          destination_value=account_module[line_destination_id])
+
+    invoice_rule.validate()
+    get_transaction().commit()
+    self.tic()
+
+
+
+class TestInvoice(TestInvoiceMixin):
+  """Test methods for invoice. Subclasses must defines portal types to use.
+  """
   def test_invoice_transaction_line_resource(self):
     """
     tests that simulation movements corresponding to accounting line have a
@@ -90,17 +206,21 @@ class TestInvoiceMixin:
     resource = self.portal.getDefaultModule(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
-                    title='Resource',)
+                    title='Resource',
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='Currency')
+    self.createInvoiceTransactionRule(currency)
 
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
-                            title='Client')
+                            title='Client',
+                            default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
-                            title='Vendor')
+                            title='Vendor',
+                            default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
                               source_value=vendor,
@@ -169,9 +289,10 @@ class TestInvoiceMixin:
     other_entity = self.portal.organisation_module.newContent(
                                       portal_type='Organisation',
                                       title='Other Entity')
-    order.confirm()
+    order.plan()
     get_transaction().commit()
     self.tic()
+    self.assertEquals('planned', order.getSimulationState())
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -329,17 +450,21 @@ class TestInvoiceMixin:
     resource = self.portal.getDefaultModule(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
-                    title='Resource',)
+                    title='Resource',
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='Currency')
+    self.createInvoiceTransactionRule(currency)
 
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
-                            title='Client')
+                            title='Client',
+                            default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
-                            title='Vendor')
+                            title='Vendor',
+                            default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
                               source_value=vendor,
@@ -355,10 +480,12 @@ class TestInvoiceMixin:
                                   price=2)
     other_entity = self.portal.organisation_module.newContent(
                                       portal_type='Organisation',
-                                      title='Other Entity')
-    order.confirm()
+                                      title='Other Entity',
+                                      default_address_region=self.default_region)
+    order.plan()
     get_transaction().commit()
     self.tic()
+    self.assertEquals('planned', order.getSimulationState())
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -631,7 +758,7 @@ class TestInvoiceMixin:
 
 class TestSaleInvoiceMixin(TestPackingListMixin,
                            TestAccountingRulesMixin,
-                           TestInvoiceMixin,
+                           TestInvoice,
                            ERP5TypeTestCase):
   """Test sale invoice are created from orders then packing lists.
 
@@ -640,30 +767,6 @@ class TestSaleInvoiceMixin(TestPackingListMixin,
   """
   RUN_ALL_TESTS = 1
   quiet = 1
-
-  default_region = "europe/west/france"
-  vat_gap = 'fr/pcg/4/44/445/4457/44571'
-  vat_rate = 0.196
-  sale_gap = 'fr/pcg/7/70/707/7071/70712'
-  customer_gap = 'fr/pcg/4/41/411'
-
-  # (account_id, account_gap, account_type)
-  #XXX gap for the last 3 should be set to real values
-  account_definition_list = (
-      ('receivable_vat', vat_gap, 'liability/payable/collected_vat',),
-      ('sale', sale_gap, 'income'),
-      ('customer', customer_gap, 'asset/receivable'),
-      ('refundable_vat', vat_gap, 'asset/receivable/refundable_vat'),
-      ('purchase', sale_gap, 'expense'),
-      ('supplier', customer_gap, 'liability/payable'),
-      )
-  # (line_id, source_account_id, destination_account_id, line_quantity)
-  transaction_line_definition_list = (
-      ('income', 'sale', 'purchase', 1.0),
-      ('receivable', 'customer', 'supplier', -1.0 - vat_rate),
-      ('collected_vat', 'receivable_vat', 'refundable_vat', vat_rate),
-      )
-
 
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
@@ -764,42 +867,8 @@ class TestSaleInvoiceMixin(TestPackingListMixin,
       stepCheckNewPackingListIsPacked
     """
 
-
   def getTitle(self):
     return "Invoices"
-
-  login = TestInvoiceMixin.login
-
-  def createCategories(self):
-    """Create the categories for our test. """
-    return UnrestrictedMethod(self._createCategories)()
-
-  def _createCategories(self):
-    TestPackingListMixin.createCategories(self)
-    # create categories
-    for cat_string in self.getNeededCategoryList() :
-      base_cat = cat_string.split("/")[0]
-      path = self.getPortal().portal_categories[base_cat]
-      for cat in cat_string.split("/")[1:] :
-        if not cat in path.objectIds() :
-          path = path.newContent(
-                    portal_type='Category',
-                    id=cat,)
-        else:
-          path = path[cat]
-    # check categories have been created
-    for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
-                self.getCategoryTool().restrictedTraverse(cat_string),
-                cat_string)
-
-  def getNeededCategoryList(self):
-    """return a list of categories that should be created."""
-    return ('region/%s' % self.default_region,
-            'gap/%s' % self.vat_gap,
-            'gap/%s' % self.sale_gap,
-            'gap/%s' % self.customer_gap,
-        )
 
   def getBusinessTemplateList(self):
     """ """
@@ -830,57 +899,7 @@ class TestSaleInvoiceMixin(TestPackingListMixin,
 
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """Create the rule for accounting. """
-    return UnrestrictedMethod(self._stepCreateSaleInvoiceTransactionRule)(
-                  sequence, **kw)
-
-  def _stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
-    portal = self.getPortal()
-    account_module = self.getAccountModule()
-    for account_id, account_gap, account_type \
-               in self.account_definition_list:
-      if not account_id in account_module.objectIds():
-        account = account_module.newContent(id=account_id)
-        account.setGap(account_gap)
-        account.setAccountType(account_type)
-        portal.portal_workflow.doActionFor(account, 'validate_action')
-    invoice_rule = self.getPortal().portal_rules\
-                          .default_invoice_transaction_rule
-    
-    invoice_rule.deleteContent([x.getId()
-                          for x in invoice_rule.objectValues()])
-    get_transaction().commit()
-    self.tic()
-    region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
-    product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
-    region_predicate.edit(
-      membership_criterion_base_category_list = ['destination_region'],
-      membership_criterion_category_list =
-                   ['destination_region/region/%s' % self.default_region ],
-      int_index = 1,
-      string_index = 'region'
-    )
-    product_line_predicate.edit(
-      membership_criterion_base_category_list = ['product_line'],
-      membership_criterion_category_list =
-                            ['product_line/apparel'],
-      int_index = 1,
-      string_index = 'product'
-    )
-    product_line_predicate.immediateReindexObject()
-    region_predicate.immediateReindexObject()
-
-    invoice_rule.updateMatrix()
-    cell_list = invoice_rule.getCellValueList(base_id='movement')
-    self.assertEquals(len(cell_list),1)
-    cell = cell_list[0]
-
-    for line_id, line_source_id, line_destination_id, line_ratio in \
-        self.transaction_line_definition_list:
-      line = cell.newContent(id=line_id,
-          portal_type='Accounting Transaction Line', quantity=line_ratio,
-          resource_value=sequence.get('currency'),
-          source_value=account_module[line_source_id],
-          destination_value=account_module[line_destination_id])
+    self.createInvoiceTransactionRule(resource=sequence.get('resource'))
 
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
@@ -2549,8 +2568,18 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   invoice_cell_portal_type = 'Invoice Cell'
   invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
   
+  # fix inheritance
+  login = TestInvoiceMixin.login
+  createCategories = TestInvoiceMixin.createCategories
 
-class TestPurchaseInvoice(TestInvoiceMixin, ERP5TypeTestCase):
+  def _createCategories(self):
+    TestPackingListMixin.createCategories(self)
+    TestInvoiceMixin._createCategories(self)
+
+  getNeededCategoryList = TestInvoiceMixin.getNeededCategoryList
+
+
+class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
   """Tests for purchase invoice.
   """
   resource_portal_type = 'Product'
