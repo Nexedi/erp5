@@ -51,7 +51,6 @@ Image | jump_to_wiki_predecessor
 Image | local_permission
 Image | related_document
 Organisation | contribute_file
-Organisation | related_document_view
 PDF | download
 PDF | file_upload
 PDF | html_view
@@ -67,7 +66,6 @@ PDF | related_document
 PDF | view
 PDF | web_view
 Person | contribute_file
-Person | related_document_view
 Presentation | convert
 Presentation | create_snapshot
 Presentation | download
