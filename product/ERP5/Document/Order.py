@@ -131,7 +131,7 @@ class Order(Delivery):
           Delete related Applied Rule
       """
       for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
-        o.getParentValue().activate().deleteContent(o.getId())
+        o.getParentValue().deleteContent(o.getId())
       Delivery.manage_beforeDelete(self, item, container)
 
     ##########################################################################
