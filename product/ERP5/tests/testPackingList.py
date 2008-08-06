@@ -681,14 +681,14 @@ class TestPackingListMixin(TestOrderMixin):
   def stepCreateCurrency(self, sequence, **kw) :
     """Create a default currency. """
     currency_module = self.getCurrencyModule()
-    if len(currency_module.objectValues(id='EUR'))==0:
+    if currency_module._getOb('EUR', None) is None:
       currency = self.getCurrencyModule().newContent(
           portal_type='Currency',
           id="EUR",
           base_unit_quantity=0.01,
           )
     else:
-      currency = currency_module.objectValues(id='EUR')[0]
+      currency = currency_module._getOb('EUR')
     sequence.edit(currency=currency)
  
   def stepSetOrderPriceCurrency(self, sequence, **kw) :
