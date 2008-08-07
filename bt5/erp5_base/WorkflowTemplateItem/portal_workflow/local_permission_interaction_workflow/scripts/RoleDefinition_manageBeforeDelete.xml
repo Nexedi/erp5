@@ -71,7 +71,7 @@
   that will update security groups. \n
 """\n
 role_definition_parent = state_change[\'object\'].getParentValue()\n
-role_definition_parent.activate().assignRoleToSecurityGroup()\n
+role_definition_parent.activate().updateLocalRolesOnSecurityGroups()\n
 </string> </value>
         </item>
         <item>

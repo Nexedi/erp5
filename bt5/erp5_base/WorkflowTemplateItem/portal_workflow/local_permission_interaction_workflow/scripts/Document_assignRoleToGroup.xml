@@ -71,7 +71,7 @@ It is called usually called after each update on\n
 a document which follows classification based security.\n
 """\n
 ob = sci[\'object\']\n
-ob.assignRoleToSecurityGroup()\n
+ob.updateLocalRolesOnSecurityGroups()\n
 </string> </value>
         </item>
         <item>
