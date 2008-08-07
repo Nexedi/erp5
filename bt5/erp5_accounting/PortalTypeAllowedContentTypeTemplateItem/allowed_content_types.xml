@@ -7,6 +7,8 @@
   <item>Accounting Transaction Line</item>
  </portal_type>
  <portal_type id="Accounting Transaction">
+  <item>Image</item>
+  <item>File</item>
   <item>Accounting Transaction Line</item>
  </portal_type>
  <portal_type id="Accounting Transaction Module">
@@ -35,6 +37,8 @@
  </portal_type>
  <portal_type id="Payment Transaction">
   <item>Accounting Transaction Line</item>
+  <item>Image</item>
+  <item>File</item>
  </portal_type>
  <portal_type id="Preference">
   <item>Accounting Transaction</item>
@@ -44,12 +48,16 @@
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Purchase Invoice Transaction Line</item>
+  <item>File</item>
+  <item>Image</item>
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Invoice Rule</item>
   <item>Payment Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
+  <item>File</item>
   <item>Sale Invoice Transaction Line</item>
+  <item>Image</item>
  </portal_type>
 </allowed_content_type_list>

@@ -33,9 +33,11 @@ Accounting Transaction Module | trial_balance_export
 Accounting Transaction Module | trial_balance_report
 Accounting Transaction Module | view
 Accounting Transaction | add_accounting_transaction_line
+Accounting Transaction | create_new_file
 Accounting Transaction | create_reversal
 Accounting Transaction | destination_asset
 Accounting Transaction | details
+Accounting Transaction | document_list
 Accounting Transaction | source_asset
 Accounting Transaction | view
 Balance Transaction Line | view
@@ -55,10 +57,12 @@ Organisation | jump_to_accounting
 Organisation | transactions
 Payment Rule | view
 Payment Transaction | add_accounting_transaction_line
+Payment Transaction | create_new_file
 Payment Transaction | create_reversal
 Payment Transaction | destination_asset
 Payment Transaction | destination_view
 Payment Transaction | details
+Payment Transaction | document_list
 Payment Transaction | related_invoice
 Payment Transaction | source_asset
 Payment Transaction | view
@@ -69,20 +73,24 @@ Preference | view_accounting
 Purchase Invoice Transaction Line | view
 Purchase Invoice Transaction Line | view_destination
 Purchase Invoice Transaction | add_purchase_invoice_transaction_line
+Purchase Invoice Transaction | create_new_file
 Purchase Invoice Transaction | create_related_payment
 Purchase Invoice Transaction | create_reversal
 Purchase Invoice Transaction | destination_asset
 Purchase Invoice Transaction | detail
+Purchase Invoice Transaction | document_list
 Purchase Invoice Transaction | jump_related_payment
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | view
 Purchase Invoice Transaction | view_source
 Sale Invoice Transaction Line | view
 Sale Invoice Transaction | add_sale_invoice_transaction_line
+Sale Invoice Transaction | create_new_file
 Sale Invoice Transaction | create_related_payment
 Sale Invoice Transaction | create_reversal
 Sale Invoice Transaction | destination_asset
 Sale Invoice Transaction | detail
+Sale Invoice Transaction | document_list
 Sale Invoice Transaction | jump_to_related_payment
 Sale Invoice Transaction | source_asset
 Sale Invoice Transaction | view

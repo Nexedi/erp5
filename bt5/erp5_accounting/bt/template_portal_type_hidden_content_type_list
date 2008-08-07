@@ -1,11 +1,19 @@
 Accounting Rule Cell | Accounting Transaction Line
 Accounting Transaction Module | Balance Transaction
 Accounting Transaction | Accounting Transaction Line
+Accounting Transaction | File
+Accounting Transaction | Image
 Balance Transaction | Balance Transaction Line
 Payment Transaction | Accounting Transaction Line
+Payment Transaction | File
+Payment Transaction | Image
 Preference | Accounting Transaction
 Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
+Purchase Invoice Transaction | File
+Purchase Invoice Transaction | Image
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
+Sale Invoice Transaction | File
+Sale Invoice Transaction | Image
 Sale Invoice Transaction | Sale Invoice Transaction Line
