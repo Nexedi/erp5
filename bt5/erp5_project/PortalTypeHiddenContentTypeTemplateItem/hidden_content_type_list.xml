@@ -1,0 +1,14 @@
+<hidden_content_type_list>
+ <portal_type id="Project">
+  <item>File</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Project Line">
+  <item>Image</item>
+  <item>File</item>
+ </portal_type>
+ <portal_type id="Project Milestone">
+  <item>Image</item>
+  <item>File</item>
+ </portal_type>
+</hidden_content_type_list>

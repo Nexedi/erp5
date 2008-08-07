@@ -4,21 +4,25 @@ Project Line | available_budget
 Project Line | constraint
 Project Line | consumed_budget
 Project Line | contents
+Project Line | create_new_file
 Project Line | current_budget
-Project Line | documents
+Project Line | document_list
 Project Line | initial_budget
 Project Line | jump_to_related_sale_order_lines
 Project Line | task_fast_input_dialog
 Project Line | task_list
 Project Line | view
 Project Milestone | constraint
+Project Milestone | create_new_file
+Project Milestone | document_list
 Project Milestone | view
 Project Module | view
 Project | add_task_related
 Project | bug_list
 Project | content
+Project | create_new_file
 Project | detailed_report
-Project | documents
+Project | document_list
 Project | jump_to_related_sale_order_lines
 Project | milestone
 Project | planning
