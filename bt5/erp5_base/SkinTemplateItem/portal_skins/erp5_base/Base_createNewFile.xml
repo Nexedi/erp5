@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>translateString = context.Base_translateString\n
+\n
+# XXX Current there is no Group or Portal Type specific to define\n
+# Embedded portal types. It will leave it hardcoded until a \n
+# good API be defined.\n
+\n
+embedded_portal_type_list = ["File", "Image"]  \n
+\n
+module_id = context.getDefaultModuleId(portal_type, \'\')\n
+module = getattr(context, module_id, None)\n
+\n
+if module is not None:\n
+  allowed_type_list = module.getVisibleAllowedContentTypeList()\n
+  if portal_type not in allowed_type_list:\n
+    return context.Base_redirect(keep_items={\'portal_status_message\':\n
+               translateString("You are not allowed to create this object.")})\n
+else:\n
+  module = context\n
+  if (portal_type not in embedded_portal_type_list) and \\\n
+        (context.Base_checkPermission(context.getRelativeUrl(), \'Add portal content\')) :\n
+    return context.Base_redirect(keep_items={\'portal_status_message\':\n
+               translateString("You are not allowed to create this object.")})\n
+\n
+\n
+document = module.newContent( portal_type = portal_type,\n
+                                                             description = description,\n
+                                                             title=title)\n
+\n
+# XXX If DMS exist?\n
+document.edit( follow_up = context.getRelativeUrl(),\n
+                            version = version,\n
+                            short_title = short_title,\n
+                            language = language,\n
+                            reference = reference)\n
+\n
+if file.filename not in [\'\', None]:\n
+  document.setFile(file)\n
+\n
+return context.REQUEST.RESPONSE.redirect(\n
+           \'%s/view?portal_status_message=%s+%s.\'%(document.absolute_url(), \n
+           document.getTranslatedPortalType(), translateString(\'+Created+Successfully\')))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>portal_type, title, reference, short_title, language, version, description, file, form_id=\'view\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>portal_type</string>
+                            <string>title</string>
+                            <string>reference</string>
+                            <string>short_title</string>
+                            <string>language</string>
+                            <string>version</string>
+                            <string>description</string>
+                            <string>file</string>
+                            <string>form_id</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>translateString</string>
+                            <string>embedded_portal_type_list</string>
+                            <string>module_id</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>module</string>
+                            <string>allowed_type_list</string>
+                            <string>document</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_createNewFile</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
