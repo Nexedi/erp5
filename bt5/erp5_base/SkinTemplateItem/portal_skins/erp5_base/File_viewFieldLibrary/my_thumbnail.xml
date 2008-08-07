@@ -262,7 +262,7 @@
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string>jpg</string> </value>
+                    <value> <string>png</string> </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
