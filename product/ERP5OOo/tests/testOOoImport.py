@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf8 -*-
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Nicolas Delaby <nicolas@nexedi.com>
 #
@@ -37,11 +37,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
-
-def shout(msg):
-  msg = str(msg)
-  ZopeTestCase._print('\n ' + msg)
-  LOG('Testing... ', 0, msg)
 
 def unpackData(data):
   """
@@ -270,6 +265,25 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
     self.assertEquals('France', france.getTitle())
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+    
+  def test_CategoryTool_importCategoryFile_PathStars_noID(self):
+    # tests CategoryTool_importCategoryFile with * in the paths columns, and no
+    # ID column, and non ascii titles
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+            import_file=makeFileUpload(
+              'import_region_category_path_stars_non_ascii.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('Frànce', france.getTitle())
     self.assertEquals('A Country', france.getDescription())
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
