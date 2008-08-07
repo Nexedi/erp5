@@ -437,20 +437,12 @@
                           <string>Status</string>
                         </tuple>
                         <tuple>
-                          <string>function</string>
-                          <string>New Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>old_function</string>
-                          <string>Old Function</string>
+                          <string>last_name</string>
+                          <string>Last Name</string>
                         </tuple>
                         <tuple>
                           <string>first_name</string>
                           <string>First Name</string>
-                        </tuple>
-                        <tuple>
-                          <string>last_name</string>
-                          <string>Last Name</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -459,6 +451,14 @@
                         <tuple>
                           <string>default_birthplace_address_city</string>
                           <string>Birthplace</string>
+                        </tuple>
+                        <tuple>
+                          <string>function</string>
+                          <string>New Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>old_function</string>
+                          <string>Old Function</string>
                         </tuple>
                         <tuple>
                           <string>id_card_number</string>
@@ -550,7 +550,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>M0_assignment_selection</string> </value>
+                    <value> <string>M2_assignment_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -601,7 +601,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>M0_getFastInputDialogAssignmentList</string> </value>
+            <value> <string>M2_getFastInputDialogAssignmentList</string> </value>
         </item>
       </dictionary>
     </pickle>

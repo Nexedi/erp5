@@ -126,15 +126,26 @@ new_registry_number = request_eform.portal_ids.generateNewId(method=attachLocati
 activity_list=[]\n
 organisation_list = [organisation.getObject() for organisation in \\\n
                      organisation_module.searchFolder(corporate_registration_code=corporate_registration_code)]\n
+context.log(organisation_list)\n
 for organisation in organisation_list:\n
   if organisation.getActivityFreeText()!= None:\n
     activity_list = organisation.getActivityFreeText().split(\',\')\n
-  person_module = request_eform.getPortalObject().person_module\n
-  #destination_form_uid = request_eform.portal_categories.destination_form.getUid()\n
-  #person_object_list = [person.getObject() for person in context.portal_catalog(portal_type = \'Assignment\',\n
-  #                                                  destination_form_uid = request_eform.getUid())]\n
-  #for person_object in person_object_list:\n
-  #     person_object.edit(destination_value = organisation)\n
+\n
+  # Open all assignemnts that are in open_submitted state\n
+  destination_form_uid = context.portal_categories.destination_form.getUid()\n
+  #assignment_list = [assignment.getObject() for assignment in context.portal_catalog(portal_type=\'Assignment\',\n
+                        #validation_state = \'open_submitted\',\n
+                        #destination_form_uid = request_eform.getUid())]\n
+  assignment_list = [assignment for assignment in \\\n
+           organisation.getDestinationRelatedValueList() if \\\n
+           assignment.getValidationState()==\'open_submitted\']\n
+  context.log(assignment_list)\n
+  for assignment in assignment_list:\n
+    context.log(assignment)\n
+    assignment.open()\n
+    assignment.edit(destination_value=organisation,\n
+                    corporate_registration_code=new_registry_number)\n
+\n
   if request_eform.getMoralPersonCheck():\n
     if request_eform.getCharacteristicsCheck():\n
       for property, value in caracteristic_property_dict.items():\n
@@ -292,7 +303,11 @@ for m2_bis in m2_bis_list:\n
                             <string>_getiter_</string>
                             <string>organisation</string>
                             <string>organisation_list</string>
+                            <string>context</string>
                             <string>None</string>
+                            <string>destination_form_uid</string>
+                            <string>assignment</string>
+                            <string>assignment_list</string>
                             <string>property</string>
                             <string>value</string>
                             <string>removed_activity_list</string>

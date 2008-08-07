@@ -88,7 +88,7 @@ for line in listbox:\n
     item[\'first_name\'] = line[\'first_name\']\n
     item[\'last_name\'] = line[\'last_name\']\n
     item[\'start_date\'] = line[\'start_date\']\n
-    item[\'default_birthplace_address_city\']= line[\'default_birthplace_address_city\']\n
+    item[\'default_birthplace_address_city\'] = line[\'default_birthplace_address_city\']\n
     item[\'function\'] = line[\'function\']\n
     item[\'choice\'] = line[\'choice\']\n
     item[\'status\'] = line[\'status\']\n
@@ -114,54 +114,49 @@ for item in items:\n
                                                    first_name=item[\'first_name\'],\n
                                                    last_name =item[\'last_name\'],\n
                                                    start_date=item[\'start_date\'],\n
-                                        default_birthplace_address_city=item[\'default_birthplace_address_city\'])\n
-      person_third_party_assgmnt =person_third_party.newContent(portal_type=\'Assignment\',\n
-                                                                function=item[\'function\'],\n
-                                                              destination_form_value=context_obj)\n
-      person_third_party_assgmnt.openSubmit()\n
+             default_birthplace_address_city=item[\'default_birthplace_address_city\'],)\n
+      person_third_party_assignment = \\\n
+             person_third_party.newContent(portal_type=\'Assignment\',\n
+                                          function=item[\'function\'],\n
+                                          destination_form_value=context_obj) \n
+      person_third_party_assignment.openSubmit()\n
     else:\n
-      result_list = portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
-                                        relative_url=item[\'choice\'])\n
-     \n
-      for object in result_list:\n
-        assgment = object.newContent(portal_type=\'Assignment\',\n
+      person = portal.restrictedTraverse(item[\'choice\'])\n
+      assignment = person.newContent(portal_type=\'Assignment\',\n
                                      function=item[\'function\'],\n
                                      destination_form_value=context_obj)\n
-        assgment.openSubmit()\n
+      assignment.openSubmit()\n
   elif item[\'status\'] == \'_action_maintain\':\n
     pass\n
   elif item[\'status\'] == \'_action_modify\':\n
-    result_list = [x.getObject() for x in portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
-                          relative_url=item[\'choice\'])]\n
+    person = portal.restrictedTraverse(item[\'choice\'])\n
     corporate_registration_code = context_obj.getCorporateRegistrationCode()\n
-    organisation_list = [x.getObject() for x in portal.portal_catalog(parent_uid=portal.organisation_module.getUid(), \n
+    organisation_list = [organisation.getObject() for organisation in portal.portal_catalog(parent_uid=portal.organisation_module.getUid(), \n
                          corporate_registration_code=corporate_registration_code)]\n
-    function_relative_url = \'/\'.join((\'function\', item[\'old_function\']))\n
-    for org in organisation_list:\n
-      for object in result_list:\n
-        destination_uid = context.portal_categories.destination.getUid()\n
-        asst_list = list(context.portal_catalog(parent_uid=object.getUid(),\n
-                                             portal_type=\'Assignment\',\n
-                                             function_relative_url=function_relative_url,\n
-                                             destination_uid=org.getUid()))\n
-        for x in asst_list:\n
-           x.edit(function=item[\'function\'],\n
-                  destination_form_value=context_obj)\n
+    #function_relative_url = \'/\'.join((\'function\', item[\'old_function\']))\n
+    for organisation in organisation_list:\n
+      # XXX for assignment in assignment_list:\n
+      for assignment in person.contentValues(portal_type=\'Assignment\',\n
+                                              checked_permission=\'View\'):\n
+        if assignment.getValidationState() ==\'open\' and \\\n
+            assignment.getFunction() == item[\'old_function\'] and \\\n
+            organisation in assignment.getDestinationValueList():\n
+          assignment.edit(function=item[\'function\'],\n
+                          destination_value=organisation,)\n
   elif item[\'status\']==\'_go_action\':\n
-    result_list = portal.portal_catalog(parent_uid=portal.person_module.getUid(),\n
-                                        relative_url=item[\'choice\'])\n
+    person = portal.restrictedTraverse(item[\'choice\'])\n
     corporate_registration_code = context_obj.getCorporateRegistrationCode()\n
-    organisation_list = [x.getObject() for x in portal.portal_catalog(parent_uid=portal.organisation_module.getUid(), \n
+    organisation_list = [organisation.getObject() for organisation in portal.portal_catalog(parent_uid=portal.organisation_module.getUid(), \n
                          corporate_registration_code=corporate_registration_code)]\n
-    for org in organisation_list:\n
-      for object in result_list:\n
-        destination_uid = context.portal_categories.destination.getUid()\n
-        asst_list = list(context.portal_catalog(parent_uid=object.getUid(),\n
-                                              portal_type=\'Assignment\',\n
-                                              destination_uid=org.getUid()))\n
-        for x in asst_list:\n
-          x.edit(destination_form_value=context_obj)\n
-          x.cancel()\n
+    for organisation in organisation_list:\n
+      for assignment in person.contentValues(portal_type=\'Assignment\',\n
+                                               checked_permission=\'View\'):\n
+        if assignment.getValidationState() ==\'open\' and \\\n
+              assignment.getFunction() == item[\'old_function\'] and \\\n
+              organisation in assignment.getDestinationValueList():\n
+          assignment.edit(destination_form_value=context_obj)\n
+          assignment.cancel()\n
+\n
 role_type = \'Assignment\' \n
 if context_obj.getPortalType()==\'M2\':\n
  form_id = \'M2_view\'\n
@@ -252,20 +247,14 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                             <string>new_items</string>
                             <string>person_title</string>
                             <string>person_third_party</string>
-                            <string>person_third_party_assgmnt</string>
-                            <string>result_list</string>
-                            <string>object</string>
-                            <string>assgment</string>
+                            <string>person_third_party_assignment</string>
+                            <string>person</string>
+                            <string>assignment</string>
+                            <string>corporate_registration_code</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>x</string>
-                            <string>corporate_registration_code</string>
+                            <string>organisation</string>
                             <string>organisation_list</string>
-                            <string>function_relative_url</string>
-                            <string>org</string>
-                            <string>destination_uid</string>
-                            <string>list</string>
-                            <string>asst_list</string>
                             <string>role_type</string>
                             <string>ignore_layout</string>
                             <string>editable_mode</string>

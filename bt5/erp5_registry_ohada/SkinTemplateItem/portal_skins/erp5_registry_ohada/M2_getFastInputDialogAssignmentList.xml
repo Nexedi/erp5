@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   This script creates a list Person objects based\n
-  on the M0 form information. It updates the list of persons\n
+  on the M2 form information. It updates the list of persons\n
   based on fast input entries.\n
 """\n
 from string import zfill\n
@@ -81,8 +81,8 @@ listbox = getattr(request, \'listbox\', None) # Retrieve the fast input data if 
 \n
 def addPerson(first_name=None, last_name=None,\n
               start_date=None, default_birthplace_address_city=None,\n
-              default_address_text=None, description=None, \n
-              function=None, **kw):\n
+              description=None, function=None, old_function=None,\n
+              new=None, going=None, maintained=None, modified=None, **kw):\n
   """\n
    This creates a single temporary person with all appropriate parameters\n
   """\n
@@ -98,7 +98,15 @@ def addPerson(first_name=None, last_name=None,\n
     if line.has_key(\'last_name\') and line.has_key(\'first_name\') :\n
       first_name = line[\'first_name\']\n
       last_name = line[\'last_name\']\n
-\n
+  status = None\n
+  if new:\n
+    status = \'_new_action\'\n
+  elif going:\n
+    status = \'_go_action\'\n
+  elif maintained:\n
+    status = \'_action_maintain\'\n
+  elif modified:\n
+    status = \'_action_modify\'\n
   person = context.getPortalObject().person_module.newContent(\n
     portal_type=\'Person\',\n
     uid=uid_string,\n
@@ -106,9 +114,10 @@ def addPerson(first_name=None, last_name=None,\n
     last_name=last_name,\n
     start_date=start_date,\n
     default_birthplace_address_city=default_birthplace_address_city,\n
-    default_address_text=default_address_text,\n
     function=function,\n
+    old_function=old_function,\n
     description=description,\n
+    status=status,\n
     temp_object=1,\n
     is_indexable=0,\n
   )\n
@@ -121,44 +130,45 @@ def addPerson(first_name=None, last_name=None,\n
 addPerson(first_name=context.getFirstAssociateFirstname(),\n
           last_name=context.getFirstAssociateLastname(),\n
           start_date=context.getFirstAssociateBirthday(),\n
-          default_address_text=context.getFirstAssociateAddress(),\n
-          default_birthplace_address_city=context.getFirstAssociateBirthplace(),)\n
+          default_birthplace_address_city=context.getFirstAssociateBirthplace(),\n
+          function=context.getFirstAssociateNewQuality(),\n
+          old_function=context.getFirstAssociateOldQuality(),\n
+          new=context.getFirstAssociateNewCheck(),\n
+          going=context.getFirstAssociateGoingCheck(),\n
+          maintained=context.getFirstAssociateMaintainedCheck(),\n
+          modified=context.getFirstAssociateModifiedCheck(),)\n
 \n
 addPerson(first_name=context.getSecondAssociateFirstname(),\n
           last_name=context.getSecondAssociateLastname(),\n
           start_date=context.getSecondAssociateBirthday(),\n
-          default_address_text=context.getSecondAssociateAddress(),\n
-          default_birthplace_address_city=context.getSecondAssociateBirthplace(),)\n
+          default_birthplace_address_city=context.getSecondAssociateBirthplace(),\n
+          function=context.getSecondAssociateNewQuality(),\n
+          old_function=context.getSecondAssociateOldQuality(),\n
+          new=context.getSecondAssociateNewCheck(),\n
+          going=context.getSecondAssociateGoingCheck(),\n
+          maintained=context.getSecondAssociateMaintainedCheck(),\n
+          modified=context.getSecondAssociateModifiedCheck(),)\n
 \n
-addPerson(first_name=context.getThirdAssociateFirstname(),\n
-          last_name=context.getThirdAssociateLastname(),\n
-          start_date=context.getThirdAssociateBirthday(),\n
-          default_address_text=context.getThirdAssociateAddress(),\n
-          default_birthplace_address_city=context.getThirdAssociateBirthplace(),)\n
+# only if there is M2 bis form :\n
+m2_bis_result = context.contentValues(portal_type=\'M2 Bis\')\n
+number_list = (\'Third\', \'Fourth\', \'Fifth\', \'Sixth\', \'Seventh\',\n
+    \'Eighth\', \'Ninth\')\n
 \n
-# only if there is M0 bis form :\n
-m0_bis_result = context.contentValues(portal_type=\'M0 Bis\')\n
-number_list = (\'Fourth\', \'Fifth\', \'Sixth\', \'Seventh\',\n
-    \'Eighth\', \'Ninth\', \'Tenth\', \'Eleventh\', \'Twelfth\',\n
-    \'Thirteenth\', \'Fourteenth\', \'Fifteenth\', \'Sixteenth\',\n
-    \'Seventeenth\')\n
-\n
-if len(m0_bis_result):\n
-  for m0 in m0_bis_result:\n
+if len(m2_bis_result):\n
+  for m2 in m2_bis_result:\n
     for number in number_list:\n
-      associateFirstName = getattr(m0, \'get%sAssociateFirstname\' % number, None)\n
-      associateLastName = getattr(m0, \'get%sAssociateLastname\' % number, None)\n
-      associateBirthday = getattr(m0, \'get%sAssociateBirthday\' % number, None)\n
-      associateBirthPlace = getattr(m0, \'get%sAssociateBirthplace\' % number, None)\n
-      associateAnotherInfo = getattr(m0, \'get%sAssociateAnotherInfo\' % number, None)\n
-\n
+      associateFirstName = getattr(m2, \'get%sAssociateFirstname\' % number, None)\n
+      associateLastName = getattr(m2, \'get%sAssociateLastname\' % number, None)\n
+      associateBirthday = getattr(m2, \'get%sAssociateBirthday\' % number, None)\n
+      associateBirthPlace = getattr(m2, \'get%sAssociateBirthplace\' % number, None)\n
+      associateAnotherInfo = getattr(m2, \'get%sAssociateAnotherInfo\' % number, None)\n
       addPerson(first_name=associateFirstName(),\n
                 last_name=associateLastName(),\n
                 start_date=associateBirthday(),\n
                 default_birthplace_address_city=associateBirthPlace(),\n
+                function=\'entreprise/associe\',\n
+                old_function=None,\n
                 description=associateAnotherInfo(),)\n
-\n
-\n
 \n
 \n
 #Create Managers\n
@@ -166,49 +176,63 @@ addPerson(first_name=context.getFirstAdministratorFirstname(),\n
           last_name=context.getFirstAdministratorLastname(),\n
           start_date=context.getFirstAdministratorBirthday(),\n
           default_birthplace_address_city=context.getFirstAdministratorBirthplace(),\n
-          default_address_text=context.getFirstAdministratorAddress(),\n
-          function=context.getFirstAdministratorFunction(),)\n
+          function=context.getFirstAdministratorNewQuality(),\n
+          old_function=context.getFirstAdministratorOldQuality(),\n
+          new=context.getFirstAdministratorNewCheck(),\n
+          going=context.getFirstAdministratorGoingCheck(),\n
+          maintained=context.getFirstAdministratorMaintainedCheck(),\n
+          modified=context.getFirstAdministratorModifiedCheck(),)\n
 \n
 addPerson(first_name=context.getSecondAdministratorFirstname(),\n
           last_name=context.getSecondAdministratorLastname(),\n
           start_date=context.getSecondAdministratorBirthday(),\n
           default_birthplace_address_city=context.getSecondAdministratorBirthplace(),\n
-          default_address_text=context.getSecondAdministratorAddress(),\n
-          function=context.getSecondAdministratorFunction(),)\n
+          function=context.getSecondAdministratorNewQuality(),\n
+          old_function=context.getSecondAdministratorOldQuality(),\n
+          new=context.getSecondAdministratorNewCheck(),\n
+          going=context.getSecondAdministratorGoingCheck(),\n
+          maintained=context.getSecondAdministratorMaintainedCheck(),\n
+          modified=context.getSecondAdministratorModifiedCheck(),)\n
 \n
-# only if there is M0 bis form :\n
+# only if there is M2 bis form :\n
 number_list = (\'Third\', \'Fourth\', \'Fifth\', \'Sixth\', \'Seventh\',\n
-    \'Eighth\', \'Ninth\', \'Tenth\', \'Eleventh\', \'Twelfth\',\n
-    \'Thirteenth\', \'Fourteenth\', \'Fifteenth\', \'Sixteenth\')\n
+    \'Eighth\', \'Ninth\', \'Tenth\')\n
 \n
-if len(m0_bis_result):\n
-  for m0 in m0_bis_result:\n
+if len(m2_bis_result):\n
+  for m2 in m2_bis_result:\n
     for number in number_list:\n
-      administratorFirstName = getattr(m0, \'get%sAdministratorFirstname\' % number, None)\n
-      administratorLastName = getattr(m0, \'get%sAdministratorLastname\' % number, None)\n
-      administratorBirthday = getattr(m0, \'get%sAdministratorBirthday\' % number, None)\n
-      administratorBirthPlace = getattr(m0, \'get%sAdministratorBirthplace\' % number, None)\n
-      administratorAnotherInfo = getattr(m0, \'get%sAdministratorAnotherInfo\' % number, None)\n
+      administratorFirstName = getattr(m2, \'get%sAdministratorFirstname\' % number, None)\n
+      administratorLastName = getattr(m2, \'get%sAdministratorLastname\' % number, None)\n
+      administratorBirthday = getattr(m2, \'get%sAdministratorBirthday\' % number, None)\n
+      administratorBirthPlace = getattr(m2, \'get%sAdministratorBirthplace\' % number, None)\n
+      administratorAnotherInfo = getattr(m2, \'get%sAdministratorAnotherInfo\' % number, None)\n
 \n
       addPerson(first_name=administratorFirstName(),\n
                 last_name=administratorLastName(),\n
                 start_date=administratorBirthday(),\n
                 default_birthplace_address_city=administratorBirthPlace(),\n
+                function=\'entreprise/directeur/administrateur\',\n
+                old_function=None,\n
                 description=administratorAnotherInfo(),)\n
 \n
+number_list = (\'First\', \'Second\', \'Third\', \'Fourth\', \'Fifth\', \'Sixth\', \'Seventh\')\n
 \n
-#Create Auditors\n
-addPerson(first_name=context.getFirstAuditorFirstname(),\n
-          last_name=context.getFirstAuditorLastname(),\n
-          start_date=context.getFirstAuditorBirthday(),\n
-          default_birthplace_address_city=context.getFirstAuditorBirthplace(),\n
-          default_address_text=context.getFirstAuditorAddress(),)\n
+if len(m2_bis_result):\n
+  for m2 in m2_bis_result:\n
+    for number in number_list:\n
+      auditorFirstName = getattr(m2, \'get%sAuditorFirstname\' % number, None)\n
+      auditorLastName = getattr(m2, \'get%sAuditorLastname\' % number, None)\n
+      auditorBirthday = getattr(m2, \'get%sAuditorBirthday\' % number, None)\n
+      auditorBirthPlace = getattr(m2, \'get%sAuditorBirthplace\' % number, None)\n
+      AuditorAnotherInfo = getattr(m2, \'get%sAuditorAnotherInfo\' % number, None)\n
 \n
-addPerson(first_name=context.getSecondAuditorFirstname(),\n
-          last_name=context.getSecondAuditorLastname(),\n
-          start_date=context.getSecondAuditorBirthday(),\n
-          default_birthplace_address_city=context.getSecondAuditorBirthplace(),\n
-          default_address_text=context.getSecondAuditorAddress(),)\n
+      addPerson(first_name=auditorFirstName(),\n
+                last_name=auditorLastName(),\n
+                start_date=auditorBirthday(),\n
+                default_birthplace_address_city=auditorBirthPlace(),\n
+                function=\'comptabilite/commissaire\',\n
+                old_function=None,\n
+                description=auditorAnotherInfo(),)\n
 \n
 return result_list\n
 </string> </value>
@@ -227,7 +251,7 @@ return result_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>lines_num=8, **kw</string> </value>
+            <value> <string>lines_num=10, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -266,11 +290,11 @@ return result_list\n
                             <string>None</string>
                             <string>listbox</string>
                             <string>addPerson</string>
-                            <string>m0_bis_result</string>
+                            <string>m2_bis_result</string>
                             <string>number_list</string>
                             <string>len</string>
                             <string>_getiter_</string>
-                            <string>m0</string>
+                            <string>m2</string>
                             <string>number</string>
                             <string>associateFirstName</string>
                             <string>associateLastName</string>
@@ -282,6 +306,12 @@ return result_list\n
                             <string>administratorBirthday</string>
                             <string>administratorBirthPlace</string>
                             <string>administratorAnotherInfo</string>
+                            <string>auditorFirstName</string>
+                            <string>auditorLastName</string>
+                            <string>auditorBirthday</string>
+                            <string>auditorBirthPlace</string>
+                            <string>AuditorAnotherInfo</string>
+                            <string>auditorAnotherInfo</string>
                           </tuple>
                         </value>
                     </item>
@@ -294,17 +324,13 @@ return result_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>8</int>
+                <int>10</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>M0_getFastInputDialogAssignmentList</string> </value>
-        </item>
-        <item>
-            <key> <string>isIndexable</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string>M2_getFastInputDialogAssignmentList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

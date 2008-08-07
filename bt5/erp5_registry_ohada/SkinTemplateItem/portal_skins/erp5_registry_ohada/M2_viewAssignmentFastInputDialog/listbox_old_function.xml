@@ -157,7 +157,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -233,44 +235,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string encoding="base64">QWN0aW9ubmFpcmUgZGUgc29jacOpdMOp</string>
-                          <string>corporation/shareholder</string>
-                        </tuple>
-                        <tuple>
-                          <string>PDG</string>
-                          <string>corporation/executive/ceo</string>
-                        </tuple>
-                        <tuple>
-                          <string encoding="base64">R8OpcmFudA==</string>
-                          <string>corporation/executive/manager</string>
-                        </tuple>
-                        <tuple>
-                          <string>Administrateur</string>
-                          <string>corporation/executive/trustee</string>
-                        </tuple>
-                        <tuple>
-                          <string>Personne Morale/GIE/Pr\xc3\xa9sident</string>
-                          <string>gie/president</string>
-                        </tuple>
-                        <tuple>
-                          <string>Personne Morale/GIE/Vice Pr\xc3\xa9sident</string>
-                          <string>gie/vice_president</string>
-                        </tuple>
-                        <tuple>
-                          <string>Personne Morale/GIE/Secretaire G\xc3\xa9n\xc3\xa9ral</string>
-                          <string>gie/secretary_general</string>
-                        </tuple>
-                        <tuple>
-                          <string>Personne Morale/GIE/Tr\xc3\xa9sorier</string>
-                          <string>gie/treasurer</string>
-                        </tuple>
-                        <tuple>
-                          <string>Commissaire au Comptes</string>
-                          <string>accounting/auditor</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -295,6 +260,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.Base_getPreferredCategoryChildItemList(here.portal_categories.function, filter_node=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

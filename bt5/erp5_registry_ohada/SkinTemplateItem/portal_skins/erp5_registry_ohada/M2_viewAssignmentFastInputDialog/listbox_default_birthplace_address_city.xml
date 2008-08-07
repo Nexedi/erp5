@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_default_birthplace_city</string> </value>
+            <value> <string>listbox_default_birthplace_address_city</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_default_birthplace_city</string> </value>
+                    <value> <string>listbox_default_birthplace_address_city</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
