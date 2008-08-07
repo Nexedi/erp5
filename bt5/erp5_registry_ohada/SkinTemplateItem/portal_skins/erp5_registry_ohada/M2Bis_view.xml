@@ -16,27 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -67,7 +46,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>page_0</string> </key>
+                    <key>                 <string>page_0</string> </key>
                     <value>
                       <list>
                         <string>my_third_associate_lastname</string>
@@ -151,7 +130,7 @@
                         <string>my_first_auditor_birthplace</string>
                         <string>my_first_auditor_another_info</string>
                         <string>my_second_auditor_lastname</string>
-                        <string>my_seventh_auditor_firstname</string>
+                        <string>my_second_auditor_firstname</string>
                         <string>my_second_auditor_birthday</string>
                         <string>my_second_auditor_birthplace</string>
                         <string>my_second_auditor_another_info</string>
@@ -176,7 +155,7 @@
                         <string>my_sixth_auditor_birthplace</string>
                         <string>my_sixth_auditor_another_info</string>
                         <string>my_seventh_auditor_lastname</string>
-                        <string>my_eighth_auditor_firstname</string>
+                        <string>my_seventh_auditor_firstname</string>
                         <string>my_seventh_auditor_birthday</string>
                         <string>my_seventh_auditor_birthplace</string>
                         <string>my_seventh_auditor_another_info</string>
