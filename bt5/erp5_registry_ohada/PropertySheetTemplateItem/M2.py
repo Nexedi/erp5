@@ -225,31 +225,6 @@ class M2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'first_associate_fullname'
-    , 'description': 'PRENOMS'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_associate_lastname'
-    , 'description': 'NOM'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_associate_firstname'
-    , 'description': 'NUMERO'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_associate_birthday'
-    , 'description': 'Date et lieu de naissance'
-    , 'type'       : 'date'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_associate_address'
-    , 'description': 'Adresse'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
     { 'id'         : 'eight_administrator_another_info'
     , 'description': 'Date et lieu de naissance,regime matrimonial,etc..'
     , 'type'       : 'string'
@@ -350,14 +325,29 @@ class M2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
+    { 'id'         : 'first_associate_lastname'
+    , 'description': 'Last Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_associate_firstname'
+    , 'description': 'first Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_associate_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_associate_birthplace'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'first_associate_going_check'
     , 'description': 'Partant'
     , 'type'       : 'boolean'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_associate_identity'
-    , 'description': 'Identite'
-    , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_maintained_check'
@@ -410,14 +400,29 @@ class M2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
+    { 'id'         : 'first_administrator_lastname'
+    , 'description': 'Last Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_administrator_firstname'
+    , 'description': 'First Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_administrator_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_administrator_birthplace'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'first_administrator_going_check'
     , 'description': 'Partant'
     , 'type'       : 'boolean'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_administrator_identity'
-    , 'description': 'Identite'
-    , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_maintained_check'
@@ -640,14 +645,29 @@ class M2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
+    { 'id'         : 'second_associate_lastname'
+    , 'description': 'Last Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_associate_firstname'
+    , 'description': 'First Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_associate_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_associate_birthplace'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'second_associate_going_check'
     , 'description': 'Partant'
     , 'type'       : 'boolean'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'second_associate_identity'
-    , 'description': 'Identite'
-    , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_maintained_check'
@@ -700,14 +720,29 @@ class M2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
+    { 'id'         : 'second_administrator_lastname'
+    , 'description': 'Last Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_administrator_firstname'
+    , 'description': 'First Name'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_administrator_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_administrator_birthplace'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'second_administrator_going_check'
     , 'description': 'Partant'
     , 'type'       : 'boolean'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'second_administrator_identity'
-    , 'description': 'Identite'
-    , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_maintained_check'
