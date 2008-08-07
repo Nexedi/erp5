@@ -1201,6 +1201,15 @@ class TestERP5Base(ERP5TypeTestCase):
     # magic
     self.assertEquals('\xff', image_data[0])
     self.assertEquals('\xd8', image_data[1])
+  
+  def test_ImageSize(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    self.assertEquals(320, image.getWidth())
+    self.assertEquals(250, image.getHeight())
+    image.edit(file=self.makeImageFileUpload('erp5_logo_small.png'))
+    self.assertEquals(160, image.getWidth())
+    self.assertEquals(125, image.getHeight())
 
   def test_Person_getCareerStartDate(self):
     # Person_getCareerStartDate scripts returns the date when an employee

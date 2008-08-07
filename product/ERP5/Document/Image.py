@@ -489,6 +489,12 @@ class Image(File, OFSImage):
       return (height, width)
     return None
 
+  def _setFile(self, *args, **kw):
+    """set the file content and reset image information.
+    """
+    File._setFile(self, *args, **kw)
+    self._update_image_info()
+  
   #
   # FTP/WebDAV support
   #
