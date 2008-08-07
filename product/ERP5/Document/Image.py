@@ -33,6 +33,7 @@ import os
 import string
 import sys
 import time
+import subprocess
 from cStringIO import StringIO
 
 from AccessControl import ClassSecurityInfo
@@ -357,38 +358,27 @@ class Image(File, OFSImage):
                     resolution=None, frame=None):
       """Resize and resample photo."""
       newimg = StringIO()
+      
+      parameter_list = ['convert']
+      if resolution:
+        parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
+      parameter_list.extend(['-quality', str(quality)])
+      parameter_list.extend(['-geometry', '%sx%s' % (width, height)])
+      if frame:
+        parameter_list.append('-[%s]' % frame)
+      else:
+        parameter_list.append('-')
 
-      # Prepare the format prefix
       if format:
-        format = '%s:' % format
+        parameter_list.append('%s:-' % format)
       else:
-        format = ''
+        parameter_list.append('-')
 
-      # Prepare the frame suffix
-      if frame is not None:
-        frame = '[%s]' % frame
-      else:
-        frame = ''
-
-      if sys.platform == 'win32':
-          # XXX - Does win32 support pipe ?
-          from win32pipe import popen2
-          if resolution is None:
-            imgin, imgout = popen2('convert -quality %s -geometry %sx%s -%s %s-'
-                            % (quality, width, height, frame, format), 'b')
-          else:
-            imgin, imgout = popen2('convert -density %sx%s -quality %s -geometry %sx%s -%s %s-'
-                            % (resolution, resolution, quality, width, height, frame, format), 'b')
-
-      else:
-          from popen2 import popen2
-          if resolution is None:
-            cmd = 'convert -quality %s -geometry %sx%s -%s %s-' % (
-                    quality, width, height, frame, format)
-          else:
-            cmd = 'convert -density %sx%s -quality %s -geometry %sx%s -%s %s-' % (
-                    resolution, resolution, quality, width, height, frame, format)
-          imgout, imgin = popen2(cmd)
+      process = subprocess.Popen(parameter_list,
+                                 stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 close_fds=True)
+      imgin, imgout = process.stdin, process.stdout
 
       def writeData(stream, data):
         if isinstance(data, str):
