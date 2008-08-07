@@ -2485,6 +2485,46 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if err_list:
       self.fail(''.join(err_list))
 
+  def test_Order_viewAsODT_big_image(self):
+    # tests order printout with big images (that has Pdata)
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    image = FileUpload(os.path.join(os.path.dirname(__file__),
+                      'test_data', 'images', 'erp5_logo.bmp'), 'rb')
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client',
+                              default_image_file=image)
+    from OFS.Image import Pdata
+    self.assertTrue(isinstance(client.getDefaultImageValue().data, Pdata))
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor',
+                              default_image_file=image)
+    from OFS.Image import Pdata
+    self.assertTrue(isinstance(vendor.getDefaultImageValue().data, Pdata))
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              title='Order',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
   def test_Order_viewAsODT_non_ascii(self):
     # test order printout with non ascii characters
     resource = self.portal.getDefaultModule(
