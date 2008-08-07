@@ -1,3 +1,6 @@
+2008-08-07 yusei
+* Added proxy role to NotificationTool_getDocumentValue, otherwise Anonymous use can't use notification message.
+
 2008-08-05 yusei
 * Remove subject field from NotificationMessage_view. It was useless.
 
