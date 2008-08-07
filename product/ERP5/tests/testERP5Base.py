@@ -1202,6 +1202,28 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('\xff', image_data[0])
     self.assertEquals('\xd8', image_data[1])
   
+  def test_ConvertImageQuality(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    image_type, image_data = image.convert('jpg', display='thumbnail',
+                                           quality=100)
+    self.assertEquals('image/jpeg', image_type)
+    # magic
+    self.assertEquals('\xff', image_data[0])
+    self.assertEquals('\xd8', image_data[1])
+  
+  def test_ConvertImagePdata(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
+    from OFS.Image import Pdata
+    self.assertTrue(isinstance(image.data, Pdata))
+
+    image_type, image_data = image.convert('jpg', display='thumbnail')
+    self.assertEquals('image/jpeg', image_type)
+    # magic
+    self.assertEquals('\xff', image_data[0])
+    self.assertEquals('\xd8', image_data[1])
+
   def test_ImageSize(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
     image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
