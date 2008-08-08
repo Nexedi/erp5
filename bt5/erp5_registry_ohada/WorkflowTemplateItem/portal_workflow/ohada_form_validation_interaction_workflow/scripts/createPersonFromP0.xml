@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""This script collects *all* filled properties in the P0\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""This script collects *all* filled properties in the P0\n
 request_eform and creates a new Person record and an organisation for this person.\n
 """\n
 \n
@@ -93,9 +95,9 @@ def attachLocationYearInfo(last_id):\n
   location_info = request_eform.getSite().split(\'/\')[0]\n
   if location_info == \'dakar\':\n
     location_initials = \'DKR\'\n
-  elif location_info == \'Thies\':\n
+  elif location_info == \'thies\':\n
     location_initials = \'TH\'\n
-  elif location_info == \'Saint-Louis\':\n
+  elif location_info == \'saint-louis\':\n
     location_initials = \'SL\'\n
   year = str(date.year())\n
   type_of_form = \'A\'\n
@@ -113,10 +115,11 @@ def attachLocationYearInfo(last_id):\n
 \n
 new_registry_number = request_eform.portal_ids.generateNewId(\n
         id_group=\'sn-%s\' % request_eform.getGroup(), method = attachLocationYearInfo)\n
-#build a query and search in person module if the person exists already,\n
-#if the person does notexist, create the person and a new assignment for the person with function merchant on the organisation\n
-#if the person does exist, just add a new assignment for the person with the function\n
-#merchant on organisation\n
+# build a query and search in person module if the person already exists,\n
+# if the person does not exist, create the person and a new assignment for \n
+# the person with function commercant on the organisation if the \n
+# person exist, just add a new assignment for the person with the function\n
+# commercant on organisation\n
 query=ComplexQuery(Query(title=request_eform.getTitle()),\n
              Query(birth_date=request_eform.getStartDate()),\n
              Query(birthplace_city=request_eform.getDefaultBirthplaceAddressCity()),\n
@@ -125,7 +128,6 @@ person_list = [person.getObject() for person in person_module.searchFolder(query
 if len(person_list) == 0:\n
   person = person_module.newContent(portal_type=\'Person\')\n
   person.edit(\n
-    function = \'commerce/commercant\', # This is a registry entry\n
     first_name = request_eform.getFirstName(),\n
     last_name = request_eform.getLastName(),\n
     default_address_street_address = request_eform.getHeadOfficeAddress(),\n
@@ -147,24 +149,29 @@ if len(person_list) == 0:\n
   else:\n
     person.edit(gender = \'female\')\n
 \n
-  assignment = person.newContent(portal_type=\'Assignment\',\n
-                                 function=\'commerce/commercant\',\n
-                                 start_date=request_eform.getBeginningDate(),\t\n
-                                 destination_form_value=request_eform,\n
-                                 destination_value=organisation)\n
-  assignment.openSubmit()\n
-  assignment.open()\n
-  person.updateLocalRolesOnSecurityGroups()\n
-else:\n
-  for person in person_list:\n
-    assignment = person.newContent(portal_type=\'Assignment\',\n
-                                   function=\'commerce/commercant\',\n
-                                   start_date=request_eform.getBeginningDate(),\t\n
-                                   destination_form_value=request_eform,\n
-                                   destination_value=organisation)\n
-    assignment.openSubmit()\n
-    assignment.open()\n
-    person.updateLocalRolesOnSecurityGroups()\n
+else: # person exists\n
+  if len(person_list) >0 :\n
+    raise ValidationFailed, "Error : There is more than one person with the "\\\n
+            " title \'%s\', birth date \'%s\' and birthplace \'%s\'" % (request_eform.getTitle(),\n
+                request_eform.getStartDate(),\n
+                request_eform.getDefaultBirthplaceAddressCity())\n
+  elif len(person_list) == 0:\n
+    raise ValidationFailed, "Error : There is nobody with the "\\\n
+            " title \'%s\', birth date \'%s\' and birthplace \'%s\'" % (request_eform.getTitle(),\n
+                request_eform.getStartDate(),\n
+                request_eform.getDefaultBirthplaceAddressCity())\n
+  else:\n
+    person = person_list[0]\n
+\n
+# add a new assignment to this person\n
+assignment = person.newContent(portal_type=\'Assignment\',\n
+                               function=\'commerce/commercant\',\n
+                               start_date=request_eform.getBeginningDate(),\t\n
+                               destination_form_value=request_eform,\n
+                               destination_value=organisation)\n
+assignment.openSubmit()\n
+assignment.open()\n
+person.updateLocalRolesOnSecurityGroups()\n
 \n
 # In case of an harmonisation, update the organisation corporate_registration_code with the old corporate_registration_code\n
 #used to create the organisation\n
@@ -189,7 +196,9 @@ history_list = request_eform.portal_workflow.getInfoFor(request_eform,\n
 for history in history_list:\n
   if history[\'action\'] == \'validate_action\':\n
     request_eform.edit(registration_date = history[\'time\'])\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -260,6 +269,7 @@ for history in history_list:\n
                             <string>person</string>
                             <string>person_list</string>
                             <string>len</string>
+                            <string>ValidationFailed</string>
                             <string>assignment</string>
                             <string>str</string>
                             <string>history_list</string>
