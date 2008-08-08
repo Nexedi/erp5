@@ -39,7 +39,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>liquiderOrganisationFromM4</string>
+                <string>liquidateOrganisationFromM4</string>
                 <string>printPDFForm</string>
               </list>
             </value>

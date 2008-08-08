@@ -150,7 +150,7 @@ if len(person_list) == 0:\n
     person.edit(gender = \'female\')\n
 \n
 else: # person exists\n
-  if len(person_list) >0 :\n
+  if len(person_list) >1 :\n
     raise ValidationFailed, "Error : There is more than one person with the "\\\n
             " title \'%s\', birth date \'%s\' and birthplace \'%s\'" % (request_eform.getTitle(),\n
                 request_eform.getStartDate(),\n
