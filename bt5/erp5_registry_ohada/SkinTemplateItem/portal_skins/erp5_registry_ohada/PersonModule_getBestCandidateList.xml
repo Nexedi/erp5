@@ -185,6 +185,7 @@ for candidate in candidate_list:\n
                            candidate_birthplace_address_city)),candidate.getRelativeUrl()))\n
 \n
 # Append extra actions\n
+result.append((\'-\', \'_no_action\'))\n
 result.append((\'New Person\', \'_action_create\'))\n
 return result\n
 </string> </value>

@@ -133,13 +133,9 @@ for organisation in organisation_list:\n
 \n
   # Open all assignemnts that are in open_submitted state\n
   destination_form_uid = context.portal_categories.destination_form.getUid()\n
-  #assignment_list = [assignment.getObject() for assignment in context.portal_catalog(portal_type=\'Assignment\',\n
-                        #validation_state = \'open_submitted\',\n
-                        #destination_form_uid = request_eform.getUid())]\n
-  assignment_list = [assignment for assignment in \\\n
-           organisation.getDestinationRelatedValueList() if \\\n
-           assignment.getValidationState()==\'open_submitted\']\n
-  context.log(assignment_list)\n
+  assignment_list = [assignment.getObject() for assignment in context.portal_catalog(portal_type=\'Assignment\',\n
+                        validation_state = \'open_submitted\',\n
+                        destination_form_uid = request_eform.getUid())]\n
   for assignment in assignment_list:\n
     context.log(assignment)\n
     assignment.open()\n
