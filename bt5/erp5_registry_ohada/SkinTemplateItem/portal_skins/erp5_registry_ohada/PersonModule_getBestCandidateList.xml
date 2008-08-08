@@ -133,7 +133,7 @@ else:\n
                          Query(birthplace_city = person_birthplace),\n
                          operator = "AND"),\n
                        ComplexQuery(\n
-                         Query(start_date = person_start_date),\n
+                         Query(birth_date = person_start_date),\n
                          Query(birthplace_city = person_birthplace),\n
                          operator = "AND"),\n
                        ComplexQuery(\n
@@ -185,7 +185,6 @@ for candidate in candidate_list:\n
                            candidate_birthplace_address_city)),candidate.getRelativeUrl()))\n
 \n
 # Append extra actions\n
-result.append((\'-\', \'_no_action\'))\n
 result.append((\'New Person\', \'_action_create\'))\n
 return result\n
 </string> </value>
@@ -281,6 +280,12 @@ return result\n
         <item>
             <key> <string>isIndexable</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

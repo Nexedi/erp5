@@ -222,7 +222,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'eight_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -232,7 +232,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -257,7 +257,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -282,7 +282,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -312,7 +312,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -342,7 +342,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_going_check'
-    , 'description': 'going'
+    , 'description': 'Going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -377,7 +377,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -407,7 +407,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_going_check'
-    , 'description': 'going'
+    , 'description': 'Going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -441,7 +441,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -486,12 +486,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -617,7 +617,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -647,7 +647,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_going_check'
-    , 'description': 'going'
+    , 'description': 'Going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -682,7 +682,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -712,7 +712,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_going_check'
-    , 'description': 'going'
+    , 'description': 'Going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -770,7 +770,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -796,7 +796,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -822,7 +822,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -848,7 +848,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -874,7 +874,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -900,7 +900,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -926,7 +926,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -952,7 +952,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -978,7 +978,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1014,7 +1014,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1039,7 +1039,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1064,7 +1064,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1109,14 +1109,14 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_associate_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     
     
     { 'id'         : 'third_administrator_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1141,7 +1141,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1166,7 +1166,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1191,7 +1191,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_auditor_another_info'
-    , 'description': 'Other Info'
+    , 'description': 'Other Info (date and place wedding, marital status ...)'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
