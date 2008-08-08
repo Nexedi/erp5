@@ -36,27 +36,27 @@ class M2:
   _properties = (
     # M2 properties
     { 'id'         : 'new_corporate_registration_code'
-    , 'description': 'RCCM du siege'
+    , 'description': 'Head Office RCCM'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'activity_free_text'
-    , 'description': 'Activite'
+    , 'description': 'Activities'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'auditor_first_no_check'
-    , 'description': 'Non'
+    , 'description': 'No'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'auditor_first_yes_check'
-    , 'description': 'OUI'
+    , 'description': 'Yes'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'activities_check'
-    , 'description': 'Activites'
+    , 'description': 'Activities'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -66,7 +66,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'added_activities'
-    , 'description': 'Activites ajoutees'
+    , 'description': 'Activities added'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -76,17 +76,17 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'auditor_second_no_check'
-    , 'description': 'NON'
+    , 'description': 'No'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'auditor_second_yes_check'
-    , 'description': 'OUI'
+    , 'description': 'Yes'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'buyers_address'
-    , 'description': 'Ancienne adresse'
+    , 'description': 'Old Address'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -96,17 +96,15 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'buyers_name'
-    , 'description': 'Acquereur'
+    , 'description': 'Buyers'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'default_address_city'
-    , 'description': 'Fait à'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'applicant'
-    , 'description': 'Le soussigne'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -116,12 +114,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'characteristics_check'
-    , 'description': 'Caracteristiques'
+    , 'description': 'Characteristics'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'closing_check'
-    , 'description': 'Fermeture'
+    , 'description': 'Closing'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -136,7 +134,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'company_check'
-    , 'description': 'ETABLISSEMENT'
+    , 'description': 'Company'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -151,7 +149,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'deleted_activities'
-    , 'description': 'Activite Supprimees'
+    , 'description': 'Activities deleted'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -161,152 +159,150 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'dissolved_check'
-    , 'description': 'Dissolution'
+    , 'description': 'dissolve'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'beginning_date'
-    , 'description': 'Date de debut'
+    , 'description': 'Beginning Date'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'rccm_check'
-    , 'description': 'Demande d immatriculation au RCCM'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'other_check_info'
-    , 'description': 'Autres(pr�ciser)'
+    , 'description': 'Other'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'other_companies'
-    , 'description': 'Etablissements secondaires'
+    , 'description': 'Second company'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'other_companies_rccm'
-    , 'description': 'Identit� de l exploitant'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'oui_check'
-    , 'description': 'OUI'
+    , 'description': 'Yes'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'purchase_check'
-    , 'description': 'Achat'
+    , 'description': 'Purchase'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'rent_check'
-    , 'description': 'Prise en location gerance'
+    , 'description': 'Rent'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'report_number'
-    , 'description': 'Numero de formalite'
+    , 'description': 'Report Number'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'place'
-    , 'description': 'Fait �'
+    , 'description': 'Place'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'registration_number'
-    , 'description': 'NUMERO'
+    , 'description': 'Registration Number'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_registration_number'
-    , 'description': 'NUMERO'
+    , 'description': 'Second Registration Number'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eight_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eight_administrator_fullname'
-    , 'description': 'NOM,PRENOM'
+    , 'description': 'Fullname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_associate_another_info'
-    , 'description': 'Date et lieu de naissance,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_auditor_another_info'
-    , 'description': 'Date et lieu de naissance,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_auditor_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_auditor_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_auditor_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fifth_auditor_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -316,12 +312,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_fullname'
-    , 'description': 'Nom,Prenom'
+    , 'description': 'Fullname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -341,48 +337,38 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_birthplace'
-    , 'description': 'Birthplace'
+    , 'description': 'Going'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_going_check'
-    , 'description': 'Partant'
+    , 'description': 'going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_maintained_check'
-    , 'description': 'Maintenu'
+    , 'description': 'Maintained'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_new_check'
-    , 'description': 'Nouveau'
+    , 'description': 'New'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_new_quality'
-    , 'description': 'Nouvelle qualite'
+    , 'description': 'New quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_old_quality'
-    , 'description': 'Ancienne qualite'
+    , 'description': 'Old quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_associate_modified_check'
-    , 'description': 'Modifiee'
+    , 'description': 'Modified'
     , 'type'       : 'boolean'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_auditor_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'first_auditor_fullname'
-    , 'description': 'NOM,PRENOMS,DOMICILE PERSONNEL'
-    , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_date'
@@ -391,12 +377,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_fullname'
-    , 'description': 'Nom,Prenom'
+    , 'description': 'Fullname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -421,117 +407,116 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_going_check'
-    , 'description': 'Partant'
+    , 'description': 'going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_maintained_check'
-    , 'description': 'Maintenu'
+    , 'description': 'Maintained'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_new_check'
-    , 'description': 'Nouveau'
+    , 'description': 'New'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_new_quality'
-    , 'description': 'Nouvelle qualite'
+    , 'description': 'New quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_old_quality'
-    , 'description': 'Ancienne qualite'
+    , 'description': 'Old quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_modified_check'
-    , 'description': 'Modifiee'
+    , 'description': 'Modified'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_rccm_check'
-    , 'description': 'Demande d immatriculation au RCCM'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_auditor_another_info'
-    , 'description': 'Date et Lieu de naissance, de mariage,regime matrimonial,etc...'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_auditor_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_auditor_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_auditor_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'fourth_auditor_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'initials'
-    , 'description': 'SIGLE'
+    , 'description': 'Acronym'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -546,12 +531,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'modified_added_activities'
-    , 'description': 'Activites ajoutees'
+    , 'description': 'Activities added'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'modified_deleted_activities'
-    , 'description': 'Activites supprimees'
+    , 'description': 'Activities deleted'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -561,27 +546,24 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'new_address'
-    , 'description': 'Adresse'
+    , 'description': 'Address'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     }, 
     { 'id'         : 'new_capital'
-    , 'description': 'Nouveau'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'new_commercial'
-    , 'description': 'Nouveau'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'new_headquarters'
-    , 'description': 'Nouveau Siege'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'new_legal_form'
-    , 'description': 'Forme Juridique'
+    , 'description': 'Legal Form'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -596,7 +578,7 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'old_title'
-    , 'description': 'Old commercial name'
+    , 'description': 'New commercial name'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -606,27 +588,26 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'old_legal_form'
-    , 'description': 'Forme Juridique'
+    , 'description': 'Legal Form'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'old_corporate_registration_code'
-    , 'description': 'Ancien RCCM'
+    , 'description': 'New RCCM'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     }, 
     { 'id'         : 'other'
-    , 'description': 'Autre'
+    , 'description': 'Other'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'other_reason'
-    , 'description': 'Autre'
+    , 'description': 'Other'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'registration_date'
-    , 'description': 'Le'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
@@ -636,12 +617,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_fullname'
-    , 'description': 'Nom,Prenom'
+    , 'description': 'Fullname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -666,43 +647,33 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_going_check'
-    , 'description': 'Partant'
+    , 'description': 'going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_maintained_check'
-    , 'description': 'Maintenu'
+    , 'description': 'Maintained'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_new_check'
-    , 'description': 'Nouveau'
+    , 'description': 'New'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_new_quality'
-    , 'description': 'Nouvelle qualite'
+    , 'description': 'New quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_old_quality'
-    , 'description': 'Ancienne qualite'
+    , 'description': 'Old quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_associate_modified_check'
-    , 'description': 'Modifiee'
+    , 'description': 'Modified'
     , 'type'       : 'boolean'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'second_auditor_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
-    { 'id'         : 'second_auditor_fullname'
-    , 'description': 'NOM,PRENOMS,DOMICILE PERSONNEL'
-    , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_date'
@@ -711,12 +682,12 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_fullname'
-    , 'description': 'Nom,Prenom'
+    , 'description': 'Fullname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -741,37 +712,36 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_going_check'
-    , 'description': 'Partant'
+    , 'description': 'going'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_maintained_check'
-    , 'description': 'Maintenu'
+    , 'description': 'Maintained'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_new_check'
-    , 'description': 'Nouveau'
+    , 'description': 'New'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_new_quality'
-    , 'description': 'Nouvelle qualite'
+    , 'description': 'New quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_old_quality'
-    , 'description': 'Ancienne qualite'
+    , 'description': 'Old quality'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_administrator_modified_check'
-    , 'description': 'Modifiee'
+    , 'description': 'Modified'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_rccm_check'
-    , 'description': 'Demande d immatriculation au RCCM'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
@@ -781,7 +751,6 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_place'
-    , 'description': 'Fait a'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -801,241 +770,241 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'seventh_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
      { 'id'         : 'seventh_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'seventh_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_auditor_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'seventh_auditor_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_auditor_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_auditor_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'seventh_auditor_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'eighth_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
      { 'id'         : 'eighth_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'eighth_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'eighth_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'ninth_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'ninth_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'ninth_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'tenth_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     {
      'id'         : 'tenth_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'tenth_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sign'
-    , 'description': 'Enseigne'
+    , 'description': 'Sign'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1045,147 +1014,214 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_associate_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_associate_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_associate_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_associate_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_auditor_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_auditor_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_auditor_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_auditor_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'sixth_auditor_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'third_associate_firstname'
+    , 'description': 'Firstname'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'third_associate_lastname'
+    , 'description': 'Lastname'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'third_associate_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'third_associate_birthplace'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_associate_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'third_associate_fullname'
-    , 'description': 'Nom,Prenom'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
+    
+    
     { 'id'         : 'third_administrator_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_administrator_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_administrator_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_administrator_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_administrator_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_auditor_another_info'
-    , 'description': 'Date et lieu de naissance,de mariage,regime matrimonial,etc..'
+    , 'description': 'Other Info'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_auditor_firstname'
-    , 'description': 'Prénom'
+    , 'description': 'Firstname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_auditor_lastname'
-    , 'description': 'Nom'
+    , 'description': 'Lastname'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_auditor_birthday'
-    , 'description': 'Date de naissance'
+    , 'description': 'Birthday'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'third_auditor_birthplace'
-    , 'description': 'Lieu de naissance'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_auditor_another_info'
+    , 'description': 'Other Info'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_auditor_firstname'
+    , 'description': 'Firstname'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_auditor_lastname'
+    , 'description': 'Lastname'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_auditor_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'first_auditor_birthplace'
+    , 'description': 'Birthplace'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_auditor_another_info'
+    , 'description': 'Other Info'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_auditor_firstname'
+    , 'description': 'Firstname'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_auditor_lastname'
+    , 'description': 'Lastname'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_auditor_birthday'
+    , 'description': 'Birthday'
+    , 'type'       : 'date'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'second_auditor_birthplace'
+    , 'description': 'Birthplace'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'transfer_check'
-    , 'description': 'Transfert'
+    , 'description': 'Transfer'
     , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'transferred_address'
-    , 'description': 'Adresse'
+    , 'description': 'Address'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -1195,7 +1231,6 @@ class M2:
     , 'mode'       : 'w'
     },
     { 'id'         : 'source_reference'
-    , 'description': 'Numero de formalite'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
