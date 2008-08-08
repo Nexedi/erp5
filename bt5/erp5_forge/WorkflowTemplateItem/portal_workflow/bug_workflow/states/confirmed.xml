@@ -76,14 +76,9 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Add Content Type Registrys</string> </key>
-                    <value>
-                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -93,6 +88,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -103,6 +99,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -114,6 +111,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>

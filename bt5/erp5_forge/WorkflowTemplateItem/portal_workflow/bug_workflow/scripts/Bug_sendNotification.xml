@@ -68,23 +68,21 @@
             <value> <string encoding="cdata"><![CDATA[
 
 bug = state_change["object"]\n
-destination_state_title = state_change["new_state"].title\n
-person_list = []\n
+valid_transaction_list = ["confirm_action", "stop_action", \n
+                                           "deliver_action", "set_ready_action"]\n
 \n
-history = state_change.getHistory()\n
-\n
-valid_transaction_list = ["confirm_action", "stop_action", "deliver_action", "set_ready_action"]\n
+message = [ h for h in state_change.getHistory() \\\n
+                                        if h[\'action\'] in valid_transaction_list]\n
 \n
 comment = ""\n
-message = [ h for h in history if h[\'action\'] in valid_transaction_list]\n
 if len(message) > 0:\n
   comment=message[-1]["comment"] \n
 \n
-line = bug.newContent(title="This bug was %s" % state_change["new_state"].title,\n
+line = bug.newContent(title="This bug was %s" % bug.getSimulationStateTitle(),\n
                                            portal_type="Bug Line",\n
                                            text_content=comment)\n
 \n
-# Call line workflow.\n
+# This will post The message Automatically.\n
 line.start()\n
 
 
@@ -113,6 +111,12 @@ line.start()\n
             <value> <string>state_change</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
@@ -139,17 +143,14 @@ line.start()\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>bug</string>
-                            <string>_getattr_</string>
-                            <string>destination_state_title</string>
-                            <string>person_list</string>
-                            <string>history</string>
                             <string>valid_transaction_list</string>
-                            <string>comment</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
                             <string>h</string>
                             <string>message</string>
+                            <string>comment</string>
                             <string>len</string>
                             <string>line</string>
                           </tuple>

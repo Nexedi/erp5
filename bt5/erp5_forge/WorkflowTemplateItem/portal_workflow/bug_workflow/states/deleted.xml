@@ -64,31 +64,33 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Add Content Type Registrys</string> </key>
-                    <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>
