@@ -63,6 +63,11 @@ except ImportError:
   def getTimerService(self):
     pass
 
+try:
+  from traceback import format_list, extract_stack
+except ImportError:
+  format_list = extract_stack = None
+
 # minimal IP:Port regexp
 NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
 
@@ -138,6 +143,13 @@ class Message:
     self.exc_type = None
     self.exc_value = None
     self.traceback = None
+    if format_list is None:
+      self.call_traceback = None
+    else:
+      # Save current traceback, to make it possible to tell where a message
+      # was generated.
+      # Strip last stack entry, since it will always be the same.
+      self.call_traceback = ''.join(format_list(extract_stack()[:-1]))
     self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info
@@ -244,8 +256,8 @@ class Message:
         self.is_executed = MESSAGE_NOT_EXECUTED
         exc_info = sys.exc_info()
         LOG('ActivityTool', WARNING,
-            'Could not call method %s on object %s' % (
-            self.method_id, self.object_path), error=exc_info)
+            'Could not call method %s on object %s. Activity created at:\n%s' % (
+            self.method_id, self.object_path, self.call_traceback), error=exc_info)
         # push the error in ZODB error_log
         if getattr(activity_tool, 'error_log', None) is not None:
           activity_tool.error_log.raising(exc_info)
@@ -277,11 +289,15 @@ Document: %s
 Method: %s
 Arguments:%r
 Named Parameters:%r
+Created at:
+%s
+
 Exception: %s %s
 
 %s
 """ % (activity_tool.email_from_address, user_email, message,
        message, '/'.join(self.object_path), self.method_id, self.args, self.kw,
+       self.call_traceback,
        self.exc_type, self.exc_value, self.traceback)
     try:
       activity_tool.MailHost.send( mail_text )
