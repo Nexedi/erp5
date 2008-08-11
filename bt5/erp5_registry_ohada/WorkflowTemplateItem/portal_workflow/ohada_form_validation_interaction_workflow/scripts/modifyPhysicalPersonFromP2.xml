@@ -154,7 +154,6 @@ else:\n
   if request_eform.getCompanyModifications():\n
     organisation_list = [organisation.getObject() for organisation in \\\n
         organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
-    context.log(organisation_list)\n
     for organisation in organisation_list:\n
       activity_free_text = organisation.getActivityFreeText()\n
       activity_list = activity_free_text and activity_free_text.split(\',\') or []\n
@@ -182,12 +181,12 @@ else:\n
                                    corporate_registration_code = new_registry_number,\n
                                    activity_free_text = request_eform.getCompanyModifiedAddedActivities(),\n
                                    role=\'commerce/siege\',)\n
-          assgt = person.newContent(portal_type=\'Assignment\')\n
-          assgt.edit(function = \'commerce/commercant\',\n
+          assignment = person.newContent(portal_type=\'Assignment\')\n
+          assignment.edit(function = \'commerce/commercant\',\n
                      destination_form_value = request_eform,\n
                      destination_value = second_organisation)\n
-          assgt.openSubmit()\n
-          assgt.open()\n
+          assignment.openSubmit()\n
+          assignment.open()\n
         else:\n
           organisation.edit(title = request_eform.getCompanyModifiedName(),\n
                             corporate_name = request_eform.getCompanyModifiedName())\n
@@ -302,7 +301,7 @@ for history in history_list:\n
                             <string>removed_activities_list</string>
                             <string>removed_activities</string>
                             <string>second_organisation</string>
-                            <string>assgt</string>
+                            <string>assignment</string>
                             <string>history_list</string>
                             <string>history</string>
                           </tuple>
