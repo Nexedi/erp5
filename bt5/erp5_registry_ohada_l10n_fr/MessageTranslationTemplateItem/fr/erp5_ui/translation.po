@@ -2618,6 +2618,9 @@ msgstr "Nouveau"
 msgid "New Application"
 msgstr "Nouvelle demande"
 
+msgid "New Function"
+msgstr "Nouvelle fonction"
+
 msgid "New Request"
 msgstr "Nouveau Dossier"
 
@@ -2734,6 +2737,9 @@ msgstr ""
 
 msgid "Ohada Assignment Validation Workflow"
 msgstr "Workflow de validation Affectation OHADA"
+
+msgid "Old Function"
+msgstr "Ancienne fonction"
 
 msgid "Old Registry"
 msgstr "Ancien Registre"
