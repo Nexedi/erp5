@@ -104,6 +104,8 @@ elif len(related_list) == 1:\n
   if related_object is not None and checkPerm("View", related_object) :\n
     if target_form_id is not None:\n
       form_id = target_form_id\n
+    else:\n
+      form_id = \'view\'\n
     url = related_object.absolute_url()\n
     message = N_(\n
       # first, try to get a full translated message with portal types\n

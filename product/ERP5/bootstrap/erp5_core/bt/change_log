@@ -1,3 +1,6 @@
+2008-08-11 vincentd
+* fix Base_jumpToRelatedObject to avoid a probleme with bad form_id when jumping on a single object
+
 2008-08-06 jerome
 * Change Movement_getPriceCalculationOperandDict to use source_section / destination_section instead of source / destination.
 * Change Movement_getPriceCalculationOperandDict to give priority to supply lines contained in related trade conditions.
