@@ -407,7 +407,7 @@ class EmailDocument(File, TextDocument):
       line = line.strip()
       if line:
         new_text_list.append(line)
-    clean_text = ''.join(new_text_list)
+    clean_text = '\n'.join(new_text_list)
     return clean_text
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplySubject')
