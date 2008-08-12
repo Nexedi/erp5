@@ -126,7 +126,6 @@ new_registry_number = request_eform.portal_ids.generateNewId(method=attachLocati
 activity_list=[]\n
 organisation_list = [organisation.getObject() for organisation in \\\n
                      organisation_module.searchFolder(corporate_registration_code=corporate_registration_code)]\n
-context.log(organisation_list)\n
 for organisation in organisation_list:\n
   if organisation.getActivityFreeText()!= None:\n
     activity_list = organisation.getActivityFreeText().split(\',\')\n
@@ -137,7 +136,6 @@ for organisation in organisation_list:\n
                         validation_state = \'open_submitted\',\n
                         destination_form_uid = request_eform.getUid())]\n
   for assignment in assignment_list:\n
-    context.log(assignment)\n
     assignment.open()\n
     assignment.edit(destination_value=organisation,\n
                     corporate_registration_code=new_registry_number)\n
@@ -299,8 +297,8 @@ for m2_bis in m2_bis_list:\n
                             <string>_getiter_</string>
                             <string>organisation</string>
                             <string>organisation_list</string>
-                            <string>context</string>
                             <string>None</string>
+                            <string>context</string>
                             <string>destination_form_uid</string>
                             <string>assignment</string>
                             <string>assignment_list</string>
