@@ -70,12 +70,10 @@
 body = """\n
 Reporter: %s\n
 Date: %s\n
-Follow Up: %s\n
 \n
 Bug Message:\n
 \n
-""" % (bug_message.getSourceTitle(\'\'), bug_message.getStartDate(\'\'), \n
-       bug_message.getFollowUpTitle(\'\'))\n
+""" % (bug_message.getSourceTitle(\'\'), bug_message.getStartDate(\'\'))\n
 \n
 #XXX This does not support structured text format.\n
 body += bug_message.getTextContent("") \n
@@ -99,15 +97,13 @@ if bug.getSourceTitle() is not None:\n
 """ % (bug.getDestinationTitle(\'\'), bug.getSourceTitle(\'\'),\n
            bug.getSourceTradeTitle(\'\'))\n
 \n
-body += """ Link: %s\n
+body += """  Link: %s\n
   Request Project: %s\n
   Assigned Project: %s\n
-  Follow Up: %s\n
   Description: \n
 %s\n
 """ % (bug.getAbsoluteUrl(), bug.getDestinationProjectTitle(\'\'), \n
-           bug.getSourceProjectTitle(\'\'), \n
-           \' / \'.join(bug.getFollowUpTitleList(\'\')), bug.getDescription(\'\'))\n
+           bug.getSourceProjectTitle(\'\'), bug.getDescription(\'\'))\n
 \n
 body += """\n
 +---------------------- Messages Related -----------------------+\n
@@ -138,12 +134,6 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

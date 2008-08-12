@@ -69,16 +69,17 @@
 
 bug = state_change["object"]\n
 valid_transaction_list = ["confirm_action", "stop_action", \n
-                                           "deliver_action", "set_ready_action"]\n
+                                           "deliver_action", "set_ready_action" , "cancel_action"]\n
 \n
 message = [ h for h in state_change.getHistory() \\\n
                                         if h[\'action\'] in valid_transaction_list]\n
 \n
 comment = ""\n
 if len(message) > 0:\n
-  comment=message[-1]["comment"] \n
+  comment=message[-1]["comment"]\n
 \n
-line = bug.newContent(title="This bug was %s" % bug.getSimulationStateTitle(),\n
+line = bug.newContent(title="Bug %s was %s" % (bug.getReference(),\n
+                                                                                          bug.getSimulationStateTitle()),\n
                                            portal_type="Bug Line",\n
                                            text_content=comment)\n
 \n
@@ -96,12 +97,6 @@ line.start()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
