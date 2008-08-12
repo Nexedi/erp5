@@ -1755,13 +1755,13 @@ msgid "Filter"
 msgstr "Filtrer"
 
 msgid "Financial Information"
-msgstr "Information Financière"
+msgstr "Information financière"
 
 msgid "Financial Informations"
 msgstr ""
 
 msgid "Financial Section"
-msgstr "Section Financière"
+msgstr "Section financière"
 
 msgid "Find"
 msgstr "Chercher"
@@ -1809,7 +1809,7 @@ msgid "Format"
 msgstr ""
 
 msgid "Forms"
-msgstr ""
+msgstr "Formulaires liés"
 
 msgid "French"
 msgstr "Français"
@@ -2370,7 +2370,7 @@ msgid "M0"
 msgstr "Formulaire M0"
 
 msgid "M0 Bis"
-msgstr ""
+msgstr "Formulaire M0 Bis"
 
 msgid "M0 Form"
 msgstr ""
@@ -2385,7 +2385,7 @@ msgid "M2"
 msgstr "Formulaire M2"
 
 msgid "M2 Bis"
-msgstr ""
+msgstr "Formulaire M2 Bis"
 
 msgid "M2 Forms"
 msgstr ""
@@ -3630,7 +3630,7 @@ msgid "Related Objects Qtty"
 msgstr "Nombre d'objets liés"
 
 msgid "Related Organisations"
-msgstr "Organisations Liés"
+msgstr "Organisations liées"
 
 msgid "Related Payment Created"
 msgstr "Écriture de payement correspondante crée"
