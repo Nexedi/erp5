@@ -73,7 +73,7 @@ if person is not None:\n
 \n
 # Define Reference from ID\n
 bug_id = context.getId()\n
-context.setReference("B-ERP5-%s" % bug_id)\n
+context.setReference("#%s" % bug_id)\n
 </string> </value>
         </item>
         <item>

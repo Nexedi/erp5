@@ -129,12 +129,6 @@ return object_list\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object=None, **kw</string> </value>
         </item>

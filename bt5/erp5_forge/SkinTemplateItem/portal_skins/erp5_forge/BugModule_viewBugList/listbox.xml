@@ -319,8 +319,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -331,8 +331,12 @@
                           <string>Reporter</string>
                         </tuple>
                         <tuple>
-                          <string>destination_person_title</string>
+                          <string>source_person_title</string>
                           <string>Assignee</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_person_title</string>
+                          <string>Requester</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -355,12 +359,8 @@
                           <string>Difficulty</string>
                         </tuple>
                         <tuple>
-                          <string>source_project_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_simulation_state_title</string>
-                          <string>Status</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -396,7 +396,7 @@
                           <string>Reporter</string>
                         </tuple>
                         <tuple>
-                          <string>destination_person_title</string>
+                          <string>source_person_title</string>
                           <string>Assignee</string>
                         </tuple>
                         <tuple>
@@ -420,12 +420,8 @@
                           <string>Difficulty</string>
                         </tuple>
                         <tuple>
-                          <string>source_project_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_simulation_state_title</string>
-                          <string>Status</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -563,8 +559,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -575,8 +571,12 @@
                           <string>Reporter</string>
                         </tuple>
                         <tuple>
-                          <string>destination_person_title</string>
+                          <string>source_person_title</string>
                           <string>Assignee</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_person_title</string>
+                          <string>Requester</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -599,12 +599,8 @@
                           <string>Difficulty</string>
                         </tuple>
                         <tuple>
-                          <string>source_project_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_simulation_state_title</string>
-                          <string>Status</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -622,8 +618,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>Reference</string>
+                          <string>Reference</string>
                         </tuple>
                       </list>
                     </value>
@@ -631,7 +627,20 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

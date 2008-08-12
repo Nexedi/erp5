@@ -164,12 +164,6 @@ if download:\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_url=None, to_url=None, reply_url=None, subject=None, body=None, attachment_format=None, attachment_list=None, download=None, **kw</string> </value>
         </item>

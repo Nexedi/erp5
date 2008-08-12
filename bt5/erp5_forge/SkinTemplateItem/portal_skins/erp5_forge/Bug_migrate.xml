@@ -69,7 +69,7 @@
 
 # This script is used to only migrate Items to new bug implementation.\n
 # Set reference\n
-context.setReference("B-%s" % (context.getId()))\n
+context.setReference("#%s" % (context.getId()))\n
 \n
 # Now Source is Source Trade\n
 source = context.getSource()\n
@@ -88,7 +88,7 @@ context.setDestinationValue(None)\n
 \n
 bug_history = context.Base_getWorkflowHistoryItemList(workflow_id="bug_workflow")\n
 \n
-valid_action_transitions = ["close_action" , "open_action", "reopen_action", "follow_action" ]\n
+valid_action_transitions = ["close_action" , "open_action", "reopen_action", "follow_action", "cancel" ]\n
 history_list = [ac for ac in bug_history if ac.action in valid_action_transitions ]\n
 \n
 for message in history_list:\n
@@ -97,9 +97,12 @@ for message in history_list:\n
   if message.action == "open_action":\n
     bug_message_title = "This bug was Open"\n
   if message.action == "close_action":\n
-    bug_message_title = "This bug was Close"\n
+    bug_message_title = "This bug was Closed"\n
   if message.action == "reopen_action":\n
-    bug_message_title = "This bug was ReOpen"\n
+    bug_message_title = "This bug was Reopen"\n
+  if message.action == "cancel":\n
+    bug_message_title = "This bug was Cancelled"\n
+    \n
 \n
   bug_message = context.newContent(title=bug_message_title, \n
                                    portal_type="Bug Line")\n
@@ -112,7 +115,7 @@ for message in history_list:\n
 # Migration States\n
 for index in range(len(bug_history)):\n
   history_item = bug_history[-(index+1)]\n
-  if history_item.action in [\'open\', \'reopen\', \'close\']:\n
+  if history_item.action in [\'open\', \'reopen\', \'close\' , "cancel"]:\n
     context.confirm()\n
   if history_item.action in [\'reopen\', \'close\']:\n
     context.portal_workflow.doActionFor(context, \'set_ready_action\')\n
@@ -154,6 +157,14 @@ context.log("%s Bug Migrated." % (context.getReference()))\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
