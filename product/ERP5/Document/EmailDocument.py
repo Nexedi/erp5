@@ -28,7 +28,6 @@
 
 import re, types
 from DateTime import DateTime
-from time import mktime_tz
 from Globals import get_request
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Base import WorkflowMethod
@@ -58,7 +57,7 @@ except ImportError:
 
 from email import message_from_string
 from email.Header import decode_header
-from email.Utils import parsedate_tz
+from email.Utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
