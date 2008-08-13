@@ -764,7 +764,7 @@ msgid "Cancel Assignment"
 msgstr "Annuler Affectation"
 
 msgid "Cancel Form"
-msgstr "Annuler Formulaire"
+msgstr "Annuler la demande"
 
 msgid "Cancel the Form"
 msgstr "Annuler le Formulaire"
@@ -5825,6 +5825,9 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
+msgid "female"
+msgstr "femme"
+
 msgid "field_description"
 msgstr ""
 
@@ -5929,6 +5932,9 @@ msgstr "Page de Connexion"
 
 msgid "login_information"
 msgstr ""
+
+msgid "male"
+msgstr "homme"
 
 msgid "modification date :"
 msgstr ""
