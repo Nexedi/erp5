@@ -80,12 +80,16 @@ listbox = getattr(request, \'listbox\', None) # Retrieve the fast input data if 
 \n
 \n
 def addPerson(first_name=None, last_name=None,\n
-              start_date=None, default_birthplace_address_city=None,\n
+              start_date=None, default_birthplace_address_city=\'\',\n
               description=None, function=None, old_function=None,\n
               new=None, going=None, maintained=None, modified=None, **kw):\n
   """\n
    This creates a single temporary person with all appropriate parameters\n
   """\n
+  # don\'t add person if there is no first_name\n
+  if not first_name:\n
+    return\n
+\n
   global result_list\n
   global uid\n
   if not (first_name or last_name):\n
