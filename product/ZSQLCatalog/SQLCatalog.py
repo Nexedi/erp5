@@ -1833,12 +1833,9 @@ class Catalog(Folder,
           if hasattr(current_query, 'order_by'): query_group_by_list = current_query.order_by
         else:
           if isinstance(value, dict):
-            # XXX: If dictionary has more that one key, subsequent Query() will raise.
-            for value_key in value.keys():
-              if value_key == 'query':
-                new_query_dict[key] = value['query']
-              else:
-                new_query_dict[value_key] = value[value_key]
+            new_query_dict = value.copy()
+            if 'query' in new_query_dict:
+              new_query_dict[key] = new_query_dict.pop('query')
           else:
             new_query_dict[key] = value
           current_query = Query(**new_query_dict)
