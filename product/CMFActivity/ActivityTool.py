@@ -97,6 +97,16 @@ def disableLogging():
   global logging
   logging = False
 
+activity_creation_trace = False
+
+def enableActivityCreationTrace():
+  global activity_creation_trace
+  activity_creation_trace = True
+
+def disableActivityCreationTrace():
+  global activity_creation_trace
+  activity_creation_trace = false
+
 # Here go ActivityBuffer instances
 # Structure:
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
@@ -143,13 +153,13 @@ class Message:
     self.exc_type = None
     self.exc_value = None
     self.traceback = None
-    if format_list is None:
-      self.call_traceback = None
-    else:
+    if activity_creation_trace and format_list is not None:
       # Save current traceback, to make it possible to tell where a message
       # was generated.
       # Strip last stack entry, since it will always be the same.
       self.call_traceback = ''.join(format_list(extract_stack()[:-1]))
+    else:
+      self.call_traceback = None
     self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info
