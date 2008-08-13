@@ -81,8 +81,10 @@ request_eform.setTitle(request_eform.getOwnerFirstName()+\' \'+request_eform.get
 \n
 organisation_list = [organisation.getObject() for organisation in \\\n
      portal.organisation_module.searchFolder(corporate_registration_code=rccm)]\n
+context.log(organisation_list)\n
 for organisation in organisation_list:\n
   if request_eform.getDefinitiveCheck():\n
+    organisation.edit(stop_date = request_eform.getSecondDate())\n
     organisation.mettreEntrepriseEnCessation()\n
     organisation.liquiderEntreprise()\n
     organisation.radierEntreprise()\n
@@ -190,9 +192,9 @@ for history in history_list:\n
                             <string>_getiter_</string>
                             <string>organisation</string>
                             <string>organisation_list</string>
+                            <string>context</string>
                             <string>attachLocationYearInfo</string>
                             <string>new_registry_number</string>
-                            <string>context</string>
                             <string>history_list</string>
                             <string>history</string>
                           </tuple>
