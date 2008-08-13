@@ -45,7 +45,7 @@ class P0Constraint:
       'message_no_such_property': 'The first name address must be defined',
       'message_property_not_set': 'The first name address must be defined',
     },
-    { 'id'            : 'date',
+    { 'id'            : 'date_exitence',
       'description'   : 'Property date must be definied',
       'type'    : 'PropertyExistence',
       'date'          : None,
