@@ -1898,6 +1898,72 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 
+  def test_SubDocumentsWithAcquireLocalRoleSecurityIndexing(
+                                   self, quiet=quiet, run=run_all_test):
+    if not run: return    
+    # Check that sub object indexation is compatible with ZODB settings
+    # when the sub object acquires the parent local roles
+    perm = 'View'
+
+    # Create some users
+    login = PortalTestCase.login
+    logout = self.logout
+    user1 = 'local_foo_1'
+    user2 = 'local_bar_1'
+    uf = self.getPortal().acl_users
+    uf._doAddUser(user1, user1, ['Member', ], [])
+    uf._doAddUser(user2, user2, ['Member', ], [])
+
+    container_portal_type = 'Organisation'
+    # Create a container, define a local role, and set view permission
+    folder = self.getOrganisationModule()
+
+    # user1 should be auditor on container
+    # user2 should be assignor on subdocument
+    container = folder.newContent(portal_type=container_portal_type)
+    container.manage_setLocalRoles(user1, ['Auditor'])
+#     container.manage_setLocalRoles(user2, [])
+    container.manage_permission(perm, ['Owner', 'Auditor', 'Assignor'], 0)
+
+    # By default, local roles are acquired from container for Email portal type
+    object_portal_type = 'Email'
+    obj = container.newContent(portal_type=object_portal_type)
+    # Acquire permission from parent
+    obj.manage_permission(perm, [], 1)
+    obj.manage_setLocalRoles(user2, ['Assignor'])
+
+    obj.reindexObject()
+    get_transaction().commit()
+    self.tic()
+
+    logout()
+    login(self, user1)
+    result = obj.portal_catalog(portal_type=object_portal_type)
+    self.assertSameSet([obj, ], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=object_portal_type, 
+                                local_roles='Owner')
+    self.assertSameSet([], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=object_portal_type, 
+                                local_roles='Assignor')
+    self.assertSameSet([], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=object_portal_type, 
+                                local_roles='Auditor')
+    self.assertSameSet([obj], [x.getObject() for x in result])
+
+    logout()
+    login(self, user2)
+    result = obj.portal_catalog(portal_type=object_portal_type)
+    self.assertSameSet([obj, ], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=object_portal_type, 
+                                local_roles='Owner')
+    self.assertSameSet([], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=object_portal_type, 
+                                local_roles='Assignor')
+    self.assertSameSet([obj], [x.getObject() for x in result])
+    result = obj.portal_catalog(portal_type=object_portal_type, 
+                                local_roles='Auditor')
+    self.assertSameSet([], [x.getObject() for x in result])
+
   def test_60_ViewableOwnerIndexing(self, quiet=quiet, run=run_all_test):
     if not run: 
       return
