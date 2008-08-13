@@ -87,7 +87,7 @@ for organisation in organisation_list:\n
     organisation.liquiderEntreprise()\n
     organisation.radierEntreprise()\n
   elif request_eform.getTemporaryCheck():\n
-    organisation.edit(stop_date = request_eform.getFifthDate())\n
+    organisation.edit(stop_date = request_eform.getStopTemporaryActivityDate())\n
     organisation.stopActivities()\n
 \n
 def attachLocationYearInfo(last_id):\n
@@ -103,7 +103,8 @@ def attachLocationYearInfo(last_id):\n
   attach_info = \'SN\' + location_initials + year + type_of_form\n
   last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
   new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
-  return (\'-\'.join([\'SN\', location_initials, year, type_of_form, new_corporate_registration_code]))\n
+  return (\'-\'.join([\'SN\', location_initials, year,\n
+          type_of_form, new_corporate_registration_code]))\n
 \n
 # We shall now allocate a new registry number\n
 # using the custom method attachLocationYearInfo\n

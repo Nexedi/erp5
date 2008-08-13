@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_fifth_date</string> </value>
+            <value> <string>my_stop_temporary_activity_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -266,7 +266,7 @@
                 </item>
                 <item>
                     <key> <string>date_separator</string> </key>
-                    <value> <string> /</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -322,7 +322,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string>1</string> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>start_datetime</string> </key>
@@ -332,7 +332,7 @@
                 </item>
                 <item>
                     <key> <string>time_separator</string> </key>
-                    <value> <string>:</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>timezone_style</string> </key>

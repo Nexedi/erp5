@@ -46,7 +46,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>page_0</string> </key>
+                    <key>                 <string>page_0</string> </key>
                     <value>
                       <list>
                         <string>my_temporary_check</string>
@@ -60,7 +60,7 @@
                         <string>my_personal_address</string>
                         <string>my_enterprise_address</string>
                         <string>my_corporate_registration_code</string>
-                        <string>my_date</string>
+                        <string>my_stop_temporary_activity_date</string>
                         <string>my_sickness_check</string>
                         <string>my_accident_check</string>
                         <string>my_disaster_check</string>
@@ -88,7 +88,7 @@
                         <string>my_registration_date</string>
                         <string>my_registration_number</string>
                         <string>my_place</string>
-                        <string>my_fifth_date</string>
+                        <string>my_date</string>
                         <string>my_signature</string>
                         <string>my_owner_birthplace</string>
                         <string>my_source_reference</string>

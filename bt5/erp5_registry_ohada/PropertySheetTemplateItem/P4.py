@@ -145,7 +145,7 @@ class P4:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'fifth_date'
+    { 'id'         : 'stop_temporary_activity_date'
     , 'description': 'Date'
     , 'type'       : 'date'
     , 'mode'       : 'w'
