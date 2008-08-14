@@ -160,4 +160,12 @@ class P0Constraint:
       'inscription_check'     : None,
       'condition'     : 'python: object.getRccmCheck() == None',
     },
+    { 'id'            : 'previous_activity_corporate_registration_code_existence',
+      'description'   : 'Property must be definied',
+      'type'          : 'PropertyExistence',
+      'previous_activity_corporate_registration_code'     : None,
+      'condition'     : 'python: object.getActivityRestartCheck() != None',
+      'message_no_such_property': 'for a restart activity you must define the previous registration code',
+      'message_property_not_set': 'for a restart activity you must define the previous registration code',
+    },
   )
