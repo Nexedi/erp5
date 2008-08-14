@@ -70,37 +70,18 @@ This script is used to create links between these forms and the correponding org
 or persons\n
 """\n
 # Initalize some useful variables\n
-portal =context.getPortalObject()\n
-organisation_module = portal.organisation_module\n
-person_module = portal.person_module\n
 request_eform = state_change[\'object\']\n
+portal =request_eform.getPortalObject()\n
 application_date = request_eform.getDate()\n
-corporate_registration_code = request_eform.getCorporateRegistrationCode()\n
-hypothecation_person_corporate_registration_code = request_eform.getHypothecationPersonCorporateRegistrationCode()\n
-hypothecation_corporate_registration_code = request_eform.getHypothecationCorporateRegistrationCode()\n
-inscription_person_corporate_registration_code = request_eform.getInscriptionPersonCorporateRegistrationCode()\n
-object_list = []\n
-if request_eform.getPortalType() == \'S1\':\n
-  object_list = [x.getObject() for x in portal.portal_catalog(portal_type=[\'Person\',\'Organisation\'],\n
-       corporate_registration_code=[corporate_registration_code, hypothecation_person_corporate_registration_code,hypothecation_corporate_registration_code])]\n
-  for i in object_list:\n
-    i.setCollateralParentValueList(request_eform)\n
-    i.updateLocalRolesOnSecurityGroups()\n
-elif request_eform.getPortalType() == \'S5\':\n
-  object_list = [x.getObject() for x in portal.portal_catalog(portal_type=[\'Person\',\'Organisation\'],\n
-       corporate_registration_code=[corporate_registration_code,inscription_person_corporate_registration_code,hypothecation_corporate_registration_code])]\n
-  for i in object_list:\n
-    i.setInscriptionParentValueList(request_eform)\n
-    i.updateLocalRolesOnSecurityGroups() \n
 \n
 #Custom method used to create custom-made corporate_registration_codes for the companies\n
 def attachLocationYearInfo(last_id):\n
   location_info = request_eform.getSite().split(\'/\')[0]\n
   if location_info == \'dakar\':\n
     location_initials = \'DKR\'\n
-  elif location_info == \'Thies\':\n
+  elif location_info == \'thies\':\n
     location_initials = \'TH\'\n
-  elif location_info == \'Saint-Louis\':\n
+  elif location_info == \'saint-louis\':\n
     location_initials = \'SL\'\n
   year = str(application_date.year())\n
   type_of_form = \'S\'\n
@@ -124,7 +105,7 @@ new_registry_number = request_eform.portal_ids.generateNewId(\n
 request_eform.edit(registration_number=new_registry_number)\n
 # Update the registration date of the request_eform with the time when the registry officer\n
 #validates the transition\n
-history_list = context.portal_workflow.getInfoFor(request_eform, \'history\', wf_id=\'egov_form_validation_workflow\')\n
+history_list = request_eform.portal_workflow.getInfoFor(request_eform, \'history\', wf_id=\'egov_form_validation_workflow\')\n
 for history in history_list:\n
   if history[\'action\'] == \'validate_action\':\n
     request_eform.edit(registration_date=history[\'time\'],\n
@@ -180,28 +161,16 @@ for history in history_list:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>organisation_module</string>
-                            <string>person_module</string>
                             <string>_getitem_</string>
                             <string>request_eform</string>
+                            <string>_getattr_</string>
+                            <string>portal</string>
                             <string>application_date</string>
-                            <string>corporate_registration_code</string>
-                            <string>hypothecation_person_corporate_registration_code</string>
-                            <string>hypothecation_corporate_registration_code</string>
-                            <string>inscription_person_corporate_registration_code</string>
-                            <string>object_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>i</string>
                             <string>attachLocationYearInfo</string>
                             <string>default_address_city</string>
                             <string>new_registry_number</string>
                             <string>history_list</string>
+                            <string>_getiter_</string>
                             <string>history</string>
                           </tuple>
                         </value>

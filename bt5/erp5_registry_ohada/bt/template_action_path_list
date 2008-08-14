@@ -68,7 +68,6 @@ P4 | print
 P4 | view
 Person | companies_exploited
 Person | jump_p0_form
-Person | person_form_view
 S1 Module | list
 S1 Module | ods_import_nantis_report
 S1 Module | ods_nantis_import
