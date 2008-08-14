@@ -160,7 +160,17 @@ class P2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'new_corporate_registration_code'
+    { 'id'         : 'corporate_registration_code'
+    , 'description': 'RCCM'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'establishment_corporate_registration_code'
+    , 'description': 'RCCM'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
+    { 'id'         : 'company_corporate_registration_code'
     , 'description': 'RCCM'
     , 'type'       : 'string'
     , 'mode'       : 'w'

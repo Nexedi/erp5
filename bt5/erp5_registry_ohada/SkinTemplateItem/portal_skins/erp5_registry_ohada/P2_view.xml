@@ -67,7 +67,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>page_0</string> </key>
+                    <key>                 <string>page_0</string> </key>
                     <value>
                       <list>
                         <string>my_company_modifications</string>
@@ -95,14 +95,14 @@
                         <string>my_third_spouse_birthdate</string>
                         <string>my_third_spouse_matrimonial_situation</string>
                         <string>my_third_spouse_restrictive_clauses</string>
-                        <string>my_corporate_registration_code</string>
+                        <string>my_company_corporate_registration_code</string>
                         <string>my_company_address</string>
                         <string>my_company_old_address</string>
                         <string>my_company_modified_name</string>
                         <string>my_company_old_name</string>
                         <string>my_company_modified_removed_activities</string>
                         <string>my_company_modified_added_activities</string>
-                        <string>my_new_corporate_registration_code</string>
+                        <string>my_establishment_corporate_registration_code</string>
                         <string>my_new_address</string>
                         <string>my_transferred_address</string>
                         <string>my_transferred_date</string>
