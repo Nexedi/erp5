@@ -31,6 +31,9 @@ msgstr "-- Utilisateur --"
 msgid "-- Workflows --"
 msgstr ""
 
+msgid "Activities Stopped"
+msgstr "Activités stoppés"
+
 msgid "A change log"
 msgstr ""
 
@@ -2071,9 +2074,6 @@ msgstr "Explications pour la fabrication"
 
 msgid "Initial Contacts"
 msgstr ""
-
-msgid "Input data has errors. Please look at error messages below."
-msgstr "Les données contiennent des erreurs. S'il vous plait, regardez le message d'erreur"
 
 msgid "Input is required but no input given."
 msgstr "Ce champ est obligatoire."
