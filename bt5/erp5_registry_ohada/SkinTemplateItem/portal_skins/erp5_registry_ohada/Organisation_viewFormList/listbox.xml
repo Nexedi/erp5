@@ -311,6 +311,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -329,6 +335,10 @@
                         <tuple>
                           <string>corporate_registration_code</string>
                           <string>Corporate Registration Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -356,6 +366,10 @@
                         <tuple>
                           <string>corporate_registration_code</string>
                           <string>Corporate Registration Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

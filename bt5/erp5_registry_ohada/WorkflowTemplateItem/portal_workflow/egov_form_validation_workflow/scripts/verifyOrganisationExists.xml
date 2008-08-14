@@ -74,7 +74,10 @@ person_module = portal.person_module\n
 date = request_eform.getDate()\n
 if request_eform.getPortalType() == \'P2\':\n
   organisation_list = portal.portal_catalog(parent_uid = portal.organisation_module.getUid(),\n
-                                            corporate_registration_code = request_eform.getCorporateRegistrationCode(),\n
+                                            corporate_registration_code = \\\n
+                                    request_eform.getEstablishmentModification() \\\n
+                                    and request_eform.getEstablishmentCorporateRegistrationCode()\\\n
+                                    or request_eform.getCompanyCorporateRegistrationCode(),\n
                                             ignore_empty_string = 0)\n
   if not len(organisation_list):\n
     raise ValidationFailed, \'Organisation was not found for this person\'\n
