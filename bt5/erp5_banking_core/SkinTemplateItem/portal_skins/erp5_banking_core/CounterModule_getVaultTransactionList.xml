@@ -76,7 +76,13 @@
 #                             [\'cash_status/valid\', \'cash_status/new_not_emitted\']\n
 #\n
 \n
-from Products.ERP5Type.Document import newTempBase\n
+if dictionaries:\n
+  def newTempBase(ignored, object_id, **kw):\n
+    kw[\'id\'] = object_id\n
+    return kw\n
+else:\n
+  from Products.ERP5Type.Document import newTempBase\n
+\n
 from DateTime import DateTime\n
 begin = DateTime()\n
 \n
@@ -383,7 +389,7 @@ return repr([x for x in total_inventory_list])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, excluded_variation_list=None, all_state=0, only_last_date=0, **kw</string> </value>
+            <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, excluded_variation_list=None, all_state=0, only_last_date=0, dictionaries=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -411,7 +417,7 @@ return repr([x for x in total_inventory_list])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
+                        <value> <int>13</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -429,9 +435,10 @@ return repr([x for x in total_inventory_list])\n
                             <string>excluded_variation_list</string>
                             <string>all_state</string>
                             <string>only_last_date</string>
+                            <string>dictionaries</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
+                            <string>Products.ERP5Type.Document</string>
                             <string>DateTime</string>
                             <string>begin</string>
                             <string>None</string>
@@ -526,6 +533,7 @@ return repr([x for x in total_inventory_list])\n
                 <none/>
                 <int>0</int>
                 <none/>
+                <int>0</int>
                 <int>0</int>
                 <int>0</int>
               </tuple>
