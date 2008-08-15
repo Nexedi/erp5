@@ -1,9 +1,11 @@
 M0 Module | M0
 M0 | File
 M0 | M0 Bis
+M0 | PDF
 M2 Module | M2
 M2 | File
 M2 | M2 Bis
+M2 | PDF
 M4 Module | M4
 Organisation Module | Organisation
 Organisation | Address
@@ -18,10 +20,13 @@ Organisation | Link
 Organisation | Telephone
 P0 Module | P0
 P0 | File
+P0 | PDF
 P2 Module | P2
 P2 | File
+P2 | PDF
 P4 Module | P4
 P4 | File
+P4 | PDF
 Person Module | Person
 Person | Address
 Person | Assignment

@@ -1,6 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="M0">
   <item>File</item>
+  <item>PDF</item>
   <item>M0 Bis</item>
  </portal_type>
  <portal_type id="M0 Module">
@@ -9,6 +10,7 @@
  <portal_type id="M2">
   <item>File</item>
   <item>M2 Bis</item>
+  <item>PDF</item>
  </portal_type>
  <portal_type id="M2 Module">
   <item>M2</item>
@@ -32,18 +34,21 @@
   <item>Organisation</item>
  </portal_type>
  <portal_type id="P0">
+  <item>PDF</item>
   <item>File</item>
  </portal_type>
  <portal_type id="P0 Module">
   <item>P0</item>
  </portal_type>
  <portal_type id="P2">
+  <item>PDF</item>
   <item>File</item>
  </portal_type>
  <portal_type id="P2 Module">
   <item>P2</item>
  </portal_type>
  <portal_type id="P4">
+  <item>PDF</item>
   <item>File</item>
  </portal_type>
  <portal_type id="P4 Module">
@@ -51,7 +56,6 @@
  </portal_type>
  <portal_type id="Person">
   <item>Address</item>
-  <item>Assignment</item>
   <item>Telephone</item>
   <item>Image</item>
   <item>Credit Card</item>
@@ -61,6 +65,7 @@
   <item>Link</item>
   <item>Career</item>
   <item>Bank Account</item>
+  <item>Assignment</item>
  </portal_type>
  <portal_type id="Person Module">
   <item>Person</item>
