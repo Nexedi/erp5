@@ -82,7 +82,7 @@ assigned_to_dict={}\n
 not_assigned_bug_list=[]\n
 \n
 for bug in bug_module.searchFolder(portal_type=\'Bug\',\n
-                                   validation_state=\'open\',\n
+                                   simulation_state=\'confirmed\',\n
                                    sort_on=((\'id\', \'asc\', \'int\'),)):\n
   bug = bug.getObject()\n
   if bug.getDestination():\n
@@ -94,7 +94,7 @@ for bug in bug_module.searchFolder(portal_type=\'Bug\',\n
 for assignee, bug_list in assigned_to_dict.items():\n
   addBodyLine(" Assigned to %s:" % bug_list[0].getDestinationTitle())\n
   for bug in bug_list:\n
-    addBodyLine("  [#%s] %s" % (bug.getId(), bug.getTitle()))\n
+    addBodyLine("  [%s] %s" % (bug.getReference(), bug.getTitle()))\n
     addBodyLine("    %s/%s/view" % (server_url, bug.getRelativeUrl()))\n
     addBodyLine(\'\')\n
   addBodyLine(\'\')\n
@@ -103,7 +103,7 @@ if not_assigned_bug_list:\n
   addBodyLine(\'\')\n
   addBodyLine(" Not assigned:")\n
   for bug in not_assigned_bug_list:\n
-    addBodyLine("  [#%s] %s" % (bug.getId(), bug.getTitle()))\n
+    addBodyLine("  [%s] %s" % (bug.getReference(), bug.getTitle()))\n
     addBodyLine("    %s/%s/view" % (server_url, bug.getRelativeUrl()))\n
     addBodyLine(\'\')\n
 \n
@@ -138,6 +138,12 @@ if bug_count:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
