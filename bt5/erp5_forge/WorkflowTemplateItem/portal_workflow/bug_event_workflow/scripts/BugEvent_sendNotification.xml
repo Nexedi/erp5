@@ -81,7 +81,7 @@ body += bug_message.getTextContent("") \n
 # Bug Information\n
 bug = bug_message.getParentValue()\n
 body += """\n
-+----------------------- Bug Informations ----------------------+\n
++----------------------- Bug Information ----------------------+\n
 \n
   Bug: %s\n
   Status: %s \n
@@ -97,7 +97,7 @@ if bug.getSourceTitle() is not None:\n
 """ % (bug.getDestinationTitle(\'\'), bug.getSourceTitle(\'\'),\n
            bug.getSourceTradeTitle(\'\'))\n
 \n
-body += """  Link: %s\n
+body += """  Link: %s/view\n
   Request Project: %s\n
   Assigned Project: %s\n
   Description: \n
