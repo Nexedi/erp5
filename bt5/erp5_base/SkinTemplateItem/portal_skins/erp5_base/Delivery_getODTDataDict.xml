@@ -359,6 +359,7 @@ data_dict = {\n
   \'reference\': context.getReference() or \'\',\n
   \'start_date\': getOrderedDate(context.getStartDate()) or \'\',\n
   \'stop_date\': getOrderedDate(context.getStopDate()) or \'\',\n
+  \'creation_date\': getOrderedDate(context.getCreationDate()) or \'\',\n
   \'currency\': context.getPriceCurrencyReference() or \'\',\n
   \'payment_condition\': getPaymentConditionText(context),\n
   \'delivery_mode\': context.getDeliveryModeTitle() or \'\',\n
