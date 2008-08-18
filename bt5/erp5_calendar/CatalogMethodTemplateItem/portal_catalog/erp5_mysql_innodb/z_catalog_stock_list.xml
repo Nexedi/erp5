@@ -186,31 +186,31 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>getResourceUid</string>
-                            <string>getInventoriatedQuantity</string>
-                            <string>getSourceUid</string>
-                            <string>getDestinationUid</string>
-                            <string>getSourceSectionUid</string>
-                            <string>getDestinationSectionUid</string>
-                            <string>isMovement</string>
-                            <string>isInventoryMovement</string>
-                            <string>getSourcePaymentUid</string>
-                            <string>getDestinationPaymentUid</string>
-                            <string>getSourceFunctionUid</string>
-                            <string>getDestinationFunctionUid</string>
-                            <string>getSourceProjectUid</string>
-                            <string>getDestinationProjectUid</string>
-                            <string>getSimulationState</string>
-                            <string>getSourceInventoriatedTotalAssetPrice</string>
-                            <string>getDestinationInventoriatedTotalAssetPrice</string>
-                            <string>getStartDate</string>
-                            <string>getStopDate</string>
-                            <string>isAccountable</string>
-                            <string>getPortalType</string>
-                            <string>getVariationText</string>
-                            <string>getSubVariationText</string>
-                            <string>asMovementList</string>
+<string>uid</string>
+<string>getResourceUid</string>
+<string>getInventoriatedQuantity</string>
+<string>getSourceUid</string>
+<string>getDestinationUid</string>
+<string>getSourceSectionUid</string>
+<string>getDestinationSectionUid</string>
+<string>isMovement</string>
+<string>isInventoryMovement</string>
+<string>getSourcePaymentUid</string>
+<string>getDestinationPaymentUid</string>
+<string>getSourceFunctionUid</string>
+<string>getDestinationFunctionUid</string>
+<string>getSourceProjectUid</string>
+<string>getDestinationProjectUid</string>
+<string>getSimulationState</string>
+<string>getSourceInventoriatedTotalAssetPrice</string>
+<string>getDestinationInventoriatedTotalAssetPrice</string>
+<string>getStartDate</string>
+<string>getStopDate</string>
+<string>isAccountable</string>
+<string>getPortalType</string>
+<string>getVariationText</string>
+<string>getSubVariationText</string>
+<string>asMovementList</string>
                           </list>
                         </value>
                     </item>
@@ -341,8 +341,8 @@ WHERE\n
                       getDestinationUid[loop_item],\n
                       getResourceUid[loop_item],\n
                       -(getInventoriatedQuantity[loop_item] or 0),\n
-                      mov_item.getStopDate(),\n
                       mov_item.getStartDate(),\n
+                      mov_item.getStopDate(),\n
                       getSourceInventoriatedTotalAssetPrice[loop_item],\n
                       getPortalType[loop_item],\n
                       getSimulationState[loop_item],\n
@@ -472,8 +472,8 @@ WHERE\n
                       getDestinationUid[loop_item],\n
                       getResourceUid[loop_item],\n
                       -(getInventoriatedQuantity[loop_item] or 0),\n
-                      mov_item.getStopDate(),\n
                       mov_item.getStartDate(),\n
+                      mov_item.getStopDate(),\n
                       getSourceInventoriatedTotalAssetPrice[loop_item],\n
                       getPortalType[loop_item],\n
                       getSimulationState[loop_item],\n
