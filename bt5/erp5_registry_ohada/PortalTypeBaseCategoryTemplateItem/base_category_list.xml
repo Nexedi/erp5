@@ -21,9 +21,7 @@
   <item>follow_up</item>
  </portal_type>
  <portal_type id="Organisation">
-  <item>inscription_parent</item>
   <item>role</item>
-  <item>collateral_parent</item>
  </portal_type>
  <portal_type id="Organisation Module">
   <item>business_application</item>
@@ -44,8 +42,6 @@
   <item>aggregate</item>
  </portal_type>
  <portal_type id="Person">
-  <item>inscription_parent</item>
-  <item>collateral_parent</item>
   <item>destination_form</item>
  </portal_type>
  <portal_type id="Person Module">
@@ -54,11 +50,9 @@
  <portal_type id="S1">
   <item>follow_up</item>
   <item>destination_form</item>
-  <item>collateral_parent</item>
  </portal_type>
  <portal_type id="S5">
   <item>destination_form</item>
-  <item>inscription_parent</item>
   <item>follow_up</item>
  </portal_type>
 </base_category_list>
