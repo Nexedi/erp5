@@ -336,7 +336,7 @@ AAA=</string> </value>
           <table:table-row table:style-name="Tableau4.1">\n
             <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
               <text:p text:style-name="P1">\n
-                <office:include_img tal:condition="image_path"\n
+                <office:include_img tal:condition="python: image_path and image_width and image_height"\n
                                     maxwidth="6cm"\n
                                     maxheigth="2cm"\n
                                     tal:attributes="path image_path;\n

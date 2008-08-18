@@ -372,7 +372,7 @@ AAA=</string> </value>
                           </table:table-cell>\n
                           <table:table-cell table:style-name=\'Tableau2.E1.2.2\' office:value-type=\'string\'>\n
                             <text:p text:style-name=\'Table_20_Contents\'\n
-                                    tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'start_date\'] or data_dict[\'stop_date\']">start_date</text:p>\n
+                                    tal:content="data_dict/creation_date">creation date</text:p>\n
                           </table:table-cell>\n
                         </table:table-row>\n
                         <table:table-row table:style-name=\'Tableau2.E1.1\'>\n
