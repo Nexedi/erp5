@@ -87,7 +87,7 @@ body += """\n
   Status: %s \n
   Reporter: %s\n
   Submitted Date: %s\n
-""" %  (bug.getTitle(\'\'), bug.getSimulationState(), \n
+""" %  (bug.getTitle(\'\'), bug.getSimulationStateTitle(), \n
         bug.getSourceTradeTitle(\'\'), bug.getStartDate(\'\'))\n
 \n
 if bug.getSourceTitle() is not None:\n
