@@ -16,27 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -67,7 +46,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>page_0</string> </key>
+                    <key>                 <string>page_0</string> </key>
                     <value>
                       <list>
                         <string>my_inscription_check</string>
@@ -81,12 +60,12 @@
                         <string>my_vehicle_check</string>
                         <string>my_stock_check</string>
                         <string>my_title</string>
-                        <string>my_corporate_registration_code</string>
-                        <string>my_address</string>
+                        <string>my_beneficiary_corporate_registration_code</string>
+                        <string>my_head_office_address</string>
                         <string>my_capital</string>
                         <string>my_residence</string>
                         <string>my_hypothecation_person_title</string>
-                        <string>my_hypothecation_person_corporate_registration_code</string>
+                        <string>my_corporate_registration_code</string>
                         <string>my_hypothecation_person_address</string>
                         <string>my_hypothecation_capital</string>
                         <string>my_credit_title</string>
