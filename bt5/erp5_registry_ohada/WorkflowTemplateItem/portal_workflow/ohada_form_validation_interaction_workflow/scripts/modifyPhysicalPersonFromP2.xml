@@ -152,6 +152,8 @@ else:\n
   #address, or its corporate name or whether the P2 form is used to create another\n
   #company for the person\n
   if request_eform.getCompanyModifications():\n
+    corporate_registration_code = request_eform.getCompanyCorporateRegistrationCode()\n
+    request_eform.edit(corporate_registration_code=corporate_registration_code)\n
     organisation_list = [organisation.getObject() for organisation in \\\n
         organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
     for organisation in organisation_list:\n
@@ -168,7 +170,7 @@ else:\n
             if removed_activities in activity_list:\n
               activity_list.remove(removed_activities)\n
               organisation.edit(activity_free_text = \',\'.join(activity_list))\n
-        elif request_eform.getCompanyModifiedAddedActivities() != None:\n
+        if request_eform.getCompanyModifiedAddedActivities() != None:\n
           activity_list.append(request_eform.getCompanyModifiedAddedActivities())\n
           organisation.edit(activity_free_text = \',\'.join(activity_list))\n
 \n
@@ -193,8 +195,10 @@ else:\n
   #If the person has secondaries organisations,\n
   #modify the secondaries organisations for the person\n
   elif request_eform.getEstablishmentModification():\n
+    corporate_registration_code = request_eform.getEstablishmentRegistrationCode()\n
+    request_eform.edit(corporate_registration_code=corporate_registration_code)\n
     organisation_list = [organisation.getObject() for organisation in \\\n
-        organisation_module.searchFolder(corporate_registration_code=request_eform.getNewCorporateRegistrationCode())]\n
+        organisation_module.searchFolder(corporate_registration_code=request_eform.getCorporateRegistrationCode())]\n
     for organisation in organisation_list:\n
       if request_eform.getClosingCheck():\n
         organisation.getDefaultAddress().close()\n
@@ -294,6 +298,7 @@ for history in history_list:\n
                             <string>person_list</string>
                             <string>len</string>
                             <string>ValidationFailed</string>
+                            <string>corporate_registration_code</string>
                             <string>organisation</string>
                             <string>organisation_list</string>
                             <string>activity_free_text</string>
