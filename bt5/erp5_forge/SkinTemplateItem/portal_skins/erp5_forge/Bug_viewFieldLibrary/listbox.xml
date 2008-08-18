@@ -17,7 +17,6 @@
                 <string>description</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>list_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
@@ -83,10 +82,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>portal_types</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -114,11 +109,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>getTitle</string>
+                          <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -141,11 +136,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key>                 <string>description</string> </key>
                     <value> <string>Messages</string> </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -168,13 +163,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -185,11 +174,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>bug_view_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -204,27 +193,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Messages</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
