@@ -1466,7 +1466,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     self.assertEquals(self.vendor, supply_line.getSourceSectionValue())
     self.assertEquals(self.client, supply_line.getDestinationValue())
     self.assertEquals(self.client, supply_line.getDestinationSectionValue())
-    self.assertEquals(self.client, supply_line.getPriceCurrencyValue())
+    self.assertEquals(self.currency, supply_line.getPriceCurrencyValue())
 
   def test_movement_price_assignment(self):
     # supply line from the trade condition apply to the movements in order
