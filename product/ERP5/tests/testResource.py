@@ -657,10 +657,10 @@ class TestResource(ERP5TypeTestCase):
                                    categories=['industrial_phase/phase1',
                                                'industrial_phase/phase2']))
 
-  def test_11_getPriceWithDestination(self, quiet=0, run=run_all_test):
+  def test_11_getPriceWithDestinationSection(self, quiet=0, run=run_all_test):
     """
     Test the pricing model with multiple price for 
-    differents destinations.
+    differents destination sections.
     """
     if not run: return
     # Initialize variables
@@ -700,7 +700,7 @@ class TestResource(ERP5TypeTestCase):
                                      portal_type=self.sale_supply_portal_type,
                                      title='FakeSupply%s' % i,
                                      price_currency_value=currency,
-                                     destination_value=node)
+                                     destination_section_value=node)
         self.logMessage("Creating fake supply line %s..." % i, tab=1)
         supply_line = supply.newContent(
               portal_type=self.sale_supply_line_portal_type,
@@ -726,14 +726,14 @@ class TestResource(ERP5TypeTestCase):
     # Test the cases
     for product, node, base_price in test_case_list:
       if node is not None:
-        self.logMessage("Check product %s with destination %s" % \
+        self.logMessage("Check product %s with destination section %s" % \
                         (product.getTitle(), node.getTitle()),
                         tab=1)
         self.assertEquals(base_price, 
                           product.getPrice(
-                        categories=['destination/%s' % node.getRelativeUrl()]))
+                        categories=['destination_section/%s' % node.getRelativeUrl()]))
       else:
-        self.logMessage("Check product %s without destination" % \
+        self.logMessage("Check product %s without destination section" % \
                         product.getTitle(),
                         tab=1)
         self.assertEquals(base_price, 
@@ -742,7 +742,7 @@ class TestResource(ERP5TypeTestCase):
   def test_12_getPurchaseVsSalePrice(self, quiet=0, run=run_all_test):
     """
     Test the pricing model with purchase and sale supply lines, and with
-    source/destination.
+    source_section/destination_section.
     """
     if not run: return
     # Initialize variables
@@ -769,11 +769,11 @@ class TestResource(ERP5TypeTestCase):
     product.newContent(
         portal_type=self.sale_supply_line_portal_type,
         base_price=100.0,
-        destination_value=orga1)
+        destination_section_value=orga1)
     product.newContent(
         portal_type=self.sale_supply_line_portal_type,
         base_price=200.0,
-        destination_value=orga2)
+        destination_section_value=orga2)
     product.newContent(
         portal_type=self.sale_supply_line_portal_type,
         base_price=400.0)
@@ -781,11 +781,11 @@ class TestResource(ERP5TypeTestCase):
     product.newContent(
         portal_type=self.purchase_supply_line_portal_type,
         base_price=10.0,
-        source_value=orga1)
+        source_section_value=orga1)
     product.newContent(
         portal_type=self.purchase_supply_line_portal_type,
         base_price=20.0,
-        source_value=orga2)
+        source_section_value=orga2)
     product.newContent(
         portal_type=self.purchase_supply_line_portal_type,
         base_price=40.0)
@@ -800,7 +800,7 @@ class TestResource(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(sale_order_line.getPrice(), 400.0)
-    sale_order.setDestinationValue(orga2)
+    sale_order.setDestinationSectionValue(orga2)
     get_transaction().commit()
     self.tic()
     sale_order_line.setPrice(None)
@@ -816,7 +816,7 @@ class TestResource(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     self.assertEquals(purchase_order_line.getPrice(), 40.0)
-    purchase_order.setSourceValue(orga2)
+    purchase_order.setSourceSectionValue(orga2)
     get_transaction().commit()
     self.tic()
     purchase_order_line.setPrice(None)
