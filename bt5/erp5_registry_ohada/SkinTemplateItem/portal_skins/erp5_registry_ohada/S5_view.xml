@@ -46,7 +46,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>page_0</string> </key>
+                    <key>                 <string>page_0</string> </key>
                     <value>
                       <list>
                         <string>my_inscription_check</string>
@@ -56,12 +56,12 @@
                         <string>my_credit_check</string>
                         <string>my_property_reserve_check</string>
                         <string>my_title</string>
-                        <string>my_corporate_registration_code</string>
-                        <string>my_address</string>
+                        <string>my_beneficiary_corporate_registration_code</string>
+                        <string>my_head_office_address</string>
                         <string>my_capital</string>
                         <string>my_residence</string>
                         <string>my_inscription_person_title</string>
-                        <string>my_inscription_person_corporate_registration_code</string>
+                        <string>my_corporate_registration_code</string>
                         <string>my_inscription_person_address</string>
                         <string>my_inscription_capital</string>
                         <string>my_credit_title</string>
