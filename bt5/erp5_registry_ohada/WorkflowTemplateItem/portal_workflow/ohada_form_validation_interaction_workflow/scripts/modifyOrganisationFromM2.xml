@@ -107,7 +107,6 @@ def attachLocationYearInfo(last_id):\n
     location_initials = \'SL\'\n
   year = str(application_date.year())\n
   type_of_form = \'M\'\n
-  attach_info = \'SN\' + location_initials + year + type_of_form\n
   last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
   new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
   return (\'-\'.join([\'SN\', location_initials, year,\n
@@ -117,7 +116,9 @@ def attachLocationYearInfo(last_id):\n
 # using custom method attachLocationYearInfo\n
 # we use corporate_registry for corporations and\n
 # merchant_registry for merchants.\n
-new_registry_number = request_eform.portal_ids.generateNewId(method=attachLocationYearInfo)\n
+new_registry_number = request_eform.portal_ids.generateNewId(\\\n
+    id_group = \'sn-%s\' % request_eform.getGroup(),\n
+    method=attachLocationYearInfo)\n
 \n
 #variable used to store activity of the organisation,activities should be\n
 #separated with commas, and no space between them\n
@@ -137,8 +138,7 @@ for organisation in organisation_list:\n
                         destination_form_uid = request_eform.getUid())]\n
   for assignment in assignment_list:\n
     assignment.open()\n
-    assignment.edit(destination_value=organisation,\n
-                    corporate_registration_code=new_registry_number)\n
+    assignment.edit(destination_value=organisation)\n
 \n
   if request_eform.getMoralPersonCheck():\n
     if request_eform.getCharacteristicsCheck():\n
@@ -187,6 +187,7 @@ if new_corporate_registration_code != None:\n
       second_organisation.getDefaultAddress().sell()\n
     else:\n
       second_organisation.getDefaultAddress().modify()\n
+\n
 \n
 # Update the request_eform with the allocated number\n
 request_eform.edit(registration_number = new_registry_number,\n

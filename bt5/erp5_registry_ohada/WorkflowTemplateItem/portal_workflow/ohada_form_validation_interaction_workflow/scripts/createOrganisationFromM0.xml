@@ -121,9 +121,9 @@ def attachLocationYearInfo(last_id):\n
   location_info = request_eform.getSite().split(\'/\')[0]\n
   if location_info == \'dakar\':\n
     location_initials = \'DKR\'\n
-  elif location_info == \'Thies\':\n
+  elif location_info == \'thies\':\n
     location_initials = \'TH\'\n
-  elif location_info == \'Saint-Louis\':\n
+  elif location_info == \'saint-louis\':\n
     location_initials = \'SL\'\n
   year = str(date.year())\n
   if request_eform.getMoralPerson():\n
@@ -137,7 +137,6 @@ def attachLocationYearInfo(last_id):\n
     type_of_form = \'E\'\n
   else:\n
     type_of_form = \'M\'\n
-  attach_info = \'SN\' + location_initials + year + type_of_form\n
   last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
   new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
   return (\'-\'.join([\'SN\', location_initials, year,\n

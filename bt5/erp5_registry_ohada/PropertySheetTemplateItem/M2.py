@@ -759,11 +759,6 @@ class M2:
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'second_registration_number'
-    , 'description': 'Numero'
-    , 'type'       : 'string'
-    , 'mode'       : 'w'
-    },
     { 'id'         : 'second_signature'
     , 'description': 'Signature'
     , 'type'       : 'string'
