@@ -46,7 +46,7 @@ class TestTemplate(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_ui_test')
 
   def login(self, name=None):
-    """login with Assignee, Assignor & Author roles."""
+    """login with Auditor & Author roles."""
     if name is None:
       return
     uf = self.getPortal().acl_users
