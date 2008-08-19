@@ -18,6 +18,7 @@
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>select</string>
+                <string>editable_columns</string>
                 <string>url_columns</string>
               </list>
             </value>
@@ -112,6 +113,17 @@
                         <tuple>
                           <string>translated_portal_type</string>
                           <string>Portal Type</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
                         </tuple>
                       </list>
                     </value>

@@ -44,11 +44,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -91,7 +97,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
