@@ -107,6 +107,37 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(new_document.getTitle(), 'My Foo 1')
 
 
+  def test_TemplateCreatePreference(self):
+    self.login('another user with no active preference')
+    active_user_preference_list = [p for p in
+        self.portal.portal_preferences.getActivePreference()
+        if p.getPriority() == Priority.USER]
+    self.assertEquals([], active_user_preference_list)
+
+    preference_id_list = list(self.portal.portal_preferences.objectIds())
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    get_transaction().commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    get_transaction().commit()
+    self.tic()
+
+    # a new preference is created
+    new_preference_id_list = list(self.portal.portal_preferences.objectIds())
+    self.assertEqual(len(preference_id_list) + 1, len(new_preference_id_list))
+    preference_id = [x for x in new_preference_id_list if x not in
+                            preference_id_list][0]
+    preference = self.portal.portal_preferences._getOb(preference_id)
+
+    self.assertEquals('Preference', preference.getPortalType())
+    self.assertEquals('Document Template Container', preference.getTitle())
+    self.assertEquals(Priority.USER, preference.getPriority())
+    self.assertEquals('enabled', preference.getPreferenceState())
+
+    self.assertEqual(len(preference.objectIds()), 1)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTemplate))
