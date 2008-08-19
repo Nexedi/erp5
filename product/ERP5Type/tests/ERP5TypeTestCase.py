@@ -164,7 +164,6 @@ from cStringIO import StringIO
 from urllib import urlretrieve
 from glob import glob
 import sys, re, base64
-import transaction
 
 portal_name = 'erp5_portal'
 
@@ -807,7 +806,7 @@ class ERP5TypeTestCase(PortalTestCase):
         sm = getSecurityManager()
 
         # Commit the sandbox for good measure
-        transaction.commit()
+        get_transaction().commit()
 
         if env is None:
             env = {}
