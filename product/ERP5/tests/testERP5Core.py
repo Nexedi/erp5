@@ -46,8 +46,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
   run_all_test = 1
   quiet = 1
+
   manager_username = 'rc'
-  manager_password = ''
+  manager_password = 'w'
 
   def getTitle(self):
     return "ERP5Core"
@@ -266,14 +267,16 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """Make sure that user with very long login name can find his document by catalog"""
     portal = self.getPortal()
     # Create user account with very long login name
-    login_name = 'very_very_looooooooooooooooong_login_name'
-    password = 'password'
+    login_name = 'very_very_looooooooooooooooooooooooooooooooooooooooooooooooooooo' + \
+    'oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong_login_name'
+    password = 'very_long_passworddddddddddddddddddddddddddddddddddddddddddddddddd' + \
+    'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
     acl_users = portal.acl_users
     acl_users._doAddUser(login_name, password, ['Member'], [])
     user = acl_users.getUserById(login_name).__of__(acl_users)
     # Login as the above user
     newSecurityManager(None, user)
-
+    self.auth = '%s:%s' % (login_name, password)
     get_transaction().commit()
 
     # Create preference
@@ -286,6 +289,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       len(portal.portal_catalog(portal_type='Preference',
                                 title='My Test Preference')),
       1)
+    response = self.publish('%s/view' % self.portal_id, self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
 
 def test_suite():
   suite = unittest.TestSuite()
