@@ -3,12 +3,12 @@ Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
                     Jean-Paul Smets <jp@nexedi.com>
 
 WARNING: This program as such is intended to be used by professional
-programmers who take the whole responsability of assessing all potential
+programmers who take the whole responsibility of assessing all potential
 consequences resulting from its eventual inadequacies and bugs
 
 This program as such is not intended to be used by end users. End
 users who are looking for a ready-to-use solution with commercial
-garantees and support are strongly adviced to contract a Free Software
+guarantees and support are strongly advised to contract a Free Software
 Service Company
 
 This program is Free Software; you can redistribute it and/or
@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   To provide high performance, the activities are distributed over several ZEO clients, called <i>nodes</i>,
   so that they can be processed in parallel. Nodes can either run on different machines or on one machine
   with different Port Numbers.
-  The format to adress a node in this configuration is therfore
+  The format to address a node in this configuration is therefore
   <code>IP-Address</code>:<code>Port-Number</code>.
 </p>
 
@@ -63,9 +63,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 &lt;timer-server&gt;
   interval 5
 &lt;/timer-server&gt;</pre>
-        <b>CMFActivity wil not work until at least one node is known.</b>
+        <b>CMFActivity will not work until at least one node is known.</b>
         <p>
-        If it is already configured properly, then chances are you accesed
+        If it is already configured properly, then chances are you accessed
         this page before timeserver had the chance to trigger, or you just
         deleted the last known nodes.
         </p>
@@ -90,7 +90,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           The current node is not registered as an available node on current instance.
           This can be normal if this node is part of a cluster, but it can also happen
           if its hostname and/or IP address changed.
-          I the latter case, you must reconfigure this page acordignly, and can safely delete
+          I the latter case, you must reconfigure this page accordingly, and can safely delete
           the old IP address if it's still listed on this page.
         </p>
       </td>
@@ -130,7 +130,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <p class="form-help">
         The <i>Distributing node</i> is responsible for the Load Distribution.
         Only one node can be <i>Distributing node</i> at any given time.
-        It is also possible to interupt activity distribution by selecting the
+        It is also possible to interrupt activity distribution by selecting the
         <i>(disabled)</i> value. Activity nodes will receive no more activity
         when <i>Distributing node</i> is disabled.
       </p>
@@ -186,15 +186,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <td>
       <p class="form-help">
         Every node sharing the same ZODB will register itself to the idle
-        node list - except the first one which will be automaticaly declared
+        node list - except the first one which will be automatically declared
         both <i>Processing node</i> and <i>Distributing node</i>. Registered
         nodes can then be made <i>Processing nodes</i> or <i>Idle nodes</i>.
       </p>
       <p class="form-help">
        <b>Important note:</b> Nodes can register themselves, but can not
        unregister themselves (for example, a node which IP has changed will
-       be present twice in the list). It is up to the user to manualy prune
-       obsolete nodes. If non-existant nodes are present in the
+       be present twice in the list). It is up to the user to manually prune
+       obsolete nodes. If non-existent nodes are present in the
        <i>Processing node</i> list, activities will get balanced to those
        nodes and never be executed.
       </p>
