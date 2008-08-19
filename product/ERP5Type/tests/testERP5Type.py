@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf8 -*-
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Yoshinori Okuji <yo@nexedi.com>
 #
@@ -943,6 +943,21 @@ class TestPropertySheet:
       person.setDummyPsProp('a value')
       self.assertTrue(person.hasProperty('dummy_ps_prop'))
       self.assertEquals('a value', person.getDummyPsProp())
+
+      # string accessors converts the data type, if provided an unicode, it
+      # will store an utf-8 encoded string
+      person.setDummyPsProp(u'type convérsion')
+      self.assertEquals('type convérsion', person.getDummyPsProp())
+      # if provided anything else, it will store it's string representation
+      person.setDummyPsProp(1)
+      self.assertEquals('1', person.getDummyPsProp())
+
+      class Dummy:
+        def __str__(self):
+          return 'string representation'
+      person.setDummyPsProp(Dummy())
+      self.assertEquals('string representation', person.getDummyPsProp())
+
 
     def test_17_WorkflowStateAccessor(self):
       """Tests for workflow state. assumes that validation state is chained to

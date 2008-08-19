@@ -92,9 +92,10 @@ def asString(value):
     if value is None:
       result = ''
     else:
-      result = str(value)
-      if isinstance(result, unicode):
-        result = result.encode('utf-8')
+      if isinstance(value, unicode):
+        result = value.encode('utf-8')
+      else:
+        result = str(value)
   except TypeError:
     result = type_definition['string']['default']
   return result
