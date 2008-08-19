@@ -67,62 +67,57 @@
             <key> <string>_body</string> </key>
             <value> <string>bug_message = state_change["object"]\n
 \n
-body = """\n
-Reporter: %s\n
-Date: %s\n
-\n
-Bug Message:\n
-\n
-""" % (bug_message.getSourceTitle(\'\'), bug_message.getStartDate(\'\'))\n
-\n
-#XXX This does not support structured text format.\n
-body += bug_message.getTextContent("") \n
-\n
 # Bug Information\n
 bug = bug_message.getParentValue()\n
-body += """\n
-+----------------------- Bug Information ----------------------+\n
-\n
-  Bug: %s\n
-  Status: %s \n
-  Reporter: %s\n
-  Submitted Date: %s\n
-""" %  (bug.getTitle(\'\'), bug.getSimulationStateTitle(), \n
-        bug.getSourceTradeTitle(\'\'), bug.getStartDate(\'\'))\n
+body = """\n
+  Bug     : %s\n
+  Status : %s \n
+  Date    : %s\n
+  Link     : %s/view\n
+""" %  (bug.getTitle(\'\'), bug.getSimulationStateTitle(),  \n
+            bug.getStartDate(\'\'),  bug.getAbsoluteUrl())\n
 \n
 if bug.getSourceTitle() is not None:\n
-  body += """  Requester: %s\n
-  Assignee: %s\n
-  Reporter: %s\n
+  body += """  Requester : %s\n
+  Assignee   : %s\n
+  Reporter    : %s\n
 """ % (bug.getDestinationTitle(\'\'), bug.getSourceTitle(\'\'),\n
            bug.getSourceTradeTitle(\'\'))\n
 \n
-body += """  Link: %s/view\n
-  Request Project: %s\n
-  Assigned Project: %s\n
-  Description: \n
-%s\n
-""" % (bug.getAbsoluteUrl(), bug.getDestinationProjectTitle(\'\'), \n
-           bug.getSourceProjectTitle(\'\'), bug.getDescription(\'\'))\n
+if bug.getDestinationProjectTitle() is not None:\n
+  body += """  Request Project   : %s\n
+""" % bug.getDestinationProjectTitle()\n
 \n
-body += """\n
-+---------------------- Messages Related -----------------------+\n
+if bug.getSourceProjectTitle() is not None:\n
+  body += """  Assigned Project : %s\n
+""" % bug.getSourceProjectTitle()\n
+\n
+body += """ \n
+  Description: \n
+\n
+%s\n
+\n
+""" % (bug.getDescription(\'\'))\n
+\n
+body += """ Messages :\n
 """\n
 # Messages Information \n
-message_count = 0\n
-for message in bug.searchFolder(portal_type=\'Bug Line\'):\n
-  if message.getSimulationState() == \'delivered\':\n
-    message_count += 1\n
+simulation_state = (\'delivered\', \'started\')\n
+bug_message_list = bug.searchFolder(portal_type=\'Bug Line\', sort_on=(("id", "DESC"),), \n
+                                                                       simulation_state=simulation_state)\n
+message_count = len(bug_message_list)+1\n
+for message in bug_message_list:\n
+    message_count -= 1\n
     body += """\n
 ++++++ Message #%s submitted by %s on %s ++++++\n
 %s\n
 """ % (message_count, bug_message.getSourceTitle(\'\'), \n
-            bug_message.getStartDate(),  message.getTextContent(\'\') )\n
+            message.getStartDate(),  message.getTextContent(\'\') )\n
 \n
 portal = bug_message.getPortalObject()\n
 portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
                           recipient=bug_message.getDestinationValueList(), \n
-                          subject="[ERP5 Bug] [Message] %s" % bug_message.getTitle(), \n
+                          subject="[Bug %s] %s" % (bug.getReference(), bug.getTitle()), \n
                           message=body)\n
 </string> </value>
         </item>
@@ -170,10 +165,13 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
                             <string>_getitem_</string>
                             <string>bug_message</string>
                             <string>_getattr_</string>
-                            <string>body</string>
-                            <string>_inplacevar_</string>
                             <string>bug</string>
+                            <string>body</string>
                             <string>None</string>
+                            <string>_inplacevar_</string>
+                            <string>simulation_state</string>
+                            <string>bug_message_list</string>
+                            <string>len</string>
                             <string>message_count</string>
                             <string>_getiter_</string>
                             <string>message</string>
