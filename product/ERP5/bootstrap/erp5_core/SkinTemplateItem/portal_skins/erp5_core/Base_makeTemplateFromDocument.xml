@@ -69,7 +69,7 @@
 \n
 preference = portal_preferences.getActivePreference()\n
 if preference is None or preference.getPreferenceState()!=\'enabled\':\n
-  p = portal_preferences.newContent()\n
+  p = portal_preferences.newContent(portal_type=\'Preference\')\n
   p.setTitle(\'Document Template Container\')\n
   p.enable()\n
   preference = p\n
