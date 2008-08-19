@@ -26,7 +26,16 @@ when ERP5 runs in "require_referer" mode.
 """
 
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
-from urllib import quote
+from Products.CMFCore.CookieCrumbler import CookieCrumblerDisabled
+from urllib import quote, unquote
+from ZPublisher.HTTPRequest import HTTPRequest
+
+ATTEMPT_NONE = 0       # No attempt at authentication
+ATTEMPT_LOGIN = 1      # Attempt to log in
+ATTEMPT_RESUME = 2     # Attempt to resume session
+
+from base64 import encodestring, decodestring
+from DateTime import DateTime
 
 class PatchedCookieCrumbler(CookieCrumbler):
   """
@@ -60,3 +69,86 @@ def getLoginURL(self):
     return None
 
 CookieCrumbler.getLoginURL = getLoginURL
+
+def modifyRequest(self, req, resp):
+  """Copies cookie-supplied credentials to the basic auth fields.
+  
+  Returns a flag indicating what the user is trying to do with
+  cookies: ATTEMPT_NONE, ATTEMPT_LOGIN, or ATTEMPT_RESUME.  If
+  cookie login is disabled for this request, raises
+  CookieCrumblerDisabled.
+  """
+  if (req.__class__ is not HTTPRequest
+      or not req['REQUEST_METHOD'] in ('HEAD', 'GET', 'PUT', 'POST')
+      or req.environ.has_key('WEBDAV_SOURCE_PORT')):
+      raise CookieCrumblerDisabled
+
+  # attempt may contain information about an earlier attempt to
+  # authenticate using a higher-up cookie crumbler within the
+  # same request.
+  attempt = getattr(req, '_cookie_auth', ATTEMPT_NONE)
+
+  if attempt == ATTEMPT_NONE:
+    if req._auth:
+      # An auth header was provided and no cookie crumbler
+      # created it.  The user must be using basic auth.
+      raise CookieCrumblerDisabled
+
+    if req.has_key(self.pw_cookie) and req.has_key(self.name_cookie):
+      # Attempt to log in and set cookies.
+      attempt = ATTEMPT_LOGIN
+      name = req[self.name_cookie]
+      pw = req[self.pw_cookie]
+      #ac = encodestring('%s:%s' % (name, pw)).rstrip() => changed for remove all newlines
+      ac = encodestring('%s:%s' % (name, pw)).replace('\012','')
+      self._setAuthHeader(ac, req, resp)
+      if req.get(self.persist_cookie, 0):
+        # Persist the user name (but not the pw or session)
+        expires = (DateTime() + 365).toZone('GMT').rfc822()
+        resp.setCookie(self.name_cookie, name,
+                       path=self.getCookiePath(),
+                       expires=expires)
+      else:
+        # Expire the user name
+        resp.expireCookie(self.name_cookie,
+                          path=self.getCookiePath())
+      method = self.getCookieMethod( 'setAuthCookie'
+                                     , self.defaultSetAuthCookie )
+      method( resp, self.auth_cookie, quote( ac ) )
+      self.delRequestVar(req, self.name_cookie)
+      self.delRequestVar(req, self.pw_cookie)
+
+    elif req.has_key(self.auth_cookie):
+      # Attempt to resume a session if the cookie is valid.
+      # Copy __ac to the auth header.
+      ac = unquote(req[self.auth_cookie])
+      if ac and ac != 'deleted':
+        try:
+          decodestring(ac)
+        except:
+          # Not a valid auth header.
+          pass
+        else:
+          attempt = ATTEMPT_RESUME
+          self._setAuthHeader(ac, req, resp)
+          self.delRequestVar(req, self.auth_cookie)
+          method = self.getCookieMethod(
+            'twiddleAuthCookie', None)
+          if method is not None:
+            method(resp, self.auth_cookie, quote(ac))
+              
+  req._cookie_auth = attempt
+  return attempt
+
+CookieCrumbler.modifyRequest = modifyRequest
+
+
+def credentialsChanged(self, user, name, pw):
+  #ac = encodestring('%s:%s' % (name, pw)).rstrip() => changed for remove all newlines
+  ac = encodestring('%s:%s' % (name, pw)).replace('\012','')
+  method = self.getCookieMethod( 'setAuthCookie'
+                                 , self.defaultSetAuthCookie )
+  resp = self.REQUEST['RESPONSE']
+  method( resp, self.auth_cookie, quote( ac ) )
+
+CookieCrumbler.credentialsChanged = credentialsChanged
