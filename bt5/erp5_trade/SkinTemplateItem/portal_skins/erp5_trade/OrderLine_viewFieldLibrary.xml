@@ -111,6 +111,7 @@
                         <string>my_source_title</string>
                         <string>my_order_sub_lines_listbox</string>
                         <string>my_aggregate_title_list</string>
+                        <string>my_price_currency</string>
                       </list>
                     </value>
                 </item>

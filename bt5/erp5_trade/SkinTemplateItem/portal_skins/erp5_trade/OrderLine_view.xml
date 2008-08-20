@@ -142,6 +142,7 @@
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_price</string>
+                        <string>my_price_currency</string>
                         <string>my_start_date</string>
                         <string>my_source_title</string>
                         <string>my_stop_date</string>
