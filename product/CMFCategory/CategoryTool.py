@@ -1609,7 +1609,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                 display_id = 'getTitle')
 
     security.declarePublic('resolveCategory')
-    def resolveCategory(self, relative_url):
+    def resolveCategory(self, relative_url,  default=_marker):
         """
           Finds an object from a relative_url
           Method is public since we use restrictedTraverse
@@ -1690,11 +1690,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
         stack.reverse()
 
         validate = getSecurityManager().validate
-        def restrictedGetOb(container, key):
+        def restrictedGetOb(container, key, default):
           obj = container._getOb(key, None)
           if obj is not None:
-            if not validate(container, container, key, obj):
-              raise Unauthorized('unauthorized access to element %s' % key)
+            try:
+              if not validate(container, container, key, obj):
+                raise Unauthorized('unauthorized access to element %s' % key)
+            except Unauthorized:
+              # if user can't access object try to return default passed
+              if default is not _marker:
+                return default
+              else:
+                raise Unauthorized('unauthorized access to element %s' % key)
           return obj
 
         # XXX Currently, resolveCategory accepts that a category might
@@ -1706,28 +1713,28 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if stack:
           portal = aq_inner(self.getPortalObject())
           key = stack.pop()
-          obj = restrictedGetOb(self, key)
+          obj = restrictedGetOb(self, key, default)
           if obj is None:
-            obj = restrictedGetOb(portal, key)
+            obj = restrictedGetOb(portal, key, default)
             if obj is not None:
               obj = obj.__of__(self)
           else:
             while stack:
               container = obj
               key = stack.pop()
-              obj = restrictedGetOb(container, key)
+              obj = restrictedGetOb(container, key, default)
               if obj is not None:
                 break
-              obj = restrictedGetOb(self, key)
+              obj = restrictedGetOb(self, key, default)
               if obj is None:
-                obj = restrictedGetOb(portal, key)
+                obj = restrictedGetOb(portal, key, default)
                 if obj is not None:
                   obj = obj.__of__(container)
                 break
 
           while obj is not None and stack:
             key = stack.pop()
-            obj = restrictedGetOb(obj, key)
+            obj = restrictedGetOb(obj, key, default)
 
         if obj is None:
           LOG('CMFCategory', WARNING, 
