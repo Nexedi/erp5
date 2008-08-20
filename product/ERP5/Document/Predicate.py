@@ -233,7 +233,7 @@ class Predicate(XMLObject, Folder):
     for category in self.getMembershipCriterionCategoryList():
       base_category = category.split('/')[0] # Retrieve base category
       if membership_dict.has_key(base_category):
-        category_value = portal_categories.resolveCategory(category)
+        category_value = portal_categories.resolveCategory(category, None)
         if category_value is not None:
           table_alias = "single_%s_%s" % (table, base_category)
           from_table_dict[table_alias] = 'category'
