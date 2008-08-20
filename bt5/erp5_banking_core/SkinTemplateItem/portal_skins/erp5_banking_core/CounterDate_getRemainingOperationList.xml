@@ -99,7 +99,7 @@ if site_uid is not None:\n
               or (portal_type == \'Paper Money Payment\' and simulation_state != \'ready\') \\\n
               or (portal_type == \'Paper Money Deposit\' and simulation_state == \'stopped\'):\n
          continue\n
-      if portal_type in (\'Cash Movement\', \'Cash Movement New Not Emmited\'):\n
+      if portal_type in (\'Cash Movement\', \'Cash Movement New Not Emitted\'):\n
          if not (\n
                 ((simulation_state in (\'confirmed\') and site_url in document.getSource()) \n
                   or \n
