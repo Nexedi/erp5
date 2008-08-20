@@ -1080,11 +1080,282 @@ class TestCalendar(ERP5TypeTestCase):
                   to_date=DateTime(2008, 1, 1).latestTime())
     self.assertEquals(2, len(available_time_movement_list))
     self.assertEquals(
-        [(DateTime('2008/01/01 08:00').ISO(),
-          DateTime('2008/01/01 09:00').ISO()),
-         (DateTime('2008/01/01 16:59:59').ISO(), # XXX is it good ?
-          DateTime('2008/01/01 18:00').ISO())],
-        [(m.getStartDate().ISO(), m.getStopDate().ISO()) for m in
+        [(DateTime('2008/01/01 08:00'),
+          DateTime('2008/01/01 09:00')),
+         (DateTime('2008/01/01 17:00'),
+          DateTime('2008/01/01 18:00'))],
+        [(m.getStartDate(), m.getStopDate()) for m in
+                        available_time_movement_list])
+
+  def test_LeaveRequestOverlappingBeforeGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period.setStartDate('2008/01/01 07:00')
+    leave_request_period.setStopDate('2008/01/01 09:00')
+    leave_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals((18-9) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([(18-9) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(
+        [(DateTime('2008/01/01 09:00'),
+          DateTime('2008/01/01 18:00'),)],
+        [(m.getStartDate(), m.getStopDate()) for m in
+                        available_time_movement_list])
+
+  def test_LeaveRequestOverlappingAfterGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period.setStartDate('2008/01/01 17:00')
+    leave_request_period.setStopDate('2008/01/01 19:00')
+    leave_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals((17-8) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([(17-8) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(
+        [(DateTime('2008/01/01 08:00'),
+          DateTime('2008/01/01 17:00'),)],
+        [(m.getStartDate(), m.getStopDate()) for m in
+                        available_time_movement_list])
+
+  def test_2LeaveRequestOverlappingAfterGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period_1 = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period_1.setStartDate('2008/01/01 09:00')
+    leave_request_period_1.setStopDate('2008/01/01 10:00')
+    leave_request_period_1.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request_period_2 = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period_2.setStartDate('2008/01/01 12:00')
+    leave_request_period_2.setStopDate('2008/01/01 13:00')
+    leave_request_period_2.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals((18-13 + 12-10 + 9-8) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([(18-13 + 12-10 + 9-8) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(
+        [(DateTime('2008/01/01 08:00'),
+          DateTime('2008/01/01 09:00'),),
+         (DateTime('2008/01/01 10:00'),
+          DateTime('2008/01/01 12:00'),),
+         (DateTime('2008/01/01 13:00'),
+          DateTime('2008/01/01 18:00'),)],
+        [(m.getStartDate(), m.getStopDate()) for m in
+                        available_time_movement_list])
+
+  def test_2ConsecutiveLeaveRequestOverlappingAfterGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period_1 = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period_1.setStartDate('2008/01/01 09:00')
+    leave_request_period_1.setStopDate('2008/01/01 10:00')
+    leave_request_period_1.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request_period_2 = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period_2.setStartDate('2008/01/01 10:00')
+    leave_request_period_2.setStopDate('2008/01/01 11:00')
+    leave_request_period_2.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([(18-11 + 9-8) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(
+        [(DateTime('2008/01/01 08:00'),
+          DateTime('2008/01/01 09:00'),),
+         (DateTime('2008/01/01 11:00'),
+          DateTime('2008/01/01 18:00'),),],
+        [(m.getStartDate(), m.getStopDate()) for m in
+                        available_time_movement_list])
+
+  def test_2OverlappedLeaveRequestOverlappingAfterGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period_1 = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period_1.setStartDate('2008/01/01 09:00')
+    leave_request_period_1.setStopDate('2008/01/01 10:00')
+    leave_request_period_1.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request_period_2 = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period_2.setStartDate('2008/01/01 09:30')
+    leave_request_period_2.setStopDate('2008/01/01 11:00')
+    leave_request_period_2.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([(18-11 + 9-8) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(
+        [(DateTime('2008/01/01 08:00'),
+          DateTime('2008/01/01 09:00'),),
+         (DateTime('2008/01/01 11:00'),
+          DateTime('2008/01/01 18:00'),),],
+        [(m.getStartDate(), m.getStopDate()) for m in
                         available_time_movement_list])
 
 
