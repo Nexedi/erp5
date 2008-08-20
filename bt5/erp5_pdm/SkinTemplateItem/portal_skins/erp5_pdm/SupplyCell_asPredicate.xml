@@ -71,6 +71,10 @@ if context.getSourceSection():\n
   base_category_tuple += (\'source_section\',)\n
 if context.getDestinationSection():\n
   base_category_tuple += (\'destination_section\',)\n
+if context.getSource():\n
+  base_category_tuple += (\'source\',)\n
+if context.getDestination():\n
+  base_category_tuple += (\'destination\',)\n
 \n
 #backwards compatibility\n
 mapped_value_property_list = context.getMappedValuePropertyList()\n
