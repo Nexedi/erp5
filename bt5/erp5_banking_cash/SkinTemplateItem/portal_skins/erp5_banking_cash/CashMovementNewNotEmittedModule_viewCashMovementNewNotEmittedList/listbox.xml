@@ -468,7 +468,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>CashMovementNewNotEmittedModule_viewCashMovementNewNotEmmitedList</string> </value>
+                    <value> <string>CashMovementNewNotEmittedModule_viewCashMovementNewNotEmittedList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

@@ -148,7 +148,7 @@ if listbox is None:\n
 \n
   return context.asContext(context=None\n
                            , portal_type=context.getPortalType()\n
-                           ).CashMovementNewNotEmmited_fastInputForm(**kw)\n
+                           ).CashMovementNewNotEmitted_fastInputForm(**kw)\n
 </string> </value>
         </item>
         <item>

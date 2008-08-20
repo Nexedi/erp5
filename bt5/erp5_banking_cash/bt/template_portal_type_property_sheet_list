@@ -6,7 +6,6 @@ Cash Exchange | Resource
 Cash Exchange | Simulation
 Cash Movement New Not Emitted Line | CashDeliveryLine
 Cash Movement New Not Emitted | Amount
-Cash Movement New Not Emitted | CashMovementNewNotEmmitedCoinBag
 Cash Movement New Not Emitted | Price
 Cash Movement | CashMovement
 Cash Movement | Price

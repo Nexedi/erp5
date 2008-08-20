@@ -409,7 +409,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>CashMovementNewNotEmmited_Folder_viewContainerList</string> </value>
+                    <value> <string>CashMovementNewNotEmitted_Folder_viewContainerList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -424,12 +424,16 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Cash Movement New Not Emmited Container</string>
-                          <string>Cash Movement New Not Emmited Container</string>
+                          <string>Cash Movement New Not Emitted Container</string>
+                          <string>Cash Movement New Not Emitted Container</string>
                         </tuple>
                       </list>
                     </value>
@@ -508,11 +512,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -527,11 +528,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

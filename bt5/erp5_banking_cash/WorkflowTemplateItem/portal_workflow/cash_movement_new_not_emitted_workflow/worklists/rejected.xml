@@ -39,7 +39,7 @@ Base_viewWorklist?simulation_state=rejected&portal_type=Cash Movement New Not Em
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Rejected Cash Movement New Not Emmited</string> </value>
+            <value> <string>Rejected Cash Movement New Not Emitted</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

@@ -53,6 +53,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -135,7 +139,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CashMovementNewNotEmmited_view</string> </value>
+            <value> <string>CashMovementNewNotEmitted_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -151,7 +155,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cash Movement New Not Emmited</string> </value>
+            <value> <string>Cash Movement New Not Emitted</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

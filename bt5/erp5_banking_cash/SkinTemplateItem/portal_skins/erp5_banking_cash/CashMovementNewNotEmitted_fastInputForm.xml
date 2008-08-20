@@ -50,7 +50,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>CashMovementNewNotEmmited_saveFastInputLine</string> </value>
+            <value> <string>CashMovementNewNotEmitted_saveFastInputLine</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>None</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -125,7 +129,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CashMovementNewNotEmmited_fastInputForm</string> </value>
+            <value> <string>CashMovementNewNotEmitted_fastInputForm</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
