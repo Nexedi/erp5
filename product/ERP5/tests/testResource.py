@@ -41,6 +41,7 @@ class TestResource(ERP5TypeTestCase):
     Test ERP5 document Resource
   """
   run_all_test = 1
+  quiet = 0
 
   # Global variables
   resource_portal_type = 'Apparel Model'
@@ -229,7 +230,7 @@ class TestResource(ERP5TypeTestCase):
     # store individual resource
     sequence.edit(colour=colour_list)
 
-  def test_01_getVariationBaseCategoryList(self, quiet=0, run=run_all_test):
+  def test_01_getVariationBaseCategoryList(self, quiet=quiet, run=run_all_test):
     """
       Test the method getVariationBaseCategoryList on a resource.
     """
@@ -241,9 +242,9 @@ class TestResource(ERP5TypeTestCase):
                       CheckGetVariationBaseCategoryList \
                       '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def genericTest(self, test_method_name):
+  def genericTest(self, test_method_name, quiet=quiet):
     """
       Generic test on a resource.
     """
@@ -289,14 +290,14 @@ class TestResource(ERP5TypeTestCase):
                       %s \
                       ' % test_method_name
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
-  def test_02_getVariationRangeCategoryList(self, quiet=0, run=run_all_test):
+  def test_02_getVariationRangeCategoryList(self, quiet=quiet, run=run_all_test):
     """
       Test the method getVariationRangeCategoryList on a resource.
     """
     if not run: return
-    self.genericTest('CheckGetVariationRangeCategoryList')
+    self.genericTest('CheckGetVariationRangeCategoryList', quiet=quiet)
 
   def stepCheckGetVariationRangeCategoryItemList(self, sequence=None,
                                                  sequence_list=None, **kw):
@@ -310,13 +311,13 @@ class TestResource(ERP5TypeTestCase):
     vrcil = resource.getVariationRangeCategoryItemList()
     self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
 
-  def test_03_getVariationRangeCategoryItemList(self, quiet=0,
+  def test_03_getVariationRangeCategoryItemList(self, quiet=quiet,
                                                 run=run_all_test):
     """
       Test the method getVariationRangeCategoryItemList on a resource.
     """
     if not run: return
-    self.genericTest('CheckGetVariationRangeCategoryItemList')
+    self.genericTest('CheckGetVariationRangeCategoryItemList', quiet=quiet)
 
   def stepCheckGetVariationCategoryList(self, sequence=None,
                                                  sequence_list=None, **kw):
@@ -326,16 +327,14 @@ class TestResource(ERP5TypeTestCase):
     """
     resource = sequence.get('resource')
     vcl = resource.getVariationCategoryList()
-#    ZopeTestCase._print('\n')
-#    ZopeTestCase._print('vcl: %s\n' % str(vcl))
     self.failIfDifferentSet(self.category_list, vcl)
 
-  def test_04_getVariationCategoryList(self, quiet=0, run=run_all_test):
+  def test_04_getVariationCategoryList(self, quiet=quiet, run=run_all_test):
     """
       Test the method getVariationCategoryList on a resource.
     """
     if not run: return
-    self.genericTest('CheckGetVariationCategoryList')
+    self.genericTest('CheckGetVariationCategoryList', quiet=quiet)
 
   def stepCheckGetVariationCategoryListWithoutOmit(self, sequence=None,
                                                  sequence_list=None, **kw):
@@ -354,13 +353,13 @@ class TestResource(ERP5TypeTestCase):
         correct_vcl.extend(individual_variation_list)
     self.failIfDifferentSet(correct_vcl, vcl)
 
-  def test_05_getVariationCategoryList(self, quiet=0, run=run_all_test):
+  def test_05_getVariationCategoryList(self, quiet=quiet, run=run_all_test):
     """
       Test the method getVariationCategoryList on a resource
       with parameter omit_individual_variation=0.
     """
     if not run: return
-    self.genericTest('CheckGetVariationCategoryListWithoutOmit')
+    self.genericTest('CheckGetVariationCategoryListWithoutOmit', quiet)
 
   def stepCheckGetVariationCategoryItemList(self, sequence=None,
                                                  sequence_list=None, **kw):
@@ -373,12 +372,12 @@ class TestResource(ERP5TypeTestCase):
     vcil = resource.getVariationCategoryItemList()
     self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
 
-  def test_06_getVariationCategoryItemList(self, quiet=0, run=run_all_test):
+  def test_06_getVariationCategoryItemList(self, quiet=quiet, run=run_all_test):
     """
       Test the method getVariationCategoryItemList on a resource.
     """
     if not run: return
-    self.genericTest('CheckGetVariationCategoryItemList')
+    self.genericTest('CheckGetVariationCategoryItemList', quiet)
 
   def stepCheckGetVariationCategoryItemListWithoutOmit(self, sequence=None,
                                                  sequence_list=None, **kw):
@@ -391,13 +390,14 @@ class TestResource(ERP5TypeTestCase):
     vcil = resource.getVariationCategoryItemList(omit_individual_variation=0)
     self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
 
-  def test_07_getVariationCategoryItemList(self, quiet=0, run=run_all_test):
+  def test_07_getVariationCategoryItemList(self, quiet=quiet, run=run_all_test):
     """
       Test the method getVariationCategoryItemList on a resource
       with parameter omit_individual_variation=0.
     """
     if not run: return
-    self.genericTest('CheckGetVariationCategoryItemListWithoutOmit')
+    self.genericTest('CheckGetVariationCategoryItemListWithoutOmit',
+        quiet=quiet)
 
   def stepCheckGetVariationPropertyList(self, sequence=None,
                                         sequence_list=None, **kw):
@@ -422,7 +422,7 @@ class TestResource(ERP5TypeTestCase):
     self.failIfDifferentSet(resource.variation_property_list,
                             vpl)
 
-  def test_08_variationPropertyList(self, quiet=0, run=run_all_test):
+  def test_08_variationPropertyList(self, quiet=quiet, run=run_all_test):
     """
       Simply test if method are well generated by the property sheet.
     """
@@ -436,7 +436,7 @@ class TestResource(ERP5TypeTestCase):
                       CheckGetVariationPropertyList \
                       '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=quiet)
 
   def getPriceConfig(self):
     """
@@ -521,12 +521,14 @@ class TestResource(ERP5TypeTestCase):
     """
     Log a message.
     """
+    if self.quiet:
+      return
     if tab:
       msg = '  %s' % msg
     ZopeTestCase._print('\n%s' % msg)
     LOG('testResource.play', 0, msg)
 
-  def test_09_getPrice(self, quiet=0, run=run_all_test):
+  def test_09_getPrice(self, quiet=quiet, run=run_all_test):
     """
     Test the pricing model.
     """
@@ -568,7 +570,7 @@ class TestResource(ERP5TypeTestCase):
       self.logMessage("Check product price...", tab=1)
       self.assertEquals(config['price'], product.getPrice())
 
-  def test_10_getPriceWithOptions(self, quiet=0, run=run_all_test):
+  def test_10_getPriceWithOptions(self, quiet=quiet, run=run_all_test):
     """
     Test the pricing model on a resource with options.
     """
@@ -657,7 +659,7 @@ class TestResource(ERP5TypeTestCase):
                                    categories=['industrial_phase/phase1',
                                                'industrial_phase/phase2']))
 
-  def test_11_getPriceWithDestinationSection(self, quiet=0, run=run_all_test):
+  def test_11_getPriceWithDestinationSection(self, quiet=quiet, run=run_all_test):
     """
     Test the pricing model with multiple price for 
     differents destination sections.
@@ -739,7 +741,7 @@ class TestResource(ERP5TypeTestCase):
         self.assertEquals(base_price, 
                           product.getPrice())
   
-  def test_12_getPurchaseVsSalePrice(self, quiet=0, run=run_all_test):
+  def test_12_getPurchaseVsSalePrice(self, quiet=quiet, run=run_all_test):
     """
     Test the pricing model with purchase and sale supply lines, and with
     source_section/destination_section.
