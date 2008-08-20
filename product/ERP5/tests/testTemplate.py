@@ -46,11 +46,11 @@ class TestTemplate(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_ui_test')
 
   def login(self, name=None):
-    """login with Auditor & Author roles."""
+    """login with Member & Author roles."""
     if name is None:
       return
     uf = self.getPortal().acl_users
-    uf._doAddUser(name, '', ['Auditor', 'Author'], [])
+    uf._doAddUser(name, '', ['Member', 'Author'], [])
     user = uf.getUserById(name).__of__(uf)
     newSecurityManager(None, user)
 
@@ -110,7 +110,7 @@ class TestTemplate(ERP5TypeTestCase):
   def test_TemplateCreatePreference(self):
     self.login('another user with no active preference')
     active_user_preference_list = [p for p in
-        self.portal.portal_preferences.getActivePreference()
+        self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
     self.assertEquals([], active_user_preference_list)
 
