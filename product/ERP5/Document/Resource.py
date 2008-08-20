@@ -560,10 +560,10 @@ class Resource(XMLMatrix, Variated):
       return p
 
     def _pricingSortMethod(self, a, b):
-      # Simple method : the one that defines a destination wins
-      if a.getDestination():
-        return -1 # a defines a destination and wins
-      return 1 # a defines no destination ans loses
+      # Simple method : the one that defines a destination section wins
+      if a.getDestinationSection():
+        return -1 # a defines a destination section and wins
+      return 1 # a defines no destination section and loses
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getPriceParameterDict')
