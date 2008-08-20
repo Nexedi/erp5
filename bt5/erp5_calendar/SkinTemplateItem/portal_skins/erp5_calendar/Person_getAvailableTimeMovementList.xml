@@ -131,7 +131,10 @@ def flush_list():\n
 for movement in movement_list:\n
   default_range = movement.stop_date - movement.start_date\n
   next_start_date = movement.date\n
-  next_stop_date = movement.date+default_range\n
+  if next_start_date <= movement.start_date:\n
+    next_stop_date = movement.stop_date\n
+  else:\n
+    next_stop_date = movement.date+default_range\n
   next_quantity = movement.total_quantity\n
   next_relative_url = movement.relative_url\n
 \n
