@@ -117,7 +117,7 @@ def flush_list():\n
   for k in range(1, len(date_list)):\n
     stop_date = date_list[k]\n
     quantity = quantity_list[k-1]\n
-    if quantity > 0:\n
+    if quantity > 0 and start_date < stop_date:\n
       \n
       mov = mvt_list[k-1].asContext(\n
         start_date = start_date,\n
