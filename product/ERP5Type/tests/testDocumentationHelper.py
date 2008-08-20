@@ -34,8 +34,11 @@ from Products.ERP5Type.DocumentationHelper.ERP5SiteDocumentationHelper \
     import ERP5SiteDocumentationHelper
 from Products.ERP5Type.DocumentationHelper.BusinessTemplateDocumentationHelper \
     import BusinessTemplateDocumentationHelper
+from Products.ERP5Type.DocumentationHelper.PortalTypeDocumentationHelper \
+    import PortalTypeDocumentationHelper
+from Products.ERP5Type.DocumentationHelper.PortalTypeInstanceDocumentationHelper \
+        import PortalTypeInstanceDocumentationHelper
 from zLOG import LOG
-
 
 class TestDocumentationHelper(ERP5TypeTestCase):
   """
@@ -67,7 +70,11 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.assertEquals(len(site_do.getSectionList()), 1)
     #just erp5_core, erp5_mysql_innodb_catalog, erp5_documentation
     #, erp5_xhtml_style and erp5_ui_test are installed
-    self.assertEquals(len(site_do.getBusinessTemplateIdList()), 5)
+    self.assertTrue('erp5_core' in site_do.getBusinessTemplateIdList())
+    self.assertTrue('erp5_xhtml_style' in site_do.getBusinessTemplateIdList())
+    self.assertTrue('erp5_mysql_innodb_catalog' in site_do.getBusinessTemplateIdList())
+    self.assertTrue('erp5_documentation' in site_do.getBusinessTemplateIdList())
+    self.assertTrue('erp5_ui_test' in site_do.getBusinessTemplateIdList())
     self.portal.portal_classes.getDocumentationHelper(
         'ERP5SiteDocumentationHelper', site_uri).view()
     #test the report mode of the documentation of the whole site
@@ -75,9 +82,9 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.portal.REQUEST['uri'] = site_uri
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
-  def test_02_bt(self):
+  def test_02_BusinessTemplate(self):
     ZopeTestCase._print('\nTest Documentation Business Template')
-    LOG('Testing... ', 0, 'Documentation of test_02_bt')
+    LOG('Testing... ', 0, 'Documentation of test_02_BusinessTemplate')
     bt_ui_test = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_ui_test')
     bt_uri = bt_ui_test.getUrl()
     #do means documented_object
@@ -92,6 +99,39 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
     self.portal.REQUEST['uri'] = bt_uri
     self.portal.portal_classes.DocumentationHelper_viewReport()
+
+  def test_03_PortalType(self):
+    ZopeTestCase._print('\nTest Documentation Portal Type')
+    LOG('Testing... ', 0, 'Documentation of test_02_PortalType')
+    portal_type_uri = '%s/portal_types/Foo' % self.portal.getUrl()
+    portal_type_do = PortalTypeDocumentationHelper(portal_type_uri).__of__(self.portal)
+    self.assertEquals(len(portal_type_do.getSectionList()), 8)
+    self.assertTrue('Foo Line' in portal_type_do.getAllowedContentTypeList())
+    self.assertTrue('foo_category' in portal_type_do.getBaseCategoryList())
+    self.assertTrue('bar_category' in portal_type_do.getBaseCategoryList())
+    self.assertTrue('Base' in portal_type_do.getPropertySheetList())
+    self.assertTrue('select_bar' in portal_type_do.getActionIdList())
+    self.assertTrue('checkConsistency' in portal_type_do.getClassMethodIdList())
+    self.assertTrue('validate' in portal_type_do.getWorkflowMethodIdList())
+    self.assertTrue('getCategories' in portal_type_do.getAccessorMethodIdList())
+    self.portal.portal_classes.getDocumentationHelper(
+        'PortalTypeDocumentationHelper', portal_type_uri).view()
+    self.portal.REQUEST['class_name'] = 'PortalTypeDocumentationHelper'
+    self.portal.REQUEST['uri'] = portal_type_uri
+    self.portal.portal_classes.DocumentationHelper_viewReport()
+    #test an instance of Foo Module
+    instance_uri = '%s/foo_module' % self.portal.getUrl()
+    instance_foo = PortalTypeInstanceDocumentationHelper(instance_uri).__of__(self.portal)
+    self.assertEquals(len(instance_foo.getSectionList()), 3)
+    self.assertTrue('getPropertyType__roles__' in instance_foo.getClassPropertyIdList())
+    self.assertTrue('restrictedTraverse' in instance_foo.getClassMethodIdList())
+    self.assertTrue('_baseGetDescription' in instance_foo.getAccessorMethodIdList())
+    self.portal.portal_classes.getDocumentationHelper(
+        'PortalTypeInstanceDocumentationHelper', instance_uri).view()
+    self.portal.REQUEST['class_name'] = 'PortalTypeInstanceDocumentationHelper'
+    self.portal.REQUEST['uri'] = instance_uri
+    self.portal.portal_classes.DocumentationHelper_viewReport()
+
 
 def test_suite():
   suite = unittest.TestSuite()
