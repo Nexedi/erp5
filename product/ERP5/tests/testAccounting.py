@@ -3328,7 +3328,8 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     get_transaction().commit()
     self.tic()
 
-    document = self.accounting_module.newContent(portal_type='Accounting Transaction')
+    document = self.accounting_module.newContent(
+                    portal_type='Accounting Transaction')
     document.edit(title='My Accounting Transaction')
     document.Base_makeTemplateFromDocument(form_id=None)
 
@@ -3348,7 +3349,8 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
 
     template = preference.objectValues()[0]
 
-    cp = preference.manage_copyObjects(ids=[template.getId()], REQUEST=None, RESPONSE=None)
+    cp = preference.manage_copyObjects(ids=[template.getId()],
+                                       REQUEST=None, RESPONSE=None)
     new_document_list = self.accounting_module.manage_pasteObjects(cp)
     new_document_id = new_document_list[0]['new_id']
     new_document = self.accounting_module[new_document_id]
