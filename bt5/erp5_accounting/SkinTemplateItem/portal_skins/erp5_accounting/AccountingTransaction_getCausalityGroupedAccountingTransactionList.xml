@@ -65,16 +65,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""When transaction is restarted, we\'ll break existing grouping references on lines.\n
+            <value> <string>"""Returns the group of accounting transaction related by causality\n
 """\n
-transaction = sci[\'object\']\n
-for line in transaction.getMovementList(\n
-   portal_type=sci.getPortal().getPortalAccountingMovementTypeList()):\n
-  if line.getGroupingReference():\n
-    line.activate(after_path_and_method_id=(\n
-                  (transaction.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),\n
-                  (line.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),),\n
-    ).AccountingTransactionLine_resetGroupingReference()\n
+portal = context.getPortalObject()\n
+accounting_transaction_type_list = \\\n
+              portal.getPortalAccountingTransactionTypeList()\n
+accounting_transaction_set = {}\n
+accounting_transaction_set[context] = 1\n
+\n
+# Add all causality transactions\n
+for accounting_transaction in [context] + context.getCausalityValueList(\n
+                  portal_type=accounting_transaction_type_list):\n
+  accounting_transaction_set[accounting_transaction] = 1\n
+  for related_causality in accounting_transaction.getCausalityRelatedValueList(\n
+              portal_type=accounting_transaction_type_list):\n
+    if related_causality.getSimulationState() not in (\'cancelled\', \'deleted\'):\n
+      accounting_transaction_set[related_causality] = 1\n
+\n
+return accounting_transaction_set.keys()\n
 </string> </value>
         </item>
         <item>
@@ -97,7 +105,7 @@ for line in transaction.getMovementList(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,18 +125,21 @@ for line in transaction.getMovementList(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>sci</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>line</string>
+<string>context</string>
+                            <string>portal</string>
+                            <string>accounting_transaction_type_list</string>
+                            <string>accounting_transaction_set</string>
+                            <string>_write_</string>
+                            <string>_getiter_</string>
+                            <string>accounting_transaction</string>
+                            <string>related_causality</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +156,7 @@ for line in transaction.getMovementList(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>resetGroupingReference</string> </value>
+            <value> <string>AccountingTransaction_getCausalityGroupedAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -41,8 +41,8 @@
                 <string>cancel_accounting_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
+                <string>restart</string>
                 <string>restart_action</string>
-                <string>start</string>
               </tuple>
             </value>
         </item>

@@ -65,16 +65,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""When transaction is restarted, we\'ll break existing grouping references on lines.\n
-"""\n
-transaction = sci[\'object\']\n
-for line in transaction.getMovementList(\n
-   portal_type=sci.getPortal().getPortalAccountingMovementTypeList()):\n
-  if line.getGroupingReference():\n
-    line.activate(after_path_and_method_id=(\n
-                  (transaction.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),\n
-                  (line.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),),\n
-    ).AccountingTransactionLine_resetGroupingReference()\n
+            <value> <string>portal = sci.getPortal()\n
+\n
+# if we allow grouping with different quantities, we cannot group here\n
+# (because the script will group everything)\n
+if portal.portal_preferences.getPreference(\n
+               \'preferred_grouping_with_different_quantities\', 0):\n
+  return\n
+\n
+sci[\'object\'].AccountingTransaction_guessGroupedLines()\n
 </string> </value>
         </item>
         <item>
@@ -85,12 +84,6 @@ for line in transaction.getMovementList(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -124,11 +117,9 @@ for line in transaction.getMovementList(\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>line</string>
+                            <string>portal</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -145,7 +136,7 @@ for line in transaction.getMovementList(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>resetGroupingReference</string> </value>
+            <value> <string>guessGroupingReference</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

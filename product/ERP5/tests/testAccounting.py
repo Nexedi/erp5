@@ -1705,7 +1705,7 @@ class TestAccountingExport(AccountingTestCase):
 class TestTransactions(AccountingTestCase):
   """Test behaviours and utility scripts for Accounting Transactions.
   """
-
+  
   def test_SourceDestinationReference(self):
     # Check that source reference and destination reference are filled
     # automatically.
@@ -2068,8 +2068,7 @@ class TestTransactions(AccountingTestCase):
     self.failUnless(other_section_line.getGroupingReference())
     self.failUnless(other_letter_line.getGroupingReference())
 
-
-  def test_ResetGroupingReferenceAfterRestart(self):
+  def test_automatically_setting_grouping_reference(self):
     invoice = self._makeOne(
                title='First Invoice',
                destination_section_value=self.organisation_module.client_1,
@@ -2077,60 +2076,109 @@ class TestTransactions(AccountingTestCase):
                            source_debit=100),
                       dict(source_value=self.account_module.receivable,
                            source_credit=100,
-                           id='line_with_grouping_reference',
-                           grouping_reference='A'),))
-    
-    invoice_line = invoice.line_with_grouping_reference
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
 
     payment = self._makeOne(
                title='First Invoice Payment',
                portal_type='Payment Transaction',
                simulation_state='delivered',
+               causality_value=invoice,
                source_payment_value=self.section.newContent(
                                             portal_type='Bank Account'),
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.receivable,
-                           id='line_with_grouping_reference',
-                           grouping_reference='A',
+                           id='line_for_grouping_reference',
                            source_debit=100),
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
-    payment_line = payment.line_with_grouping_reference
+    payment_line = payment.line_for_grouping_reference
+    
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+    
+    # lines match, they are automatically grouped
     invoice.stop()
-    
-    self.portal.portal_workflow.doActionFor(invoice, 'restart_action')
-    get_transaction().commit()
-    self.tic()
-    self.portal.portal_workflow.doActionFor(invoice, 'stop_action')
-    get_transaction().commit()
-    self.tic()
-    # we still have a grouping reference at this point, because the line was
-    # not modified, so the group is still valid
     self.failUnless(invoice_line.getGroupingReference())
     self.failUnless(payment_line.getGroupingReference())
-    
-    self.portal.portal_workflow.doActionFor(invoice, 'restart_action')
-    get_transaction().commit()
-    self.tic()
-    # try again, after modifying lines.
-    for line in invoice.getMovementList():
-      line.setQuantity(line.getQuantity() * 1.5)
-    # Now the group is no longer valid, so passing stop transaction again will
-    # ungroup lines.
-    self.portal.portal_workflow.doActionFor(invoice, 'stop_action')
-    
-    # this is done with activities, because we need an up to date catalog to
-    # check if the group is still valid, so we do this in an activity after
-    # this document indexing.
-    self.failUnless(invoice_line.getGroupingReference())
-    self.failUnless(payment_line.getGroupingReference())
-    
-    # after activities invocation, grouping references have been removed
+  
+    # when restarting, grouping is removed
+    invoice.restart()
     get_transaction().commit()
     self.tic()
     self.failIf(invoice_line.getGroupingReference())
     self.failIf(payment_line.getGroupingReference())
+    invoice.stop()
+    self.failUnless(invoice_line.getGroupingReference())
+    self.failUnless(payment_line.getGroupingReference())
 
+  def test_automatically_setting_grouping_reference_only_related(self):
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               # payment is not related with invoice, so no automatic grouping
+               # will occur
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_for_grouping_reference',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_for_grouping_reference
+    
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+    
+    invoice.stop()
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+
+  def test_automatically_setting_grouping_reference_same_section(self):
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               causality_value=invoice,
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_2,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_for_grouping_reference',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_for_grouping_reference
+    
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+    
+    # different sections, no grouping
+    invoice.stop()
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
 
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
