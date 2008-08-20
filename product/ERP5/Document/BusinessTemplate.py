@@ -423,6 +423,10 @@ class BaseTemplateItem(Implicit, Persistent):
           self.uninstall(context, trash=1, object_path=path, **kw)
         elif action == 'remove':
           self.uninstall(context, trash=0, object_path=path, **kw)
+        else:
+          # As the list of available actions is not strictly defined,
+          # prevent mistake if an action is not handled
+          raise ValueError, 'Unknown action "%s"' % action
 
 
   def trash(self, context, new_item, **kw):
@@ -665,6 +669,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, **kw)
     elif action == 'install':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0, **kw)
+    else:
+      # As the list of available actions is not strictly defined,
+      # prevent mistake if an action is not handled
+      raise ValueError, 'Unknown action "%s"' % action
     return subobjects_dict
 
   def beforeInstall(self):
