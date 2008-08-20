@@ -468,7 +468,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>CashMovementNewNotEmmitedModule_viewCashMovementNewNotEmmitedList</string> </value>
+                    <value> <string>CashMovementNewNotEmittedModule_viewCashMovementNewNotEmmitedList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -491,8 +491,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Cash Movement New Not Emmited</string>
-                          <string>Cash Movement New Not Emmited</string>
+                          <string>Cash Movement New Not Emitted</string>
+                          <string>Cash Movement New Not Emitted</string>
                         </tuple>
                       </list>
                     </value>
@@ -523,7 +523,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>monetray_issue_list_selection</string> </value>
+                    <value> <string>cash_movement_new_not_emitted_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
