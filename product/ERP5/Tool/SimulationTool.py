@@ -2494,8 +2494,11 @@ class Sequence:
     second, minute,
     hour, day,
     month, year   - duration of each time period (cumulative)
-
+                    at least one of those parameters must be specified.
     """
+    if not (second or minute or hour or day or month or year):
+      raise ValueError('Period duration must be specified')
+
     self.item_list = []
     # Calculate all time period
     current_from_date = from_date
