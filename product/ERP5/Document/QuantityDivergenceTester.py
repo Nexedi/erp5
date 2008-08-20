@@ -100,6 +100,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
     # divergent even if the delivery quantity is 0
     if delivery_ratio is not None:
       d_quantity *= delivery_ratio
+      message.decision_value = d_quantity
       if delivery_ratio == 0 and quantity > 0:
         return [message]
     if d_quantity != quantity + d_error:
