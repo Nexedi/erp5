@@ -118,6 +118,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.getWorkflowTool().manage_delObjects(['geek_workflow'])
     if 'custom_geek_workflow' in self.getWorkflowTool().objectIds():
       self.getWorkflowTool().manage_delObjects(['custom_geek_workflow'])
+    for business_template in self.getTemplateTool().contentValues():
+      if business_template.getTitle() == 'geek template':
+        self.getTemplateTool().manage_delObjects([business_template.getId()])
     get_transaction().commit()
     self._ignore_log_errors()
 
@@ -656,6 +659,46 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         id_list.append(field.getId())
       group_dict[group] = id_list 
     sequence.edit(group_dict=group_dict, field_id=field.getId())
+
+  def stepModifyFormTitle(self, sequence=None, sequence_list=None):
+    """Add a field to an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    form_title = 'First Form Title'
+    form.title = form_title
+    self.assertNotEquals(form, None)
+    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+                      sorted(['left', 'right', 'center', 'bottom', 'hidden']))
+    group_dict = {}
+    for group in form.get_groups(include_empty=1):
+      id_list = []
+      for field in form.get_fields_in_group(group):
+        id_list.append(field.getId())
+      group_dict[group] = id_list 
+    sequence.edit(group_dict=group_dict, field_id=field.getId(),
+                  form_title=form_title)
+
+  def stepRevertFormTitle(self, sequence=None, sequence_list=None):
+    """Add a field to an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    form_title = 'Second Form Title'
+    form.title = form_title
+
+  def stepCheckFormTitle(self, sequence=None, sequence_list=None):
+    """Add a field to an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertEquals('First Form Title', form.title)
 
   def stepRemoveFormField(self, sequence=None, sequence_list=None):
     """Remove a field from an ERP5 Form."""
@@ -4514,6 +4557,48 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        InstallWithoutForceBusinessTemplate \
                        Tic \
                        \
+                       CheckFormGroups \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+    
+  def test_34_UpgradeFormAttribute(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Upgrade Form'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateSkinFolder \
+                       CreateNewForm \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveForm \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormGroups \
+                       ModifyFormTitle \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RevertFormTitle \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormTitle \
                        CheckFormGroups \
                        '
     sequence_list.addSequenceString(sequence_string)
