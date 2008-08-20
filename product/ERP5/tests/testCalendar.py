@@ -78,7 +78,7 @@ class TestCalendar(ERP5TypeTestCase):
   def stepTic(self,**kw):
     self.tic()
 
-  def afterSetUp(self, quiet=1, run=0):
+  def afterSetUp(self):
     """
     Fake after setup
     """
@@ -96,6 +96,14 @@ class TestCalendar(ERP5TypeTestCase):
     self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
 
+  def beforeTearDown(self):
+    get_transaction().abort()
+    for module in (self.portal.group_calendar_module,
+                   self.portal.leave_request_module,
+                   self.portal.presence_request_module,):
+      module.manage_delObjects(list(module.objectIds()))
+    get_transaction().commit()
+    self.tic()
 
   def _addPropertySheet(self, type_info_name, property_sheet_name):
     ti = self.portal.portal_types.getTypeInfo(type_info_name)
@@ -795,6 +803,217 @@ class TestCalendar(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     presence_request.setDestinationValue(person)
     self.assertEquals(0, len(presence_request.checkConsistency()))
+
+  def test_SimpleLeaveRequestWithSameDateAsGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate(self.start_date)
+    group_calendar_period.setStopDate(self.stop_date)
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+
+    # there is 43200 seconds between self.start_date and self.stop_date
+    total_time = 43200
+
+    self.assertEquals(total_time, person.getAvailableTime(
+                                from_date=self.start_date-1,
+                                to_date=self.stop_date+1))
+    self.assertEquals([total_time], [x.total_quantity for x in 
+                              person.getAvailableTimeSequence(
+                                year=1,
+                                from_date=self.start_date-1,
+                                to_date=self.stop_date+1)])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                                            from_date=self.start_date-1,
+                                            to_date=self.stop_date+1)
+    self.assertEquals(1, len(available_time_movement_list))
+    self.assertEquals([(self.start_date.ISO(), self.stop_date.ISO())],
+                      [(x.getStartDate().ISO(), x.getStopDate().ISO()) for x in
+                          available_time_movement_list])
+
+
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period.setStartDate(self.start_date)
+    leave_request_period.setStopDate(self.stop_date)
+    leave_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals(0, person.getAvailableTime(
+                                from_date=self.start_date-1,
+                                to_date=self.stop_date+1))
+    self.assertEquals([0], [x.total_quantity for x in 
+                              person.getAvailableTimeSequence(
+                                year=1,
+                                from_date=self.start_date-1,
+                                to_date=self.stop_date+1)])
+                              
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                                            from_date=self.start_date-1,
+                                            to_date=self.stop_date+1)
+    self.assertEquals(0, len(available_time_movement_list))
+
+
+  def test_LeaveRequestWithSameDateAsGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period_am = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period_am.setStartDate('2008/01/01 08:00')
+    group_calendar_period_am.setStopDate('2008/01/01 12:00')
+    group_calendar_period_am.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period_pm = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period_pm.setStartDate('2008/01/01 14:00')
+    group_calendar_period_pm.setStopDate('2008/01/01 18:00')
+    group_calendar_period_pm.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals((18 - 14 + 12 - 8) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([(18 - 14 + 12 - 8) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(2, len(available_time_movement_list))
+    self.assertEquals(
+        [(DateTime('2008/01/01 08:00'), DateTime('2008/01/01 12:00')),
+         (DateTime('2008/01/01 14:00'), DateTime('2008/01/01 18:00'))],
+        [(m.getStartDate(), m.getStopDate()) for m in
+          available_time_movement_list])
+
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request_period.setStartDate('2008/01/01 08:00')
+    leave_request_period.setStopDate('2008/01/01 18:00')
+    leave_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals(0, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 1).earliestTime(),
+                            to_date=DateTime(2008, 1, 1).latestTime()))
+                            
+    self.assertEquals([0],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=1,
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 1).earliestTime(),
+                  to_date=DateTime(2008, 1, 1).latestTime())
+    self.assertEquals(0, len(available_time_movement_list))
+
+
+  def test_LeaveRequestWithSameDateAsRepeatedGroupCalendar(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    # note that 2008/01/01 was a Tuesday
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityStopDate('2008/01/30')
+    group_calendar_period.setPeriodicityWeekDayList(['Monday'])
+
+    group_calendar.confirm()
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   calendar_value=group_calendar)
+    get_transaction().commit()
+    self.tic()
+    
+    # 2008/01/07 was a Monday
+    self.assertEquals((18 - 8) * 60 * 60, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 6).earliestTime(),
+                            to_date=DateTime(2008, 1, 7).latestTime()))
+
+    self.assertEquals([(18 - 8) * 60 * 60],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=2,
+                  from_date=DateTime(2008, 1, 6).earliestTime(),
+                  to_date=DateTime(2008, 1, 7).latestTime())])
+
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 6).earliestTime(),
+                  to_date=DateTime(2008, 1, 7).latestTime())
+    self.assertEquals(1, len(available_time_movement_list))
+    self.assertEquals(
+        [(DateTime('2008/01/07 08:00'), DateTime('2008/01/07 18:00'))],
+        [(m.getStartDate(), m.getStopDate()) for m in
+          available_time_movement_list])
+
+    leave_request = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request')
+    leave_request_period = leave_request.newContent(
+                                  portal_type='Leave Request Period')
+
+    leave_request_period.setStartDate('2008/01/06 08:00')
+    leave_request_period.setStopDate('2008/01/07 18:00')
+    leave_request_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    leave_request.setDestinationValue(person)
+    leave_request.confirm()
+    
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEquals(0, person.getAvailableTime(
+                            from_date=DateTime(2008, 1, 6).earliestTime(),
+                            to_date=DateTime(2008, 1, 7).latestTime()))
+                            
+    self.assertEquals([0],
+      [x.total_quantity for x in person.getAvailableTimeSequence(
+                  day=2,
+                  from_date=DateTime(2008, 1, 6).earliestTime(),
+                  to_date=DateTime(2008, 1, 7).latestTime())])
+    available_time_movement_list = person.Person_getAvailableTimeMovementList(
+                  from_date=DateTime(2008, 1, 6).earliestTime(),
+                  to_date=DateTime(2008, 1, 7).latestTime())
+    self.assertEquals(0, len(available_time_movement_list))
 
 
 import unittest
