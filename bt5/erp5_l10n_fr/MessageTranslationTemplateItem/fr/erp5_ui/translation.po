@@ -450,9 +450,6 @@ msgstr "Fin de l'affectation"
 msgid "At Date"
 msgstr "Date de fin (inclus)"
 
-msgid "August"
-msgstr "Août"
-
 msgid "Available"
 msgstr "Disponible"
 
@@ -3494,3 +3491,73 @@ msgstr "Devis"
 
 msgid "Invoice"
 msgstr "Facture"
+
+msgid "Days Of Week"
+msgstr "Jours de la semaine"
+
+msgid "Sunday"
+msgstr "Dimanche"
+
+msgid "Monday"
+msgstr "Lundi"
+
+msgid "Tuesday"
+msgstr "Mardi"
+
+msgid "Wednesday"
+msgstr "Mercredi"
+
+msgid "Thursday"
+msgstr "Jeudi"
+
+msgid "Friday"
+msgstr "Vendredi"
+
+msgid "Saturday"
+msgstr "Samedi"
+
+msgid "Weeks"
+msgstr "Semaines"
+
+msgid "Days Of Month"
+msgstr "Jours du mois"
+
+msgid "Months"
+msgstr "Mois"
+
+msgid "January"
+msgstr "Janvier"
+
+msgid "February"
+msgstr "Février"
+
+msgid "March"
+msgstr "Mars"
+
+msgid "April"
+msgstr "Avril"
+
+msgid "May"
+msgstr "Mai"
+
+msgid "June"
+msgstr "Juin"
+
+msgid "July"
+msgstr "Juillet"
+
+msgid "August"
+msgstr "Août"
+
+msgid "September"
+msgstr "Septembre"
+
+msgid "October"
+msgstr "Octobre"
+
+msgid "November"
+msgstr "Novembre"
+
+msgid "December"
+msgstr "Décembre"
+
