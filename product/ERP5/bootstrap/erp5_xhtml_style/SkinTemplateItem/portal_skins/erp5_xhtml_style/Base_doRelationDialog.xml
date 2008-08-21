@@ -72,7 +72,14 @@ if Base_updateListboxSelection is not None:\n
 \n
 context.REQUEST.set("proxy_listbox_id", select_dialog )\n
 \n
-return getattr(context,"Base_viewRelatedObjectList")(REQUEST=context.REQUEST)\n
+# Remove portal_type from selection params when changing the listbox\n
+stool = context.getPortalObject().portal_selections\n
+selection_params = stool.getSelectionParamsFor("Base_viewRelatedObjectList")\n
+selection_params.pop(\'portal_type\', None)\n
+stool.setSelectionParamsFor("Base_viewRelatedObjectList", selection_params)\n
+\n
+\n
+return getattr(context, "Base_viewRelatedObjectList")(REQUEST=context.REQUEST)\n
 </string> </value>
         </item>
         <item>
@@ -127,6 +134,8 @@ return getattr(context,"Base_viewRelatedObjectList")(REQUEST=context.REQUEST)\n
                             <string>None</string>
                             <string>Base_updateListboxSelection</string>
                             <string>_getattr_</string>
+                            <string>stool</string>
+                            <string>selection_params</string>
                           </tuple>
                         </value>
                     </item>
