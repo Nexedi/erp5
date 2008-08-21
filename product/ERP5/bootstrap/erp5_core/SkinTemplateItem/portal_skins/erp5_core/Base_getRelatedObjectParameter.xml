@@ -68,6 +68,7 @@
             <value> <string># This script is used in order to retrieve parameter in the listbox Displayed\n
 # by Base_viewRelatedObjectList from the relation field\n
 result = None\n
+\n
 if parameter is not None:\n
   listbox = getattr(context, context.REQUEST.form_id, None).get_field( context.REQUEST.field_id )\n
   dialog_id = listbox.get_value(\'relation_form_id\') or \'Base_viewRelatedObjectList\'\n
@@ -77,6 +78,20 @@ if parameter is not None:\n
     if parameter == \'proxy_listbox_ids\':\n
       return context.REQUEST.get(\'proxy_listbox_ids\', [])\n
     result = getattr(context, dialog_id, None).get_field( \'listbox\' ).get_orig_value(parameter)\n
+\n
+  if parameter == \'portal_type\':\n
+    portal_type = listbox.get_value(\'portal_type\')\n
+    proxied_listbox = None\n
+    relation_field_proxy_listbox = context.Base_getRelationFieldProxyListBoxId()\n
+    if relation_field_proxy_listbox != \\\n
+            \'Base_viewRelatedObjectListBase/listbox\':\n
+      proxied_listbox = context.restrictedTraverse(\n
+                relation_field_proxy_listbox, None)\n
+    if proxied_listbox is None:\n
+      return portal_type\n
+    \n
+    proxied_listbox_portal_type = proxied_listbox.get_value(\'portal_types\')\n
+    return [x for x in proxied_listbox_portal_type if x in portal_type]\n
 \n
 return result\n
 </string> </value>
@@ -136,6 +151,14 @@ return result\n
                             <string>context</string>
                             <string>listbox</string>
                             <string>dialog_id</string>
+                            <string>portal_type</string>
+                            <string>proxied_listbox</string>
+                            <string>relation_field_proxy_listbox</string>
+                            <string>proxied_listbox_portal_type</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>

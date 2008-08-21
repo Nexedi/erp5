@@ -18,6 +18,7 @@
                 <string>list_method</string>
                 <string>count_method</string>
                 <string>selection_name</string>
+                <string>portal_types</string>
                 <string>search</string>
                 <string>select</string>
                 <string>editable_columns</string>
@@ -72,6 +73,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -88,14 +101,40 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -123,23 +162,23 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
+                    <key>                 <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>domain_root_list</string> </key>
+                    <key>                 <string>domain_root_list</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
+                    <key>                 <string>domain_tree</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -161,19 +200,25 @@
                     <value> <string>SEARCH_LIST</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
+                    <key>                 <string>report_root_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -181,25 +226,25 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
+                    <key>                 <string>search</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>select</string> </key>
+                    <key>                 <string>select</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>Base_viewRelatedObjectList</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key>                 <string>sort</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>stat_columns</string> </key>
+                    <key>                 <string>stat_columns</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -209,7 +254,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Related Objects</string> </value>
                 </item>
                 <item>
@@ -265,12 +310,28 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'sort\')</string> </value>
+            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'portal_type\')</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'sort\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>
@@ -286,7 +347,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>
