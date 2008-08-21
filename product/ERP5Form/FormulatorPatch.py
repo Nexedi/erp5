@@ -712,6 +712,12 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefi
   css_class = field.get_value('css_class')
   extra_item = field.get_value('extra_item')
   rendered_items = []
+  
+  # multi items widget should have at least one child in order to produce 
+  # valid XHTML disable it so user can not select it
+  if not len(items) :
+    return [self.render_item('','', '', '', 'disabled="1"')]
+ 
   for item in items:
       try:
           item_text, item_value = item
@@ -736,7 +742,6 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefi
                key,
                css_class,
                extra_item)
-
       rendered_items.append(rendered_item)
 
   # XXX We want to make sure that we always have the current value in items. -yo
