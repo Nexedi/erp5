@@ -17,11 +17,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The request is approved</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>ordered</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,14 +31,18 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Approved</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
                 <string>cancel</string>
-                <string>cancel_action</string>
+                <string>cancel_assignee_action</string>
+                <string>confirm</string>
+                <string>confirm_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
               </tuple>
             </value>
         </item>

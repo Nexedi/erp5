@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Reject</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=confirm_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=reject_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>confirm</string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_action</string> </value>
+            <value> <string>reject_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>LeaveRequest_checkConsistency</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -78,6 +78,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Associate</string>
               </tuple>
             </value>
         </item>

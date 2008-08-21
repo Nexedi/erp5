@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Approve</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=confirm_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=approve_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>confirm</string> </value>
+            <value> <string>approve</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_action</string> </value>
+            <value> <string>approve_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -77,7 +77,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
+                <string>Associate</string>
               </tuple>
             </value>
         </item>
