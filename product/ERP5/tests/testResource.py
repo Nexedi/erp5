@@ -66,20 +66,6 @@ class TestResource(ERP5TypeTestCase):
   def getTitle(self):
     return "Resource"
 
-  def enableLightInstall(self):
-    """
-    You can override this.
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
