@@ -94,13 +94,6 @@ def int2letter(i):\n
   return int2letter(d - 1) + int2letter(m)\n
 \n
 \n
-def isSource(accounting_transaction):\n
-  section_cat = portal.portal_preferences\\\n
-                .getPreferredAccountingTransactionSectionCategory()\n
-  section = accounting_transaction.getSourceSectionValue(\n
-                                      portal_type=\'Organisation\')\n
-  return section is not None and section.isMemberOf(section_cat)\n
-\n
 accounting_transaction_line_value_list = []\n
 if accounting_transaction_line_uid_list is None:\n
   for accounting_transaction in context\\\n
@@ -119,7 +112,7 @@ else:\n
 \n
 for line in accounting_transaction_line_value_list:\n
   accounting_transaction = line.getParentValue()\n
-  if isSource(accounting_transaction):\n
+  if accounting_transaction.AccountingTransaction_isSourceView():\n
     lines_per_node.setdefault(\n
                   (line.getSource(portal_type=\'Account\'),\n
                    line.getSourceSection(),\n
@@ -138,8 +131,10 @@ changed_lines = []\n
 for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
   total_price = sum([l[\'total_price\'] for l in line_info_list])\n
   # get the currency rounding for this section\n
-  section_obj = portal.restrictedTraverse(section)\n
-  default_currency = section_obj.getPriceCurrencyValue()\n
+  default_currency = None\n
+  if section:\n
+    section_obj = portal.restrictedTraverse(section)\n
+    default_currency = section_obj.getPriceCurrencyValue()\n
   if default_currency is not None:\n
     total_price = round(total_price, default_currency.getQuantityPrecision())\n
   if total_price == 0 or allow_grouping_with_different_quantity:\n
@@ -214,7 +209,6 @@ return changed_lines\n
                             <string>ctool</string>
                             <string>allow_grouping_with_different_quantity</string>
                             <string>int2letter</string>
-                            <string>isSource</string>
                             <string>accounting_transaction_line_value_list</string>
                             <string>None</string>
                             <string>_getiter_</string>
@@ -233,8 +227,8 @@ return changed_lines\n
                             <string>l</string>
                             <string>_getitem_</string>
                             <string>total_price</string>
-                            <string>section_obj</string>
                             <string>default_currency</string>
+                            <string>section_obj</string>
                             <string>round</string>
                             <string>grouping_reference</string>
                             <string>string_reference</string>
