@@ -2180,6 +2180,43 @@ class TestTransactions(AccountingTestCase):
     self.failIf(invoice_line.getGroupingReference())
     self.failIf(payment_line.getGroupingReference())
 
+  def test_automatically_unsetting_grouping_reference_when_cancelling(self):
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               causality_value=invoice,
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_for_grouping_reference',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_for_grouping_reference
+
+    invoice.stop()
+    self.failUnless(invoice_line.getGroupingReference())
+    self.failUnless(payment_line.getGroupingReference())
+
+    invoice.cancel()
+    get_transaction().commit()
+    self.tic()
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+
+
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
