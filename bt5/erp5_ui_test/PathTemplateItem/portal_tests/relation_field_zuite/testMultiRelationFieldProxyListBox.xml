@@ -126,7 +126,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>id=listbox_record_number</td>\n
-    <td>15 record(s)</td>\n
+    <td>5 record(s)</td> <!-- we have 5 Foo Lines -->\n
 </tr>\n
 <tr>\n
     <td>verifyElementPresent</td>\n
@@ -176,7 +176,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>id=listbox_record_number</td>\n
-    <td>15 record(s)</td>\n
+    <td>10 record(s)</td> <!-- we have 5 Foos -->\n
 </tr>\n
 <tr>\n
     <td>verifyElementPresent</td>\n
