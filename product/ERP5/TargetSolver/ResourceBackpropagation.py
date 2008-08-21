@@ -28,7 +28,6 @@
 ##############################################################################
 
 from CopyToTarget import CopyToTarget
-from Products.ERP5Type.DateUtils import createDateTimeFromMillis
 
 class ResourceBackpropagation(CopyToTarget):
   """
@@ -40,36 +39,19 @@ class ResourceBackpropagation(CopyToTarget):
       Get interesting values
       XXX: better description is possible. But is it needed ?
     """
-    # Get interesting value
-    old_quantity = simulation_movement.getQuantity()
-    old_start_date = simulation_movement.getStartDate()
-    old_stop_date = simulation_movement.getStopDate()
-    new_quantity = simulation_movement.getDeliveryQuantity() * \
-                   simulation_movement.getDeliveryRatio()
-    new_start_date = simulation_movement.getDeliveryStartDateList()[0]
-    new_stop_date = simulation_movement.getDeliveryStopDateList()[0]
-    # Calculate delta
-    quantity_ratio = 0
-    if old_quantity not in (None,0.0): # XXX: What if quantity happens to be an integer ?
-      quantity_ratio = new_quantity / old_quantity
-    start_date_delta = 0
-    stop_date_delta = 0
-    # get the date delta in milliseconds, to prevent rounding issues
-    if new_start_date is not None and old_start_date is not None:
-      start_date_delta = new_start_date.millis() - old_start_date.millis()
-    if new_stop_date is not None and old_stop_date is not None:
-      stop_date_delta = new_stop_date.millis() - old_stop_date.millis()
-    return {
-      'quantity_ratio': quantity_ratio,
-      'start_date_delta': start_date_delta,
-      'stop_date_delta': stop_date_delta,
+    value_delta_dict = CopyToTarget._generateValueDeltaDict(
+      self, simulation_movement)
+    value_delta_dict.update(
+      {
       'resource_list' :
           simulation_movement.getDeliveryValue().getResourceList(),
       'variation_category_list':
           simulation_movement.getDeliveryValue().getVariationCategoryList(),
       'variation_property_dict':
           simulation_movement.getDeliveryValue().getVariationPropertyDict(),
-    }
+      })
+
+    return value_delta_dict
 
   def _generateValueDict(self, simulation_movement, quantity_ratio=1, 
                          start_date_delta=0, stop_date_delta=0,
@@ -80,15 +62,13 @@ class ResourceBackpropagation(CopyToTarget):
     """
     Generate values to save on simulation movement.
     """
-    value_dict = {}
-    # Modify quantity, start_date, stop_date
-    start_date = simulation_movement.getStartDate()
-    if start_date is not None:
-      value_dict['start_date'] = createDateTimeFromMillis(start_date.millis() + start_date_delta)
-    stop_date = simulation_movement.getStopDate()
-    if stop_date is not None:
-      value_dict['stop_date'] = createDateTimeFromMillis(stop_date.millis() + stop_date_delta)
-    value_dict['quantity'] = simulation_movement.getQuantity() * quantity_ratio
+    value_dict = CopyToTarget._generateValueDict(
+      self, simulation_movement, quantity_ratio=quantity_ratio,
+      start_date_delta=start_date_delta, stop_date_delta=stop_date_delta,
+      resource_list=resource_list,
+      variation_category_list=variation_category_list,
+      variation_property_dict=variation_property_dict, **value_delta_dict)
+    # Modify resource etc.
     if resource_list:
       value_dict['resource_list'] = resource_list
     if variation_category_list:
