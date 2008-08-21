@@ -733,14 +733,135 @@ class TestResource(ERP5TypeTestCase):
                         tab=1)
         self.assertEquals(base_price, 
                           product.getPrice(
-                        categories=['destination_section/%s' % node.getRelativeUrl()]))
+                    categories=['destination_section/%s' % node.getRelativeUrl()]))
       else:
         self.logMessage("Check product %s without destination section" % \
                         product.getTitle(),
                         tab=1)
         self.assertEquals(base_price, 
                           product.getPrice())
+
+  def test_11b_getPriceWithCells(self, quiet=quiet, run=run_all_test):
+    """
+    Test the pricing model with multiple price for 
+    differents destination sections, using supply cells
+    """
+    if not run: return
+    # Initialize variables
+    test_case_list = []
+    # Create product
+    product_module = self.portal.getDefaultModule(self.product_portal_type)
+    supply_module = self.portal.getDefaultModule(self.sale_supply_portal_type)
+    currency_module = self.portal.getDefaultModule("Currency")
+    currency = currency_module.newContent(
+                     portal_type="Currency",
+                     title='A great currency')
+    # Create generic supply
+    self.logMessage("Creating generic fake supply ...", tab=1)
+    generic_supply = supply_module.newContent(
+                     portal_type=self.sale_supply_portal_type,
+                     title='FakeGenericSupply',
+                     price_currency_value=currency)
+    # Create empty supply line
+    supply_line = generic_supply.newContent(
+          portal_type=self.sale_supply_line_portal_type)
+    supply_line.setProperty('base_price', 0)
+    for j in range(33, 35):
+      self.logMessage("Creating fake product %s..." % j, tab=1)
+      product = product_module.newContent(
+                           portal_type=self.product_portal_type,
+                           title='AnotherFakeProduct%s' % j)
+      product.setVariationBaseCategoryList(['size'])
+      product.setVariationCategoryList(['size/Baby', 'size/Man'])
+      # Create some nodes
+      node_module = self.portal.getDefaultModule(self.node_portal_type)
+      for i in range(11, 14):
+        self.logMessage("Creating fake node %s..." % i, tab=1)
+        node = node_module.newContent(
+                       portal_type=self.node_portal_type,
+                       title='FakeNode%s%s' % (j, i))
+        # Create a supply
+        self.logMessage("Creating fake supply %s..." % i, tab=1)
+        supply = supply_module.newContent(
+                                     portal_type=self.sale_supply_portal_type,
+                                     title='FakeSupply%s' % i,
+                                     price_currency_value=currency,
+                                     destination_section_value=node)
+
+        if 0:
+          # XXX if both a supply line for the resource and a supply cell for
+          # the resource with the exact variation can be applied, one of them
+          # is choosen randomly. It looks like a bug, but I'm not sure we
+          # should handle such situation.
+          self.logMessage("Creating wrong supply line %s..." % i, tab=1)
+          wrong_supply_line = supply.newContent(
+                portal_type=self.sale_supply_line_portal_type,
+                resource_value=product)
+          wrong_supply_line.setBasePrice(12454326)
+
+        self.logMessage("Creating fake supply line %s..." % i, tab=1)
+        supply_line = supply.newContent(
+              portal_type=self.sale_supply_line_portal_type,
+              resource_value=product)
+        supply_line.setPVariationBaseCategoryList(['size'])
+        supply_line.updateCellRange(base_id='path')
+
+        baby_cell = supply_line.newCell('size/Baby',
+                           portal_type=self.sale_supply_cell_portal_type)
+        baby_cell.setVariationCategoryList(['size/Baby'])
+        baby_cell.setPredicateCategoryList(['size/Baby'])
+        baby_cell.setMappedValuePropertyList(['base_price'])
+        baby_cell.setMembershipCriterionBaseCategory('size')
+        baby_cell.setMembershipCriterionCategory('size/Baby')
+        base_price = i*j
+        baby_cell.setProperty('base_price', base_price)
+        # Register the case
+        test_case_list.append((product, 'size/Baby', node, base_price))
+
+        man_cell = supply_line.newCell('size/Man',
+                        portal_type=self.sale_supply_cell_portal_type)
+        man_cell.setVariationCategoryList(['size/Man'])
+        man_cell.setPredicateCategoryList(['size/Man'])
+        man_cell.setMappedValuePropertyList(['base_price'])
+        man_cell.setMembershipCriterionBaseCategory('size')
+        man_cell.setMembershipCriterionCategory('size/Man')
+        base_price = i*j+3
+        man_cell.setProperty('base_price', base_price)
+        # Register the case
+        test_case_list.append((product, 'size/Man', node, base_price))
+
+      # Create generic supply line
+      self.logMessage("Creating generic fake supply line ...", tab=1)
+      supply_line = generic_supply.newContent(
+            portal_type=self.sale_supply_line_portal_type,
+            resource_value=product)
+      supply_line.setProperty('base_price', j)
+      test_case_list.append((product, None, None, j))
+
+    # Commit transaction
+    self.logMessage("Commit transaction...", tab=1)
+    get_transaction().commit()
+    # Tic
+    self.logMessage("Tic...", tab=1)
+    self.tic()
+    # Test the cases
+    for product, variation, node, base_price in test_case_list:
+      if node is not None:
+        self.logMessage("Check product %s with destination section %s" % \
+                        (product.getTitle(), node.getTitle()),
+                        tab=1)
+        self.assertEquals(base_price,
+             product.getPrice(
+               categories=['destination_section/%s' % node.getRelativeUrl(),
+                           variation]))
+      else:
+        self.logMessage("Check product %s without destination section" % \
+                        product.getTitle(),
+                        tab=1)
+        self.assertEquals(base_price,
+                          product.getPrice(categories=[variation]))
   
+
   def test_12_getPurchaseVsSalePrice(self, quiet=quiet, run=run_all_test):
     """
     Test the pricing model with purchase and sale supply lines, and with
