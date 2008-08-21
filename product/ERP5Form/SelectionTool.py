@@ -1133,7 +1133,6 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         kw['selection_name'] = selection_name
         kw['selection_index'] = 0 # We start on the first page
         kw['field_id'] = field.id
-        kw['portal_type'] = [x[0] for x in field.get_value('portal_type')]
         parameter_list = field.get_value('parameter_list')
         if len(parameter_list) > 0:
           for k,v in parameter_list:
