@@ -71,17 +71,22 @@ from string import zfill\n
 global portal_object, new_id, l\n
 \n
 portal_object = context.getPortalObject()\n
+\n
+if lines_num is None:\n
+  lines_num = portal_object.portal_preferences.getPreferredListboxListModeLineCount() or 40\n
+\n
 new_id = 0\n
 l = []\n
+\n
 \n
 # function to create a new fast input line\n
 def createInputLine():\n
   global portal_object, new_id, l\n
   new_id += 1\n
   int_len = 3\n
-  o = newTempBase( portal_object\n
-                 , str(new_id)\n
-                 , uid =\'new_%s\' % zfill(new_id, int_len)\n
+  o = newTempBase( portal_object,\n
+                   str(new_id),\n
+                   uid =\'new_%s\' % zfill(new_id, int_len)\n
                  )\n
   l.append(o)\n
 \n
@@ -107,7 +112,7 @@ return l\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>lines_num=7, **kw</string> </value>
+            <value> <string>lines_num=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -142,6 +147,7 @@ return l\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_object</string>
+                            <string>None</string>
                             <string>new_id</string>
                             <string>l</string>
                             <string>createInputLine</string>
@@ -160,7 +166,7 @@ return l\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>7</int>
+                <none/>
               </tuple>
             </value>
         </item>
