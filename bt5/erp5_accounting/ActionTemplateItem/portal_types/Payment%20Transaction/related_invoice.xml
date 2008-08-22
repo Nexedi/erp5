@@ -27,9 +27,7 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -77,23 +75,11 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:"%s/%s/view" % (object.getPortalObject().getPath(), object.getCausality())</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:object.getCausalityValue() is not None</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type:list=Purchase+Invoice+Transaction&portal_type:list=Sale+Invoice+Transaction&portal_type:list=Accounting+Transaction&related:int=0
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
