@@ -21,6 +21,7 @@
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>url_columns</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
                 <string>report_tree</string>
@@ -338,6 +339,17 @@
                 <item>
                     <key>                 <string>title</string> </key>
                     <value> <string>Tasks</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Task_getTaskReportTranslatedSimulationStateTitle</string>
+                          <string>Task_getTaskReportURL</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
