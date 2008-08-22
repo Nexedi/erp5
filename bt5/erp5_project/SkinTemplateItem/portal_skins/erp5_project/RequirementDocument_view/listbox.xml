@@ -113,6 +113,10 @@
                           <string>Requirement Description</string>
                         </tuple>
                         <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
                           <string>sub_requirement_count</string>
                           <string>Sub-Requirement Count</string>
                         </tuple>
