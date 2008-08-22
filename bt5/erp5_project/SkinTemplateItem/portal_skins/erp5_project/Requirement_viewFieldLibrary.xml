@@ -101,6 +101,7 @@
                         <string>my_version</string>
                         <string>my_reference</string>
                         <string>my_short_title</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

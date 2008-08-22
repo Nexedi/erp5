@@ -12,6 +12,7 @@
   <item>XMLObject</item>
   <item>Document</item>
   <item>Folder</item>
+  <item>Comment</item>
   <item>DublinCore</item>
   <item>Reference</item>
   <item>SortIndex</item>
