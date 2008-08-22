@@ -1,8 +1,10 @@
 <base_category_list>
  <portal_type id="Project">
   <item>predecessor</item>
+  <item>requirement</item>
  </portal_type>
  <portal_type id="Project Line">
+  <item>requirement</item>
   <item>predecessor</item>
  </portal_type>
  <portal_type id="Project Milestone">
