@@ -716,7 +716,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefi
   # multi items widget should have at least one child in order to produce 
   # valid XHTML disable it so user can not select it
   if not len(items) :
-    return [self.render_item('','', '', '', 'disabled="1"')]
+    return [self.render_item('','', '', '', 'disabled="disabled"')]
  
   for item in items:
       try:
