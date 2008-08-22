@@ -205,19 +205,20 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEquals('postmaster@localhost', mfrom)
     self.assertEquals(['person1@localhost'], mto)
-    self.failUnless(bug.getSimulationStateTitle() in messageText)
+    self.failUnless(bug.getTitle().replace(" ", "_") in messageText)
 
   def stepCheckBugMessageNotification(self, sequence=None,
                                          sequence_list=None, **kw):
     """
     Check that notification works
     """
+    bug = sequence.get('bug')
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEquals('person2@localhost', mfrom)
     self.assertEquals(['person1@localhost'], mto)
-    self.failUnless("Message" in messageText)
+    self.failUnless(bug.getTitle().replace(" ", "_") in messageText)
 
   def stepSetSourceProject(self, sequence=None, sequence_list=None, **kw):
     """
@@ -295,7 +296,7 @@ class TestBug(ERP5TypeTestCase):
       Create a dummy bug
     """
     bug = sequence.get('bug')
-    self.assertEquals("B-ERP5-%s" % bug.getId(), bug.getReference())
+    self.assertEquals("#%s" % bug.getId(), bug.getReference())
     #self.assertEquals(bug_message.getSourceTradeValue().getTitle(), 'dummy')
 
   def stepOpenBug(self, sequence=None, sequence_list=None, **kw):
