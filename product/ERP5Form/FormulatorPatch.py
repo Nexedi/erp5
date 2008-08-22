@@ -614,6 +614,10 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST, render_pref
   # get items
   cell = getattr(REQUEST, 'cell', None)
   items = field.get_value('items', REQUEST=REQUEST, cell=cell)
+  if not items:
+    # single item widget should have at least one child in order to produce
+    # valid XHTML; disable it so user can not select it
+    return [self.render_item('', '', '', '', 'disabled="disabled"')]
 
   # check if we want to select first item
   if not value and field.get_value('first_item',
@@ -709,15 +713,15 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefi
   selected_found = {}
 
   items = field.get_value('items',REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None)) # Added request
+  if not items:
+    # multi items widget should have at least one child in order to produce
+    # valid XHTML; disable it so user can not select it
+    return [self.render_item('', '', '', '', 'disabled="disabled"')]
+
   css_class = field.get_value('css_class')
   extra_item = field.get_value('extra_item')
   rendered_items = []
-  
-  # multi items widget should have at least one child in order to produce 
-  # valid XHTML disable it so user can not select it
-  if not len(items) :
-    return [self.render_item('','', '', '', 'disabled="disabled"')]
- 
+
   for item in items:
       try:
           item_text, item_value = item
