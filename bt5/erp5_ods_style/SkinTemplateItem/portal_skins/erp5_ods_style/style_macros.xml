@@ -130,6 +130,22 @@
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border=\'none\'/>\n
       <style:paragraph-properties fo:text-align=\'center\' fo:margin-left=\'0cm\'/>\n
     </style:style>\n
+    <number:date-style style:name="date_style" number:automatic-order="true">\n
+      <number:day number:style="long"/>\n
+      <number:text>/</number:text>\n
+      <number:month number:style="long"/>\n
+      <number:text>/</number:text>\n
+      <number:year number:style="long"/>\n
+      <number:text> </number:text>\n
+      <number:hours number:style="long"/>\n
+      <number:text>:</number:text>\n
+      <number:minutes number:style="long"/>\n
+      <number:text>:</number:text>\n
+      <number:seconds number:style="long"/>\n
+    </number:date-style>\n
+    <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="date_style">\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
+    </style:style>\n
   </office:automatic-styles>\n
 </tal:block>\n
 
