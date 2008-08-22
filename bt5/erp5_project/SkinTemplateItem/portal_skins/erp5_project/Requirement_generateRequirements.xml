@@ -131,9 +131,7 @@ for requirement_item in requirements_items:\n
       new_2nd_level_feat[\'description\'] = None\n
   else:\n
     has_2nd_level_requirement = False\n
-\n
-  if not has_2nd_level_requirement:\n
-    description_dict[new_1st_level_requirement_title] =\\\n
+    description_dict[requirement_item[\'title\']] =\\\n
           requirement_item[\'sub_description\']\n
 \n
   if has_2nd_level_requirement and new_1st_level_requirement != None:\n
