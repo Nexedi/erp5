@@ -52,6 +52,18 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Access contents information</string>
+                <string>View</string>
+                <string>Add portal content</string>
+                <string>Delete objects</string>
+                <string>Modify portal content</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>state_var</string> </key>
             <value> <string>validation_state</string> </value>
         </item>
