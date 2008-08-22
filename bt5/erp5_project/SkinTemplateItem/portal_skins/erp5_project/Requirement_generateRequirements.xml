@@ -158,6 +158,7 @@ for key in clean_requirements_key_list:\n
                                               , int_index   = int_index\n
                                               , description = description_dict[key]\n
                                               )\n
+  sub_requirement_int_index = 0\n
   for second_level in clean_requirements[key]:\n
     sub_requirement_int_index += 10\n
     new_2nd_requirement = new_1st_requirement.newContent( portal_type = requirement_type\n
