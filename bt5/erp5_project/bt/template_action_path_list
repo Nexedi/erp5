@@ -32,6 +32,7 @@ Project | task_fast_input_dialog
 Project | task_list
 Project | task_report_list
 Project | view
+Requirement Document | cleanup_descriptions
 Requirement Document | detailed_report
 Requirement Document | fast_input
 Requirement Document | orphaned
