@@ -36,11 +36,13 @@ Requirement Document | detailed_report
 Requirement Document | fast_input
 Requirement Document | orphaned
 Requirement Document | project_mapping
+Requirement Document | reference_generate
 Requirement Document | view
 Requirement Module | fast_input
 Requirement Module | view
 Requirement | fast_input
 Requirement | project_list
+Requirement | reference_generate
 Requirement | view
 Sale Order Line | line_profile
 Sale Order Line | project
