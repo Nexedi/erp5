@@ -76,7 +76,6 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -88,7 +87,6 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,7 +106,6 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -120,7 +117,6 @@
                         <string>Assignor</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
