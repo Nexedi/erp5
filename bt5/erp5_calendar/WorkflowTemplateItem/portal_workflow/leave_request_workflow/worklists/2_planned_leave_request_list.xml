@@ -21,13 +21,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Planned Leave Requests (%(count)s)</string> </value>
+            <value> <string>Leave Requests to Approve (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-leave_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
+leave_request_module/view?simulation_state=planned&local_roles:list=Associate&local_roles:list=Assignor&reset:int=1
 
 ]]></string> </value>
         </item>
@@ -67,7 +67,8 @@ leave_request_module?simulation_state=planned&local_roles=Assignee&reset:int=1
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Associate</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>

@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Leave Requests to Submit(%(count)s)</string> </value>
+            <value> <string>Leave Requests to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-leave_request_module/view?simulation_state=draft&local_roles=Owner&reset:int=1
+leave_request_module/view?simulation_state=ordered&local_roles=Assignor&reset:int=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Draft Leave Request</string> </value>
+            <value> <string>Ordered Leave Request</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ leave_request_module/view?simulation_state=draft&local_roles=Owner&reset:int=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1_draft_leave_request_list</string> </value>
+            <value> <string>3_ordered_leave_request_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -67,7 +67,7 @@ leave_request_module/view?simulation_state=draft&local_roles=Owner&reset:int=1
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Owner</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -99,7 +99,7 @@ leave_request_module/view?simulation_state=draft&local_roles=Owner&reset:int=1
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>ordered</string>
                       </tuple>
                     </value>
                 </item>
