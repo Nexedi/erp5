@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -18,6 +15,9 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
+                <string>all_columns</string>
+                <string>search_columns</string>
+                <string>sort_columns</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
@@ -86,18 +86,32 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Short Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Source Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Destination Decision</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -107,11 +121,48 @@
                           <string>requirement_count</string>
                           <string>Requirement Count</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>requirement_count</string>
+                          <string>Requirement Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -149,7 +200,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -164,15 +215,101 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Short Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Source Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Destination Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>requirement_count</string>
+                          <string>Requirement Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>requirement_document_list_selection</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Short Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Source Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Destination Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>requirement_count</string>
+                          <string>Requirement Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Requirement Documents</string> </value>
                 </item>
                 <item>
