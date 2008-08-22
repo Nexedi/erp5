@@ -101,7 +101,8 @@ for requirement_line in listbox:\n
 requirements_items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
 \n
 clean_requirements = {}\n
-int_index_dict = dict()\n
+clean_requirements_key_list = [] # use a list for keys, to keep ordering\n
+description_dict = dict()\n
 has_1st_level_requirement = False\n
 has_2nd_level_requirement = False\n
 new_1st_level_requirement = None\n
@@ -116,6 +117,9 @@ for requirement_item in requirements_items:\n
   else:\n
     has_1st_level_requirement = False\n
   \n
+  if has_1st_level_requirement:\n
+    description_dict[new_1st_level_requirement_title] = \'\'\n
+  \n
   # the item has a second level requirement, built it\n
   if requirement_item[\'sub_title\'] not in (\'\', None):\n
     has_2nd_level_requirement = True\n
@@ -128,13 +132,18 @@ for requirement_item in requirements_items:\n
   else:\n
     has_2nd_level_requirement = False\n
 \n
-  if has_2nd_level_requirement == True and new_1st_level_requirement != None:\n
+  if not has_2nd_level_requirement:\n
+    description_dict[new_1st_level_requirement_title] =\\\n
+          requirement_item[\'sub_description\']\n
+\n
+  if has_2nd_level_requirement and new_1st_level_requirement != None:\n
     new_1st_level_requirement.append(new_2nd_level_feat)\n
 \n
-  if has_1st_level_requirement == True:\n
+  if has_1st_level_requirement:\n
     if clean_requirements.has_key(new_1st_level_requirement_title):\n
       new_1st_level_requirement = clean_requirements[new_1st_level_requirement_title] + new_1st_level_requirement\n
     clean_requirements[new_1st_level_requirement_title] = new_1st_level_requirement\n
+    clean_requirements_key_list.append(new_1st_level_requirement_title)\n
 \n
 int_index = 0\n
 if len(destination_obj.contentValues()):\n
@@ -144,11 +153,12 @@ sub_requirement_int_index = 0\n
 int_index_step = 10\n
 \n
 # create requirement objects and sub-requirements\n
-for key in clean_requirements.keys():\n
+for key in clean_requirements_key_list:\n
   int_index += int_index_step\n
   new_1st_requirement = destination_obj.newContent( portal_type = requirement_type\n
                                               , title       = key\n
                                               , int_index   = int_index\n
+                                              , description = description_dict[key]\n
                                               )\n
   for second_level in clean_requirements[key]:\n
     sub_requirement_int_index += 10\n
@@ -223,8 +233,9 @@ return context.Base_redirect(form_id,\n
                             <string>requirement</string>
                             <string>_write_</string>
                             <string>clean_requirements</string>
+                            <string>clean_requirements_key_list</string>
                             <string>dict</string>
-                            <string>int_index_dict</string>
+                            <string>description_dict</string>
                             <string>False</string>
                             <string>has_1st_level_requirement</string>
                             <string>has_2nd_level_requirement</string>
