@@ -18,6 +18,7 @@
                 <string>portal_type</string>
                 <string>allow_creation</string>
                 <string>catalog_index</string>
+                <string>columns</string>
               </list>
             </value>
         </item>
@@ -79,16 +80,43 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_creation</string> </key>
+                    <key>                 <string>allow_creation</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>base_category</string> </key>
+                    <key>                 <string>base_category</string> </key>
                     <value> <string>causality</string> </value>
                 </item>
                 <item>
-                    <key> <string>catalog_index</string> </key>
+                    <key>                 <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Source Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Destination Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>AccountingTransactionLine_statSourceDebit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>AccountingTransactionLine_statSourceCredit</string>
+                          <string>Credit</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -99,7 +127,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -126,7 +154,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Causality (Invoices ...)</string> </value>
                 </item>
               </dictionary>
