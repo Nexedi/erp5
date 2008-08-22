@@ -108,13 +108,13 @@ AAA=</string> </value>
       </text:sequence-decls>\n
       <!-- Init state variables as globals -->\n
       <tal:block tal:define="global current_requirement python:here;\n
-                             global depth python:request.get(\'depth\', 1);\n
+                             global depth python: request.get(\'depth\', 1);\n
                              global reference_list python:[here.getReference(\'R\')]">\n
       <tal:block metal:define-macro="line"\n
                  tal:define="requirement_base python:\'-\'.join(reference_list)">\n
         <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\' tal:content="python:\'%s %s\' % (current_requirement.getReference(requirement_base), current_requirement.getTitle())"\n
                 tal:attributes="text:outline-level python:\'%s\' % depth;\n
-\t\t\t\ttext:style-name python:\'Heading_20_%s\' % depth"><tal:trans i18n:domain="erp5_ui" i18n:translate="Project Line" /></text:h>\n
+                                 text:style-name python:\'Heading_20_%s\' % depth"><tal:trans i18n:domain="erp5_ui" i18n:translate="Project Line">Project Line</tal:trans></text:h>\n
         <text:p text:style-name=\'Text_20_body\' tal:content="current_requirement/getDescription"\n
                 tal:condition="current_requirement/getDescription">Description of project line.</text:p>\n
         <tal:block tal:define="requirement_list python:current_requirement.contentValues(portal_type=\'Requirement\', sort_on=((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\')">\n
@@ -134,13 +134,13 @@ AAA=</string> </value>
         <table:table-header-rows>\n
           <table:table-row>\n
             <table:table-cell table:style-name=\'RequirementList.A1\' office:value-type=\'string\'>\n
-\t\t\t\t<text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Reference" /></text:p>\n
+              <text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Reference">Reference</tal:trans></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'RequirementList.A1\' office:value-type=\'string\'>\n
-\t\t\t\t<text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Title" /></text:p>\n
+              <text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Title">Title</tal:trans></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'RequirementList.C1\' office:value-type=\'string\'>\n
-\t\t\t\t<text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Description" /></text:p>\n
+              <text:p text:style-name=\'Table_20_Heading\'><tal:trans i18n:domain="erp5_ui" i18n:translate="Description">Description</tal:trans></text:p>\n
             </table:table-cell>\n
           </table:table-row>\n
         </table:table-header-rows>\n
@@ -155,6 +155,9 @@ AAA=</string> </value>
           </table:table-cell>\n
           <table:table-cell table:style-name=\'RequirementList.C2\' office:value-type=\'string\'>\n
             <text:p text:style-name=\'Table_20_Contents\'  tal:content="requirement/getDescription">Description here</text:p>\n
+            <text:p text:style-name=\'Comment\'\n
+              tal:condition="python: request.get(\'show_comment\') and requirement.getComment()"\n
+              tal:content="requirement/getComment">Comment here</text:p>\n
           </table:table-cell>\n
         </table:table-row>\n
         </tal:block>\n

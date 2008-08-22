@@ -71,6 +71,7 @@
                     <value>
                       <list>
                         <string>your_depth</string>
+                        <string>your_show_comment</string>
                       </list>
                     </value>
                 </item>
