@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
             <value> <string>ts45484866.57</string> </value>
         </item>
@@ -22,6 +26,12 @@
         <item>
             <key> <string>__name__</string> </key>
             <value> <string>SaleOrder_viewDetailedReportOdtContainer</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
