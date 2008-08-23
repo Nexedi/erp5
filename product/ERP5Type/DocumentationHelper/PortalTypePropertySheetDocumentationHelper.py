@@ -76,13 +76,20 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
       property_sheet_file.seek(0)
       source_code = property_sheet_file.read()
       portal_transforms = getattr(self, 'portal_transforms', None)
-      if portal_transforms is None:
+      if portal_transforms is not None:
+        REQUEST = getattr(self, 'REQUEST', None)
+        if REQUEST is not None:
+          if REQUEST.get('portal_skin', 'View' ) != 'View':
+            return source_code
+      else:
         LOG('DCWorkflowScriptDocumentationHelper', INFO,
-          'Transformation Tool is not installed. No convertion of python script to html')
+            'Transformation Tool is not installed. No convertion of python script to html')
         return source_code
     src_mimetype='text/x-python'
     mime_type = 'text/html'
     source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
     return source_html.getData()
+
+
 
 InitializeClass(PortalTypePropertySheetDocumentationHelper)

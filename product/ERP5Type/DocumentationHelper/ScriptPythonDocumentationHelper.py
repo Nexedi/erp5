@@ -71,7 +71,12 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     from zLOG import LOG, INFO
     source_code = getattr(self.getDocumentedObject(), "_body", '')
     portal_transforms = getattr(self, 'portal_transforms', None)
-    if portal_transforms is None:
+    if portal_transforms is not None:
+      REQUEST = getattr(self, 'REQUEST', None)
+      if REQUEST is not None:
+        if REQUEST.get('portal_skin', 'View' ) != 'View':
+          return source_code
+    else:
       LOG('DCWorkflowScriptDocumentationHelper', INFO,
           'Transformation Tool is not installed. No convertion of python script to html')
       return source_code
