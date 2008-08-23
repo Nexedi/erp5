@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: "%s" % context.portal_selections.getSelectionParamsFor(\'documentation_helper_selection\').get(\'description\')</string> </value>
+            <value> <string>python: "%s" % (context.portal_selections.getSelectionParamsFor(\'documentation_helper_selection\').get(\'description\') or "")</string> </value>
         </item>
       </dictionary>
     </pickle>
