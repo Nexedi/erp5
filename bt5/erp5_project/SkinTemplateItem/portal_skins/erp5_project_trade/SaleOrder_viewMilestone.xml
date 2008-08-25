@@ -101,7 +101,6 @@
                     <value>
                       <list>
                         <string>listbox_int_index</string>
-                        <string>listbox_quantity</string>
                         <string>listbox_stop_date</string>
                       </list>
                     </value>
@@ -122,7 +121,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -156,6 +155,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Milestones</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
