@@ -160,6 +160,9 @@ item_list = getItemList( category=category,\n
 if omit_filter:\n
   return item_list\n
 \n
+if not hasattr(context, \'getSource\'):\n
+  return item_list\n
+\n
 for node in (context.getSource(portal_type=\'Account\'),\n
              context.getDestination(portal_type=\'Account\')):\n
   if node:\n
@@ -234,6 +237,7 @@ return item_list\n
                             <string>getItemList</string>
                             <string>str</string>
                             <string>item_list</string>
+                            <string>hasattr</string>
                             <string>_getiter_</string>
                             <string>node</string>
                             <string>append</string>
