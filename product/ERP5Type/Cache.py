@@ -189,9 +189,7 @@ class CachingMethod:
       ## which is faster than checking for keys
       # It is very important to take the factories dictionnary
       # on CachingMethod instead of self, we want a global variable
-      value = CachingMethod.factories[self.cache_factory](
-              self.callable_object, cache_id, scope, self.cache_duration,
-              *args, **kwd)
+      cache_factory = CachingMethod.factories[self.cache_factory]
     except KeyError:
       global is_cache_ready
       if is_cache_ready:
@@ -200,6 +198,10 @@ class CachingMethod:
             "Factory %s not found, method %s executed without cache" % (
              self.cache_factory, self.callable_object))
       value = self.callable_object(*args, **kwd)
+    else:
+      value = cache_factory(
+              self.callable_object, cache_id, scope, self.cache_duration,
+              *args, **kwd)
     return value
 
   def delete(self, id, cache_factory=DEFAULT_CACHE_FACTORY, scope=DEFAULT_CACHE_SCOPE):
