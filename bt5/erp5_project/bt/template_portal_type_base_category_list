@@ -13,6 +13,7 @@ Sale Order Line | predecessor
 Sale Order Line | requirement
 Sale Order Milestone | predecessor
 Sale Order Milestone | requirement
+Sale Order | requirement
 Sale Packing List Line | predecessor
 Sale Packing List Line | requirement
 Task Line | requirement

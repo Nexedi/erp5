@@ -24,6 +24,9 @@
  <portal_type id="Requirement Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Sale Order">
+  <item>requirement</item>
+ </portal_type>
  <portal_type id="Sale Order Line">
   <item>requirement</item>
   <item>predecessor</item>
