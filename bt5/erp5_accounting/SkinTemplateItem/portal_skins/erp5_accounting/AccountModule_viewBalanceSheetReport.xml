@@ -93,6 +93,7 @@ dQEAAAAA</string> </value>
   tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
   tal:define=\'at_date request/at_date;\n
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day());\n
+              date_formatter nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"]);\n
               financial_section python:context.getPortalObject().portal_categories.financial_section;\n
@@ -203,10 +204,8 @@ dQEAAAAA</string> </value>
         <table:table-row table:style-name=\'ro2\'>\n
           <table:table-cell table:style-name=\'ce1\'><text:p/></table:table-cell>\n
           <table:table-cell table:style-name=\'report-title-date\'\n
-                            table:number-rows-spanned=\'1\' table:number-columns-spanned=\'4\'\n
-                            office:value-type=\'date\' office:date-value=\'2004-04-05\'\n
-                            tal:attributes=\'office:date-value python:at_date.strftime("%Y-%m-%d")\'>\n
-            <text:p>Date</text:p>\n
+                table:number-rows-spanned=\'1\' table:number-columns-spanned=\'4\'>\n
+            <text:p tal:content="python: date_formatter(at_date)">Date</text:p>\n
           </table:table-cell>\n
           <table:covered-table-cell table:number-columns-repeated=\'2\'/>\n
           <table:covered-table-cell table:style-name=\'ce1\' table:number-columns-repeated=\'1\'/>\n
@@ -596,21 +595,87 @@ dQEAAAAA</string> </value>
               <table:table-cell table:style-name=\'report-content-heading1\'\n
                                 table:number-columns-spanned=\'3\'\n
                                 table:number-rows-spanned=\'1\'\n
-                                office:value-type=\'string\'>\n
+                                office:value-type=\'string\'\n
+                                tal:define="global total_current_period python: 0;\n
+                                            global total_prev_period python: 0;">\n
                 <text:p tal:define="global level1_title cat_level_1/getTranslatedTitle" tal:content="level1_title">Level 1</text:p>\n
               </table:table-cell>\n
               <table:covered-table-cell table:style-name="ce9"/>\n
               <table:covered-table-cell table:style-name="ce9"/>\n
-              <table:table-cell table:style-name=\'report-content-currency1\'>\n
-                <text:p/></table:table-cell>\n
-              <table:table-cell table:style-name=\'report-content-currency1\'>\n
-                <text:p/></table:table-cell>\n
-            </table:table-row>\n
+              <tal:block tal:condition="cat_level_1/contentIds">\n
+                <table:table-cell table:style-name=\'report-content-currency1\'>\n
+                  <text:p/></table:table-cell>\n
+                <table:table-cell table:style-name=\'report-content-currency1\'>\n
+                  <text:p/></table:table-cell>\n
+              </tal:block>\n
+              <tal:block tal:condition="not: cat_level_1/contentIds"\n
+                         tal:define="node_category cat_level_1/getRelativeUrl;">\n
+\n
+                  <!-- current period:\n
+                  If the category have the special ID \'net_profit\', it will also contain the content of income & expense for this period\n
+                  -->\n
+                  <tal:block tal:condition=\'python: cat_level_1.getId() == "net_profit"\'>\n
+                    <tal:block \n
+                      tal:define=\'value python: -getInventory(node_category=[node_category]) - getInventoryIncomeAccount(node_category=["financial_section/income", "financial_section/expense"]);\n
+                                  global total_current_period python: total_current_period + value;\'>\n
+                      <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        tal:attributes=\'office:value value\'\n
+                        table:style-name=\'report-content-currency2\'\n
+                        office:value-type=\'float\'\n
+                        office:value=\'123456.56\'>\n
+                        <text:p>123 456,56</text:p>\n
+                      </table:table-cell>\n
+                      <table:table-cell\n
+                        tal:condition=\'not:value\'\n
+                        table:style-name=\'report-content-currency2\'>\n
+                        <text:p></text:p>\n
+                      </table:table-cell>\n
+                    </tal:block></tal:block>\n
+\n
+                  <tal:block tal:condition=\'python: cat_level_1.getId() != "net_profit"\'>\n
+                    <tal:block \n
+                      tal:define=\'value python: -getInventory(node_category=node_category);\n
+                                  global total_current_period python: total_current_period + value;\'>\n
+                      <table:table-cell\n
+                        tal:condition=\'value\'\n
+                        tal:attributes=\'office:value value\'\n
+                        table:style-name=\'report-content-currency2\'\n
+                        office:value-type=\'float\'\n
+                        office:value=\'123456.56\'>\n
+                        <text:p>123 456,56</text:p>\n
+                      </table:table-cell>\n
+                      <table:table-cell\n
+                        tal:condition=\'not:value\'\n
+                        table:style-name=\'report-content-currency2\'>\n
+                        <text:p></text:p>\n
+                      </table:table-cell>\n
+                    </tal:block>\n
+                  </tal:block>\n
+\n
+                  <!-- previous period -->\n
+                  <tal:block\n
+                      tal:define=\'value python: -getInventoryPreviousPeriod(node_category=node_category);\n
+                                  global total_prev_period python: total_prev_period + value;\'>\n
+                    <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      tal:attributes=\'office:value value\'\n
+                      table:style-name=\'report-content-currency2\'\n
+                      office:value=\'123456.56\'\n
+                      office:value-type=\'float\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency2\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </table:table-row>\n
             <!-- }}} -->\n
           \n
             <!-- LEVEL 2 {{{ -->\n
-            <tal:block tal:define="global total_current_period python: 0;\n
-                                   global total_prev_period python: 0;">\n
               <tal:block tal:repeat="cat_level_2 python:cat_level_1.contentValues(sort_on=((\'int_index\', \'ascending\'),))">\n
               \n
               <!-- if we have sub content at level 3 to display, we will only display a title ...\n
@@ -784,7 +849,6 @@ dQEAAAAA</string> </value>
                 </tal:block>\n
               </tal:block>\n
             </table:table-row>\n
-          </tal:block>\n
           </tal:block>\n
         <!-- }}} --> \n
 \n

@@ -95,6 +95,7 @@ dQEAAAAA</string> </value>
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day());\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
               from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);\n
+              date_formatter nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"]);\n
               financial_section python:context.getPortalObject().portal_categories.financial_section;\n
               getInventory python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], at_date=at_date, from_date=from_date, **kw);\n
@@ -205,10 +206,8 @@ dQEAAAAA</string> </value>
         <table:table-row table:style-name=\'ro2\'>\n
           <table:table-cell table:style-name=\'ce1\'><text:p/></table:table-cell>\n
           <table:table-cell table:style-name=\'report-title-date\'\n
-                            table:number-rows-spanned=\'1\' table:number-columns-spanned=\'4\'\n
-                            office:value-type=\'date\' office:date-value=\'2004-04-05\'\n
-                            tal:attributes=\'office:date-value python:at_date.strftime("%Y-%m-%d")\'>\n
-            <text:p>Date</text:p>\n
+                            table:number-rows-spanned=\'1\' table:number-columns-spanned=\'4\'>\n
+            <text:p tal:content="python:date_formatter(at_date)">Date</text:p>\n
           </table:table-cell>\n
           <table:covered-table-cell table:number-columns-repeated=\'2\'/>\n
           <table:covered-table-cell table:style-name=\'ce1\' table:number-columns-repeated=\'1\'/>\n
@@ -827,7 +826,7 @@ dQEAAAAA</string> </value>
           <table:table-cell table:style-name=\'report-stat-currency2\'\n
             tal:attributes="office:value python: net_income_previous_period"\n
             tal:define="global grand_total_previous_period python: grand_total_previous_period + net_income_previous_period"\n
-            office:value=\'\' office:value-type=\'string\'><text:p></text:p></table:table-cell>\n
+            office:value=\'\' office:value-type=\'float\'><text:p></text:p></table:table-cell>\n
         </table:table-row>\n
 \n
         <!-- TOTAL LEVEL 2 {{{ -->\n
