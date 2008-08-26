@@ -90,10 +90,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     <tal:block metal:fill-slot="layout"\n
                tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
       <div id="main_content" tal:attributes="class python:(list_mode and \'list_mode\') or \'view_mode\'">\n
-        <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
+        <tal:block tal:condition="request/portal_status_message | nothing">\n
           <!-- XXX Why no portal message displayed there ?\n
                 Normally a message should be displayed when saving an object through web interface... -->\n
-          <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
+          <div tal:content="request/portal_status_message | nothing" id="transition_message"/>\n
         </tal:block>\n
         <tal:block metal:define-slot="main"/>\n
       </div>\n
