@@ -71,6 +71,8 @@ portal_workflow = context.portal_workflow\n
 content_type_list = context.allowedContentTypes()\n
 content_type_list.sort()\n
 \n
+translateString = context.Base_translateString\n
+\n
 # XXX better implementation is required, but I do not know how to get workflows related to a portal type\n
 possible_state_name_list = (\'validation_state\',\n
                             \'simulation_state\',\n
@@ -93,30 +95,42 @@ for content_type in content_type_list:\n
         portal_type_dict.update({result[0]: count})\n
         result_dict.update({content_type_id: portal_type_dict})\n
 \n
+\n
+def getStateTranslatedTitle(state, portal_type, saved_state_dict=dict()):\n
+  if state in saved_state_dict:\n
+    return saved_state_dict[state]\n
+  # XXX requires manager proxy role\n
+  workflow_for_ptype = portal_workflow.getWorkflowsFor(portal_type)\n
+  for workflow in workflow_for_ptype:\n
+    if hasattr(workflow, \'states\') and state in workflow.states.objectIds():\n
+      saved_state_dict[state] = translateString(getattr(workflow.states, state).title_or_id())\n
+      return saved_state_dict[state]\n
+\n
 state_list_dict = {}\n
 portal_type_list = result_dict.keys()\n
 portal_type_list.sort()\n
 for portal_type in portal_type_list:\n
-  listbox.append({\'portal_type\': portal_type,\n
+  listbox.append({\'translated_portal_type\': translateString(portal_type),\n
                   \'state\'      : \'\',\n
                   \'count\'      : \'\'})\n
   state_list = result_dict[portal_type].keys()\n
   state_list.sort()\n
   for state in state_list:\n
+    state_title = getStateTranslatedTitle(state, portal_type)\n
     count = state_list_dict.get(state, 0) + result_dict[portal_type][state]\n
     state_list_dict.update({state:count})\n
-    listbox.append({\'portal_type\': \'\',\n
-                    \'state\'      : state,\n
+    listbox.append({\'translated_portal_type\': \'\',\n
+                    \'state\'      : state_title,\n
                     \'count\'      : result_dict[portal_type][state]})\n
 \n
-listbox.append({\'portal_type\': \'All\',\n
+listbox.append({\'translated_portal_type\': translateString(\'All\'),\n
                 \'state\'      : \'\',\n
                 \'count\'      : \'\'})\n
 state_list = state_list_dict.keys()\n
 state_list.sort()\n
 for state in state_list:\n
-  listbox.append({\'portal_type\': \'\',\n
-                  \'state\'      : state,\n
+  listbox.append({\'translated_portal_type\': \'\',\n
+                  \'state\'      : getStateTranslatedTitle(state, None),\n
                   \'count\'      : state_list_dict[state]})\n
 \n
 context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
@@ -183,6 +197,7 @@ return context.Folder_viewWorkflowReport()\n
                             <string>context</string>
                             <string>portal_workflow</string>
                             <string>content_type_list</string>
+                            <string>translateString</string>
                             <string>possible_state_name_list</string>
                             <string>_getiter_</string>
                             <string>content_type</string>
@@ -195,11 +210,14 @@ return context.Folder_viewWorkflowReport()\n
                             <string>result</string>
                             <string>portal_type_dict</string>
                             <string>count</string>
+                            <string>dict</string>
+                            <string>getStateTranslatedTitle</string>
                             <string>state_list_dict</string>
                             <string>portal_type_list</string>
                             <string>portal_type</string>
                             <string>state_list</string>
                             <string>state</string>
+                            <string>state_title</string>
                           </tuple>
                         </value>
                     </item>
@@ -217,6 +235,12 @@ return context.Folder_viewWorkflowReport()\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_generateWorkflowReport</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

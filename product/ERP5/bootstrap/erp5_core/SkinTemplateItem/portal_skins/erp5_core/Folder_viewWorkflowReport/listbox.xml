@@ -331,8 +331,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Portal Type</string>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>state</string>
@@ -472,7 +472,12 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>None</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -492,7 +497,20 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>translated_portal_type</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>state</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>count</string>
+<string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
