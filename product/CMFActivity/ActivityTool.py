@@ -295,6 +295,7 @@ Subject: %s
 
 %s
 
+Server: %s
 Document: %s
 Method: %s
 Arguments:%r
@@ -305,8 +306,9 @@ Created at:
 Exception: %s %s
 
 %s
-""" % (activity_tool.email_from_address, user_email, message,
-       message, '/'.join(self.object_path), self.method_id, self.args, self.kw,
+""" % (activity_tool.email_from_address, user_email, message, message,
+       self.request_info.get('SERVER_URL', ''),
+       '/'.join(self.object_path), self.method_id, self.args, self.kw,
        self.call_traceback,
        self.exc_type, self.exc_value, self.traceback)
     try:
