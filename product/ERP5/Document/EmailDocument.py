@@ -370,6 +370,8 @@ class EmailDocument(File, TextDocument):
       return None
     if not import_libxml2:
       return html_text
+    #Null char. is not allowed by parser
+    html_text = html_text.replace(chr(0), '')
     exclude_tag_list = ('html', 'head', 'body',)
     xsl_as_string = """<?xml version="1.0" ?>
 <xsl:stylesheet version="1.0"
