@@ -80,36 +80,17 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     """
     return getattr(self.getDocumentedObject(), "description", '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateIdList' )
-  def getBusinessTemplateIdList(self):
-    """
-    """
-    bt_list = []
-    for bt in self.getDocumentedObject().portal_templates.objectValues():
-      current_state = ''
-      if bt.getInstallationState() == 'installed':
-        bt_list.append(bt.getId())
-    return bt_list
-
   security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateItemList' )
   def getBusinessTemplateItemList(self):
     """
     """
-    bt_list = []
-    portal_templates = getattr(self.getDocumentedObject(), "portal_templates", None)
-    if portal_templates is not None:
-      for bt in portal_templates.objectValues():
-        current_state = ''
-        for wh in bt.workflow_history['business_template_installation_workflow']:
-          current_state = wh['installation_state']
-        if current_state == 'installed':
-          bt_list.append((bt.getId(),
-                          getattr(bt, "title", ''),
-                          getattr(bt, "description", ''),
-                          getattr(bt, "version", ''),
-                          getattr(bt, "revision", '')
-                         ))
-    return bt_list
+    return [(bt.getId(),
+              getattr(bt, "title", ''),
+              getattr(bt, "description", ''),
+              getattr(bt, "version", ''),
+              getattr(bt, "revision", ''))
+            for bt in self.getDocumentedObject().portal_templates.objectValues()
+            if bt.getInstallationState() == 'installed']
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateURIList' )
   def getBusinessTemplateURIList(self):

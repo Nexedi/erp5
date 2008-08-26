@@ -56,11 +56,7 @@ class TestDocumentationHelper(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """return list of business templates to be installed. """
-    return ( 'erp5_documentation',
-             'erp5_core',
-             'erp5_xhtml_style',
-             'erp5_ui_test',
-            )
+    return 'erp5_documentation', 'erp5_ui_test'
 
   def test_01_ERP5Site(self):
     ZopeTestCase._print('\nTest Documentation ERP5Site')
@@ -68,13 +64,9 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     site_uri = self.portal.getUrl()
     site_do = ERP5SiteDocumentationHelper(site_uri).__of__(self.portal)
     self.assertEquals(len(site_do.getSectionList()), 1)
-    #just erp5_core, erp5_mysql_innodb_catalog, erp5_documentation
-    #, erp5_xhtml_style and erp5_ui_test are installed
-    self.assertTrue('erp5_core' in site_do.getBusinessTemplateIdList())
-    self.assertTrue('erp5_xhtml_style' in site_do.getBusinessTemplateIdList())
-    self.assertTrue('erp5_mysql_innodb_catalog' in site_do.getBusinessTemplateIdList())
-    self.assertTrue('erp5_documentation' in site_do.getBusinessTemplateIdList())
-    self.assertTrue('erp5_ui_test' in site_do.getBusinessTemplateIdList())
+    bt_title_set = set(bt[1] for bt in site_do.getBusinessTemplateItemList())
+    self.assertTrue('erp5_core' in bt_title_set)
+    self.assertTrue('erp5_documentation' in bt_title_set)
     self.portal.portal_classes.getDocumentationHelper(
         'ERP5SiteDocumentationHelper', site_uri).view()
     #test the report mode of the documentation of the whole site
