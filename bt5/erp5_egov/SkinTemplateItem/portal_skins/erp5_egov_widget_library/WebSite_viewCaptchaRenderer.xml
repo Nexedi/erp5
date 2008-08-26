@@ -75,9 +75,6 @@ Description:\n
         to generate a new image\n
       </tal:block>\n
     </div>\n
-        <tal:block\n
-        metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
-\n
     <div class="next_step_action" tal:define="object_uid           here/getUid | nothing;\n
                   object_path          here/getPath | nothing;\n
                   form                 nocall: form | nothing;\n
