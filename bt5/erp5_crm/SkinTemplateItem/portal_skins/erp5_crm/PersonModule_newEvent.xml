@@ -142,7 +142,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, title, description, direction, selection_name, follow_up, single_event=0, text_content, form_id, **kw</string> </value>
+            <value> <string>portal_type, title, description, direction, selection_name, follow_up=None, single_event=0, text_content, form_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -206,6 +206,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <int>0</int>
                 <none/>
                 <none/>
