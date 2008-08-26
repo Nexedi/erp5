@@ -475,6 +475,26 @@ dQEAAAAA</string> </value>
         <!-- }}} -->\n
       </tal:block>\n
       <!-- loop level 2 -->\n
+      <!-- Total expense {{{ -->\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'report-stat2\'\n
+                            table:number-columns-spanned=\'3\'\n
+                            table:number-rows-spanned=\'1\'\n
+                            office:value-type=\'string\'>\n
+            <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class"\n
+                        i18n:translate=\'\' i18n:domain="ui" tal:content=\'string:Expense\'></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:covered-table-cell table:style-name="ce9"/>\n
+          <table:covered-table-cell table:style-name="ce9"/>\n
+\n
+          <table:table-cell table:style-name=\'report-stat-currency2\'\n
+            tal:attributes="office:value python: grand_total_current_period"\n
+            office:value-type=\'float\' office:value=\'123456.56\'><text:p>123 456,56</text:p></table:table-cell>\n
+          <table:table-cell table:style-name=\'report-stat-currency2\'\n
+            tal:attributes="office:value python: grand_total_previous_period"\n
+            office:value=\'123456.56\' office:value-type=\'float\'><text:p>123 456,56</text:p></table:table-cell>\n
+        </table:table-row>\n
+      <!-- }}} -->\n
 \n
         <!-- NET PROFIT {{{ -->\n
         <table:table-row tal:condition="python: net_income &lt; 0">\n
@@ -501,8 +521,7 @@ dQEAAAAA</string> </value>
                             table:number-columns-spanned=\'3\'\n
                             table:number-rows-spanned=\'1\'\n
                             office:value-type=\'string\'>\n
-            <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class"\n
-                        i18n:translate=\'\' i18n:domain="ui" tal:content=\'string:Expense\'></tal:block></text:p>\n
+            <text:p i18n:translate="" i18n:domain="ui">Total</text:p>\n
           </table:table-cell>\n
           <table:covered-table-cell table:style-name="ce9"/>\n
           <table:covered-table-cell table:style-name="ce9"/>\n
@@ -810,6 +829,24 @@ dQEAAAAA</string> </value>
 \n
       </tal:block> <!-- loop level 2 -->\n
 \n
+        <!-- TOTAL INCOME {{{ -->\n
+        <table:table-row>\n
+          <table:table-cell table:style-name=\'report-stat2\'\n
+                            office:value-type=\'string\'\n
+                            table:number-rows-spanned=\'1\'\n
+                            table:number-columns-spanned=\'3\'>\n
+          <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" i18n:translate=\'\' i18n:domain="ui" tal:content=\'string:Income\'></tal:block></text:p>\n
+          </table:table-cell>\n
+          <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>\n
+          <table:table-cell table:style-name=\'report-stat-currency2\'\n
+            tal:attributes="office:value python: grand_total_current_period"\n
+            office:value-type=\'float\' office:value=\'123456.56\'><text:p>123 456,56</text:p></table:table-cell>\n
+          <table:table-cell table:style-name=\'report-stat-currency2\'\n
+            tal:attributes="office:value python: grand_total_previous_period"\n
+            office:value=\'123456.56\' office:value-type=\'float\'><text:p>123 456,56</text:p></table:table-cell>\n
+        </table:table-row>\n
+        <!-- }}} --> \n
+\n
         <!-- NET LOSS {{{ -->\n
         <table:table-row tal:condition="python: net_income &gt; 0">\n
           <table:table-cell table:style-name=\'report-stat2\'\n
@@ -835,7 +872,7 @@ dQEAAAAA</string> </value>
                             office:value-type=\'string\'\n
                             table:number-rows-spanned=\'1\'\n
                             table:number-columns-spanned=\'3\'>\n
-          <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" i18n:translate=\'\' i18n:domain="ui" tal:content=\'string:Income\'></tal:block></text:p>\n
+          <text:p i18n:translate="" i18n:domain="ui">Total</text:p>\n
           </table:table-cell>\n
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>\n
           <table:table-cell table:style-name=\'report-stat-currency2\'\n
