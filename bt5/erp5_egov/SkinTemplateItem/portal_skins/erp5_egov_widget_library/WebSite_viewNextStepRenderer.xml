@@ -59,6 +59,7 @@
               form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
               local_parameter_list local_parameter_list | python: {};\n
               ">\n
+\n
   <input type="hidden" name="form_action" value=""\n
          tal:attributes="value request/form_action" />\n
   <input type="hidden" name="edit_document_url" value=""\n
@@ -78,13 +79,6 @@
 \n
   </span>\n
   <div class="onright">\n
-    <div class="erp5_captcha" tal:condition="python: here.portal_membership.isAnonymousUser()">\n
-      <div class="explanation">\n
-        Type the characters you see in the picture below.\n
-      </div>\n
-      <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
-      <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
-    </div>\n
     <button type="submit" class="nextStep" title="Next Step >>" name="EGov_Base_editAndNextStep:method"  \n
       i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n

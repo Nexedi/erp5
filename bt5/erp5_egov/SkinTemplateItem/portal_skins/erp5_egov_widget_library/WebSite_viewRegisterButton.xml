@@ -59,9 +59,7 @@ Description:\n
 \n
 <tal:block metal:define-macro="main">\n
   <div id="register_button">\n
-    <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
-    name="EGov_register:method"\n
-    value="Register >>"/>\n
+    <a href="captcha/CaptchaAdvertisment" i18n:domain="ui" i18n:translate="">Register >></a>\n
   </div>\n
   <div class="clear"></div>\n
 </tal:block>\n

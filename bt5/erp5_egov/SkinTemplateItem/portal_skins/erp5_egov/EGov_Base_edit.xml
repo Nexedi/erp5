@@ -77,8 +77,6 @@ next_url_dict = {\n
     \'DeclarationTVA_viewAttachmentList\' : \'PDFDocument_viewLoginInformation\'\n
 }\n
 \n
-successful_edit_redirect_url = \'%s/%s\' % (context.absolute_url(), form_id)\n
-\n
 return context.Base_edit(form_id=form_id, \n
                          selection_index=selection_index, \n
                          selection_name=selection_name, \n
@@ -86,8 +84,7 @@ return context.Base_edit(form_id=form_id, \n
                          ignore_layout=ignore_layout, \n
                          editable_mode=editable_mode, \n
                          silent_mode=silent_mode, \n
-                         field_prefix=field_prefix, \n
-                         successful_edit_redirect_url=successful_edit_redirect_url)\n
+                         field_prefix=field_prefix)\n
 </string> </value>
         </item>
         <item>
@@ -147,7 +144,6 @@ return context.Base_edit(form_id=form_id, \n
                             <string>next_url_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>successful_edit_redirect_url</string>
                           </tuple>
                         </value>
                     </item>

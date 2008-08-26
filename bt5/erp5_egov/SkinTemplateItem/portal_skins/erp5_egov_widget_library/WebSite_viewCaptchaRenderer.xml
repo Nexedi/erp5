@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!-- ============================================================== -->\n
+<!--\n
+Description:\n
+  This macro render a invitation to becom vip member panel.\n
+-->\n
+\n
+<tal:block metal:define-macro="main">\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+  \n
+  <div class="become_vip_member">\n
+    <div class="title" i18n:domain="ui" i18n:translate="">\n
+      Anti spam test\n
+    </div>\n
+    <div class="captcha_explanations">\n
+      <tal:block i18n:domain="ui" i18n:translate="">\n
+        Type the characters you see in the picture below. \n
+        This is done to prevent access by spam bots. All letters are \n
+        lowercase. If you are unable to read, click on "refresh" \n
+        to generate a new image\n
+      </tal:block>\n
+    </div>\n
+        <tal:block\n
+        metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
+\n
+    <div class="next_step_action" tal:define="object_uid           here/getUid | nothing;\n
+                  object_path          here/getPath | nothing;\n
+                  form                 nocall: form | nothing;\n
+                  form_id              form/id | template/title_or_id | nothing;\n
+                  portal               here/getPortalObject;\n
+                  form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
+                  local_parameter_list local_parameter_list | python: {};\n
+                  ">\n
+      <input type="hidden" name="form_action" value=""\n
+             tal:attributes="value request/form_action" />\n
+      <input type="hidden" name="edit_document_url" value=""\n
+             tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
+      <input type="hidden" name="view_document_url" value=""\n
+             tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
+      <!--<input type="hidden" name="actions" value=""\n
+             tal:attributes="value request/actions" />\n
+          <input type="hidden" name="current_action" value="" \n
+             tal:attributes="value request/current_action" />-->\n
+    <div class="onright">\n
+        <div class="erp5_captcha" tal:condition="python: here.portal_membership.isAnonymousUser()">\n
+          <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
+          <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
+        </div>\n
+        <button class="nextStep" title="Refresh"\n
+          OnClick="javascript:window.history.go(0)" \n
+          i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description"> <tal:block i18n:translate="" i18n:domain="ui">Refresh</tal:block></span>\n
+        </button>\n
+        <button class="nextStep" title="Next Step >>" name="EGov_register:method"  \n
+          i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description"> <tal:block i18n:translate="" i18n:domain="ui">Next Step</tal:block> >></span>\n
+        </button>\n
+      <div class="clear">\n
+      </div>\n
+    </div>\n
+    </div>\n
+\n
+\n
+  </div>\n
+\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewCaptchaRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

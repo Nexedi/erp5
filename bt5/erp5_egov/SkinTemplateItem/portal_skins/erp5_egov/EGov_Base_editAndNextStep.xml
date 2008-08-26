@@ -76,14 +76,6 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 request=context.REQUEST\n
 \n
 \n
-# check captcha\n
-if context.portal_membership.isAnonymousUser():\n
-  if not context.isCaptchaTextCorrect(captcha_text):\n
-    message = "text entered at the left of the picture is wrong"\n
-    return request[\'RESPONSE\'].redirect(\n
-               "%s/%s?portal_status_message=%s" %\n
-               (context.absolute_url(), form_id, message))\n
-\n
 next_url_dict = {\n
     \'DeclarationTVA_view\' : \'DeclarationTVA_viewAttachmentList\',\n
     \'SubscriptionForm_view\': \'SubscriptionForm_viewAttachmentList\',\n
@@ -139,7 +131,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, captcha_text=\'\', selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\'</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,14 +151,13 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
-                            <string>captcha_text</string>
                             <string>selection_index</string>
                             <string>selection_name</string>
                             <string>dialog_id</string>
@@ -179,10 +170,10 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>message</string>
-                            <string>_getitem_</string>
                             <string>next_url_dict</string>
                             <string>next_url</string>
+                            <string>message</string>
+                            <string>_getitem_</string>
                             <string>successful_edit_redirect_url</string>
                             <string>result</string>
                           </tuple>
@@ -197,7 +188,6 @@ return result\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
                 <int>0</int>
                 <string></string>
                 <string></string>

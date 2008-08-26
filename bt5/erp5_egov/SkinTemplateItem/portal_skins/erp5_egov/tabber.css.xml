@@ -257,6 +257,10 @@ div.fields div{\n
  font: bold 12px Verdana, sans-serif;\n
 }\n
 \n
+.captcha_explanations {\n
+  margin-bottom:2em;\n
+}\n
+\n
 #register_button input{\n
   margin-top:0.2em;\n
   float: right;\n
