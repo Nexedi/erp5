@@ -41,6 +41,8 @@
                 <string>delete_action</string>
                 <string>order</string>
                 <string>order_action</string>
+                <string>start</string>
+                <string>start_action</string>
               </tuple>
             </value>
         </item>
