@@ -43,6 +43,10 @@ MARGIN_RIGHT = 5
 MAX_BG = 5
 
 def generateBgFile(size_x, size_y):
+  """
+    generate a randomize background image and return the filename of the
+    generated file
+  """
   tmp_file = NamedTemporaryFile()
   tmp_file_name = tmp_file.name
   tmp_file.close()
@@ -69,6 +73,9 @@ def getRandomText():
   return text[-7:]                             
 
 def generateCaptcha():
+  """
+    used for local tests
+  """
   captcha_file = NamedTemporaryFile()
   captcha_file_path = captcha_file.name
   captcha_file.close()
@@ -78,6 +85,9 @@ def generateCaptcha():
       captcha_file_path=captcha_file_path)
 
 def getTempFileName():
+  """
+    return a tempory filename
+  """
   tmp_file = NamedTemporaryFile()
   tmp_file_name = tmp_file.name
   tmp_file.close()
