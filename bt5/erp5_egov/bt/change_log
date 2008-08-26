@@ -1,5 +1,6 @@
 2008-08-26 fabien
 * add erp5_captcha skin folder
+* add portal_sessions tool
 
 2008-06-10 fabien
 * add erp5_egov_catalog to dependence list
