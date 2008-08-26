@@ -43,6 +43,8 @@
                 <string>delete_action</string>
                 <string>set_ready</string>
                 <string>set_ready_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>

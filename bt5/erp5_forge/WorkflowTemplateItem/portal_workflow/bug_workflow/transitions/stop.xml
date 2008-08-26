@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The stop logical transition sets the bug state to invalidate.</string> </value>
+            <value> <string>The stop logical transition sets the bug state to stopped.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>setCloseDate</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
