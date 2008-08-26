@@ -52,6 +52,13 @@ class TestTradeReports(ERP5ReportTestCase):
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
 
+  def loginAsUser(self):
+    """login as user, without Manager role"""
+    uf = self.getPortal().acl_users
+    uf._doAddUser('user', 'user', ['Assignee', 'Assignor',
+                               'Associate', 'Auditor', 'Author'], [])
+    user = uf.getUserById('manager').__of__(uf)
+    newSecurityManager(None, user)
 
   def afterSetUp(self):
     """Setup the fixture.
@@ -145,6 +152,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # and all this available to catalog
     get_transaction().commit()
     self.tic()
+    self.loginAsUser()
 
   def beforeTearDown(self):
     """Remove all documents.
