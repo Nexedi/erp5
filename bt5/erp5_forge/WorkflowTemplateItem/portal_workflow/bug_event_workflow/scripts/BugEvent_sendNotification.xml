@@ -103,8 +103,10 @@ body += """ Messages :\n
 """\n
 # Messages Information \n
 simulation_state = (\'delivered\', \'started\')\n
-bug_message_list = bug.searchFolder(portal_type=\'Bug Line\', sort_on=(("id", "DESC"),), \n
-                                                                       simulation_state=simulation_state)\n
+bug_message_list = [bug_message]\n
+lines_list = bug.searchFolder(portal_type=\'Bug Line\', sort_on=(("id", "DESC"),),\n
+                                                                       simulation_state=simulation_state)  \n
+bug_message_list.extend(lines_list)\n
 message_count = len(bug_message_list)+1\n
 for message in bug_message_list:\n
     message_count -= 1\n
@@ -171,6 +173,7 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
                             <string>_inplacevar_</string>
                             <string>simulation_state</string>
                             <string>bug_message_list</string>
+                            <string>lines_list</string>
                             <string>len</string>
                             <string>message_count</string>
                             <string>_getiter_</string>
