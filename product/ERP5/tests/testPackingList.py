@@ -722,6 +722,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_string = self.default_sequence + '\
                       stepDecreasePackingListLineQuantity \
                       stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
                       stepSplitAndDeferPackingList \
                       stepTic \
                       stepCheckPackingListIsSolved \
@@ -739,6 +741,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_string = self.default_sequence + '\
                       stepChangePackingListDestination \
                       stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
                       stepAcceptDecisionPackingList \
                       stepTic \
                       stepCheckPackingListIsSolved \
@@ -757,6 +761,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_string = self.default_sequence + '\
                       stepChangePackingListStartDate \
                       stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
                       stepAcceptDecisionPackingList \
                       stepTic \
                       stepCheckPackingListIsSolved \
@@ -955,6 +961,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_string = self.default_sequence + '\
                       stepIncreasePackingListLineQuantity \
                       stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
                       stepSplitAndDeferPackingList \
                       stepTic \
                       stepCheckPackingListIsDiverged \
@@ -979,12 +987,16 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_string = self.default_sequence + '\
                       stepDecreasePackingListLineQuantity \
                       stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
                       stepSplitAndDeferPackingList \
                       stepTic \
                       stepCheckPackingListIsSolved \
                       stepCheckPackingListSplitted \
                       stepDecreasePackingListLineQuantity \
                       stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
                       stepSplitAndDeferPackingList \
                       stepTic \
                       stepCheckNewPackingListIsDivergent \
