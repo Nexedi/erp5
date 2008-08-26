@@ -877,6 +877,8 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       stepCheckDeliveryBuilding
       stepDecreasePackingListLineQuantity
       stepCheckPackingListIsCalculating
+      stepTic
+      stepCheckPackingListIsDiverged
       stepSplitAndDeferPackingList
       stepTic
       stepCheckPackingListIsSolved
@@ -1993,6 +1995,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepDecreaseInvoiceLineQuantity
     stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepSplitAndDeferInvoice
     stepTic
 
@@ -2032,6 +2036,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepChangeInvoiceStartDate
     stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepAcceptDecisionInvoice
     stepTic
 
@@ -2071,6 +2077,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepChangeInvoiceStartDate
     stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepAcceptDecisionInvoice
     stepTic
 
@@ -2101,6 +2109,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     """
     stepSetContainerFullQuantity
     stepCheckPackingListIsCalculating
+    stepTic
+    stepCheckPackingListIsDiverged
     stepAcceptDecisionPackingList
     stepTic
     stepCheckPackingListIsSolved
@@ -2169,6 +2179,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     """
     stepSetContainerFullQuantity
     stepCheckPackingListIsCalculating
+    stepTic
+    stepCheckPackingListIsDiverged
     stepAcceptDecisionPackingList
     stepTic
     stepCheckPackingListIsSolved
@@ -2263,6 +2275,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepDecreasePackingListLineQuantity
     stepSetContainerFullQuantity
     stepCheckPackingListIsCalculating
+    stepTic
+    stepCheckPackingListIsDiverged
     stepSplitAndDeferPackingList
     stepTic
     stepCheckPackingListIsSolved
@@ -2284,6 +2298,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
 
     stepIncreaseInvoiceLineQuantity
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepAcceptDecisionInvoice
     stepTic
     stepStartInvoice
@@ -2322,6 +2338,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
 
     stepSetInvoiceLineQuantityToZero
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepAcceptDecisionInvoice
     stepTic
     stepStartInvoice
@@ -2375,6 +2393,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepDecreaseInvoiceLineQuantity
     stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepSplitAndDeferInvoice
     stepTic
     stepStartInvoice
@@ -2442,6 +2462,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     """
     stepCheckInvoiceIsDivergent
     stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
     stepAcceptDecisionInvoice
     stepTic
     stepStartInvoice
