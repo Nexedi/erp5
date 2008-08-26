@@ -161,6 +161,8 @@ class TestTradeReports(ERP5ReportTestCase):
         [x for x in self.portal_categories['colour'].objectIds()])
     self.inventory_module.manage_delObjects(
                       list(self.inventory_module.objectIds()))
+    self.sale_order_module.manage_delObjects(
+                      list(self.sale_order_module.objectIds()))
                       
     get_transaction().commit()
     self.tic()
@@ -611,6 +613,77 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_text='colour/colour2',
                    inventory=66,
                    quantity_unit='')
+
+  def test_Folder_generateWorkflowReport(self):
+    # Create sales orders
+    first = self._makeOneSaleOrder(
+              title='SO 1',
+              destination_value=self.organisation_module.Organisation_1,
+              destination_section_value=self.organisation_module.Organisation_1,
+              destination_decision_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_2,
+              source_section_value=self.organisation_module.Organisation_2,
+              source_decision_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2006, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":11, "price":3},
+                               'product_module/product_B':{"quantity":7, "price":6},}
+              )
+    second = self._makeOneSaleOrder(
+              title='SO 2',
+              destination_value=self.organisation_module.Organisation_1,
+              destination_section_value=self.organisation_module.Organisation_1,
+              destination_decision_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_2,
+              source_section_value=self.organisation_module.Organisation_2,
+              source_decision_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2007, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":3, "price":3},}
+              )
+    third = self._makeOneSaleOrder(
+              title='SO 4',
+              destination_value=self.organisation_module.Organisation_1,
+              destination_section_value=self.organisation_module.Organisation_1,
+              destination_decision_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_2,
+              source_section_value=self.organisation_module.Organisation_2,
+              source_decision_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2007, 2, 2),
+              resource_dict = {'product_module/product_A':{"quantity":17, "price":3},
+                               'product_module/product_B':{"quantity":13, "price":6},},
+              cancel=True
+              )
+    
+    # call the report first, it will set selection
+    report_html = \
+        self.portal.sale_order_module.Folder_generateWorkflowReport()
+    self.failIf('Site Error' in report_html)
+
+    line_list = self.portal.sale_order_module.Folder_viewWorkflowReport.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(6, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             translated_portal_type='Sale Order')
+    self.checkLineProperties(data_line_list[1],
+                             translated_portal_type='',
+                             state='Cancelled',
+                             count=1)
+    self.checkLineProperties(data_line_list[2],
+                             translated_portal_type='',
+                             state='Draft',
+                             count=2)
+    self.checkLineProperties(data_line_list[3],
+                             translated_portal_type='All')
+    self.checkLineProperties(data_line_list[4],
+                             translated_portal_type='',
+                             state='Cancelled',
+                             count=1)
+    self.checkLineProperties(data_line_list[5],
+                             translated_portal_type='',
+                             state='Draft',
+                             count=2)
+
 
 def test_suite():
   suite = unittest.TestSuite()
