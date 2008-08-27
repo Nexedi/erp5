@@ -506,9 +506,9 @@ Alarm URL: %s
     of processes
     """
     portal_activities = getToolByName(self,'portal_activities')
-    active_process = portal_activities.newActiveProcess(**kw)
-    active_process.setStartDate(DateTime())
-    active_process.setCausalityValue(self)
+    active_process = portal_activities.newActiveProcess(start_date=DateTime(),
+                                                        causality_value=self,
+                                                        **kw)
     return active_process
 
   security.declareProtected(Permissions.View, 'setNextAlarmDate')
