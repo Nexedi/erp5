@@ -149,7 +149,7 @@ class IdTool(BaseTool):
     return self.dict_length_ids.items()
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLastGeneratedId')
+                            'getLastLengthGeneratedId')
   def getLastLengthGeneratedId(self,id_group=None,default=None):
     """
     Get the last length id generated
