@@ -76,16 +76,23 @@ class ObjectMessage:
         raise AttributeError, name
 
   def getObject(self):
-     """
-     Get the Object.
-     """
-     from Globals import get_request
-     request = get_request()['PARENTS']
-     if request is not None:
-       for item in request:
-         if item.meta_type == 'ERP5 Site':
-           return item.restrictedTraverse(self.object_relative_url)
+    """
+    Get the Object.
+    """
+    from Globals import get_request
+    request = get_request()['PARENTS']
+    if request is not None:
+      for item in request:
+        if item.meta_type == 'ERP5 Site':
+          return item.restrictedTraverse(self.object_relative_url)
 
-     return None
+    return None
+
+  def __repr__(self):
+    repr_str = '<%s object at 0x%x\n ' % (self.__class__.__name__, id(self))
+    repr_str += ' \n'.join([' %r: %r' % (k, v) \
+                           for k, v in self.__dict__.items()])
+    repr_str += '>'
+    return repr_str
 
 allow_class(ObjectMessage)
