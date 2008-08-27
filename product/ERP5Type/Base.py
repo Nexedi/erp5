@@ -2568,15 +2568,6 @@ class Base( CopyContainer,
     localizer = getToolByName(self, 'Localizer')
     return localizer.erp5_ui.gettext(portal_type).encode('utf8')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setPortalType')
-  def setPortalType(self, portal_type = None):
-    """
-    This allows to set the portal_type
-    """
-    if portal_type is not None:
-      self.portal_type = portal_type
-
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaType')
   def getMetaType(self):
     """
