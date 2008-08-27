@@ -151,7 +151,7 @@ for i in listbox_list:\n
 #\n
 Base_findStaticTranslationText = context.Base_findStaticTranslationText\n
 for i in page_template_list:\n
-  for m in Base_findStaticTranslationText(i):\n
+  for m in Base_findStaticTranslationText(i, FUNC_NAME_LIST):\n
     add_message(m, portal_url.getRelativeContentURL(i))\n
 \n
 #\n

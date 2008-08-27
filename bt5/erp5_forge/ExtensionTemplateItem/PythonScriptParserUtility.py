@@ -11,8 +11,12 @@ class Visitor(compiler.visitor.ASTVisitor):
     self.result = []
 
   def visitCallFunc(self, node, *args):
-    if (isinstance(node.node, compiler.ast.Name) and
-        node.node.name==self.func_name):
+    if ((isinstance(node.node, compiler.ast.Name) and
+         node.node.name==self.func_name)
+        or
+        (isinstance(node.node, compiler.ast.Getattr) and
+         node.node.attrname==self.func_name)
+        ):
       arg = node.args[0]
       value = None
       if isinstance(arg, compiler.ast.Const):

@@ -34,7 +34,8 @@ from StringIO import StringIO
 from TAL.HTMLTALParser import HTMLTALParser
 from TAL.TALParser import TALParser
 from TAL.TALGenerator import TALGenerator
-def findStaticTranslationText(page_template):
+from TAL.DummyEngine import name_match
+def findStaticTranslationText(page_template, func_name_list):
   def iterate(node, target_name, function):
     if type(node) is list:
       for i in node:
@@ -59,6 +60,23 @@ def findStaticTranslationText(page_template):
     if interpreter._i18n_message_id_dict is not None:
       text_dict.update(interpreter._i18n_message_id_dict)
 
+  def addTextFromPythonExpression(node):
+    tal_expression = node[1]
+    if isinstance(tal_expression, (tuple, list)):
+      tal_expression = tal_expression[0]
+    tal_expression = tal_expression[1:-1]
+    match = name_match(tal_expression)
+    if match:
+      type, expression = match.group(1, 2)
+      if type=='python':
+        # clean up expression
+        expression = expression.strip()
+        expression = expression.replace('\n', ' ')
+        Base_getFunctionFirstArgumentValue = page_template.Base_getFunctionFirstArgumentValue
+        for func_name in func_name_list:
+          for message in Base_getFunctionFirstArgumentValue(func_name, expression):
+            text_dict[message] = None
+
   if page_template.html():
     generator = TALGenerator(xml=0)
     parser = HTMLTALParser(generator)
@@ -67,6 +85,7 @@ def findStaticTranslationText(page_template):
     parser = TALParser(generator)
   parser.parseString(page_template._text)
   iterate(parser.gen.program, 'insertTranslation', addText)
+  iterate(parser.gen.program, 'insertText', addTextFromPythonExpression)
   return text_dict.keys()
 
 #
@@ -74,11 +93,11 @@ def findStaticTranslationText(page_template):
 #
 from TAL.TALInterpreter import TALInterpreter
 from TAL.DummyEngine import DummyEngine
-
 class MyDummyEngine(DummyEngine):
-  
+
   def evaluate(self, expression):
     return None
+
 
 class MyDummyTALInterpreter(TALInterpreter):
 
