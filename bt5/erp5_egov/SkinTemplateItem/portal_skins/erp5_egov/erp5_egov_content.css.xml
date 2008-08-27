@@ -279,7 +279,6 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {\n
 \n
 div#main_content fieldset {\n
   margin: 1em 0;\n
-  padding: .5em;\n
   background: transparent;\n
   border-color: #ccc;\n
   border-width: 1px 0 0;\n
