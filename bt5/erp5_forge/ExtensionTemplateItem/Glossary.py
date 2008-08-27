@@ -11,7 +11,7 @@ def getPropertySheetAttributeList(name):
 
 
 def getActionTitleListFromAllActionProvider(portal):
-  result = {}
+  result = []
   provider_list = []
   for provider_id in portal.portal_actions.listActionProviders():
     if provider_id in ('portal_types', 'portal_workflow'):
@@ -24,13 +24,16 @@ def getActionTitleListFromAllActionProvider(portal):
   for typeinfo in portal.portal_types.objectValues():
     provider_list.append(typeinfo)
 
-  for action in provider.listActions():
-      result[action.title] = None
-  return result.keys()
+  for provider in provider_list:
+    for action in provider.listActions():
+        result.append((action.title, provider.getId()))
+  return result
 
 
 from StringIO import StringIO
 from TAL.HTMLTALParser import HTMLTALParser
+from TAL.TALParser import TALParser
+from TAL.TALGenerator import TALGenerator
 def findStaticTranslationText(page_template):
   def iterate(node, target_name, function):
     if type(node) is list:
@@ -56,7 +59,12 @@ def findStaticTranslationText(page_template):
     if interpreter._i18n_message_id_dict is not None:
       text_dict.update(interpreter._i18n_message_id_dict)
 
-  parser = HTMLTALParser()
+  if page_template.html():
+    generator = TALGenerator(xml=0)
+    parser = HTMLTALParser(generator)
+  else:
+    generator = TALGenerator(xml=1)
+    parser = TALParser(generator)
   parser.parseString(page_template._text)
   iterate(parser.gen.program, 'insertTranslation', addText)
   return text_dict.keys()
@@ -92,4 +100,3 @@ def setGuard(self, guard):
     self.guard = guard
   else:
     raise ValueError, "not a TransitionDefinition"
-
