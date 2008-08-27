@@ -72,7 +72,6 @@
 \n
 ========================================================================================*/\n
 \n
-<tal:block tal:replace="structure python:here.getPortalObject()[\'erp5_web_editable_content.css\']()"/>\n
 div.bottom_actions {\n
   display: none;\n
 }\n
@@ -89,6 +88,420 @@ div#main_content fieldset div.input {\n
 \n
 div#main_content fieldset{\n
   padding: 0;\n
+}\n
+\n
+\n
+div#main_content input, textarea, select {\n
+  border: 1px solid #999;\n
+}\n
+\n
+div#main_content input, textarea {\n
+  padding: 1px;\n
+}\n
+\n
+div#main_content input.button, input[type="submit"] {\n
+  /* XXX Is this case happend in current web implementation ? */\n
+  background: #fff url(erp5-website-button.png) bottom repeat-x;\n
+}\n
+\n
+div#main_content input[type="image"] {\n
+  border: 0;\n
+  vertical-align: bottom;\n
+  background-color: transparent;\n
+}\n
+\n
+div#main_content button {\n
+  margin: .8em .5em;\n
+  padding: .3em;\n
+}\n
+\n
+\n
+/* Default Listbox styling\n
+** TODO: change colors to have better integration in default erp5 web theme.\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content .ListSummary table {\n
+  width: 100%;\n
+  background-color: white;\n
+  padding: .1em;\n
+  margin-top: 1em;\n
+  background: #fff url(erp5-website-field.png) top repeat-x;\n
+  border: 1pt solid #ccc;\n
+  color: #666;\n
+  padding: 2px;\n
+}\n
+\n
+div#main_content .ListContent table {\n
+  margin-bottom: 2em;\n
+  width: 100%;\n
+}\n
+\n
+div#main_content .ListContent td {\n
+  padding: .1em;\n
+  border: 1pt solid #adb9cc;\n
+  vertical-align: top;\n
+}\n
+\n
+div#main_content .ListContent td.Data  {\n
+  background: #adb9cc\n
+}\n
+\n
+div#main_content .ListContent tr.DataA {\n
+  background: #fff\n
+}\n
+\n
+div#main_content .ListContent tr.DataB {\n
+  background: #eee\n
+}\n
+\n
+div#main_content .ListContent table tr:hover {background: #ccc}\n
+\n
+/* Custom web Listbox styling.\n
+** TODO: change colors to have better integration in default erp5 web theme.\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content table.listbox,\n
+div#main_content table.listbox tr,\n
+div#main_content table.listbox td,\n
+div#main_content table.listbox th {\n
+  border: 0;\n
+  color: #000;\n
+  line-height: 1.5em;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div#main_content table.listbox {\n
+  margin-bottom: 3em;\n
+  width: 100%;\n
+}\n
+\n
+div#main_content table.listbox .right {float: right}\n
+div#main_content table.listbox .left  {float: left}\n
+\n
+div#main_content table.listbox caption,\n
+div#main_content div.searchResultHeader {\n
+  border-top: 1px #3366CC solid;\n
+  background-color: #c3e3df;\n
+  padding: .2em;\n
+  color: #000;\n
+}\n
+\n
+div#main_content table.listbox caption em,\n
+div#main_content div.searchResultHeader em {\n
+  font-weight: bold;\n
+  font-style: normal;\n
+}\n
+\n
+div#main_content table.listbox thead th,\n
+div#main_content table.listbox thead td {\n
+  border-right: 1px #ccc solid;\n
+  text-align: center;\n
+  color: #666;\n
+  background: #ddd;\n
+}\n
+\n
+div#main_content table.listbox thead th:last-child,\n
+div#main_content table.listbox thead td:last-child {\n
+  border-right: none;\n
+}\n
+\n
+div#main_content table.listbox thead th {\n
+  text-transform: capitalize;\n
+  font-variant: small-caps;\n
+}\n
+\n
+div#main_content table.listbox tbody td.externalLink a,\n
+div#main_content table.listbox tbody th.externalLink a {\n
+  text-decoration: none;\n
+  background: transparent url(erp5-website-external-link.png) center right no-repeat;\n
+  padding-right: 15px;\n
+  color: #637dc1;\n
+}\n
+\n
+div#main_content table.listbox tbody td.externalLink a:hover,\n
+div#main_content table.listbox tbody th.externalLink a:hover {\n
+  text-decoration: underline;\n
+  color: #637dc1;\n
+}\n
+\n
+div#main_content table.listbox tbody td, table.listbox tbody th {border-top: 1px solid #ddd}\n
+\n
+div#main_content table.listbox td, table.listbox th {\n
+  text-align: left;\n
+  padding: .2em .5em;\n
+}\n
+\n
+div#main_content table.listbox tbody td a,\n
+div#main_content table.listbox tbody td a:hover,\n
+div#main_content table.listbox tbody td a:visited {color: #4343D9}\n
+\n
+div#main_content table.listbox tbody tr {\n
+  background: #fff;\n
+}\n
+\n
+div#main_content table.listbox tbody tr:hover {background: #ccc}\n
+\n
+div#main_content table.listbox tbody span.number, tbody span.date {float: right}\n
+\n
+div#main_content table.listbox tbody .mainLink {\n
+  font-weight: bold;\n
+  display: block;\n
+}\n
+\n
+div#main_content table.listbox tfoot th, table.listbox tfoot td {border-top: 1px solid #999}\n
+\n
+div#main_content table.listbox tfoot td {text-align: right}\n
+\n
+div#main_content table.listbox tfoot .pageNavigation button {\n
+  border: 1px #eee solid;\n
+  background: #fff;\n
+  padding: .2em .4em;\n
+  margin: 0 .1em;\n
+}\n
+\n
+div#main_content table.listbox tfoot .pageNavigation button:hover {\n
+  border: 1px #999 solid;\n
+  text-decoration: none;\n
+  background: #eee;\n
+}\n
+\n
+/*========================================================================================\n
+**  PAGE LAYOUT\n
+**========================================================================================*/\n
+\n
+/* Content zone form styling (apply for editable mode and read\n
+   only mode within the content zone).\n
+   TODO: Change form rendering to let the field go below the label\n
+         if there is not enought width to display them inline.\n
+   TODO: Use dtml variables to define dynamiccaly label width.\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
+  background: transparent;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+div#main_content fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+div#main_content fieldset div.input {\n
+  margin-left: 11.5em;  /* = div#main_content label width + 0.5 of margin */\n
+}\n
+\n
+div#main_content fieldset legend {\n
+  padding: .2em .5em;\n
+  font-weight: bold;\n
+  color: #666;\n
+  text-transform: capitalize;\n
+}\n
+\n
+div#main_content fieldset label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 11em;\n
+  text-align: right;\n
+  float: left;\n
+  text-transform: capitalize;\n
+}\n
+\n
+div#main_content fieldset div.field label:after {content: ":"}\n
+\n
+/* Edit tabs styling.\n
+** Edit tabs are another part of admin stuffs and\n
+** should respect other admin design convention\n
+** (colors, etc...) to keep the UI consistent.\n
+------------------------------------------------------------------ */\n
+\n
+div.document div.actions {\n
+  position: relative;\n
+  width: 100%;\n
+  height: 3em;\n
+}\n
+\n
+div.document div.actions ul {\n
+  position: absolute;\n
+  bottom: -1px;\n
+  list-style: none;\n
+  margin: 0;\n
+}\n
+\n
+div.document div.actions ul li  {\n
+  display: inline;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div.document div.actions ul a,\n
+div.document div.actions ul li.selected a {\n
+  display: block;\n
+  float: left;\n
+  padding: 4px 1em;\n
+  margin: 1px 2px 0 0;\n
+  text-align: center;\n
+  text-decoration: none;\n
+}\n
+\n
+div.document div.actions ul a {\n
+  background: #fffae1;\n
+  border: 1px solid #999;\n
+}\n
+\n
+div.document div.actions ul li.selected a,\n
+div.document div.actions ul li.selected a:hover {\n
+  border-bottom: none;\n
+  padding-bottom: 6px;\n
+  margin-top: 0;\n
+  background: #fff;\n
+}\n
+\n
+div.document div.actions ul a:hover {\n
+  margin-top: 0;\n
+  border-color: #000;\n
+  border-bottom: none;\n
+  padding-bottom: 5px;\n
+}\n
+\n
+\n
+\n
+/* Editable mode forms styling\n
+------------------------------------------------------------------ */\n
+\n
+div.document > div.editable {border: 1px solid #999}\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+/*  position: absolute; */\n
+  float: right;\n
+  z-index: 300;\n
+  top: -.5em;\n
+  right: 0;\n
+}\n
+\n
+/* Bottom Save buttons styling - XXX NOT YET CENTERED */\n
+\n
+div.bottom_actions {\n
+  position: relative;\n
+  width: 100%;\n
+  height: 3em;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
+\n
+\n
+div.bottom_actions button {\n
+  position: absolute;\n
+  z-index: 300;\n
+}\n
+\n
+div.bottom_actions button.saveEdit {\n
+  right:10em;\n
+}\n
+\n
+div.bottom_actions button.saveView {\n
+  right:0em;\n
+}\n
+\n
+div.bottom_actions button.saveEdit .description {\n
+ position: relative;\n
+ top: 3px;\n
+ left: 2px;\n
+}\n
+\n
+div.bottom_actions button.saveView .description {\n
+ position: relative;\n
+ top: 3px;\n
+ left: 3px;\n
+}\n
+\n
+div.bottom_actions button.saveView .image,\n
+div.bottom_actions button.saveEdit .image {\n
+  float: left;\n
+  display: block;\n
+  width: 22px;\n
+  height: 22px;\n
+}\n
+\n
+div.bottom_actions button.saveEdit span.image {\n
+  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save.png\');\n
+}\n
+\n
+div.bottom_actions button.saveView span.image {\n
+  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save-preview.png\');\n
+}\n
+\n
+/* Reset common fieldset styling for bottom group in editable mode:\n
+     - no need to let some free space in the left side\n
+     - no need to display label\n
+     - no need to display fieldset legend\n
+   TODO: Because thoses properties are used for generic ".bottom" fieldset\n
+         and webcontent custom forms, we can add a new CSS class with a better\n
+         name to enhance semantics.\n
+*/\n
+div#main_content fieldset.bottom legend,\n
+div#main_content fieldset.bottom label {\n
+  display: none;\n
+}\n
+\n
+div#main_content fieldset.bottom div.input {margin-left: inherit}\n
+\n
+\n
+\n
+/* Special rendering for read-only webcontent\n
+     (used in WebPage_viewAsWeb and so on).\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content > fieldset.webcontent {\n
+  margin: 0;\n
+  border: 0;\n
+}\n
+\n
+/* TODO: redo webcontent header spacing policy because lack of consistency\n
+         (not tested with huge titles) */\n
+\n
+div#main_content > fieldset#fieldset_webcontent {padding: 2em}\n
+\n
+div#main_content > fieldset.header {\n
+  padding-bottom: 1em;\n
+  border-bottom: .3em solid #999;\n
+}\n
+\n
+/* TODO: span.headline should be a h1, h2, h-something tag to improve SEO */\n
+div#main_content > fieldset.webcontent span.headline {\n
+  display: block;\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 200%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+}\n
+\n
+div#main_content > fieldset.webcontent span.summary {\n
+  display: block;\n
+  font-size: 120%;\n
+  padding: 0 2em;\n
+  font-style: italic;\n
+}\n
+\n
+\n
+div#main_content fieldset.webcontent span.headline {\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 250%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+  text-align: left;\n
 }\n
 
 
