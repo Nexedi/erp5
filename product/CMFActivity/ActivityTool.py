@@ -1213,10 +1213,7 @@ class ActivityTool (Folder, UniqueObject):
     def newActiveProcess(self, **kw):
       from ActiveProcess import addActiveProcess
       new_id = str(self.generateNewId())
-      addActiveProcess(self, new_id)
-      active_process = self._getOb(new_id)
-      active_process.edit(**kw)
-      return active_process
+      return addActiveProcess(self, new_id, **kw)
 
     def reindexObject(self):
       self.immediateReindexObject()

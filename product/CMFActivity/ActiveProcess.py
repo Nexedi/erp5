@@ -53,6 +53,7 @@ def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
     if kw: o._edit(force_update=1, **kw)
     if REQUEST is not None:
         REQUEST['RESPONSE'].redirect( 'manage_main' )
+    return o
 
 class ActiveProcess(Base):
     """
