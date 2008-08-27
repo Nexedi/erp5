@@ -92,8 +92,7 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
                              gtitle  group/gtitle;\n
                              goid    group/goid;\n
                              field_list python: layout_form.get_fields_in_group(goid);">\n
-        <div tal:attributes="class python: gid;\n
-                                   id    python: \'fieldset_\' + gid.replace(\' \', \'_\');"\n
+        <div tal:attributes="class python: gid;"\n
              tal:condition="python:len(field_list)">\n
           <fieldset class="widget">\n
             <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title"/>\n

@@ -95,7 +95,7 @@
 \n
        We need to setup the actions variable from the request because\n
        this template is called from outside the main rendering process-->\n
-  <div name="adminSection" class="adminSection">\n
+  <div class="adminSection">\n
     <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
     <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
   </div>\n
