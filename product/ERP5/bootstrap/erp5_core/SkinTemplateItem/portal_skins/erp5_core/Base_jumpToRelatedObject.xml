@@ -127,7 +127,7 @@ else:\n
     if module_id is not None:\n
       if related:\n
         return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
-                 \'view\', keep_items={\'%s_uid\' % base_category: relation.getUid(),\n
+                 \'view\', keep_items={\'default_%s_uid\' % base_category: relation.getUid(),\n
                                      \'reset\': 1})\n
       get_uid_method = getattr(relation, \'get%sUidList\' % getter_base_name)\n
       return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
