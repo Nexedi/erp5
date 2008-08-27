@@ -746,8 +746,17 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check if edit method works.
     """
     object_instance = sequence.get('object_instance')
-    self.assertRaises(BadRequest,object_instance.setProperty, 'edit', 
+    # can't override a method:
+    self.assertRaises(BadRequest, object_instance.setProperty, 'edit',
                       "now this object is 'read only !!!'")
+    # can't change the portal type and other internal instance attributes
+    self.assertRaises(BadRequest, object_instance.setProperty,
+                      'portal_type', "Other")
+    self.assertRaises(BadRequest, object_instance.setProperty,
+                      'workflow_history', {})
+    self.assertRaises(BadRequest, object_instance.setProperty,
+                      '__dict__', {})
+
 
   def test_07_setEditProperty(self, quiet=quiet, run=run_all_test):
     """
@@ -755,7 +764,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test on temp tempAmount.
     sequence_string = '\
               CreateObject \
               CheckEditMethod \
