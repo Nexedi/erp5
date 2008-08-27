@@ -66,9 +66,11 @@
         <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" \n
           href="./home" i18n:translate="" i18n:domain="ui">Home</a>\n
       </tal:block>\n
+      <!--\n
       <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
         <a class="preferences" href="./preferences" i18n:translate="" i18n:domain="ui">Preferences</a>\n
       </tal:block>\n
+      -->\n
       <a class="help" href="./help" i18n:translate="" i18n:domain="ui">Help</a>\n
     </span>\n
     <hr/>\n
@@ -94,6 +96,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

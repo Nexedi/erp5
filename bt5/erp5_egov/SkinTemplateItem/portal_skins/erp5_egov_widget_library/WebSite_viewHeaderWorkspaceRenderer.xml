@@ -65,11 +65,12 @@
       </tal:block>\n
         <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" \n
           href="./home" i18n:translate="" i18n:domain="ui">Home</a>\n
+      <!--\n
       <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
         <a class="preferences" href="./preferences" i18n:translate="" i18n:domain="ui">Preferences</a>\n
       </tal:block>\n
-      <!--<a class="help" href="EGov_helpWithContext" tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" i18n:translate="" i18n:domain="ui">Help</a>-->\n
-      <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()"  onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
+      -->\n
+      <a class="help" href="EGov_helpWithContext" tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()"  onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
 \n
     </span>\n
     <hr/>\n
@@ -95,6 +96,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

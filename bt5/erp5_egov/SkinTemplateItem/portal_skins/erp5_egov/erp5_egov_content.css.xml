@@ -292,10 +292,6 @@ div#main_content fieldset > div {\n
   position: relative;\n
 }\n
 \n
-div#main_content fieldset div.input {\n
-  margin-left: 11.5em;  /* = div#main_content label width + 0.5 of margin */\n
-}\n
-\n
 div#main_content fieldset legend {\n
   padding: .2em .5em;\n
   font-weight: bold;\n
@@ -522,6 +518,12 @@ div#main_content fieldset.webcontent span.headline {\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
