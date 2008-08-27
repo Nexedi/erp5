@@ -303,9 +303,11 @@ class Alarm(XMLObject, PeriodicityMixin):
     if method_id not in (None, ''):
       # A tag is provided as a parameter in order to be
       # able to notify the user after all processes are ended
+      # Tag is generated from portal_ids so that it can be retrieved
+      # later when creating an active process for example
       # We do some inspection to keep compatibility
       # (because fixit and tag were not set previously)
-      tag='Alarm_activeSense_%s_%s' % (self.getId(), DateTime())
+      tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
       kw = {}
       method = getattr(self, method_id)
       name_list = method.func_code.co_varnames
@@ -499,15 +501,19 @@ Alarm URL: %s
 
   security.declareProtected(Permissions.ModifyPortalContent, 
                             'newActiveProcess')
-  def newActiveProcess(self, **kw):
+  def newActiveProcess(self, activate_kw={}, **kw):
     """
     We will create a new active process in order to store
     new results, then this process will be added to the list
     of processes
     """
+    tag = self.portal_ids.getLastLengthGeneratedId(id_group=self.getId())
+    if tag is not None:
+      activate_kw.setdefault('tag', str(tag))
     portal_activities = getToolByName(self,'portal_activities')
     active_process = portal_activities.newActiveProcess(start_date=DateTime(),
                                                         causality_value=self,
+                                                        activate_kw=activate_kw,
                                                         **kw)
     return active_process
 
