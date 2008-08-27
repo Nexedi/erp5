@@ -149,6 +149,29 @@ class IdTool(BaseTool):
     return self.dict_length_ids.items()
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getLastGeneratedId')
+  def getLastLengthGeneratedId(self,id_group=None,default=None):
+    """
+    Get the last length id generated
+    """
+    # check in persistent mapping if exists
+    if getattr(self, 'dict_length_ids', None) is not None:
+      last_id = self.dict_length_ids.get(id_group)
+      if last_id is not None:
+        return last_id.value - 1
+    # otherwise check in mysql
+    portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
+    query = getattr(portal_catalog, 'z_portal_ids_get_last_id', None)
+    if query is None:
+      raise AttributeError, 'Error while getting last Id: ' \
+            'z_portal_ids_get_last_id could not ' \
+            'be found.'
+    result = query(id_group=id_group)
+    if len(result):
+      return result[0]['last_id'] - 1
+    return default
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewLengthIdList')
   def generateNewLengthIdList(self, id_group=None, id_count=1, default=None,
                               store=True):
@@ -162,7 +185,7 @@ class IdTool(BaseTool):
       "Length" is because the id is stored in a python object inspired by
       BTrees.Length. It doesn't have to be a length.
 
-      store : if we want do store the new id into the zodb, we want it
+      store : if we want to store the new id into the zodb, we want it
               by default
     """
     new_id = None
