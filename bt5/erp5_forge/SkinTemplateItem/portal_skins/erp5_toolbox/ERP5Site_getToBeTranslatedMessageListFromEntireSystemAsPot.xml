@@ -209,6 +209,7 @@ message_list = message_dict.keys()\n
 message_list.sort()\n
 for message in message_list:\n
   comment_list = message_dict[message]\n
+  comment_list = comment_list.sort()\n
   comment = \'\\n\'.join([(\'#: %s\' % i) for i in comment_list])\n
   print MESSAGE_TEMPLATE % (comment, format(message))\n
 \n
