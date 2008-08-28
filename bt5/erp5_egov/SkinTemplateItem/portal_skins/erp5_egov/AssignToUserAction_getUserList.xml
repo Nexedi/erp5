@@ -65,12 +65,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'This script return the list of all users assigned to this service\'\'\'\n
+            <value> <string>\'\'\'This script return the list of all users that is possible to assign the application\'\'\'\n
 \n
-#XXX Just for test\n
-#person_list = context.person_module.contentValues()\n
-#return [(\'\', \'\')] + [(i.getTitleOrId(), i.getRelativeUrl()) for i in person_list]\n
-return [(\'admin\',\'admin\'), (\'chef\',\'chef\'), (\'jp\',\'jp\'), (\'citoyen\',\'citoyen\'), (\'agent-test\',\'agent-test\'), (\'agentkaolak\',\'agentkaolak\')]\n
+# XXX for now, it returns every people who works in cge\n
+# in future, the site and function should be take into account\n
+\n
+cat = context.restrictedTraverse(\'portal_categories/group/dgid/di/cge\')\n
+cat_uid = cat.getUid()\n
+agent_list = context.portal_catalog(portal_type=\'Assignment\',\n
+                                    group_uid=cat_uid)\n
+\n
+return [(agent.getParentValue().getReference(), agent.getParentValue().getId()) for agent in agent_list if agent.getParentValue().getReference()]\n
 </string> </value>
         </item>
         <item>
@@ -96,6 +101,14 @@ return [(\'admin\',\'admin\'), (\'chef\',\'chef\'), (\'jp\',\'jp\'), (\'citoyen\
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
@@ -118,7 +131,17 @@ return [(\'admin\',\'admin\'), (\'chef\',\'chef\'), (\'jp\',\'jp\'), (\'citoyen\
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>cat</string>
+                            <string>cat_uid</string>
+                            <string>agent_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>agent</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -135,6 +158,12 @@ return [(\'admin\',\'admin\'), (\'chef\',\'chef\'), (\'jp\',\'jp\'), (\'citoyen\
         <item>
             <key> <string>id</string> </key>
             <value> <string>AssignToUserAction_getUserList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
