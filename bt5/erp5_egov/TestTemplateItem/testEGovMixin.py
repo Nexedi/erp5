@@ -89,7 +89,6 @@ class TestEGovMixin(SecurityTestCase):
                                                       message.method_id)
     self.createUsers()
     self.createOrganisations()
-    self.setUpEGovPas()
 
     # XXX quick hack not to have mysql database pre-fill.
     self.portal.__class__.DeclarationTVA_zGetSIGTASInformation \
@@ -190,48 +189,6 @@ class TestEGovMixin(SecurityTestCase):
       # make this available to catalog
       get_transaction().commit()
       self.tic()
-
-  def setUpEGovPas(self):
-    '''use safi PAS to be able to login organisation'''
-    from Products import ERP5Security
-    from Products import PluggableAuthService
-
-    portal = self.getPortalObject()
-    acl_users = self.getUserFolder()
-
-    # Add SAFIUserManager
-    ZopeTestCase.installProduct('SAFISecurity')
-    erp5security_dispatcher = acl_users.manage_addProduct['SAFISecurity']
-    # don't add it if it's already here
-    if {'meta_type': 'SAFI User Manager', 'id': 'safi_users'} not in \
-        erp5security_dispatcher._d._objects:
-      erp5security_dispatcher.addSAFIUserManager('safi_users')
-    if {'meta_type': 'SAFI Group Manager', 'id': 'safi_groups'} not in \
-        erp5security_dispatcher._d._objects :
-      erp5security_dispatcher.addSAFIGroupManager('safi_groups')
-    # Register ERP5UserManager Interface
-    acl_users.safi_users.manage_activateInterfaces(('IAuthenticationPlugin',
-                                                    'IUserEnumerationPlugin',))
-    acl_users.safi_groups.manage_activateInterfaces(('IGroupsPlugin',))
-
-    # desactivate the erp5 plugin
-    plugins = acl_users.safi_groups.plugins
-    interface = plugins._getInterfaceFromName('IGroupsPlugin')
-    if 'erp5_groups' in list(plugins._getPlugins(interface)):
-      plugins.deactivatePlugin( interface, 'erp5_groups')
-    plugins = acl_users.safi_users.plugins
-    interface = plugins._getInterfaceFromName('IAuthenticationPlugin')
-    if 'erp5_users' in list(plugins._getPlugins(interface)):
-      plugins.deactivatePlugin( interface, 'erp5_users')
-    interface = plugins._getInterfaceFromName('IUserEnumerationPlugin')
-    if 'erp5_users' in list(plugins._getPlugins(interface)):
-      plugins.deactivatePlugin( interface, 'erp5_users')
-
-    # set properties to enable the login on Person and Organisation
-    acl_users.safi_users.manage_changeProperties(portal_type_list=['Person',
-                                                 'Organisation'],)
-    acl_users.safi_groups.manage_changeProperties(portal_type_list=['Person', 
-                                                 'Organisation'],)
 
   def checkRights(self, object_list, security_mapping, username):
     self.loginAsUser(username)
