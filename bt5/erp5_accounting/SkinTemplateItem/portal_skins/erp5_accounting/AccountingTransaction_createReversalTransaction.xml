@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>""" Create a reversal transaction from current tansaction. """\n
 \n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 accounting_module = context.getPortalObject().accounting_module\n
 is_source = context.AccountingTransaction_isSourceView()\n
 \n
@@ -85,12 +85,12 @@ reversal = accounting_module.newContent (\n
     destination_section=context.getDestinationSection(),\n
     source_payment=context.getSourcePayment(),\n
     destination_payment=context.getDestinationPayment(),\n
-    title = N_("Reversal Transaction for ${title}",\n
-              mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\')}),\n
-    description = N_(\n
-      "Reversal Transaction for ${title} (${specific_reference})",\n
-      mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\'),\n
-               \'specific_reference\': specific_reference}),\n
+    title = Base_translateString("Reversal Transaction for ${title}",\n
+                                 mapping={\'title\':unicode(context.getTitleOrId(), \'utf8\')}),\n
+    description = Base_translateString(\n
+  "Reversal Transaction for ${title} (${specific_reference})",\n
+  mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\'),\n
+           \'specific_reference\': specific_reference}),\n
     resource=context.getResource(),\n
     reference=context.getReference(),\n
     causality_value_list=causality_value_list,\n
@@ -139,8 +139,8 @@ for line in line_list:\n
 \n
 return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
               (reversal.absolute_url(),\n
-               N_("Reversal Transaction for ${specific_reference} created.",\n
-             mapping={\'specific_reference\': specific_reference})))\n
+               Base_translateString("Reversal Transaction for ${specific_reference} created.",\n
+                                    mapping={\'specific_reference\': specific_reference})))\n
 </string> </value>
         </item>
         <item>
@@ -185,7 +185,7 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>accounting_module</string>
                             <string>is_source</string>
                             <string>specific_reference</string>

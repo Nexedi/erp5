@@ -67,11 +67,10 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Log import log\n
 portal = context.getPortalObject()\n
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
-N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
 if params.get(\'precision\', None) is not None:\n
   # listbox editable float fields uses request/precision to format the value.\n
@@ -174,8 +173,8 @@ if from_date or node_account_type in (\'expense\', \'income\'):\n
         total_price=net_balance,\n
         running_total_price=net_balance,\n
         is_previous_balance=True,\n
-        Movement_getSpecificReference=u\'%s\' % N_(\'Previous Balance\'),\n
-        Movement_getExplanationTitle=u\'%s\' % N_(\'Previous Balance\'),\n
+        Movement_getSpecificReference=u\'%s\' % translateString(\'Previous Balance\'),\n
+        Movement_getExplanationTitle=u\'%s\' % translateString(\'Previous Balance\'),\n
         Movement_getExplanationTranslatedPortalType=\'\',\n
         Movement_getExplanationReference=\'\',\n
         Movement_getMirrorSectionTitle=\'\',\n
@@ -271,14 +270,13 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>selection_name</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>Products.ERP5Type.Log</string>
                             <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>params</string>
-                            <string>N_</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>_write_</string>

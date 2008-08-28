@@ -73,10 +73,9 @@ Account is the combination of :\n
 """\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 request = context.REQUEST\n
 traverse = context.getPortalObject().restrictedTraverse\n
-N_ = lambda msg: Message(\'ui\', msg)\n
 \n
 # for preference info fields on Account_viewAccountingTransactionList\n
 request.set(\'is_accounting_report\', True)\n
@@ -136,7 +135,7 @@ report_section_list = []\n
 if from_date and detailed_from_date_summary:\n
   report_section_list.append(\n
     ReportSection(form_id=\'\', level=4,\n
-                  title=N_(\'Not Grouped Lines in Beginning Balance\')))\n
+                  title=translateString(\'Not Grouped Lines in Beginning Balance\')))\n
 \n
   report_section_list.append(\n
     ReportSection(\n
@@ -152,7 +151,7 @@ if from_date and detailed_from_date_summary:\n
 \n
   report_section_list.append(\n
     ReportSection(form_id=None, level=4,\n
-                  title=N_(\'Lines in the Period\')))\n
+                  title=translateString(\'Lines in the Period\')))\n
 \n
 report_section_list.append(\n
     ReportSection(\n
@@ -212,12 +211,11 @@ return report_section_list\n
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>traverse</string>
-                            <string>N_</string>
                             <string>True</string>
                             <string>_getitem_</string>
                             <string>at_date</string>

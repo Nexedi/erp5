@@ -71,7 +71,7 @@
 \n
 """\n
 portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 precision_cache = dict()\n
 def roundCurrency(value, resource_relative_url):\n
@@ -96,7 +96,7 @@ balance_transaction = portal.accounting_module.newContent(\n
                         activate_kw=dict(tag=activity_tag),\n
                         portal_type=\'Balance Transaction\',\n
                         start_date=(at_date + 1).earliestTime(),\n
-                        title=context.getTitle() or N_(\'Balance Transaction\'),\n
+                        title=context.getTitle() or Base_translateString(\'Balance Transaction\'),\n
                         destination_section_value=section,\n
                         resource=section_currency,\n
                         causality_value=context)\n
@@ -319,7 +319,7 @@ context.activate(after_tag=activity_tag).getTitle()\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>dict</string>
                             <string>precision_cache</string>
                             <string>roundCurrency</string>

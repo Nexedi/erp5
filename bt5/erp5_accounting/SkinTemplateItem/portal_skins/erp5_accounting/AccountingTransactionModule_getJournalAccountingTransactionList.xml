@@ -85,7 +85,7 @@
 \n
 request = context.REQUEST\n
 selection_name = "accounting_selection"\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 result = []\n
 journal_total_debit  = 0\n
 journal_total_credit = 0\n
@@ -146,18 +146,18 @@ for transaction in transaction_list:\n
     date = transaction.getStopDate()\n
 \n
   lines = []\n
-  transaction_dict = { \\\n
-      \'date\'       : context.Base_FormatDate( date ),\n
-      \'lines\'      : lines,\n
-      \'description\': N_( "${transaction_title} (Transaction Reference "   +\n
-                         "= ${transaction_reference},\\n Creation Date = " +\n
-                         "${creation_date} \\n Currency = ${currency_title})"\n
-                       , mapping = {\n
-          "transaction_title": unicode(transaction.getTitle() or \'\', \'utf8\'),\n
-          "transaction_reference": unicode(specific_reference or \'\', \'utf8\'),\n
-          "creation_date": context.Base_FormatDate(\n
-                                        transaction.getCreationDate()),\n
-          "currency_title": transaction.getResourceTitle() or \'\' })}\n
+  transaction_dict = {\n
+    \'date\'       : context.Base_FormatDate( date ),\n
+    \'lines\'      : lines,\n
+    \'description\': Base_translateString(\n
+    "${transaction_title} (Transaction Reference "\n
+    "= ${transaction_reference},\\n Creation Date = "\n
+    "${creation_date} \\n Currency = ${currency_title})",\n
+    mapping = {\n
+    "transaction_title": unicode(transaction.getTitle() or \'\', \'utf8\'),\n
+    "transaction_reference": unicode(specific_reference or \'\', \'utf8\'),\n
+    "creation_date": context.Base_FormatDate(transaction.getCreationDate()),\n
+    "currency_title": transaction.getResourceTitle() or \'\' })}\n
 \n
   result.append(transaction_dict)\n
   transaction_lines = transaction.contentValues(\n
@@ -281,7 +281,7 @@ return result + [{ "journal_total_debit" : journal_total_debit\n
                             <string>context</string>
                             <string>request</string>
                             <string>selection_name</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>result</string>
                             <string>journal_total_debit</string>
                             <string>journal_total_credit</string>

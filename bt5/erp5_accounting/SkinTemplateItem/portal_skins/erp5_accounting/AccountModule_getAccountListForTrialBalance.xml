@@ -74,7 +74,7 @@ request = container.REQUEST\n
 portal = context.getPortalObject()\n
 getInventoryList = portal.portal_simulation.getInventoryList\n
 getInventory = portal.portal_simulation.getInventoryAssetPrice\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 inventory_movement_type_list = portal.getPortalInventoryMovementTypeList()\n
 # Balance Movement Type list is all movements that are both inventory movement\n
@@ -589,13 +589,13 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   node_uid, node_title, node_id, string_index = getNodeTitleAndId(node_relative_url)\n
   if mirror_section_uid is not MARKER:\n
     if mirror_section_uid is None:\n
-      node_title = \'%s (%s)\' % ( node_title, N_(\'None\'))\n
+      node_title = \'%s (%s)\' % ( node_title, Base_translateString(\'None\'))\n
     else:\n
       third_party = getObject(mirror_section_uid)\n
       node_title = "%s (%s)" % ( node_title, third_party.getTitle() )\n
   elif payment_uid is not MARKER:\n
     if payment_uid is None:\n
-      node_title = \'%s (%s)\' % ( node_title, N_(\'None\'))\n
+      node_title = \'%s (%s)\' % ( node_title, Base_translateString(\'None\'))\n
     else:\n
       payment = getObject(payment_uid)\n
       node_title = "%s (%s)" % ( node_title, payment.getTitle() )\n
@@ -702,7 +702,7 @@ for account_class in account_class_list:\n
     add_line(account)\n
     \n
   # summary\n
-  add_line(Object(node_title=N_(\'Total for class ${account_class}\',\n
+  add_line(Object(node_title=Base_translateString(\'Total for class ${account_class}\',\n
                    mapping=dict(account_class=account_class or \'???\')),\n
           initial_debit_balance=round(initial_debit_balance, precision),\n
           debit=round(debit, precision),\n
@@ -789,7 +789,7 @@ return new_line_list\n
                             <string>portal</string>
                             <string>getInventoryList</string>
                             <string>getInventory</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>inventory_movement_type_list</string>
                             <string>append</string>
                             <string>$append0</string>

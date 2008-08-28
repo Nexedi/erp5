@@ -69,7 +69,7 @@
 
 from Products.ERP5Form.Report import ReportSection\n
 request = container.REQUEST\n
-N_ = container.Base_translateString\n
+Base_translateString = container.Base_translateString\n
 \n
 portal_type = request[\'portal_type\']\n
 simulation_state = request[\'simulation_state\']\n
@@ -109,7 +109,7 @@ else:\n
 \n
 return [ReportSection(\n
           path=context.getPhysicalPath(),\n
-          title=N_(\'Transactions\'),\n
+          title=Base_translateString(\'Transactions\'),\n
           selection_name=\'journal_selection\',\n
           form_id=\'AccountingTransactionModule_viewJournalSection\',\n
           selection_columns=selection_columns,\n
@@ -170,7 +170,7 @@ return [ReportSection(\n
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>_getitem_</string>
                             <string>portal_type</string>
                             <string>simulation_state</string>

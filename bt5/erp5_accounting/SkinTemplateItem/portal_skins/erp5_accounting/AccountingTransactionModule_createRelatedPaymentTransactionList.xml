@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 try:\n
   from zExceptions import Redirect\n
 except:\n
@@ -77,7 +77,6 @@ stool = portal.portal_selections\n
 getObject = portal.portal_catalog.getObject\n
 countMessage = portal.portal_activities.countMessage\n
 invoice_type_list = portal.getPortalInvoiceTypeList()\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
 selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(\n
@@ -97,7 +96,7 @@ stool.setSelectionParamsFor(\'accounting_create_related_payment_selection\',\n
 if len(object_list) >= 1000:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
-        context.absolute_url(), N_(\n
+        context.absolute_url(), translateString(\n
          \'Refusing to process more than 1000 objects, check your selection\')))\n
 \n
 tag = \'payment_creation_%s\' % random.randint(0, 1000)\n
@@ -108,8 +107,8 @@ for obj in object_list:\n
     if countMessage(path=obj.getPath(),\n
                     method_id=\'Invoice_createRelatedPaymentTransaction\'):\n
       raise Redirect, "%s/view?portal_status_message=%s" % (\n
-                context.absolute_url(), N_(\'Payment Creation already in\'\n
-                \' progress, abandon\'))\n
+                context.absolute_url(), translateString(\n
+        \'Payment Creation already in progress, abandon\'))\n
     obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(\n
                                                   node=node,\n
                                                   payment_mode=payment_mode,\n
@@ -120,14 +119,14 @@ for obj in object_list:\n
 if not activated:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
-        context.absolute_url(), N_(\'No Invoice in your selection\')))\n
+        context.absolute_url(), translateString(\'No Invoice in your selection\')))\n
 \n
 # activate something on the folder\n
 context.activate(after_tag=tag).getTitle()\n
 \n
 return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
-        context.absolute_url(), N_(\n
+        context.absolute_url(), translateString(\n
           \'Payments Creation for ${activated_invoice_count} on\'\n
           \' ${total_selection_count} Invoices in Progress\',\n
           mapping=dict(activated_invoice_count=activated,\n
@@ -184,7 +183,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>listbox_uid</string>
                             <string>selection_name</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>zExceptions</string>
                             <string>Redirect</string>
                             <string>_getattr_</string>
@@ -194,7 +193,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>getObject</string>
                             <string>countMessage</string>
                             <string>invoice_type_list</string>
-                            <string>N_</string>
                             <string>selection_uid_list</string>
                             <string>append</string>
                             <string>$append0</string>

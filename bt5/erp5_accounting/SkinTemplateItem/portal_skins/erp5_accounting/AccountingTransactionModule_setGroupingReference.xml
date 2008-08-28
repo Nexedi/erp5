@@ -73,8 +73,8 @@ from ZODB.POSException import ConflictError\n
 portal = context.getPortalObject()\n
 getobject = portal.portal_catalog.getobject\n
 stool = portal.portal_selections\n
-N_ = portal.Base_translateString\n
-psm = N_(\'Nothing matches\')\n
+Base_translateString = portal.Base_translateString\n
+psm = Base_translateString(\'Nothing matches\')\n
 request = container.REQUEST\n
 precision = request.get(\'precision\', 2)\n
 \n
@@ -113,7 +113,7 @@ if uids:\n
 request.set(\'total_selected_amount\', total_selected_amount)\n
 \n
 if update:\n
-  request.set(\'portal_status_message\', N_(\'Updated\'))\n
+  request.set(\'portal_status_message\', Base_translateString(\'Updated\'))\n
   return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\n
   \n
 \n
@@ -122,8 +122,8 @@ if grouping == \'grouping\':\n
   grouped_line_list = context.AccountingTransaction_guessGroupedLines(\n
                         accounting_transaction_line_uid_list=uids)\n
   if grouped_line_list:\n
-    psm = N_(\'${grouped_line_count} Lines Grouped\',\n
-          mapping=dict(grouped_line_count=len(grouped_line_list)))\n
+    psm = Base_translateString(\'${grouped_line_count} Lines Grouped\',\n
+                               mapping=dict(grouped_line_count=len(grouped_line_list)))\n
 \n
     # make sure nothing will be checked next time\n
     stool.setSelectionCheckedUidsFor(list_selection_name, [])\n
@@ -176,8 +176,8 @@ else:\n
     if line.getGroupingReference():\n
       ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference())\n
   \n
-  psm = N_(\'${ungrouped_line_count} Lines Ungrouped\',\n
-            mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))\n
+  psm = Base_translateString(\'${ungrouped_line_count} Lines Ungrouped\',\n
+                             mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))\n
 \n
   # make sure nothing will be checked next time\n
   stool.setSelectionCheckedUidsFor(list_selection_name, [])\n
@@ -250,7 +250,7 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
                             <string>portal</string>
                             <string>getobject</string>
                             <string>stool</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>psm</string>
                             <string>container</string>
                             <string>request</string>

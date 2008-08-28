@@ -66,11 +66,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_type_list = context.getPortalAccountingTransactionTypeList()\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 item_list = []\n
 for portal_type in portal_type_list : \n
-  item_list.append((N_(portal_type), portal_type))\n
+  item_list.append((Base_translateString(portal_type), portal_type))\n
 \n
 return item_list\n
 </string> </value>
@@ -118,7 +118,7 @@ return item_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_type_list</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
                             <string>portal_type</string>

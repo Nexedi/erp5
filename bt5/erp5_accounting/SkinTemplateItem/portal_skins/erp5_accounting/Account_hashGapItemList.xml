@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>N_ = context.Base_translateString\n
+            <value> <string>Base_translateString = context.Base_translateString\n
 split_depth = 2\n
 \n
 def getSubFieldDict():\n
@@ -86,7 +86,7 @@ def getSubFieldDict():\n
         # Create property dict (key are field parameters)\n
         sub_field_property_dict = default_sub_field_property_dict.copy()\n
         sub_field_property_dict[\'key\'] = item_key\n
-        sub_field_property_dict[\'title\'] = N_("GAP - ${gap_title}", mapping=dict(\n
+        sub_field_property_dict[\'title\'] = Base_translateString("GAP - ${gap_title}", mapping=dict(\n
                     gap_title=context.portal_categories.resolveCategory(\n
                           \'gap/%s\' % item_key).getTitle()))\n
         sub_field_property_dict[\'required\'] = 0\n
@@ -182,7 +182,7 @@ return sub_field_dict.values()\n
                             <string>is_right_display</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>split_depth</string>
                             <string>getSubFieldDict</string>
                             <string>sub_field_dict</string>

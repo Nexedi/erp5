@@ -74,7 +74,7 @@ request  = context.REQUEST\n
 portal   = context.portal_url.getPortalObject()\n
 cat_tool = portal.portal_categories\n
 sim_tool = portal.portal_simulation\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 at_date             = request[\'at_date\']\n
 section_category    = request[\'section_category\']\n
@@ -259,7 +259,7 @@ if gap:\n
   total_params[\'node_category\'] = \'gap/%s\' % gap\n
 result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
-              title=N_("Total"),\n
+              title=Base_translateString("Total"),\n
               form_id=\'AccountModule_viewGeneralLedgerSummary\',\n
               selection_name=\'accounting_report_selection\',\n
               selection_params=total_params))\n
@@ -317,7 +317,7 @@ return result\n
                             <string>portal</string>
                             <string>cat_tool</string>
                             <string>sim_tool</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
                             <string>section_category</string>

@@ -66,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Jump to a bank account of the current organisation\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 request=context.REQUEST\n
 portal = context.getPortalObject()\n
 organisation = portal.restrictedTraverse(\n
@@ -83,9 +83,7 @@ if organisation is not None :\n
     return context.Base_jumpToRelatedObjectList(\n
           uids=selection_uid_list, REQUEST=request)\n
 \n
-return context.Base_redirect(form_id,\n
-          keep_items=dict(portal_status_message=\n
-                             N_(\'No Bank Account For Current Organisation\')))\n
+return context.Base_redirect(form_id, keep_items=dict(portal_status_message=Base_translateString(\'No Bank Account For Current Organisation\')))\n
 </string> </value>
         </item>
         <item>
@@ -131,7 +129,7 @@ return context.Base_redirect(form_id,\n
                             <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>request</string>
                             <string>portal</string>
                             <string>organisation</string>

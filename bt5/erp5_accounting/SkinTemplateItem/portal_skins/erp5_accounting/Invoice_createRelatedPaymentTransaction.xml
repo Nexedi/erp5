@@ -72,7 +72,7 @@ be provided, but by default the transaction is created at the system date.\n
 from DateTime import DateTime\n
 # translate with Base_translateString which is a bit more robust during\n
 # activities, because it doesn\'t rely on REQUEST[\'PARENTS\']\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 date = DateTime()\n
 portal = context.getPortalObject()\n
@@ -98,12 +98,12 @@ if sum(total_payable_price_details.values()) == 0:\n
   if not batch_mode:\n
     return context.REQUEST.RESPONSE.redirect(\n
       "%s/view?portal_status_message=%s" % (\n
-        context.absolute_url(), N_(\'Nothing more to pay\')))\n
+      context.absolute_url(), Base_translateString(\'Nothing more to pay\')))\n
   return None\n
 \n
 related_payment = portal.accounting_module.newContent(\n
   portal_type="Payment Transaction",\n
-  title=str(N_("Payment of ${invoice_title}",\n
+  title=str(Base_translateString("Payment of ${invoice_title}",\n
           mapping=dict(invoice_title=unicode((context.getReference() or\n
                                               context.getTitle() or \'\'),\n
                                               \'utf8\', \'repr\')))),\n
@@ -158,7 +158,8 @@ else:\n
 if not batch_mode:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
-        related_payment.absolute_url(), N_(\'Related Payment Created\')))\n
+    related_payment.absolute_url(),\n
+    Base_translateString(\'Related Payment Created\')))\n
 else:\n
   return related_payment\n
 </string> </value>
@@ -217,7 +218,7 @@ else:\n
                             <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>portal</string>
                             <string>payment_dict</string>
                             <string>is_source</string>

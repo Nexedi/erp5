@@ -67,8 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Deletes all empty (ie. with balance == 0) lines in an accounting transaction\n
 """\n
-from Products.ERP5Type.Message import Message\n
-N_ = lambda msg: Message(\'erp5_ui\', msg)\n
+from Products.ERP5Type.Message import translateString\n
 lines_portal_type = context.getPortalAccountingMovementTypeList()\n
 transaction = context.getObject()\n
 transaction_lines = transaction.objectValues(portal_type=lines_portal_type)\n
@@ -92,7 +91,7 @@ if len(id_to_delete_list) != len(transaction_lines):\n
 \n
 if redirect:\n
   context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
-      transaction.absolute_url(), N_(\'Empty+Lines+Deleted.\')))\n
+    transaction.absolute_url(), translateString(\'Empty+Lines+Deleted.\')))\n
 </string> </value>
         </item>
         <item>
@@ -137,8 +136,7 @@ if redirect:\n
                           <tuple>
                             <string>redirect</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>lines_portal_type</string>
