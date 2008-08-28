@@ -93,11 +93,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: len([x for x in object.Baobab_getFunctionList([\'manager\']) if x in object.Baobab_getUserAssignedFunctionList()])>0
-
-]]></string> </value>
+            <value> <string>python: object.Baobab_matchUserFunction([\'counter\'])</string> </value>
         </item>
       </dictionary>
     </pickle>
