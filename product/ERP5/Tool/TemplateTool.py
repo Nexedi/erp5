@@ -51,10 +51,9 @@ try:
   from base64 import b64encode, b64decode
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO
 
-N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
 
 WIN = os.name == 'nt'
 
@@ -162,8 +161,8 @@ class TemplateTool (BaseTool):
       path = pathname2url(path)
       business_template.export(path=path, local=1)
       if REQUEST is not None:
-        psm = N_('Saved+in+${path}+.',
-                  mapping={'path': pathname2url(path)})
+        psm = translateString('Saved+in+${path}+.',
+                              mapping={'path':pathname2url(path)})
         ret_url = '%s/%s?portal_status_message=%s' % \
                   (business_template.absolute_url(),
                    REQUEST.get('form_id', 'view'), psm)
@@ -283,7 +282,7 @@ class TemplateTool (BaseTool):
             
       if REQUEST is not None:
         ret_url = bt.absolute_url() + '/view'
-        psm = N_("Business+Template+Downloaded+Successfully")
+        psm = translateString("Business+Template+Downloaded+Successfully")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s" 
                                     % (ret_url, psm))
     
@@ -398,7 +397,7 @@ class TemplateTool (BaseTool):
 
       if (import_file is None) or (len(import_file.read()) == 0):
         if REQUEST is not None:
-          psm = N_('No+file+or+an+empty+file+was+specified')
+          psm = translateString('No+file+or+an+empty+file+was+specified')
           REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (self.absolute_url(), psm))
           return
@@ -423,7 +422,7 @@ class TemplateTool (BaseTool):
       if (batch_mode == 0) and \
          (REQUEST is not None):
         ret_url = bt.absolute_url() + '/view'
-        psm = N_("Business+Templates+Imported+Successfully")
+        psm = translateString("Business+Templates+Imported+Successfully")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                   % (ret_url, psm))
       elif (batch_mode == 1):
@@ -542,7 +541,7 @@ class TemplateTool (BaseTool):
         
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('dialog_id', 'view')
-        psm = N_("Business+Templates+Updated+Successfully")
+        psm = translateString("Business+Templates+Updated+Successfully")
         REQUEST.RESPONSE.redirect("%s?cancel_url=%s&portal_status_message=%s&dialog_category=object_exchange&selection_name=business_template_selection"
                                   % (ret_url, REQUEST.form.get('cancel_url', ''), psm))
                 

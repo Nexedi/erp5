@@ -16,6 +16,7 @@ from DateTime import DateTime
 from ZTUtils import make_query
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG, PROBLEM
+from Products.ERP5Type.Message import translateString
 
 class InventoryBrain(ZSQLBrain):
   """
@@ -260,7 +261,6 @@ class InventoryListBrain(ZSQLBrain):
     # Returns an explanation of the movement
     o = self.getObject()
     if o is not None:
-      N_ = lambda msg, **kw: o.Localizer.translate('ui', msg, **kw)
       # Get the delivery/order
       if not getattr(o, 'isDelivery', 0):
         delivery = o.getExplanationValue()
@@ -275,16 +275,16 @@ class InventoryListBrain(ZSQLBrain):
         }
         causality = delivery.getCausalityValue()
         if causality is not None:
-          mapping['causality_portal_type'] = \
-                            causality.getTranslatedPortalType()
+          mapping['causality_portal_type'] = causality.getTranslatedPortalType()
           mapping['causality_title'] = causality.getTitleOrId()
-          return N_("${delivery_portal_type} ${delivery_title} "\
-                    "(${causality_portal_type} ${causality_title})",
-                    mapping = mapping )
+          return translateString(
+            "${delivery_portal_type} ${delivery_title} "
+            "(${causality_portal_type} ${causality_title})",
+            mapping=mapping)
         else :
-          return N_("${delivery_portal_type} ${delivery_title}",
-                    mapping = mapping )
-    return N_('Unknown')
+          return translateString("${delivery_portal_type} ${delivery_title}",
+                                 mapping=mapping)
+    return translateString('Unknown')
 
 class TrackingListBrain(InventoryListBrain):
   """

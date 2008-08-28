@@ -32,10 +32,8 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.Field import ZMIField
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Message import translateString
 
-def N_(message, **kw):
-  return Message('erp5_ui', message, **kw)
 
 class MatrixBoxWidget(Widget.Widget):
     """
@@ -322,7 +320,7 @@ class MatrixBoxWidget(Widget.Widget):
                             my_field.render(value=display_value,
                                             REQUEST=REQUEST,
                                             key=key),
-                            N_(field_errors[key].error_text))
+                            translateString(field_errors[key].error_text))
                       else:
                         cell_body += '<span class="input">%s</span>' %\
                                          my_field.render(

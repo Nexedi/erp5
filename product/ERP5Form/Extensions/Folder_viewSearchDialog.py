@@ -31,7 +31,7 @@ from Products.Formulator.TALESField import TALESMethod
 from Products.CMFCore.utils import _getViewFor
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ListBox import ListBoxListRenderer
 
@@ -44,7 +44,6 @@ def getSearchDialog(self, REQUEST=None):
   category_tool = getToolByName(portal, 'portal_categories')
   types_tool = getToolByName(portal, 'portal_types')
   workflow_tool = getToolByName(portal, 'portal_workflow')
-  N_ = lambda msg, **kw: str(Message('erp5_ui', msg, **kw))
   
   default_view = _getViewFor(self)
   listbox = default_view.listbox
@@ -101,13 +100,16 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(column_title), usage=N_('Usage'))),
-                                items=[(N_('Equals To'), ''),
-                                       (N_('Greater Than'), 'min'),
-                                       (N_('Lower Than'),'max'),
-                                       (N_('Not Greater Then'), 'ngt'),
-                                       (N_('Not Lower Than'), 'nlt'),
-                                       ]),
+    field._surcharged_edit(dict(
+      title=translateString('${key} ${usage}',
+                            mapping=dict(key=translateString(column_title),
+                                         usage=translateString('Usage'))),
+      items=[(translateString('Equals To'), ''),
+             (translateString('Greater Than'), 'min'),
+             (translateString('Lower Than'),'max'),
+             (translateString('Not Greater Then'), 'ngt'),
+             (translateString('Not Lower Than'), 'nlt'),
+             ]),
                                 
                            ['title', 'items'])
     field._surcharged_tales(
@@ -136,12 +138,12 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(column_title), usage=N_('Usage'))),
-                                items=[(N_('Equals To'), ''),
-                                       (N_('Greater Than'), 'min'),
-                                       (N_('Lower Than'),'max'),
-                                       (N_('Not Greater Then'), 'ngt'),
-                                       (N_('Not Lower Than'), 'nlt'),
+    field._surcharged_edit(dict(title=translateString('${key} ${usage}', mapping=dict(key=translateString(column_title), usage=translateString('Usage'))),
+                                items=[(translateString('Equals To'), ''),
+                                       (translateString('Greater Than'), 'min'),
+                                       (translateString('Lower Than'),'max'),
+                                       (translateString('Not Greater Then'), 'ngt'),
+                                       (translateString('Not Lower Than'), 'nlt'),
                                        ]),
                                 
                            ['title', 'items'])
@@ -184,13 +186,13 @@ def getSearchDialog(self, REQUEST=None):
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
-    field._surcharged_edit(dict(title=N_('${key} ${usage}', mapping=dict(key=N_(column_title), usage=N_('Search Key'))),
+    field._surcharged_edit(dict(title=translateString('${key} ${usage}', mapping=dict(key=translateString(column_title), usage=translateString('Search Key'))),
                                 description='',
-                                items=[(N_('Default (${search_key})',
+                                items=[(translateString('Default (${search_key})',
                                             mapping=dict(search_key=
-                                               N_(default_search_key))), ''),
-                                       (N_('ExactMatch'), 'ExactMatch' ),
-                                       (N_('Keyword'), 'Keyword'),
+                                               translateString(default_search_key))), ''),
+                                       (translateString('ExactMatch'), 'ExactMatch' ),
+                                       (translateString('Keyword'), 'Keyword'),
                                        ]),
                                 
                            ['title', 'items'])
@@ -286,11 +288,11 @@ def getSearchDialog(self, REQUEST=None):
       field.manage_edit_xmlrpc(dict(
           form_id='Base_viewDialogFieldLibrary',
           field_id='your_category_list'))
-      items = [('', '')] + sorted([(N_(x.title), x.id) for x
+      items = [('', '')] + sorted([(translateString(x.title), x.id) for x
                          in workflow.states.objectValues()],
                          lambda a, b: cmp(a[0], b[0]))
       field._surcharged_edit(
-              dict(title=N_(workflow.title),
+              dict(title=translateString(workflow.title),
                    items=items,
                    size=len(items)),
               ['title', 'items', 'size'])
@@ -311,8 +313,8 @@ def getSearchDialog(self, REQUEST=None):
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category_list'))
     field._surcharged_edit(
-            dict(title=N_('Type'),
-                 items=[(N_(x), x) for x in allowed_content_types]),
+            dict(title=translateString('Type'),
+                 items=[(translateString(x), x) for x in allowed_content_types]),
             
             ['title', 'items'])
     field._surcharged_tales(

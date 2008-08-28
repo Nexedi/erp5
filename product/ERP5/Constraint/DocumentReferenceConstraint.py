@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Constraint import Constraint
-N_ = lambda msg, **kw: msg # just to extract messages
+translateString = lambda msg, **kw: msg # just to extract messages
 _MARKER = []
 
 
@@ -45,12 +45,12 @@ class DocumentReferenceConstraint(Constraint):
                        'message_another_document_exists',
                        'message_multiple_documents_exists' ]
   
-  message_property_not_defined = N_(
+  message_property_not_defined = translateString(
       'Property ${property_id} was not defined')
-  message_another_document_exists = N_(
+  message_another_document_exists = translateString(
       'Another document ${document_reference} - '
       '${document_language} - ${document_version} already exists')
-  message_multiple_documents_exists = N_(
+  message_multiple_documents_exists = translateString(
       'Multiple (${document_count}) documents ${document_reference} - '
       '${document_language} - ${document_version} already exists')
 

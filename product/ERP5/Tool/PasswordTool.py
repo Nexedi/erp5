@@ -35,10 +35,10 @@ from Products.ERP5 import _dtmldir
 from zLOG import LOG
 import time, random, md5
 from DateTime import DateTime
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Message import translateString
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
-N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
+
 
 class PasswordTool(BaseTool):
   """
@@ -73,8 +73,8 @@ class PasswordTool(BaseTool):
     # check user exists
     user_list = self.portal_catalog.unrestrictedSearchResults(portal_type="Person", reference=user_login)
     if len(user_list) == 0:
-      msg = N_("User ${user} doesn't exist.",
-               mapping={'user': user_login})        
+      msg = translateString("User ${user} doesn't exist.",
+                            mapping={'user':user_login})
       if REQUEST is not None:
         ret_url = '%s/login_form?portal_status_message=%s' % \
                   (self.getPortalObject().absolute_url(),msg)
@@ -101,7 +101,7 @@ class PasswordTool(BaseTool):
               "Thank you" %(self.getPortalObject().getTitle(), url, expiration_date)    
     self.portal_notifications.sendMessage(sender=None, recipient=[user,], subject=subject, message=message)
     if REQUEST is not None:
-      msg = N_("An email has been sent to you.")        
+      msg = translateString("An email has been sent to you.")
       ret_url = '%s/login_form?portal_status_message=%s' % \
                 (self.getPortalObject().absolute_url(),msg)
       return REQUEST.RESPONSE.redirect( ret_url )
@@ -140,7 +140,7 @@ class PasswordTool(BaseTool):
     # check date
     current_date = DateTime()
     if current_date > expiration_date:
-      msg = N_("Date has expire.",)
+      msg = translateString("Date has expire.")
       ret_url = '%s/login_form?portal_status_message=%s' % \
                 (self.getPortalObject().absolute_url(), msg)
       return REQUEST.RESPONSE.redirect( ret_url )
@@ -172,11 +172,11 @@ class PasswordTool(BaseTool):
     if register_user_login is None:
       msg = ""
     elif register_user_login != user_login:
-      msg = N_("Bad login provided.",)
+      msg = translateString("Bad login provided.")
     elif current_date > expiration_date:
-      msg = N_("Date has expire.",)
+      msg = translateString("Date has expire.")
     elif password != password_confirmation:
-      msg = N_("Password are not identical.",)
+      msg = translateString("Password are not identical.")
     if msg is not None:
       if REQUEST is not None:
         ret_url = '%s/login_form?portal_status_message=%s' % \
@@ -192,7 +192,7 @@ class PasswordTool(BaseTool):
     person._setPassword(password)
     person.reindexObject()
     if REQUEST is not None:
-      msg = N_("Password changed.",)
+      msg = translateString("Password changed.")
       ret_url = '%s/login_form?portal_status_message=%s' % \
                 (self.getPortalObject().absolute_url(), msg)
       return REQUEST.RESPONSE.redirect( ret_url )

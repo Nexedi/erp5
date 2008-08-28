@@ -28,7 +28,7 @@
 
 from Products.ERP5Type.Constraint import Constraint
 from Products.ERP5Type.Message import Message
-N_ = lambda msg: msg  # just to extract messages
+translateString = lambda msg: msg  # just to extract messages
 
 class AccountingTransactionBalance(Constraint):
   """Check that accounting transaction total debit and total credit are equals.
@@ -37,9 +37,9 @@ class AccountingTransactionBalance(Constraint):
   _message_id_list = [ 'message_transaction_not_balanced_for_source',
                        'message_transaction_not_balanced_for_destination' ]
   
-  message_transaction_not_balanced_for_source = N_(
+  message_transaction_not_balanced_for_source = translateString(
        'Transaction is not Balanced')
-  message_transaction_not_balanced_for_destination = N_(
+  message_transaction_not_balanced_for_destination = translateString(
        'Transaction is not Balanced')
 
   def checkConsistency(self, obj, fixit=0):

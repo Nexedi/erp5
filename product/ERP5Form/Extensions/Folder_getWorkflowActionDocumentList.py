@@ -47,7 +47,7 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
 
   request = self.REQUEST
   portal = self.getPortalObject()
-  N_ = portal.Base_translateString
+  Base_translateString = portal.Base_translateString
   wf_tool = portal.portal_workflow
   selection_tool = portal.portal_selections
   
@@ -85,7 +85,7 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
             document_list.append(doc.asContext(
                             uid='new_%s' % counter,
                             getListItemUrl=UrlGetter(doc, state_var),
-                            workflow_title=N_(workflow.title_or_id()),
+                            workflow_title=Base_translateString(workflow.title_or_id()),
                             translated_workflow_state_title=
                                    translated_workflow_state_title,
                             count=brain.count,
@@ -125,7 +125,7 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
       document_list.append(doc.asContext(
                 uid='new_%s' % counter,
                 getListItemUrl=UrlGetter(doc, state_var),
-                workflow_title=N_(workflow.title_or_id()),
+                workflow_title=Base_translateString(workflow.title_or_id()),
                 translated_workflow_state_title=
                        translated_workflow_state_title,
                 count=document_count,

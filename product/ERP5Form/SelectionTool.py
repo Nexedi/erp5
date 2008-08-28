@@ -43,11 +43,9 @@ import md5
 import string
 from zLOG import LOG, INFO
 from Acquisition import aq_base
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Message import translateString
 import warnings
 
-# a marker function for translation.
-N_ = lambda msg, **kw: str(Message('erp5_ui', msg, **kw))
 
 _MARKER = []
 
@@ -1115,9 +1113,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           if len(field_value) > 1 and isinstance(field_value, type([])):
             field_value = ' OR '.join(field_value)
           REQUEST.form[field_key] = field_value
-          portal_status_message = N_("Please select one (or more) object.")
+          portal_status_message = translateString("Please select one (or more) object.")
         else:
-          portal_status_message = N_("Please select one object.")
+          portal_status_message = translateString("Please select one object.")
 
 
         # Save the current REQUEST form
