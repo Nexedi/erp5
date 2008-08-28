@@ -52,7 +52,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
+                                                       \'text/html;; charset=utf-8\');">\n
   <div class="fieldset hidden_label">\n
     \n
     <div>\n

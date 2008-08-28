@@ -52,7 +52,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
+                                                       \'text/html;; charset=utf-8\');">\n
   <div>\n
     <input type="text" size="40" name="new_advanced_search_text" id="SearchableText" class="autofocus"/>\n
     <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n

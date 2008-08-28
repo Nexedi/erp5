@@ -54,8 +54,10 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
            tal:define="info_dict here/ERP5Site_getCategorizedModuleActionInformationDict;\n
-           module_category_list info_dict/report;\n
-           dummy python:module_category_list.sort()">\n
+                       module_category_list info_dict/report;\n
+                       dummy python:module_category_list.sort();\n
+                       dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
+                                                       \'text/html;; charset=utf-8\');">\n
   <table tal:define="max_per_line python: 4;\n
          cell_number python: len(module_category_list);\n
          row_number python: (cell_number/max_per_line+1)">\n
@@ -119,6 +121,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
