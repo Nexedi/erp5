@@ -1,5 +1,6 @@
 2008-08-28 yusei
 * Extract translation message from tal:dfeine expression.
+* Use Base_translateString or translateString instead of N_ for translation message.
 
 2008-08-27 yusei
 * Improve pot file export.

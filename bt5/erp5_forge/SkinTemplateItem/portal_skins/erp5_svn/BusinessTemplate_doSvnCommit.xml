@@ -69,11 +69,10 @@
 
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError\n
 from Products.ERP5Subversion.SubversionClient import SubversionLoginError\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 from ZTUtils import make_query\n
 request = container.REQUEST\n
 \n
-N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 \n
 # XXX: To be compatible with commit from diff view\n
 if same_type(added, []):\n
@@ -99,12 +98,12 @@ else:\n
   commit_recurs = removed\n
 \n
 if changelog is None :\n
-  request.set(\'portal_status_message\', N_(\'Please Set a ChangeLog Message\'))\n
+  request.set(\'portal_status_message\', translateString(\'Please Set a ChangeLog Message\'))\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
 if changelog.strip() == \'\' :\n
-  request.set(\'portal_status_message\', N_("Error: ChangeLog Message can\'t be Empty"))\n
+  request.set(\'portal_status_message\', translateString("Error: ChangeLog Message can\'t be Empty"))\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
@@ -124,7 +123,7 @@ except SubversionLoginError, error1 :\n
 \n
 return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
        context.absolute_url(),\n
-       make_query(portal_status_message=N_(\'Files commited successfully\'))))\n
+       make_query(portal_status_message=translateString(\'Files commited successfully\'))))\n
 
 
 ]]></string> </value>
@@ -178,13 +177,12 @@ return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
-                            <string>N_</string>
                             <string>same_type</string>
                             <string>commit_non_recurs</string>
                             <string>_getitem_</string>
@@ -217,6 +215,12 @@ return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessTemplate_doSvnCommit</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
