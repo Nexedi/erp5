@@ -355,9 +355,20 @@ class TestSelectionPersistence(unittest.TestCase):
     self.assertEquals('saved_value',
         portal_selections.getSelectionParamsFor('test_selection').get('key'))
 
+class TestSelectionToolMemcachedStorage(TestSelectionTool):
+  quiet = 1
+  run_all_test = 1
+  
+  def getTitle(self):
+    return "SelectionTool with Memcached Storage"
+
+  def afterSetUp(self):
+    self.portal.portal_selections.setStorage('Memcached Tool')
+    TestSelectionTool.afterSetUp(self)
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSelectionTool))
+  suite.addTest(unittest.makeSuite(TestSelectionToolMemcachedStorage))
   suite.addTest(unittest.makeSuite(TestSelectionPersistence))
   return suite
