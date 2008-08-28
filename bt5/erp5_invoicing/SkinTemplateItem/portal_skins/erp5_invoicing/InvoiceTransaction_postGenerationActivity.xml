@@ -80,7 +80,8 @@ except ImportError:\n
   class WorkflowException(Exception):\n
     pass\n
 \n
-N_ = lambda msg, **kw: str(Message(\'erp5_ui\', msg, **kw))\n
+# Return Message object, so that this message will be translated when it is rendered later.\n
+N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 invoice = context\n
 \n
