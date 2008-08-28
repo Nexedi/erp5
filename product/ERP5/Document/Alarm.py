@@ -501,13 +501,14 @@ Alarm URL: %s
 
   security.declareProtected(Permissions.ModifyPortalContent, 
                             'newActiveProcess')
-  def newActiveProcess(self, activate_kw={}, **kw):
+  def newActiveProcess(self, **kw):
     """
     We will create a new active process in order to store
     new results, then this process will be added to the list
     of processes
     """
     tag = self.portal_ids.getLastLengthGeneratedId(id_group=self.getId())
+    activate_kw = kw.get('activate_kw', {})
     if tag is not None:
       activate_kw.setdefault('tag', str(tag))
     portal_activities = getToolByName(self,'portal_activities')
