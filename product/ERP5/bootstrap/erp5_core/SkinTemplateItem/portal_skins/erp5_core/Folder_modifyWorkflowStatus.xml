@@ -65,9 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
 \n
@@ -93,7 +92,7 @@ context.activate(after_tag=tag).getTitle()\n
 \n
 return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                          context.absolute_url(), form_id,\n
-                        N_("Workflow Modification in Progress")))\n
+                        translateString("Workflow Modification in Progress")))\n
 </string> </value>
         </item>
         <item>
@@ -147,8 +146,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                             <string>form_id</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
