@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Applications to assign (%(count)s)</string> </value>
+            <value> <string>Subscription Forms to assign (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?validation_state=validated&local_roles=%(local_roles)s&reset=1&portal_type=%(portal_type)s
+Base_viewSearchResultList?validation_state=validated&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Applications to assign</string> </value>
+            <value> <string>Subscription Forms to assign</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ Base_viewSearchResultList?validation_state=validated&local_roles=%(local_roles)s
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>applications_to_assign</string> </value>
+            <value> <string>subscription_forms_to_assign</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>

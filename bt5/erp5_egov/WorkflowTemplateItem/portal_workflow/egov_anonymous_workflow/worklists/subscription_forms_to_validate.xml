@@ -21,19 +21,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Applications to archive (%(count)s)</string> </value>
+            <value> <string>Subscription Forms to validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-web_site_module/dgid/declaration_tva_module?validation_state=signed&local_roles=%(local_roles)s&reset=1
+Base_viewSearchResultList?validation_state=submitted&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Applications to archive</string> </value>
+            <value> <string>Subscription Forms to validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -43,7 +43,7 @@ web_site_module/dgid/declaration_tva_module?validation_state=signed&local_roles=
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>applications_to_archive</string> </value>
+            <value> <string>subscription_forms_to_validate</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -91,7 +91,7 @@ web_site_module/dgid/declaration_tva_module?validation_state=signed&local_roles=
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>signed</string>
+                        <string>submitted</string>
                       </tuple>
                     </value>
                 </item>
