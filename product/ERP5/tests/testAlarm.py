@@ -494,8 +494,6 @@ class TestAlarm(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-    get_transaction().commit()
-    self.tic()
     sense_method_id = 'Alarm_testSenseMethodForTic'
     skin_folder_id = 'custom'
     skin_folder = self.getPortal().portal_skins[skin_folder_id]
@@ -520,6 +518,57 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm_tool.tic()
     self.assertEquals(alarm.getDescription(), 'a')
+
+  def test_18_alarm_activities_execution_order(self, quiet=0, run=run_all_test):
+    """
+    Make sure active process created by an alarm get the rigth tag
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Activities execution order'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    alarm = self.newAlarm()
+    # Create script that generate active process
+    sense_method_id = 'Alarm_createActiveProcessSenseMethod'
+    skin_folder_id = 'custom'
+    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts']\
+        .manage_addPythonScript(id=sense_method_id)
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
+          'context.newActiveProcess()')
+    # update alarm properties
+    alarm.edit(alarm_notification_mode="always",
+               active_sense_method_id=sense_method_id,
+               enabled=True)
+    get_transaction().commit()
+    self.tic()
+    alarm.activeSense()
+    get_transaction().commit()
+    messages_list = self.getActivityTool().getMessageList()
+    self.assertEquals(2, len(messages_list))
+    # check tags after activeSense
+    for m in messages_list:
+      if m.method_id == 'notify':
+        self.assertEquals(m.activity_kw.get('after_tag'), '1')
+      elif m.method_id == sense_method_id:
+        self.assertEquals(m.activity_kw.get('tag'), '1')
+      else:
+        raise AssertionError, m.method_id
+    # execute alarm sense script and check tags
+    self.getActivityTool().manageInvoke(alarm.getPhysicalPath(),sense_method_id)
+    get_transaction().commit()
+    messages_list = self.getActivityTool().getMessageList()
+    for m in messages_list:
+      if m.method_id == 'notify':
+        self.assertEquals(m.activity_kw.get('after_tag'), '1')
+      elif m.method_id == 'immediateReindexObject':
+        self.assertEquals(m.activity_kw.get('tag'), '1')
+      else:
+        raise AssertionError, m.method_id
+
+    
 
 def test_suite():
   suite = unittest.TestSuite()
