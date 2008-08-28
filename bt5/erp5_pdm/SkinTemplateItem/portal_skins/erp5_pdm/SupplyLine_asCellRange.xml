@@ -68,7 +68,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 cell_range = []\n
 add_predicate = 1\n
@@ -150,15 +150,15 @@ if add_predicate == 1:\n
           min_qty = criterion.min\n
           max_qty = criterion.max\n
           if min_qty is None:\n
-            predicate_title = N_("Quantity < ${max_quantity}",\n
-                                 mapping={\'max_quantity\': max_qty})\n
+            predicate_title = Base_translateString("Quantity < ${max_quantity}",\n
+                                                   mapping={\'max_quantity\': max_qty})\n
           elif max_qty is None:\n
-            predicate_title = N_("${min_quantity} <= Quantity",\n
-                                 mapping={\'min_quantity\': min_qty})\n
+            predicate_title = Base_translateString("${min_quantity} <= Quantity",\n
+                                                   mapping={\'min_quantity\': min_qty})\n
           else:\n
-            predicate_title = N_("${min_quantity} <= Quantity < ${max_quantity}",\n
-                                 mapping={\'min_quantity\': min_qty,\n
-                                          \'max_quantity\': max_qty})\n
+            predicate_title = Base_translateString("${min_quantity} <= Quantity < ${max_quantity}",\n
+                                                   mapping={\'min_quantity\': min_qty,\n
+                                                            \'max_quantity\': max_qty})\n
           break\n
       pred_ids.append((predicate.getRelativeUrl(), predicate_title))\n
   else:\n
@@ -226,7 +226,7 @@ return cell_range\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>cell_range</string>
                             <string>add_predicate</string>
                             <string>no_option_base_category_list</string>

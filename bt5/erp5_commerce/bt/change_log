@@ -1,3 +1,6 @@
+2008-08-28 yusei
+* Use Base_translateString or translateString instead of N_ for translation message.
+
 2007-06-07 Ivan
 * Update. Split core script from widgets
 

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -121,9 +118,8 @@ if line_found == False:\n
   order_line.setResource(resource.getRelativeUrl())\n
   order_line.setQuantity(quantity)\n
 \n
-N_ = context.Base_translateString\n
-context.Base_redirect(\'view\', \\\n
-                      keep_items={\'portal_status_message\': N_("Added to cart.")})\n
+context.Base_redirect(\'view\',\n
+                      keep_items={\'portal_status_message\':context.Base_translateString("Added to cart.")})\n
 
 
 ]]></string> </value>
@@ -196,7 +192,6 @@ context.Base_redirect(\'view\', \\\n
                             <string>order_line</string>
                             <string>new_quantity</string>
                             <string>True</string>
-                            <string>N_</string>
                           </tuple>
                         </value>
                     </item>
@@ -222,6 +217,12 @@ context.Base_redirect(\'view\', \\\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Add resource to shopping cart</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
