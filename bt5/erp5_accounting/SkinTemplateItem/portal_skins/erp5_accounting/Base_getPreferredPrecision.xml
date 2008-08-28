@@ -66,11 +66,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 currency = context.portal_preferences.getPreferredAccountingTransactionCurrency()\n
 if currency is None:\n
-  raise ValueError, N_("Currency must be defined in Preferences")\n
+  raise ValueError, Base_translateString("Currency must be defined in Preferences")\n
 \n
 currency_value = context.restrictedTraverse(currency)\n
 precision      = currency_value.getQuantityPrecision()\n
@@ -127,7 +127,7 @@ return precision\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>currency</string>
                             <string>None</string>
                             <string>ValueError</string>
