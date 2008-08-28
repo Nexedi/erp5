@@ -91,11 +91,11 @@
 \n
   <div tal:condition="here/Base_hasProjectModuleViewPermission">\n
     <label for="source_project" value="" \n
-           i18n:translate="" i18n:domain="ui">Programme</label>\n
+           i18n:translate="" i18n:domain="ui">Project</label>\n
     <select size="1" id="source_project" name="source_project"\n
             tal:attributes="name string:${contribute_prefix}source_project">\n
       <option value="" value="" \n
-              i18n:translate="" i18n:domain="ui">-- Select Programme --</option>\n
+              i18n:translate="" i18n:domain="ui">-- Select Project --</option>\n
       <option tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in \n
                                        here.project_module.searchFolder(sort_on=\'title\')]"\n
               tal:content="python:item[0]" \n
@@ -123,6 +123,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Contribute Subwidgets</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
