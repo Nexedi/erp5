@@ -79,8 +79,7 @@ from zLOG import LOG, PROBLEM, WARNING
 import warnings
 
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
-from Products.ERP5Type.Message import Message
-N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
+from Products.ERP5Type.Message import translateString
 
 # from Products.BTreeFolder2.BTreeFolder2 import _marker as BTreeMarker
 # from Products.HBTreeFolder2.HBTreeFolder2 import _marker as HBTreeMarker
@@ -468,7 +467,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     self.activate(activity="SQLQueue", after_tag=tag)._launchCopyObjectToHBTree(tag)
     
     if REQUEST is not None:
-      psm = N_('Migration to HBTree is running.',)
+      psm = translateString('Migration to HBTree is running.')
       ret_url = '%s/%s?portal_status_message=%s' % \
                 (self.absolute_url(),
                  REQUEST.get('form_id', 'view'), psm)
