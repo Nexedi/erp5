@@ -2,6 +2,7 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
 from Products.CMFCore.utils import getToolByName
+from Acquisition import aq_base
 try:
   from Products.ERP5OOo.OOoUtils import OOoBuilder
   import re
@@ -86,7 +87,7 @@ class OOOdCommandTransform(commandtransform):
         path = matching.groupdict().get('path')
         try:
           image = self.context.restrictedTraverse(path)
-        except AttributeError:
+        except (AttributeError, KeyError):
           #Image not found, this image is probably not hosted by ZODB. Do nothing
           image = None
         if image is not None:
@@ -102,7 +103,7 @@ class OOOdCommandTransform(commandtransform):
             data = image.getData()
             height = image.getHeight()
             width = image.getWidth()
-          except AttributeError:
+          except (AttributeError, KeyError):
             #OFS API
             data = image.data
             height = image.height
@@ -137,12 +138,17 @@ class OOOdCommandTransform(commandtransform):
       if matching is not None:
         path = matching.groupdict().get('path')
         try:
-          css = self.context.restrictedTraverse(path)
-        except AttributeError:
+          css_object = self.context.restrictedTraverse(path)
+        except (AttributeError, KeyError):
           #Image not found, this image is probably not hosted by ZODB. Do nothing
-          css = None
-        if css is not None:
-          css_as_text = css(client=self.context.getPortalObject())
+          css_object = None
+        if css_object is not None:
+          if callable(aq_base(css_object)):
+            #In case of DTMLDocument
+            css_as_text = css_object(client=self.context.getPortalObject())
+          else:
+            #Other cases like files
+            css_as_text = str(css_object)
           style_node = xml_doc.newChild(None, 'style', css_as_text)
           style_node.setProp('type', 'text/css')
           css_link_tag.replaceNode(style_node)
