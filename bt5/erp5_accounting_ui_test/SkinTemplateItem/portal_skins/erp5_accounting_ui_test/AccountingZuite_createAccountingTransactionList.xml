@@ -258,9 +258,19 @@ for month in range(1, month_count + 1):\n
       if transaction_state == \'validated\':\n
         payment.stop()\n
         assert payment.getSimulationState() == \'stopped\'\n
+        if not keep_grouping_reference:\n
+          for line in payment.getMovementList(\n
+                          portal_type=payment.getPortalAccountingMovementTypeList()):\n
+            if line.getGroupingReference():\n
+               line.activate(after_path_and_method_id=(\n
+                  (payment.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),\n
+                  (line.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),),\n
+               ).AccountingTransactionLine_resetGroupingReference()\n
+\n
       else:\n
         # other cases not supported for now\n
         assert transaction_state == \'draft\'\n
+      \n
 \n
   amount=7000\n
   default_date += 1\n
@@ -344,7 +354,7 @@ return "Accounting Transactions Created."\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0</string> </value>
+            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0, keep_grouping_reference=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -364,7 +374,7 @@ return "Accounting Transactions Created."\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -374,6 +384,7 @@ return "Accounting Transactions Created."\n
                             <string>add_draft_transactions</string>
                             <string>transaction_state</string>
                             <string>add_related_payments</string>
+                            <string>keep_grouping_reference</string>
                             <string>DateTime</string>
                             <string>section_title</string>
                             <string>_getattr_</string>
@@ -429,6 +440,7 @@ return "Accounting Transactions Created."\n
                 <int>1</int>
                 <int>1</int>
                 <string>validated</string>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -195,6 +192,16 @@ for month in range(1, month_count + 1):\n
       )\n
       ptr.stop()\n
 \n
+      if not keep_grouping_reference:\n
+        for line in ptr.getMovementList(\n
+                          portal_type=ptr.getPortalAccountingMovementTypeList()):\n
+          if line.getGroupingReference():\n
+             line.activate(after_path_and_method_id=(\n
+                  (ptr.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),\n
+                  (line.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),),\n
+             ).AccountingTransactionLine_resetGroupingReference()\n
+\n
+\n
 accounting_module.setProperty(\'current_content_script\',\n
                               current_script_data_id)\n
 \n
@@ -225,7 +232,7 @@ return "Accounting Transactions Created."\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, no_creation_need=0</string> </value>
+            <value> <string>month_count=1, no_creation_need=0, keep_grouping_reference=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -245,7 +252,7 @@ return "Accounting Transactions Created."\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -253,6 +260,7 @@ return "Accounting Transactions Created."\n
                           <tuple>
                             <string>month_count</string>
                             <string>no_creation_need</string>
+                            <string>keep_grouping_reference</string>
                             <string>DateTime</string>
                             <string>section_title</string>
                             <string>_getattr_</string>
@@ -282,7 +290,9 @@ return "Accounting Transactions Created."\n
                             <string>client_title</string>
                             <string>amount</string>
                             <string>receivable_qty</string>
+                            <string>_inplacevar_</string>
                             <string>ptr</string>
+                            <string>line</string>
                           </tuple>
                         </value>
                     </item>
@@ -296,6 +306,7 @@ return "Accounting Transactions Created."\n
             <value>
               <tuple>
                 <int>1</int>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>
