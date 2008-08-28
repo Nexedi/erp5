@@ -67,12 +67,14 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import Message\n
 \n
+N_ = lambda msg, **kw: str(Message(\'erp5_ui\', msg, **kw))\n
+\n
 payment_transaction = context\n
 \n
 if payment_transaction.getSimulationState() == "draft":\n
   payment_transaction.portal_workflow.doActionFor(\n
      payment_transaction, \'plan_action\',\n
-     comment=Message(\'erp5_ui\', "Initialized by Delivery Builder"))\n
+     comment=N_("Initialized by Delivery Builder"))\n
 </string> </value>
         </item>
         <item>
@@ -117,6 +119,7 @@ if payment_transaction.getSimulationState() == "draft":\n
                           <tuple>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
+                            <string>N_</string>
                             <string>context</string>
                             <string>payment_transaction</string>
                             <string>_getattr_</string>

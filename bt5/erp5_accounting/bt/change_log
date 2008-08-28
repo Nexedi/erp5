@@ -1,3 +1,6 @@
+2008-08-28 yusei
+* Use N_ for translation message.
+
 2008-07-02 yusei
 * Update title of Account_view.reference.
 In accounting, reference is "Document Reference", but, in account, reference must be "Reference".
