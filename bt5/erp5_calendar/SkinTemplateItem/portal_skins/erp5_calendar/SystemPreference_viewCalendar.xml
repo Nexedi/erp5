@@ -43,14 +43,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -108,22 +102,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_periodicity_stop_date</string>
-                        <string>my_source_title</string>
-                        <string>my_periodicity_month_day_list</string>
-                        <string>my_periodicity_month_list</string>
-                        <string>my_periodicity_week_day_list</string>
-                        <string>my_periodicity_week_list</string>
-                        <string>my_group</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_quantity</string>
-                        <string>my_exception_date</string>
-                        <string>my_destination_title</string>
-                        <string>my_int_index</string>
-                        <string>listbox</string>
-                        <string>my_absence_resource</string>
-                        <string>my_presence_resource</string>
+                        <string>my_preferred_presence_calendar_period_type</string>
+                        <string>my_preferred_absence_calendar_period_type</string>
                       </list>
                     </value>
                 </item>
@@ -138,7 +118,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Calendar_viewFieldLibrary</string> </value>
+            <value> <string>SystemPreference_viewCalendar</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -146,7 +126,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BaseCalendar_FieldLibrary</string> </value>
+            <value> <string>SystemPreference_viewCalendar</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -162,7 +142,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Field Library for Calendar</string> </value>
+            <value> <string>Calendar</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource</string> </value>
+            <value> <string>my_preferred_absence_calendar_period_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,7 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -75,7 +75,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -105,7 +105,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Type</string> </value>
+                    <value> <string>Type for Absence</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories.calendar_period_type, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\', base=1)</string> </value>
+            <value> <string>python: getattr(here.portal_categories.calendar_period_type, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
