@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 listbox = request.get(\'listbox\')\n
 start_date = context.getStartDate()\n
@@ -109,7 +106,7 @@ if listbox is not None:\n
 \n
     delivery_builder.activate(activity=\'SQLQueue\', after_tag=tag).build(explanation_uid=explanation_uid_list)\n
    \n
-message = N_("${obj_portal_type} updated.", mapping={\'obj_portal_type\' : context.getTranslatedPortalType()})\n
+message = Base_translateString("${obj_portal_type} updated.", mapping={\'obj_portal_type\':context.getTranslatedPortalType()})\n
 message = message.replace(\' \', \'+\')\n
 \n
 redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id, \n
@@ -163,7 +160,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>listbox</string>
                             <string>start_date</string>
                             <string>stop_date</string>
@@ -203,6 +200,12 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>AmortisationTransaction_doSolveActions</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
