@@ -1193,7 +1193,7 @@ class TestPropertySheet:
                         person.getDefaultOrganisationTitle())
       self.assertEquals(other_pers_title,
                         other_pers.getDefaultOrganisationTitle())
-      
+
     def test_19b_AcquiredContentAccessorWithIdClash(self,quiet=quiet, run=run_all_test):
       """Tests a content setters do not set the property on acquired object
       that may have the same id, using same scenario as test_19
@@ -1260,6 +1260,8 @@ class TestPropertySheet:
       self.assertEquals(email.getAvailableLanguage(), 'ja')
       self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
       self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
+
+
 
     def test_20_AsContext(self,quiet=quiet, run=run_all_test):
       """asContext method return a temporary copy of an object.
@@ -1982,6 +1984,28 @@ class TestPropertySheet:
       self.assertRaises(Unauthorized, foo.getWrappedRegionTitleList)
       self.assertEquals(["Gamma System"],
           foo.getWrappedRegionTitleList(checked_permission='View'))
+
+      # Remove permission from parent object, the behaviour of acessor should
+      # be kept. If you have no permission to the parent, this means that the 
+      # sub objects cannot be accessed too.
+      gamma.getParentValue().manage_permission("View", [], acquire=0)
+
+      # getProperty is used by forms
+      self.assertEquals(None,foo.getProperty("wrapped_region_title_list",
+                                                            checked_permission='View'))
+      self.assertEquals(None,
+                foo.getWrappedRegionTitleList(checked_permission='View'))
+
+      self.assertEquals(["Gamma System"],
+                      foo.getWrappedRegionTitleList(checked_permission='Access contents information'))
+
+      gamma.getParentValue().manage_permission("Access contents information", [], acquire=0)
+      self.assertEquals(None,
+                foo.getWrappedRegionTitleList(checked_permission='View'))
+
+      self.assertEquals(None,
+                      foo.getWrappedRegionTitleList(checked_permission='Access contents information'))
+
 
     def test_category_accessor_to_non_existing_documents(self):
       # tests behaviour of category accessors with relations to non existing
