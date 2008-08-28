@@ -65,14 +65,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-N_ = lambda msg: Message(\'erp5_ui\', msg)\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 return [\n
   (\'\', \'\'),\n
-  ( N_(\'List of Documents\'), \'list\'),\n
-  ( N_(\'Default Export of each Document\'), \'list_view\' ),\n
-  ( N_(\'Default Export of each Document (one sheet per view)\'), \'list_view_separate_sheet\'),\n
+  (translateString(\'List of Documents\'), \'list\'),\n
+  (translateString(\'Default Export of each Document\'), \'list_view\' ),\n
+  (translateString(\'Default Export of each Document (one sheet per view)\'), \'list_view_separate_sheet\'),\n
 ]\n
 </string> </value>
         </item>
@@ -123,8 +122,7 @@ return [\n
                         <value>
                           <tuple>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                           </tuple>
                         </value>
                     </item>

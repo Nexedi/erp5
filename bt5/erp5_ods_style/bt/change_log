@@ -1,3 +1,6 @@
+2008-08-28 yusei
+* Update Base_translateString or translateString instead of N_ for translation message.
+
 2008-06-26 yusei
 * Revise version to 5.1.
 
