@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              noSecurityManager
@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from DateTime import DateTime
 
-class TestCalendar(ERP5TypeTestCase):
+class TestCalendar(ERP5ReportTestCase):
 
   run_all_test = 1
   person_portal_type = "Person"
@@ -68,12 +68,17 @@ class TestCalendar(ERP5TypeTestCase):
       Light install create only base categories, so we create
       some categories for testing them
     """
-    cal_type_category_list = ['type1']
+    cal_type_category_list = ['type1', 'type2', 'type3']
     if len(self.category_tool.calendar_period_type.contentValues()) == 0 :
       for category_id in cal_type_category_list:
         o = self.category_tool.calendar_period_type.newContent(
                          portal_type='Category',
                          id=category_id)
+
+    if 'my_group' not in self.category_tool.group.contentIds():
+      self.category_tool.group.newContent(portal_type='Category',
+                                          id='my_group')
+
 
   def stepTic(self,**kw):
     self.tic()
@@ -1357,6 +1362,107 @@ class TestCalendar(ERP5TypeTestCase):
           DateTime('2008/01/01 18:00'),),],
         [(m.getStartDate(), m.getStopDate()) for m in
                         available_time_movement_list])
+
+
+  def test_PersonModule_viewLeaveRequestReport(self):
+    # in this test, type1 is the type for presences, type2 & type3 are types
+    # for leaves.
+    organisation = self.portal.organisation_module.newContent(
+                                portal_type='Organisation',
+                                group='my_group')
+
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar.confirm()
+
+    person1 = self.portal.person_module.newContent(
+                                portal_type='Person',
+                                title='Person 1',
+                                career_reference='1',
+                                subordination_value=organisation)
+    assignment = person1.newContent(portal_type='Assignment',
+                                    calendar_value=group_calendar)
+    leave_request1 = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request',
+                                  destination_value=person1)
+    leave_request1_period = leave_request1.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request1_period.setStartDate('2008/01/01 09:00')
+    leave_request1_period.setStopDate('2008/01/01 10:00')
+    leave_request1_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type2)
+    leave_request1.confirm()
+
+    person2 = self.portal.person_module.newContent(
+                                portal_type='Person',
+                                title='Person 2',
+                                career_reference='2',
+                                subordination_value=organisation)
+    assignment = person2.newContent(portal_type='Assignment',
+                                    calendar_value=group_calendar)
+    leave_request2 = self.portal.leave_request_module.newContent(
+                                  portal_type='Leave Request',
+                                  destination_value=person2)
+    leave_request2_period1 = leave_request2.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request2_period1.setStartDate('2008/01/01 09:00')
+    leave_request2_period1.setStopDate('2008/01/01 10:00')
+    leave_request2_period1.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type2)
+    leave_request2_period2 = leave_request2.newContent(
+                                  portal_type='Leave Request Period')
+    leave_request2_period2.setStartDate('2008/01/01 10:00')
+    leave_request2_period2.setStopDate('2008/01/01 11:30')
+    leave_request2_period2.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type3)
+    leave_request2.confirm()
+
+    get_transaction().commit()
+    self.tic()
+
+    # set request variables and render                 
+    request_form = self.portal.REQUEST
+    request_form['from_date'] = DateTime(2008, 1, 1)
+    request_form['to_date'] = DateTime(2009, 1, 1)
+    request_form['node_category'] = 'group/my_group'
+    
+    report_section_list = self.getReportSectionList(
+                             self.portal.person_module,
+                             'PersonModule_viewLeaveRequestReport')
+    self.assertEquals(1, len(report_section_list))
+      
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+
+    self.assertEquals(data_line_list[0].column_id_list,
+        ['person_career_reference', 'person_title',
+         'calendar_period_type/type2', 'calendar_period_type/type3', 'total'])
+
+    self.checkLineProperties(data_line_list[0],
+                             person_career_reference='1',
+                             person_title='Person 1',
+                             total=1.0,
+                             **{'calendar_period_type/type2': 1.0,})
+    self.checkLineProperties(data_line_list[1],
+                             person_career_reference='2',
+                             person_title='Person 2',
+                             total=2.5,
+                             **{'calendar_period_type/type2': 1.0,
+                                'calendar_period_type/type3': 1.5,})
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+                             total=3.5,
+                             **{'calendar_period_type/type2': 2.0,
+                                'calendar_period_type/type3': 1.5,})
+                             
 
 
 import unittest
