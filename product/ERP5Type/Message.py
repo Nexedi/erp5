@@ -142,3 +142,7 @@ class Message(Persistent):
 
 InitializeClass(Message)
 allow_class(Message)
+
+
+def translateString(message, **kw):
+  return Message(domain='erp5_ui', message=message, **kw)

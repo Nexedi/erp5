@@ -110,6 +110,8 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList')
 
 allow_module('Products.ERP5Type.Message')
+ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
+
 allow_module('Products.ERP5Type.Error')
 allow_module('Products.ERP5Type.JSONEncoder')
 allow_module('Products.ERP5Type.Log')
