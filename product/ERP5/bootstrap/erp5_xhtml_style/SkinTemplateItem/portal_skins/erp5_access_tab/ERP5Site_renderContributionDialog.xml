@@ -72,12 +72,12 @@
         </select>\n
       </div>\n
       <div>\n
-        <label for="source_project" value="" i18n:translate="" i18n:domain="ui">Programme</label>\n
+        <label for="source_project" value="" i18n:translate="" i18n:domain="ui">Project</label>\n
         <select size="1" id="source_project" name="source_project"\n
                 tal:attributes="name string:${contribute_prefix}source_project"\n
                 tal:define="ticket_module nocall:here/ticket_module|nothing;\n
                 project_module nocall:here/project_module|nothing;">\n
-          <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Programme --</option>\n
+          <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Project --</option>\n
           <option tal:condition="project_module"\n
                   tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in project_module.searchFolder()]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
             Project Name\n
@@ -115,6 +115,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
