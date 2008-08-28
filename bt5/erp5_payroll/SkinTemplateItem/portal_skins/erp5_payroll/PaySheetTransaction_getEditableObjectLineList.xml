@@ -75,8 +75,7 @@
 \n
 from Products.ERP5Type.Utils import cartesianProduct\n
 import pprint\n
-from Products.ERP5Type.Message import Message\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+from Products.ERP5Type.Message import translateString\n
 \n
 def sortByIntIndex(a, b):\n
   return cmp(a.getIntIndex(), b.getIntIndex())\n
@@ -99,7 +98,7 @@ context.log(model_line_list)\n
 for model_line in model_line_list:\n
   base_category_list = model_line.getVariationBaseCategoryList()\n
   base_application_list = model_line.getBaseAmountTitleList()\n
-  translated_base_application_list = [str(N_(x)) for x in base_application_list]\n
+  translated_base_application_list = [str(translateString(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
   list_of_list = []\n
   for base_category in base_category_list:\n
@@ -131,7 +130,7 @@ for model_line in model_line_list:\n
     quantity = cell.getQuantity()\n
     base = quantity\n
 \n
-    base_list = [str(N_(base_application)) for base_application in \\\n
+    base_list = [str(translateString(base_application)) for base_application in \\\n
         model_line.getBaseAmountTitleList()]\n
     base_name = \'+\'.join(base_list)\n
 \n
@@ -285,8 +284,7 @@ return line_list\n
                             <string>cartesianProduct</string>
                             <string>pprint</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>sortByIntIndex</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -359,6 +357,12 @@ return line_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>PaySheetTransaction_getEditableObjectLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

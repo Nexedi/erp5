@@ -74,11 +74,11 @@ paysheet_type = paysheet.getPortalType()\n
 employer      = paysheet.getDestinationSection()\n
 employee      = paysheet.getSourceSection()\n
 \n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 def redirect(msg):\n
   return context.Base_redirect(form_id,\n
-      keep_items=dict(portal_status_message=N_(msg)))\n
+      keep_items=dict(portal_status_message=Base_translateString(msg)))\n
 \n
 if not paysheet.getPriceCurrency():\n
   return redirect(\'Currency is required\')\n
@@ -160,7 +160,7 @@ return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
                             <string>paysheet_type</string>
                             <string>employer</string>
                             <string>employee</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>redirect</string>
                             <string>employer_obj</string>
                             <string>employee_obj</string>
@@ -185,6 +185,12 @@ return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>PaySheetTransaction_checkParameters</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
