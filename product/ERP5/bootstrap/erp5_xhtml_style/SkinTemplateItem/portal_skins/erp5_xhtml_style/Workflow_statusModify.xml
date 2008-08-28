@@ -67,8 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.Formulator.Errors import FormValidationError\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-N_ = lambda msg, **kwd: Message(\'erp5_ui\', msg, **kwd)\n
+from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
 request=context.REQUEST\n
 \n
@@ -136,7 +135,7 @@ except ValidationFailed, error_message:\n
                   \'%s/%s\' % (context.absolute_url(), form_id),\n
                   keep_items={\'portal_status_message\': message}, **kw)\n
 \n
-portal_status_message = request.get(\'portal_status_message\', N_(\'Status changed.\'))\n
+portal_status_message = request.get(\'portal_status_message\', translateString(\'Status changed.\'))\n
 \n
 return context.ERP5Site_redirect(\n
                 \'%s/%s\' % (context.absolute_url(), form_id),\n
@@ -197,8 +196,7 @@ return context.ERP5Site_redirect(\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -246,6 +244,12 @@ return context.ERP5Site_redirect(\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Workflow_statusModify</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

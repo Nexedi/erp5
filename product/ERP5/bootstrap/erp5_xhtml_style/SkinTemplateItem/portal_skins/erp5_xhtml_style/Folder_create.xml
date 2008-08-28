@@ -65,16 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>N_ = context.getPortalObject().Base_translateString\n
+            <value> <string>Base_translateString = context.getPortalObject().Base_translateString\n
 allowed_type_list = context.getVisibleAllowedContentTypeList()\n
 \n
 if not allowed_type_list:\n
-  return context.ERP5Site_redirect(\'%s/view\' % (context.absolute_url(), ), keep_items={\'portal_status_message\': N_("You are not allowed to add new content in this context.")})\n
+  return context.ERP5Site_redirect(\'%s/view\' % (context.absolute_url(), ), keep_items={\'portal_status_message\': Base_translateString("You are not allowed to add new content in this context.")})\n
 \n
 # newContent will add the first allowed type when we do not specify portal_type=\n
 new_object = context.newContent(portal_type=allowed_type_list[0])\n
 \n
-return context.ERP5Site_redirect(\'%s/view\' % (new_object.absolute_url(), ), keep_items={\'portal_status_message\': N_("Object Created.")})\n
+return context.ERP5Site_redirect(\'%s/view\' % (new_object.absolute_url(), ), keep_items={\'portal_status_message\': Base_translateString("Object Created.")})\n
 </string> </value>
         </item>
         <item>
@@ -125,7 +125,7 @@ return context.ERP5Site_redirect(\'%s/view\' % (new_object.absolute_url(), ), ke
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>allowed_type_list</string>
                             <string>_getitem_</string>
                             <string>new_object</string>
@@ -146,6 +146,12 @@ return context.ERP5Site_redirect(\'%s/view\' % (new_object.absolute_url(), ), ke
         <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_create</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>N_ = context.Base_translateString\n
+            <value> <string>Base_translateString = context.Base_translateString\n
 REQUEST = context.REQUEST\n
 portal = context.getPortalObject()\n
 contribute_file = REQUEST.get(\'contribute_file\', None)\n
@@ -75,7 +75,7 @@ contribute_portal_type = REQUEST.get(\'contribute_portal_type\', None)\n
 \n
 \n
 if contribute_file is None or not contribute_file.filename:\n
-  portal_status_message = N_(\'Please select upload file.\')\n
+  portal_status_message = Base_translateString(\'Please select upload file.\')\n
   keep_items={\'portal_status_message\':portal_status_message}\n
   portal.Base_redirect(form_view=\'view\', keep_items=keep_items)\n
   return\n
@@ -132,7 +132,7 @@ return context.ERP5Site_contributeContent(\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>REQUEST</string>
                             <string>portal</string>
                             <string>None</string>
@@ -159,6 +159,12 @@ return context.ERP5Site_contributeContent(\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_uploadContributeContent</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

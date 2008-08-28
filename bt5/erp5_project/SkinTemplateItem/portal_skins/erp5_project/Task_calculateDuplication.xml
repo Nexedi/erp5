@@ -68,7 +68,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.DateUtils import addToDate\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 task_portal_type = \'Task\'\n
 task_module = context.getDefaultModule(task_portal_type)\n
@@ -125,8 +125,8 @@ start_date = context.getStartDate()\n
 if start_date is None:\n
   return context.REQUEST.RESPONSE.redirect(\n
     \'%s?portal_status_message=%s+%s.\' % (context.absolute_url(), \n
-                                         N_(\'Tasks+can+not+be+created:\'), \n
-                                         N_(\'Start+Date+is+None\')))\n
+                                         Base_translateString(\'Tasks+can+not+be+created:\'), \n
+                                         Base_translateString(\'Start+Date+is+None\')))\n
 else:\n
   date_list = getDatePeriodList(start_date)\n
   for next_date in date_list:\n
@@ -134,7 +134,7 @@ else:\n
   return context.REQUEST.RESPONSE.redirect(\n
     \'%s?portal_status_message=%s+%s.\' % (context.absolute_url(), \n
                                          len(date_list), \n
-                                         N_(\'Tasks+created\')))\n
+                                         Base_translateString(\'Tasks+created\')))\n
 
 
 ]]></string> </value>
@@ -189,7 +189,7 @@ else:\n
                             <string>addToDate</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>task_portal_type</string>
                             <string>task_module</string>
                             <string>validateDay</string>
@@ -226,6 +226,12 @@ else:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Task_calculateDuplication</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

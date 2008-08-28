@@ -65,13 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-N_ = lambda msg: Message(\'erp5_ui\', msg)\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 return [\n
-  ( N_(\'Tasks\'), \'Project_viewTaskList\'),\n
-  ( N_(\'Tasks Reports\'), \'Project_viewTaskReportList\' ),\n
-  ( N_(\'Tasks Summary\'), \'Project_viewSummaryList\'),\n
+  (translateString(\'Tasks\'), \'Project_viewTaskList\'),\n
+  (translateString(\'Tasks Reports\'), \'Project_viewTaskReportList\' ),\n
+  (translateString(\'Tasks Summary\'), \'Project_viewSummaryList\'),\n
 ]\n
 </string> </value>
         </item>
@@ -116,8 +115,7 @@ return [\n
                         <value>
                           <tuple>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,6 +133,12 @@ return [\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Project_getExportModeItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
