@@ -70,7 +70,7 @@ Description:\n
 \n
 \n
       <tal:block tal:define="global portal_type_dict python:\n
-      here.getPortalTypeWorklistDictForWorkflow(context, workflow=\'egov_universal_workflow\')" />\n
+      here.getPortalTypeWorklistDictForWorkflow(context, workflow_list=[\'egov_universal_workflow\', \'egov_anonymous_workflow\'])" />\n
       <ul tal:condition="python: portal_type_dict">\n
         <li tal:repeat="portal_type python: portal_type_dict.keys()">\n
           <span class ="portal_type" tal:content="portal_type" i18n:domain="ui" i18n:translate="">portal_type</span>\n
@@ -149,6 +149,12 @@ Description:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
