@@ -1,3 +1,6 @@
+2008-08-28 yusei
+* Use N_ function for translation message.
+
 2008-08-11 vincentd
 * fix Base_jumpToRelatedObject to avoid a probleme with bad form_id when jumping on a single object
 

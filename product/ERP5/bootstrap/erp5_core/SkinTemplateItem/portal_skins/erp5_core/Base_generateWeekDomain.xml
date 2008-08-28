@@ -74,6 +74,8 @@ from Products.ERP5Type.Message import Message\n
 from Products.ERP5Type.Document import newTempBase\n
 from string import zfill\n
 \n
+N_ = lambda msg, **kw: str(Message(\'erp5_ui\', msg, **kw))\n
+\n
 portal = context.getPortalObject()\n
 request = context.REQUEST\n
 domain_list = []\n
@@ -120,15 +122,13 @@ if depth == 0:\n
     else:\n
       o.setProperty(\'delimiter_type\', 0)\n
 \n
-    title = Message(\'erp5_ui\',\n
-                    \'${day_name} ${date}\',\n
-                    mapping=dict(day_name=Message(\'erp5_ui\',\n
-                                                current_date.Day()),\n
-                                 date=current_date.strftime(date_format))).translate()\n
+    title = N_(\'${day_name} ${date}\',\n
+               mapping=dict(day_name=N_(current_date.Day()),\n
+                            date=current_date.strftime(date_format)))\n
     o.setProperty(\'title\', title)\n
 \n
     # Defining ToolTip (Optional)\n
-    tp = \'%s %s\' % (Message(domain=\'erp5_ui\', message=current_date.Day()), str(current_date))\n
+    tp = \'%s %s\' % (N_(current_date.Day()), str(current_date))\n
     o.setProperty(\'tooltip\', tp)\n
 \n
     # Defining Link (Optional)\n
@@ -214,6 +214,7 @@ return domain_list\n
                             <string>newTempBase</string>
                             <string>string</string>
                             <string>zfill</string>
+                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
