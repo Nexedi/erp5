@@ -295,11 +295,15 @@ class EmailDocument(File, TextDocument):
         part_encoding = part.get_content_charset()
         if part_encoding not in (None, 'utf-8',):
           try:
-            return part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
+            text_result = part.get_payload(decode=1).\
+                          decode(part_encoding).encode('utf-8')
           except (UnicodeDecodeError, LookupError):
-            return part.get_payload(decode=1)
-        return part.get_payload(decode=1)
-    return text_result
+            text_result = part.get_payload(decode=1)
+        else:
+          text_result = part.get_payload(decode=1)
+    if default is _MARKER:
+      return text_result
+    return text_result or default
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
   def getTextFormat(self, default=_MARKER):
