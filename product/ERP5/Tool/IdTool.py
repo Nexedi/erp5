@@ -150,7 +150,7 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastLengthGeneratedId')
-  def getLastLengthGeneratedId(self,id_group=None,default=None):
+  def getLastLengthGeneratedId(self, id_group, default=None):
     """
     Get the last length id generated
     """
