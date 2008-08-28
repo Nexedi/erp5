@@ -75,7 +75,7 @@ cat_uid = cat.getUid()\n
 agent_list = context.portal_catalog(portal_type=\'Assignment\',\n
                                     group_uid=cat_uid)\n
 \n
-return [(agent.getParentValue().getReference(), agent.getParentValue().getId()) for agent in agent_list if agent.getParentValue().getReference()]\n
+return [(agent.getParentValue().getReference(), agent.getParentValue().getReference()) for agent in agent_list if agent.getParentValue().getReference()]\n
 </string> </value>
         </item>
         <item>
