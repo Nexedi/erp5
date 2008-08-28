@@ -42,6 +42,9 @@ from Globals import get_request
 from AccessControl import Unauthorized
 from AccessControl import getSecurityManager
 
+# a marker function for translation.
+N_ = lambda msg, **kw: str(Message('erp5_ui', msg, **kw))
+
 # Max. number of catalog result
 MAX_SELECT = 30
 NEW_CONTENT_PREFIX = '_newContent_'
@@ -556,12 +559,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
             # form is not validated
             ##############################
             portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
-            translated_portal_type = Message(domain='erp5_ui',
-                                             message=portal_type)
+            translated_portal_type = N_(portal_type)
             # XXX Replace New by Add
-            message = Message(
-                    domain='erp5_ui', message='New ${portal_type}',
-                    mapping={'portal_type': translated_portal_type})
+            message = N_('New ${portal_type}',
+                         mapping={'portal_type': translated_portal_type})
             display_text = message
           else:
             display_text = 'Object has been deleted'
@@ -653,11 +654,9 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                   # form is not validated
                   ##############################
                   portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
-                  translated_portal_type = Message(domain='erp5_ui',
-                                                   message=portal_type)
-                  message = Message(
-                          domain='erp5_ui', message='New ${portal_type}',
-                          mapping={'portal_type': translated_portal_type})
+                  translated_portal_type = N_(portal_type)
+                  message = N_('New ${portal_type}',
+                               mapping={'portal_type': translated_portal_type})
                   display_text = message
                 else:
                   display_text = 'Object has been deleted'
@@ -736,11 +735,9 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                       pass
                     else:
                       if portal_type in module.getVisibleAllowedContentTypeList():
-                        translated_portal_type = Message(domain='erp5_ui',
-                                                         message=portal_type)
-                        message = Message(
-                                domain='erp5_ui', message='Add ${portal_type}',
-                                mapping={'portal_type': translated_portal_type})
+                        translated_portal_type = N_(portal_type)
+                        message = N_('Add ${portal_type}',
+                                     mapping={'portal_type':translated_portal_type})
                         menu_item_list.append((message, 
                                                '%s%s' % (NEW_CONTENT_PREFIX, 
                                                          portal_type)))
