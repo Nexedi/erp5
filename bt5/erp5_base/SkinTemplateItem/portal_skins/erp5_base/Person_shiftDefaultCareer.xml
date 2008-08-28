@@ -66,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.CMFActivity.Errors import ActivityPendingError\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 person = context\n
 career_list = []\n
@@ -77,7 +77,7 @@ if \'default_career\' in person.objectIds():\n
 \n
 if default_career is None:\n
   # No default career.\n
-  message = N_(\'Current career must exist.\')\n
+  message = Base_translateString(\'Current career must exist.\')\n
   return context.Base_redirect(form_id=form_id,\n
                                selection_name=selection_name,\n
                                selection_index=selection_index,\n
@@ -89,7 +89,7 @@ else:\n
   try:\n
     default_career.setId(new_id)\n
   except ActivityPendingError, error:\n
-    message = N_("%s" % error)\n
+    message = Base_translateString("%s" % error)\n
     return context.Base_redirect(form_id=form_id,\n
                                  selection_name=selection_name,\n
                                  selection_index=selection_index,\n
@@ -107,7 +107,7 @@ else:\n
     start_date=new_start_date,\n
     stop_date=None)\n
 \n
-  message = N_(\'Last career step terminated. New career step added.\')\n
+  message = Base_translateString(\'Last career step terminated. New career step added.\')\n
   return context.Base_redirect(form_id=form_id,\n
                                selection_name=selection_name,\n
                                selection_index=selection_index,\n
@@ -167,7 +167,7 @@ else:\n
                             <string>ActivityPendingError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>person</string>
                             <string>career_list</string>
                             <string>None</string>

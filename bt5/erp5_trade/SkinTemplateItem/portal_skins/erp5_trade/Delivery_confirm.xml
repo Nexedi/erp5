@@ -65,16 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-\n
-N_ = lambda msg, **kw: str(Message(\'erp5_ui\', msg, **kw))\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 packing_list = context\n
  \n
 # Modify state\n
 packing_list_state = packing_list.getSimulationState()\n
 if packing_list_state == "draft":\n
-  packing_list.confirm(comment=N_(\'Initialized by Delivery Builder\'))\n
+  packing_list.confirm(comment=translateString(\'Initialized by Delivery Builder\'))\n
 </string> </value>
         </item>
         <item>
@@ -125,8 +123,7 @@ if packing_list_state == "draft":\n
                           <tuple>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>context</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>

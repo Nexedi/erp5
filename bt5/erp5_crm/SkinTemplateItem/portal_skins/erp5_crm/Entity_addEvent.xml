@@ -113,8 +113,7 @@ event_kw[\'causality\'] = causality\n
 module = context.getDefaultModule(portal_type=portal_type)\n
 event = module.newContent(**event_kw)\n
 \n
-N_ = context.Base_translateString\n
-message = N_(\'New Event Created\')\n
+message = context.Base_translateString(\'New Event Created\')\n
 \n
 event.Base_redirect(keep_items={\'portal_status_message\': message})\n
 </string> </value>
@@ -196,7 +195,6 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
                             <string>module</string>
                             <string>_apply_</string>
                             <string>event</string>
-                            <string>N_</string>
                             <string>message</string>
                           </tuple>
                         </value>

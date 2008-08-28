@@ -71,7 +71,7 @@
 # and tries to complete some fields\n
 \n
 order = context\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 trade_condition_portal_type = \'Sale Trade Condition\'\n
 \n
 trade_condition_list = order.getSpecialiseValueList(\n
@@ -97,7 +97,7 @@ while count > 0 and len(trade_condition_list) == 0:\n
 \n
 if len(trade_condition_list ) == 0 :\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id,\n
-      \'portal_status_message=\' + N_(\'No Trade Condition.\'))\n
+      \'portal_status_message=\' + Base_translateString(\'No Trade Condition.\'))\n
 else :\n
   # if more than one trade condition is found, simply apply the first one\n
   trade_condition=trade_condition_list[0].getObject()\n
@@ -108,7 +108,7 @@ else :\n
     context.setReceivedDate(DateTime())\n
 \n
   redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
-      \'portal_status_message=\' + N_(\'Order updated.\'))\n
+      \'portal_status_message=\' + Base_translateString(\'Order updated.\'))\n
 \n
 if batch_mode:\n
   return\n
@@ -169,7 +169,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
                             <string>context</string>
                             <string>order</string>
                             <string>_getattr_</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>trade_condition_portal_type</string>
                             <string>trade_condition_list</string>
                             <string>tested_base_category_list</string>

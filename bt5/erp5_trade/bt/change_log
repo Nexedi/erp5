@@ -1,5 +1,5 @@
 2008-08-28 yusei
-* Use N_ function for translation message.
+* Use Base_translateString or translateString instead of N_ for translation message.
 
 2008-07-30 Jerome
 Add "offered" and "rejected" state on order workflow, to manage offers.

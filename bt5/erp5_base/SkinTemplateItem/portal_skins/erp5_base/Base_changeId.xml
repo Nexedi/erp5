@@ -65,8 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 if id and id != context.getId():\n
   container = context.getParentValue()\n
@@ -80,13 +79,13 @@ if id and id != context.getId():\n
           keep_items=dict(selection_name=selection_name,\n
                           selection_index=selection_index,\n
                           cancel_url=cancel_url,\n
-                          portal_status_message=N_("Function Changed")),)\n
+                          portal_status_message=translateString("Function Changed")),)\n
 \n
 return context.Base_redirect(form_id,\n
           keep_items=dict(selection_name=selection_name,\n
                           selection_index=selection_index,\n
                           cancel_url=cancel_url,\n
-                          portal_status_message=N_("Cancelled")),)\n
+                          portal_status_message=translateString("Cancelled")),)\n
 </string> </value>
         </item>
         <item>
@@ -142,8 +141,7 @@ return context.Base_redirect(form_id,\n
                             <string>cancel_url</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>container</string>

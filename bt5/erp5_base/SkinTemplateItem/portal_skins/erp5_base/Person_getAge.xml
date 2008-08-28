@@ -73,7 +73,7 @@ string.\n
 """\n
 from DateTime import DateTime\n
 from Products.ERP5Type.DateUtils import getIntervalBetweenDates\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 birthday = context.getBirthday()\n
 if birthday is None:\n
@@ -88,7 +88,7 @@ if year:\n
   return interval_dict[\'year\']\n
 \n
 # mapping contains year, month & day\n
-return N_("${year} Years Old", mapping=interval_dict)\n
+return Base_translateString("${year} Years Old", mapping=interval_dict)\n
 
 
 ]]></string> </value>
@@ -140,7 +140,7 @@ return N_("${year} Years Old", mapping=interval_dict)\n
                             <string>getIntervalBetweenDates</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>birthday</string>
                             <string>None</string>
                             <string>interval_dict</string>

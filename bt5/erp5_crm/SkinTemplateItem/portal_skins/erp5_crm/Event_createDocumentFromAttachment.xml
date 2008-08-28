@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>dms_module = getattr(context, \'document_module\', None)\n
 attachment_info_list =  context.getAttachmentInformationList()\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 if dms_module is not None:\n
   for uid in uids:\n
     # Maybe select Line can be improved later\n
@@ -88,12 +88,12 @@ if dms_module is not None:\n
 \n
 if len(uids) == 1:\n
   return context.REQUEST.RESPONSE.redirect(\n
-                  \'%s/view?portal_status_message=%s+%s.\' % (doc.absolute_url(), doc.getTranslatedPortalType(),\n
-                                         N_(\'+Created+Successfully\')))\n
+    \'%s/view?portal_status_message=%s+%s.\' % (doc.absolute_url(), doc.getTranslatedPortalType(),\n
+                                              Base_translateString(\'+Created+Successfully\')))\n
 \n
 return context.REQUEST.RESPONSE.redirect(\n
-                  \'%s?portal_status_message=%s+%s.\' % (dms_module.absolute_url(),len(uids),\n
-                                         N_(\'+Documents+created+Successfully\')))\n
+  \'%s?portal_status_message=%s+%s.\' % (dms_module.absolute_url(),len(uids),\n
+                                       Base_translateString(\'+Documents+created+Successfully\')))\n
 </string> </value>
         </item>
         <item>
@@ -151,7 +151,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>dms_module</string>
                             <string>_getattr_</string>
                             <string>attachment_info_list</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>_getiter_</string>
                             <string>uid</string>
                             <string>_getitem_</string>
