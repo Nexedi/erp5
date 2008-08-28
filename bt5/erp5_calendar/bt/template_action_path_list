@@ -9,6 +9,8 @@ Leave Request Period | periodicity_view
 Leave Request Period | view
 Leave Request | view
 Organisation | planning_task_list
+Person Module | leave_request_export
+Person Module | leave_request_report
 Person Module | planning
 Person | jump_leave_requests
 Person | jump_presence_requests

@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
+portal = context.getPortalObject()\n
+stool = portal.portal_simulation\n
+\n
+person_value_list = portal.portal_categories.restrictedTraverse(\n
+    node_category).getGroupRelatedValueList(portal_type=\'Person\',\n
+                                            checked_permission=\'View\')\n
+\n
+# for stat\n
+total_time_per_resource = dict()\n
+total_time = 0\n
+\n
+result_list = []\n
+\n
+# guess the list of resource used in presences\n
+presence_resource_uid_list = [inventory.resource_uid for inventory\n
+     in stool.getInventoryList(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          portal_type=(\'Presence Request Period\',\n
+                                       \'Group Presence Period\'),\n
+                          group_by_resource=1)]\n
+\n
+\n
+for person in person_value_list:\n
+  result_dict = dict()\n
+  person_total = 0\n
+\n
+  person_planned_time = person.getAvailableTime(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          resource=presence_resource_uid_list)\n
+\n
+  for inventory in stool.getInventoryList(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          node_uid=person.getUid(),\n
+                          portal_type=\'Leave Request Period\',\n
+                          group_by_resource=1):\n
+\n
+    resource = inventory.resource_relative_url\n
+\n
+    if inventory.resource_uid in presence_resource_uid_list:\n
+      raise ValueError, "This report does not work when same resource are"\\\n
+                        " used in presence and leave."\n
+\n
+    person_time = (person_planned_time - person.getAvailableTime(\n
+                      from_date=from_date,\n
+                      to_date=to_date,\n
+                      resource=presence_resource_uid_list +\n
+                              [inventory.resource_uid] )) / 60. / 60.\n
+\n
+    result_dict[resource] = person_time\n
+\n
+    total_time_per_resource[resource] = \\\n
+        person_time + total_time_per_resource.get(resource, 0)\n
+\n
+    person_total += person_time\n
+    total_time += person_time\n
+\n
+\n
+  result_list.append(\n
+      Object(\n
+        uid=\'new_0\',\n
+        person_title=person.getTitle(),\n
+        person_career_reference=person.getCareerReference(),\n
+        total=person_total,\n
+        **result_dict))\n
+\n
+result_list.sort(lambda a,b: cmp(\n
+        a.person_career_reference or a.person_title,\n
+        b.person_career_reference or b.person_title))\n
+\n
+request.set(\'total_time\', total_time)\n
+request.set(\'total_time_per_resource\', total_time_per_resource)\n
+\n
+return result_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>from_date, to_date, node_category, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>node_category</string>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>stool</string>
+                            <string>person_value_list</string>
+                            <string>dict</string>
+                            <string>total_time_per_resource</string>
+                            <string>total_time</string>
+                            <string>result_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>inventory</string>
+                            <string>presence_resource_uid_list</string>
+                            <string>person</string>
+                            <string>result_dict</string>
+                            <string>person_total</string>
+                            <string>person_planned_time</string>
+                            <string>resource</string>
+                            <string>ValueError</string>
+                            <string>person_time</string>
+                            <string>_write_</string>
+                            <string>_inplacevar_</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PersonModule_getLeaveRequestReportLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
