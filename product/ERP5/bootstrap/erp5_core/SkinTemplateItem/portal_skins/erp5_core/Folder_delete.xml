@@ -69,13 +69,13 @@
 
 from ZODB.POSException import ConflictError\n
 portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 selected_uids = portal.portal_selections.updateSelectionCheckedUidList(\n
                             selection_name,listbox_uid,uids)\n
 uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
-error = context.portal_selections.selectionHasChanged(md5_object_uid_list,\n
+error = portal.portal_selections.selectionHasChanged(md5_object_uid_list,\n
                                                       uids)\n
 \n
 REQUEST=context.REQUEST\n
@@ -101,7 +101,7 @@ def Object_hasRelation(obj):\n
 \n
 ret_url = context.absolute_url() + \'/\' + form_id\n
 if error:\n
-  message = N_("Sorry+your+selection+has+changed")\n
+  message = Base_translateString("Sorry+your+selection+has+changed")\n
   qs = \'?portal_status_message=%s\' % message\n
 elif uids is not None:\n
   # Check if there is some related objets.\n
@@ -112,10 +112,10 @@ elif uids is not None:\n
 \n
   if object_used > 0:\n
     if object_used == 1:\n
-      message = N_("Sorry,+1+Item+Is+In+Use.")\n
+      message = Base_translateString("Sorry,+1+Item+Is+In+Use.")\n
     else:\n
-      message = N_("Sorry,+${count}+Items+Are+In+Use.",\n
-                   mapping={\'count\': repr(object_used)})\n
+      message = Base_translateString("Sorry,+${count}+Items+Are+In+Use.",\n
+                                     mapping={\'count\': repr(object_used)})\n
     qs = \'?portal_status_message=%s\' % message  \n
   else:\n
 \n
@@ -137,11 +137,11 @@ elif uids is not None:\n
     # Remove some objects\n
     try:\n
       if object_to_remove_list != []:\n
-        if context.portal_type==\'Preference\':\n
+        if portal.portal_type==\'Preference\':\n
           context.manage_delObjects(\n
                         ids=[x.getId() for x in object_to_remove_list],\n
                         REQUEST=REQUEST)\n
-          context.portal_caches.clearCacheFactory(\'erp5_ui_medium\')\n
+          portal.portal_caches.clearCacheFactory(\'erp5_ui_medium\')\n
         else:\n
           context.manage_delObjects(\n
                         uids=[x.getUid() for x in object_to_remove_list],\n
@@ -152,17 +152,15 @@ elif uids is not None:\n
       qs = \'?portal_status_message=%s\' % message\n
     else:\n
       object_ids = [x.getId() for x in object_to_remove_list]\n
-      comment = N_(\'Deleted objects: ${object_ids}\',\n
-                   mapping={\'object_ids\': object_ids})\n
+      comment = Base_translateString(\'Deleted objects: ${object_ids}\',\n
+                                     mapping={\'object_ids\': object_ids})\n
       if \'edit_action\' in [x.get(\'id\', \'\') for x in\n
-                           context.portal_workflow.getActionsFor(context)]:\n
+                           portal.portal_workflow.getActionsFor(context)]:\n
         # record object deletion in workflow history\n
-        context.getPortalObject().portal_workflow.doActionFor(\n
-                      context,\n
-                      \'edit_action\',\n
-                      comment=comment)\n
+        portal.portal_workflow.doActionFor(context, \'edit_action\',\n
+                                           comment=comment)\n
 \n
-      message = N_("Deleted.")\n
+      message = Base_translateString("Deleted.")\n
 \n
       # Change workflow state of others objects\n
       not_deleted_count = 0\n
@@ -170,9 +168,7 @@ elif uids is not None:\n
         # Hidden transition (without a message displayed) \n
         # are not returned by getActionsFor\n
         try:\n
-          context.getPortalObject().portal_workflow.doActionFor(\n
-                      object,\n
-                      \'delete_action\')\n
+          portal.portal_workflow.doActionFor(object, \'delete_action\')\n
         except ConflictError:\n
           raise\n
         except:\n
@@ -181,19 +177,19 @@ elif uids is not None:\n
 \n
       # Generate message\n
       if not_deleted_count == 1:\n
-        message = N_("Sorry+You+Can+Not+Delete+${count}+Item.",\n
-                     mapping={\'count\': not_deleted_count})\n
+        message = Base_translateString("Sorry+You+Can+Not+Delete+${count}+Item.",\n
+                                       mapping={\'count\': not_deleted_count})\n
       elif not_deleted_count > 1:\n
-        message = N_("Sorry+You+Can+Not+Delete+${count}+Items.",\n
-                     mapping={\'count\': not_deleted_count})\n
+        message = Base_translateString("Sorry+You+Can+Not+Delete+${count}+Items.",\n
+                                       mapping={\'count\': not_deleted_count})\n
       qs = \'?portal_status_message=%s\' % message\n
 \n
 else:\n
-  message = N_("Please+select+one+or+more+items+first.")\n
+  message = Base_translateString("Please+select+one+or+more+items+first.")\n
   qs = \'?portal_status_message=%s\' % message\n
 \n
 # make sure nothing is checked after\n
-context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
+portal.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
 return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
 
 
@@ -265,7 +261,7 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>selected_uids</string>
                             <string>error</string>
                             <string>REQUEST</string>

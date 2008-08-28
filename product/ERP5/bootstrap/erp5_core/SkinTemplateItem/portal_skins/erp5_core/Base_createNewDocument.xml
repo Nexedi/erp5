@@ -68,25 +68,23 @@
             <value> <string>"""Add an object of the same type as self in the container, unless\n
 this type cannot be added in the container.\n
 """\n
-N_ = context.getPortalObject().Base_translateString\n
+Base_translateString = context.Base_translateString\n
 REQUEST=context.REQUEST\n
 parent = context.getParentValue()\n
 allowed_type_list = parent.getVisibleAllowedContentTypeList()\n
 \n
 if not allowed_type_list:\n
   return context.ERP5Site_redirect(\'%s/%s\' % (context.absolute_url(), form_id),\n
-        keep_items={\'portal_status_message\':\n
-           N_("You are not allowed to add new content in this context.")})\n
+        keep_items={\'portal_status_message\':Base_translateString("You are not allowed to add new content in this context.")})\n
 \n
 if context.getPortalType() not in allowed_type_list:\n
   return context.ERP5Site_redirect(\'%s/%s\' % (context.absolute_url(), form_id),\n
-        keep_items={\'portal_status_message\':\n
-           N_("You are not allowed to add ${portal_type} in this context.",\n
+        keep_items={\'portal_status_message\':Base_translateString("You are not allowed to add ${portal_type} in this context.",\n
               mapping=dict(portal_type=context.getTranslatedPortalType()))})\n
   \n
 new_content = parent.newContent(portal_type=context.getPortalType())\n
 return context.ERP5Site_redirect(\'%s/%s\' % (new_content.absolute_url(), form_id),\n
-              keep_items={\'portal_status_message\': N_("Object Created.")})\n
+              keep_items={\'portal_status_message\':Base_translateString("Object Created.")})\n
 </string> </value>
         </item>
         <item>
@@ -138,7 +136,7 @@ return context.ERP5Site_redirect(\'%s/%s\' % (new_content.absolute_url(), form_i
                             <string>form_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>REQUEST</string>
                             <string>parent</string>
                             <string>allowed_type_list</string>

@@ -66,12 +66,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 item_list = [(\'\', \'\')]\n
 \n
 for skin_selection in portal.portal_skins.getSkinSelections():\n
-  item_list.append((N_("%s Style" % skin_selection), skin_selection))\n
+  item_list.append((Base_translateString("%s Style" % skin_selection), skin_selection))\n
 \n
 return item_list\n
 </string> </value>
@@ -125,7 +125,7 @@ return item_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
                             <string>skin_selection</string>

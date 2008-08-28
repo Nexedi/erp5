@@ -68,7 +68,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 def Object_hasRelation(object):\n
   # Check if there is some related objets.\n
@@ -101,16 +101,16 @@ if uids != []:\n
 \n
   if object_used > 0:\n
     if object_used == 1:\n
-      message = N_("Sorry,+1+Item+Is+In+Use.")\n
+      message = Base_translateString("Sorry,+1+Item+Is+In+Use.")\n
     else:\n
-      message = N_("Sorry,+${count}+Items+Are+In+Use.",\n
-                   mapping={\'count\': repr(object_used)})\n
+      message = Base_translateString("Sorry,+${count}+Items+Are+In+Use.",\n
+                                     mapping={\'count\': repr(object_used)})\n
     qs = \'?portal_status_message=%s\' % message  \n
   else:\n
     context.manage_cutObjects(uids=uids, REQUEST=request)\n
-    message = N_("Item(s)+Cut.")\n
+    message = Base_translateString("Item(s)+Cut.")\n
 else:\n
-  message = N_("Please+select+one+or+more+items+to+cut+first.")\n
+  message = Base_translateString("Please+select+one+or+more+items+to+cut+first.")\n
 return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
 
 
@@ -163,7 +163,7 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>Object_hasRelation</string>
                             <string>selected_uids</string>
                             <string>request</string>

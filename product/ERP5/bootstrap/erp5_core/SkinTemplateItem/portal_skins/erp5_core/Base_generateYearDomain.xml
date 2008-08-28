@@ -70,11 +70,9 @@
 #  - Years always starts at 0h of the current year\'s first day  and \n
 #    finish 0h of the next year\'s first day.\n
 \n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Document import newTempBase\n
 from string import zfill\n
-\n
-N_ = lambda msg, **kw: str(Message(\'erp5_ui\', msg, **kw))\n
 \n
 portal = context.getPortalObject()\n
 request = context.REQUEST\n
@@ -120,9 +118,9 @@ if depth == 0:\n
     \n
     o.setProperty(\'relative_position\', int(current_date))\n
 \n
-    title = N_(\'${month_name} ${year}\',\n
-               mapping=dict(month_name=N_(current_date.Month()),\n
-                            year=str(current_date.year())))\n
+    title = translateString(\'${month_name} ${year}\',\n
+                            mapping=dict(month_name=translateString(current_date.Month()),\n
+                                         year=str(current_date.year())))\n
     o.setProperty(\'title\', title)\n
 \n
     # Defining Link\n
@@ -204,12 +202,11 @@ return domain_list\n
                             <string>parent</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>string</string>
                             <string>zfill</string>
-                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -256,6 +253,12 @@ return domain_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_generateYearDomain</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

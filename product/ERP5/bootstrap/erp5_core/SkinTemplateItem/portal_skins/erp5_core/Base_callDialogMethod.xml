@@ -226,7 +226,7 @@ if hasattr(kw, \'previous_md5_object_uid_list\'):\n
     object_uid_list = map(lambda x:x.getObject().getUid(), selection_list)\n
     error = context.portal_selections.selectionHasChanged(kw[\'previous_md5_object_uid_list\'], object_uid_list)\n
     if error:\n
-      error_message = N_("Sorry+your+selection+has+changed")\n
+      error_message = context.Base_translateString("Sorry+your+selection+has+changed")\n
 \n
 # if dialog_category is object_search, then edit the selection\n
 if dialog_category == "object_search" :\n
@@ -387,7 +387,6 @@ return request.RESPONSE.redirect(redirect_url)\n
                             <string>map</string>
                             <string>object_uid_list</string>
                             <string>error</string>
-                            <string>N_</string>
                             <string>listbox_uid</string>
                             <string>uids</string>
                             <string>selected_uids</string>

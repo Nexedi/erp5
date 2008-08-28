@@ -66,12 +66,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 checkPerm = context.portal_membership.checkPermission\n
 \n
-if jump_from_relative_url is None:                                                                                                          \n
-  relation = context                                                                                                         \n
-else:                                                                                                                        \n
+if jump_from_relative_url is None:\n
+  relation = context\n
+else:\n
   relation = context.getPortalObject().restrictedTraverse(jump_from_relative_url)\n
 \n
 # FIXME: performance problem getting *all* related documents URL is not scalable.\n
@@ -89,9 +89,10 @@ if same_type(portal_type, \'\'):\n
 relation_found = 0\n
 if len(related_list) == 0:\n
   url = context.absolute_url()\n
-  message = N_(\'No %s Related\' % portal_type[0],\n
-      default = unicode(N_(\'No ${portal_type} Related.\',\n
-      mapping = { \'portal_type\': N_(portal_type[0])}), \'utf8\'))\n
+  message = Base_translateString(\n
+    \'No %s Related\' % portal_type[0],\n
+    default = unicode(Base_translateString(\'No ${portal_type} Related.\',\n
+                                           mapping = { \'portal_type\': Base_translateString(portal_type[0])}), \'utf8\'))\n
 \n
 elif len(related_list) == 1:\n
   relation_found = 1\n
@@ -107,17 +108,17 @@ elif len(related_list) == 1:\n
     else:\n
       form_id = \'view\'\n
     url = related_object.absolute_url()\n
-    message = N_(\n
+    message = Base_translateString(\n
       # first, try to get a full translated message with portal types\n
       "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),\n
        # if not found, fallback to generic translation\n
-      default = unicode(N_(\'${this_portal_type} related to ${that_portal_type} : ${that_title}.\',\n
+      default = unicode(Base_translateString(\'${this_portal_type} related to ${that_portal_type} : ${that_title}.\',\n
         mapping={"this_portal_type" : related_object.getTranslatedPortalType(),\n
                  "that_portal_type" : context.getTranslatedPortalType(),\n
                  "that_title" : context.getTitleOrId() }), \'utf8\'))\n
   else :\n
     url = context.absolute_url()\n
-    message = N_("You are not authorized to view the related document.")\n
+    message = Base_translateString("You are not authorized to view the related document.")\n
     relation_found = 0\n
 \n
 else:\n
@@ -149,7 +150,7 @@ else:\n
       related_object_list.append(obj)\n
   if len(related_object_list) == 0 :\n
     url = context.absolute_url()\n
-    message = N_("You are not authorized to view any related document.")\n
+    message = Base_translateString("You are not authorized to view any related document.")\n
     relation_found = 0\n
   else :\n
     request=context.REQUEST\n
@@ -230,7 +231,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>checkPerm</string>
                             <string>None</string>
                             <string>relation</string>

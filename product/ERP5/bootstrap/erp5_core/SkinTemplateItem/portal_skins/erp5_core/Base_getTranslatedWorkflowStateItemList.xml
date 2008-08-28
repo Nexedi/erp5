@@ -68,7 +68,7 @@
             <value> <string># wf_id : the id of workflow. It can be string, list or tuple.\n
 from Products.CMFCore.utils import getToolByName\n
 \n
-N_ = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 \n
 if same_type(wf_id, []) or same_type(wf_id, ()):\n
@@ -87,7 +87,7 @@ for wf_id in wf_id_list:\n
     if state.title and state.id != \'deleted\':\n
       if not state_dict.has_key(state.id):\n
         # we hide states without titles\n
-        item_list.append((N_(state.title), state.id))\n
+        item_list.append((Base_translateString(state.title), state.id))\n
         state_dict[state.id] = None\n
 \n
 return item_list\n
@@ -148,7 +148,7 @@ return item_list\n
                             <string>getToolByName</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>same_type</string>
                             <string>wf_id_list</string>
                             <string>state_dict</string>

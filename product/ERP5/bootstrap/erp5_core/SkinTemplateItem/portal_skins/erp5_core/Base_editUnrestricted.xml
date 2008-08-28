@@ -72,7 +72,7 @@ from Products.CMFActivity.Errors import ActivityPendingError\n
 \n
 request=context.REQUEST\n
 portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 # Extra security\n
 if request.get(\'field_prefix\', None):\n
@@ -105,7 +105,7 @@ except FormValidationError, validation_errors:\n
 kw = {}\n
 encapsulated_editor_list = []\n
 MARKER = []\n
-message = N_("Data+Updated.")\n
+message = Base_translateString("Data+Updated.")\n
 \n
 \n
 def parseField(f):\n
@@ -139,7 +139,7 @@ try:\n
   for encapsulated_editor in encapsulated_editor_list:\n
     encapsulated_editor.edit(context)\n
 except ActivityPendingError,e:\n
-  message = N_("%s" % e)\n
+  message = Base_translateString("%s" % e)\n
 \n
 ignore_layout = int(ignore_layout)\n
 editable_mode = int(editable_mode)\n
@@ -227,7 +227,7 @@ return request[\'RESPONSE\'].redirect(redirect_url)\n
                             <string>context</string>
                             <string>request</string>
                             <string>portal</string>
-                            <string>N_</string>
+                            <string>Base_translateString</string>
                             <string>None</string>
                             <string>getattr</string>
                             <string>form</string>

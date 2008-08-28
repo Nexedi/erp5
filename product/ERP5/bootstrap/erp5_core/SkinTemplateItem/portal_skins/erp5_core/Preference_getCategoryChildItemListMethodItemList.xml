@@ -65,15 +65,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-N_ = lambda msg: Message(\'erp5_ui\', msg)\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 return [\n
    (\'\', \'\'),\n
-   (N_(\'Logical Path\'), \'getCategoryChildTranslatedLogicalPathItemList\', ),\n
-   (N_(\'Logical Compact Path\'), \'getCategoryChildTranslatedCompactLogicalPathItemList\', ),\n
-   (N_(\'Indented Title\'), \'getCategoryChildTranslatedIndentedTitleItemList\', ),\n
-   (N_(\'Indented Compact Title\'), \'getCategoryChildTranslatedIndentedCompactTitleItemList\', ),\n
+   (translateString(\'Logical Path\'), \'getCategoryChildTranslatedLogicalPathItemList\', ),\n
+   (translateString(\'Logical Compact Path\'), \'getCategoryChildTranslatedCompactLogicalPathItemList\', ),\n
+   (translateString(\'Indented Title\'), \'getCategoryChildTranslatedIndentedTitleItemList\', ),\n
+   (translateString(\'Indented Compact Title\'), \'getCategoryChildTranslatedIndentedCompactTitleItemList\', ),\n
 ]\n
 </string> </value>
         </item>
@@ -124,8 +123,7 @@ return [\n
                         <value>
                           <tuple>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                           </tuple>
                         </value>
                     </item>
