@@ -358,7 +358,6 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
 
   def testGetSelectionContainer(self, quiet=quiet, run=run_all_test):
     if not run: return
-    self.portal_selections.setStorage('Memcached Tool')
     self.assertEquals([],
                       self.portal_selections.getSelectionNameList())
     self.assertEquals([],
