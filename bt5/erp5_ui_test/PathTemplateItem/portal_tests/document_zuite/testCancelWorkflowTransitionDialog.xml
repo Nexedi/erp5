@@ -127,7 +127,7 @@ workflow history. -->\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
+  <td>x0_listbox_record_number</td>\n
   <td>1 record(s)</td>\n
 </tr>\n
 \n

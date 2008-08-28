@@ -67,7 +67,10 @@
             <key> <string>_body</string> </key>
             <value> <string>manage_deleteSelection = context.getPortalObject().portal_selections.manage_deleteSelection\n
 for index in xrange(3):\n
-  manage_deleteSelection(\'x%s_foo_dummy_listbox_selection\' % (index, ))\n
+  try:\n
+    manage_deleteSelection(\'x%s_foo_dummy_listbox_selection\' % (index, ))\n
+  except KeyError:\n
+    pass\n
 return "Done."\n
 </string> </value>
         </item>
@@ -117,6 +120,7 @@ return "Done."\n
                             <string>_getiter_</string>
                             <string>xrange</string>
                             <string>index</string>
+                            <string>KeyError</string>
                           </tuple>
                         </value>
                     </item>
