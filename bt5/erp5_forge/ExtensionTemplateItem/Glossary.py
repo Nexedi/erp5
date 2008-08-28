@@ -61,9 +61,19 @@ def findStaticTranslationText(page_template, func_name_list):
       text_dict.update(interpreter._i18n_message_id_dict)
 
   def addTextFromPythonExpression(node):
-    tal_expression = node[1]
-    if isinstance(tal_expression, (tuple, list)):
-      tal_expression = tal_expression[0]
+    if node[0]=='insertText':
+      tal_expression = node[1]
+      if isinstance(tal_expression, (tuple, list)):
+        tal_expression = tal_expression[0]
+    elif node[0] in ('setLocal', 'setGlobal'):
+      if len(node)==2:
+        tal_expression = node[1][1]
+      elif len(node)==3:
+        tal_expression = node[2]
+      else:
+        return
+    else:
+      return
     tal_expression = tal_expression[1:-1]
     match = name_match(tal_expression)
     if match:
@@ -86,6 +96,8 @@ def findStaticTranslationText(page_template, func_name_list):
   parser.parseString(page_template._text)
   iterate(parser.gen.program, 'insertTranslation', addText)
   iterate(parser.gen.program, 'insertText', addTextFromPythonExpression)
+  iterate(parser.gen.program, 'setLocal', addTextFromPythonExpression)
+  iterate(parser.gen.program, 'setGlobal', addTextFromPythonExpression)
   return text_dict.keys()
 
 #
