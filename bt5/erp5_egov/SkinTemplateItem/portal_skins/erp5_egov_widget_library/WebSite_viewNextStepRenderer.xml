@@ -66,12 +66,13 @@
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
   <input type="hidden" name="view_document_url" value=""\n
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
+  <input type="hidden" name="editable_mode" value="0" />\n
 <!--  <input type="hidden" name="actions" value=""\n
          tal:attributes="value request/actions" />\n
   <input type="hidden" name="current_action" value=""\n
          tal:attributes="value request/current_action" />-->\n
   <span class="onleft">\n
-    <button type="submit" class="save" title="Save" name="EGov_Base_edit:method"  \n
+    <button type="submit" class="save" title="Save" name="Base_edit:method"  \n
       i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description" i18n:translate="" i18n:domain="ui">Save draft and continue later</span>\n
@@ -107,6 +108,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
