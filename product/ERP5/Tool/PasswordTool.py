@@ -176,7 +176,7 @@ class PasswordTool(BaseTool):
     elif current_date > expiration_date:
       msg = translateString("Date has expire.")
     elif password != password_confirmation:
-      msg = translateString("Password are not identical.")
+      msg = translateString("Passwords do not match.")
     if msg is not None:
       if REQUEST is not None:
         ret_url = '%s/login_form?portal_status_message=%s' % \
