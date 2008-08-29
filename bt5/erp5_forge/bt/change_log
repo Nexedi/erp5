@@ -1,3 +1,6 @@
+2008-08-29 yusei
+* Correct message text.
+
 2008-08-28 yusei
 * Extract translation message from tal:dfeine expression.
 * Use Base_translateString or translateString instead of N_ for translation message.

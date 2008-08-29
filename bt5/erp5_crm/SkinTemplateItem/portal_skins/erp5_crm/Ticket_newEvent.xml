@@ -73,8 +73,9 @@ translateString = context.Base_translateString\n
 module = context.getDefaultModule(portal_type)\n
 \n
 if portal_type not in module.getVisibleAllowedContentTypeList():\n
-  return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=translateString("You Don\'t Have Permission to Add New Event")))\n
+  return context.Base_redirect(form_id,\n
+                               keep_items=dict(\n
+       portal_status_message=translateString("You do not have permission to add new event")))\n
 \n
 # Create a new event\n
 event = module.newContent(portal_type=portal_type, description=description, title=title, follow_up=context.getRelativeUrl())\n
@@ -86,8 +87,9 @@ else:\n
   event.plan()\n
 \n
 # Redirect to even\n
-portal_status_message = translateString("Created and associated a new ${portal_type} to the ticket.", \n
-                                    mapping = dict(portal_type = translateString(portal_type)))\n
+portal_status_message = translateString(\n
+  "Created and associated a new ${portal_type} to the ticket.", \n
+  mapping=dict(portal_type = translateString(portal_type)))\n
 return event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>

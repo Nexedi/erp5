@@ -69,23 +69,25 @@
   This script creates a new event with given metadata and\n
   attaches it to the current bug.\n
 """\n
-translateString = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 portal_type = \'Bug\'\n
 module = context.getDefaultModule(portal_type)\n
 \n
 if portal_type not in module.getVisibleAllowedContentTypeList():\n
-  return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=translateString("You Don\'t Have Permission to Add New Bug")))\n
+  return context.Base_redirect(form_id,\n
+                               keep_items=dict(\n
+    portal_status_message=Base_translateString("You do not have permission to add new bug")))\n
 \n
 # Create a new event\n
-bug = module.newContent(portal_type=portal_type, \n
-                                                 description=description, \n
-                                                 title=title, \n
-                                                 follow_up=context.getRelativeUrl())\n
+bug = module.newContent(portal_type=portal_type,\n
+                        description=description,\n
+                        title=title,\n
+                        follow_up=context.getRelativeUrl())\n
 \n
 # Redirect to even\n
-portal_status_message = translateString("Created and associated a new ${portal_type} to the ticket.", \n
-                                    mapping = dict(portal_type = translateString(portal_type)))\n
+portal_status_message = Base_translateString(\n
+  "Created and associated a new ${portal_type} to the ticket.",\n
+  mapping = dict(portal_type=Base_translateString(portal_type)))\n
 return bug.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>
@@ -135,7 +137,7 @@ return bug.Base_redirect(\'view\', keep_items = dict(portal_status_message=porta
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>translateString</string>
+                            <string>Base_translateString</string>
                             <string>portal_type</string>
                             <string>module</string>
                             <string>dict</string>
