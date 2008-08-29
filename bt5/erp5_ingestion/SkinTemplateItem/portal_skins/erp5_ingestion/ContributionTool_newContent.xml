@@ -78,7 +78,7 @@ portal_type = kw.get(\'portal_type\', None)\n
 doc = context.portal_contributions.newContent(file = file,\n
                                               portal_type = portal_type)\n
 \n
-msg = translateString("${portal_type} created successfully.",\n
+msg = translateString("${portal_type} created successfully",\n
                        mapping = {\'portal_type\':doc.getPortalType()})\n
 return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':msg})\n
 </string> </value>
@@ -165,6 +165,12 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
         <item>
             <key> <string>title</string> </key>
             <value> <string>Contribute new file</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
