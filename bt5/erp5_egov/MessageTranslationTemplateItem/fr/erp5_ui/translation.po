@@ -18,60 +18,6 @@ msgstr "${number} enregistrements "
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
 
-msgid "&lt;a href=\"http://localhost:1234/erp5/declaration_tva_module/142/view?selection_index=3&amp;amp;selection_name=pending_requests_selection&amp;amp;ignore_layout:int=0&amp;amp;reset:int=1\"&gt;Declaration De TVA&lt;/a&gt;"
-msgstr ""
-
-msgid "&lt;a href=\"http://localhost:1234/erp5/declaration_tva_module/145/view?selection_index=2&amp;amp;selection_name=pending_requests_selection&amp;amp;ignore_layout:int=0&amp;amp;reset:int=1\"&gt;Declaration De TVA&lt;/a&gt;"
-msgstr ""
-
-msgid "&lt;a href=\"http://localhost:1234/erp5/declaration_tva_module/150/view?selection_index=5&amp;amp;selection_name=pending_requests_selection&amp;amp;ignore_layout:int=0&amp;amp;reset:int=1\"&gt;Declaration De TVA&lt;/a&gt;"
-msgstr ""
-
-msgid "&lt;a href=\"http://localhost:1234/erp5/declaration_tva_module/151/view?selection_index=4&amp;amp;selection_name=pending_requests_selection&amp;amp;ignore_layout:int=0&amp;amp;reset:int=1\"&gt;Declaration De TVA&lt;/a&gt;"
-msgstr ""
-
-msgid "&lt;a href=\"http://localhost:1234/erp5/declaration_tva_module/152/view?selection_index=1&amp;amp;selection_name=pending_requests_selection&amp;amp;ignore_layout:int=0&amp;amp;reset:int=1\"&gt;Declaration De TVA&lt;/a&gt;"
-msgstr ""
-
-msgid "&lt;a href=\"http://localhost:1234/erp5/declaration_tva_module/153/view?selection_index=0&amp;amp;selection_name=pending_requests_selection&amp;amp;ignore_layout:int=0&amp;amp;reset:int=1\"&gt;Declaration De TVA&lt;/a&gt;"
-msgstr ""
-
-msgid "&nbsp;"
-msgstr ""
-
-msgid "(1)"
-msgstr ""
-
-msgid "(10)"
-msgstr ""
-
-msgid "(2)"
-msgstr ""
-
-msgid "(23)"
-msgstr ""
-
-msgid "(3)"
-msgstr ""
-
-msgid "(4)"
-msgstr ""
-
-msgid "(7)"
-msgstr ""
-
-msgid "(9)"
-msgstr ""
-
-msgid "- ${number} item(s) selected"
-msgstr ""
-
-msgid "-- Developper Mode --"
-msgstr ""
-
-msgid "-- Directory --"
-msgstr ""
-
 msgid "-- Object --"
 msgstr "-- Action sur l'Objet --"
 
@@ -79,286 +25,10 @@ msgid "-- Others --"
 msgstr "-- Autres --"
 
 msgid "-- Quick Search --"
-msgstr ""
+msgstr "-- Recherche rapide --"
 
 msgid "-- User --"
 msgstr "-- Utilisateur --"
-
-msgid "-- Workflows --"
-msgstr ""
-
-msgid "58499"
-msgstr ""
-
-msgid "58799"
-msgstr ""
-
-msgid "59073"
-msgstr ""
-
-msgid "59074"
-msgstr ""
-
-msgid "59075"
-msgstr ""
-
-msgid "59076"
-msgstr ""
-
-msgid "59077"
-msgstr ""
-
-msgid "59078"
-msgstr ""
-
-msgid "59079"
-msgstr ""
-
-msgid "59080"
-msgstr ""
-
-msgid "59081"
-msgstr ""
-
-msgid "59094"
-msgstr ""
-
-msgid "59396"
-msgstr ""
-
-msgid "59690"
-msgstr ""
-
-msgid "59691"
-msgstr ""
-
-msgid "59692"
-msgstr ""
-
-msgid "59693"
-msgstr ""
-
-msgid "59694"
-msgstr ""
-
-msgid "59695"
-msgstr ""
-
-msgid "59696"
-msgstr ""
-
-msgid "59697"
-msgstr ""
-
-msgid "59698"
-msgstr ""
-
-msgid "59699"
-msgstr ""
-
-msgid "59999"
-msgstr ""
-
-msgid "62399"
-msgstr ""
-
-msgid "62699"
-msgstr ""
-
-msgid "62999"
-msgstr ""
-
-msgid "63299"
-msgstr ""
-
-msgid "64199"
-msgstr ""
-
-msgid "64498"
-msgstr ""
-
-msgid "65396"
-msgstr ""
-
-msgid "65397"
-msgstr ""
-
-msgid "65398"
-msgstr ""
-
-msgid "65399"
-msgstr ""
-
-msgid "66894"
-msgstr ""
-
-msgid "66895"
-msgstr ""
-
-msgid "66896"
-msgstr ""
-
-msgid "66898"
-msgstr ""
-
-msgid "66899"
-msgstr ""
-
-msgid "67492"
-msgstr ""
-
-msgid "67493"
-msgstr ""
-
-msgid "67494"
-msgstr ""
-
-msgid "67495"
-msgstr ""
-
-msgid "67496"
-msgstr ""
-
-msgid "67498"
-msgstr ""
-
-msgid "67499"
-msgstr ""
-
-msgid "A change log"
-msgstr ""
-
-msgid "A document can be associated to one or multiple entities in the function classification tree."
-msgstr ""
-
-msgid "A document can be associated to one or multiple entities in the group classification tree."
-msgstr ""
-
-msgid "A document can be associated to one or multiple entities in the site  classification tree."
-msgstr ""
-
-msgid "A flag indicating if we have to update business template workflows"
-msgstr ""
-
-msgid "A flag indicating if we have to update tools"
-msgstr ""
-
-msgid "A list of ERP5Types for which we want to add the roles in the template"
-msgstr ""
-
-msgid "A list of Tool ids used by this template"
-msgstr ""
-
-msgid "A list of allowed content types for portal types"
-msgstr ""
-
-msgid "A list of base categories for portal types"
-msgstr ""
-
-msgid "A list of copyright holders"
-msgstr ""
-
-msgid "A list of hidden content types for portal types"
-msgstr ""
-
-msgid "A list of ids of actions used by this template"
-msgstr ""
-
-msgid "A list of ids of base categories used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog DateTime keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog full text keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog keyword keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog methods used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog multivalue keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog related keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog request keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog result keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog result tables used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog scriptable keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog topic keys used by this template"
-msgstr ""
-
-msgid "A list of ids of constraints used by this template"
-msgstr ""
-
-msgid "A list of ids of documents used by this template"
-msgstr ""
-
-msgid "A list of ids of extensions used by this template"
-msgstr ""
-
-msgid "A list of ids of modules used by this template"
-msgstr ""
-
-msgid "A list of ids of portal types used by this template"
-msgstr ""
-
-msgid "A list of ids of products used by this template"
-msgstr ""
-
-msgid "A list of ids of property sheets used by this template"
-msgstr ""
-
-msgid "A list of ids of roles used by this template"
-msgstr ""
-
-msgid "A list of ids of site properties used by this template"
-msgstr ""
-
-msgid "A list of ids of skins used by this template"
-msgstr ""
-
-msgid "A list of ids of tests used by this template"
-msgstr ""
-
-msgid "A list of local roles used by this template"
-msgstr ""
-
-msgid "A list of maintainers"
-msgstr ""
-
-msgid "A list of message translations used by this template"
-msgstr ""
-
-msgid "A list of object paths used by this template"
-msgstr ""
-
-msgid "A list of property sheet for portal types"
-msgstr ""
-
-msgid "A list of workflow chains of portal types used by this template"
-msgstr ""
-
-msgid "A revision identifier"
-msgstr ""
-
-msgid "A string which represents the mime type of the data"
-msgstr ""
-
-msgid "A version identifier"
-msgstr ""
 
 msgid "Accept"
 msgstr "Accepter"
@@ -417,36 +87,6 @@ msgstr "Vue de la Comptabilité"
 msgid "Accounts"
 msgstr "Comptes"
 
-msgid "Acitivty"
-msgstr ""
-
-msgid "Acknowledged"
-msgstr ""
-
-msgid "Acquisition Append Value"
-msgstr ""
-
-msgid "Acquisition Base Categories"
-msgstr ""
-
-msgid "Acquisition Copy Value"
-msgstr ""
-
-msgid "Acquisition Mask Value"
-msgstr ""
-
-msgid "Acquisition Object IDs"
-msgstr ""
-
-msgid "Acquisition Portal Types"
-msgstr ""
-
-msgid "Acquisition Sync Value"
-msgstr ""
-
-msgid "Action"
-msgstr ""
-
 msgid "Action impossible : credit is greater than debit"
 msgstr "Action impossible : l'écriture n'est pas équilibrée"
 
@@ -464,15 +104,6 @@ msgstr "Action impossible : l'écriture n'est pas équilibrée"
 
 msgid "Action impossible : transaction is not balanced for source section"
 msgstr "Action impossible : l'écriture n'est pas équilibrée"
-
-msgid "Action test"
-msgstr ""
-
-msgid "Action test 1"
-msgstr ""
-
-msgid "Action test 2"
-msgstr ""
 
 msgid "Action..."
 msgstr "Action ..."
@@ -492,9 +123,6 @@ msgstr "Utilisateur"
 msgid "Actors"
 msgstr "Utilisateurs"
 
-msgid "Actors involved in this Use Case are listed bellow:"
-msgstr ""
-
 msgid "Add ${portal_type}"
 msgstr "Ajouter ${portal_type}"
 
@@ -504,17 +132,8 @@ msgstr "Ajouter Coloris"
 msgid "Add Attachment"
 msgstr "Ajouter une pièce jointe"
 
-msgid "Add Use Case Actors"
-msgstr ""
-
-msgid "Add Use Case Scenarii"
-msgstr ""
-
 msgid "Added ${attachment_count} attachment(s) to the current form."
 msgstr "Ajout de ${attachment_count} pièce(s) jointe(s) au dossier courant."
-
-msgid "Added Files"
-msgstr ""
 
 msgid "Additional Payments"
 msgstr "Echéancier"
@@ -528,9 +147,6 @@ msgstr "Adresse"
 msgid "Addresses"
 msgstr "Adresses"
 
-msgid "Admin"
-msgstr ""
-
 msgid "Adopt prevision"
 msgstr "Adoptez la prévision"
 
@@ -542,9 +158,6 @@ msgstr "Avantage en nature"
 
 msgid "Agent"
 msgstr "Mandataire"
-
-msgid "Agent Privilege"
-msgstr ""
 
 msgid "Agents"
 msgstr "Mandataires"
