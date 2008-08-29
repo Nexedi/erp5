@@ -410,13 +410,15 @@
                   <span tal:condition="alias" style="font-size: -3">\n
                     <tal:block tal:condition="python: search_field is not None"\n
                       tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
-                    <input tal:condition="python: not is_gadget_mode and search_field is None" name="id" size="8" value=""\n
-                      tal:attributes="name alias; value param" />\n
-                    <input tal:condition="python: is_gadget_mode and search_field is None" \n
-                      tal:define ="params python: {alias:\'this.value\'};"\n
-                      size="8" type="textarea" \n
-                      tal:attributes=\'value python: selection.getParams().get(alias,"");\n
-                                      onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                    <tal:block tal:condition="python: search_field is None">\n
+                      <input tal:condition="not: is_gadget_mode" name="id" size="8" value=""\n
+                        tal:attributes="name alias; value param" />\n
+                      <input tal:condition="is_gadget_mode" \n
+                        tal:define ="params python: {alias:\'this.value\'};"\n
+                        size="8" type="textarea" \n
+                        tal:attributes=\'value python: selection.getParams().get(alias,"");\n
+                                        onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                  </tal:block>\n
                   </span>\n
                 </td>\n
               </tal:block>\n
