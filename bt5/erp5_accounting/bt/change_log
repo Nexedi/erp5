@@ -1,3 +1,6 @@
+2008-08-29 yusei
+* Replace abbreviation in action title.
+
 2008-08-28 yusei
 * Use translateString or Base_translateString instead of N_ for translation message.
 
