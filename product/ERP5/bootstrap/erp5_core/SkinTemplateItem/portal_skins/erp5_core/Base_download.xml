@@ -81,7 +81,7 @@ response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file
 try:\n
   result = context.index_html(request, response)\n
 except Unauthorized:\n
-  msg = context.Base_translateString("You don\'t have enough permission for converting this document.")\n
+  msg = context.Base_translateString("You do not have enough permission for converting this document.")\n
   return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
 \n
 return result\n

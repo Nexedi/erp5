@@ -70,7 +70,7 @@
             <h1 i18n:translate="" i18n:domain="ui">Log in</h1>\n
           </tal:block>\n
           <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
-            <h1 i18n:translate="" i18n:domain="ui">You don\'t have enough permissions to access this page</h1>\n
+            <h1 i18n:translate="" i18n:domain="ui">You do not have enough permissions to access this page</h1>\n
             <p i18n:translate="" i18n:domain="ui">You can log in with another user name or\n
               <a href="javascript:history.back();">go back</a>.\n
             </p>\n
@@ -113,7 +113,7 @@
           </fieldset>\n
           <script type="text/javascript">setFocus()</script>\n
           <p i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</p>\n
-          <p i18n:translate="" i18n:domain="ui">Don\'t forget to logout or exit your browser when you\'re done.</p>\n
+          <p i18n:translate="" i18n:domain="ui">Do not forget to logout or exit your browser when you are done.</p>\n
           <p i18n:translate="" i18n:domain="ui">Setting the \'Remember my name\' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you.</p>\n
         </div>\n
       </tal:block>\n

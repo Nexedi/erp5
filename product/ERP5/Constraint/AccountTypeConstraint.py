@@ -65,12 +65,12 @@ class AccountTypeConstraint(Constraint):
     if getattr(obj, 'getAccountType', _MARKER) is _MARKER:
       errors.append(self._generateError(
         obj,
-        translateString("Account doesn't have account_type category")))
+        translateString("Account does not have account_type category")))
     else:
       account_type_map = getattr(self, '_account_type_map', ())
       if not account_type_map:
         raise NotImplementedError(
-            "AccountTypeConstraint doesn't define an _account_type_map")
+            "AccountTypeConstraint does not define an _account_type_map")
       found = 0
       for category, account_type_list in account_type_map:
         if obj.isMemberOf(category):
