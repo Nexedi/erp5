@@ -228,7 +228,7 @@ dQEAAAAA</string> </value>
           </table:table-cell>\n
           <table:covered-table-cell table:style-name=\'report-column-title\' table:number-columns-repeated=\'2\'/>\n
           <table:table-cell office:value-type=\'string\' table:style-name=\'report-column-title\'>\n
-            <text:p i18n:translate="" i18n:domain="ui">Prev. Period</text:p>\n
+            <text:p i18n:translate="" i18n:domain="ui">Previous Period</text:p>\n
           </table:table-cell>\n
         </table:table-row>\n
         <table:table-row table:style-name=\'ro3\'>\n
@@ -237,7 +237,7 @@ dQEAAAAA</string> </value>
             <text:p i18n:translate="" i18n:domain="ui">Gross</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'report-column-title\' office:value-type=\'string\'>\n
-            <text:p i18n:translate="" i18n:domain="ui">Amort</text:p>\n
+            <text:p i18n:translate="" i18n:domain="ui">Amortisation</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'report-column-title\' office:value-type=\'string\'>\n
             <text:p i18n:translate="" i18n:domain="ui">Net</text:p>\n
