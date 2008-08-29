@@ -75,7 +75,7 @@
                   tal:content="ptype" tal:attributes="value ptype"\n
                   value="" i18n:translate="" i18n:domain="ui">Report</option>\n
           </tal:block>\n
-          <option value="" i18n:translate="" i18n:domain="ui">-- Any other Documents Type --</option>\n
+          <option value="" i18n:translate="" i18n:domain="ui">-- Any other Document Type --</option>\n
         </select>\n
         <input type="file" name="contribute_file" size="30" />\n
       </div>\n
@@ -114,7 +114,7 @@
     <h2 i18n:translate="" i18n:domain="ui">Link</h2>\n
     <div class="fieldset tabbertabcont">\n
       <div>\n
-        <label for="url" value="" i18n:translate="" i18n:domain="ui">Url</label>\n
+        <label for="url" value="" i18n:translate="" i18n:domain="ui">URL</label>\n
         <input type="text" name="link_url" id="url" size="80" value="http://" />\n
         <a href="" target="_blank" onclick="return setLink(this)" value="" i18n:translate="" i18n:domain="ui">preview</a>\n
       </div>\n

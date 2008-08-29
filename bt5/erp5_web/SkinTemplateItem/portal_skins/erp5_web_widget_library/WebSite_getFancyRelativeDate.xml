@@ -77,11 +77,11 @@ hour = 1.0 / 24\n
 minute = 1.0 / (24 * 60)\n
 if dif < 1:\n
   if dif < hour:\n
-    return translateString("${timedif} min ago.",  mapping = {\'timedif\':int(dif / minute)})\n
-  return translateString("${timedif}h ago.",  mapping = {\'timedif\':int(dif / hour)})\n
+    return translateString("${timedif} min ago",  mapping = {\'timedif\':int(dif / minute)})\n
+  return translateString("${timedif}h ago",  mapping = {\'timedif\':int(dif / hour)})\n
 if int(dif) == 1: \n
   return translateString(\'1 day ago\')\n
-return translateString("${timedif} days ago.",  mapping = {\'timedif\':int(dif)})\n
+return translateString("${timedif} days ago",  mapping = {\'timedif\':int(dif)})\n
 
 
 ]]></string> </value>
