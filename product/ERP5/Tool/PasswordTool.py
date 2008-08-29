@@ -73,7 +73,7 @@ class PasswordTool(BaseTool):
     # check user exists
     user_list = self.portal_catalog.unrestrictedSearchResults(portal_type="Person", reference=user_login)
     if len(user_list) == 0:
-      msg = translateString("User ${user} doesn't exist.",
+      msg = translateString("User ${user} does not exist.",
                             mapping={'user':user_login})
       if REQUEST is not None:
         ret_url = '%s/login_form?portal_status_message=%s' % \
