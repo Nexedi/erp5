@@ -65,12 +65,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 pref = sci[\'object\']\n
 portal = sci.getPortal()\n
 LOG = lambda msg: pref.log("PreferenceWorkflow.disableOtherPreferences on %s"%pref, msg)\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 # deactivate all other preferences of the same level \n
 for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
@@ -83,8 +82,9 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
         p.portal_workflow.doActionFor(p,\n
            \'disable_action\',\n
            wf_id=\'preference_workflow\', \n
-           comment=N_(\'Automatically disabled when enabling ${preference_title}\',\n
-                                   mapping={\'preference_title\': pref.getTitle()}) )\n
+           comment=translateString(\n
+          \'Automatically disabled when enabling ${preference_title}\',\n
+          mapping={\'preference_title\': pref.getTitle()}))\n
   except \'Unauthorized\', a :\n
     LOG("not authorized to deactivate %s"%p)\n
 </string> </value>
@@ -137,13 +137,12 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
                           <tuple>
                             <string>sci</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>pref</string>
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>LOG</string>
-                            <string>N_</string>
                             <string>_getiter_</string>
                             <string>p</string>
                             <string>a</string>

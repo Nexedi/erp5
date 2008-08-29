@@ -68,18 +68,17 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 \n
 closing_period = state_change[\'object\']\n
 portal = closing_period.getPortalObject()\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 valid_state_list = [\'started\', \'stopped\', \'delivered\']\n
 \n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
 if start_date > stop_date:\n
-  raise ValidationFailed, N_("Start Date is After Stop Date")\n
+  raise ValidationFailed, translateString("Start Date is After Stop Date")\n
 \n
 period_list = closing_period.getParentValue().searchFolder(\n
                               simulation_state=valid_state_list,\n
@@ -90,7 +89,7 @@ for period in period_list:\n
   period = period.getObject()\n
   if period.getSimulationState() in valid_state_list:\n
     if start_date <= period.getStopDate():\n
-      raise ValidationFailed, N_(\n
+      raise ValidationFailed, translateString(\n
           "${date} is already in an opened accounting period",\n
           mapping={\'date\': start_date})\n
           \n
@@ -99,7 +98,7 @@ if len(period_list) > 1:\n
   if last_period.getId() == closing_period.getId():\n
     last_period  = period_list[-2].getObject()\n
   if (start_date - last_period.getStopDate()) > 1:\n
-    raise ValidationFailed, N_(\n
+    raise ValidationFailed, translateString(\n
         "Last opened period ends on ${last_openned_date},"+\n
         " this period starts on ${this_period_start_date}."+\n
         " Accounting Periods must be consecutive.",\n
@@ -153,12 +152,11 @@ if len(period_list) > 1:\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>closing_period</string>
                             <string>_getattr_</string>
                             <string>portal</string>
-                            <string>N_</string>
                             <string>valid_state_list</string>
                             <string>start_date</string>
                             <string>stop_date</string>

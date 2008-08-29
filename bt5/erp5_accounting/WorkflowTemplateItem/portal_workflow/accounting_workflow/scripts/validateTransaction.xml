@@ -73,10 +73,9 @@ XXX why proxy role ???\n
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 \n
 transaction = state_change[\'object\']\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 # XXX manually default start date to stop date\n
 if not transaction.getStartDate() and transaction.getStopDate():\n
@@ -99,12 +98,12 @@ destination_section = transaction.getDestinationSectionValue(\n
                        portal_type=[\'Organisation\', \'Person\'])\n
 \n
 if source_section is None and destination_section is None:\n
-  raise ValidationFailed(N_(\'At Least One Section Must be Defined\'))\n
+  raise ValidationFailed(translateString(\'At Least One Section Must be Defined\'))\n
 \n
 # check that no categories are used for section\n
 if transaction.getSourceSectionValue(portal_type=\'Category\') is not None or\\\n
     transaction.getDestinationSectionValue(portal_type=\'Category\') is not None:\n
-  raise ValidationFailed(N_(\'Using Category for Section is Invalid\'))\n
+  raise ValidationFailed(translateString(\'Using Category for Section is Invalid\'))\n
 \n
 transaction_line_list = transaction.getMovementList(\n
         portal_type=transaction.getPortalAccountingMovementTypeList())\n
@@ -136,8 +135,8 @@ if not skip_period_validation :\n
       if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date:\n
-      raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
-                                "for source section"))\n
+      raise ValidationFailed(translateString("Date is not in an opened Accounting Period "\n
+                                             "for source section"))\n
   # do the same for destination section \n
   if destination_section is not None:\n
     # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
@@ -160,8 +159,8 @@ if not skip_period_validation :\n
       if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date:\n
-      raise ValidationFailed(N_("Date is not in an opened Accounting Period "\n
-                                "for destination section"))\n
+      raise ValidationFailed(translateString("Date is not in an opened Accounting Period "\n
+                                             "for destination section"))\n
 
 
 ]]></string> </value>
@@ -228,10 +227,9 @@ if not skip_period_validation :\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
-                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>skip_period_validation</string>
                             <string>transition</string>

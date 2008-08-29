@@ -66,18 +66,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-N_ = lambda msg, **kwd: Message(\'erp5_ui\', msg, **kwd)\n
+from Products.ERP5Type.Message import translateString\n
 \n
 kwargs = state_change[\'kwargs\']\n
 password = kwargs[\'password\']\n
 password_confirm = kwargs[\'password_confirm\']\n
 if password != password_confirm:\n
-  raise ValidationFailed(N_(\'Passwords do not match\'))\n
+  raise ValidationFailed(translateString(\'Passwords do not match\'))\n
 \n
 reference = kwargs[\'reference\']\n
 if not reference:\n
-  raise ValidationFailed(N_(\'User ID is not specified\'))\n
+  raise ValidationFailed(translateString(\'User ID is not specified\'))\n
 </string> </value>
         </item>
         <item>
@@ -124,8 +123,7 @@ if not reference:\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>kwargs</string>
                             <string>password</string>

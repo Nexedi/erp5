@@ -66,11 +66,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 \n
 period = state_change[\'object\']\n
 portal = period.getPortalObject()\n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 \n
 valid_simulation_state_list = [\'cancelled\', \'delivered\', \'deleted\', \'rejected\']\n
 all_state_list = [x[1] for x in\n
@@ -86,7 +85,7 @@ movement_list = portal.portal_simulation.getMovementHistoryList(\n
       portal_type=portal.getPortalAccountingMovementTypeList(),)\n
 \n
 if movement_list:\n
-  raise ValidationFailed, N_(\n
+  raise ValidationFailed, translateString(\n
     "All Accounting Transactions for this organisation during the period have"\n
     " to be closed first")\n
 </string> </value>
@@ -135,12 +134,11 @@ if movement_list:\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>period</string>
                             <string>_getattr_</string>
                             <string>portal</string>
-                            <string>N_</string>
                             <string>valid_simulation_state_list</string>
                             <string>append</string>
                             <string>$append0</string>

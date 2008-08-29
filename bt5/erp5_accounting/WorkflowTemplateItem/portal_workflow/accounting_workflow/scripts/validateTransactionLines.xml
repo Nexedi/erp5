@@ -71,7 +71,7 @@ XXX why proxy role ???\n
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 \n
 transaction = state_change[\'object\']\n
 portal = transaction.getPortalObject()\n
@@ -99,21 +99,21 @@ for line in transaction.contentValues(filter=dict(\n
     ):\n
 \n
     if account is not None and account.getValidationState() != \'validated\':\n
-      raise ValidationFailed, N_(\n
+      raise ValidationFailed, translateString(\n
           "Account ${account_title} is not opened",\n
            mapping=dict(account_title=unicode(\n
               account.Account_getFormattedTitle(), \'utf8\')))\n
       \n
     if third_party is not None and\\\n
         third_party.getValidationState() in invalid_state_list:\n
-      raise ValidationFailed, N_(\n
+      raise ValidationFailed, translateString(\n
           "Third Party ${third_party_name} is invalid",\n
            mapping=dict(third_party_name=unicode(\n
                       third_party.getTitle(), \'utf8\')))\n
       \n
     if bank_account is not None and\\\n
         bank_account.getValidationState() in invalid_state_list:\n
-      raise ValidationFailed, N_(\n
+      raise ValidationFailed, translateString(\n
           "Bank Account ${bank_account_reference} is invalid",\n
            mapping=dict(bank_account_reference=unicode(\n
                           bank_account.getReference(), \'utf8\')))\n
@@ -124,7 +124,7 @@ for line in transaction.contentValues(filter=dict(\n
         bank_account_currency = bank_account.getProperty(\'price_currency\')\n
         if bank_account_currency is not None and \\\n
               bank_account_currency != line.getResource():\n
-          raise ValidationFailed, N_(\n
+          raise ValidationFailed, translateString(\n
               "Bank Account ${bank_account_reference} "\n
               "uses ${bank_account_currency} as default currency",\n
              mapping=dict(\n
@@ -199,7 +199,7 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
