@@ -66,7 +66,6 @@
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
   <input type="hidden" name="view_document_url" value=""\n
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
-  <input type="hidden" name="editable_mode" value="0" />\n
 <!--  <input type="hidden" name="actions" value=""\n
          tal:attributes="value request/actions" />\n
   <input type="hidden" name="current_action" value=""\n
