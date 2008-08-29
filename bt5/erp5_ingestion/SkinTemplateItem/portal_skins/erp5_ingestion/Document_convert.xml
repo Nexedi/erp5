@@ -78,7 +78,7 @@ from zExceptions import Unauthorized\n
 try:\n
   data = context.index_html(request, response, format=format, force=force)\n
 except Unauthorized:\n
-  msg = context.Base_translateString("You don\'t have enough permission for converting this document.")\n
+  msg = context.Base_translateString("You do not have enough permission for converting this document.")\n
   return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
 \n
 typ = response.headers.get(\'content-type\')\n
@@ -183,6 +183,12 @@ return data\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Convert document to given format</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
