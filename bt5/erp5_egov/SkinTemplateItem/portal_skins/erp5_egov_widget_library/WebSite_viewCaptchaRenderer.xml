@@ -72,7 +72,7 @@ Description:\n
         Type the characters you see in the picture below. \n
         This is done to prevent access by spam bots. All letters are \n
         lowercase. If you are unable to read, click on "refresh" \n
-        to generate a new image\n
+        to generate a new image.\n
       </tal:block>\n
     </div>\n
     <div class="next_step_action" tal:define="object_uid           here/getUid | nothing;\n
@@ -137,6 +137,12 @@ Description:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
