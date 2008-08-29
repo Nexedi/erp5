@@ -6287,3 +6287,9 @@ msgstr "Tapez les caractères que vous voyez dans l'image suivante. Ceci est fai
 
 msgid "Refresh"
 msgstr "Rafraîchir"
+
+msgid "text entered at the right of the picture is wrong"
+msgstr "le texte saisi à droite de l'image est incorrect"
+
+msgid "Anti spam test"
+msgstr "Test anti-spam"
