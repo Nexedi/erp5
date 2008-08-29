@@ -117,7 +117,7 @@
                         </tuple>
                         <tuple>
                           <string>inventory</string>
-                          <string>Futur</string>
+                          <string>Future</string>
                         </tuple>
                         <tuple>
                           <string>getQuantityUnit</string>
