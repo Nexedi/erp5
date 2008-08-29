@@ -123,23 +123,25 @@
                   </table:table-cell>\n
                 </tal:block>\n
                 <tal:block tal:condition="python: field is not None">\n
-                  <tal:block tal:condition="python:field.meta_type==\'DateTimeField\' and field.get_value(\'date_only\')"> \n
-                    <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
+                  <tal:block tal:condition="python:field.meta_type==\'DateTimeField\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'DateTimeField\')">\n
+                    <tal:block tal:condition="python:field.get_value(\'date_only\')">\n
+                      <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
                                       table:style-name string:${style_prefix}date;"\n
                                       table:style-name="date"\n
                                       office:value-type="date">\n
-                      <text:p tal:content="python: field.render_pdf(value)"/>\n
-                    </table:table-cell>\n
-                  </tal:block>\n
-                  <tal:block tal:condition="python:field.meta_type==\'DateTimeField\' and field.get_value(\'date_only\')==0">\n
-                    <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
+                        <text:p tal:content="python: field.render_pdf(value)"/>\n
+                      </table:table-cell>\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python:field.get_value(\'date_only\')==0">\n
+                      <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
                                       table:style-name string:${style_prefix}date_with_time;"\n
                                       table:style-name="date_with_time"\n
                                       office:value-type="date">\n
-                      <text:p tal:content="python: field.render_pdf(value)"/>\n
-                    </table:table-cell>\n
+                        <text:p tal:content="python: field.render_pdf(value)"/>\n
+                      </table:table-cell>\n
+                    </tal:block>\n
                   </tal:block>\n
-                  <tal:block tal:condition="python:field.meta_type!=\'DateTimeField\'">\n
+                  <tal:block tal:condition="python:field.meta_type!=\'DateTimeField\' and field.meta_type!=\'ProxyField\'">\n
                     <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"\n
                                       table:style-name="string"\n
                                       office:value-type="string">\n
@@ -148,7 +150,7 @@
                   </tal:block>\n
                 </tal:block>\n
               </tal:block>\n
-            </tal:block>            \n
+            </tal:block>\n
             <tal:block tal:condition="python:not isinstance(value, DateTime)">\n
              <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
                                tal:attributes="table:style-name string:${style_prefix}text"\n
