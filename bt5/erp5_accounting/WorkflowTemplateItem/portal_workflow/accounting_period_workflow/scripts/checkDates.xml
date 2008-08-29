@@ -90,7 +90,7 @@ for period in period_list:\n
   if period.getSimulationState() in valid_state_list:\n
     if start_date <= period.getStopDate():\n
       raise ValidationFailed, translateString(\n
-          "${date} is already in an opened accounting period",\n
+          "${date} is already in an open accounting period",\n
           mapping={\'date\': start_date})\n
           \n
 if len(period_list) > 1:\n
