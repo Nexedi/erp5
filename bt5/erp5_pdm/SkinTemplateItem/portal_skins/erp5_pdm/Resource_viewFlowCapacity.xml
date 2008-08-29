@@ -149,7 +149,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Flow Capacity (obsoleted - use Supply Line)</string> </value>
+            <value> <string>Flow Capacity (obsolete - use Supply Line)</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
