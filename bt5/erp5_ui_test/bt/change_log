@@ -1,3 +1,6 @@
+2008-08-29 yusei
+* Replace N_ with translateString.
+
 2008-06-17 rafael
 * Access Tab has your own scripts to handle preference.
 

@@ -68,10 +68,9 @@
             <value> <string>document = state_change[\'object\']\n
 request = document.REQUEST\n
 \n
-from Products.ERP5Type.Message import Message\n
-N_ = lambda msg, **kwd: Message(\'erp5_ui\', msg, **kwd)\n
+from Products.ERP5Type.Message import translateString\n
 \n
-request.set(\'portal_status_message\', N_(\'Status Message Changed.\'))\n
+request.set(\'portal_status_message\', translateString(\'Status Message Changed.\'))\n
 </string> </value>
         </item>
         <item>
@@ -120,8 +119,7 @@ request.set(\'portal_status_message\', N_(\'Status Message Changed.\'))\n
                             <string>_getattr_</string>
                             <string>request</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>N_</string>
+                            <string>translateString</string>
                           </tuple>
                         </value>
                     </item>
