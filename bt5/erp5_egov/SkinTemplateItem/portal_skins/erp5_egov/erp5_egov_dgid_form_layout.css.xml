@@ -58,189 +58,17 @@
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
-/*========================================================================================\n
-  Default ERP5 Web CSS.\n
 \n
-  Guidelines (how-to create a good css):\n
-    * All measurements should be expressed with scalable units like em, ex, %.\n
-    * pt, px must be avoid expect for box borders (not sure) and tricks related to borders (like position popup of Edit Tabs)\n
-    * Test your design and layout against font size increasing/decreasing.\n
-    * Test your html code semantics value by disabling all your css.\n
-    * Don\'t put styling directives in xhtml code.\n
+/*------------ widget style -------------*/\n
 \n
-  Tested Browser:\n
-    * Firefox 1.5.0.6\n
-    * Konqueror 3.4.2\n
-    * Opera 9.01\n
-    * Internet Explorer 6 (Layout: OK; Style: not OK)\n
-\n
-  TODO: * Layout is ok in ie6, now styling should be adapted to support ie6.\n
-        * The "WebWidget" class should be used somewhere to identify such objects easily\n
-          and enhance semantics.\n
-========================================================================================*/\n
-\n
-\n
-\n
-/*========================================================================================\n
-**  GENERAL STUFF\n
-**========================================================================================*/\n
-\n
-/* Good CSS directive to include in every website to reset all browser default style.\n
------------------------------------------------------------------- */\n
-\n
-* {\n
-  padding: 0;\n
-  margin: 0;\n
+/* hide WebSite_viewWorkspaceWidget */\n
+div#wrapper_footer{\n
+  display: none;\n
 }\n
 \n
-.clear {clear: both}\n
-p.clear {display: none}\n
-\n
-img {border: 0}\n
-\n
-a:link, a:visited {text-decoration: none}\n
-a:active, a:hover {text-decoration: underline}\n
-a:link {color: #00248f}\n
-a:visited {color: #909}\n
-a:hover {color: #39f}\n
-\n
-a img, h3 img, button img, li img {vertical-align: middle}\n
-\n
-ul {list-style-position: inside}\n
-li {margin-left: 1em}\n
-\n
-.doNotDisplay {display: none}\n
-\n
-.hidden_label label { \n
-  display: none !important\n
+div.next_step_action{\n
+  display:none;\n
 }\n
-\n
-\n
-table {\n
-  border-collapse: collapse;\n
-  border-spacing: 0;\n
-}\n
-\n
-p {\n
-  margin: .6em 0;\n
-  text-align: justify;\n
-}\n
-\n
-/* Workflow states\n
------------------------------------------------------------------- */\n
-\n
-span.draft       {color: #be854d}\n
-span.submitted   {color: #be854d}\n
-span.published,\n
-span.validated   {color: #078307}\n
-span.invalidated {color: #ab0303}\n
-span.cancelled   {color: #ccc}\n
-\n
-\n
-\n
-/* Emulate <center> html tag.\n
-   This class is called \'centered\' to not interfer with the \'center\' group\n
-   used in erp5_xhtml_style rigid positionning mechanism.\n
------------------------------------------------------------------- */\n
-\n
-.centered,\n
-.centeredInner {\n
-  width: 100%;\n
-  text-align: center;\n
-}\n
-\n
-*.centered *,\n
-*.centeredInner * {\n
-  margin-left: auto;\n
-  margin-right: auto;\n
-}\n
-\n
-\n
-\n
-/* Default content styling (apply to everything, site wide);\n
-   Typography & colors (fonts, color, background).\n
------------------------------------------------------------------- */\n
-\n
-body {background: #e6e6e6 url(erp5-website-background.png) top left no-repeat}\n
-\n
-body, input, textarea, select, table {\n
-  color: #333;\n
-  font-family: Sans, Verdana, Tahoma, Georgia, Geneva, Arial, sans-serif;\n
-  font-size: 8pt; /* XXX font-size should not be expressed in pt unit.\n
-                  ** This unit is quite convinient actually because it scale well\n
-                  ** in any browser on font resizing.\n
-                  */\n
-  line-height: 1.5em; /* Let the content breathe ! This reduce the density of\n
-                      ** paragraph and make the text easier to read.\n
-                      */\n
-}\n
-\n
-.code, code {font-family: monospace}\n
-\n
-#transition_message, .warning, .error, .important {\n
-  color: #f00;\n
-  font-weight: bold;\n
-}\n
-\n
-h1 {margin: 1.3em 0}\n
-\n
-blockquote {\n
-  margin: .5em;\n
-  padding: .5em;\n
-  border-left: 2px #ddd solid;\n
-  background: #f9f9f9;\n
-}\n
-\n
-input#hidden_button {\n
-  width: 0;\n
-  height: 0;\n
-  display: inline;\n
-  border-width: 0;\n
-  float: left;\n
-}\n
-\n
-/* Login page style\n
------------------------------------------------------------------- */\n
-\n
-div.content.login {padding: 0 1em}\n
-div.content.login fieldset {border: none}\n
-\n
-/* Breadcrumb default style\n
------------------------------------------------------------------- */\n
-\n
-div.breadcrumb li a.selected {\n
-  border-bottom: 1px dashed #00248f; /* same color as "a:link" rule */\n
-  text-decoration: none;\n
-}\n
-\n
-.tabbertab #search{\n
-  margin-left:20px;\n
-}\n
-  \n
-div.breadcrumb li a.selected:hover {border-bottom-color: #39f} /* same as "a:hover" rule */\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-/*========================================================================================\n
-**  FORMs & INPUTs\n
-**========================================================================================*/\n
-\n
-/*\n
-  Inspired by Aleksandar Vaci?\'s work,\n
-  distributed under Creative Commons Paternity Licence:\n
-    * http://www.aplus.co.yu/css/forms/?css=1\n
-    * http://creativecommons.org/licenses/by/2.0/\n
------------------------------------------------------------------- */\n
 \n
 div#main_content input, textarea, select {\n
   border: 1px solid #999;\n
@@ -416,7 +244,193 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {\n
   text-decoration: none;\n
   background: #eee;\n
 }\n
-
+\n
+/*========================================================================================\n
+**  PAGE LAYOUT\n
+**========================================================================================*/\n
+\n
+/* Content zone form styling (apply for editable mode and read\n
+   only mode within the content zone).\n
+   TODO: Change form rendering to let the field go below the label\n
+         if there is not enought width to display them inline.\n
+   TODO: Use dtml variables to define dynamiccaly label width.\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
+  background: transparent;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+div#main_content fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+div#main_content fieldset div.input {\n
+  /*margin-left: 11.5em;  /* = div#main_content label width + 0.5 of margin */\n
+}\n
+\n
+div#main_content fieldset legend {\n
+  padding: .2em .5em;\n
+  font-weight: bold;\n
+  color: #666;\n
+  text-transform: capitalize;\n
+}\n
+\n
+div#main_content fieldset label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 11em;\n
+  text-align: right;\n
+  float: left;\n
+  text-transform: capitalize;\n
+}\n
+\n
+div#main_content fieldset div.field label:after {content: ":"}\n
+\n
+/* Edit tabs styling.\n
+** Edit tabs are another part of admin stuffs and\n
+** should respect other admin design convention\n
+** (colors, etc...) to keep the UI consistent.\n
+------------------------------------------------------------------ */\n
+\n
+div.document div.actions {\n
+  position: relative;\n
+  width: 100%;\n
+  height: 3em;\n
+}\n
+\n
+div.document div.actions ul {\n
+  position: absolute;\n
+  bottom: -1px;\n
+  list-style: none;\n
+  margin: 0;\n
+}\n
+\n
+div.document div.actions ul li  {\n
+  display: inline;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div.document div.actions ul a,\n
+div.document div.actions ul li.selected a {\n
+  display: block;\n
+  float: left;\n
+  padding: 4px 1em;\n
+  margin: 1px 2px 0 0;\n
+  text-align: center;\n
+  text-decoration: none;\n
+}\n
+\n
+div.document div.actions ul a {\n
+  background: #fffae1;\n
+  border: 1px solid #999;\n
+}\n
+\n
+div.document div.actions ul li.selected a,\n
+div.document div.actions ul li.selected a:hover {\n
+  border-bottom: none;\n
+  padding-bottom: 6px;\n
+  margin-top: 0;\n
+  background: #fff;\n
+}\n
+\n
+div.document div.actions ul a:hover {\n
+  margin-top: 0;\n
+  border-color: #000;\n
+  border-bottom: none;\n
+  padding-bottom: 5px;\n
+}\n
+\n
+\n
+/* Editable mode forms styling\n
+------------------------------------------------------------------ */\n
+\n
+/*div.document > div.editable {border-top: 1px solid #999}*/\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+/*  position: absolute; */\n
+  float: right;\n
+  z-index: 300;\n
+  right: 0;\n
+}\n
+\n
+/* Bottom Save buttons styling - XXX NOT YET CENTERED */\n
+\n
+\n
+/* Reset common fieldset styling for bottom group in editable mode:\n
+     - no need to let some free space in the left side\n
+     - no need to display label\n
+     - no need to display fieldset legend\n
+   TODO: Because thoses properties are used for generic ".bottom" fieldset\n
+         and webcontent custom forms, we can add a new CSS class with a better\n
+         name to enhance semantics.\n
+*/\n
+div#main_content fieldset.bottom legend,\n
+div#main_content fieldset.bottom label {\n
+  display: none;\n
+}\n
+\n
+div#main_content fieldset.bottom div.input {margin-left: inherit}\n
+\n
+\n
+\n
+/* Special rendering for read-only webcontent\n
+     (used in WebPage_viewAsWeb and so on).\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content > fieldset.webcontent {\n
+  margin: 0;\n
+  border: 0;\n
+}\n
+\n
+/* TODO: redo webcontent header spacing policy because lack of consistency\n
+         (not tested with huge titles) */\n
+\n
+div#main_content > fieldset#fieldset_webcontent {padding: 2em}\n
+\n
+div#main_content > fieldset.header {\n
+  padding-bottom: 1em;\n
+  border-bottom: .3em solid #999;\n
+}\n
+\n
+/* TODO: span.headline should be a h1, h2, h-something tag to improve SEO */\n
+div#main_content > fieldset.webcontent span.headline {\n
+  display: block;\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 200%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+}\n
+\n
+div#main_content > fieldset.webcontent span.summary {\n
+  display: block;\n
+  font-size: 120%;\n
+  padding: 0 2em;\n
+  font-style: italic;\n
+}\n
+\n
+\n
+div#main_content fieldset.webcontent span.headline {\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 250%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+  text-align: left;\n
+}
 
 ]]></string> </value>
         </item>
@@ -430,7 +444,7 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_egov.css</string> </value>
+            <value> <string>erp5_egov_dgid_form_layout.css</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

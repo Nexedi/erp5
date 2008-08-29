@@ -50,17 +50,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -74,9 +68,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>vip_space</string>
-                <string>footer</string>
-                <string>header</string>
+                <string>left</string>
+                <string>right</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -86,17 +80,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>footer</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>header</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>header_section</string>
-                        <string>status_section</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -104,25 +91,27 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>website_logo</string>
-                        <string>language_selector</string>
-                        <string>breadcrumb</string>
-                        <string>subsection_list</string>
-                        <string>section_content_list</string>
-                        <string>your_search_text</string>
-                        <string>search_action</string>
-                        <string>applicable_layout</string>
-                        <string>admin_toolbox</string>
-                        <string>form_submission_wizard</string>
+                        <string>listbox_registration_number</string>
+                        <string>my_agence_title</string>
+                        <string>my_succursale_title</string>
+                        <string>my_collateral_parent_list</string>
+                        <string>my_inscription_parent_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>vip_space</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>become_vip</string>
+                        <string>my_title</string>
+                        <string>my_corporate_registration_code</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -130,7 +119,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_egov_captcha_layout</string> </value>
+            <value> <string>Organisation_viewFormList</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -138,15 +131,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>erp5_web_default_layout</string> </value>
+            <value> <string>Organisation_viewFormList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>template_erp5_egov_workspace</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>6</int> </value>
+            <value> <int>4</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
@@ -154,7 +147,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Captcha Layout</string> </value>
+            <value> <string>Related Forms</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

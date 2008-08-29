@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+\n
+/* hide tabs */\n
+.document > .actions,\n
+.bottom_actions{\n
+  display: none;\n
+}\n
+\n
+\n
+div#main_content fieldset {\n
+  margin: 1em 0;\n
+  padding: .5em;\n
+  background: transparent;\n
+  border-color: #ccc;\n
+  border-width: 1px 0 0;\n
+  border-style: dotted none none;\n
+}\n
+\n
+div#main_content fieldset > div {\n
+  clear: both;\n
+  margin: .1em 0;\n
+  position: relative;\n
+}\n
+\n
+div#main_content fieldset div.input {\n
+  /*margin-left: 11.5em;  /* = div#main_content label width + 0.5 of margin */\n
+}\n
+\n
+div#main_content fieldset legend {\n
+  padding: .2em .5em;\n
+  font-weight: bold;\n
+  color: #666;\n
+  text-transform: capitalize;\n
+}\n
+\n
+div#main_content fieldset label {\n
+  margin: 0;\n
+  display: block;\n
+  width: 11em;\n
+  text-align: right;\n
+  float: left;\n
+  text-transform: capitalize;\n
+}\n
+\n
+div#main_content fieldset div.field label:after {content: ":"}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_egov_workspace.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

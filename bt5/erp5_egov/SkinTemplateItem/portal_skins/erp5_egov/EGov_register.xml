@@ -70,9 +70,10 @@
 # check captcha\n
 if not context.isCaptchaTextCorrect(captcha_text):\n
   message = "text entered at the right of the picture is wrong"\n
+  translated_message = context.Base_translateString(message)\n
   return request[\'RESPONSE\'].redirect(\n
              "%s/%s?portal_status_message=%s" %\n
-             (context.absolute_url(), form_id, message))\n
+             (context.absolute_url(), form_id, translated_message))\n
 \n
 return context.EGov_createNewProcedure(new_application_procedure=\'Subscription Form\')\n
 </string> </value>
@@ -138,6 +139,7 @@ return context.EGov_createNewProcedure(new_application_procedure=\'Subscription 
                             <string>context</string>
                             <string>request</string>
                             <string>message</string>
+                            <string>translated_message</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
@@ -158,6 +160,12 @@ return context.EGov_createNewProcedure(new_application_procedure=\'Subscription 
         <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_register</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

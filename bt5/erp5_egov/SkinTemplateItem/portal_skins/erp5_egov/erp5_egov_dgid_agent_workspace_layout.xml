@@ -182,7 +182,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>template_erp5_egov</string> </value>
+            <value> <string>template_erp5_egov_workspace</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -195,6 +195,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Workspace Layout</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
