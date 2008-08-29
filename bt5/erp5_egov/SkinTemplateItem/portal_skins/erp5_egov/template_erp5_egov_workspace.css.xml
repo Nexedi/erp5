@@ -102,7 +102,46 @@ div#main_content fieldset label {\n
 }\n
 \n
 div#main_content fieldset div.field label:after {content: ":"}\n
-
+\n
+\n
+/* TODO: span.headline should be a h1, h2, h-something tag to improve SEO */\n
+div#main_content > fieldset.webcontent span.headline {\n
+  display: block;\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 200%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+}\n
+\n
+div#main_content > fieldset.webcontent span.summary {\n
+  display: block;\n
+  font-size: 120%;\n
+  padding: 0 2em;\n
+  font-style: italic;\n
+}\n
+\n
+\n
+div#main_content fieldset.webcontent span.headline {\n
+  margin: 1em 0;\n
+  padding: 0 1em;\n
+  font-size: 250%;\n
+  color: #999;\n
+  font-weight: bold;\n
+  text-shadow: .1em .1em .1em #eee;\n
+  line-height: 140%;\n
+  text-align: left;\n
+}\n
+\n
+\n
+div#main_content fieldset.bottom legend,\n
+div#main_content fieldset.bottom label {\n
+  display: none;\n
+}\n
+\n
+div#main_content fieldset.bottom div.input {margin-left: inherit}
 
 ]]></string> </value>
         </item>
