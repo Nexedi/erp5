@@ -75,8 +75,7 @@
               show_search_line here/showSearchLine;\n
               is_gadget_mode request/is_gadget_mode | nothing;\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              box python: real_context.restrictedTraverse(box_relative_url); \n
-              box_id python: \'visual_%s\' %box.getId();">\n
+              box_id python: \'visual_%s\' %box_relative_url.split(\'/\')[-1];">\n
 \n
   <!-- ListBox starts here.  -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -85,13 +84,13 @@
                                        name string:${field_id}_list_selection_name" />\n
   <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />\n
   \n
-  <input tal:condition="python:form_id and is_gadget_mode" \n
-         type="hidden" name="gadget_form_id"\n
-         tal:attributes="value form_id" />\n
- \n
-  <input tal:condition="python:is_gadget_mode" \n
-         type="hidden" name="list_start" \n
-         tal:attributes="value here/getLineStart" />\n
+  <tal:block tal:condition="python:is_gadget_mode" >\n
+    <input tal:condition="python:form_id" \n
+          type="hidden" name="gadget_form_id"\n
+          tal:attributes="value form_id" />\n
+    <input type="hidden" name="list_start" \n
+           tal:attributes="value here/getLineStart" />\n
+  </tal:block>\n
 \n
   <tal:replace tal:content="nothing">\n
     Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.\n
@@ -272,7 +271,7 @@
                     tal:attributes="id    string:${field_id}_previous_page;\n
                                     src   string:${portal_url_string}/images/1leftarrowv.png;\n
                                     onclick python:\n
-                                    real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id,params)"/>\n
+                                    real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box_relative_url,box_id,params)"/>\n
                 </td>\n
                 <td style="white-space: nowrap; vertical-align: middle; text-align: center">\n
                   <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"\n
@@ -280,7 +279,7 @@
                                 lines here/getMaxLineNumber" \n
                     tal:attributes=\'id string:${field_id}_page_selection;\n
                                     class string:listbox_page_selection;\n
-                                    onChange python: real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")\'\n
+                                    onChange python: real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")\'\n
                     i18n:domain="ui" i18n:attributes="title">\n
                     <option value="0"\n
                       tal:repeat="p python: range(0, here.total_pages)"\n
@@ -297,7 +296,7 @@
                     tal:attributes="id string:${field_id}_next_page;\n
                                     src string:${portal_url_string}/images/1rightarrowv.png;\n
                                     class string:listbox_next_page;\n
-                                    onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id,params)"/>\n
+                                    onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box_relative_url,box_id,params)"/>\n
                 </td>\n
               </tal:block>\n
             </tr>\n
@@ -355,7 +354,7 @@
                         tal:define ="params python: {\'setSelectionQuickSortOrder:method\':field_id+\'.\'+sql};"\n
                         type="button" class="sort_button"\n
                         tal:attributes="title string:${title}; \n
-                                        onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id,params);"\n
+                                        onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box_relative_url,box_id,params);"\n
                         i18n:domain="ui" i18n:attributes="title">\n
                           <span tal:content="title" i18n:domain="ui" i18n:translate="">ID</span>\n
                       </button>\n
@@ -417,7 +416,7 @@
                       tal:define ="params python: {alias:\'this.value\'};"\n
                       size="8" type="textarea" \n
                       tal:attributes=\'value python: selection.getParams().get(alias,"");\n
-                                      onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                                      onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
                   </span>\n
                 </td>\n
               </tal:block>\n
