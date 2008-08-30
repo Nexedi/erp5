@@ -267,18 +267,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_categories.bug_severity.getCategoryChildLogicalPathItemList(base=1,display_none_category=1, sort_on=\'int_index\')</string> </value>
+            <value> <string>python:here.portal_categories.bug_severity.getCategoryChildLogicalPathItemList(display_none_category=1, sort_on=\'int_index\')</string> </value>
         </item>
       </dictionary>
     </pickle>
