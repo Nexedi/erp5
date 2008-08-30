@@ -76,7 +76,7 @@
 \n
 \n
   <!-- Edit button menu -->\n
-  <div name="adminSection" class="adminSection">\n
+  <div class="adminSection">\n
     <h3 i18n:translate="" i18n:domain="ui">Edit</h3>\n
     <ul tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">\n
       <li tal:repeat="link edit_link_list">\n
@@ -109,7 +109,7 @@
        XXX - This is not so good to create new content in a section\n
              Behaviour should be to create content in section / site\n
   -->\n
-  <div name="adminSection" class="adminSection"\n
+  <div class="adminSection"\n
        tal:condition="python: is_default_document_available or here.isDocument"\n
        tal:define="document python: test(is_default_document_available, \n
                                          here.getDefaultDocumentValue(), \n
