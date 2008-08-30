@@ -66,12 +66,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>def getTitle(url=\'\'):\n
-  return url.split(\'/\')[-1]\n
+  obj = context.getPortalObject().restrictedTraverse(url)\n
+  if obj is None:\n
+    return url.split(\'/\')[-1]\n
+  else:\n
+    return obj.getTitle()\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
 REQUEST = context.REQUEST\n
 REQUEST.set(\'is_documentation_report\', True)\n
 result = []\n
+root_class_name =  REQUEST.get(\'class_name\')\n
 documentation_helper = context.getDocumentationHelper(REQUEST.get(\'class_name\'), REQUEST.get(\'uri\'))\n
 section_list = documentation_helper.getSectionList()\n
 result.append(\n
@@ -119,7 +124,7 @@ for section in section_list:\n
       ReportSection(\n
         path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
         level=3,\n
-        title= getTitle(uri.split(\'.\')[-1]),\n
+        title= getTitle(uri),\n
         form_id=\'\')\n
     )\n
     result.append(\n
@@ -140,9 +145,19 @@ for section in section_list:\n
                     uri],\n
         listbox_display_mode=\'FlatListMode\')\n
     )\n
-    for child_uri in uri_object.getSectionList():\n
-      class_name = child_uri.getClassName()\n
-      result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, child_uri.uri_list)\n
+    portal_skin = REQUEST.get(\'portal_skin\')\n
+    if portal_skin is None:\n
+      for child_uri in uri_object.getSectionList():\n
+        class_name = child_uri.getClassName()\n
+        result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, child_uri.uri_list)\n
+        if root_class_name == "ERP5SiteDocumentationHelper":\n
+           for sub_child_uri in child_uri.getSectionList():\n
+              class_name = sub_child_uri.getClassName()\n
+              result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, sub_child_uri.uri_list)\n
+    elif portal_skin == "ODT" and root_class_name == "ERP5SiteDocumentationHelper":\n
+      for child_uri in uri_object.getSectionList():\n
+        class_name = child_uri.getClassName()\n
+        result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, child_uri.uri_list)\n
 return result\n
 </string> </value>
         </item>
@@ -194,6 +209,7 @@ return result\n
                             <string>REQUEST</string>
                             <string>True</string>
                             <string>result</string>
+                            <string>root_class_name</string>
                             <string>documentation_helper</string>
                             <string>section_list</string>
                             <string>dict</string>
@@ -201,10 +217,12 @@ return result\n
                             <string>section</string>
                             <string>uri</string>
                             <string>uri_object</string>
-                            <string>_getitem_</string>
+                            <string>portal_skin</string>
+                            <string>None</string>
                             <string>child_uri</string>
                             <string>class_name</string>
                             <string>_inplacevar_</string>
+                            <string>sub_child_uri</string>
                           </tuple>
                         </value>
                     </item>
