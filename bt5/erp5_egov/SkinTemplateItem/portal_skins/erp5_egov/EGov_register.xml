@@ -75,7 +75,7 @@ if not context.isCaptchaTextCorrect(captcha_text):\n
              "%s/%s?portal_status_message=%s" %\n
              (context.absolute_url(), form_id, translated_message))\n
 \n
-return context.EGov_createNewProcedure(new_application_procedure=\'Subscription Form\')\n
+return context.EGov_createNewProcedure(new_application_procedure=\'Subscription Form\', captcha_ok=True)\n
 </string> </value>
         </item>
         <item>
@@ -141,6 +141,7 @@ return context.EGov_createNewProcedure(new_application_procedure=\'Subscription 
                             <string>message</string>
                             <string>translated_message</string>
                             <string>_getitem_</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>

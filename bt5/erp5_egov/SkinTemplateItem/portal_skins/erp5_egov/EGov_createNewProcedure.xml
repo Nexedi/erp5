@@ -67,15 +67,21 @@
             <key> <string>_body</string> </key>
             <value> <string>request=context.REQUEST\n
 \n
-portal_type = new_application_procedure\n
-module = context.getDefaultModule(portal_type=portal_type)\n
-# Create a new procedure\n
-new_procedure = module.newContent(portal_type=portal_type)\n
+if context.portal_membership.isAnonymousUser() and not captcha_ok:\n
+  absolute_url = context.absolute_url()\n
+  new_url = \'captcha/CaptchaAdvertisment\'\n
+  redirect_url = "%s/%s" % (absolute_url, new_url)\n
+else:\n
+  portal_type = new_application_procedure\n
+  module = context.getDefaultModule(portal_type=portal_type)\n
+  # Create a new procedure\n
+  new_procedure = module.newContent(portal_type=portal_type)\n
 \n
-absolute_url = context.absolute_url()\n
-module_id = module.getId()\n
-new_object_id = new_procedure.getId()\n
-redirect_url = "%s/%s/%s/%s" % (absolute_url, module_id, new_object_id, \'view\')\n
+  absolute_url = context.absolute_url()\n
+  module_id = module.getId()\n
+  new_object_id = new_procedure.getId()\n
+\n
+  redirect_url = "%s/%s/%s/%s" % (absolute_url, module_id, new_object_id, \'view\')\n
 \n
 result = request[\'RESPONSE\'].redirect(redirect_url) \n
 return result\n
@@ -101,7 +107,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>new_application_procedure</string> </value>
+            <value> <string>new_application_procedure, captcha_ok=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,23 +127,25 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>new_application_procedure</string>
+                            <string>captcha_ok</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>absolute_url</string>
+                            <string>new_url</string>
+                            <string>redirect_url</string>
                             <string>portal_type</string>
                             <string>module</string>
                             <string>new_procedure</string>
-                            <string>absolute_url</string>
                             <string>module_id</string>
                             <string>new_object_id</string>
-                            <string>redirect_url</string>
                             <string>_getitem_</string>
                             <string>result</string>
                           </tuple>
@@ -151,12 +159,20 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_createNewProcedure</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

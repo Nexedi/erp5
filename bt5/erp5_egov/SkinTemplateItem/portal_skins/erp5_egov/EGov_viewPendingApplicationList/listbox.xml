@@ -311,6 +311,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -361,7 +367,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
