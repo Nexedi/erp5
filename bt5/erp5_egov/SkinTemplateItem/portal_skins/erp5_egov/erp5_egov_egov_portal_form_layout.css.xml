@@ -61,9 +61,11 @@
 \n
 /* hide tabs */\n
 .document > .actions,\n
-.bottom_actions{\n
+.bottom_actions,\n
+.adminSection > #action{\n
   display: none;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>

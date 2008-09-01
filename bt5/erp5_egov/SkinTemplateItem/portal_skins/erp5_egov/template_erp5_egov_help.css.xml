@@ -74,6 +74,12 @@ html {\n
 **  Layout technique based on http://alistapart.com/articles/holygrail/\n
 **========================================================================================*/\n
 \n
+/* hide tabs */\n
+.document > .actions,\n
+.bottom_actions{\n
+  display: none;\n
+}\n
+\n
 .document div.content {\n
   background: #fff;\n
   border: .1em solid #ccc;\n
@@ -281,6 +287,12 @@ form#main_form div.languageSelector {\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
