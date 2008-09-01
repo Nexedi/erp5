@@ -69,11 +69,11 @@ class AssertPermissionMethod(object):
         if hasattr(user, 'getGroups'):
           groups = user.getGroups()
         self._instance.fail(
-          'User %s does NOT have %s permission on %s (user roles: [%s], '
+          'User %s does NOT have %s permission on %s %s (user roles: [%s], '
           'roles needed: [%s], existing local roles: %s, '
           'your user groups: [%s])' %
-          (username, self._permission_name, document,
-           ', '.join(user.getRolesInContext(document)),
+          (username, self._permission_name, document.getPortalTypeName(),
+            document, ', '.join(user.getRolesInContext(document)),
            ', '.join([x['name'] for x in
                       document.rolesOfPermission(self._permission_name)
                       if x['selected']]),
@@ -101,9 +101,9 @@ class AssertNoPermissionMethod(object):
       user = getSecurityManager().getUser()
       if user.has_permission(self._permission_name, document):
         self._instance.fail(
-          'User %s has %s permission on %s (roles: [%s])' %
-          (username, self._permission_name, document,
-            ', '.join(user.getRolesInContext(document))))
+          'User %s has %s permission on %s %s (roles: [%s])' %
+          (username, self._permission_name, document.getPortalTypeName(),
+            document, ', '.join(user.getRolesInContext(document))))
     except:
       setSecurityManager(sm)
 
@@ -179,8 +179,8 @@ class SecurityTestCase(ERP5TypeTestCase):
                             self.workflow_tool.listActions(object=document) if
                             ai['category'] == 'workflow']
       if transition in valid_transistion_list:
-        self.fail('User %s can pass %s transition on %s. Roles: [%s]' % (
-                  username, transition, document,
+        self.fail('User %s can pass %s transition on %s %s. Roles: [%s]' % (
+                  username, transition, document.getPortalTypeName(), document,
                   ", ".join(user.getRolesInContext(document))))
     finally:
       setSecurityManager(sm)
