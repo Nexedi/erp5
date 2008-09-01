@@ -75,6 +75,28 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 request=context.REQUEST\n
 \n
+portal_status_message = \'\'\n
+\n
+# add the attachments :\n
+request = context.REQUEST\n
+translateString = context.Base_translateString\n
+result, mode = context.Base_edit(\'DeclarationTVA_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+attachment_count = 0\n
+\n
+if mode == \'edit\':\n
+  (kw, encapsulated_editor_list) = result\n
+  if kw.has_key(\'attachment\') and kw.has_key(\'attachment_title\'):\n
+    attachment_list = zip(kw[\'attachment\'], kw[\'attachment_title\'])\n
+    portal_status_message = translateString("No attachment was added. Please select a file to add an attachment.")\n
+    # XXX make sure it is a list\n
+    for attachment, title in attachment_list:\n
+      if attachment:\n
+        attachment_count += 1\n
+        file = context.newContent(portal_type=\'File\', file=attachment, title=title)\n
+\n
+if attachment_count:\n
+  portal_status_message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
+                                mapping = dict(attachment_count=attachment_count))\n
 \n
 next_url_dict = {\n
     \'DeclarationTVA_view\' : \'DeclarationTVA_viewAttachmentList\',\n
@@ -108,7 +130,9 @@ else:\n
 successful_edit_redirect_url = \'%s/%s\' % (context.absolute_url(), next_url)\n
 \n
 result = request[\'RESPONSE\'].redirect(successful_edit_redirect_url) \n
-return result\n
+#return result\n
+\n
+return context.Base_redirect(successful_edit_redirect_url, keep_items = dict(portal_status_message = portal_status_message), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -131,7 +155,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\'</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -165,17 +189,32 @@ return result\n
                             <string>editable_mode</string>
                             <string>silent_mode</string>
                             <string>field_prefix</string>
+                            <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal_status_message</string>
+                            <string>translateString</string>
+                            <string>_getiter_</string>
+                            <string>result</string>
+                            <string>mode</string>
+                            <string>attachment_count</string>
+                            <string>encapsulated_editor_list</string>
+                            <string>zip</string>
+                            <string>_getitem_</string>
+                            <string>attachment_list</string>
+                            <string>attachment</string>
+                            <string>title</string>
+                            <string>_inplacevar_</string>
+                            <string>file</string>
+                            <string>dict</string>
                             <string>next_url_dict</string>
                             <string>next_url</string>
                             <string>message</string>
-                            <string>_getitem_</string>
                             <string>successful_edit_redirect_url</string>
-                            <string>result</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -201,6 +240,12 @@ return result\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_Base_editAndNextStep</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
