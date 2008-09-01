@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>type_list = context.EGov_getAllowedFormTypeList() + (\'Person\',)\n
+            <value> <string>type_list = context.ERP5Site_getQuickSearchableTypeList()\n
 item_list = [(x, x) for x in type_list]\n
 \n
 return item_list\n
@@ -136,6 +136,12 @@ return item_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_getQuickSearchableTypeItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
