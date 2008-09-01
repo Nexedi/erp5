@@ -6293,3 +6293,6 @@ msgstr "le texte saisi à droite de l'image est incorrect"
 
 msgid "Anti spam test"
 msgstr "Test anti-spam"
+
+msgid "See"
+msgstr "Voir"
