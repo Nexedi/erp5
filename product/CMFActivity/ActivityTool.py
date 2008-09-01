@@ -289,6 +289,11 @@ class Message:
     portal = activity_tool.getPortalObject()
     user_email = portal.getProperty('email_to_address',
                        portal.getProperty('email_from_address'))
+
+    call_traceback = ''
+    if self.call_traceback:
+      call_traceback = 'Created at:\n%s' % self.call_traceback
+
     mail_text = """From: %s
 To: %s
 Subject: %s
@@ -298,9 +303,8 @@ Subject: %s
 Server: %s
 Document: %s
 Method: %s
-Arguments:%r
-Named Parameters:%r
-Created at:
+Arguments: %r
+Named Parameters: %r
 %s
 
 Exception: %s %s
@@ -309,8 +313,7 @@ Exception: %s %s
 """ % (activity_tool.email_from_address, user_email, message, message,
        self.request_info.get('SERVER_URL', ''),
        '/'.join(self.object_path), self.method_id, self.args, self.kw,
-       self.call_traceback,
-       self.exc_type, self.exc_value, self.traceback)
+       call_traceback, self.exc_type, self.exc_value, self.traceback)
     try:
       activity_tool.MailHost.send( mail_text )
     except (socket.error, MailHostError), message:
