@@ -311,6 +311,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -618,7 +624,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Reference</string>
+                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                       </list>
