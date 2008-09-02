@@ -869,10 +869,10 @@ class ObjectTemplateItem(BaseTemplateItem):
           # activites are finished, to make sure it is indexed in the end.
           recursiveReindexObject = getattr(obj, 'recursiveReindexObject', None)
           if recursiveReindexObject is not None:
-            # XXX: Using SQLQueue to make sure this activity does not get
-            # merged and dropped because of another existing
+            # XXX: Using an hardcoded tag to make sure this activity does not
+            # get merged and dropped because of another existing
             # 'recursiveReindexObject' on same path.
-            recursiveReindexObject(activate_kw={'activity': 'SQLQueue',
+            recursiveReindexObject(activate_kw={'tag': 'uid_preservation',
               'after_method_id': 'unindexObject'})
       # now put original order group
       # we remove object not added in forms
