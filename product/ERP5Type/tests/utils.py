@@ -201,6 +201,9 @@ def getMySQLArguments():
   if not connection_string:
     return '-u test test'
   db, user = connection_string.split()
+  if "@" in db:
+    db, host = db.split('@')
+    return "-u %s -h %s %s" % (user, host, db)
   return '-u %s %s' % (user, db)
 
 # decorators
