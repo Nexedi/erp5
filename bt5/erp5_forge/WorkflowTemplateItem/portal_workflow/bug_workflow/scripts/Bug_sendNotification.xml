@@ -68,8 +68,15 @@
             <value> <string encoding="cdata"><![CDATA[
 
 bug = state_change["object"]\n
-valid_transaction_list = ["confirm_action", "stop_action", \n
-                                           "deliver_action", "set_ready_action" , "cancel_action"]\n
+history = bug.portal_workflow.getInfoFor(bug, \'history\',\n
+                                         wf_id=\'bug_workflow\')\n
+for history_item in history[::-1]:\n
+  if history_item[\'action\'].endswith(\'action\'):\n
+    send_event = history_item[\'send_event\']\n
+    break\n
+\n
+valid_transaction_list = ["confirm_action", "stop_action",\n
+                          "deliver_action", "set_ready_action", "cancel_action"]\n
 \n
 message = [ h for h in state_change.getHistory() \\\n
                                         if h[\'action\'] in valid_transaction_list]\n
@@ -78,13 +85,14 @@ comment = ""\n
 if len(message) > 0:\n
   comment=message[-1]["comment"]\n
 \n
-line = bug.newContent(title="Bug %s was %s" % (bug.getReference(),\n
-                                                                                          bug.getSimulationStateTitle()),\n
-                                           portal_type="Bug Line",\n
-                                           text_content=comment)\n
-\n
-# This will post The message Automatically.\n
-line.start()\n
+line = bug.newContent(title="Bug %s was %s" % (bug.getReference(),                                                                  bug.getSimulationStateTitle()),\n
+                      portal_type="Bug Line",\n
+                      text_content=comment)\n
+if send_event:\n
+  # This will post The message Automatically.\n
+  line.start()\n
+else:\n
+  line.plan()\n
 
 
 ]]></string> </value>
@@ -138,11 +146,14 @@ line.start()\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>bug</string>
+                            <string>_getattr_</string>
+                            <string>history</string>
+                            <string>_getiter_</string>
+                            <string>history_item</string>
+                            <string>send_event</string>
                             <string>valid_transaction_list</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
                             <string>h</string>
                             <string>message</string>
                             <string>comment</string>

@@ -1,3 +1,9 @@
+2008-09-02 nicolas
+* add new transition to display Re Assign in workflow action
+* Bug Notification can be send later to change recipient list
+* Add File dialog require missing mandatory fields
+* New worklist on bug_evnt_worklow to display planned Bug Line
+
 2008-08-29 yusei
 * Improve domain tree mode of glossary term list.
 

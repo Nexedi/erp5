@@ -43,6 +43,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Bug_newFile</string> </value>
         </item>
@@ -104,7 +110,10 @@
                       <list>
                         <string>your_portal_type</string>
                         <string>your_title</string>
+                        <string>your_reference</string>
+                        <string>your_language</string>
                         <string>your_file</string>
+                        <string>your_version</string>
                       </list>
                     </value>
                 </item>
@@ -129,7 +138,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Ticket_viewNewFileDialog</string> </value>
+            <value> <string>Bug_viewNewFileDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

@@ -105,7 +105,7 @@ body += """ Messages :\n
 simulation_state = (\'delivered\', \'started\')\n
 bug_message_list = [bug_message]\n
 lines_list = bug.searchFolder(portal_type=\'Bug Line\', sort_on=(("id", "DESC"),),\n
-                                                                       simulation_state=simulation_state)  \n
+                              simulation_state=simulation_state)\n
 bug_message_list.extend(lines_list)\n
 message_count = len(bug_message_list)+1\n
 for message in bug_message_list:\n
@@ -116,10 +116,12 @@ for message in bug_message_list:\n
 """ % (message_count, bug_message.getSourceTitle(\'\'), \n
             message.getStartDate(),  message.getTextContent(\'\') )\n
 \n
+recipient_list = bug_message.BugLine_getRecipientValueList()\n
+\n
 portal = bug_message.getPortalObject()\n
 portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
-                          recipient=bug_message.getDestinationValueList(), \n
-                          subject="[Bug %s] %s" % (bug.getReference(), bug.getTitle()), \n
+                          recipient=recipient_list,\n
+                          subject="[Bug %s] %s" % (bug.getReference(), bug.getTitle()),\n
                           message=body)\n
 </string> </value>
         </item>
@@ -178,6 +180,7 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
                             <string>message_count</string>
                             <string>_getiter_</string>
                             <string>message</string>
+                            <string>recipient_list</string>
                             <string>portal</string>
                           </tuple>
                         </value>
