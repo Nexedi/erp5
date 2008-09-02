@@ -110,7 +110,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 Normally a message should be displayed when saving an object through web interface... -->\n
           <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>\n
         </tal:block>\n
-\n
+        <div id="information_area" tal:condition="python: request.has_key(\'field_errors\')" \n
+            i18n:translate="" i18n:domain="ui">\n
+          Input data has errors. Please look at error messages below.\n
+        </div>\n
         <tal:block metal:define-slot="main"/>\n
 \n
       </div>\n

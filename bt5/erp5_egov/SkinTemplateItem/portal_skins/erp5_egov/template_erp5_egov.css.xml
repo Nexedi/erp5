@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
               <none/>
@@ -674,6 +678,18 @@ fieldset.register_informations{\n
 .become_member_body  ul{\n
   list-style-image: url(\'img/puce1.png\')\n
 }\n
+\n
+#information_area {\n
+  margin-top: 1em;\n
+  padding:0.5em 1em 0.5em 1em;\n
+  margin-bottom: 1em;\n
+  border-width: 1px;\n
+  border-style: dotted;\n
+  border-color: black;\n
+  color: red;\n
+  background-color: <dtml-var document_background_color>;\n
+  font-weight: bold;\n
+}\n
 
 
 ]]></string> </value>
@@ -693,6 +709,12 @@ fieldset.register_informations{\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
