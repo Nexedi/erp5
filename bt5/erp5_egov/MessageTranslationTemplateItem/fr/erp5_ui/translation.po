@@ -2625,8 +2625,8 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-msgid "Le cas échéant, veuillez indiquer pour les lignes 10, 15, 25, et 30, les motifs d'exonération selon leur nature ou leur régime."
-msgstr ""
+msgid "If so, please indicate for lines 10, 15, 25 and 30, grounds for exemption according to their nature or regime."
+msgstr "Le cas échéant, veuillez indiquer pour les lignes 10, 15, 25, et 30, les motifs d'exonération selon leur nature ou leur régime."
 
 msgid "Le portail SAFI permet d'effectuer des formalités administratives en ligne. Il est possible d'effectuer des demandes sans être inscrit (demande anonymes), toutefois, l'inscription est vivement conseillée."
 msgstr ""
@@ -3282,8 +3282,8 @@ msgstr ""
 msgid "Partners"
 msgstr "Nombre d'épouses"
 
-msgid "Pas de description"
-msgstr ""
+msgstr "No description"
+msgstr "Pas de description"
 
 msgid "Password"
 msgstr "Mot de passe"
@@ -3559,9 +3559,6 @@ msgid "Prefix"
 msgstr "Préfixe"
 
 msgid "Presentation"
-msgstr ""
-
-msgid "Preuve de souscription à la procédure XXX avec signature officielle"
 msgstr ""
 
 msgid "Previous"
@@ -4014,29 +4011,11 @@ msgstr ""
 msgid "Request Number"
 msgstr "Numéro du Dossier"
 
-msgid "Request Outcome"
-msgstr ""
-
 msgid "Request Steps"
 msgstr "Étapes de la demande"
 
-msgid "Request Translation"
-msgstr ""
-
-msgid "Requested by"
-msgstr ""
-
 msgid "Required"
 msgstr "Requis"
-
-msgid "Requirement"
-msgstr ""
-
-msgid "Requirements"
-msgstr ""
-
-msgid "Resolve SVN conflicted files"
-msgstr ""
 
 msgid "Resource"
 msgstr "Nature"
@@ -4059,56 +4038,11 @@ msgstr "Liste"
 msgid "Results per page"
 msgstr "Resultat par page"
 
-msgid "Retour à l'acceuil"
-msgstr ""
-
-msgid "Retour à l'accueil"
-msgstr ""
-
-msgid "Returned Sale Packing Lists"
-msgstr ""
-
-msgid "Revert &amp; Update Business Template from SVN"
-msgstr ""
-
-msgid "Revision"
-msgstr ""
-
-msgid "Revision Number"
-msgstr ""
-
 msgid "Rights"
 msgstr "Droits"
 
 msgid "Role"
 msgstr "Rôle"
-
-msgid "Role Definition"
-msgstr ""
-
-msgid "Role Keys"
-msgstr ""
-
-msgid "Roles"
-msgstr ""
-
-msgid "Route Tool"
-msgstr ""
-
-msgid "Rule Tool"
-msgstr ""
-
-msgid "Run Unit Tests"
-msgstr ""
-
-msgid "S1"
-msgstr ""
-
-msgid "S5"
-msgstr ""
-
-msgid "SQL Cache"
-msgstr ""
 
 msgid "Safi is a major Internet portal for performing administrative formalities online. It is a quick and easy way to make a statement, or a application for jutificatif,... without having to move or to queue. For more information, please click"
 msgstr "Safi est un grand portail internet qui permet d'effectuer des formalités administratives directement en ligne. C'est est un moyen simple et rapide de faire faire une télé-déclaration, ou une demande de jutificatif,... sans avoir à se déplacer ou faire la queue. Pour plus d'information, cliquez"
@@ -4380,8 +4314,8 @@ msgstr ""
 msgid "Show All"
 msgstr "Tout Montrer"
 
-msgid "Si vous n'êtes pas un citoyen sénégalais, vous devez joindre votre carte d'identité"
-msgstr ""
+msgid "If you are not a senegalese citizen, you have to attach your identity card"
+msgstr "Si vous n'êtes pas un citoyen sénégalais, vous devez joindre votre carte d'identité"
 
 msgid "Sign"
 msgstr ""
@@ -5218,9 +5152,6 @@ msgid "Total quantity"
 msgstr "Quantité totale"
 
 msgid "Tous Droits r&eacute;serv&eacute;s &agrave; la DGID"
-msgstr ""
-
-msgid "Tout contribuable assujeti blablalbla.... doit joindre le tableau des dépenses"
 msgstr ""
 
 msgid "Track"
@@ -6162,8 +6093,8 @@ msgstr ""
 msgid "requested"
 msgstr ""
 
-msgid "requirement non trouvé"
-msgstr ""
+msgid "Requirement not found"
+msgstr "Requirement non trouvé"
 
 msgid "responded"
 msgstr ""
