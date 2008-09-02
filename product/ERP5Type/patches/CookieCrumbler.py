@@ -34,7 +34,7 @@ ATTEMPT_NONE = 0       # No attempt at authentication
 ATTEMPT_LOGIN = 1      # Attempt to log in
 ATTEMPT_RESUME = 2     # Attempt to resume session
 
-from base64 import encodestring, decodestring
+from base64 import standard_b64encode, standard_b64decode
 from DateTime import DateTime
 
 class PatchedCookieCrumbler(CookieCrumbler):
@@ -99,8 +99,7 @@ def modifyRequest(self, req, resp):
       attempt = ATTEMPT_LOGIN
       name = req[self.name_cookie]
       pw = req[self.pw_cookie]
-      #ac = encodestring('%s:%s' % (name, pw)).rstrip() => changed for remove all newlines
-      ac = encodestring('%s:%s' % (name, pw)).replace('\012','')
+      ac = standard_b64encode('%s:%s' % (name, pw))
       self._setAuthHeader(ac, req, resp)
       if req.get(self.persist_cookie, 0):
         # Persist the user name (but not the pw or session)
@@ -124,7 +123,7 @@ def modifyRequest(self, req, resp):
       ac = unquote(req[self.auth_cookie])
       if ac and ac != 'deleted':
         try:
-          decodestring(ac)
+          standard_b64decode(ac)
         except:
           # Not a valid auth header.
           pass
@@ -144,8 +143,7 @@ CookieCrumbler.modifyRequest = modifyRequest
 
 
 def credentialsChanged(self, user, name, pw):
-  #ac = encodestring('%s:%s' % (name, pw)).rstrip() => changed for remove all newlines
-  ac = encodestring('%s:%s' % (name, pw)).replace('\012','')
+  ac = standard_b64encode('%s:%s' % (name, pw))
   method = self.getCookieMethod( 'setAuthCookie'
                                  , self.defaultSetAuthCookie )
   resp = self.REQUEST['RESPONSE']
