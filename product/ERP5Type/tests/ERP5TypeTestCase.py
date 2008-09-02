@@ -622,6 +622,10 @@ class ERP5TypeTestCase(PortalTestCase):
                 ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
 
               extra_constructor_kw = _getConnectionStringDict()
+              # manage_addERP5Site does not accept
+              # erp5_sql_transactionless_connection_string argument
+              extra_constructor_kw.pop(
+                    'erp5_sql_transactionless_connection_string', None)
               email_from_address = os.environ.get('email_from_address')
               if email_from_address is not None:
                 extra_constructor_kw['email_from_address'] = email_from_address
