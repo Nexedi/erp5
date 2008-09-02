@@ -111,9 +111,9 @@
                         <string>your_portal_type</string>
                         <string>your_title</string>
                         <string>your_reference</string>
+                        <string>your_version</string>
                         <string>your_language</string>
                         <string>your_file</string>
-                        <string>your_version</string>
                       </list>
                     </value>
                 </item>
