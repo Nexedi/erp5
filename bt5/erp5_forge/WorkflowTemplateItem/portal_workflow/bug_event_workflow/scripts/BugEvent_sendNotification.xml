@@ -110,11 +110,12 @@ bug_message_list.extend(lines_list)\n
 message_count = len(bug_message_list)+1\n
 for message in bug_message_list:\n
     message_count -= 1\n
+    content_type, text = message.convert(\'text\')\n
     body += """\n
 ++++++ Message #%s submitted by %s on %s ++++++\n
 %s\n
 """ % (message_count, bug_message.getSourceTitle(\'\'),\n
-            message.getStartDate(),  message.getTextContent(\'\') )\n
+            message.getStartDate(),  text )\n
 \n
 recipient_list = bug_message.BugLine_getRecipientValueList()\n
 \n
@@ -180,6 +181,8 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
                             <string>message_count</string>
                             <string>_getiter_</string>
                             <string>message</string>
+                            <string>content_type</string>
+                            <string>text</string>
                             <string>recipient_list</string>
                             <string>portal</string>
                           </tuple>
