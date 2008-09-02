@@ -42,15 +42,15 @@ class MTMultipart(MIMEMultipart):
     security.declarePublic('add_file')
     def add_file(self,theFile=None,data=None,filename=None,content_type=None):
         "add a Zope file or Image to ourselves as an attachment"
-        if theFile and data:
+        if theFile and data is not None:
             raise TypeError(
                 'A file-like object was passed as well as data to create a file'
                 )
-        if (data or filename) and not (data and filename):
+        if (data is None) != (not filename):
             raise TypeError(
                 'Both data and filename must be specified'
                 )
-        if data:
+        if data is not None:
             if content_type is None:
                 content_type, enc=guess_content_type(filename, data)
         elif isinstance(theFile,File):
