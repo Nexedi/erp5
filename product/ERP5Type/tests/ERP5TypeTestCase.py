@@ -651,8 +651,7 @@ class ERP5TypeTestCase(PortalTestCase):
             update_business_templates = os.environ.get('update_business_templates') is not None
             BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
 
-            # Disable reindexing before adding templates
-            # VERY IMPORTANT: Add some business templates
+            # Add some business templates
             for url, bt_title in business_template_list:
               start = time.time()
               get_install_kw = False
