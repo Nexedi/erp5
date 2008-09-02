@@ -3282,7 +3282,7 @@ msgstr ""
 msgid "Partners"
 msgstr "Nombre d'épouses"
 
-msgstr "No description"
+msgid "No description"
 msgstr "Pas de description"
 
 msgid "Password"
