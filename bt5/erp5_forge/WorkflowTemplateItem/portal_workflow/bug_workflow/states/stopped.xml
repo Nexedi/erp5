@@ -39,8 +39,8 @@
               <tuple>
                 <string>deliver</string>
                 <string>deliver_action</string>
-                <string>set_ready</string>
-                <string>set_ready_action</string>
+                <string>re_assign</string>
+                <string>re_assign_action</string>
               </tuple>
             </value>
         </item>
