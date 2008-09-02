@@ -258,8 +258,7 @@ class WizardTool(BaseTool):
     user_and_password = self._getSubsribedUserAndPassword()
     if (len(user_and_password)==2 and
         user_and_password[0] and user_and_password[1]):
-      auth = 'Basic %s' % base64.standard_b64encode(
-                              '%s:%s' % user_and_password).strip()
+      auth = 'Basic %s' % base64.standard_b64encode('%s:%s' % user_and_password)
       header_dict['Authorization'] = auth
 
     if content_type:
