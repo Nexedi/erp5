@@ -392,6 +392,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def _updateConnectionStrings(self):
       """Update connection strings with values passed by the testRunner
       """
+      global current_app
+      if current_app is not None:
+        self.app = current_app
       portal = self.getPortal()
       # update connection strings
       for connection_string_name, connection_string in\
@@ -653,6 +656,8 @@ class ERP5TypeTestCase(PortalTestCase):
                 removeLocalDocument(id_)
               for id_ in getLocalConstraintList():
                 removeLocalConstraint(id_)
+
+            self._updateConnectionStrings()
 
             update_business_templates = os.environ.get('update_business_templates') is not None
             BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
