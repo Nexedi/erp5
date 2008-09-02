@@ -198,15 +198,13 @@ class TestEGovMixin(SecurityTestCase):
     for object in object_list:
       for permission, has in security_mapping.items():
         if user.has_permission(permission, object) and not has:
-          self.fail('%s Permission should be Unauthorized on %s\n%s' % \
+          self.fail('%s Permission should be Unauthorized on %s' % \
                                                 ( permission,
-                                                  object.getRelativeUrl(),
-                                                  object.Base_viewSecurity()))
+                                                  object.getRelativeUrl()))
         if not(user.has_permission(permission, object)) and has:
-          self.fail('%s Permission should be Authorized on %s\n%s' % \
+          self.fail('%s Permission should be Authorized on %s' % \
                                                 ( permission,
-                                                  object.getRelativeUrl(),
-                                                  object.Base_viewSecurity()))
+                                                  object.getRelativeUrl()))
 
   def checkTransition(self, object_list, possible_transition_list, 
                       not_possible_transition_list, username):
