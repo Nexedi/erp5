@@ -27,7 +27,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/WebSite_viewAdvancedSearchResultList?portal_type=%(portal_type)s&simulation_state=planned&local_roles=%(local_roles)s&reset:int=1
+Base_viewSearchResultList?portal_type=%(portal_type)s&simulation_state=planned&local_roles=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>
