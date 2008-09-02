@@ -13,11 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>default_module</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
               </list>
             </value>
         </item>
@@ -79,11 +78,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
+                    <key>                 <string>base_category</string> </key>
                     <value> <string>source_decision</string> </value>
                 </item>
                 <item>
-                    <key> <string>catalog_index</string> </key>
+                    <key>                 <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>
@@ -99,16 +98,12 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>Organisation</string>
                           <string>Organisation</string>
-                        </tuple>
-                        <tuple>
-                          <string>Category</string>
-                          <string>Category</string>
                         </tuple>
                         <tuple>
                           <string>Person</string>
@@ -122,7 +117,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Supervisor</string> </value>
                 </item>
               </dictionary>
