@@ -71,10 +71,10 @@
 bug = bug_message.getParentValue()\n
 body = """\n
   Bug     : %s\n
-  Status : %s \n
+  Status : %s\n
   Date    : %s\n
   Link     : %s/view\n
-""" %  (bug.getTitle(\'\'), bug.getSimulationStateTitle(),  \n
+""" %  (bug.getTitle(\'\'), bug.getSimulationStateTitle(),\n
             bug.getStartDate(\'\'),  bug.getAbsoluteUrl())\n
 \n
 if bug.getSourceTitle() is not None:\n
@@ -92,8 +92,8 @@ if bug.getSourceProjectTitle() is not None:\n
   body += """  Assigned Project : %s\n
 """ % bug.getSourceProjectTitle()\n
 \n
-body += """ \n
-  Description: \n
+body += """\n
+  Description:\n
 \n
 %s\n
 \n
@@ -101,7 +101,7 @@ body += """ \n
 \n
 body += """ Messages :\n
 """\n
-# Messages Information \n
+# Messages Information\n
 simulation_state = (\'delivered\', \'started\')\n
 bug_message_list = [bug_message]\n
 lines_list = bug.searchFolder(portal_type=\'Bug Line\', sort_on=(("id", "DESC"),),\n
@@ -113,7 +113,7 @@ for message in bug_message_list:\n
     body += """\n
 ++++++ Message #%s submitted by %s on %s ++++++\n
 %s\n
-""" % (message_count, bug_message.getSourceTitle(\'\'), \n
+""" % (message_count, bug_message.getSourceTitle(\'\'),\n
             message.getStartDate(),  message.getTextContent(\'\') )\n
 \n
 recipient_list = bug_message.BugLine_getRecipientValueList()\n
