@@ -72,10 +72,8 @@ portal = bug.getPortalObject()\n
 if project is not None:\n
   recipient_list = [ i.getParentValue() for i in project.getDestinationProjectRelatedValueList(portal_type="Assignment")]\n
 else:\n
-  recipient_list = bug_line.getDestinationValueList() or\\\n
-                   bug.getDestinationValueList() +\\\n
-                   bug_line.getSourceValueList() or\\\n
-                   bug.getSourceValueList()\n
+  recipient_list = bug_line.getDestinationValueList() or bug.getDestinationValueList()\n
+  recipient_list.extend(bug_line.getSourceValueList() or bug.getSourceValueList())\n
 \n
 #If highest level of severity is reach, send Notifications also to source_decision\n
 if bug.getBugSeverityUid() is not None:\n
