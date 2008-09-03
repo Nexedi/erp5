@@ -146,7 +146,8 @@ for i in form_list:\n
 # ListBox title, columns\n
 #\n
 for i in listbox_list:\n
-  add_message(i.title(), portal_url.getRelativeContentURL(i))\n
+  if i.get_tales(\'title\')==\'\':\n
+    add_message(i.title(), portal_url.getRelativeContentURL(i))\n
   for value, label in i.get_value(\'columns\') or ():\n
     add_message(label, portal_url.getRelativeContentURL(i))\n
   for value, label in i.get_value(\'all_columns\') or ():\n

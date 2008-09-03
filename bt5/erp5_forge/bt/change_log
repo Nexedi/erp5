@@ -1,3 +1,6 @@
+2008-09-03 yusei
+* Don't extract title from field if tales expression was used.
+
 2008-09-02 yusei
 * Don't extract title from field libraries.
 
