@@ -325,7 +325,7 @@ class TestBug(ERP5TypeTestCase):
 
   def stepReAssignBug(self, sequence=None, sequence_list=None, **kw):
     """
-      Close the bug.
+      Re Assign the bug.
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 're_assign_action', send_event=1)
