@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>bug_line = context\n
 bug = bug_line.getParentValue()\n
-project = bug.getDestinationProjectValue()\n
+project = bug.getSourceProjectValue()\n
 portal = bug.getPortalObject()\n
 if project is not None:\n
   recipient_list = [ i.getParentValue() for i in project.getDestinationProjectRelatedValueList(portal_type="Assignment")]\n
