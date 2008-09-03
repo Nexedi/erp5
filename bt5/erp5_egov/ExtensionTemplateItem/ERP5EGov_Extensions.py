@@ -44,16 +44,18 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
     return a dict containing portal_type and all informations about work_list
     of workflow :
 
-    { 'Declaration TVA': {  'id':'applications_to_submit',
-                            'description':'Applications to submit',
-                            'validation_state':'draft',
-                            'formated_name':'Applications to submit (%(count)s)'
-                            'formated_url':'Base_viewSearchResultList?validation_state=submitted&local_roles=%(local_roles)s&reset=1&portal_type=%(portal_type)s',
-                            'category':'global',
-                            'count':2,
-                            'roles':['Owner'],
+    {'Subscription Form': {('signed',): {'category': 'global',
+                                         'count': 1,
+                                         'description': 'Subscription Forms to archive',
+                                         'formated_name': 'Subscription Forms to archive (%(count)s)',
+                                         'formated_url': 'Base_viewSearchResultList?validation_state=signed&local_roles=Assignor&reset=1&portal_type=Subscription Form
+',
+                                         'id': 'subscription_forms_to_archive',
+                                         'roles': ('Assignor',),
+                                         'validation_state': ('signed',)}
                           },
               .....
+
     }
   """
   portal_type_worklist_dict = {}
@@ -89,8 +91,8 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
           if not portal_type_worklist_dict.has_key(portal_type):
             portal_type_worklist_dict[portal_type] = {}
 
-          portal_type_worklist_dict[portal_type][worklist_id] = {}
-          result_dict = portal_type_worklist_dict[portal_type][worklist_id]
+          portal_type_worklist_dict[portal_type][state] = {}
+          result_dict = portal_type_worklist_dict[portal_type][state]
           result_dict['id']=worklist_id
           result_dict['count']=len(result)
           result_dict['description']=worklist.description
