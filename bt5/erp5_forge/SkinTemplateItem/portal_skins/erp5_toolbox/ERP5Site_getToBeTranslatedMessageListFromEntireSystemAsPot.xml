@@ -133,6 +133,12 @@ for message, path in context.Base_findMessageListFromPythonInProduct(FUNC_NAME_L
 # ERP5 Form title\n
 #\n
 for i in form_list:\n
+  if (i.getId().endswith(\'_viewFieldLibrary\') or\n
+      i.getId().endswith(\'_viewDialogFieldLibrary\') or\n
+      i.getId().endswith(\'_viewReportFieldLibrary\') or\n
+      i.getId().endswith(\'_FieldLibrary\')\n
+      ):\n
+    continue\n
   add_message(i.title, portal_url.getRelativeContentURL(i))\n
 \n
 \n
