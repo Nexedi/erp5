@@ -304,7 +304,7 @@ class TestBug(ERP5TypeTestCase):
       Open the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'confirm_action')
+    self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'confirmed')
 
   def stepAssignBug(self, sequence=None, sequence_list=None, **kw):
@@ -312,7 +312,7 @@ class TestBug(ERP5TypeTestCase):
       Close the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'set_ready_action')
+    self.workflow_tool.doActionFor(bug, 'set_ready_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'ready')
 
   def stepResolveBug(self, sequence=None, sequence_list=None, **kw):
@@ -320,16 +320,23 @@ class TestBug(ERP5TypeTestCase):
       Close the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'stop_action')
+    self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'stopped')
 
+  def stepReAssignBug(self, sequence=None, sequence_list=None, **kw):
+    """
+      Close the bug.
+    """
+    bug = sequence.get('bug')
+    self.workflow_tool.doActionFor(bug, 're_assign_action', send_event=1)
+    self.assertEquals(bug.getSimulationState(), 'ready')
 
   def stepCloseBug(self, sequence=None, sequence_list=None, **kw):
     """
       Close the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'deliver_action')
+    self.workflow_tool.doActionFor(bug, 'deliver_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'delivered')
 
   def stepCancelBug(self, sequence=None, sequence_list=None, **kw):
@@ -337,7 +344,7 @@ class TestBug(ERP5TypeTestCase):
       Cancel the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 'cancel_action')
+    self.workflow_tool.doActionFor(bug, 'cancel_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'cancelled')
 
   def stepSetTestedBug(self, sequence=None, sequence_list=None, **kw):
@@ -381,7 +388,7 @@ class TestBug(ERP5TypeTestCase):
                 , 'stepTic'
                 , 'stepResolveBug'
                 , 'stepTic'
-                , 'stepAssignBug'
+                , 'stepReAssignBug'
                 , 'stepTic'
                 , 'stepResolveBug'
                 , 'stepTic'
@@ -416,7 +423,7 @@ class TestBug(ERP5TypeTestCase):
                 , 'stepResolveBug'
                 , 'stepTic'
                 , 'stepCheckBugNotification'
-                , 'stepAssignBug'
+                , 'stepReAssignBug'
                 , 'stepTic'
                 , 'stepCheckBugNotification'
                 , 'stepResolveBug'
