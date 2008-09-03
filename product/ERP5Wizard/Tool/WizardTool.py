@@ -355,6 +355,8 @@ class WizardTool(BaseTool):
       parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
+    # add user preffered language
+    parameter_dict['user_preferred_language'] = self.getPortalObject().Localizer.get_selected_language()    
       
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
