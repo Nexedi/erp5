@@ -1,3 +1,6 @@
+2008-09-03 yusei
+* Remove Route Tool portal type which is not used.
+
 2008-08-28 yusei
 * Use Base_translateString or translateString instead of N_.
 
