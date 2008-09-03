@@ -75,10 +75,7 @@ if person is not None:\n
   context.setSourceValue(person)\n
 \n
 # Define Recipents\n
-project = context.getParentValue().getSourceProjectValue()\n
-if project is not None:\n
-  person_list = [ i.getParent() for i in project.getDestinationProjectRelatedValueList(portal_type="Assignment")]\n
-  context.setDestinationValueList(person_list)\n
+context.setDestinationValueList(context.BugLine_getRecipientValueList())\n
 </string> </value>
         </item>
         <item>
@@ -134,12 +131,6 @@ if project is not None:\n
                             <string>DateTime</string>
                             <string>person</string>
                             <string>None</string>
-                            <string>project</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
-                            <string>person_list</string>
                           </tuple>
                         </value>
                     </item>
