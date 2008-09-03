@@ -1,3 +1,6 @@
+2008-09-03 yusei
+* Fixed i18n markup in login_form.
+
 2008-08-28 yusei
 * Use Base_translateString instead of using Localizer method directly.
 * Use Base_translateString or translateString instead of N_ for translation message.

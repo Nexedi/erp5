@@ -72,7 +72,7 @@
           <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
             <h1 i18n:translate="" i18n:domain="ui">You do not have enough permissions to access this page</h1>\n
             <p i18n:translate="" i18n:domain="ui">You can log in with another user name or\n
-              <a href="javascript:history.back();">go back</a>.\n
+              <span i18n:name="go-back"><a href="javascript:history.back();" i18n:translate="">go back</a></span>.\n
             </p>\n
           </tal:block>\n
           <input tal:condition="exists: request/came_from"\n
