@@ -70,7 +70,6 @@ Description:\n
       <div>\n
         <div>\n
           <input type="text" size="40" name="new_advanced_search_text" id="SearchableText" class="autofocus"/>\n
-          <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n
           <select size="1" class="input" name="new_advanced_search_portal_type">\n
             <tal:block metal:define-macro="search_type_option_list">\n
               <option value="" selected value="" i18n:translate="" i18n:domain="ui">Everything</option>\n
@@ -202,6 +201,12 @@ Description:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

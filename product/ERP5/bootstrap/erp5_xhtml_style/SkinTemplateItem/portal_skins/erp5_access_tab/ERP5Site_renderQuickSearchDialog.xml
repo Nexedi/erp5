@@ -57,7 +57,6 @@
                                                        \'text/html;; charset=utf-8\');">\n
   <div>\n
     <input type="text" size="40" name="new_advanced_search_text" id="SearchableText" class="autofocus"/>\n
-    <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n
     <select size="1" class="input" name="new_advanced_search_portal_type">\n
       <option value="" selected value="" i18n:translate="" i18n:domain="ui">Everything</option>\n
       <option value="all" selected value="" i18n:translate="" i18n:domain="ui">All Documents</option>\n
@@ -93,6 +92,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
