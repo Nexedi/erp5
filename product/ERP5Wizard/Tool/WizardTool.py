@@ -49,8 +49,8 @@ def _setSuperSecurityManager(self):
 class GeneratorCall(UserDict):
   """ Class use to generate/interpret XML-RPC call for the wizard. """
   
-  _binary_keys = ("data", "filedata",)
-  _string_keys = ("previous", "next", "command", "server_buffer",)
+  _binary_keys = ("data", "filedata", "previous", "next",)
+  _string_keys = ( "command", "server_buffer",)
 
   def __init__(self, *args, **kw):
     UserDict.__init__(self, *args, **kw)
