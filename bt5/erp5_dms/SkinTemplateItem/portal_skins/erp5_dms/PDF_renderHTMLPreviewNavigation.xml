@@ -72,7 +72,7 @@
     <a href=""\n
       tal:attributes="href string:${base_url}selection_index=0">\n
         <img src="images/2leftarrowb.png" \n
-             i18n:translate="alt"\n
+             i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="First"/>\n
       </a>\n
@@ -81,7 +81,7 @@
       tal:condition="python: current_thumbnail_index >= 1"\n
       tal:attributes="href string:${base_url}selection_index=${previous_thunmbnail_index}">\n
         <img src="images/1leftarrowb.png" \n
-             i18n:translate="alt"\n
+             i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="Previous"/>\n
       </a>\n
@@ -93,22 +93,18 @@
       tal:attributes="href string:${parent_doc_url}/view">Exit Preview</a>\n
 \n
     <a href=""\n
-      i18n:translate=""\n
-      i18n:domain="ui"\n
       tal:condition="python: all_thunmbnails > next_thunmbnail_index"\n
       tal:attributes="href string:${base_url}selection_index=${next_thunmbnail_index}">\n
         <img src="images/1rightarrowb.png" \n
-             i18n:translate="alt"\n
+             i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="Next"/>\n
     </a>\n
 \n
     <a href=""\n
-      i18n:translate=""\n
-      i18n:domain="ui"\n
       tal:attributes="href string:${base_url}selection_index=${all_thunmbnails}">\n
         <img src="images/2rightarrowb.png" \n
-             i18n:translate="alt"\n
+             i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="Last"/>\n
     </a>\n
@@ -120,8 +116,20 @@
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>PDF_renderHTMLPreviewNavigation</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

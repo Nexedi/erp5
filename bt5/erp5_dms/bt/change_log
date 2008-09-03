@@ -1,3 +1,6 @@
+2008-09-03 yusei
+* Fixed i18n markup in PDF_renderHTMLPreviewNavigation.
+
 2008-07-06 yo
 * Add effective date into Web Page.
 
