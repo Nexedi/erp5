@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [line for line in context.searchFolder() if not (line.getId() == "default_bug_line")]\n
+            <value> <string>return [line for line in context.searchFolder(**kw) if not (line.getId() == "default_bug_line")]\n
 </string> </value>
         </item>
         <item>
@@ -76,6 +76,12 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -112,6 +118,7 @@
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>line</string>
