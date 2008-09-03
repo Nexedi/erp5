@@ -92,6 +92,7 @@ Sale Order Module | workflow_report
 Sale Order | apply_trade_condition
 Sale Order | jump_to_related_sale_packing_list
 Sale Order | order_print
+Sale Order | order_summary
 Sale Order | payment_condition
 Sale Order | profile_view
 Sale Order | reference_generate

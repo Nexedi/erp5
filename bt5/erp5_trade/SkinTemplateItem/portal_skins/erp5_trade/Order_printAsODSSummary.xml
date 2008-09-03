@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># We wants to get data in order to do a nice summary of items inside the order\n
+# This report will mainly usefull when the same resource is ordered on many\n
+# different lines\n
+if target_language:\n
+  container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
+\n
+unit_title_dict = {}\n
+total_quantity_dict = {}\n
+unit_price_dict = {}\n
+total_price_dict = {}\n
+error = None\n
+error_kw = {}\n
+default_quantity_unit = None\n
+default_quantity_unit_title = \'\'\n
+resource_dict = {}\n
+summary_quantity_dict = {}\n
+object_list = []\n
+untranslatable_column_list = [] # We should not translate some columns\n
+full_total_price = 0\n
+worker_column_list = []\n
+source_trade_dict = {}\n
+\n
+context_relative_url = context.getRelativeUrl()\n
+\n
+def sortMovement(a, b):\n
+  return cmp(a.getRelativeUrl(), b.getRelativeUrl())\n
+\n
+movement_type_list = context.getPortalMovementTypeList()\n
+line_list = [x for x in context.getIndexableChildValueList() if x.getPortalType() in \\\n
+              movement_type_list]\n
+line_list.sort(sortMovement)\n
+\n
+if len(quantity_unit_list) != 1:\n
+  error = "You should select only one quantity unit"\n
+else:\n
+  default_quantity_unit = quantity_unit_list[0]\n
+  default_quantity_unit_title = context.portal_categories.\\\n
+      restrictedTraverse(\'quantity_unit/\' + default_quantity_unit).getTitle()\n
+\n
+column_list = [(\'reference\', \'Reference\'), (\'title\', \'Title\'), \\\n
+    (\'stop_date\', \'Stop Date\'), (\'per_line_total_price\', \'Total Price\')]\n
+if error is None:\n
+  for line in line_list:\n
+    resource = line.getResource()\n
+    line_kw = {}\n
+    # for the per line total price\n
+    total_price = line.getTotalPrice()\n
+    line_kw[\'per_line_total_price\'] = line.getTotalPrice()\n
+    if len(line) != 0:\n
+      line_kw[\'stop_date\'] = ""\n
+    else:\n
+      if resource is not None:\n
+        if not resource in resource_dict:\n
+          resource_value = line.getResourceValue()\n
+          resource_dict[resource] = resource_value\n
+          current_column = (resource, resource_value.getTitle())\n
+          column_list.append(current_column)\n
+          untranslatable_column_list.append(current_column)\n
+          unit_price_dict[resource] = line.getPrice()\n
+          unit_title_dict[resource] = line.getQuantityUnitTitle()\n
+        quantity_unit = line.getQuantityUnit()\n
+        if line.getPrice() != unit_price_dict[resource]:\n
+          error = "Same resource has several prices, "\\\n
+              + "not handled by this report yet, check: ${line_title}"\n
+          error_kw[\'line_title\'] = line.getTitle()\n
+        if line.getQuantityUnitTitle() != unit_title_dict[resource]:\n
+          error = "Same resource has several units, " \\\n
+              + "not handled by this report yet, check: ${line_title}"\n
+          error_kw[\'line_title\'] = line.getTitle()\n
+        source_trade_list = line.getSourceTradeList()\n
+        if len(source_trade_list) != 1:\n
+          error = "This report assume one Supplier or Worker for each line, " \\\n
+              + "check: ${line_title}"\n
+          error_kw[\'line_title\'] = line.getTitle()\n
+        source_trade = source_trade_list[0]\n
+        if source_trade not in source_trade_dict:\n
+          source_trade_value = line.getSourceTradeValue()\n
+          source_trade_dict[source_trade] = source_trade_value\n
+          current_column = (source_trade, source_trade_value.getTitle())\n
+          worker_column_list.append(current_column)\n
+          untranslatable_column_list.append(current_column)\n
+        # For the line displaying total quantity \n
+        quantity = line.getQuantity()\n
+        total_quantity_dict[resource] = total_quantity_dict.get(resource, 0) + quantity\n
+        if quantity_unit == default_quantity_unit:\n
+          total_quantity_dict[source_trade] = total_quantity_dict.get(source_trade, 0) + quantity\n
+        # For the line displaying total price \n
+        total_price_dict[resource] = total_price_dict.get(resource, 0) + total_price\n
+        if quantity_unit == default_quantity_unit:\n
+          total_price_dict[source_trade] = total_price_dict.get(source_trade, 0) + total_price\n
+        full_total_price += total_price\n
+        # For the display of the quantity for resource and source_trade\n
+        line_kw[resource] = quantity\n
+        if quantity_unit == default_quantity_unit:\n
+          line_kw[source_trade] = quantity\n
+          # Add the column wich is a summary between column of resources and column \n
+          # of source_trades\n
+          line_kw[\'summary_quantity\'] = quantity\n
+    line = line.asContext(**line_kw)\n
+    object_list.append(line)\n
+\n
+\n
+if error is not None:\n
+  return context.REQUEST.RESPONSE.redirect(\n
+                "%s/view?portal_status_message=%s" % (\n
+                 context.absolute_url(), context.Base_translateString(error, mapping=error_kw )))\n
+# Add a line for unit titles\n
+for source_trade in source_trade_dict:\n
+  unit_title_dict[source_trade] = default_quantity_unit_title\n
+unit_title_dict[\'summary_quantity\'] = default_quantity_unit_title\n
+unit_title_object = context.asContext(title = "Unit",\n
+                                      reference = "",\n
+                                      stop_date = "",\n
+                                          **unit_title_dict)\n
+# Add a line for the number of unit per resource\n
+# First compute the summary quantity\n
+for source_trade in source_trade_dict:\n
+  total_quantity_dict[\'summary_quantity\'] = total_quantity_dict.get(\'summary_quantity\', 0) + \\\n
+             total_quantity_dict.get(source_trade, 0)\n
+total_quantity_object = context.asContext(title = "Total Quantity",\n
+                                          reference = "",\n
+                                          stop_date = "",\n
+                                      **total_quantity_dict)\n
+# Add a line for the object unit price\n
+# and Compute the unit price for each source_trade\n
+for source_trade in source_trade_dict:\n
+  if total_price_dict.get(source_trade, 0) != 0 and \\\n
+      total_quantity_dict.get(source_trade, 0) != 0:\n
+    unit_price_dict[source_trade] = \\\n
+      total_price_dict.get(source_trade, 0) / total_quantity_dict.get(source_trade, 0)\n
+unit_price_object = context.asContext(title = "Unit Price",\n
+                                      reference = "",\n
+                                      stop_date = "",\n
+                                      **unit_price_dict)\n
+# Add a line for the total price per resource\n
+for source_trade in source_trade_dict:\n
+  total_price_dict[\'summary_quantity\'] = \\\n
+    total_price_dict.get(\'summary_quantity\', 0) + total_price_dict.get(source_trade, 0)\n
+total_price_dict[\'per_line_total_price\'] = full_total_price\n
+total_price_object = context.asContext(title = "Total Price",\n
+                                       reference = "",\n
+                                       stop_date = "",\n
+                                      **total_price_dict)\n
+object_list = [unit_title_object, total_quantity_object, unit_price_object,\n
+               total_price_object] + object_list\n
+column_list.extend([(\'summary_quantity\', \'Total Service\')])\n
+column_list.extend(worker_column_list)\n
+\n
+\n
+context = context.asContext(\n
+                 object_list = object_list,\n
+                 untranslatable_column_list = untranslatable_column_list,\n
+                 column_list = column_list)\n
+\n
+return context.Order_viewODSSummary(format=format)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>target_language=\'\', quantity_unit_list=None, format=\'\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>target_language</string>
+                            <string>quantity_unit_list</string>
+                            <string>format</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>container</string>
+                            <string>unit_title_dict</string>
+                            <string>total_quantity_dict</string>
+                            <string>unit_price_dict</string>
+                            <string>total_price_dict</string>
+                            <string>None</string>
+                            <string>error</string>
+                            <string>error_kw</string>
+                            <string>default_quantity_unit</string>
+                            <string>default_quantity_unit_title</string>
+                            <string>resource_dict</string>
+                            <string>summary_quantity_dict</string>
+                            <string>object_list</string>
+                            <string>untranslatable_column_list</string>
+                            <string>full_total_price</string>
+                            <string>worker_column_list</string>
+                            <string>source_trade_dict</string>
+                            <string>context</string>
+                            <string>context_relative_url</string>
+                            <string>sortMovement</string>
+                            <string>movement_type_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>line_list</string>
+                            <string>len</string>
+                            <string>column_list</string>
+                            <string>line</string>
+                            <string>resource</string>
+                            <string>line_kw</string>
+                            <string>total_price</string>
+                            <string>_write_</string>
+                            <string>resource_value</string>
+                            <string>current_column</string>
+                            <string>quantity_unit</string>
+                            <string>source_trade_list</string>
+                            <string>source_trade</string>
+                            <string>source_trade_value</string>
+                            <string>quantity</string>
+                            <string>_inplacevar_</string>
+                            <string>_apply_</string>
+                            <string>unit_title_object</string>
+                            <string>total_quantity_object</string>
+                            <string>unit_price_object</string>
+                            <string>total_price_object</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <none/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Order_printAsODSSummary</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
