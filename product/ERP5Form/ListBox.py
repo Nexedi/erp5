@@ -300,6 +300,14 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('url_columns')
 
+    untranslatable_columns = fields.ListTextAreaField('untranslatable_columns',
+                                 title="Untranslatable Columns",
+                                 description=(
+        "An optional list of columns titles which should not be translated."),
+                                 default=[],
+                                 required=0)
+    property_names.append('untranslatable_columns')
+
     # XXX do we still need this?
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Attributes",
@@ -753,6 +761,13 @@ class ListBoxRenderer:
     """
     url_columns = self.field.get_value('url_columns')
     return url_columns or []
+
+  def getUntranslatableColumnList(self):
+    """Return the untranslatable columns. Make sure that it is an empty list, 
+    when not defined.
+    """
+    untranslatable_columns = self.field.get_value('untranslatable_columns')
+    return untranslatable_columns or []
 
   getUrlColumnList = lazyMethod(getUrlColumnList)
 
