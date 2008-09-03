@@ -73,6 +73,7 @@ history = bug.portal_workflow.getInfoFor(bug, \'history\',\n
 for history_item in history[::-1]:\n
   if history_item[\'action\'].endswith(\'action\'):\n
     send_event = history_item[\'send_event\']\n
+    is_re_assign_action = bool(history_item[\'action\'] == \'re_assign_action\')\n
     break\n
 \n
 valid_transaction_list = ["confirm_action", "stop_action",\n
@@ -85,7 +86,12 @@ comment = ""\n
 if len(message) > 0:\n
   comment=message[-1]["comment"]\n
 \n
-line = bug.newContent(title="Bug %s was %s" % (bug.getReference(),                                                                  bug.getSimulationStateTitle()),\n
+state = bug.getSimulationStateTitle()\n
+if is_re_assign_action:\n
+  state = \'Re %s\' % (state)\n
+line = bug.newContent(title="%s %s was %s" % (bug.getPortalType(),\n
+                                              bug.getReference(),\n
+                                              state),\n
                       portal_type="Bug Line",\n
                       text_content=comment)\n
 if send_event:\n
@@ -151,6 +157,8 @@ else:\n
                             <string>_getiter_</string>
                             <string>history_item</string>
                             <string>send_event</string>
+                            <string>bool</string>
+                            <string>is_re_assign_action</string>
                             <string>valid_transaction_list</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -158,6 +166,7 @@ else:\n
                             <string>message</string>
                             <string>comment</string>
                             <string>len</string>
+                            <string>state</string>
                             <string>line</string>
                           </tuple>
                         </value>
