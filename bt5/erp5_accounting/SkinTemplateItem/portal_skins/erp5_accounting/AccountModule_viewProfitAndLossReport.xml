@@ -197,7 +197,7 @@ dQEAAAAA</string> </value>
           </table:table-cell>\n
           <table:table-cell table:number-rows-spanned=\'1\' table:number-columns-spanned=\'4\'\n
                             office:value-type=\'string\' table:style-name=\'report-title\'>\n
-            <text:p i18n:translate="" i18n:domain="ui">Profit and Loss at</text:p>\n
+            <text:p i18n:translate="" i18n:domain="ui">Profit and Loss</text:p>\n
           </table:table-cell>\n
           <table:covered-table-cell table:number-columns-repeated=\'2\'/>\n
           <table:covered-table-cell table:style-name=\'ce1\' table:number-columns-repeated=\'1\'/>\n
