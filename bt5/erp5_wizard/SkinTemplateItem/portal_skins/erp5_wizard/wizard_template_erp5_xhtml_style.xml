@@ -122,7 +122,8 @@ IDEAS:\n
                           margin: 0.5em; \n
                           border:1px solid #3D5474;\n
                           background-color: #BAD0F0;">\n
-                <h1> ERP5 Express Configuration </h1>\n
+                <h1 i18n:translate=""\n
+                    i18n:domain="ui"> ERP5 Express Configuration </h1>\n
               </div>\n
 <!--\n
               <div id="bars">\n
