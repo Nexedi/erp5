@@ -95,16 +95,16 @@ def getOneLineAddress(text, region):\n
 def getPhoneAndFax(phone, fax):\n
   s = \'\'\n
   if phone:\n
-    s += \'%s: %s\' % (translateString(\'tel\'), phone)\n
+    s += \'%s: %s\' % (translateString(\'Tel\'), phone)\n
   if fax:\n
     if s: s += \', \'\n
-    s += \'%s: %s\' % (translateString(\'fax\'), fax)\n
+    s += \'%s: %s\' % (translateString(\'Fax\'), fax)\n
   return s\n
 \n
 def getEmail(email):\n
   s = \'\'\n
   if email:\n
-    s += \'%s: %s\' % (translateString(\'email\'), email)\n
+    s += \'%s: %s\' % (translateString(\'Email\'), email)\n
   return s\n
 \n
 def getVatId(vat_id):\n

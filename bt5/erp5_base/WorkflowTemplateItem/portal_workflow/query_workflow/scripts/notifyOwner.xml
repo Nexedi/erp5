@@ -100,7 +100,7 @@ if not user or user_value is None:\n
   return\n
 \n
 # Build the message and translate it\n
-subject = translateString("Query was answered")\n
+subject = translateString("Query was answered.")\n
 msg = """The Query ID ${id} which you posted has been answered by ${user}\n
 \n
 Question:\n

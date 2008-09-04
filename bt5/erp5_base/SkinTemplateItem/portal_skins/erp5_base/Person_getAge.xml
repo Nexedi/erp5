@@ -88,7 +88,7 @@ if year:\n
   return interval_dict[\'year\']\n
 \n
 # mapping contains year, month & day\n
-return Base_translateString("${year} Years Old", mapping=interval_dict)\n
+return Base_translateString("${year} years old", mapping=interval_dict)\n
 
 
 ]]></string> </value>

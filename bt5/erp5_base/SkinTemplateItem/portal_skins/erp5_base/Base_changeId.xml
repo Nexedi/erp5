@@ -79,13 +79,13 @@ if id and id != context.getId():\n
           keep_items=dict(selection_name=selection_name,\n
                           selection_index=selection_index,\n
                           cancel_url=cancel_url,\n
-                          portal_status_message=translateString("Function Changed")),)\n
+                          portal_status_message=translateString("Function changed.")),)\n
 \n
 return context.Base_redirect(form_id,\n
           keep_items=dict(selection_name=selection_name,\n
                           selection_index=selection_index,\n
                           cancel_url=cancel_url,\n
-                          portal_status_message=translateString("Cancelled")),)\n
+                          portal_status_message=translateString("Cancelled.")),)\n
 </string> </value>
         </item>
         <item>

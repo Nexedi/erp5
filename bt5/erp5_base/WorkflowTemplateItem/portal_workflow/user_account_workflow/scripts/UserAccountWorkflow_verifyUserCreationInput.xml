@@ -72,11 +72,11 @@ kwargs = state_change[\'kwargs\']\n
 password = kwargs[\'password\']\n
 password_confirm = kwargs[\'password_confirm\']\n
 if password != password_confirm:\n
-  raise ValidationFailed(translateString(\'Passwords do not match\'))\n
+  raise ValidationFailed(translateString(\'Passwords do not match.\'))\n
 \n
 reference = kwargs[\'reference\']\n
 if not reference:\n
-  raise ValidationFailed(translateString(\'User ID is not specified\'))\n
+  raise ValidationFailed(translateString(\'User ID is not specified.\'))\n
 </string> </value>
         </item>
         <item>

@@ -105,7 +105,7 @@ if file.filename not in [\'\', None]:\n
 \n
 return context.REQUEST.RESPONSE.redirect(\n
            \'%s/view?portal_status_message=%s+%s.\'%(document.absolute_url(), \n
-           document.getTranslatedPortalType(), translateString(\'+Created+Successfully\')))\n
+           document.getTranslatedPortalType(), translateString(\'+created+successfully.\')))\n
 </string> </value>
         </item>
         <item>
@@ -193,6 +193,12 @@ return context.REQUEST.RESPONSE.redirect(\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_createNewFile</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
