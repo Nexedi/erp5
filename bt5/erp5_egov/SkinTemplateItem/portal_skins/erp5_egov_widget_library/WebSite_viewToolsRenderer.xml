@@ -109,7 +109,6 @@ Description:\n
             <select size="1" class="input" name="new_application_recipient">\n
               <tal:block metal:define-macro="recipient_type_option_list">\n
                 <option value="" selected="selected" i18n:translate="" i18n:domain="ui">DGID</option>\n
-                <option value="" i18n:translate="" i18n:domain="ui">DTAMP - Uitegem</option>\n
                 <option value="" i18n:translate="" i18n:domain="ui">DGID</option>\n
                 <tal:block  tal:condition="exists:here/getRecipientList" \n
                             tal:repeat="ptype here/getRecipientList">\n
@@ -133,10 +132,9 @@ Description:\n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Authenticate</h2>\n
       <div class="work_in_progress">\n
-      Cette section\n
-      permettra dans un proche avenir de v\xc3\xa9rifier l\'authenticit\xc3\xa9 des actes num\xc3\xa9riques\n
-      produits par les administrations et garantir le plus haut niveau de s\xc3\xa9curit\xc3\xa9 de\n
-      la gestion des t\xc3\xa9l\xc3\xa9proc\xc3\xa9dures.\n
+        This section will permit in the near future to verify the authenticity\n
+        of documents digital products by administrations and ensure the highest level\n
+        of security of management of online procedures.\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n
@@ -163,6 +161,12 @@ Description:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
