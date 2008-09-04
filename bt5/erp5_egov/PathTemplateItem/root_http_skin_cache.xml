@@ -25,7 +25,7 @@
               <dictionary>
                 <item>
                     <key> <string>anonymous_only</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>interval</string> </key>

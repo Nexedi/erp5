@@ -80,6 +80,8 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
           local_role_list=worklist.guard.roles
           if state is None:
             continue
+          else:
+            state=state[0]
 
           result = self.getPortalObject().portal_catalog(\
                                           portal_type=portal_type,
@@ -100,7 +102,7 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
           result_dict['formated_name']=worklist.actbox_name
           result_dict['formated_url']=worklist.actbox_url
           result_dict['formated_url']='Base_viewSearchResultList?validation_state=%s&local_roles=%s&reset=1&portal_type=%s'\
-            % (state[0], local_role_list[0], portal_type)
+            % (state, local_role_list[0], portal_type)
           result_dict['category']=worklist.actbox_category
           result_dict.update(worklist.guard.__dict__)
   return portal_type_worklist_dict
