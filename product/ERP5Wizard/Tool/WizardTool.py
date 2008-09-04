@@ -356,7 +356,7 @@ class WizardTool(BaseTool):
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
     # add user preffered language
-    parameter_dict['user_preferred_language'] = self.getPortalObject().Localizer.get_selected_language()    
+    parameter_dict['user_preferred_language'] = getattr(self, 'user_preferred_language', 'en')
       
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
