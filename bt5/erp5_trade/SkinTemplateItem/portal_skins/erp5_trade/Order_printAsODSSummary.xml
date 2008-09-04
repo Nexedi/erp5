@@ -97,6 +97,16 @@ line_list = [x for x in context.getIndexableChildValueList() if x.getPortalType(
               movement_type_list]\n
 line_list.sort(sortMovement)\n
 \n
+order_type_list = context.getPortalOrderTypeList()\n
+def getMovementTitle(movement):\n
+  title = movement.getTitle()\n
+  parent_value = movement.getParentValue()\n
+  while parent_value.getPortalType() not in order_type_list:\n
+    title = parent_value.getTitle() + \' / \' + title\n
+    context.log(\'parent_value\', parent_value)\n
+    parent_value = parent_value.getParentValue()\n
+  return title\n
+\n
 if len(quantity_unit_list) != 1:\n
   error = "You should select only one quantity unit"\n
 else:\n
@@ -108,6 +118,8 @@ column_list = [(\'reference\', \'Reference\'), (\'title\', \'Title\'), \\\n
     (\'stop_date\', \'Stop Date\'), (\'per_line_total_price\', \'Total Price\')]\n
 if error is None:\n
   for line in line_list:\n
+    if error is not None:\n
+      break\n
     resource = line.getResource()\n
     line_kw = {}\n
     # for the per line total price\n
@@ -129,16 +141,19 @@ if error is None:\n
         if line.getPrice() != unit_price_dict[resource]:\n
           error = "Same resource has several prices, "\\\n
               + "not handled by this report yet, check: ${line_title}"\n
-          error_kw[\'line_title\'] = line.getTitle()\n
+          error_kw[\'line_title\'] = getMovementTitle(line)\n
+          continue\n
         if line.getQuantityUnitTitle() != unit_title_dict[resource]:\n
           error = "Same resource has several units, " \\\n
               + "not handled by this report yet, check: ${line_title}"\n
-          error_kw[\'line_title\'] = line.getTitle()\n
+          error_kw[\'line_title\'] = getMovementTitle(line)\n
+          continue\n
         source_trade_list = line.getSourceTradeList()\n
         if len(source_trade_list) != 1:\n
           error = "This report assume one Supplier or Worker for each line, " \\\n
               + "check: ${line_title}"\n
-          error_kw[\'line_title\'] = line.getTitle()\n
+          error_kw[\'line_title\'] = getMovementTitle(line)\n
+          continue\n
         source_trade = source_trade_list[0]\n
         if source_trade not in source_trade_dict:\n
           source_trade_value = line.getSourceTradeValue()\n
@@ -300,6 +315,8 @@ return context.Order_viewODSSummary(format=format)\n
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>line_list</string>
+                            <string>order_type_list</string>
+                            <string>getMovementTitle</string>
                             <string>len</string>
                             <string>column_list</string>
                             <string>line</string>
