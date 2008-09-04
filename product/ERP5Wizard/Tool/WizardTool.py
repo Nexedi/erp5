@@ -545,13 +545,7 @@ class WizardTool(BaseTool):
        0 == portal_activities.countMessageWithTag('initialERP5Setup'):
       html = self.WizardTool_successfulConfiguration()
     else:
-      html = """<h3> Installation is running. 
-                     Please be patient and do not move from current page until you get 
-                     confirmation that installation is over in about 5 minutes.</h3>"""
-      # TODO: add a progress bar (needs to install business templates
-      # separatly, with a specific tag)
-      # TODO: display some presentation, marketing images during install (like
-      # in a mandriva linux installer)
+      html = self.WizardTool_viewRunningInstallationMessageRenderer()
     return html
     
   security.declarePublic(Permissions.AccessContentsInformation, 'getInstallationStatusReportFromServer')
