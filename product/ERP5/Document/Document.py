@@ -1283,7 +1283,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       try:
         stripped_html = unicode(str(stripped_html), 
                                 charset_list[0]).encode('utf-8')
-      except UnicodeDecodeError:
+      except (UnicodeDecodeError, LookupError):
         return str(stripped_html)
     return stripped_html
 
