@@ -47,6 +47,16 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -100,6 +110,7 @@
                         <string>my_ac_password</string>
                         <string>submit_login</string>
                         <string>my_next_action_header</string>
+                        <string>my_user_preferred_language</string>
                       </list>
                     </value>
                 </item>
@@ -125,6 +136,10 @@
             <value> <string>WizardTool_view</string> </value>
         </item>
         <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
         </item>
@@ -139,6 +154,10 @@
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

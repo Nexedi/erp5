@@ -45,11 +45,32 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<h2 i18n:translate=""\n
-    i18n:domain="ui"> Welcome to wizard</h2>\n
-\n
-<p i18n:translate=""\n
-   i18n:domain="ui"> This tool will help you configure your fresh ERP5.</p>\n
+<tal:block tal:define="user_preferred_language python: getattr(here, \'user_preferred_language\', \'en\');\n
+                       languages python: [[\'en\', \'English\'],\n
+                                          [\'fr\', \'French\'],];">\n
+  <h2 i18n:translate=""\n
+      i18n:domain="ui"> Welcome to Wizard</h2>\n
+  \n
+  <p i18n:translate=""\n
+    i18n:domain="ui"> This tool will help you configure your fresh ERP5</p>\n
+  \n
+  <span i18n:translate=""\n
+    i18n:domain="ui">You can choose the language for the configuration process</span>:<br/>\n
+  \n
+  <select onchange="submitAction(this.form, \'WizardTool_setUserPreferredLanguage\')" \n
+          name="field_my_user_preferred_language">\n
+    <option value=""></option>\n
+    <tal:block tal:repeat="language languages">\n
+      <option tal:attributes="value python: language[0]"\n
+              tal:content="python: language[1]"\n
+              tal:condition="python: user_preferred_language==language[0]" selected="selected"/>\n
+      <option tal:attributes="value python: language[0]"\n
+              tal:content="python: language[1]"\n
+              tal:condition="python: user_preferred_language!=language[0]"/>\n
+    </tal:block>\n
+  </select>\n
+  \n
+</tal:block>\n
 \n
 \n
 \n
