@@ -624,6 +624,9 @@ msgstr "Annuler la transaction"
 msgid "Cancelled"
 msgstr "Annulé"
 
+msgid "Cancelled."
+msgstr "Annulé."
+
 msgid "Career"
 msgstr "Carrière"
 
@@ -1761,6 +1764,9 @@ msgstr "Nombre d'épouses"
 msgid "Password"
 msgstr "Mot de passe"
 
+msgid "Password reset."
+msgstr "Mot de passe réinitialisé."
+
 msgid "Paste"
 msgstr "Coller"
 
@@ -2598,13 +2604,13 @@ msgstr "N° de référence"
 msgid "Transaction Simulation State"
 msgstr "État de la transaction"
 
-msgid "Transactions Related To This Account"
+msgid "Transactions Related to This Account"
 msgstr "Transaction liées à ce compte"
 
-msgid "Transactions Related To This Bank Account"
+msgid "Transactions Related to This Bank Account"
 msgstr "Transaction liées à ce compte en banque"
 
-msgid "Transactions Related To This Entity"
+msgid "Transactions Related to This Entity"
 msgstr "Transaction liées à ce tiers"
 
 msgid "Transactions Simulation State"
@@ -3432,8 +3438,8 @@ msgstr "${portal_type} cloné."
 msgid "Edit Workflow"
 msgstr "Éditions"
 
-msgid "Initialized by Delivery Builder"
-msgstr "Initialisé par le système"
+msgid "Initialized by Delivery Builder."
+msgstr "Initialisé par le système."
 
 msgid "Generate References"
 msgstr "Générer les références"
@@ -3560,4 +3566,91 @@ msgstr "Novembre"
 
 msgid "December"
 msgstr "Décembre"
+
+msgid "Refusing to process more than 1000 objects, check your selection."
+msgstr "Refus de traiter plus de 1000 documents, vérifiez votre sélection."
+
+msgid "Payment creation already in progress, abandon."
+msgstr "Création des écritures de trésorerie déjà en cours."
+
+msgid "No invoice in your selection."
+msgstr "Pas de factures dans votre sélection"
+
+msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
+msgstr "Création des écritures de trésorerie pour ${activated_invoice_count} sur ${total_selection_count} en cours"
+
+msgid "No bank account for current organisation."
+msgstr "Pas de compte en banque pour l'organisation courante"
+
+msgid "Nothing matches."
+msgstr "Aucune correspondance."
+
+msgid "${grouped_line_count} lines grouped."
+msgstr "${grouped_line_count} lignes lettrées."
+
+msgid "${ungrouped_line_count} lines ungrouped."
+msgstr "${grouped_line_count} lignes délettrées."
+
+msgid "Empty+lines+deleted."
+msgstr "Lignes+vides+supprimées."
+
+msgid "Import CSV File"
+msgstr "Fichier CSV pour l'import"
+
+msgid "Nothing more to pay."
+msgstr "Rien à payer"
+
+msgid "Related payment created."
+msgstr "Écritures de trésorerie liée crée."
+
+msgid "Start date is after stop date."
+msgstr "La date de début est postérieure à la date de fin."
+
+msgid "${date} is already in an open accounting period."
+msgstr "${date} est déjà comprise dans une période comptable ouverte."
+
+msgid "All Accounting Transactions for this organisation during the period have to be closed first."
+msgstr "Toutes les écritures de l'organisation pendant cette période doivent être préalablement validées."
+
+msgid "At least one section must be defined."
+msgstr "Au moins une section doit être définie."
+
+msgid "Using category for section is invalid."
+msgstr "Utiliser des catégories comme sections est invalide."
+
+msgid "Date is not in an opened Accounting Period for source section."
+msgstr "La date n'est pas dans une période comptable ouverte pour la section source."
+
+msgid "Date is not in an opened Accounting Period for destination section."
+msgstr "La date n'est pas dans une période comptable ouverte pour la section destination."
+
+msgid "Account ${account_title} is not opened."
+msgstr "Le compte ${account_title} n'est pas ouvert."
+
+msgid "Third party ${third_party_name} is invalid."
+msgstr "Le tiers ${third_party_name} est invalidé."
+
+msgid "Bank Account ${bank_account_reference} is invalid."
+msgstr "Le compte ${bank_account_reference} est invalidé."
+
+msgid "Bank Account ${bank_account_reference} uses ${bank_account_currency} as default currency."
+msgstr "Le compte en banque ${bank_account_reference} utilise la devise ${bank_account_currency}."
+
+msgid "Function changed."
+msgstr "Fonction changée."
+
+msgid "Spreadsheet Column to Property Mapping"
+msgstr "Association entre la colonne du tableur et la propriété"
+
+msgid "${year} years old"
+msgstr "Agé de ${year} ans"
+
+msgid "Query was answered."
+msgstr "Une réponse a été apportée à la question."
+
+msgid "Passwords do not match."
+msgstr "Les mots de passe ne correspondent pas."
+
+msgid "User ID is not specified."
+msgstr "L'identifiant de l'utilisateur n'es pas spécifié."
 
