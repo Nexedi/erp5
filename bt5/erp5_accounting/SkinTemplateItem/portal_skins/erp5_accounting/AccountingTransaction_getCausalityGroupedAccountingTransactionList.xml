@@ -132,7 +132,7 @@ return accounting_transaction_set.keys()\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>accounting_transaction_type_list</string>
                             <string>accounting_transaction_set</string>

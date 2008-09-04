@@ -98,7 +98,7 @@ if sum(total_payable_price_details.values()) == 0:\n
   if not batch_mode:\n
     return context.REQUEST.RESPONSE.redirect(\n
       "%s/view?portal_status_message=%s" % (\n
-      context.absolute_url(), Base_translateString(\'Nothing more to pay\')))\n
+      context.absolute_url(), Base_translateString(\'Nothing more to pay.\')))\n
   return None\n
 \n
 related_payment = portal.accounting_module.newContent(\n
@@ -159,7 +159,7 @@ if not batch_mode:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
     related_payment.absolute_url(),\n
-    Base_translateString(\'Related Payment Created\')))\n
+    Base_translateString(\'Related payment created.\')))\n
 else:\n
   return related_payment\n
 </string> </value>

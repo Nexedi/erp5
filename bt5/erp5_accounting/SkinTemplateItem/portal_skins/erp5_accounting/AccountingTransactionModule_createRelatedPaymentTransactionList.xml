@@ -97,7 +97,7 @@ if len(object_list) >= 1000:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
         context.absolute_url(), translateString(\n
-         \'Refusing to process more than 1000 objects, check your selection\')))\n
+         \'Refusing to process more than 1000 objects, check your selection.\')))\n
 \n
 tag = \'payment_creation_%s\' % random.randint(0, 1000)\n
 activated = 0\n
@@ -108,7 +108,7 @@ for obj in object_list:\n
                     method_id=\'Invoice_createRelatedPaymentTransaction\'):\n
       raise Redirect, "%s/view?portal_status_message=%s" % (\n
                 context.absolute_url(), translateString(\n
-        \'Payment Creation already in progress, abandon\'))\n
+        \'Payment creation already in progress, abandon.\'))\n
     obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(\n
                                                   node=node,\n
                                                   payment_mode=payment_mode,\n
@@ -119,7 +119,7 @@ for obj in object_list:\n
 if not activated:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
-        context.absolute_url(), translateString(\'No Invoice in your selection\')))\n
+        context.absolute_url(), translateString(\'No invoice in your selection.\')))\n
 \n
 # activate something on the folder\n
 context.activate(after_tag=tag).getTitle()\n
@@ -127,8 +127,8 @@ context.activate(after_tag=tag).getTitle()\n
 return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
         context.absolute_url(), translateString(\n
-          \'Payments Creation for ${activated_invoice_count} on\'\n
-          \' ${total_selection_count} Invoices in Progress\',\n
+          \'Payments creation for ${activated_invoice_count} on\'\n
+          \' ${total_selection_count} invoices in progress.\',\n
           mapping=dict(activated_invoice_count=activated,\n
                        total_selection_count=len(object_list)))))\n
 

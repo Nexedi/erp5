@@ -98,12 +98,12 @@ destination_section = transaction.getDestinationSectionValue(\n
                        portal_type=[\'Organisation\', \'Person\'])\n
 \n
 if source_section is None and destination_section is None:\n
-  raise ValidationFailed(translateString(\'At Least One Section Must be Defined\'))\n
+  raise ValidationFailed(translateString(\'At least one section must be defined.\'))\n
 \n
 # check that no categories are used for section\n
 if transaction.getSourceSectionValue(portal_type=\'Category\') is not None or\\\n
     transaction.getDestinationSectionValue(portal_type=\'Category\') is not None:\n
-  raise ValidationFailed(translateString(\'Using Category for Section is Invalid\'))\n
+  raise ValidationFailed(translateString(\'Using category for section is invalid.\'))\n
 \n
 transaction_line_list = transaction.getMovementList(\n
         portal_type=transaction.getPortalAccountingMovementTypeList())\n
@@ -136,7 +136,7 @@ if not skip_period_validation :\n
         valid_date = True\n
     if not valid_date:\n
       raise ValidationFailed(translateString("Date is not in an opened Accounting Period "\n
-                                             "for source section"))\n
+                                             "for source section."))\n
   # do the same for destination section \n
   if destination_section is not None:\n
     # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
@@ -160,7 +160,7 @@ if not skip_period_validation :\n
         valid_date = True\n
     if not valid_date:\n
       raise ValidationFailed(translateString("Date is not in an opened Accounting Period "\n
-                                             "for destination section"))\n
+                                             "for destination section."))\n
 
 
 ]]></string> </value>

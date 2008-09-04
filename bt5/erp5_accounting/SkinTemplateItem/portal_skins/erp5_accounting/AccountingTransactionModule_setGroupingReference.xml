@@ -74,7 +74,7 @@ portal = context.getPortalObject()\n
 getobject = portal.portal_catalog.getobject\n
 stool = portal.portal_selections\n
 Base_translateString = portal.Base_translateString\n
-psm = Base_translateString(\'Nothing matches\')\n
+psm = Base_translateString(\'Nothing matches.\')\n
 request = container.REQUEST\n
 precision = request.get(\'precision\', 2)\n
 \n
@@ -122,7 +122,7 @@ if grouping == \'grouping\':\n
   grouped_line_list = context.AccountingTransaction_guessGroupedLines(\n
                         accounting_transaction_line_uid_list=uids)\n
   if grouped_line_list:\n
-    psm = Base_translateString(\'${grouped_line_count} Lines Grouped\',\n
+    psm = Base_translateString(\'${grouped_line_count} lines grouped.\',\n
                                mapping=dict(grouped_line_count=len(grouped_line_list)))\n
 \n
     # make sure nothing will be checked next time\n
@@ -176,7 +176,7 @@ else:\n
     if line.getGroupingReference():\n
       ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference())\n
   \n
-  psm = Base_translateString(\'${ungrouped_line_count} Lines Ungrouped\',\n
+  psm = Base_translateString(\'${ungrouped_line_count} lines ungrouped.\',\n
                              mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))\n
 \n
   # make sure nothing will be checked next time\n

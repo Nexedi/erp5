@@ -86,8 +86,7 @@ movement_list = portal.portal_simulation.getMovementHistoryList(\n
 \n
 if movement_list:\n
   raise ValidationFailed, translateString(\n
-    "All Accounting Transactions for this organisation during the period have"\n
-    " to be closed first")\n
+    "All Accounting Transactions for this organisation during the period have to be closed first.")\n
 </string> </value>
         </item>
         <item>

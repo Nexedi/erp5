@@ -91,7 +91,7 @@ if len(id_to_delete_list) != len(transaction_lines):\n
 \n
 if redirect:\n
   context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
-    transaction.absolute_url(), translateString(\'Empty+Lines+Deleted.\')))\n
+    transaction.absolute_url(), translateString(\'Empty+lines+deleted.\')))\n
 </string> </value>
         </item>
         <item>

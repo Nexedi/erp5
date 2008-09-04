@@ -83,7 +83,7 @@ if organisation is not None :\n
     return context.Base_jumpToRelatedObjectList(\n
           uids=selection_uid_list, REQUEST=request)\n
 \n
-return context.Base_redirect(form_id, keep_items=dict(portal_status_message=Base_translateString(\'No Bank Account For Current Organisation\')))\n
+return context.Base_redirect(form_id, keep_items=dict(portal_status_message=Base_translateString(\'No bank account for current organisation.\')))\n
 </string> </value>
         </item>
         <item>
