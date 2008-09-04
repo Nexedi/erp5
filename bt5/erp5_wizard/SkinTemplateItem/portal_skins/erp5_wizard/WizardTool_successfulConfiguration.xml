@@ -47,12 +47,18 @@
 
 <div>\n
 \n
-  <h3>Configuration is over. Enjoy your new ERP5 system!</h3>\n
-  <p> Please click link below. \n
-      You will be redirected to a form in which you can login using \n
-      one of yours newly created ERP5 user accounts.\n
+  <h3 i18n:translate=""\n
+      i18n:domain="ui">Configuration is over. Enjoy your new ERP5 system!</h3>\n
+\n
+  <p i18n:translate=""\n
+     i18n:domain="ui">\n
+    Please click link below. \n
+    You will be redirected to a form in which you can login using \n
+    one of yours newly created ERP5 user accounts.\n
   </p>\n
-  <a tal:attributes="href python: \'%s/logout_wizard\' %here.getPortalObject().absolute_url()"> \n
+  <a i18n:translate=""\n
+     i18n:domain="ui"\n
+     tal:attributes="href python: \'%s/logout_wizard\' %here.getPortalObject().absolute_url()"> \n
     Start using your new ERP5 system\n
   </a>\n
 \n

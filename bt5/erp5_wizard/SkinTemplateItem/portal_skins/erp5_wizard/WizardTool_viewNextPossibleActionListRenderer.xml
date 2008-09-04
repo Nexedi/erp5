@@ -55,12 +55,15 @@
     tal:define="isAllowedExpress python: here.portal_wizard.getExpressConfigurationPreference(\'preferred_express_user_id\', None) is not None and\n
                                          here.portal_wizard.getExpressConfigurationPreference(\'preferred_express_password\', None) is not None">\n
 \n
-<h5 id="wizard_message" style="visibility:hidden;" tal:content="python:test(isAllowedExpress, \'true\', \'false\')"></h5>\n
-\n
-<script type="text/javascript" src="wizard_helper.js"></script>\n
-<noscript>\n
-Please enable JavaScript in your web browser, otherwise the configuration server does not work properly.\n
-</noscript>\n
+  <h5 id="wizard_message" \n
+      style="visibility:hidden;" \n
+      tal:content="python:test(isAllowedExpress, \'true\', \'false\')"></h5>\n
+  \n
+  <script type="text/javascript" src="wizard_helper.js"></script>\n
+  <noscript>\n
+    Please enable JavaScript in your web browser, otherwise the configuration server \n
+    does not work properly.\n
+  </noscript>\n
 \n
 </tal:block>
 
