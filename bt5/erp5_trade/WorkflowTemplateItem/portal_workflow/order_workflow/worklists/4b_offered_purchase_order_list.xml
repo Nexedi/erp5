@@ -33,7 +33,7 @@ purchase_order_module/view?simulation_state=offered&portal_type=Purchase+Order&l
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Offered Purchase Orders to Follow</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

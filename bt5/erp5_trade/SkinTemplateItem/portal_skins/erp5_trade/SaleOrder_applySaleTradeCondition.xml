@@ -97,7 +97,7 @@ while count > 0 and len(trade_condition_list) == 0:\n
 \n
 if len(trade_condition_list ) == 0 :\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id,\n
-      \'portal_status_message=\' + Base_translateString(\'No Trade Condition.\'))\n
+      \'portal_status_message=\' + Base_translateString(\'No trade condition.\'))\n
 else :\n
   # if more than one trade condition is found, simply apply the first one\n
   trade_condition=trade_condition_list[0].getObject()\n

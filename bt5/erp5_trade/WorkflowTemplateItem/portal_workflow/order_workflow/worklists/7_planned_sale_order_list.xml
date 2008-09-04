@@ -33,7 +33,7 @@ sale_order_module/view?simulation_state=planned&portal_type=Sale+Order&local_rol
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Sale Orders to Order</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Purchase proposals to approve (%(count)s)</string> </value>
+            <value> <string>Purchase Proposals to Approve (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ purchase_order_module/view?simulation_state=auto_planned&portal_type=Purchase+Or
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Purchase Proposals to Approve</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

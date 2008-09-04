@@ -33,7 +33,7 @@ sale_order_module/view?simulation_state=offered&portal_type=Sale+Order&local_rol
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Offered Sale Orders to Follow</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
