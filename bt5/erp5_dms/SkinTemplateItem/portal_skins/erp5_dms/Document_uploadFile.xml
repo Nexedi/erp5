@@ -88,7 +88,7 @@ file_name = file.filename\n
 ext = file_name[file_name.rfind(\'.\')+1:]\n
 candidate_type_list = context.ContributionTool_getCandidateTypeListByExtension(ext)\n
 if candidate_type_list == () and current_type != \'File\':\n
-  portal_status_message = translateString("Sorry, this is not one of ${portal_type}. This file should be uploaded into a File document.", \n
+  portal_status_message = translateString("Sorry, this is not one of ${portal_type}. This file should be uploaded into a file document.", \n
                                     mapping = dict(portal_type = str(candidate_type_list)))\n
   return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message=portal_status_message,cancel_url = kw[\'cancel_url\']), **kw)\n
 if candidate_type_list and current_type not in candidate_type_list:\n
@@ -184,6 +184,12 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
         <item>
             <key> <string>id</string> </key>
             <value> <string>Document_uploadFile</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

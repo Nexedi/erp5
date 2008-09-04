@@ -51,6 +51,12 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -136,7 +142,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Contribute file</string> </value>
+            <value> <string>Contribute File</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

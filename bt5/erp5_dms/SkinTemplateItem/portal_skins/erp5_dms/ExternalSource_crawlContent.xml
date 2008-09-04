@@ -73,7 +73,7 @@ translateString = context.Base_translateString\n
 if not context.asURL():\n
   portal_status_message = translateString("Please specify a URL before trying to start to crawl content.")\n
 else:\n
-  portal_status_message = translateString("Started crawling External Source.")\n
+  portal_status_message = translateString("Started crawling external source.")\n
   context.crawlContent()\n
 return context.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
@@ -148,6 +148,12 @@ return context.Base_redirect(\'view\', keep_items = dict(portal_status_message=p
         <item>
             <key> <string>id</string> </key>
             <value> <string>ExternalSource_crawlContent</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

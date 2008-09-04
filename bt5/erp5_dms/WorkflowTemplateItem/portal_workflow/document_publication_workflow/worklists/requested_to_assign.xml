@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Translations to assign (%(count)s)</string> </value>
+            <value> <string>Translations to Assign (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -57,11 +57,8 @@ WebSite_viewAdvancedSearchResultList?validation_state=requested&local_roles=%(lo
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -80,17 +77,14 @@ WebSite_viewAdvancedSearchResultList?validation_state=requested&local_roles=%(lo
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
