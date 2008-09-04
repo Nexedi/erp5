@@ -66,10 +66,10 @@ class CatalogMethodDocumentationHelper(DocumentationHelper):
   security.declareProtected(Permissions.AccessContentsInformation, 'getSource' )
   def getSource(self):
     """
-    Returns the source code of the documentation helper
+    Returns the source code the catalog method
     """
     from zLOG import LOG, INFO
-    source_code =  getattr(self.getDocumentedObject(), 'src', '')
+    source_code = getattr(self.getDocumentedObject(), 'src', '')
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is not None:
       REQUEST = getattr(self, 'REQUEST', None)

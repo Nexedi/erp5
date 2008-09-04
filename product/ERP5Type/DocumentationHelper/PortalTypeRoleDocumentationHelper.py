@@ -44,7 +44,11 @@ class PortalTypeRoleDocumentationHelper(DocumentationHelper):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return self.getDocumentedObject().Description()
+    documented_object = self.getDocumentedObject()
+    if documented_object is not None:
+      return documented_object.Description()
+    else:
+      return ''
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
