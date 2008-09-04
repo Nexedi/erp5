@@ -101,7 +101,7 @@ def getActionTitleForContext(context, portal_type):\n
     edit_title = translateString("Edit ${portal_type}", \n
                                  mapping=dict(portal_type=portal_type))\n
   else:\n
-    edit_title = translateString("Access ${portal_type} details",\n
+    edit_title = translateString("Access ${portal_type} Details",\n
                                  mapping=dict(portal_type=portal_type))\n
   return edit_title\n
 \n
@@ -141,7 +141,7 @@ if portal_type not in (\'Web Section\', \'Web Site\'): \n
   result.append(dict(\n
     url = "%s/view?editable_mode=1" % current_web_section.absolute_url(),\n
     icon = current_web_section.getIcon(),\n
-    title = translateString("Edit parent ${portal_type}",\n
+    title = translateString("Edit Parent ${portal_type}",\n
                              mapping=dict(portal_type=current_web_section_pt)),\n
     label = "%s Icon" % current_web_section_pt,))\n
 \n
@@ -260,6 +260,12 @@ return result\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getAdminToolboxEditShortcutList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

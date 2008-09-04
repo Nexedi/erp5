@@ -75,7 +75,7 @@
                   tal:content="ptype" tal:attributes="value ptype"\n
                   value="" i18n:translate="" i18n:domain="ui">Report</option>\n
           </tal:block>\n
-          <option value="" i18n:translate="" i18n:domain="ui">-- Any other Document Type --</option>\n
+          <option value="" i18n:translate="" i18n:domain="ui">-- Any Other Document Type --</option>\n
         </select>\n
         <input type="file" name="contribute_file" size="30" />\n
       </div>\n
@@ -96,7 +96,7 @@
          tal:condition="ingestion_address"\n
          tal:attributes="href string:${ingestion_address}?subject=Contribution&body=">\n
         <img src="send_by_mail" border="0"/>\n
-        <tal:block  i18n:translate="" i18n:domain="ui">Click here to contribute by Email</tal:block></a>\n
+        <tal:block  i18n:translate="" i18n:domain="ui">Click here to contribute by email.</tal:block></a>\n
       &nbsp;\n
       <input i18n:domain="ui" i18n:attributes="value" type="submit" name="Memo_makeOOoTemplate:method" value="Make Template" id="maketemplatebutton" disabled="disabled"\n
              style="width:100px;background-image:none;"/>\n
@@ -204,6 +204,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
