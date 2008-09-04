@@ -1374,8 +1374,8 @@ msgstr "Au"
 msgid "Expiration date"
 msgstr "Au"
 
-msgid "Factures client"
-msgstr "Custommer Invoices"
+msgid "Custommer Invoices"
+msgstr "Factures client"
 
 msgid "Family"
 msgstr "Famille"
