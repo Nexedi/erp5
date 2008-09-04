@@ -75,7 +75,7 @@ module = context.getDefaultModule(portal_type)\n
 if portal_type not in module.getVisibleAllowedContentTypeList():\n
   return context.Base_redirect(form_id,\n
                                keep_items=dict(\n
-       portal_status_message=translateString("You do not have permission to add new event")))\n
+       portal_status_message=translateString("You do not have permission to add new event.")))\n
 \n
 # Create a new event\n
 event = module.newContent(portal_type=portal_type, description=description, title=title, follow_up=context.getRelativeUrl())\n

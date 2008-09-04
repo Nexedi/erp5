@@ -89,11 +89,11 @@ if dms_module is not None:\n
 if len(uids) == 1:\n
   return context.REQUEST.RESPONSE.redirect(\n
     \'%s/view?portal_status_message=%s+%s.\' % (doc.absolute_url(), doc.getTranslatedPortalType(),\n
-                                              Base_translateString(\'+Created+Successfully\')))\n
+                                              Base_translateString(\'+created+successfully.\')))\n
 \n
 return context.REQUEST.RESPONSE.redirect(\n
   \'%s?portal_status_message=%s+%s.\' % (dms_module.absolute_url(),len(uids),\n
-                                       Base_translateString(\'+Documents+created+Successfully\')))\n
+                                       Base_translateString(\'+documents+created+successfully\')))\n
 </string> </value>
         </item>
         <item>
