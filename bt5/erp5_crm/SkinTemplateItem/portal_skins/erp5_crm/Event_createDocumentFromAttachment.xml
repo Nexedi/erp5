@@ -76,24 +76,27 @@ if dms_module is not None:\n
     attachment_index = int(uid.split(\'index_\')[-1])\n
     attachment_info = [i for i in attachment_info_list if i[\'index\'] == attachment_index][0]\n
     file = context.getAttachmentData(index=attachment_index)\n
-    doc = dms_module.newContent(follow_up=context.getFollowUp(),\n
-                                                           portal_type = line[\'content_type\'],\n
-                                                           description = line[\'description\'],\n
-                                                           version = line[\'version\'],\n
-                                                           short_title = line[\'short_title\'],\n
-                                                           language = line[\'language\'],\n
-                                                           reference= line[\'reference\'],\n
-                                                           title = line[\'title\'])\n
-    doc.edit(source_reference=attachment_info[\'file_name\'], file=file)\n
+    document = dms_module.newContent(follow_up=context.getFollowUp(),\n
+                                     portal_type = line[\'content_type\'],\n
+                                     description = line[\'description\'],\n
+                                     version = line[\'version\'],\n
+                                     short_title = line[\'short_title\'],\n
+                                     language = line[\'language\'],\n
+                                     reference= line[\'reference\'],\n
+                                     title = line[\'title\'])\n
+    document.edit(source_reference=attachment_info[\'file_name\'], file=file)\n
 \n
 if len(uids) == 1:\n
+  message = Base_translateString(\'${portal_type} created successfully.\',\n
+                                 mapping={\'portal_type\':document.getTranslatedPortalType()})\n
   return context.REQUEST.RESPONSE.redirect(\n
-    \'%s/view?portal_status_message=%s+%s.\' % (doc.absolute_url(), doc.getTranslatedPortalType(),\n
-                                              Base_translateString(\'+created+successfully.\')))\n
-\n
+    \'%s/view?portal_status_message=%s\' % (document.absolute_url(), message)\n
+    )\n
+message = Base_translateString(\'${count} documents created successfully.\',\n
+                               mapping={\'count\':len(uids)})\n
 return context.REQUEST.RESPONSE.redirect(\n
-  \'%s?portal_status_message=%s+%s.\' % (dms_module.absolute_url(),len(uids),\n
-                                       Base_translateString(\'+documents+created+successfully\')))\n
+  \'%s?portal_status_message=%s\' % (dms_module.absolute_url(), message)\n
+  )\n
 </string> </value>
         </item>
         <item>
@@ -164,8 +167,9 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>i</string>
                             <string>attachment_info</string>
                             <string>file</string>
-                            <string>doc</string>
+                            <string>document</string>
                             <string>len</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
