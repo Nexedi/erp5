@@ -46,13 +46,13 @@ class DocumentReferenceConstraint(Constraint):
                        'message_multiple_documents_exists' ]
   
   message_property_not_defined = translateString(
-      'Property ${property_id} was not defined')
+      'Property ${property_id} was not defined.')
   message_another_document_exists = translateString(
       'Another document ${document_reference} - '
-      '${document_language} - ${document_version} already exists')
+      '${document_language} - ${document_version} already exists.')
   message_multiple_documents_exists = translateString(
       'Multiple (${document_count}) documents ${document_reference} - '
-      '${document_language} - ${document_version} already exists')
+      '${document_language} - ${document_version} already exists.')
 
   def checkConsistency(self, object, fixit=0):
     """

@@ -38,9 +38,9 @@ class AccountingTransactionBalance(Constraint):
                        'message_transaction_not_balanced_for_destination' ]
   
   message_transaction_not_balanced_for_source = translateString(
-       'Transaction is not Balanced')
+       'Transaction is not balanced.')
   message_transaction_not_balanced_for_destination = translateString(
-       'Transaction is not Balanced')
+       'Transaction is not balanced.')
 
   def checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker

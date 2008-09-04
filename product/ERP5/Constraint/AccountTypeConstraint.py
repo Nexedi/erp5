@@ -56,7 +56,7 @@ class AccountTypeConstraint(Constraint):
   message_inconsistent_account_type = translateString(
     'Account is member'
     ' of ${category}, this should have account_type'
-    ' in ${account_type_list}')
+    ' in ${account_type_list}.')
 
   def checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
@@ -65,7 +65,7 @@ class AccountTypeConstraint(Constraint):
     if getattr(obj, 'getAccountType', _MARKER) is _MARKER:
       errors.append(self._generateError(
         obj,
-        translateString("Account does not have account_type category")))
+        translateString("Account does not have account_type category.")))
     else:
       account_type_map = getattr(self, '_account_type_map', ())
       if not account_type_map:

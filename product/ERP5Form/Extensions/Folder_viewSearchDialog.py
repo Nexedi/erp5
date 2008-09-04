@@ -106,9 +106,9 @@ def getSearchDialog(self, REQUEST=None):
                                          usage=translateString('Usage'))),
       items=[(translateString('Equals To'), ''),
              (translateString('Greater Than'), 'min'),
-             (translateString('Lower Than'),'max'),
-             (translateString('Not Greater Then'), 'ngt'),
-             (translateString('Not Lower Than'), 'nlt'),
+             (translateString('Less Than'),'max'),
+             (translateString('Not Greater Than'), 'ngt'),
+             (translateString('Not Less Than'), 'nlt'),
              ]),
                                 
                            ['title', 'items'])
@@ -141,9 +141,9 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_edit(dict(title=translateString('${key} ${usage}', mapping=dict(key=translateString(column_title), usage=translateString('Usage'))),
                                 items=[(translateString('Equals To'), ''),
                                        (translateString('Greater Than'), 'min'),
-                                       (translateString('Lower Than'),'max'),
-                                       (translateString('Not Greater Then'), 'ngt'),
-                                       (translateString('Not Lower Than'), 'nlt'),
+                                       (translateString('Less Than'),'max'),
+                                       (translateString('Not Greater Than'), 'ngt'),
+                                       (translateString('Not Less Than'), 'nlt'),
                                        ]),
                                 
                            ['title', 'items'])
@@ -191,7 +191,7 @@ def getSearchDialog(self, REQUEST=None):
                                 items=[(translateString('Default (${search_key})',
                                             mapping=dict(search_key=
                                                translateString(default_search_key))), ''),
-                                       (translateString('ExactMatch'), 'ExactMatch' ),
+                                       (translateString('Exact Match'), 'ExactMatch' ),
                                        (translateString('Keyword'), 'Keyword'),
                                        ]),
                                 
