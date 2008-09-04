@@ -82,16 +82,23 @@ second_to_add = int(next_date) - int(start_date)\n
 \n
 for line in pasted_task.getMovementList():\n
   # Get task line dates\n
-  line_start_date = line.getStartDate()\n
-  line_stop_date = line.getStopDate()\n
-  if (line_start_date is not start_date) or \\\n
-     (line_stop_date is not stop_date):\n
-    # Line dates are different from task dates\n
-    next_line_start_date = addToDate(line_start_date, second=second_to_add)\n
-    line.edit(\n
-      start_date=next_line_start_date,\n
-      stop_date=addToDate(next_line_start_date, second=duration),\n
-    )\n
+  if line.hasStartDate():\n
+    line_start_date = line.getStartDate()\n
+  else:\n
+    line_start_date = start_date\n
+\n
+  if line.hasStopDate():\n
+    line_stop_date = line.getStopDate()\n
+  else:\n
+    line_stop_date = stop_date\n
+\n
+  line_duration = int(line_stop_date) - int(line_start_date)\n
+  # Line dates are different from task dates\n
+  next_line_start_date = addToDate(line_start_date, second=second_to_add)\n
+  line.edit(\n
+    start_date=next_line_start_date,\n
+    stop_date=addToDate(next_line_start_date, second=line_duration),\n
+  )\n
 \n
 pasted_task.edit(\n
   start_date=next_date,\n
@@ -159,6 +166,7 @@ pasted_task.edit(\n
                             <string>line</string>
                             <string>line_start_date</string>
                             <string>line_stop_date</string>
+                            <string>line_duration</string>
                             <string>next_line_start_date</string>
                           </tuple>
                         </value>
