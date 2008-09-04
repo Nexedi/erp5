@@ -1,3 +1,6 @@
+2008-09-04 yusei
+* Update English messages.
+
 2008-08-28 yusei
 * Update Base_translateString or translateString instead of N_ for translation message.
 

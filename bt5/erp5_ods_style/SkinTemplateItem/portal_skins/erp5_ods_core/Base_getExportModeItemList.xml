@@ -70,8 +70,8 @@
 return [\n
   (\'\', \'\'),\n
   (translateString(\'List of Documents\'), \'list\'),\n
-  (translateString(\'Default Export of each Document\'), \'list_view\' ),\n
-  (translateString(\'Default Export of each Document (one sheet per view)\'), \'list_view_separate_sheet\'),\n
+  (translateString(\'Default Export of Each Document\'), \'list_view\' ),\n
+  (translateString(\'Default Export of Each Document (One sheet per view)\'), \'list_view_separate_sheet\'),\n
 ]\n
 </string> </value>
         </item>
@@ -140,6 +140,12 @@ return [\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getExportModeItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

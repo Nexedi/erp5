@@ -130,10 +130,10 @@ if failure:\n
                                               editable_mode=0))\n
 # successful ingestion, show appropriate message\n
 if merged_content is not None and merged_content is not new_content:\n
-  msg = context.Base_translateString(\'Document successfully updated\')\n
+  msg = context.Base_translateString(\'Document successfully updated.\')\n
   target = merged_content\n
 else:\n
-  msg = context.Base_translateString(\'Document successfully created\')\n
+  msg = context.Base_translateString(\'Document successfully created.\')\n
   target = new_content\n
 \n
 return target.Base_redirect(\'view\',\n
@@ -232,6 +232,12 @@ return target.Base_redirect(\'view\',\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_contributeContent</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

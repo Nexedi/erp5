@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>View SVN Repository Infos</string> </value>
+            <value> <string>View SVN Repository Information</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

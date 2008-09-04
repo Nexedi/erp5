@@ -115,7 +115,7 @@ portal.portal_notifications.sendMessage(sender=sender,\n
                           message=body)\n
 \n
 # Redirect to even\n
-portal_status_message = translateString("New ${portal_type} Added.",\n
+portal_status_message = translateString("New ${portal_type} added.",\n
                                     mapping = dict(portal_type = translateString(portal_type)))\n
 return document.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
@@ -206,6 +206,12 @@ return document.Base_redirect(\'view\', keep_items = dict(portal_status_message=
         <item>
             <key> <string>id</string> </key>
             <value> <string>Bug_newFile</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

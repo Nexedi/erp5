@@ -135,7 +135,7 @@ IDEAS:\n
                 </div>\n
                 <div id="logged_in_as">\n
                   <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">\n
-                    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
+                    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged in as :</span>\n
                     <tal:block tal:replace="python:portal.portal_membership.getAuthenticatedMember().getUserName()" />\n
                   </tal:block>\n
                 </div>\n
@@ -143,7 +143,7 @@ IDEAS:\n
                 <div tal:content="request/portal_status_message | nothing" id="transition_message" />\n
                 <div id="information_area" tal:condition="python: request.has_key(\'field_errors\')" \n
                     i18n:translate="" i18n:domain="ui">\n
-                  Input data has errors. Please look at error messages below.\n
+                  Input data has errors. Please look at the error messages below.\n
                 </div>\n
               </div>\n
               <div id="master">\n

@@ -101,7 +101,7 @@ elif doAction0 == \'add\':\n
   new_content = context.newContent(portal_type=type_name,\n
                                    container=context,\n
                                    id=str(new_id))\n
-  preserved_parameters[\'portal_status_message\'] = Base_translateString("Object Created.")\n
+  preserved_parameters[\'portal_status_message\'] = Base_translateString("Object created.")\n
   preserved_parameters[\'editable_mode\'] = 1\n
   redirect_url = \'%s/view\' % (new_content.absolute_url(), )\n
   # The created object is not a part of the selection, so prevent from displaying the selection navigation controls\n
@@ -118,10 +118,10 @@ elif doAction0 == \'template\':\n
     new_content_id = new_content_list[0][\'new_id\']\n
     new_content = context[new_content_id]\n
     new_content.makeTemplateInstance()\n
-    preserved_parameters[\'portal_status_message\'] = Base_translateString("Template Created.")\n
+    preserved_parameters[\'portal_status_message\'] = Base_translateString("Template created.")\n
     redirect_url = \'%s/view\' % ( new_content.absolute_url(), )\n
   else:\n
-    preserved_parameters[\'portal_status_message\'] = Base_translateString("Template Does not Exist.")\n
+    preserved_parameters[\'portal_status_message\'] = Base_translateString("Template does not exist.")\n
     redirect_url = \'%s/view\' % (context.absolute_url(), )\n
 else:\n
   redirect_url = request[\'ACTUAL_URL\']\n

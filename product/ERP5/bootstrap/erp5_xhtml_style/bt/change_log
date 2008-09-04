@@ -1,3 +1,6 @@
+2008-09-04 yusei
+* Update English messages.
+
 2008-09-03 yusei
 * Fixed i18n markup in login_form.
 * Remove text which is not suitable for translation.

@@ -323,7 +323,7 @@
            class="inspect_object" title="Inspect object" href="Base_viewInspectionReport"\n
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
-          <span class="description" i18n:translate="" i18n:domain="ui">Inspect object</span>\n
+          <span class="description" i18n:translate="" i18n:domain="ui">Inspect Object</span>\n
         </a>\n
         <a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
            title="Activity Pending"\n

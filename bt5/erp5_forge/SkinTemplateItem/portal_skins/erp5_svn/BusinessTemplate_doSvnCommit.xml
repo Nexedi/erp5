@@ -98,12 +98,12 @@ else:\n
   commit_recurs = removed\n
 \n
 if changelog is None :\n
-  request.set(\'portal_status_message\', translateString(\'Please set a ChangeLog Message\'))\n
+  request.set(\'portal_status_message\', translateString(\'Please set a ChangeLog message.\'))\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
 if changelog.strip() == \'\' :\n
-  request.set(\'portal_status_message\', translateString("Error: ChangeLog Message can not be empty"))\n
+  request.set(\'portal_status_message\', translateString("Error: ChangeLog message can not be empty."))\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
@@ -123,7 +123,7 @@ except SubversionLoginError, error1 :\n
 \n
 return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
        context.absolute_url(),\n
-       make_query(portal_status_message=translateString(\'Files commited successfully\'))))\n
+       make_query(portal_status_message=translateString(\'Files commited successfully.\'))))\n
 
 
 ]]></string> </value>

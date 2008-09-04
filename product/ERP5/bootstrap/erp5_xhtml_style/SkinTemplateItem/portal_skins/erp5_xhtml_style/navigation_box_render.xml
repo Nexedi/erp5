@@ -62,7 +62,7 @@
                 user_actions actions/user;"\n
                 tal:attributes="onChange string:submitAction(this.form,\'Base_doFavorite\')">\n
           <option selected="selected" value=""\n
-                  i18n:translate="" i18n:domain="ui">My favourites</option>\n
+                  i18n:translate="" i18n:domain="ui">My Favourites</option>\n
           <tal:block tal:repeat="action ordered_global_actions">\n
             <option tal:condition="action/disabled"\n
                     disabled="disabled">-- <tal:block tal:content="action/title" i18n:translate="" i18n:domain="ui" /> --</option>\n
@@ -97,7 +97,7 @@
         <select name="select_module"\n
                 tal:define="module_list here/ERP5Site_getModuleItemList;"\n
                 tal:attributes="onChange string:submitAction(this.form,\'Base_doModule\')">\n
-          <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
+          <option selected="selected" value="" i18n:translate="" i18n:domain="ui">Modules</option>\n
           <option tal:repeat="module module_list"\n
                   tal:attributes="value python: module[1]"\n
                   tal:content="python: module[0]"\n
@@ -116,7 +116,7 @@
         <select name="select_language"\n
                 tal:attributes="onChange string:submitAction(this.form,\'Base_doLanguage\')">\n
           <option value=""\n
-                  i18n:translate="" i18n:domain="ui">My language</option>\n
+                  i18n:translate="" i18n:domain="ui">My Language</option>\n
           <option tal:repeat="language python: here.Localizer.get_languages_map()"\n
                   tal:omit-tag="nothing"\n
                   tal:attributes="value language/id;\n
