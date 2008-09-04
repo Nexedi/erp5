@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -315,11 +312,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
-                          <string>File name</string>
+                          <string>File Name</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
@@ -347,11 +344,11 @@
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>Created</string>
+                          <string>Creation Date</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Modified</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -359,6 +356,10 @@
                 <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -370,7 +371,7 @@
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
-                          <string>File name</string>
+                          <string>File Name</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
@@ -398,11 +399,11 @@
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>Created</string>
+                          <string>Creation Date</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Modified</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -547,7 +548,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
@@ -571,11 +572,11 @@
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>Created</string>
+                          <string>Creation Date</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Modified</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -592,7 +593,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>My contributed content</string> </value>
+                    <value> <string>My Contributed Content</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -609,11 +610,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

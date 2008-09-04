@@ -163,6 +163,12 @@ return context.portal_catalog(**kw)\n
             <value> <string>Get my documents</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
