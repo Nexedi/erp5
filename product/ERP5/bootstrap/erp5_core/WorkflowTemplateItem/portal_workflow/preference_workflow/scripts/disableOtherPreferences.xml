@@ -83,7 +83,7 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
            \'disable_action\',\n
            wf_id=\'preference_workflow\', \n
            comment=translateString(\n
-          \'Automatically disabled when enabling ${preference_title}\',\n
+          \'Automatically disabled when enabling ${preference_title}.\',\n
           mapping={\'preference_title\': pref.getTitle()}))\n
   except \'Unauthorized\', a :\n
     LOG("not authorized to deactivate %s"%p)\n

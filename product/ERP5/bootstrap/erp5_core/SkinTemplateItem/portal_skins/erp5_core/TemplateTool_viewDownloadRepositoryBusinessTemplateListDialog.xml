@@ -53,6 +53,16 @@
             <value> <string>TemplateTool_downloadRepositoryBusinessTemplateList</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -118,7 +128,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Business Templates From Repositories</string> </value>
+            <value> <string>Download Business Templates from Repositories</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

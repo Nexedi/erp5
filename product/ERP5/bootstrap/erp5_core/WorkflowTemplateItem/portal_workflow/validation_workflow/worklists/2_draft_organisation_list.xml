@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Organisations to validate (%(count)s)</string> </value>
+            <value> <string>Organisations to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ organisation_module/view?validation_state=draft&local_roles:list=Assignee&local_
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Organisations to validate</string> </value>
+            <value> <string>Organisations to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

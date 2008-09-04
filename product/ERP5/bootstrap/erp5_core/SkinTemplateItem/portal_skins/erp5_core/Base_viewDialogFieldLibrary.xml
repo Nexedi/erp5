@@ -57,6 +57,12 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -153,7 +159,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Field Library For Dialogs</string> </value>
+            <value> <string>Default Field Library for Dialogs</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

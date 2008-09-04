@@ -77,7 +77,7 @@ request=context.REQUEST\n
 \n
 if uids != []:\n
   context.manage_copyObjects(uids=uids, REQUEST=request, RESPONSE=request.RESPONSE)\n
-  message = Base_translateString("Item(s)+Copied.")\n
+  message = Base_translateString("Item(s)+copied.")\n
 else:\n
   message = Base_translateString("Please+select+one+or+more+items+to+copy+first.")\n
 return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
@@ -161,6 +161,12 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
         <item>
             <key> <string>id</string> </key>
             <value> <string>Folder_copy</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

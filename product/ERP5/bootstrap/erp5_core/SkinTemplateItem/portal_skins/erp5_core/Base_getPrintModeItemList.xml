@@ -70,7 +70,7 @@
 return [\n
   (\'\', \'\'),\n
   (translateString(\'List of Documents\'), \'list\'),\n
-  (translateString(\'Default Print of each Document\'), \'list_view\'),\n
+  (translateString(\'Default Print of Each Document\'), \'list_view\'),\n
 ]\n
 </string> </value>
         </item>
@@ -139,6 +139,12 @@ return [\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getPrintModeItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

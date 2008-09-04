@@ -101,7 +101,7 @@ def Object_hasRelation(obj):\n
 \n
 ret_url = context.absolute_url() + \'/\' + form_id\n
 if error:\n
-  message = Base_translateString("Sorry+your+selection+has+changed")\n
+  message = Base_translateString("Sorry,+your+selection+has+changed.")\n
   qs = \'?portal_status_message=%s\' % message\n
 elif uids is not None:\n
   # Check if there is some related objets.\n
@@ -112,9 +112,9 @@ elif uids is not None:\n
 \n
   if object_used > 0:\n
     if object_used == 1:\n
-      message = Base_translateString("Sorry,+1+Item+Is+In+Use.")\n
+      message = Base_translateString("Sorry,+1+item+is+in+use.")\n
     else:\n
-      message = Base_translateString("Sorry,+${count}+Items+Are+In+Use.",\n
+      message = Base_translateString("Sorry,+${count}+items+are+in+use.",\n
                                      mapping={\'count\': repr(object_used)})\n
     qs = \'?portal_status_message=%s\' % message  \n
   else:\n
@@ -177,10 +177,10 @@ elif uids is not None:\n
 \n
       # Generate message\n
       if not_deleted_count == 1:\n
-        message = Base_translateString("Sorry+You+Can+Not+Delete+${count}+Item.",\n
+        message = Base_translateString("Sorry,+you+can+not+delete+${count}+item.",\n
                                        mapping={\'count\': not_deleted_count})\n
       elif not_deleted_count > 1:\n
-        message = Base_translateString("Sorry+You+Can+Not+Delete+${count}+Items.",\n
+        message = Base_translateString("Sorry,+you+can+not+delete+${count}+items.",\n
                                        mapping={\'count\': not_deleted_count})\n
       qs = \'?portal_status_message=%s\' % message\n
 \n
@@ -318,6 +318,12 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Delete objects from a folder</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -254,7 +254,7 @@ except FormValidationError, validation_errors:\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
 else:\n
-  message = Base_translateString(\'Relation+Unchanged.\')\n
+  message = Base_translateString(\'Relation+unchanged.\')\n
 \n
 if redirect_url is None:\n
   if not selection_index:\n
@@ -387,6 +387,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_validateRelation</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Trade Conditions to validate (%(count)s)</string> </value>
+            <value> <string>Sale Trade Conditions to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ sale_trade_condition_module/view?validation_state=draft&local_roles:list=Assigne
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sale Trade Conditions to validate</string> </value>
+            <value> <string>Sale Trade Conditions to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

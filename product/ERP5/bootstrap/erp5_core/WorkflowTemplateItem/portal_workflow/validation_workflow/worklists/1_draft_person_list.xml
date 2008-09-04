@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Persons to validate (%(count)s)</string> </value>
+            <value> <string>Persons to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Persons to validate</string> </value>
+            <value> <string>Persons to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
