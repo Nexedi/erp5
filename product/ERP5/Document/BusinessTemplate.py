@@ -73,7 +73,7 @@ from gzip import GzipFile
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-import tarfile
+from Products.ERP5Type import tarfile
 from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
