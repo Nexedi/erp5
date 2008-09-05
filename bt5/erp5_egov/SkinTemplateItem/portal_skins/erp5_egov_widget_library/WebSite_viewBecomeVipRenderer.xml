@@ -74,7 +74,9 @@ Description:\n
       jutificatif,... without having to move or to queue. For more\n
       information, please click\n
       </tal:block>\n
-      <a href="eGov_RegisterInformations"  i18n:domain="ui" i18n:translate="">here</a>.\n
+      <a href="help/registerInformations" onclick="window.open(this.href,\n
+        \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\');\n
+        return false;" i18n:translate="" i18n:domain="ui">here</a>\n
     </div>\n
     <tal:block metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
   </div>\n
@@ -98,6 +100,12 @@ Description:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

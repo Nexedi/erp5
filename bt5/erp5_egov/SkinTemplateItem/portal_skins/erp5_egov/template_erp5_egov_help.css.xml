@@ -268,6 +268,36 @@ form#main_form div.searchInput input, textarea, select { /* This should be commo
 form#main_form div.languageSelector {\n
   float: right;\n
 }\n
+\n
+ul {\n
+  list-style-image:url(img/puce1.png);\n
+}\n
+\n
+.member_explanation_body{\n
+float:left;\n
+clear:none !important;\n
+width:40%;\n
+}\n
+\n
+.member_explanation_picture{\n
+float:left;\n
+clear:none !important;\n
+width:60%;\n
+}\n
+\n
+.become_member_body{\n
+margin-bottom:1.5em;\n
+}\n
+\n
+div.section_explanation{\n
+  padding-top:1em;\n
+  padding-bottom:2em;\n
+  font-size: 1.3em;\n
+}\n
+\n
+.section_explanation{\n
+width:100%\n
+}\n
 
 
 ]]></string> </value>
