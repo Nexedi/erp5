@@ -95,9 +95,10 @@ if reply_url:\n
   additional_headers = {\'Return-Path\':reply_url}\n
 \n
 # To (multiple)\n
+recipient_list = context.BugLine_getRecipientValueList()\n
 to_url_list = []\n
 if to_url is None:\n
-  for recipient in context.getDestinationValueList():\n
+  for recipient in recipient_list:\n
     email = recipient.getDefaultEmailText()\n
     if email:\n
       if recipient.getTitle():\n
@@ -164,6 +165,12 @@ if download:\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_url=None, to_url=None, reply_url=None, subject=None, body=None, attachment_format=None, attachment_list=None, download=None, **kw</string> </value>
         </item>
@@ -206,6 +213,7 @@ if download:\n
                             <string>sender</string>
                             <string>user</string>
                             <string>additional_headers</string>
+                            <string>recipient_list</string>
                             <string>to_url_list</string>
                             <string>_getiter_</string>
                             <string>recipient</string>
