@@ -130,7 +130,7 @@ Description:\n
   \n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Authenticate</h2>\n
-      <div class="work_in_progress">\n
+      <div class="work_in_progress" i18n:translate="" i18n:domain="ui">\n
         This section will permit in the near future to verify the authenticity\n
         of documents digital products by administrations and ensure the highest level\n
         of security of management of online procedures.\n
