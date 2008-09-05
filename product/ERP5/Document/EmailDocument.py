@@ -332,8 +332,10 @@ class EmailDocument(File, TextDocument):
     """
     pass
 
+  security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html
 
+  security.declareProtected(Permissions.View, 'convert')
   convert = TextDocument.convert
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
