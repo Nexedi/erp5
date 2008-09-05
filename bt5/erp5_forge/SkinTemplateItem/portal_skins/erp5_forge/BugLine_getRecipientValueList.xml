@@ -82,7 +82,12 @@ if bug.getBugSeverityUid() is not None:\n
      bug_severity_list[-1].getUid() ==\\\n
      bug.getBugSeverityUid():\n
     recipient_list.extend(bug.getSourceDecisionValueList())\n
-return recipient_list\n
+\n
+unique_recipient_list = []\n
+for recipient in recipient_list:\n
+  if recipient.getRelativeUrl() not in [ur.getRelativeUrl() for ur in unique_recipient_list]:\n
+    unique_recipient_list.append(recipient)\n
+return unique_recipient_list\n
 </string> </value>
         </item>
         <item>
@@ -141,6 +146,9 @@ return recipient_list\n
                             <string>recipient_list</string>
                             <string>bug_severity_list</string>
                             <string>_getitem_</string>
+                            <string>unique_recipient_list</string>
+                            <string>recipient</string>
+                            <string>ur</string>
                           </tuple>
                         </value>
                     </item>
@@ -158,6 +166,12 @@ return recipient_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>BugLine_getRecipientValueList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
