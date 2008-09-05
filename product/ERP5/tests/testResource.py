@@ -76,8 +76,6 @@ class TestResource(ERP5TypeTestCase):
     self.login()
     self.portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
     self.createCategories()
 
   def createCategories(self):
