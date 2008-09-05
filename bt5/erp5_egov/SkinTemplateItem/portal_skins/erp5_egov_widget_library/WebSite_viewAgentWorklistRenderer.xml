@@ -67,68 +67,38 @@ Description:\n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Pending Applications</h2>\n
       <img alt="Track Application Logo" src="img/track_application.png"/>\n
-\n
-\n
       <tal:block tal:define="global portal_type_dict python:\n
-      here.getPortalTypeWorklistDictForWorkflow(context, workflow_list=[\'egov_universal_workflow\', \'egov_anonymous_workflow\'])" />\n
+        here.getPortalTypeWorklistDictForWorkflow(context, \n
+        workflow_list=[\'egov_universal_workflow\', \'egov_anonymous_workflow\'])" />\n
       <ul tal:condition="python: portal_type_dict">\n
         <li tal:repeat="portal_type python: portal_type_dict.keys()">\n
-          <span class ="portal_type" tal:content="portal_type" i18n:domain="ui" i18n:translate="">portal_type</span>\n
+          <span class ="portal_type" tal:content="portal_type" \n
+            i18n:domain="ui" i18n:translate="">portal_type\n
+          </span>\n
           : \n
-          <tal:block tal:repeat="worklist python: portal_type_dict[portal_type].values()">\n
-              <tal:block tal:define="index python: worklist[\'id\']">\n
-                <span class="state" tal:attributes="class python:\'%s_state\' % worklist[\'validation_state\'][0]" tal:content="python: worklist[\'validation_state\'][0]">state</span> : \n
-                <a class="action_number" tal:content="python: worklist[\'count\']"\n
-                   href="link" tal:attributes="href worklist/formated_url">action_number</a>\n
-              </tal:block>\n
-              ; \n
+          <tal:block tal:repeat="worklist_list python: \n
+                                  portal_type_dict[portal_type].values()">\n
+            <span class="state" tal:attributes="class python:\'%s_state\' % \n
+              worklist_list[\'validation_state\']" \n
+              i18n:translate="" i18n:domain="ui" \n
+              tal:content="python: worklist_list[\'validation_state\']">\n
+              state\n
+            </span> : \n
+            <a class="action_number" tal:content="python: worklist_list[\'count\']"\n
+              href="link" tal:attributes="href worklist_list/formated_url">action_number\n
+            </a>\n
+            ; \n
           </tal:block>\n
         </li>\n
       </ul>\n
       <div tal:condition="python: not portal_type_dict">\n
         Nothing to do !\n
       </div>\n
-<!--\n
-\n
-\n
-      <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
-                             global workilist_not_empty python: True">\n
-        <ul class="select_favorite"\n
-                tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
-                user_actions actions/user;">\n
-          <tal:block tal:repeat="action ordered_global_actions">\n
-            <tal:block tal:condition="python: action[\'disabled\']!=1 and action.has_key(\'workflow_id\')"\n
-                       tal:define="name python: action.get(\'name\', \'\');\n
-                       index python: name.find(\' (\');">\n
-              <tal:block tal:define="global workilist_not_empty python: False" />\n
-              <li>\n
-                <a href="link" tal:attributes="href action/url"\n
-                      tal:content="action/name"\n
-                      i18n:translate="" i18n:domain="ui">\n
-                </a>\n
-              </li>\n
-            </tal:block>\n
-          </tal:block>\n
-        </ul>\n
-      </tal:block>\n
-\n
-      <div tal:condition="workilist_not_empty">\n
-        Nothing to do !\n
-      </div>\n
-\n
-\n
-      -->\n
-\n
-\n
-\n
-\n
-\n
-\n
       <div class="clear"></div>\n
     </div>\n
   </div>\n
-<div class="clear">\n
-</div>\n
+  <div class="clear">\n
+  </div>\n
 </tal:block>\n
 
 

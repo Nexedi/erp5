@@ -44,7 +44,7 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
     return a dict containing portal_type and all informations about work_list
     of workflow :
 
-    {'Subscription Form': {('signed',): {'category': 'global',
+    {'Subscription Form': {'signed': {'category': 'global',
                                          'count': 1,
                                          'description': 'Subscription Forms to archive',
                                          'formated_name': 'Subscription Forms to archive (%(count)s)',
@@ -52,7 +52,7 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
 ',
                                          'id': 'subscription_forms_to_archive',
                                          'roles': ('Assignor',),
-                                         'validation_state': ('signed',)}
+                                         'validation_state': 'signed'}
                           },
               .....
 
