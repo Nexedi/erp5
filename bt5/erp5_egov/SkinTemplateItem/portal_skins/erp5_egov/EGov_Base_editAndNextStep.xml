@@ -75,7 +75,7 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 request=context.REQUEST\n
 \n
-portal_status_message = \'\'\n
+message = \'\'\n
 \n
 # add the attachments :\n
 request = context.REQUEST\n
@@ -87,7 +87,7 @@ if mode == \'edit\':\n
   (kw, encapsulated_editor_list) = result\n
   if kw.has_key(\'attachment\') and kw.has_key(\'attachment_title\'):\n
     attachment_list = zip(kw[\'attachment\'], kw[\'attachment_title\'])\n
-    portal_status_message = translateString("No attachment was added. Please select a file to add an attachment.")\n
+    message = translateString("No attachment was added. Please select a file to add an attachment.")\n
     # XXX make sure it is a list\n
     for attachment, title in attachment_list:\n
       if attachment:\n
@@ -95,7 +95,7 @@ if mode == \'edit\':\n
         file = context.newContent(portal_type=\'File\', file=attachment, title=title)\n
 \n
 if attachment_count:\n
-  portal_status_message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
+  message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
                                 mapping = dict(attachment_count=attachment_count))\n
 \n
 next_url_dict = {\n
@@ -104,7 +104,7 @@ next_url_dict = {\n
 }\n
 \n
 # edit the document with the entered data before to change of state\n
-context.Base_edit(form_id=form_id, \n
+base_edit_result = context.Base_edit(form_id=form_id, \n
                   selection_index=selection_index, \n
                   selection_name=selection_name, \n
                   dialog_id=dialog_id, \n
@@ -112,6 +112,11 @@ context.Base_edit(form_id=form_id, \n
                   editable_mode=editable_mode, \n
                   silent_mode=silent_mode, \n
                   field_prefix=field_prefix)\n
+\n
+# if there is somme errors (like required field not filled),\n
+# return to the same page, and display Base_edit error message\n
+if request.get(\'field_errors\', \'\'):\n
+  return base_edit_result\n
 \n
 if not next_url_dict.has_key(form_id):\n
   next_url = \'PDFDocument_viewLoginInformation\'\n
@@ -127,12 +132,7 @@ if not next_url_dict.has_key(form_id):\n
 else:\n
   next_url = next_url_dict[form_id]\n
 \n
-successful_edit_redirect_url = \'%s/%s\' % (context.absolute_url(), next_url)\n
-\n
-result = request[\'RESPONSE\'].redirect(successful_edit_redirect_url) \n
-#return result\n
-\n
-return context.Base_redirect(successful_edit_redirect_url, keep_items = dict(portal_status_message = portal_status_message), **kw)\n
+return context.Base_redirect(next_url, keep_items = dict(portal_status_message=message), **kw)\n
 </string> </value>
         </item>
         <item>
@@ -195,7 +195,7 @@ return context.Base_redirect(successful_edit_redirect_url, keep_items = dict(por
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>portal_status_message</string>
+                            <string>message</string>
                             <string>translateString</string>
                             <string>_getiter_</string>
                             <string>result</string>
@@ -211,9 +211,8 @@ return context.Base_redirect(successful_edit_redirect_url, keep_items = dict(por
                             <string>file</string>
                             <string>dict</string>
                             <string>next_url_dict</string>
+                            <string>base_edit_result</string>
                             <string>next_url</string>
-                            <string>message</string>
-                            <string>successful_edit_redirect_url</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
