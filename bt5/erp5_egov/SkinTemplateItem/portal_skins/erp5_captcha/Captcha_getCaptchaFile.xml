@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string># this is made to be sure that captcha image will not be cached\n
+container.REQUEST.RESPONSE.setHeader(\'Pragma\', \'no-cache\')\n
+\n
+request = context.REQUEST\n
 now = DateTime()\n
 expire_timeout_days = 90\n
 session_id = request.get(\'erp5_captcha_session_id\', None)\n
@@ -130,6 +133,7 @@ return image_data\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
+                            <string>container</string>
                             <string>context</string>
                             <string>request</string>
                             <string>DateTime</string>
@@ -161,6 +165,12 @@ return image_data\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Captcha_getCaptchaFile</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
