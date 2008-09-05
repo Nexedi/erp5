@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2.5
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -73,7 +73,7 @@ def generateInformation(fd):
   os.write(fd, '<?xml version="1.0"?>\n')
   os.write(fd, '<repository>\n')
 
-  for file in os.listdir(os.getcwd()):
+  for file in sorted(os.listdir(os.getcwd())):
     if file.endswith('.bt5'):
       info('Reading %s... ' % (file,))
       try:
