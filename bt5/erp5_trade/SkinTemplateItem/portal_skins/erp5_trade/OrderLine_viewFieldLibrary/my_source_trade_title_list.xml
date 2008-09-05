@@ -15,6 +15,8 @@
               <list>
                 <string>title</string>
                 <string>portal_type</string>
+                <string>columns</string>
+                <string>proxy_listbox_ids</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -91,7 +93,38 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Usual Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>getDefaultTelephoneText</string>
+                          <string>Telephone</string>
+                        </tuple>
+                        <tuple>
+                          <string>getDefaultAddressText</string>
+                          <string>Address</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -103,12 +136,31 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>Person</string>
                           <string>Person</string>
+                        </tuple>
+                        <tuple>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>OrganisationModule_viewOrganisationList/listbox</string>
+                          <string>Organisations</string>
+                        </tuple>
+                        <tuple>
+                          <string>PersonModule_viewPersonList/listbox</string>
+                          <string>Persons</string>
                         </tuple>
                       </list>
                     </value>
@@ -118,7 +170,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Original Supplier or Worker</string> </value>
                 </item>
               </dictionary>
