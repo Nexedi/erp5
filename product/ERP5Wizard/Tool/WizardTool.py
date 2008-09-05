@@ -40,7 +40,11 @@ from UserDict import UserDict
 import xmlrpclib, socket, sys, traceback, urllib, urllib2, base64, cgi
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 import zLOG
+import cookielib
 
+# global (RAM) cookie storage
+cookiejar = cookielib.CookieJar()
+  
 def _setSuperSecurityManager(self):
   """ Change to super user account. """
   user = self.getWrappedOwner()
@@ -207,10 +211,13 @@ class WizardTool(BaseTool):
     handler = getattr(urllib2, name, None)
     if handler is not None:
       simple_opener_director.add_handler(handler())
-
+  # add cookie support
+  simple_opener_director.add_handler(urllib2.HTTPCookieProcessor(cookiejar))  
+ 
   security.declareProtected(Permissions.View, 'proxy')
   def proxy(self, **kw):
     """Proxy a request to a server."""
+    global cookiejar
     if self.REQUEST['REQUEST_METHOD'] != 'GET':
       # XXX this depends on the internal of HTTPRequest.
       pos = self.REQUEST.stdin.tell()
@@ -264,6 +271,15 @@ class WizardTool(BaseTool):
     if content_type:
       header_dict['Content-Type'] = content_type
 
+    # send locally saved cookies to remote web server
+    if not header_dict.has_key('Cookie'):
+      header_dict['Cookie'] = ''
+    for cookie in cookiejar:
+      # unconditionally send all cookies (no matter if expired or not) as URL is always the same
+      header_dict['Cookie']  +=  '%s=%s;' %(cookie.name, cookie.value)
+    # XXX: include cookies from local browser (like show/hide tabs) which are set directly
+    # by client JavaScript code (i.e. not sent from server)
+    
     request = urllib2.Request(url, data, header_dict)
     f = self.simple_opener_director.open(request)
 
@@ -273,7 +289,6 @@ class WizardTool(BaseTool):
       response = self.REQUEST.RESPONSE
       response.setStatus(f.code, f.msg)
       response.setHeader('content-type', metadata.getheader('content-type'))
-
       # FIXME this list should be confirmed with the RFC 2616.
       for k in ('location', 'uri', 'cache-control', 'last-modified',
                 'etag', 'if-matched', 'if-none-match',
