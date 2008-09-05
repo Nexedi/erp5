@@ -109,7 +109,6 @@ Description:\n
             <select size="1" class="input" name="new_application_recipient">\n
               <tal:block metal:define-macro="recipient_type_option_list">\n
                 <option value="" selected="selected" i18n:translate="" i18n:domain="ui">DGID</option>\n
-                <option value="" i18n:translate="" i18n:domain="ui">DGID</option>\n
                 <tal:block  tal:condition="exists:here/getRecipientList" \n
                             tal:repeat="ptype here/getRecipientList">\n
                   <option tal:attributes="value ptype"  tal:content="python:ptype"\n
