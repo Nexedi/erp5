@@ -137,7 +137,7 @@
         </tal:block>\n
         <tal:block tal:replace=\'nothing\'>\n
           <!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) -->\n
-          <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --</option>\n
+          <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Folder</tal:block> --</option>\n
           <tal:block tal:repeat="action actions/folder">\n
             <option tal:content="action/name"\n
                     tal:attributes="value python: \'folder %s\' % (action[\'url\'], )"\n
