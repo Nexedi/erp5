@@ -168,7 +168,6 @@ Description:\n
       <h2 i18n:translate="" i18n:domain="ui">Query</h2>\n
       <div>\n
         <textarea cols="80" rows="4" name="query_description"></textarea>\n
-        <tal:block i18n:translate="" i18n:domain="ui">in</tal:block>\n
         <select size="1" class="input" name="query_portal_type">\n
           <option value="all" selected value="" i18n:translate="" i18n:domain="ui">Any Documents</option>\n
             <option tal:repeat="ptype here/getPortalDocumentTypeList"\n

@@ -116,7 +116,7 @@
       <div>\n
         <label for="url" value="" i18n:translate="" i18n:domain="ui">URL</label>\n
         <input type="text" name="link_url" id="url" size="80" value="http://" />\n
-        <a href="" target="_blank" onclick="return setLink(this)" value="" i18n:translate="" i18n:domain="ui">preview</a>\n
+        <a href="" target="_blank" onclick="return setLink(this)" value="" i18n:translate="" i18n:domain="ui">Preview</a>\n
       </div>\n
       <tal:block tal:define="contribute_prefix string:link_">\n
         <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties">\n

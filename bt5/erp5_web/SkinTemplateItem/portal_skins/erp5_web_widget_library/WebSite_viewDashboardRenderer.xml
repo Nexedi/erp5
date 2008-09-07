@@ -51,7 +51,7 @@
  <tal:block tal:define="tasks python: list(here.WebSite_getPendingEventInfoList())[:TASK_LEN];">\n
     <div class="boxHeader" >\n
       <a tal:attributes="href string: search_area/WebSite_viewPendingEventList"\n
-         tal:content="python: \'%s (%s %s)\' % (here.Base_translateString(\'Act\'), len(tasks), here.Base_translateString(\'total\'))" />\n
+         tal:content="python:here.Base_translateString(\'Action: (${task_count} total.)\', mapping={\'task_count\':len(tasks)})" />\n
     </div>\n
     <div class="boxContent">\n
       <ul>\n
@@ -180,6 +180,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
