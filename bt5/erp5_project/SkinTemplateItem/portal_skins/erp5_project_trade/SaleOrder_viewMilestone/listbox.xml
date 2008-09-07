@@ -77,6 +77,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -121,7 +127,7 @@
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -136,7 +142,7 @@
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>

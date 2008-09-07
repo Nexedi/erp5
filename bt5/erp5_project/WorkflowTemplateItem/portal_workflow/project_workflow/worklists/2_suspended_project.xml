@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Project to resume (%(count)s)</string> </value>
+            <value> <string>Project to Resume (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ project_module?validation_state=suspended&portal_type=%(portal_type)s&local_role
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Project to resume</string> </value>
+            <value> <string>Project to Resume</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

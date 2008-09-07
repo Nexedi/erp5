@@ -101,7 +101,7 @@ AAA=</string> </value>
           </text:p>\n
           \n
           <text:p text:style-name=\'Project_20_Box\'>\n
-            <text:span text:style-name=\'T1\' i18n:translate="Assigned to" i18n:domain="erp5_ui">Assigned to</text:span>: <tal:block tal:replace="task/getSourceTitle">2006-01-01</tal:block><text:tab/>\n
+            <text:span text:style-name=\'T1\' i18n:translate="Assignee" i18n:domain="erp5_ui">Assignee</text:span>: <tal:block tal:replace="task/getSourceTitle">2006-01-01</tal:block><text:tab/>\n
           </text:p>\n
   \n
           <text:p text:style-name=\'Text_20_body\' tal:content="task/getComment">Description of project line.</text:p>\n
@@ -137,6 +137,12 @@ AAA=</string> </value>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

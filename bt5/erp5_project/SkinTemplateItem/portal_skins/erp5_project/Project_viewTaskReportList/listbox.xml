@@ -80,6 +80,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -88,7 +94,7 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>all_columns</string> </key>
+                    <key>                 <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -109,7 +115,7 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Assigned To</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
@@ -117,11 +123,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -162,7 +168,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key>                 <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -191,11 +197,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -213,16 +219,16 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key>                 <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -236,13 +242,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key>                 <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key>                 <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -253,7 +259,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
+                    <key>                 <string>report_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -264,11 +270,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_tree</string> </key>
+                    <key>                 <string>report_tree</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key>                 <string>selection_name</string> </key>
                     <value> <string>project_task_report_selection</string> </value>
                 </item>
                 <item>
@@ -276,7 +282,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>stat_method</string> </key>
+                    <key>                 <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -286,7 +292,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Task Reports</string> </value>
                 </item>
               </dictionary>

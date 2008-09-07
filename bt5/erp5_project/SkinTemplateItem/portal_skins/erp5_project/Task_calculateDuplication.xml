@@ -124,17 +124,20 @@ def getDatePeriodList(start_date):\n
 start_date = context.getStartDate()\n
 if start_date is None:\n
   return context.REQUEST.RESPONSE.redirect(\n
-    \'%s?portal_status_message=%s+%s.\' % (context.absolute_url(), \n
-                                         Base_translateString(\'Tasks+can+not+be+created:\'), \n
-                                         Base_translateString(\'Start+Date+is+None\')))\n
+    \'%s?portal_status_message=%s\' % (\n
+    context.absolute_url(),\n
+    Base_translateString(\'Tasks can not be created, start date is empty.\')\n
+    ))\n
 else:\n
   date_list = getDatePeriodList(start_date)\n
   for next_date in date_list:\n
     context.activate(activity="SQLQueue").Task_duplicate(next_date)\n
   return context.REQUEST.RESPONSE.redirect(\n
-    \'%s?portal_status_message=%s+%s.\' % (context.absolute_url(), \n
-                                         len(date_list), \n
-                                         Base_translateString(\'Tasks+created\')))\n
+    \'%s?portal_status_message=%s\' % (\n
+    context.absolute_url(),\n
+    Base_translateString(\'${count} tasks created.\',\n
+                         mapping={\'count\':len(date_list)})\n
+    ))\n
 
 
 ]]></string> </value>

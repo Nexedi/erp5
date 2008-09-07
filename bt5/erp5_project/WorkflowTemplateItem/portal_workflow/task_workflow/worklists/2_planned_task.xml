@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Tasks to order (%(count)s)</string> </value>
+            <value> <string>Tasks to Order (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ task_module?simulation_state=planned&local_roles=%(local_roles)s&reset=1
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Planned tasks to review</string> </value>
+            <value> <string>Tasks to Order</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

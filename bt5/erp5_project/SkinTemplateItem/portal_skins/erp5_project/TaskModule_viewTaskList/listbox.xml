@@ -83,6 +83,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -112,11 +118,11 @@
                         </tuple>
                         <tuple>
                           <string>destination_decision_title</string>
-                          <string>Requested by</string>
+                          <string>Requester</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Assigned to</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
@@ -227,11 +233,11 @@
                       <list>
                         <tuple>
                           <string>delivery.start_date</string>
-                          <string>Starting</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>delivery.stop_date</string>
-                          <string>Due</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -300,11 +306,11 @@
                         </tuple>
                         <tuple>
                           <string>destination_decision_title</string>
-                          <string>Requested by</string>
+                          <string>Requester</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Assigned to</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>

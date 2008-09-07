@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Tasks to validate (%(count)s)</string> </value>
+            <value> <string>Tasks to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -33,7 +33,7 @@ task_module?simulation_state=draft&local_roles=%(local_roles)s&reset=1
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tasks to validate</string> </value>
+            <value> <string>Tasks to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
