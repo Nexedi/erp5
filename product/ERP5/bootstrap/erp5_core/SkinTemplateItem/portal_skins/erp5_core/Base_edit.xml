@@ -234,7 +234,7 @@ def parseField(f):\n
 kw = {}\n
 encapsulated_editor_list = []\n
 MARKER = []\n
-message = Base_translateString("Data+updated.")\n
+message = Base_translateString("Data updated.")\n
 \n
 try:\n
   # We process all the field in form and\n

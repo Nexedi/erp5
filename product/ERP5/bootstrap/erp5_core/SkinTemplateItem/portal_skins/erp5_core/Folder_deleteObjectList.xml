@@ -75,7 +75,7 @@ selected_uids = context.portal_selections.updateSelectionCheckedUidList(selectio
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if uids == []:\n
-  message = Base_translateString("Please+select+one+or+more+items+to+delete+first.")\n
+  message = Base_translateString("Please select one or more items to delete first.")\n
   qs = \'?portal_status_message=%s\' % message\n
   return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
 \n

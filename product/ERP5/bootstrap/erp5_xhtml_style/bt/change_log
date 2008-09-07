@@ -1,3 +1,6 @@
+2008-09-07 yusei
+* Replace "+" with " " in translation messages.
+
 2008-09-05 yusei
 * Fixed wrong i18n:name.
 

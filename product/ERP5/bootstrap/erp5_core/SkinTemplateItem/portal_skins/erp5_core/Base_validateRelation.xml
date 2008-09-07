@@ -254,7 +254,7 @@ except FormValidationError, validation_errors:\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
 else:\n
-  message = Base_translateString(\'Relation+unchanged.\')\n
+  message = Base_translateString(\'Relation unchanged.\')\n
 \n
 if redirect_url is None:\n
   if not selection_index:\n

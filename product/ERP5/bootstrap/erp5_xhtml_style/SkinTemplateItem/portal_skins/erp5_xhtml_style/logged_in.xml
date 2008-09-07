@@ -61,7 +61,7 @@
              isAnon mtool/isAnonymousUser|nothing;">\n
     <tal:block tal:condition="isAnon">\n
       <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
-                 url python: \'%s/login_form?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(\'Login+and/or+password+is+incorrect.\'));\n
+                 url python: \'%s/login_form?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(\'Login and/or password is incorrect.\'));\n
                  url python: request.get(\'came_from\') and  \'%s&amp;came_from=%s\' % (url, request[\'came_from\']) or url;\n
                  dummy python: response.redirect(url);" />\n
     </tal:block>\n
@@ -90,6 +90,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

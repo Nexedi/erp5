@@ -103,7 +103,7 @@ elif doAction0 == \'add\':\n
   new_content = context.newContent(portal_type=type_name,\n
                                    container=context,\n
                                    id=str(new_id))\n
-  message = Base_translateString("Object+created.")\n
+  message = Base_translateString("Object created.")\n
   if not(ignore_layout) and context.getApplicableLayout():\n
     redirect_url = \'%s/%s?portal_status_message=%s&editable_mode=1\' % (\n
                               new_content.WebSite_getDocumentPhysicalPath()\n
@@ -128,9 +128,9 @@ elif doAction0 == \'template\':\n
     new_content.makeTemplateInstance()\n
     redirect_url = \'%s/%s?%s\' % ( new_content.absolute_url()\n
                             , \'view\'\n
-                            , \'portal_status_message=\'+Base_translateString(\'Template+created.\'))\n
+                            , \'portal_status_message=\'+Base_translateString(\'Template created.\'))\n
   else:\n
-    message = Base_translateString("Template+does+not+exist.")\n
+    message = Base_translateString("Template does not exist.")\n
     redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
                             , \'view\'\n
                             , message)\n

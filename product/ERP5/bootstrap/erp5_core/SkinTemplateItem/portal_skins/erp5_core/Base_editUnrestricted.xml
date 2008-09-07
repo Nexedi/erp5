@@ -105,7 +105,7 @@ except FormValidationError, validation_errors:\n
 kw = {}\n
 encapsulated_editor_list = []\n
 MARKER = []\n
-message = Base_translateString("Data+updated.")\n
+message = Base_translateString("Data updated.")\n
 \n
 \n
 def parseField(f):\n

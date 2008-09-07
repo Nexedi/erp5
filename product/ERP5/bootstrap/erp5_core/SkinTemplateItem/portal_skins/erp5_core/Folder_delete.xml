@@ -101,7 +101,7 @@ def Object_hasRelation(obj):\n
 \n
 ret_url = context.absolute_url() + \'/\' + form_id\n
 if error:\n
-  message = Base_translateString("Sorry,+your+selection+has+changed.")\n
+  message = Base_translateString("Sorry, your selection has changed.")\n
   qs = \'?portal_status_message=%s\' % message\n
 elif uids is not None:\n
   # Check if there is some related objets.\n
@@ -112,9 +112,9 @@ elif uids is not None:\n
 \n
   if object_used > 0:\n
     if object_used == 1:\n
-      message = Base_translateString("Sorry,+1+item+is+in+use.")\n
+      message = Base_translateString("Sorry, 1 item is in use.")\n
     else:\n
-      message = Base_translateString("Sorry,+${count}+items+are+in+use.",\n
+      message = Base_translateString("Sorry, ${count} items are in use.",\n
                                      mapping={\'count\': repr(object_used)})\n
     qs = \'?portal_status_message=%s\' % message  \n
   else:\n
@@ -177,15 +177,15 @@ elif uids is not None:\n
 \n
       # Generate message\n
       if not_deleted_count == 1:\n
-        message = Base_translateString("Sorry,+you+can+not+delete+${count}+item.",\n
+        message = Base_translateString("Sorry, you can not delete ${count} item.",\n
                                        mapping={\'count\': not_deleted_count})\n
       elif not_deleted_count > 1:\n
-        message = Base_translateString("Sorry,+you+can+not+delete+${count}+items.",\n
+        message = Base_translateString("Sorry, you can not delete ${count} items.",\n
                                        mapping={\'count\': not_deleted_count})\n
       qs = \'?portal_status_message=%s\' % message\n
 \n
 else:\n
-  message = Base_translateString("Please+select+one+or+more+items+first.")\n
+  message = Base_translateString("Please select one or more items first.")\n
   qs = \'?portal_status_message=%s\' % message\n
 \n
 # make sure nothing is checked after\n

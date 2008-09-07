@@ -76,29 +76,30 @@ if context.cb_dataValid:\n
   try:\n
     portal_type_list = [x.getPortalType() for x in object_list]\n
   except AttributeError:\n
-    error_message = Base_translateString(\'Sorry,+you+can+not+paste+theses+items+here.\')\n
+    error_message = Base_translateString(\'Sorry, you can not paste these items here.\')\n
   else:\n
     allowed_type_list = [x for x in context.getVisibleAllowedContentTypeList()]\n
     for portal_type in portal_type_list:\n
       if portal_type not in allowed_type_list:\n
-        error_message = Base_translateString(\'Sorry,+you+can+not+paste+theses+items+here.\')\n
+        error_message = Base_translateString(\'Sorry, you can not paste these items here.\')\n
 if context.cb_dataValid and error_message==\'\':\n
   try:\n
     new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
   except KeyError:\n
-    msg = Base_translateString(\'Nothing+to+paste.\')\n
+    msg = Base_translateString(\'Nothing to paste.\')\n
     return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
   else:\n
     new_id_list = [i[\'new_id\'] for i in new_item_list]\n
     for my_id in new_id_list:\n
       context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
       context[my_id].recursiveImmediateReindexObject()\n
-    msg = Base_translateString(\'Item(s)+pasted.\')\n
+    msg = Base_translateString(\'Item(s) pasted.\')\n
     return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
 elif context.cb_dataValid and error_message!=\'\':\n
   return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
 else:\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Copy+or+cut+one+or+more+items+to+paste+first.\')\n
+  error_message = Base_translateString(\'Copy or cut one or more items to paste first.\')\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
 </string> </value>
         </item>
         <item>
