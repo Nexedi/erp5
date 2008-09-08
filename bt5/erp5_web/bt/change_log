@@ -1,4 +1,7 @@
 2008-09-08 yusei
+* Added web mode version of Base_doLanguage.
+
+2008-09-08 yusei
 * Use Base_translateString instead of translate.
 
 2008-09-07 yusei
