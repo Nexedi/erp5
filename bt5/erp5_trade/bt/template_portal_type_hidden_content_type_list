@@ -1,6 +1,7 @@
 Container Line | Container Cell
 Internal Packing List Line | Internal Packing List Cell
 Inventory Line | Inventory Cell
+Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
 Purchase Order | Discount Line
 Purchase Order | Tax Line

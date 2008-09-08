@@ -14,6 +14,7 @@ Inventory | Inventory Line
 Order Rule | Category Divergence Tester
 Order Rule | Property Divergence Tester
 Order Rule | Quantity Divergence Tester
+Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
 Purchase Order Line | Purchase Order Line
 Purchase Order Module | Purchase Order
