@@ -1107,6 +1107,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
       reindex_kw = self.getDefaultReindexParameterDict()
       if reindex_kw is not None:
+        reindex_activate_kw = reindex_kw.pop('activate_kw', None)
+        if reindex_activate_kw is not None:
+          reindex_activate_kw = reindex_activate_kw.copy()
+          if activate_kw is not None:
+            # activate_kw parameter takes precedence
+            reindex_activate_kw.update(activate_kw)
+          activate_kw = reindex_activate_kw
         kw.update(reindex_kw)
 
       group_id_list  = []
