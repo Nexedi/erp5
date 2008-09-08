@@ -105,7 +105,7 @@ def enableActivityCreationTrace():
 
 def disableActivityCreationTrace():
   global activity_creation_trace
-  activity_creation_trace = false
+  activity_creation_trace = False
 
 # Here go ActivityBuffer instances
 # Structure:
