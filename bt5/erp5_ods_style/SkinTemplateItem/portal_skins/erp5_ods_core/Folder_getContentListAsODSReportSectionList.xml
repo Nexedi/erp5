@@ -66,14 +66,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
-from Products.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import translateString\n
 \n
 form = context\n
 request = context.REQUEST\n
 report_section_list = []\n
 portal = context.getPortalObject()\n
 selection_name=request.form.get(\'selection_name\', None)\n
-translate = lambda msg: Message(\'ui\', msg)\n
+\n
 \n
 def getReportSectionListForObject(doc):\n
   """ Get all possible report section for object. """\n
@@ -90,7 +90,7 @@ def getReportSectionListForObject(doc):\n
       report_section_list.append(ReportSection(path = doc.getPath(),\n
                                                form_id = form_id,\n
                                                level = 2,\n
-                                               title = \'%s - %s\' % (title, translate(action_title))))\n
+                                               title = \'%s - %s\' % (title, translateString(action_title))))\n
   return report_section_list\n
 \n
 if selection_name is not None:\n
@@ -153,7 +153,7 @@ return report_section_list\n
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>translateString</string>
                             <string>context</string>
                             <string>form</string>
                             <string>_getattr_</string>
@@ -162,7 +162,6 @@ return report_section_list\n
                             <string>portal</string>
                             <string>None</string>
                             <string>selection_name</string>
-                            <string>translate</string>
                             <string>getReportSectionListForObject</string>
                             <string>checked_uid_list</string>
                             <string>getObject</string>
