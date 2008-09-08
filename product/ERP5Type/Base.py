@@ -3577,12 +3577,28 @@ class Base( CopyContainer,
     tv[key] = kw
 
   security.declareProtected(Permissions.View, 'getDefaultReindexParameterDict' )
-  def getDefaultReindexParameterDict(self):
+  def getDefaultReindexParameterDict(self, inherit_placess=True):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
     tv = getTransactionalVariable(self)
-    key = ('default_reindex_parameter', id(aq_base(self)))
-    return tv.get(key)
+    if inherit_placess:
+      placeless = tv.get(('default_reindex_parameter', ))
+      if placeless is not None:
+        placeless = placeless.copy()
+    else:
+      placeless = None
+    local = tv.get(('default_reindex_parameter', id(aq_base(self))))
+    if local is None:
+      result = placeless
+    else:
+      if placeless is None:
+        result = local.copy()
+      else:
+        # local defaults takes precedence over placeless defaults.
+        result = {}
+        result.update(placeless)
+        result.update(local)
+    return result
 
   security.declareProtected(Permissions.View, 'isItem' )
   def isItem(self):
