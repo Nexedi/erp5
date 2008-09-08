@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -69,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Return a list of translated strings corresponding to errors for this movement validity\n
-translate = context.Base_translateString\n
+Base_translateString = context.Base_translateString\n
 \n
 def translateString(msg):\n
   try:\n
@@ -82,12 +79,12 @@ def translateString(msg):\n
   translate_kw = {\'catalog\':\'content\'}\n
   if mapping is not None:\n
     translate_kw[\'mapping\'] = mapping\n
-  return translate(msg, **translate_kw)\n
+  return Base_translateString(msg, **translate_kw)\n
 \n
 \n
 error_list = context.checkImmobilisationConsistency(to_translate=1)\n
 if len(error_list) == 0:\n
-  return [translate(\'Valid\', \'content\')]\n
+  return [Base_translateString(\'Valid\')]\n
 \n
 translated_list = []\n
 for error in error_list:\n
@@ -147,7 +144,7 @@ return translated_list\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>translate</string>
+                            <string>Base_translateString</string>
                             <string>translateString</string>
                             <string>error_list</string>
                             <string>len</string>
@@ -175,6 +172,12 @@ return translated_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Immobilisation_getValidityErrorTranslatedList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
