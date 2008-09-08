@@ -68,6 +68,9 @@
             <value> <string>translateString = context.Base_translateString\n
 request = context.REQUEST\n
 \n
+# display only title line instead of description\n
+use_line_title =  request.get(\'use_line_title\', 0)\n
+\n
 def getFieldAsString(field):\n
   return \', \'.join(getFieldAsLineList(field))\n
 \n
@@ -145,7 +148,10 @@ def unicodeDict(d):\n
 for line in getSubLineList(context):\n
   prod_desc = line.getResource() is not None and \\\n
            line.getResourceValue().getDescription() or line.getResourceTitle()\n
-  desc = getProductAndLineDesc(prod_desc, line.getDescription())\n
+  if use_line_title:\n
+    desc = (line.getTitle(), )\n
+  else:\n
+    desc = getProductAndLineDesc(prod_desc, line.getDescription())\n
   if getattr(line, \'hasLineContent\', None) is not None\\\n
         and line.hasLineContent()\\\n
         or getattr(line, \'hasCellContent\', None) is not None\\\n
@@ -429,6 +435,7 @@ return unicodeDict(data_dict)\n
                             <string>context</string>
                             <string>translateString</string>
                             <string>request</string>
+                            <string>use_line_title</string>
                             <string>getFieldAsLineList</string>
                             <string>getFieldAsString</string>
                             <string>getProductAndLineDesc</string>
