@@ -44,7 +44,8 @@ import cookielib
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
-  
+referer  = None
+
 def _setSuperSecurityManager(self):
   """ Change to super user account. """
   user = self.getWrappedOwner()
@@ -148,7 +149,12 @@ class WizardTool(BaseTool):
       subpath = path[:-1]
       subpath.reverse()
       request.set('traverse_subpath', subpath)
+      # initialize our root proxy URL which we use for a referer
+      global referer
       path[:-1] = []
+      if referer is None:
+        referer = '%s/portal_wizard/proxy/%s/view' %(self.getPortalObject().absolute_url(), \
+                                                                                   '/'.join(subpath[:3]))      
 
   def _getProxyURL(self, subpath='', query=''):
     # Helper method to construct an URL appropriate for proxying a request.
@@ -206,18 +212,19 @@ class WizardTool(BaseTool):
   # and errors automatically. This is necessary because the proxy
   # should pass all results to a client as they are.
   simple_opener_director = urllib2.OpenerDirector()
-  for name in ('ProxyHandler', 'UnknownHandler', 'HTTPHandler',
-               'FTPHandler', 'FileHandler', 'HTTPSHandler'):
+  for name in ('ProxyHandler', 'UnknownHandler', \
+               'HTTPHandler', 'FTPHandler', 
+               'FileHandler', 'HTTPSHandler',):
     handler = getattr(urllib2, name, None)
     if handler is not None:
       simple_opener_director.add_handler(handler())
   # add cookie support
-  simple_opener_director.add_handler(urllib2.HTTPCookieProcessor(cookiejar))  
+  simple_opener_director.add_handler(urllib2.HTTPCookieProcessor(cookiejar))
  
   security.declareProtected(Permissions.View, 'proxy')
   def proxy(self, **kw):
     """Proxy a request to a server."""
-    global cookiejar
+    global cookiejar, referer
     if self.REQUEST['REQUEST_METHOD'] != 'GET':
       # XXX this depends on the internal of HTTPRequest.
       pos = self.REQUEST.stdin.tell()
@@ -229,7 +236,7 @@ class WizardTool(BaseTool):
       data = None
 
     content_type = self.REQUEST.get_header('content-type')
-
+  
     # XXX if ":method" trick is used, then remove it from subpath.
     if self.REQUEST.traverse_subpath:
       if data is not None:
@@ -280,6 +287,8 @@ class WizardTool(BaseTool):
     # XXX: include cookies from local browser (like show/hide tabs) which are set directly
     # by client JavaScript code (i.e. not sent from server)
     
+    # add HTTP referer (especially useful in Localizer when changing language)
+    header_dict['REFERER'] = self.REQUEST.get('HTTP_REFERER', None) or referer
     request = urllib2.Request(url, data, header_dict)
     f = self.simple_opener_director.open(request)
 
@@ -287,10 +296,14 @@ class WizardTool(BaseTool):
       data = f.read()
       metadata = f.info()
       response = self.REQUEST.RESPONSE
+      if f.code> 300 and f.code <400:
+        # ignore 'location' header for redirects from server. If server requires redirect then 
+        # redirect it ONLY to root web siteor current location
+        response['location'] =  header_dict['REFERER']
       response.setStatus(f.code, f.msg)
       response.setHeader('content-type', metadata.getheader('content-type'))
       # FIXME this list should be confirmed with the RFC 2616.
-      for k in ('location', 'uri', 'cache-control', 'last-modified',
+      for k in ('uri', 'cache-control', 'last-modified',
                 'etag', 'if-matched', 'if-none-match',
                 'if-range', 'content-language', 'content-range'
                 'content-location', 'content-md5', 'expires',
@@ -298,7 +311,6 @@ class WizardTool(BaseTool):
                 'content-length', 'age'):
         if k in metadata:
           response.setHeader(k, metadata.getheader(k))
-
       return data
     finally:
       f.close()
