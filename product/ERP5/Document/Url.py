@@ -105,6 +105,7 @@ class Url(Coordinate, Base, UrlMixIn):
   property_sheets = (   PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.Url
+                      , PropertySheet.SortIndex
                       )
 
   security.declareProtected(Permissions.AccessContentsInformation,
