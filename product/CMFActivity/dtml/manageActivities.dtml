@@ -43,6 +43,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Processing Node</th>
     <th align="left" valign="top">Priority</th>
     <th align="left" valign="top">Processing</th>
+    <th align="left" valign="top">Call traceback</th>
   </tr>
   <dtml-in expr="getMessageList(include_processing=1)">
       <tr>
@@ -61,6 +62,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="top">
           <dtml-if expr="processing is not None">
              <dtml-var processing>
+          </dtml-if>
+        </td>
+        <td align="left" valign="top">
+          <dtml-if expr="call_traceback is not None">
+            <pre><dtml-var call_traceback></pre>
           </dtml-if>
         </td>
       </tr>
