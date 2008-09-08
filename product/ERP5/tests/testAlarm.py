@@ -237,6 +237,32 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=right_third_date)
     self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
 
+  def test_07a_Every4DaysSomeHours(self, quiet=0, run=run_all_test):
+    """- every 4 days at 14 and 15 and 17"""
+    if not run: return
+    if not quiet:
+      message = 'Every 4 Days Some Hours'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    right_first_date = DateTime(self.date_format % (2006,10,7,14,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,7,15,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,7,17,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,11,14,00,00))
+    alarm = self.newAlarm()
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityDayFrequency(4)
+    alarm.setPeriodicityHourList((14,15,17))
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(alarm.getAlarmDate(),right_first_date)
+    alarm.setNextAlarmDate(current_date=right_first_date)
+    self.assertEquals(alarm.getAlarmDate(),right_second_date)
+    alarm.setNextAlarmDate(current_date=right_second_date)
+    self.assertEquals(alarm.getAlarmDate(),right_third_date)
+    alarm.setNextAlarmDate(current_date=right_third_date)
+    self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
+
   def test_08_SomeWeekDaysSomeHours(self, quiet=0, run=run_all_test):
     """- every monday and friday, at 6 and 15"""
     if not run: return
