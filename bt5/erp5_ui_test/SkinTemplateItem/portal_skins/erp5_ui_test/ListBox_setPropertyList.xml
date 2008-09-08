@@ -104,6 +104,7 @@
   field_editable = \'\',\n
   field_page_template = \'\',\n
   field_external_validator = \'\',\n
+  field_untranslatable_columns = \'\',\n
 )\n
 \n
 d.update(context.REQUEST)\n
