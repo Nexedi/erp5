@@ -730,6 +730,17 @@ class ObjectTemplateItem(BaseTemplateItem):
       # sort to add objects before their subobjects
       keys = self._objects.keys()
       keys.sort()
+      # Postpone indexations after unindexations.
+      # This avoids alarming error messages about a single uid being used
+      # by "deleted" path and reindexed object. This can happen here for
+      # objects on which the uid was restored: previous object was deleted,
+      # hence the "deleted" path, and new object does have the same uid.
+      original_reindex_parameters = context.getPlacelessDefaultReindexParameters()
+      if original_reindex_parameters is None:
+        original_reindex_parameters = {}
+      activate_kw = original_reindex_parameters.get('activate_kw', {}).copy()
+      activate_kw['after_method_id'] = 'unindexObject'
+      context.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, **original_reindex_parameters)
       for path in keys:
         if update_dict.has_key(path) or force:
           # get action for the oject
@@ -865,15 +876,6 @@ class ObjectTemplateItem(BaseTemplateItem):
             if obj.title != 'BROKEN':
               container._mapTransform(obj)
           recurse(restoreHook, obj)
-          # Reindex created object (if possible) after all unindexObject
-          # activites are finished, to make sure it is indexed in the end.
-          recursiveReindexObject = getattr(obj, 'recursiveReindexObject', None)
-          if recursiveReindexObject is not None:
-            # XXX: Using an hardcoded tag to make sure this activity does not
-            # get merged and dropped because of another existing
-            # 'recursiveReindexObject' on same path.
-            recursiveReindexObject(activate_kw={'tag': 'uid_preservation',
-              'after_method_id': 'unindexObject'})
       # now put original order group
       # we remove object not added in forms
       # we put old objects we have kept
@@ -924,6 +926,8 @@ class ObjectTemplateItem(BaseTemplateItem):
                 group_value_list.remove(widget_id)
           # now set new group object
           obj.groups = new_groups_dict
+      # Remove after_method_id
+      context.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
     else:
       # for old business template format
       BaseTemplateItem.install(self, context, trashbin, **kw)
