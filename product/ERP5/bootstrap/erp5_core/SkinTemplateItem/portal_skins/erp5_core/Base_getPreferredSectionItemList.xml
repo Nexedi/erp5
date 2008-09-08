@@ -69,7 +69,10 @@
                        context.portal_preferences.getPreferredAccountingTransactionSectionCategory() \n
 \n
 section_value = context.portal_categories.resolveCategory(section)\n
-value_list = section_value.getGroupRelatedValueList(portal_type=portal_type)\n
+value_list = section_value.getGroupRelatedValueList(portal_type=portal_type,\n
+                                                    checked_permission=\'View\')\n
+value_list = [r for r in value_list\n
+              if r.getProperty(\'validation_state\') not in (\'invalidated\', \'deleted\')]\n
 \n
 # convert to ListField format\n
 return [(\'\', \'\')] + [(obj.getTitle(), obj.getRelativeUrl()) for obj in value_list]\n
@@ -130,6 +133,7 @@ return [(\'\', \'\')] + [(obj.getTitle(), obj.getRelativeUrl()) for obj in value
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>r</string>
                             <string>obj</string>
                           </tuple>
                         </value>
@@ -152,6 +156,12 @@ return [(\'\', \'\')] + [(obj.getTitle(), obj.getRelativeUrl()) for obj in value
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getPreferredSectionItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
