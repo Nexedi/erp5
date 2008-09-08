@@ -95,7 +95,6 @@
                     <key> <string>footer</string> </key>
                     <value>
                       <list>
-                        <string>next_step</string>
                         <string>form_submission_wizard</string>
                       </list>
                     </value>
