@@ -45,6 +45,7 @@ Requirement | fast_input
 Requirement | project_list
 Requirement | reference_generate
 Requirement | view
+Sale Order Line | create_task
 Sale Order Line | line_profile
 Sale Order Line | project
 Sale Order Milestone | line_profile
