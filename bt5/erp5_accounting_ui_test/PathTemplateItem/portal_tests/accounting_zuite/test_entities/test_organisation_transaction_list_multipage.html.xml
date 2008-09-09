@@ -116,6 +116,11 @@ Test Transactions related to an Organisation, with multiple pages and date range
 \n
 <!-- {{{ check second page -->\n
 <tr>\n
+  <td>assertSelected</td>\n
+  <td>listbox_page_selection</td>\n
+  <td>1 of 3</td>\n
+</tr>\n
+<tr>\n
   <td>selectAndWait</td>\n
   <td>listbox_page_selection</td>\n
   <td>2 of 3</td>\n
@@ -208,6 +213,11 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <!-- }}} -->\n
 \n
 <!-- {{{ tear down -->\n
+<tr>\n
+  <td>assertSelected</td>\n
+  <td>listbox_page_selection</td>\n
+  <td>2 of 3</td>\n
+</tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>listbox_page_selection</td>\n

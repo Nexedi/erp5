@@ -232,6 +232,11 @@ Test Transactions related to an Organisation, with start date\n
 \n
 <!-- Second page {{{ -->\n
 <tr>\n
+  <td>assertSelected</td>\n
+  <td>listbox_page_selection</td>\n
+  <td>label=1 of 3</td>\n
+</tr>\n
+<tr>\n
   <td>selectAndWait</td>\n
   <td>listbox_page_selection</td>\n
   <td>label=2 of 3</td>\n
@@ -287,6 +292,11 @@ Test Transactions related to an Organisation, with start date\n
 <!-- }}} -->\n
 \n
 <!-- {{{ Tear down -->\n
+<tr>\n
+  <td>assertSelected</td>\n
+  <td>listbox_page_selection</td>\n
+  <td>label=2 of 3</td>\n
+</tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>listbox_page_selection</td>\n
