@@ -189,7 +189,6 @@ button {\n
 div.adminToolbox li > a:hover,\n
 button:hover {\n
   color: #333;\n
-  background: #b0cfcb;\n
   border-color: #9abdb7;\n
 }\n
 \n

@@ -279,7 +279,6 @@ div#main_content .ListSummary table {\n
   background: #fff url(erp5-website-field.png) top repeat-x;\n
   border: 1pt solid #ccc;\n
   color: #666;\n
-  padding: 2px;\n
 }\n
 \n
 div#main_content .ListContent table {\n
@@ -290,7 +289,6 @@ div#main_content .ListContent table {\n
 div#main_content .ListContent td {\n
   padding: .1em;\n
   border: 1pt solid #adb9cc;\n
-  vertical-align: top;\n
 }\n
 \n
 div#main_content .ListContent td.Data  {\n
@@ -415,6 +413,29 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {\n
   border: 1px #999 solid;\n
   text-decoration: none;\n
   background: #eee;\n
+}\n
+\n
+\n
+/* listbox button style : */\n
+button, select, input {\n
+  vertical-align: middle;\n
+}\n
+\n
+button span {\n
+  background-color: inherit;\n
+  color: #000;\n
+}\n
+\n
+button.sort_button {\n
+  background-color: inherit;\n
+  color: inherit;\n
+  border-width: 0;\n
+  cursor: pointer;\n
+}\n
+\n
+button.sort_button span {\n
+  color: inherit;\n
+  text-decoration: underline;\n
 }\n
 
 
