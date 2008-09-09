@@ -78,11 +78,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
+                    <key>                 <string>base_category</string> </key>
                     <value> <string>source_project</string> </value>
                 </item>
                 <item>
-                    <key> <string>catalog_index</string> </key>
+                    <key>                 <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
                 <item>
@@ -98,13 +98,9 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key>                 <string>portal_type</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>Category</string>
-                          <string>Category</string>
-                        </tuple>
                         <tuple>
                           <string>Project</string>
                           <string>Project</string>
@@ -125,7 +121,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key>                 <string>title</string> </key>
                     <value> <string>Source Project</string> </value>
                 </item>
               </dictionary>
