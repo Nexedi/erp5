@@ -68,10 +68,8 @@ It is no longer possible to add accounting transactions in this period. A balanc
                     <value>
                       <tuple>
                         <string>Assignee</string>
-                        <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -89,12 +87,9 @@ It is no longer possible to add accounting transactions in this period. A balanc
                     <value>
                       <tuple>
                         <string>Assignee</string>
-                        <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Member</string>
                       </tuple>
                     </value>
                 </item>
