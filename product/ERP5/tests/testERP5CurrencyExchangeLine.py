@@ -1,0 +1,239 @@
+#############################################################################
+#
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Aurelien Calonne <aurel@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+##############################################################################
+import unittest
+import os
+from DateTime import DateTime
+from zLOG import LOG
+from Products.CMFCore.utils import _checkPermission
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import reindex
+from Testing import ZopeTestCase
+from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
+from Products.ERP5.tests.testAccounting import AccountingTestCase
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
+from Products.ERP5Form.Document.Preference import Priority
+
+QUIET = False
+run_all_test = True
+
+
+def isSameSet(a, b):
+  for i in a:
+    if not(i in b) : return 0
+  for i in b:
+    if not(i in a): return 0
+  if len(a) != len(b) : return 0
+  return 1
+
+def printAndLog(msg):
+  """
+  A utility function to print a message
+  to the standard output and to the LOG
+  at the same time
+  """
+  msg = str(msg)
+  ZopeTestCase._print('\n ' + msg)
+  LOG('Testing... ', 0, msg)
+# Associate transaction portal type to the corresponding line portal type.
+transaction_to_line_mapping = {
+    'Accounting Transaction': 'Accounting Transaction Line',
+    'Balance Transaction': 'Balance Transaction Line',
+    'Purchase Invoice Transaction': 'Purchase Invoice Transaction Line',
+    'Sale Invoice Transaction': 'Sale Invoice Transaction Line',
+    'Payment Transaction': 'Accounting Transaction Line',
+  }
+
+class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
+  """
+  Mixin class for unit test of banking operations
+  """
+  username = 'username'
+ 
+  def login(self,name=username, quiet=0, run=run_all_test):
+    uf = self.getPortal().acl_users
+    uf._doAddUser(self.username, '', ['Assignee', 'Assignor', 'Author'], [])
+    user = uf.getUserById(self.username).__of__(uf)
+    newSecurityManager(None, user)
+   
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates we need to run the test.
+      This method is called during the initialization of the unit test by
+      the unit test framework in order to know which business templates
+      need to be installed to run the test on.
+    """
+    return ('erp5_base',
+             'erp5_pdm',
+            'erp5_accounting',
+	    'erp5_accounting_ui_test'
+            )
+
+  def enableLightInstall(self):
+    """
+      Return if we should do a light install (1) or not (0)
+      Light install variable is used at installation of categories in business template
+      to know if we wrap the category or not, if 1 we don't use and installation is faster
+    """
+    return 1 # here we want a light install for a faster installation
+
+  def enableActivityTool(self):
+    """
+      Return if we should create (1) or not (0) an activity tool
+      This variable is used at the creation of the site to know if we use
+      the activity tool or not
+    """
+    return 1 # here we want to use the activity tool
+
+  
+
+  def createManagerAndLogin(self):
+    """
+      Create a simple user in user_folder with manager rights.
+      This user will be used to initialize data in the method afterSetup
+    """
+    self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
+    self.login('manager')
+
+
+  def getCurrencyModule(self):
+    """
+    Return the Currency Module
+    """
+    return getattr(self.getPortal(), 'currency_module', None)
+
+  def stepTic(self, **kwd):
+    """
+    The is used to simulate the zope_tic_loop script
+    Each time this method is called, it simulates a call to tic
+    which invoke activities in the Activity Tool
+    """
+    # execute transaction
+    get_transaction().commit()
+    self.tic()
+
+	
+  def test_01_UseCurrencyExchangeLineForDestination(self, quiet=0,
+                                                  run=run_all_test):
+    """
+      Create a currency exchange line for a currency and then convert
+      destination price using that currency exchange line
+    """
+    if not run: return
+    if not quiet:printAndLog('test_01_UseCurrencyExchangeLineForDestination')
+    portal = self.getPortal()
+    self.organisation_module = self.portal.organisation_module
+    self.organisation1 = self.organisation_module.my_organisation
+    new_currency = portal.currency_module.newContent(portal_type='Currency')
+    new_currency.setReference('XOF')
+    new_currency.setTitle('Francs CFA')
+    new_currency.setBaseUnitQuantity(1.00)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
+    euro = self.portal.currency_module.euro
+    x_curr_ex_line = euro.newContent(
+	                          portal_type='Currency Exchange Line',
+				  price_currency=new_currency.getRelativeUrl())
+    x_curr_ex_line.setTitle('Euro to Francs CFA')
+    x_curr_ex_line.setBasePrice(655.957)
+    x_curr_ex_line.setStartDate(DateTime(2008,9,8))
+    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
+    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    x_curr_ex_line.validate()
+    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
+    accounting_module = self.portal.accounting_module
+    transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               stop_date=DateTime('2008/09/08'),
+               source_section_value=self.organisation_module.supplier,
+	       lines=(dict(
+	           destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    transaction.AccountingTransaction_convertDestinationPrice(form_id='view')
+    line_list = transaction.contentValues(
+               portal_type=portal.getPortalAccountingMovementTypeList())
+    for line in line_list:
+	self.assertEquals(line.getDestinationTotalAssetPrice(),round(655.957*
+                                          line.getQuantity()))
+					  
+  def test_01_UseCurrencyExchangeLineForSource(self, quiet=0,
+                                                  run=run_all_test):
+    """
+      Create a currency exchange line for a currency and then convert
+      source price using that currency exchange line
+    """
+    if not run: return
+    if not quiet:printAndLog('test_01_UseCurrencyExchangeLineForSource')
+    portal = self.getPortal()
+    self.organisation_module = self.portal.organisation_module
+    self.organisation1 = self.organisation_module.my_organisation
+    new_currency = portal.currency_module.newContent(portal_type='Currency')
+    new_currency.setReference('XOF')
+    new_currency.setTitle('Francs CFA')
+    new_currency.setBaseUnitQuantity(1.00)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
+    euro = self.portal.currency_module.euro
+    x_curr_ex_line = euro.newContent(
+	                          portal_type='Currency Exchange Line',
+				  price_currency=new_currency.getRelativeUrl())
+    x_curr_ex_line.setTitle('Euro to Francs CFA')
+    x_curr_ex_line.setBasePrice(655.957)
+    x_curr_ex_line.setStartDate(DateTime(2008,9,8))
+    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
+    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    x_curr_ex_line.validate()
+    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
+    accounting_module = self.portal.accounting_module
+    transaction = self._makeOne(
+               portal_type='Sale Invoice Transaction',
+               start_date=DateTime('2008/09/08'),
+               destination_section_value=self.organisation_module.supplier,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    transaction.AccountingTransaction_convertSourcePrice(form_id='view')
+    line_list = transaction.contentValues(
+               portal_type=portal.getPortalAccountingMovementTypeList())
+    for line in line_list:
+	self.assertEquals(line.getSourceTotalAssetPrice(),round(655.957*
+                                          line.getQuantity()))
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestERP5CurrencyMixin))
+  return suite
