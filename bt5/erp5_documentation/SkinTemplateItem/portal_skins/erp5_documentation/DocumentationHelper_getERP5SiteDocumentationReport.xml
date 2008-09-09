@@ -65,21 +65,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-tab_url = context.absolute_url().split(\':\')\n
-host =  \'%s:%s\' % (tab_url[0],tab_url[1])\n
-url = tab_url[2].split(\'/\')\n
-new_url = \'/\'.join(url[:-1])\n
-portal_url = \'%s:%s\' % (host,new_url)\n
+            <value> <string>from ZTUtils import make_query\n
+portal_url = context.getPortalObject().portal_url()\n
 uri = context.getPortalObject().getUrl()\n
-if portal_skin==\'ODT\':\n
-  return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewReport?uri=%s&class_name=ERP5SiteDocumentationHelper&portal_skin=ODT\' % (portal_url, uri))\n
+if portal_skin == \'ODT\':\n
+  query = make_query(uri=uri, class_name="ERP5SiteDocumentationHelper", portal_skin="ODT", business_template_list=business_template_list)\n
+  return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewReport?%s\' % (portal_url, query) )\n
 else:\n
-  return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewReport?uri=%s&class_name=ERP5SiteDocumentationHelper\' % (portal_url, uri))\n
-
-
-]]></string> </value>
+  query = make_query(uri=uri, class_name="ERP5SiteDocumentationHelper", portal_skin="View", business_template_list=business_template_list)\n
+  return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewReport?%s\' % (portal_url, query) )\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -95,7 +90,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_skin=\'\'</string> </value>
+            <value> <string>portal_skin=\'\', business_template_list=[]</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,22 +110,21 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>portal_skin</string>
+                            <string>business_template_list</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>tab_url</string>
-                            <string>_getitem_</string>
-                            <string>host</string>
-                            <string>url</string>
-                            <string>new_url</string>
                             <string>portal_url</string>
                             <string>uri</string>
+                            <string>query</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,6 +138,7 @@ else:\n
             <value>
               <tuple>
                 <string></string>
+                <list/>
               </tuple>
             </value>
         </item>

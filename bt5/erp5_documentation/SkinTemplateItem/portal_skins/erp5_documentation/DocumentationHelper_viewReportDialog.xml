@@ -109,7 +109,9 @@
                 <item>
                     <key>                 <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_business_template_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
