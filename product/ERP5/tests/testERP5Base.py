@@ -1282,7 +1282,7 @@ class TestERP5Base(ERP5TypeTestCase):
 
     # if year is not passed, the script returns the age in a translated string.
     age_as_text = person.Person_getAge(at_date=DateTime(2002, 2, 4))
-    self.assertEquals(age_as_text, "1 Years Old")
+    self.assertEquals(age_as_text, "1 years old")
 
   def test_AssignmentWorkflow(self):
     person = self.getPersonModule().newContent(portal_type='Person',)

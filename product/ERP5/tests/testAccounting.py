@@ -3466,7 +3466,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     ret = self.accounting_module.Base_doAction(
         select_action='template %s' % template.getRelativeUrl(),
         form_id='', cancel_url='')
-    self.failUnless('Template%20Created' in ret, ret)
+    self.failUnless('Template%20created.' in ret, ret)
     self.assertEquals(2, len(self.accounting_module.contentValues()))
 
 
