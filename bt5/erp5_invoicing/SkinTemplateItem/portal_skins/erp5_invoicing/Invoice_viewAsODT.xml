@@ -355,7 +355,7 @@ AAA=</string> </value>
                         <table:table-column table:style-name=\'Tableau2.E1.1\'/>\n
                         <table:table-column table:style-name=\'Tableau2.E1.2\'/>\n
                         <table:table-row table:style-name=\'Tableau2.E1.1\'>\n
-                          <table:table-cell table:style-name=\'Tableau2.A1\' office:value-type=\'string\' tal:define=\'orig_string string:Reference; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                          <table:table-cell table:style-name=\'Tableau2.A1\' office:value-type=\'string\' tal:define=\'orig_string string:Invoice Number; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                             <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/>:</text:p>\n
                             <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>\n
                           </table:table-cell>\n
