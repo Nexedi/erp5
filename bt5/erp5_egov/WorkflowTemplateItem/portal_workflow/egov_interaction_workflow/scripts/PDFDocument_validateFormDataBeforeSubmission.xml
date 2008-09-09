@@ -74,7 +74,7 @@ N_ = portal.Base_translateString\n
 portal_type = document.getPortalType()\n
 \n
 # dict of required documents\n
-attachement_method = getattr(context, \'%s_getApplicationIncomeDict\' % context.getPortalType().replace(\' \', \'\'))\n
+attachement_method = getattr(context, \'%s_getApplicationIncomeDict\' % portal_type.replace(\' \', \'\'))\n
 attachement_type_dict = attachement_method()\n
 \n
 # if the portal type is not mapped, no attached files are required\n
