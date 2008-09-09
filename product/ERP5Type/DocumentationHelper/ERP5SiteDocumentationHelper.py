@@ -86,7 +86,7 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     """
     REQUEST = getattr(self, 'REQUEST', None)
     business_template_list = [bt.getTitle() for bt in self.getDocumentedObject().portal_templates.objectValues()]
-    if REQUEST is not None:
+    if REQUEST is not None and "business_template_list" in REQUEST.keys():
       business_template_list = REQUEST.get("business_template_list", [])
     return [(bt.getId(),
               getattr(bt, "title", ''),
@@ -95,7 +95,7 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
               getattr(bt, "revision", ''))
             for bt in self.getDocumentedObject().portal_templates.objectValues()
             if bt.getInstallationState() == 'installed' and bt.getTitle() in business_template_list]
-
+  
   security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateURIList' )
   def getBusinessTemplateURIList(self):
     """
