@@ -442,7 +442,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>DeclarationTVA_ListBox_asAttachedFile</string> </value>
+                    <value> <string>PDFDocumentListBox_asAttachedFile</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -508,6 +508,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Attachments</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
