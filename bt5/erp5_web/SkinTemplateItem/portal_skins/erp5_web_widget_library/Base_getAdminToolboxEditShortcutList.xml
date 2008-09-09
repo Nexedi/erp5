@@ -105,8 +105,10 @@ def getActionTitleForContext(context, portal_type):\n
                                  mapping=dict(portal_type=portal_type))\n
   return edit_title\n
 \n
+editable_mode = int(request.form.get(\'editable_mode\', \n
+                                     request.get(\'editable_mode\', 0)))\n
 # Append a button to edit the current document\n
-if not bool(request.form.get(\'editable_mode\', 0)):\n
+if not editable_mode:\n
   # The title is called Edit only if the document can be edited\n
   if portal_type == \'Web Section\' and context.getDefaultDocumentValue() is not None:\n
     # try to show link to default page\n
@@ -233,7 +235,8 @@ return result\n
                             <string>getattr</string>
                             <string>editable_absolute_url</string>
                             <string>getActionTitleForContext</string>
-                            <string>bool</string>
+                            <string>int</string>
+                            <string>editable_mode</string>
                             <string>None</string>
                             <string>default_document</string>
                             <string>edit_title</string>
