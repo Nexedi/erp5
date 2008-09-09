@@ -761,3 +761,45 @@ msgstr "Brouillard"
 
 msgid "text entered at the right of the picture is wrong"
 msgstr "le texte saisi à droite de l'image est incorrect"
+
+msgid "You have to join the boss of the company identity card"
+msgstr "Vous devez joindre la carte d'identité du dirigeant de l'entreprise"
+
+msgid "You have to provide a M0 form copy"
+msgstr "Vous devez fournir une copie du formulaire M0"
+
+msgid "Sign"
+msgstr "Signer"
+
+msgid "submitted"
+msgstr "soumis"
+
+msgid "signed"
+msgstr "signé"
+
+msgid "archived"
+msgstr "archivé"
+
+msgid "validated"
+msgstr "validé"
+
+msgid "open"
+msgstr "ouvert"
+
+msgid "assigned"
+msgstr "assigné"
+
+msgid "completed"
+msgstr "Complété"
+
+msgid "suspended"
+msgstr "Suspendu"
+
+msgid "disapproved"
+msgstr "désapprouvé"
+
+msgid "approuved"
+msgstr "approuvé"
+
+msgid "draft"
+msgstr "brouillon"
