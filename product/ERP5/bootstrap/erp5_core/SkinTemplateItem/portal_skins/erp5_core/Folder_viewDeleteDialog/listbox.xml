@@ -124,6 +124,12 @@
             </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -138,11 +144,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>anchor</string> </key>
+                    <key> <string>anchor</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -169,7 +175,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -196,7 +202,7 @@
                     <value> <string>SEARCH_LIST</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
@@ -206,15 +212,15 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>search</string> </key>
+                    <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>select</string> </key>
+                    <key> <string>select</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>folder_delete_selection</string> </value>
                 </item>
                 <item>
@@ -222,7 +228,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Delete Objects</string> </value>
                 </item>
                 <item>
@@ -246,7 +252,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.getTemplateField().get_value(\'columns\') + [(\'related_object_list_quantity\', \'No related objects.\')]</string> </value>
+            <value> <string>python: field.getTemplateField().get_value(\'columns\') + [(\'related_object_list_quantity\', \'Number of Related Objects\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -262,7 +268,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.getTemplateField().get_value(\'editable_columns\') + [(\'related_object_list_quantity\', \'No related objects.\')]</string> </value>
+            <value> <string>python: field.getTemplateField().get_value(\'editable_columns\') + [(\'related_object_list_quantity\', \'Number of Related Objects\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

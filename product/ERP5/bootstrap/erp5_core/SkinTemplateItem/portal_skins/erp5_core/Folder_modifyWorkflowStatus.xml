@@ -92,7 +92,7 @@ context.activate(after_tag=tag).getTitle()\n
 \n
 return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                          context.absolute_url(), form_id,\n
-                        translateString("Workflow Modification in Progress")))\n
+                        translateString("Workflow modification in progress.")))\n
 </string> </value>
         </item>
         <item>
@@ -185,6 +185,12 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
         <item>
             <key> <string>title</string> </key>
             <value>                 <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
