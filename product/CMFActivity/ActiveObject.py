@@ -195,11 +195,11 @@ class ActiveObject(ExtensionClass.Base):
     tv[key] = kw
 
   security.declareProtected( permissions.View, 'getDefaultActivateParameterDict' )
-  def getDefaultActivateParameterDict(self, inherit_placess=True):
+  def getDefaultActivateParameterDict(self, inherit_placeless=True):
     # This method returns default activate parameters to self.
     # The result can be either a dict object or None.
     tv = getTransactionalVariable(self)
-    if inherit_placess:
+    if inherit_placeless:
       placeless = tv.get(('default_activate_parameter', ))
       if placeless is not None:
         placeless = placeless.copy()
