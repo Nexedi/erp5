@@ -100,7 +100,7 @@ for line in line_list:\n
    line.setDestinationTotalAssetPrice(\n
        round(exchange_ratio*(line.getQuantity())),precision)\n
 \n
-form_id=\'PurchaseInvoiceTransaction_viewAccounting\'\n
+\n
 msg = context.Base_translateString(\'Amount converted.\')\n
 \n
 # return to the feature module\n
@@ -122,7 +122,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -142,12 +142,13 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>Products.ERP5.Document.Document</string>
                             <string>ConversionError</string>
                             <string>_getattr_</string>
@@ -162,7 +163,6 @@ return context.Base_redirect(form_id,\n
                             <string>currency</string>
                             <string>exchange_ratio</string>
                             <string>round</string>
-                            <string>form_id</string>
                             <string>msg</string>
                             <string>dict</string>
                           </tuple>
@@ -176,7 +176,9 @@ return context.Base_redirect(form_id,\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
