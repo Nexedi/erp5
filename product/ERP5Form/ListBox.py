@@ -42,7 +42,7 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
 from Acquisition import aq_base, aq_self
-from zLOG import LOG, WARNING, INFO
+from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 
 from Globals import InitializeClass, Acquisition, get_request
@@ -51,7 +51,6 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 import md5
 import cgi
-from traceback import extract_stack
 
 # For compatibility with Python 2.3.
 try:
