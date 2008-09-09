@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -94,12 +91,6 @@ Test display of Account Module, with at_date parameter\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_edit:method</td>\n
-  <td></td>\n
-</tr>\n
-<!-- XXX manually clear the cache ? -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Select Language\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -310,12 +301,6 @@ Test display of Account Module, with at_date parameter\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_edit:method</td>\n
-  <td></td>\n
-</tr>\n
-<!-- XXX manually clear the cache ? -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Select Language\']</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n

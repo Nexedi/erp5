@@ -87,12 +87,6 @@ Test Transactions related to an Organisation, with start date\n
   <td>Base_edit:method</td>\n
   <td></td>\n
 </tr>\n
-<!-- XXX manually clear the cache ? -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Select Language\']</td>\n
-  <td></td>\n
-</tr>\n
 \n
 <tr>\n
   <td>selectAndWait</td>\n
@@ -335,12 +329,6 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_edit:method</td>\n
-  <td></td>\n
-</tr>\n
-<!-- XXX manually clear the cache ? -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Select Language\']</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
