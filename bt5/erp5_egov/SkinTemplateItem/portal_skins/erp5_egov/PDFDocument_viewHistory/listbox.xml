@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>description</string>
+                <string>css_class</string>
+                <string>columns</string>
+                <string>selection_name</string>
+                <string>default_params</string>
+                <string>page_template</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>action</string>
+                          <string>Action</string>
+                        </tuple>
+                        <tuple>
+                          <string>state</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>actor</string>
+                          <string>Actor</string>
+                        </tuple>
+                        <tuple>
+                          <string>time</string>
+                          <string>Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>assigned_function</string>
+                          <string>Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>assigned_site</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>assigned_group</string>
+                          <string>Group</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>error_message</string>
+                          <string>Error Message</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>css_class</string> </key>
+                    <value> <string>hidden_label</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>default_params</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
+                        </tuple>
+                        <tuple>
+                          <string>workflow_id</string>
+                          <string>egov_universal_workflow</string>
+                        </tuple>
+                        <tuple>
+                          <string>workflow_title</string>
+                          <string>Egov workflow</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>description</string> </key>
+                    <value> <string>All events related on your application</string> </value>
+                </item>
+                <item>
+                    <key> <string>disable_link</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewWorkflowHistory</string> </value>
+                </item>
+                <item>
+                    <key> <string>not_viewable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>page_template</string> </key>
+                    <value> <string>DeclarationTVA_ListBox_asHTML</string> </value>
+                </item>
+                <item>
+                    <key> <string>read_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key>                 <string>selection_name</string> </key>
+                    <value> <string>egov_workflow_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>viewable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>viewable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,3 +1,6 @@
+2008-09-09 fabien
+* report_section refactoring to be more generic and easier to customize with more pdf
+
 2008-08-26 fabien
 * add erp5_captcha skin folder
 * add portal_sessions tool
