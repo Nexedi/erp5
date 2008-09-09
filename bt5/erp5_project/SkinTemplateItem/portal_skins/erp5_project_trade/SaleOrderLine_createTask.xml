@@ -114,7 +114,7 @@ return task.Base_redirect(\'view\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, reference, source, source_section, destination_decision, destination_section, source_project, destination, start_date, stop_date, task_line_resource, task_line_quantity, task_line_price, task_line_quantity_unit, total_price, price_currency, description, **kw</string> </value>
+            <value> <string>title=None, reference=None, source=None, source_section=None, destination_decision=None, destination_section=None, source_project=None, destination=None, start_date=None, stop_date=None, task_line_resource=None, task_line_quantity=None, task_line_price=None, task_line_quantity_unit=None, total_price=None, price_currency=None, description=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -175,7 +175,25 @@ return task.Base_redirect(\'view\', \n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
