@@ -57,7 +57,7 @@
     <ul class="onleft">\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block> : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationStateTitle"/></span></li>\n
-      <li><tal:block i18n:translate="" i18n:domain="ui">Type</tal:block> : <span class="value"><tal:block tal:replace="here/getPortalType"></tal:block></span></li>\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Type</tal:block> : <span class="value"><tal:block  i18n:translate="" i18n:domain="ui" tal:content="here/getPortalType"></tal:block></span></li>\n
     </ul>\n
     <span class="onright">\n
       <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" href="./home" \n

@@ -56,8 +56,8 @@
   <div style="background-image: url(img/flag_of_senegal.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 95px; margin-left: 5px;">\n
     <ul class="onleft">\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block> : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
-      <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationState"/></span></li>\n
-      <li><tal:block i18n:translate="" i18n:domain="ui">Type</tal:block> : <span class="value"><tal:block tal:replace="here/getPortalType"></tal:block></span></li>\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationStateTitle"/></span></li>\n
+      <li><tal:block i18n:translate="" i18n:domain="ui">Type</tal:block> : <span class="value"><tal:block i18n:translate="" i18n:domain="ui" tal:content="here/getPortalType"></tal:block></span></li>\n
     </ul>\n
     <span class="onright">\n
       <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" href="./home" \n
@@ -66,7 +66,7 @@
         <a class="print" href="DeclarationTVA_viewDeclarationTVAAsPdf"\n
           tal:attributes="href python: context.getPrintFormUrl()" i18n:translate="" i18n:domain="ui">Print</a>\n
       </tal:block>      \n
-      <a class="help" href="./help" i18n:translate="" i18n:domain="ui">Help</a>\n
+      <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
     </span>\n
     <div class="clear">\n
     <div>  \n
