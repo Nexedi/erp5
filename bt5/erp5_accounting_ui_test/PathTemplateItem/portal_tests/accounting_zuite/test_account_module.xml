@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Zelenium.zuite</string>
-          <string>Zuite</string>
-        </tuple>
-        <none/>
+        <global name="Zuite" module="Products.Zelenium.zuite"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
