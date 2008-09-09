@@ -65,16 +65,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>column_item_list = [ (\'person_career_reference\', \'Employee Number\'),\n
-                     (\'person_title\', \'Name\'), ]\n
+            <value> <string>from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
+portal = context.getPortalObject()\n
+stool = portal.portal_simulation\n
 \n
-non_translatable_column_item_list = context\\\n
-        .PersonModule_getLeaveRequestReportListboxUntranslatableColumnList()\n
-non_translatable_column_item_list.sort(lambda a,b: cmp(a[1], b[1]))\n
+from_date = request[\'from_date\']\n
+to_date = request[\'to_date\']\n
 \n
-column_item_list.extend(non_translatable_column_item_list)\n
-column_item_list.append((\'total\', \'Total\'))\n
-return column_item_list\n
+result_list = [ ]\n
+\n
+# get all resources used for leave requests\n
+resource_list = []\n
+for inventory in stool.getInventoryList(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          portal_type=\'Leave Request Period\',\n
+                          group_by_resource=1):\n
+  resource_list.append(\n
+          (inventory.resource_relative_url,\n
+           portal.portal_categories.restrictedTraverse(\n
+                inventory.resource_relative_url).getTitle()))\n
+\n
+return result_list\n
 </string> </value>
         </item>
         <item>
@@ -118,10 +131,21 @@ return column_item_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>column_item_list</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
                             <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
                             <string>context</string>
-                            <string>non_translatable_column_item_list</string>
+                            <string>portal</string>
+                            <string>stool</string>
+                            <string>_getitem_</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>result_list</string>
+                            <string>resource_list</string>
+                            <string>_getiter_</string>
+                            <string>inventory</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +162,7 @@ return column_item_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PersonModule_getLeaveRequestReportListboxColumnList</string> </value>
+            <value> <string>PersonModule_getLeaveRequestReportListboxUntranslatableColumnList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
