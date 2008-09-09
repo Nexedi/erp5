@@ -261,12 +261,6 @@ div#main_content input[type="image"] {\n
   background-color: transparent;\n
 }\n
 \n
-div#main_content button {\n
-  margin: .8em .5em;\n
-  padding: .3em;\n
-}\n
-\n
-\n
 /* Default Listbox styling\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
 ------------------------------------------------------------------ */\n
@@ -423,7 +417,6 @@ button, select, input {\n
 \n
 button span {\n
   background-color: inherit;\n
-  color: #000;\n
 }\n
 \n
 button.sort_button {\n
