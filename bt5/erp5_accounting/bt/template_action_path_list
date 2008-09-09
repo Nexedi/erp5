@@ -17,6 +17,7 @@ Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | balance_sheet_report
 Accounting Transaction Module | bank_accounts_report
 Accounting Transaction Module | create_related_payments
+Accounting Transaction Module | fr_fiscal_report
 Accounting Transaction Module | general_ledger_export
 Accounting Transaction Module | general_ledger_report
 Accounting Transaction Module | grouping_reference_fast_input
@@ -33,19 +34,19 @@ Accounting Transaction Module | trial_balance_export
 Accounting Transaction Module | trial_balance_report
 Accounting Transaction Module | view
 Accounting Transaction | add_accounting_transaction_line
+Accounting Transaction | convert_destination_price
+Accounting Transaction | convert_source_price
 Accounting Transaction | create_new_file
 Accounting Transaction | create_reversal
 Accounting Transaction | destination_asset
 Accounting Transaction | details
 Accounting Transaction | document_list
-Accounting Transaction | profile_view
 Accounting Transaction | source_asset
 Accounting Transaction | view
 Balance Transaction Line | view
 Balance Transaction | add_balance_transaction_line
 Balance Transaction | destination_asset
 Balance Transaction | view
-Bank Account | jump_active_accounting_pref
 Bank Account | transactions
 Cash Register | jump_active_accounting_pref
 Cash Register | transactions
@@ -58,14 +59,14 @@ Organisation | jump_to_accounting
 Organisation | transactions
 Payment Rule | view
 Payment Transaction | add_accounting_transaction_line
+Payment Transaction | convert_destination_price
+Payment Transaction | convert_source_price
 Payment Transaction | create_new_file
 Payment Transaction | create_reversal
 Payment Transaction | destination_asset
 Payment Transaction | destination_view
 Payment Transaction | details
 Payment Transaction | document_list
-Payment Transaction | profile_view_destination
-Payment Transaction | profile_view_source
 Payment Transaction | related_invoice
 Payment Transaction | source_asset
 Payment Transaction | view
@@ -76,6 +77,8 @@ Preference | view_accounting
 Purchase Invoice Transaction Line | view
 Purchase Invoice Transaction Line | view_destination
 Purchase Invoice Transaction | add_purchase_invoice_transaction_line
+Purchase Invoice Transaction | convert_destination_price
+Purchase Invoice Transaction | convert_source_price
 Purchase Invoice Transaction | create_new_file
 Purchase Invoice Transaction | create_related_payment
 Purchase Invoice Transaction | create_reversal
@@ -83,12 +86,13 @@ Purchase Invoice Transaction | destination_asset
 Purchase Invoice Transaction | detail
 Purchase Invoice Transaction | document_list
 Purchase Invoice Transaction | jump_related_payment
-Purchase Invoice Transaction | profile_view
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | view
 Purchase Invoice Transaction | view_source
 Sale Invoice Transaction Line | view
 Sale Invoice Transaction | add_sale_invoice_transaction_line
+Sale Invoice Transaction | convert_destination_price
+Sale Invoice Transaction | convert_source_price
 Sale Invoice Transaction | create_new_file
 Sale Invoice Transaction | create_related_payment
 Sale Invoice Transaction | create_reversal
@@ -96,6 +100,5 @@ Sale Invoice Transaction | destination_asset
 Sale Invoice Transaction | detail
 Sale Invoice Transaction | document_list
 Sale Invoice Transaction | jump_to_related_payment
-Sale Invoice Transaction | profile_view
 Sale Invoice Transaction | source_asset
 Sale Invoice Transaction | view
