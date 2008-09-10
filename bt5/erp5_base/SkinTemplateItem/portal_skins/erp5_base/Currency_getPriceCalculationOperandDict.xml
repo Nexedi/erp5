@@ -65,16 +65,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"Search for all predicates that corresponds to this particular context"\n
-predicate_list = context.portal_domains.searchPredicateList(\n
-                 context=movement,portal_type=\'Currency Exchange Line\')\n
+            <value> <string>"""\n
+Search for all predicates that corresponds to this particular context\n
+and returns the base price of the resource\n
+This script derives form getPriceCalculationOperandDict and is invoked by getPrice.\n
+\n
+  movement -- transaction line\n
+\n
+  **kw -- dictionary containing all information of the transaction\n
 \n
 """\n
- For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
- with the reference currency\n
-"""\n
-for predicate in predicate_list:\n
-   return predicate.Resource_getPriceCalculationOperandDict(movement=predicate,**kw)\n
+#If getPrice is directly called on a resource, call directly\n
+#Resource_getPriceCalculationOperandDict on the resource\n
+if movement is None:\n
+  return context.Resource_getPriceCalculationOperandDict(**kw)\n
+else:\n
+  predicate_list = context.portal_domains.searchPredicateList(\n
+                 context=movement,portal_type=\'Currency Exchange Line\')\n
+# For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
+# with the reference currency\n
+  for predicate in predicate_list:\n
+     return predicate.Resource_getPriceCalculationOperandDict(movement=predicate,**kw)\n
 </string> </value>
         </item>
         <item>
@@ -91,7 +102,7 @@ for predicate in predicate_list:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default=None, movement, REQUEST=None, **kw</string> </value>
+            <value> <string>default=None,movement=None, REQUEST=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,12 +132,13 @@ for predicate in predicate_list:\n
                             <string>movement</string>
                             <string>REQUEST</string>
                             <string>kw</string>
+                            <string>None</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>predicate_list</string>
                             <string>_getiter_</string>
                             <string>predicate</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
