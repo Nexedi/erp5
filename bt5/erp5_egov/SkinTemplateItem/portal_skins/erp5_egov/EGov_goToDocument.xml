@@ -68,23 +68,19 @@
             <value> <string>portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-if application_number is not None:\n
+if not application_number and id:\n
+  application_number = id\n
+\n
+if application_number:\n
   document = context.portal_catalog.getResultValue(id=application_number)\n
   if document is not None:\n
     if document.getValidationState() == \'draft\':\n
       return document.Base_redirect(form_id=\'view\')\n
     return document.Base_redirect(form_id=\'PDFDocument_viewHistory\')\n
-else:\n
-  document = context.portal_catalog.getResultValue(id=id)\n
-  if document is not None:\n
-    if document.getValidationState() == \'draft\':\n
-      return document.Base_redirect(form_id=\'view\')\n
-    return document.Base_redirect(form_id=\'PDFDocument_viewHistory\')\n
-\n
 \n
 # Prepare message\n
 msg = N_(\'Sorry, this document is not available\')\n
-return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg, \'editable_mode\' : False})\n
+return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg})\n
 </string> </value>
         </item>
         <item>
@@ -148,10 +144,9 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
-                            <string>None</string>
                             <string>document</string>
+                            <string>None</string>
                             <string>msg</string>
-                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -172,6 +167,12 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
         <item>
             <key> <string>id</string> </key>
             <value> <string>EGov_goToDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
