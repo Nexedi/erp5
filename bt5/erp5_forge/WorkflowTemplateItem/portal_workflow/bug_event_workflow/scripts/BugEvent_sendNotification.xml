@@ -99,6 +99,14 @@ body += """\n
 \n
 """ % (bug.getDescription(\'\'))\n
 \n
+attachment_list = bug.Base_getRelatedDocumentList(\n
+                          portal_type=bug.getPortalDocumentTypeList())\n
+if attachment_list:\n
+  body += """Attachments:\n
+\n
+  %s\n
+\n
+""" % (\'\\n  \'.join([\'%s %s\' % (a.getTitle(), a.absolute_url()) for a in attachment_list]))\n
 body += """ Messages :\n
 """\n
 # Messages Information\n
@@ -174,12 +182,16 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
                             <string>body</string>
                             <string>None</string>
                             <string>_inplacevar_</string>
+                            <string>attachment_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>a</string>
                             <string>simulation_state</string>
                             <string>bug_message_list</string>
                             <string>lines_list</string>
                             <string>len</string>
                             <string>message_count</string>
-                            <string>_getiter_</string>
                             <string>message</string>
                             <string>content_type</string>
                             <string>text</string>
