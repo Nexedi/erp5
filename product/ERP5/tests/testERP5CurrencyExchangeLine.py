@@ -293,18 +293,6 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     self.tic()#execute transaction
     self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
-    x_curr_ex_line = euro.newContent(
-	                          portal_type='Currency Exchange Line',
-				  price_currency=new_currency.getRelativeUrl())
-    x_curr_ex_line.setTitle('Euro to Francs CFA')
-    x_curr_ex_line.setBasePrice(655.957)
-    x_curr_ex_line.setStartDate(DateTime(2008,9,6))
-    x_curr_ex_line.setStopDate(DateTime(2008,9,7))
-    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
-    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
-    x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
     accounting_module = self.portal.accounting_module
     transaction = self._makeOne(
                portal_type='Purchase Invoice Transaction',
@@ -326,7 +314,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     """
       Test that the conversion is not done when there is the start date
       and the end date of a currency exchange line don't correspond to
-      the date of the transaction
+      the date of the transaction, but when the date of the transaction
+      falls into the validity period of the currency exchange line,the
+      conversion is done
     """
     if not run: return
     if not quiet:
@@ -342,8 +332,20 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     self.tic()#execute transaction
     self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
+    x_curr_ex_line = euro.newContent(
+	                          portal_type='Currency Exchange Line',
+				  price_currency=new_currency.getRelativeUrl())
+    x_curr_ex_line.setTitle('Euro to Francs CFA')
+    x_curr_ex_line.setBasePrice(655.957)
+    x_curr_ex_line.setStartDate(DateTime(2008,9,6))
+    x_curr_ex_line.setStopDate(DateTime(2008,9,7))
+    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
+    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    x_curr_ex_line.validate()
+    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    transaction1 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
                source_section_value=self.organisation_module.supplier,
@@ -352,11 +354,27 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            destination_debit=500),
                       dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction.AccountingTransaction_convertDestinationPrice(form_id='view')
-    line_list = transaction.contentValues(
+    transaction1.AccountingTransaction_convertDestinationPrice(form_id='view')
+    line_list = transaction1.contentValues(
                portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
 	self.assertEquals(line.getDestinationTotalAssetPrice(),None)
+    transaction2 = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               stop_date=DateTime('2008/09/06'),
+               source_section_value=self.organisation_module.supplier,
+	       lines=(dict(
+	           destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    transaction2.AccountingTransaction_convertDestinationPrice(form_id='view')
+    line_list = transaction2.contentValues(
+               portal_type=portal.getPortalAccountingMovementTypeList())
+    for line in line_list:
+	self.assertEquals(line.getDestinationTotalAssetPrice(),round(655.957*
+                                          line.getQuantity()))
+   
 
 def test_suite():
   suite = unittest.TestSuite()
