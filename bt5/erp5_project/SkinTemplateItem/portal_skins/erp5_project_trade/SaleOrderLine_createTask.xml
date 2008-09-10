@@ -88,7 +88,7 @@ task = context.task_module.newContent(\n
                                       description=description,\n
                                      )\n
 translateString = context.Base_translateString\n
-portal_status_message = translateString("The new Task")\n
+portal_status_message = translateString("Object created.")\n
 return task.Base_redirect(\'view\', \n
           keep_items = dict(portal_status_message=portal_status_message),)\n
 </string> </value>
