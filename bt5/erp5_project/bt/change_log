@@ -1,3 +1,6 @@
+2008-09-10 vincentd
+* Fix the Quantity input and remove the total price input
+
 2008-09-09 vincentd
 * Fix the Create Task action condition
 

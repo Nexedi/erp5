@@ -84,7 +84,6 @@ task = context.task_module.newContent(\n
                                       task_line_quantity=task_line_quantity,\n
                                       task_line_price=task_line_price,\n
                                       task_line_quantity_unit=task_line_quantity_unit,\n
-                                      total_price=total_price,\n
                                       price_currency=price_currency,\n
                                       description=description,\n
                                      )\n
@@ -114,7 +113,7 @@ return task.Base_redirect(\'view\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title=None, reference=None, source=None, source_section=None, destination_decision=None, destination_section=None, source_project=None, destination=None, start_date=None, stop_date=None, task_line_resource=None, task_line_quantity=None, task_line_price=None, task_line_quantity_unit=None, total_price=None, price_currency=None, description=None, **kw</string> </value>
+            <value> <string>title=None, reference=None, source=None, source_section=None, destination_decision=None, destination_section=None, source_project=None, destination=None, start_date=None, stop_date=None, task_line_resource=None, task_line_quantity=None, task_line_price=None, task_line_quantity_unit=None, price_currency=None, description=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -134,7 +133,7 @@ return task.Base_redirect(\'view\', \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>17</int> </value>
+                        <value> <int>16</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -154,7 +153,6 @@ return task.Base_redirect(\'view\', \n
                             <string>task_line_quantity</string>
                             <string>task_line_price</string>
                             <string>task_line_quantity_unit</string>
-                            <string>total_price</string>
                             <string>price_currency</string>
                             <string>description</string>
                             <string>kw</string>
@@ -176,7 +174,6 @@ return task.Base_redirect(\'view\', \n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
                 <none/>
                 <none/>
                 <none/>
