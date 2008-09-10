@@ -62,10 +62,10 @@
         <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
       </span>\n
     </tal:block>\n
-    <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+    <!--<tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
       <span class="anonymous" i18n:translate=""\n
         i18n:domain="ui">Anonymous user</span>\n
-    </tal:block>\n
+    </tal:block>-->\n
   </div>\n
   <div class="clear">\n
   </div>\n
