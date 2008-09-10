@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Packing List to ship (%(count)s)</string> </value>
+            <value> <string>Sale Packing List to Ship (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
