@@ -83,11 +83,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>date_only</string> </key>
+                    <key>                 <string>date_only</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key>                 <string>description</string> </key>
                     <value> <string>The beginning date for validity of the currency exchange rate.</string> </value>
                 </item>
                 <item>
@@ -103,8 +103,8 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Validity Start Date</string> </value>
+                    <key>                 <string>title</string> </key>
+                    <value> <string>Validity Beginning Date</string> </value>
                 </item>
               </dictionary>
             </value>
