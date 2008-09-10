@@ -78,6 +78,19 @@ class TestResource(ERP5TypeTestCase):
     self.category_tool = self.getCategoryTool()
     self.createCategories()
 
+  def beforeTearDown(self):
+    get_transaction().abort()
+    for folder in (
+          self.portal.getDefaultModule(self.resource_portal_type),
+          self.portal.getDefaultModule(self.sale_supply_portal_type),
+          self.portal.getDefaultModule("Currency"),
+          self.portal.getDefaultModule(self.node_portal_type),
+          self.portal.getDefaultModule("Sale Order"),
+          self.portal.getDefaultModule("Purchase Order"),):
+      folder.manage_delObjects([i for i in folder.objectIds()])
+    get_transaction().commit()
+    self.tic()
+
   def createCategories(self):
     """
       Light install create only base categories, so we create
