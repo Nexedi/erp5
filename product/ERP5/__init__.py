@@ -65,7 +65,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  PasswordTool.PasswordTool,
                  ContributionTool.ContributionTool,
                  NotificationTool.NotificationTool,
-		 GadgetTool.GadgetTool,
+                 GadgetTool.GadgetTool,
                  ContributionRegistryTool.ContributionRegistryTool,
                 )
 content_classes = ()
