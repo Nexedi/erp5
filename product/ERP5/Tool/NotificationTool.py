@@ -289,13 +289,13 @@ class NotificationTool(BaseTool):
     if recipient:
       if not isinstance(recipient, (list, tuple)):
         recipient = (recipient,)
-      for person in recipient:
-        if isinstance(person, basestring):
+      for person_reference in recipient:
+        if isinstance(person_reference, basestring):
           person = catalog_tool.getResultValue(portal_type=portal_type_list,
-                                               reference=person)
+                                               reference=person_reference)
           if person is None:
             # For backward compatibility. I recommend to use ValueError.(yusei)
-            raise IndexError, "Can't find person document which reference is '%s'" % person
+            raise IndexError, "Can't find person document which reference is '%s'" % person_reference
         email_value = person.getDefaultEmailValue()
         if email_value is None:
           # For backward compatibility. I recommend to use ValueError.(yusei)
