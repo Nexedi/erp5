@@ -66,9 +66,6 @@
       <span class="anonymous" i18n:translate=""\n
         i18n:domain="ui">Anonymous user</span>\n
     </tal:block>\n
-    <div id="fiscal_center">\n
-    Centre des grandes entreprises\n
-    </div>\n
   </div>\n
   <div class="clear">\n
   </div>\n
@@ -116,6 +113,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

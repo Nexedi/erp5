@@ -360,8 +360,7 @@ form#main_form div.languageSelector {\n
   font-size: 110%;\n
 }\n
 \n
-#logged_in_as .login,\n
-#logged_in_as #fiscal_center{\n
+#logged_in_as .login{\n
   font-weight: bold;\n
 }\n
 \n
