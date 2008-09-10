@@ -65,7 +65,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency = context.getResourceValue()\n
+            <value> <string>"""\n
+Script used to get the exchange ratio used \n
+in the conversion of the destination price\n
+"""\n
+\n
+currency = context.getResourceValue()\n
 exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResourceRelativeUrl(), \n
                                      \'price_currency/currency_module/%s\' % context.getDestinationSectionValue().getPriceCurrencyId()],\n
                                       start_date=context.getStopDate()))\n
