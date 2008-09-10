@@ -110,6 +110,7 @@
                         <string>my_bank_country_code</string>
                         <string>my_branch</string>
                         <string>my_overdraft_facility</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

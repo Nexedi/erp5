@@ -18,15 +18,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_overdraft_facility</string> </value>
+            <value> <string>my_comment</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -82,24 +79,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>description</string> </key>
-                    <value> <string>Checked if the bank account has an overdraft facility.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_checkbox</string> </value>
+                    <value> <string>my_comment</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>BankAccount_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key>                 <string>title</string> </key>
-                    <value> <string>Overdraft Facility</string> </value>
                 </item>
               </dictionary>
             </value>
