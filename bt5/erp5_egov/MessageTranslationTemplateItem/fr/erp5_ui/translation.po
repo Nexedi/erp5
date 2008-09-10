@@ -48,17 +48,11 @@ msgstr "Toutes les pièces jointes ajoutées à votre document"
 msgid "All documents"
 msgstr "Tout vos documents"
 
-msgid "All documents add to your requests"
-msgstr "Tous les documents ajoutés à votre demande"
-
 msgid "All documents resulting of your application"
-msgstr "Tous les document qui resultent de votre demande"
-
-msgid "All documents resulting of your requests"
-msgstr "Tous les documents résultants de votre demande"
+msgstr "Tous les documents qui resultent de votre demande"
 
 msgid "All events related on your application"
-msgstr "Tous les évènement relatif à votre demande"
+msgstr "Tous les évènements relatifs à votre demande"
 
 msgid "All pending Applications"
 msgstr "Toutes les demandes en cours"
@@ -457,7 +451,7 @@ msgid "Old Function"
 msgstr "Ancienne Fonction"
 
 msgid "Only document of type"
-msgstr "Seulement les document de type"
+msgstr "Seulement les documents de type"
 
 msgid "Open-Submitted"
 msgstr "Partiellement Ouvert"
