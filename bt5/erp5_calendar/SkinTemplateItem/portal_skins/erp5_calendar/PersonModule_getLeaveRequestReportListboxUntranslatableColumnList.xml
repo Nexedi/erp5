@@ -73,8 +73,6 @@ stool = portal.portal_simulation\n
 from_date = request[\'from_date\']\n
 to_date = request[\'to_date\']\n
 \n
-result_list = [ ]\n
-\n
 # get all resources used for leave requests\n
 resource_list = []\n
 for inventory in stool.getInventoryList(\n
@@ -87,7 +85,7 @@ for inventory in stool.getInventoryList(\n
            portal.portal_categories.restrictedTraverse(\n
                 inventory.resource_relative_url).getTitle()))\n
 \n
-return result_list\n
+return resource_list\n
 </string> </value>
         </item>
         <item>
@@ -142,7 +140,6 @@ return result_list\n
                             <string>_getitem_</string>
                             <string>from_date</string>
                             <string>to_date</string>
-                            <string>result_list</string>
                             <string>resource_list</string>
                             <string>_getiter_</string>
                             <string>inventory</string>
