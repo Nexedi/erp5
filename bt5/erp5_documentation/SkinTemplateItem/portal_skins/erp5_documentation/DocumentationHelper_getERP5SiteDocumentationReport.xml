@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -67,13 +55,12 @@
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
 portal_url = context.getPortalObject().portal_url()\n
-uri = context.getPortalObject().getUrl()\n
-if portal_skin == \'ODT\':\n
-  query = make_query(uri=uri, class_name="ERP5SiteDocumentationHelper", portal_skin="ODT", business_template_list=business_template_list)\n
-  return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewReport?%s\' % (portal_url, query) )\n
-else:\n
-  query = make_query(uri=uri, class_name="ERP5SiteDocumentationHelper", portal_skin="View", business_template_list=business_template_list)\n
-  return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewReport?%s\' % (portal_url, query) )\n
+query = make_query(uri=context.getPortalObject().getUrl(),\n
+                   class_name="ERP5SiteDocumentationHelper",\n
+                   portal_skin=portal_skin,\n
+                   business_template_list=business_template_list)\n
+return context.REQUEST.RESPONSE.redirect(\n
+  \'%s/portal_classes/DocumentationHelper_viewReport?%s\' % (portal_url, query))\n
 </string> </value>
         </item>
         <item>
@@ -83,14 +70,8 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_skin=\'\', business_template_list=[]</string> </value>
+            <value> <string>portal_skin=\'View\', business_template_list=()</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,7 +104,6 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_url</string>
-                            <string>uri</string>
                             <string>query</string>
                           </tuple>
                         </value>
@@ -137,8 +117,8 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
-                <list/>
+                <string>View</string>
+                <tuple/>
               </tuple>
             </value>
         </item>
