@@ -103,9 +103,7 @@ return context.EGov_createNewProcedure(new_application_procedure=\'Subscription 
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
