@@ -2326,11 +2326,11 @@ class Base( CopyContainer,
 
   # Category testing
   security.declareProtected( Permissions.View, 'isMemberOf' )
-  def isMemberOf(self, category):
+  def isMemberOf(self, category, **kw):
     """
       Tests if an object if member of a given category
     """
-    return self._getCategoryTool().isMemberOf(self, category)
+    return self._getCategoryTool().isMemberOf(self, category, **kw)
 
   security.declareProtected( Permissions.View, 'isAcquiredMemberOf' )
   def isAcquiredMemberOf(self, category):
@@ -3205,7 +3205,7 @@ class Base( CopyContainer,
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
       if changed:
-        self.reindexObjectSecurity()
+        self.reindexObjectSecurity(activate_kw={'priority':4})
 
   # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
