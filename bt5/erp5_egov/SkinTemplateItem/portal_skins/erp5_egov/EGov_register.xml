@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+request=context.REQUEST\n
 \n
 # check captcha\n
 if not context.isCaptchaTextCorrect(captcha_text):\n
@@ -75,8 +77,42 @@ if not context.isCaptchaTextCorrect(captcha_text):\n
              "%s/%s?portal_status_message=%s" %\n
              (context.absolute_url(), form_id, translated_message))\n
 \n
-return context.EGov_createNewProcedure(new_application_procedure=\'Subscription Form\', captcha_ok=True)\n
-</string> </value>
+# create a new subscription form\n
+module = context.getDefaultModule(portal_type=\'Subscription Form\')\n
+form = module.newContent(portal_type=\'Subscription Form\')\n
+\n
+# XXX this group is not good for a form\n
+# but it\'s used for security on subscription form module\n
+form.setGroup(\'dgid/di/cge\')\n
+\n
+web_site_url = context.getWebSiteValue().absolute_url()\n
+module_id = module.getId()\n
+new_object_id = form.getId()\n
+\n
+redirect_url = "%s/%s/%s" % (web_site_url, module_id, new_object_id)\n
+\n
+# set a login on the new form\n
+form.setReference(new_object_id)\n
+\n
+# set a password\n
+password = context.Person_generatePassword()\n
+form.setPassword(password)\n
+\n
+# the ownership is the form itself\n
+form.manage_addLocalRoles(new_object_id, [\'Owner\',])\n
+#form.changeOwnership(new_object_id)\n
+\n
+\n
+\n
+\n
+# login with this new form\n
+redirect_url = \'%s/logged_in?__ac_name=%s&__ac_password=%s\' % (redirect_url, new_object_id, password)\n
+\n
+result = request[\'RESPONSE\'].redirect(redirect_url) \n
+return result\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -103,7 +139,9 @@ return context.EGov_createNewProcedure(new_application_procedure=\'Subscription 
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -139,7 +177,14 @@ return context.EGov_createNewProcedure(new_application_procedure=\'Subscription 
                             <string>message</string>
                             <string>translated_message</string>
                             <string>_getitem_</string>
-                            <string>True</string>
+                            <string>module</string>
+                            <string>form</string>
+                            <string>web_site_url</string>
+                            <string>module_id</string>
+                            <string>new_object_id</string>
+                            <string>redirect_url</string>
+                            <string>password</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

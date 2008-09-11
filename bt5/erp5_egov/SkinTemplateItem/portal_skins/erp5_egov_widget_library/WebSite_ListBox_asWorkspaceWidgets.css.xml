@@ -59,7 +59,7 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 /*========================================================================================\n
-  DeclarationTVA_ListBox_asAttachedFile CSS.\n
+  ListBox_asWorkspaceWidgets CSS.\n
 \n
 ========================================================================================*/\n
 \n
@@ -152,6 +152,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

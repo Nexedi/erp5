@@ -1,3 +1,6 @@
+2008-09-11 fabien
+* Make anonymous subscription safer using a login and password to check the application progress.
+
 2008-09-09 fabien
 * report_section refactoring to be more generic and easier to customize with more pdf
 

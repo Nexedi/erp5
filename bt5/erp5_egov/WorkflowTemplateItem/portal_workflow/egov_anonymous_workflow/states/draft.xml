@@ -68,7 +68,6 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
@@ -81,7 +80,6 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -92,7 +90,6 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -103,7 +100,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -111,10 +107,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>

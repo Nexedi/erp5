@@ -112,7 +112,7 @@ def getSecurityCategoryFromEntity(self, base_category_list, entity_name,
     portal_type_list   -- list of portal type to search the entity
   """
   if portal_type_list is None:
-    portal_type_list = ['Person', 'Organisation']
+    portal_type_list = self.portal_type_list
   if child_category_list is None:
     child_category_list = []
 
@@ -126,8 +126,26 @@ def getSecurityCategoryFromEntity(self, base_category_list, entity_name,
       # if a person_object was not found in the module, we do nothing more
       # this happens for example when a manager with no associated person 
       # object creates a person_object for a new user
-      return []
-  object = object_list[0].getObject()
+
+      portal = self.getPortalObject()
+
+      # XXX this hack permit to get the module of the application
+      # the goal is to work with anonymous applications, even if they are 
+      # not reindexed
+      if len(self.REQUEST.steps) >= 3 and \
+          'module' in self.REQUEST.steps[-3]:
+        module_id = self.REQUEST.steps[-3]
+        module =  getattr(portal, module_id, None)
+        if module is not None:
+          result = module._getOb(entity_name, None)
+          if result is not None:
+            object = result
+          else:
+            return []
+      else:
+        return []
+  else:
+    object = object_list[0].getObject()
   
   category_dict = {}
   for base_category in base_category_list:

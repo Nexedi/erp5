@@ -77,14 +77,10 @@ portal_type = document.getPortalType()\n
 attachement_method = getattr(context, \'%s_getApplicationIncomeDict\' % portal_type.replace(\' \', \'\'))\n
 attachement_type_dict = attachement_method()\n
 \n
-# if the portal type is not mapped, no attached files are required\n
-if not attachement_type_dict.has_key(portal_type):\n
-  return\n
-\n
 document_title_list = [x.getTitle() for x in document.contentValues(portal_type=\'File\')]\n
 \n
 # get only required documents\n
-required_title_list = [x for x,y in attachement_type_dict[portal_type].items() if y == \'Required\']\n
+required_title_list = [x for x,y in attachement_type_dict.items() if y[\'requirement\'] == \'Required\']\n
 \n
 message = \'The following documents are missing to submit the request :\'\n
 missing_document_list = []\n

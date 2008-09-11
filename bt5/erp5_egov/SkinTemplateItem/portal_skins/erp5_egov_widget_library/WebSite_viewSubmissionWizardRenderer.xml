@@ -51,7 +51,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<div class="submission_wizard">\n
+<div class="submission_wizard" tal:condition="python: request[\'current_action\']">\n
   <div class="clear">\n
   </div>\n
   <div class="wizard_title" i18n:domain="ui" i18n:translate="">\n
@@ -77,13 +77,13 @@
       <div class="actions">\n
         <ul>\n
           <tal:block tal:repeat="action actions">\n
-            <tal:block tal:condition="python: action_dict.get(action[\'name\']) == None">\n
+            <tal:block tal:condition="python: not action_dict.has_key(action[\'name\'])">\n
               <tal:block tal:define="global action_not_in_dict_count python: action_not_in_dict_count+1" />                    \n
             </tal:block>\n
           </tal:block>\n
           <tal:block tal:repeat="action actions"\n
                  tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
-            <tal:block tal:condition="python: action_dict.get(action[\'name\'])">\n
+            <tal:block tal:condition="python: action_dict.has_key(action[\'name\']) and action_dict[action[\'name\']]">\n
               <li>\n
                 <tal:block tal:condition="python: here.getValidationState() in state_dict[action[\'name\']]">\n
                   <tal:block tal:condition="python: current_action[\'name\'] != action[\'name\']">\n
@@ -131,6 +131,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

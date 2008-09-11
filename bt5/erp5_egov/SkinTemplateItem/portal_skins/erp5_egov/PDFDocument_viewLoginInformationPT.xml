@@ -69,6 +69,15 @@
 <div class="site_address">\n
   <a href="http://www.safi.sn">http://www.safi.sn</a>\n
 </div>\n
+<tal:bloc tal:condition="python: here.getPortalType() == \'Subscription Form\'">\n
+  <div class="explanation">\n
+    And use the login \n
+    "<b tal:content="here/getId">20080512-CF1</b>"\n
+    and the password \n
+    "<b tal:content="here/getPassword">pin02nuz</b>"\n
+  \n
+  </div>\n
+</tal:bloc>\n
 <div class="explanation">\n
   <tal:bloc i18n:translate="" i18n:domain="ui">\n
     You may now logout or go home and proceed to other applications:\n
