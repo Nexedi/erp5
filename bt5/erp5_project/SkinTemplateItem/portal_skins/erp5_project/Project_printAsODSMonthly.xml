@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
+start_date = context.getStartDate()\n
+stop_date = context.getStopDate()\n
+\n
+object_dict = {}\n
+\n
+column_list= []\n
+worker_column_list = []\n
+\n
+# find all Tasks\n
+source_project_uid_list = [x.uid for x in context.portal_catalog(\n
+     relative_url=\'%s%%\' % context.getRelativeUrl())]\n
+\n
+# Make sure to not include "confirmed tasks" in any case, because in\n
+# this case we must take task reports\n
+if kw.has_key(\'simulation_state\') and len(kw[\'simulation_state\']) > 0 :\n
+  task_simulation_state = [x for x in kw[\'simulation_state\'] if x != \'confirmed\']\n
+  task_report_simulation_state = kw[\'simulation_state\']\n
+else:\n
+  task_simulation_state = context.getPortalDraftOrderStateList() + \\\n
+                          context.getPortalPlannedOrderStateList()\n
+  task_report_simulation_state = None\n
+\n
+task_list = [x.getObject() for x in \\\n
+  context.portal_catalog(\n
+                         portal_type=\'Task\',\n
+                         source_project_uid = source_project_uid_list,\n
+                         simulation_state = task_simulation_state,\n
+                         )]\n
+task_list.extend([x.getObject() for x in \\\n
+  context.portal_catalog(\n
+                         portal_type=\'Task Report\',\n
+                         source_project_uid = source_project_uid_list,\n
+                         simulation_state = task_report_simulation_state,\n
+                         )])\n
+\n
+task_line_list = []\n
+for task in task_list:\n
+  task_line_list.extend(task.objectValues(portal_type=(\'Task Line\', \'Task Report Line\')))\n
+\n
+\n
+for task_line in task_line_list:\n
+  # initialize some variables\n
+  source = task_line.getSource()\n
+  source_title = task_line.getSourceTitle()\n
+  start_date_task = task_line.getStartDate()\n
+  stop_date_task = task_line.getStopDate()\n
+  year_start_date = start_date_task.year()\n
+  month_start_date = start_date_task.month()\n
+  date_string = "%s-%s" % (year_start_date, month_start_date)\n
+  current_date = start_date_task\n
+  # We must initialize start_date at the beginning of the month\n
+  while current_date <= stop_date_task:\n
+    if date_string not in object_dict:\n
+      object_dict[date_string]={}\n
+    current_date += 1\n
+\n
+  # create a list with people who works on the task\n
+  current_column = (source, task_line.getSourceTitle())\n
+  if current_column not in worker_column_list:\n
+    worker_column_list.append(current_column)\n
+  project = task_line.getSourceProjectValue()\n
+  quantity = task_line.getQuantity()\n
+  project_relative_url = project.getRelativeUrl()\n
+  # diff in day between the begin and the end of the task\n
+  diff_day = stop_date_task - start_date_task + 1\n
+\n
+  def getNextMonthStart(date):\n
+    """\n
+    return the next month date of the param date\n
+    """\n
+    if date.month()==12:\n
+      return DateTime(date.year()+1, date.month(), 1)\n
+    else:\n
+      return DateTime(date.year(), date.month()+1, 1)\n
+\n
+  timekeeper = start_date_task\n
+  while timekeeper <= stop_date_task :\n
+    next_timekeeper = getNextMonthStart(timekeeper)\n
+    quantity_dict = object_dict.setdefault("%s-%s" % ( timekeeper.year(), timekeeper.month()), {})\n
+    if not quantity_dict.has_key(project_relative_url):\n
+      temp_object = context.newContent(portal_type = \'Project Line\',\n
+                  temp_object=1,\n
+                  string_index = "%s-%s" % (timekeeper.year() , timekeeper.month()),\n
+                  category_list = [\'source_project/%s\' % project_relative_url])\n
+      quantity_dict[project_relative_url] = temp_object\n
+    current_temp_object = quantity_dict[project_relative_url]\n
+    current_month_quantity = (min(next_timekeeper,stop_date_task+1) - timekeeper )/ diff_day * quantity\n
+\n
+    object_quantity = current_month_quantity + current_temp_object.getProperty(source, 0)\n
+    current_temp_object.setProperty(source, object_quantity)\n
+    timekeeper = next_timekeeper\n
+    context.log(\'next_timekeeper\', next_timekeeper)\n
+\n
+column_list.extend(worker_column_list)\n
+context = context.asContext(object_dict = object_dict,\n
+                            column_list = column_list,)\n
+\n
+selection_name = \'project_monthly_report_selection\'\n
+context.portal_selections.setListboxDisplayMode(request, \'ReportTreeMode\',\n
+                                              selection_name=selection_name)\n
+return context.Project_viewODSMonthlyReport()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>object_dict</string>
+                            <string>column_list</string>
+                            <string>worker_column_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>source_project_uid_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>task_simulation_state</string>
+                            <string>task_report_simulation_state</string>
+                            <string>None</string>
+                            <string>task_list</string>
+                            <string>task_line_list</string>
+                            <string>task</string>
+                            <string>task_line</string>
+                            <string>source</string>
+                            <string>source_title</string>
+                            <string>start_date_task</string>
+                            <string>stop_date_task</string>
+                            <string>year_start_date</string>
+                            <string>month_start_date</string>
+                            <string>date_string</string>
+                            <string>current_date</string>
+                            <string>_write_</string>
+                            <string>_inplacevar_</string>
+                            <string>current_column</string>
+                            <string>project</string>
+                            <string>quantity</string>
+                            <string>project_relative_url</string>
+                            <string>diff_day</string>
+                            <string>getNextMonthStart</string>
+                            <string>timekeeper</string>
+                            <string>next_timekeeper</string>
+                            <string>quantity_dict</string>
+                            <string>temp_object</string>
+                            <string>current_temp_object</string>
+                            <string>min</string>
+                            <string>current_month_quantity</string>
+                            <string>object_quantity</string>
+                            <string>selection_name</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Project_printAsODSMonthly</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
+\n
+project_line_portal_type = \'Project Line\'\n
+\n
+domain_list = []\n
+\n
+here = context.REQUEST[\'here\']\n
+portal = context.getPortalObject()\n
+form_id=request.get(\'form_id\')\n
+selection_name = request.get(\'selection_name\')\n
+params = portal.portal_selections.getSelectionParamsFor(selection_name, request)\n
+object_path = request.get(\'object_path\')\n
+if object_path is None:\n
+  object_path = context.REQUEST.get(\'URL1\').split(\'/\')[-1]\n
+search_path = \'\'.join(["%project_module/", object_path,"%"])\n
+category_list = []\n
+\n
+year = here.getStartDate().year()\n
+month = here.getStartDate().month()\n
+\n
+if depth == 0:\n
+  # Get start date and stop date from document\n
+  start_date = here.getStartDate()\n
+  stop_date = here.getStopDate()\n
+  current_month = None\n
+  # We must initialize start_date at the beginning of the month\n
+  current_date = start_date\n
+  month_dict = {}\n
+  while current_date < stop_date:\n
+    if (current_date.year(), current_date.month()) not in month_dict:\n
+      month_dict[(current_date.year(), current_date.month())] = 1\n
+    current_date += 1\n
+\n
+  category_list = []\n
+  i = 1\n
+  month_dict_list = month_dict.keys()\n
+  month_dict_list.sort()\n
+  for year, month in month_dict_list:\n
+    category_list.append(here.getObject().asContext(title="%s - %s" % (year, month),\n
+                                                    string_index="%s-%s" % (year, month),\n
+                                                    ))\n
+    i += 1\n
+\n
+elif depth == 1:\n
+  category_list = here.contentValues(portal_type=project_line_portal_type)\n
+\n
+else:\n
+  category_list = []\n
+  parent_category_list = parent.getMembershipCriterionCategoryList()\n
+  for parent_category in parent_category_list:\n
+    parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
+    category_list.extend(context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type))\n
+\n
+\n
+i = 0\n
+for category in category_list:\n
+  string_index = getattr(category, \'string_index\', None)\n
+  if string_index is None:\n
+    string_index = getattr(parent, \'string_index\')\n
+  domain = parent.generateTempDomain(id = \'%s_%s\' % (depth, i))\n
+  domain.edit(title = category.getTitle(),\n
+              domain_generator_method_id = script.id,\n
+              criterion_property_list = [\'string_index\'] ,\n
+              string_index = string_index,\n
+              membership_criterion_base_category = (\'source_project\', ),\n
+              membership_criterion_category = (\'source_project/\' + category.getRelativeUrl(),),\n
+              domain_generator_method_id = script.id,\n
+              uid = category.getUid())\n
+  domain.setCriterion(\'string_index\', identity=string_index)\n
+  domain_list.append(domain)\n
+  i += 1\n
+\n
+return domain_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>depth, parent, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>depth</string>
+                            <string>parent</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>project_line_portal_type</string>
+                            <string>domain_list</string>
+                            <string>_getitem_</string>
+                            <string>here</string>
+                            <string>portal</string>
+                            <string>form_id</string>
+                            <string>selection_name</string>
+                            <string>params</string>
+                            <string>object_path</string>
+                            <string>None</string>
+                            <string>search_path</string>
+                            <string>category_list</string>
+                            <string>year</string>
+                            <string>month</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>current_month</string>
+                            <string>current_date</string>
+                            <string>month_dict</string>
+                            <string>_write_</string>
+                            <string>_inplacevar_</string>
+                            <string>i</string>
+                            <string>month_dict_list</string>
+                            <string>_getiter_</string>
+                            <string>parent_category_list</string>
+                            <string>parent_category</string>
+                            <string>category</string>
+                            <string>getattr</string>
+                            <string>string_index</string>
+                            <string>domain</string>
+                            <string>script</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Project_generateMonthDomain</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
