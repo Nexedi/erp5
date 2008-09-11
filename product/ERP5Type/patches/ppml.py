@@ -95,13 +95,12 @@ class String(Scalar):
                 # JPS repr is default encoding
                 encoding=' encoding="%s"' % self.encoding
         name=string.lower(self.__class__.__name__)
-        result = '%s<%s%s%s>%s</%s>\n' % (
-            ' '*indent, name, id, encoding, v, name)
+        result = '<%s%s%s>%s</%s>' % (name, id, encoding, v, name)
         if hasattr(self, 'id'):
             # The value is Immutable - let us add it the the immutable mapping
             # to reduce the number of unreadable references
             self.mapping.setImmutable(self.id, Immutable(value = result))
-        return result
+        return '%s%s\n' % (' '*indent, result)
 
 ppml.String = String
 
@@ -224,13 +223,15 @@ class Reference(Scalar):
         self.mapping = mapping
     def __str__(self, indent=0):
         v=self._v
-        name=string.lower(self.__class__.__name__)
         #LOG('Reference', 0, str(v))
         if self.mapping.hasImmutable(v):
-          return self.mapping.getImmutable(v).getValue()
-        #LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))
-        self.mapping.mark(v)
-        return '%s<%s id="%s"/>\n' % (' '*indent,name,self.mapping[v])
+          value = self.mapping.getImmutable(v).getValue()
+        else:
+          name = self.__class__.__name__.lower()
+          #LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))
+          self.mapping.mark(v)
+          value = '<%s id="%s"/>' % (name, self.mapping[v])
+        return '%s%s\n' % (' '*indent, value)
 
 ppml.Reference = Reference
 Get = Reference
