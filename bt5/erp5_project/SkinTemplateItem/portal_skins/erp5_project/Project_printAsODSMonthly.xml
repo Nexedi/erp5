@@ -159,7 +159,7 @@ for task_line in task_line_list:\n
     object_quantity = current_month_quantity + current_temp_object.getProperty(source, 0)\n
     current_temp_object.setProperty(source, object_quantity)\n
     timekeeper = next_timekeeper\n
-    context.log(\'next_timekeeper\', next_timekeeper)\n
+\n
 \n
 column_list.extend(worker_column_list)\n
 context = context.asContext(object_dict = object_dict,\n
@@ -278,6 +278,12 @@ return context.Project_viewODSMonthlyReport()\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Project_printAsODSMonthly</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

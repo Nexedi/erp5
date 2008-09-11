@@ -240,6 +240,12 @@ return domain_list\n
             <value> <string>Project_generateMonthDomain</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

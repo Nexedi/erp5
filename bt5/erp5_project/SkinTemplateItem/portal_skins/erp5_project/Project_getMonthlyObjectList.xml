@@ -65,7 +65,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>object_domain = selection_report.asDomainItemDict()[\'project_report_monthly_domain\']\n
+            <value> <string># This script is called by each line of the domain in order to know if returned objects\n
+#by the domain have the same property than returned objects\n
+\n
+object_domain = selection_report.asDomainItemDict()[\'project_report_monthly_domain\']\n
 object_dict = context.object_dict\n
 \n
 current_criterion = object_domain.getCriterionList()\n
@@ -75,7 +78,6 @@ result_list = []\n
 if returned_object is not None:\n
   for k,v in returned_object.items():\n
     if object_domain.test(v, strict_membership=1):\n
-      context.log(\'show dict temp object\',v.showDict())\n
       result_list.append(v)\n
 \n
 return result_list\n
@@ -167,6 +169,12 @@ return result_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Project_getMonthlyObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
