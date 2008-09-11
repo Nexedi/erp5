@@ -140,6 +140,15 @@ class Message(Persistent):
       message = message.decode('utf-8')
     return message
 
+  def __len__(self):
+    return len(str(self))
+
+  def __getitem__(self, index):
+    return str(self)[index]
+
+  def __getslice__(self, i, j):
+    return str(self)[i:j]
+
 InitializeClass(Message)
 allow_class(Message)
 
