@@ -85,7 +85,11 @@ class Domain(Predicate, MetaNode, MetaResource):
   __implements__ = ( Interface.Predicate, )
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Domain, )
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.Predicate
+                    , PropertySheet.Domain
+                    , PropertySheet.SortIndex
+                    )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getRelativeUrl' )
   def getRelativeUrl(self):

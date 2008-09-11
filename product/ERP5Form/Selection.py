@@ -511,7 +511,11 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
 
   security.declarePublic('asDomainItemDict')
   def asDomainItemDict(self, domain_id=None, exclude_domain_id=None):
-    pass
+    domain_item_dict = {}
+    portal = self.getPortalObject()
+    for k, d in self.domain_dict.iteritems():
+      domain_item_dict[k] = self._getDomainObject(portal,d) 
+    return domain_item_dict
 
   security.declarePublic('updateDomain')
   def updateDomain(self, domain):
