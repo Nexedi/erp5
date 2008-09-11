@@ -70,7 +70,7 @@
 except AttributeError:\n
   website = None\n
 \n
-if website is not None:\n
+if website is not None and website.isStaticLanguageSelection():\n
   # Web Mode\n
   referer_url = context.REQUEST.HTTP_REFERER\n
   default_language = context.getDefaultAvailableLanguage()\n

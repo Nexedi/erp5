@@ -125,6 +125,7 @@
                       <list>
                         <string>my_available_language_set</string>
                         <string>my_default_available_language</string>
+                        <string>my_static_language_selection</string>
                         <string>my_skin_selection_name</string>
                         <string>my_container_layout</string>
                         <string>my_content_layout</string>
@@ -165,6 +166,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Web Site</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
