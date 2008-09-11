@@ -115,7 +115,7 @@ class WebSiteTraversalHook(Persistent):
 
     # Set default language if any
     default_language = container.getDefaultAvailableLanguage()
-    if default_language:
+    if default_language and container.isStaticLanguageSelection():
       if request.get('AcceptLanguage') is not None:
         request['AcceptLanguage'].set(default_language, 80)
 
@@ -156,7 +156,7 @@ class WebSite(WebSection):
     # Static Language Selection support
     def _getExtensibleContent(self, request, name):
       language_list = self.getAvailableLanguageList()
-      if language_list:
+      if language_list and self.isStaticLanguageSelection():
         # Interprete names which could be a language
         # as a language selection only if language_list
         # was defined or set default language

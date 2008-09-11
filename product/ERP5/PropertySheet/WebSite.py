@@ -36,5 +36,11 @@ class WebSite:
             'type'        : 'string',
             'default'     : None,
             'mode'        : 'rw' },
+        {   'id'          : 'static_language_selection',
+            'description' : 'If set to True, the language selection is based on the URL rather than '
+                            'on cookie. This property impacts the behaviour of Base_doLanguage',
+            'type'        : 'boolean',
+            'default'     : 0,
+            'mode'        : 'rw' },
     )
 
