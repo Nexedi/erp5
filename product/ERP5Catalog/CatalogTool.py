@@ -166,6 +166,10 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
               add(prefix + ':' + role)
         return list(allowed)
 
+    def __repr__(self):
+      return '<Products.ERP5Catalog.CatalogTool.IndexableObjectWrapper'\
+          ' for %s>' % ('/'.join(self.__ob.getPhysicalPath()), )
+
 
 class RelatedBaseCategory(Method):
     """A Dynamic Method to act as a related key.
