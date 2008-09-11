@@ -103,9 +103,7 @@
         </item>
         <item>
             <key> <string>delivery_select_method_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>DeliverBuilder_selectConfirmedDeliveryList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

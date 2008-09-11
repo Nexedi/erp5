@@ -1,3 +1,6 @@
+2008-09-11 Kazuhiko
+* Add a script for selecting deliveries in purchase_packing_list_builder like in sale_packing_list_builder.
+
 2008-09-10 yusei
 * Update worklist action box names.
 
