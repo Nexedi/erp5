@@ -46,6 +46,21 @@ import cookielib
 cookiejar = cookielib.CookieJar()
 referer  = None
 
+def _isUserAcknowledged(cookiejar):
+  """ Is user authenticated to remote system through a cookie. """
+  for cookie in cookiejar:
+    if cookie.name == '__ac' and cookie.value != '':
+      return 1
+  return 0
+  
+def _getAcCookieFromServer(url, opener, cookiejar, username, password, header_dict = {}):
+  """ get __ac cookie from server """
+  data = urllib.urlencode({'__ac_name':  username,
+                           '__ac_password':  password})
+  request = urllib2.Request(url, data, header_dict)
+  f = opener.open(request)
+  return f
+
 def _setSuperSecurityManager(self):
   """ Change to super user account. """
   user = self.getWrappedOwner()
@@ -272,8 +287,18 @@ class WizardTool(BaseTool):
     user_and_password = self._getSubsribedUserAndPassword()
     if (len(user_and_password)==2 and
         user_and_password[0] and user_and_password[1]):
-      auth = 'Basic %s' % base64.standard_b64encode('%s:%s' % user_and_password)
-      header_dict['Authorization'] = auth
+      # try login to server only once using cookie method
+      if not _isUserAcknowledged(cookiejar):
+        server_url = self.getServerUrl()
+        f = _getAcCookieFromServer('%s/WebSite_login' %server_url,
+                                   self.simple_opener_director,
+                                   cookiejar,
+                                   user_and_password[0],
+                                   user_and_password[1])
+        # if server doesn't support cookie authentication try basic authentication
+        if not _isUserAcknowledged(cookiejar):
+          auth = 'Basic %s' % base64.standard_b64encode('%s:%s' % user_and_password)
+          header_dict['Authorization'] = auth
 
     if content_type:
       header_dict['Content-Type'] = content_type
