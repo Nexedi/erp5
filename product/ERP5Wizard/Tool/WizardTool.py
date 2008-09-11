@@ -41,6 +41,7 @@ import xmlrpclib, socket, sys, traceback, urllib, urllib2, base64, cgi
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 import zLOG
 import cookielib
+from urlparse import urlparse, urlunparse
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -311,7 +312,7 @@ class WizardTool(BaseTool):
       header_dict['Cookie']  +=  '%s=%s;' %(cookie.name, cookie.value)
     # XXX: include cookies from local browser (like show/hide tabs) which are set directly
     # by client JavaScript code (i.e. not sent from server)
-    
+
     # add HTTP referer (especially useful in Localizer when changing language)
     header_dict['REFERER'] = self.REQUEST.get('HTTP_REFERER', None) or referer
     request = urllib2.Request(url, data, header_dict)
@@ -322,9 +323,17 @@ class WizardTool(BaseTool):
       metadata = f.info()
       response = self.REQUEST.RESPONSE
       if f.code> 300 and f.code <400:
-        # ignore 'location' header for redirects from server. If server requires redirect then 
-        # redirect it ONLY to root web siteor current location
-        response['location'] =  header_dict['REFERER']
+        # adjust return url which my contain proxy URLs as arguments
+        location = metadata.getheader('location')
+        parsed_url = list(urlparse(location))
+        local_site_url_prefix = urllib.quote('%s/portal_wizard/proxy' \
+                                              %self.getPortalObject().absolute_url())
+        remote_url_parsed = urlparse(self.getServerUrl())
+        remote_site_url_prefix = '%s://%s/kb' %(remote_url_parsed[0], remote_url_parsed[1])
+        # fix arguments for returned location URL
+        parsed_url[4] = parsed_url[4].replace(local_site_url_prefix, remote_site_url_prefix)
+        response['location'] = urlunparse(parsed_url)
+
       response.setStatus(f.code, f.msg)
       response.setHeader('content-type', metadata.getheader('content-type'))
       # FIXME this list should be confirmed with the RFC 2616.
