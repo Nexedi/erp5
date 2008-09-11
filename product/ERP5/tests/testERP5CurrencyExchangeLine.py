@@ -45,14 +45,6 @@ QUIET = False
 run_all_test = True
 
 
-def isSameSet(a, b):
-  for i in a:
-    if not(i in b) : return 0
-  for i in b:
-    if not(i in a): return 0
-  if len(a) != len(b) : return 0
-  return 1
-
 def printAndLog(msg):
   """
   A utility function to print a message
@@ -62,14 +54,6 @@ def printAndLog(msg):
   msg = str(msg)
   ZopeTestCase._print('\n ' + msg)
   LOG('Testing... ', 0, msg)
-# Associate transaction portal type to the corresponding line portal type.
-transaction_to_line_mapping = {
-    'Accounting Transaction': 'Accounting Transaction Line',
-    'Balance Transaction': 'Balance Transaction Line',
-    'Purchase Invoice Transaction': 'Purchase Invoice Transaction Line',
-    'Sale Invoice Transaction': 'Sale Invoice Transaction Line',
-    'Payment Transaction': 'Accounting Transaction Line',
-  }
 
 class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
   """
@@ -81,7 +65,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     # clear modules if necessary
     currency_list = ('euro', 'yen', 'usd')
     module = self.portal.currency_module
-    module.manage_delObjects([x for x in module.objectIds() 
+    module.manage_delObjects([x for x in module.objectIds()
                         if x not in currency_list])
     for currency_id in currency_list:
       currency = self.currency_module._getOb(currency_id, None)
@@ -90,7 +74,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                 currency.objectValues(
                   portal_type='Currency Exchange Line')])
     get_transaction().commit()
-    self.tic()  
+    self.tic()
  
   def login(self,name=username, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -111,48 +95,6 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
 	    'erp5_accounting_ui_test'
             )
 
-  def enableLightInstall(self):
-    """
-      Return if we should do a light install (1) or not (0)
-      Light install variable is used at installation of categories in business template
-      to know if we wrap the category or not, if 1 we don't use and installation is faster
-    """
-    return 1 # here we want a light install for a faster installation
-
-  def enableActivityTool(self):
-    """
-      Return if we should create (1) or not (0) an activity tool
-      This variable is used at the creation of the site to know if we use
-      the activity tool or not
-    """
-    return 1 # here we want to use the activity tool
-
-  
-
-  def createManagerAndLogin(self):
-    """
-      Create a simple user in user_folder with manager rights.
-      This user will be used to initialize data in the method afterSetup
-    """
-    self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
-
-
-  def getCurrencyModule(self):
-    """
-    Return the Currency Module
-    """
-    return getattr(self.getPortal(), 'currency_module', None)
-
-  def stepTic(self, **kwd):
-    """
-    The is used to simulate the zope_tic_loop script
-    Each time this method is called, it simulates a call to tic
-    which invoke activities in the Activity Tool
-    """
-    # execute transaction
-    get_transaction().commit()
-    self.tic()
   def test_01_CreateCurrencies(self, quiet=0, run=run_all_test):
     """
       Create currencies to be used for transactions
