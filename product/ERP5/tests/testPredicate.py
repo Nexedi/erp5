@@ -300,6 +300,18 @@ class TestPredicates(TestPredicateMixIn):
         membership_criterion_category_list=['region/europe'])
     self.assertTrue(pred.test(doc))
 
+  def test_BasicCategoryMembershipStrict(self):
+    # Check that test method can take into account the strict_membership
+    # parameter
+    doc = self.createDocument(region='europe/western_europe/france',)
+    pred = self.createPredicate(
+      membership_criterion_base_category_list=['region'],
+      membership_criterion_category_list=['region/europe'])
+    self.assertFalse(pred.test(doc, strict_membership=1))
+    pred = self.createPredicate(
+      membership_criterion_base_category_list=['region'],
+      membership_criterion_category_list=['region/europe/western_europe/france'])
+    self.assertTrue(pred.test(doc, strict_membership=1))
 
   def test_BasicCategoryNonMembership(self):
     # if the document is not member of the category, the predicate returns

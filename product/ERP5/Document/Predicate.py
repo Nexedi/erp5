@@ -83,7 +83,8 @@ class Predicate(XMLObject, Folder):
   __implements__ = ( Interface.Predicate )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
-  def test(self, context, tested_base_category_list=None, **kw):
+  def test(self, context, tested_base_category_list=None, 
+           strict_membership=0, **kw):
     """
       A Predicate can be tested on a given context.
       Parameters can passed in order to ignore some conditions.
@@ -91,6 +92,8 @@ class Predicate(XMLObject, Folder):
       - tested_base_category_list:  this is the list of category that we do
         want to test. For example, we might want to test only the
         destination or the source of a predicate.
+      - if strict_membership is specified, we should make sure that we
+        are strictly a member of tested categories
     """
     self = self.asPredicate()
     result = 1
@@ -152,13 +155,15 @@ class Predicate(XMLObject, Folder):
           tested_base_category[bc] = 0
         if (bc in multimembership_criterion_base_category_list):
           tested_base_category[bc] = tested_base_category[bc] and \
-                                     context.isMemberOf(c)
+                                     context.isMemberOf(c, 
+                                         strict_membership=strict_membership)
 #        LOG('predicate test', 0,
 #            '%s after multi membership to %s' % \
 #            (tested_base_category[bc], c))
         elif (bc in membership_criterion_base_category_list):
           tested_base_category[bc] = tested_base_category[bc] or \
-                                     context.isMemberOf(c)
+                                     context.isMemberOf(c,
+                                         strict_membership=strict_membership)
     finally:
       if not enabled:
         disableReadOnlyTransactionCache(self)
