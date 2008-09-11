@@ -377,8 +377,9 @@ class Image(File, OFSImage):
       process = subprocess.Popen(parameter_list,
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
                                  close_fds=True)
-      imgin, imgout = process.stdin, process.stdout
+      imgin, imgout, err = process.stdin, process.stdout, process.stderr
 
       def writeData(stream, data):
         if isinstance(data, str):
@@ -395,7 +396,7 @@ class Image(File, OFSImage):
       newimg.write(imgout.read())
       imgout.close()
       if not newimg.tell():
-        raise ConversionError('Image conversion failed (empty file).')
+        raise ConversionError('Image conversion failed (%s).' % err.read())
       newimg.seek(0)
       return newimg
 
