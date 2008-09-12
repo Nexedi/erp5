@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -79,7 +67,7 @@ section = context.getSourceSectionValue(portal_type=\'Organisation\')\n
 if section is not None:\n
   for accounting_period in section.contentValues(\n
                           portal_type=\'Accounting Period\',\n
-                          checked_permission=\'View\'):\n
+                          checked_permission=\'Access contents information\'):\n
     if accounting_period.getSimulationState() in (\n
               \'draft\', \'cancelled\', \'deleted\'):\n
       continue\n
@@ -93,12 +81,6 @@ if section is not None:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
