@@ -117,9 +117,6 @@ else:\n
         object_url_dict[\'/\'.join(splitted_object_url[0:x+1])] = 1\n
   for parent_category in parent_category_list:\n
     parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
-    context.log(\'string_index\', getattr(parent, \'string_index\'))\n
-    context.log(\'parent_category\', parent_category)\n
-    context.log(\'object_sub_dict\', object_sub_dict)\n
     if object_url_dict.has_key(parent_category):\n
       category_child_list = context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type)\n
       for category_child in category_child_list:\n
@@ -132,15 +129,17 @@ for category in category_list:\n
   string_index = getattr(category, \'string_index\', None)\n
   if string_index is None:\n
     string_index = getattr(parent, \'string_index\')\n
+  domain_kw = {}\n
+  if depth >= 1:\n
+    domain_kw[\'membership_criterion_base_category\'] = (\'source_project\', )\n
+    domain_kw[\'membership_criterion_category\'] = (\'source_project/\' + category.getRelativeUrl(),)\n
   domain = parent.generateTempDomain(id = \'%s_%s\' % (depth, i))\n
   domain.edit(title = category.getTitle(),\n
               domain_generator_method_id = script.id,\n
               criterion_property_list = [\'string_index\'] ,\n
               string_index = string_index,\n
-              membership_criterion_base_category = (\'source_project\', ),\n
-              membership_criterion_category = (\'source_project/\' + category.getRelativeUrl(),),\n
-              domain_generator_method_id = script.id,\n
-              uid = category.getUid())\n
+              uid = category.getUid(),\n
+              **domain_kw)\n
   domain.setCriterion(\'string_index\', identity=string_index)\n
   domain_list.append(domain)\n
   i += 1\n
@@ -229,7 +228,9 @@ return domain_list\n
                             <string>category_child</string>
                             <string>category</string>
                             <string>string_index</string>
+                            <string>domain_kw</string>
                             <string>domain</string>
+                            <string>_apply_</string>
                             <string>script</string>
                           </tuple>
                         </value>

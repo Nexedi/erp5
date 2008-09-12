@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -70,33 +58,30 @@
 \n
 object_domain = selection_report.asDomainItemDict()[\'project_report_monthly_domain\']\n
 object_dict = context.object_dict\n
+summary_dict = context.summary_dict\n
 \n
+context.log(\'object_domain.showDict\', object_domain.showDict())\n
 current_criterion = object_domain.getCriterionList()\n
 date = current_criterion[0].identity\n
-returned_object = object_dict.get(date,None)\n
 result_list = []\n
-if returned_object is not None:\n
-  for k,v in returned_object.items():\n
-    if object_domain.test(v, strict_membership=1):\n
-      result_list.append(v)\n
+if len(object_domain.getMembershipCriterionBaseCategoryList())==0:\n
+  # First level, so level of month\n
+  returned_object = summary_dict.get(date, None)\n
+  if returned_object is not None:\n
+    result_list.append(returned_object)\n
+else:\n
+  returned_object = object_dict.get(date, None)\n
+  if returned_object is not None:\n
+    for k,v in returned_object.items():\n
+      if object_domain.test(v, strict_membership=1):\n
+        result_list.append(v)\n
 \n
+context.log(\'result_list\', [x.showDict() for x in result_list])\n
 return result_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -139,14 +124,19 @@ return result_list\n
                             <string>object_domain</string>
                             <string>context</string>
                             <string>object_dict</string>
+                            <string>summary_dict</string>
                             <string>current_criterion</string>
                             <string>date</string>
+                            <string>result_list</string>
+                            <string>len</string>
                             <string>None</string>
                             <string>returned_object</string>
-                            <string>result_list</string>
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -169,12 +159,6 @@ return result_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Project_getMonthlyObjectList</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

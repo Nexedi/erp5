@@ -10,14 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>your_target_language</string> </value>
+            <value> <string>your_at_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,11 +68,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_target_language</string> </value>
+                    <value> <string>your_at_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewDialogFieldLibrary</string> </value>
+                    <value> <string>Project_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

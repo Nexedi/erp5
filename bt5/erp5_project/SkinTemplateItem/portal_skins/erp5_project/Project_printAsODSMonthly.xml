@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -67,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 request = context.REQUEST\n
 start_date = context.getStartDate()\n
 stop_date = context.getStopDate()\n
@@ -79,6 +68,17 @@ worker_column_list = []\n
 # find all Tasks\n
 source_project_uid_list = [x.uid for x in context.portal_catalog(\n
      relative_url=\'%s%%\' % context.getRelativeUrl())]\n
+\n
+\n
+sql_kw = {}\n
+if kw.has_key(\'from_date\') and kw[\'from_date\'] is not None:\n
+  query_kw = {\'delivery.start_date\' : kw[\'from_date\'],\n
+              \'range\' : \'min\'}\n
+  sql_kw[\'delivery.start_date\'] = Query(**query_kw)\n
+if kw.has_key(\'at_date\') and kw[\'at_date\'] is not None:\n
+  query_kw = {\'delivery.stop_date\' : kw[\'at_date\'],\n
+              \'range\' : \'ngt\'}\n
+  sql_kw[\'delivery.stop_date\'] = Query(**query_kw)\n
 \n
 # Make sure to not include "confirmed tasks" in any case, because in\n
 # this case we must take task reports\n
@@ -95,17 +95,19 @@ task_list = [x.getObject() for x in \\\n
                          portal_type=\'Task\',\n
                          source_project_uid = source_project_uid_list,\n
                          simulation_state = task_simulation_state,\n
-                         )]\n
+                         **sql_kw)]\n
 task_list.extend([x.getObject() for x in \\\n
   context.portal_catalog(\n
                          portal_type=\'Task Report\',\n
                          source_project_uid = source_project_uid_list,\n
                          simulation_state = task_report_simulation_state,\n
-                         )])\n
+                         **sql_kw)])\n
 \n
 task_line_list = []\n
 for task in task_list:\n
   task_line_list.extend(task.objectValues(portal_type=(\'Task Line\', \'Task Report Line\')))\n
+\n
+monthly_worker_quantity_dict = {} # Used to get quantity per month and per worker\n
 \n
 \n
 for task_line in task_line_list:\n
@@ -146,23 +148,37 @@ for task_line in task_line_list:\n
   timekeeper = start_date_task\n
   while timekeeper <= stop_date_task :\n
     next_timekeeper = getNextMonthStart(timekeeper)\n
-    quantity_dict = object_dict.setdefault("%s-%s" % ( timekeeper.year(), timekeeper.month()), {})\n
+    string_index = "%s-%s" % ( timekeeper.year(), timekeeper.month())\n
+    quantity_dict = object_dict.setdefault(string_index, {})\n
+    \n
+    worker_quantity_dict = monthly_worker_quantity_dict.setdefault(string_index, {})\n
+    \n
     if not quantity_dict.has_key(project_relative_url):\n
       temp_object = context.newContent(portal_type = \'Project Line\',\n
                   temp_object=1,\n
-                  string_index = "%s-%s" % (timekeeper.year() , timekeeper.month()),\n
+                  string_index = string_index,\n
                   category_list = [\'source_project/%s\' % project_relative_url])\n
       quantity_dict[project_relative_url] = temp_object\n
     current_temp_object = quantity_dict[project_relative_url]\n
     current_month_quantity = (min(next_timekeeper,stop_date_task+1) - timekeeper )/ diff_day * quantity\n
-\n
     object_quantity = current_month_quantity + current_temp_object.getProperty(source, 0)\n
+    worker_quantity_dict[source] = worker_quantity_dict.get(source, 0) + current_month_quantity\n
     current_temp_object.setProperty(source, object_quantity)\n
     timekeeper = next_timekeeper\n
 \n
+# Now build temp objects for quantity per month and per worker\n
+summary_dict = {}\n
+for string_index, worker_quantity_dict in monthly_worker_quantity_dict.items():\n
+  temp_object = context.newContent(portal_type = \'Project Line\',\n
+              temp_object=1,\n
+              string_index = string_index)\n
+  summary_dict[string_index] = temp_object\n
+  for source, quantity in worker_quantity_dict.items():\n
+    temp_object.setProperty(source, quantity)\n
 \n
 column_list.extend(worker_column_list)\n
 context = context.asContext(object_dict = object_dict,\n
+                            summary_dict = summary_dict,\n
                             column_list = column_list,)\n
 \n
 selection_name = \'project_monthly_report_selection\'\n
@@ -175,12 +191,6 @@ return context.Project_viewODSMonthlyReport()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -214,6 +224,8 @@ return context.Project_viewODSMonthlyReport()\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -227,14 +239,19 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>source_project_uid_list</string>
-                            <string>len</string>
+                            <string>sql_kw</string>
                             <string>_getitem_</string>
+                            <string>None</string>
+                            <string>query_kw</string>
+                            <string>_apply_</string>
+                            <string>_write_</string>
+                            <string>len</string>
                             <string>task_simulation_state</string>
                             <string>task_report_simulation_state</string>
-                            <string>None</string>
                             <string>task_list</string>
                             <string>task_line_list</string>
                             <string>task</string>
+                            <string>monthly_worker_quantity_dict</string>
                             <string>task_line</string>
                             <string>source</string>
                             <string>source_title</string>
@@ -244,7 +261,6 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>month_start_date</string>
                             <string>date_string</string>
                             <string>current_date</string>
-                            <string>_write_</string>
                             <string>_inplacevar_</string>
                             <string>current_column</string>
                             <string>project</string>
@@ -254,12 +270,15 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>getNextMonthStart</string>
                             <string>timekeeper</string>
                             <string>next_timekeeper</string>
+                            <string>string_index</string>
                             <string>quantity_dict</string>
+                            <string>worker_quantity_dict</string>
                             <string>temp_object</string>
                             <string>current_temp_object</string>
                             <string>min</string>
                             <string>current_month_quantity</string>
                             <string>object_quantity</string>
+                            <string>summary_dict</string>
                             <string>selection_name</string>
                           </tuple>
                         </value>
@@ -278,12 +297,6 @@ return context.Project_viewODSMonthlyReport()\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Project_printAsODSMonthly</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
