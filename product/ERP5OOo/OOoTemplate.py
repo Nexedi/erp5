@@ -242,12 +242,12 @@ class OOoTemplate(ZopePageTemplate):
 
   def renderIncludes(self, here, text, sub_document=None):
     attached_files_dict = {}
-    arguments_re = re.compile('(\w+:?\w+)\s*=\s*"(.*?)"\s*',re.DOTALL)
+    arguments_re = re.compile('(\S+?)\s*=\s*"(.*?)"\s*',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
       ret = []
       for opt_name in opts_names:
         try:
-          val = opts_dict[opt_name]
+          val = opts_dict.pop(opt_name)
           if val.endswith('cm'):
             val = val[:-2]
           val = float( val )
@@ -338,9 +338,14 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       return new_tag
 
     def replaceIncludesImg(match):
-      options_dict = dict(x='0cm', y='0cm', style="fr1")
-      options_dict.update(dict(arguments_re.findall(match.group(1))))
-      picture = self._resolvePath(options_dict['path'].encode())
+      options_dict = { 'text:anchor-type': 'paragraph' }
+      options_dict.update(arguments_re.findall(match.group(1)))
+      for old_name, name, default in (('x', 'svg:x', '0cm'),
+                                      ('y', 'svg:y', '0cm'),
+                                      ('style', 'draw:style-name', 'fr1')):
+        options_dict.setdefault(name, options_dict.pop(old_name, default))
+
+      picture = self._resolvePath(options_dict.pop('path').encode())
 
       # "standard" filetype == Image or File , for ERP objects the
       # manipulations are different
@@ -348,8 +353,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):
-        tmp_picture = Products.ERP5Type.Document.newTempImage(
-                                    self, 'tmp')
+        tmp_picture = Products.ERP5Type.Document.newTempImage(self, 'tmp')
         tmp_picture.setData(picture())
         picture = tmp_picture
 
@@ -363,16 +367,17 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         picture_data = picture.Base_download()
 
       # fetch the content-type of the picture (generally guessed by zope)
-      if 'type' not in options_dict:
-        if is_standard_filetype:
-          options_dict['type'] = picture.content_type
-        else:
-          options_dict['type'] = picture.content_type()
+      picture_type = options_dict.pop('type', None)
+      if picture_type is None:
+        picture_type = picture.content_type
+        if not is_standard_filetype:
+          picture_type = picture_type()
 
-      if '/' not in options_dict['type']:
-        options_dict['type'] = 'image/' + options_dict['type']
+      if '/' not in picture_type:
+        picture_type = 'image/' + picture_type
 
-      w, h, maxwidth, maxheight = getLengthInfos(options_dict, ('width', 'height', 'maxwidth', 'maxheight'))
+      w, h, maxwidth, maxheight = getLengthInfos(options_dict,
+                                  ('width', 'height', 'maxwidth', 'maxheight'))
 
       aspect_ratio = 1
       try: # try image properties
@@ -402,38 +407,27 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         w = h * aspect_ratio
 
       actual_idx = self.document_counter.next()
-      pic_name = 'Pictures/picture%d.%s' % (actual_idx, options_dict['type'].split('/')[-1])
+      pic_name = 'Pictures/picture%d.%s' % (actual_idx, picture_type.split('/')[-1])
+
+      # XXX: Pictures directory not managed (seems facultative)
+      #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
+      is_legacy = 'oasis.opendocument' not in self.content_type
+      replacement = ('<draw:frame %s>\n<draw:image %s/></draw:frame>',
+                     '<draw:image %s %s/>')[is_legacy] % (
+        '''draw:name="ERP5Image%d" svg:width="%.3fcm" svg:height="%.3fcm"%s'''
+        % (actual_idx, w, h,
+           ''.join(' %s="%s"' % opt for opt in options_dict.iteritems())),
+        '''xlink:href="%s%s" xlink:type="simple"
+           xlink:show="embed" xlink:actuate="onLoad"'''
+        % (is_legacy and '#' or '', pic_name))
 
       if sub_document: # sub-document means sub-directory
         pic_name = sub_document + '/' + pic_name
 
       attached_files_dict[pic_name] = dict(
         document=picture_data,
-        doc_type=options_dict['type']
+        doc_type=picture_type,
       )
-      # XXX: Pictures directory not managed (seems facultative)
-      #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
-      is_legacy = ('oasis.opendocument' not in self.content_type)
-      if is_legacy:
-        replacement = """<draw:image draw:style-name="%s" draw:name="ERP5Image%d"
-  text:anchor-type="paragraph" svg:x="%s" svg:y="%s"
-  svg:width="%.3fcm" svg:height="%.3fcm" xlink:href="#Pictures/%s"
-  xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
-        """ % (options_dict['style'], actual_idx,
-               options_dict['x'], options_dict['y'],
-               w, h,
-               pic_name.split('/')[-1] )
-      else:
-        replacement = """<draw:frame draw:style-name="%s" draw:name="ERP5Image%d"
-  text:anchor-type="paragraph" svg:x="%s" svg:y="%s"
-  svg:width="%.3fcm" svg:height="%.3fcm">
-     <draw:image xlink:href="Pictures/%s" xlink:type="simple"
-                 xlink:show="embed" xlink:actuate="onLoad"/>
-  </draw:frame>
-        """ % (options_dict['style'], actual_idx,
-               options_dict['x'], options_dict['y'],
-               w, h,
-               pic_name.split('/')[-1] )
 
       if not (self.content_type.endswith('draw') or
               self.content_type.endswith('presentation') or
