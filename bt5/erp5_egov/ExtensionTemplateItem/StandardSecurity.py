@@ -132,9 +132,8 @@ def getSecurityCategoryFromEntity(self, base_category_list, entity_name,
       # XXX this hack permit to get the module of the application
       # the goal is to work with anonymous applications, even if they are 
       # not reindexed
-      if len(self.REQUEST.steps) >= 3 and \
-          'module' in self.REQUEST.steps[-3]:
-        module_id = self.REQUEST.steps[-3]
+      module_id = self.REQUEST.get('anonymous_module', None)
+      if module_id:
         module =  getattr(portal, module_id, None)
         if module is not None:
           result = module._getOb(entity_name, None)
