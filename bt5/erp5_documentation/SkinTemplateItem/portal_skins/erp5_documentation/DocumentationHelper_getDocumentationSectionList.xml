@@ -67,7 +67,7 @@
             <key> <string>_body</string> </key>
             <value> <string>def getTitle(url=\'\'):\n
   try:\n
-    return context.getPortalObject().restrictedTraverse(url).getTitle()\n
+    return context.getPortalObject().restrictedTraverse(url, None).getTitle()\n
   except AttributeError:\n
     return url.split(\'/\')[-1]\n
 \n
