@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>An application in requested state is an application we want another service/person to complete/view it. So applications in requested state are waiting for review from the new assigned service/person.</string> </value>
         </item>

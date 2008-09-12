@@ -10,15 +10,10 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
                 <string>description</string>
                 <string>css_class</string>
                 <string>columns</string>
@@ -67,6 +62,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -75,7 +86,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -96,7 +119,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -139,11 +162,11 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>css_class</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>default_params</string> </key>
+                    <key> <string>default_params</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -162,7 +185,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string>All events related on your application</string> </value>
                 </item>
                 <item>
@@ -194,7 +217,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>page_template</string> </key>
+                    <key> <string>page_template</string> </key>
                     <value> <string>DeclarationTVA_ListBox_asHTML</string> </value>
                 </item>
                 <item>
@@ -202,12 +225,16 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>egov_workflow_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Workflow History</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_permission</string> </key>

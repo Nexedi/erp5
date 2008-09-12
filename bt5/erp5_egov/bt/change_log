@@ -1,3 +1,6 @@
+2008-09-12 fabien
+Change all indentation, thanks to julien patch
+
 2008-09-11 fabien
 * Make anonymous subscription safer using a login and password to check the application progress.
 

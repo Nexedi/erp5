@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>form_submission_wizard</string> </value>
         </item>
@@ -212,12 +206,6 @@
                     <value> <string></string> </value>
                 </item>
               </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
