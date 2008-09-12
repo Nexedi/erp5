@@ -77,7 +77,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>verifyPortalStatusMessage</td>\n
-  <td>Object Created.</td>\n
+  <td>Object created.</td>\n
   <td></td>\n
 </tr>\n
 <!-- then from view mode -->\n
