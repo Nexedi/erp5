@@ -157,6 +157,16 @@ for section in section_list:\n
     elif portal_skin == "ODT" and root_class_name == "ERP5SiteDocumentationHelper":\n
       for child_uri in uri_object.getSectionList():\n
         class_name = child_uri.getClassName()\n
+        child_uri_title = getattr(child_uri, \'title\',\'\')\n
+        if child_uri_title == \'\':\n
+          child_uri_title = child_uri\n
+        result.append(\n
+          ReportSection(\n
+            path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+            level=4,\n
+            title=child_uri_title,\n
+            form_id=\'\')\n
+        )\n
         result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, child_uri.uri_list)\n
 return result\n
 </string> </value>
@@ -223,6 +233,8 @@ return result\n
                             <string>class_name</string>
                             <string>_inplacevar_</string>
                             <string>sub_child_uri</string>
+                            <string>getattr</string>
+                            <string>child_uri_title</string>
                           </tuple>
                         </value>
                     </item>
