@@ -129,9 +129,8 @@ def getSecurityCategoryFromEntity(self, base_category_list, entity_name,
 
       portal = self.getPortalObject()
 
-      # XXX this hack permit to get the module of the application
-      # the goal is to work with anonymous applications, even if they are 
-      # not reindexed
+      # this permit to get the module of the application. The goal is to
+      # work with anonymous applications, even if they are not reindexed
       module_id = self.REQUEST.get('anonymous_module', None)
       if module_id:
         module =  getattr(portal, module_id, None)
