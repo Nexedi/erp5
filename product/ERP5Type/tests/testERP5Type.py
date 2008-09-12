@@ -1027,7 +1027,7 @@ class TestPropertySheet:
                         'storage_id': 'default_organisation',
                         'type':       'content',
                         'portal_type': ('Organisation', ),
-                        'acquired_property_id': ('title', 'description'),
+                        'acquired_property_id': ('title', 'reference'),
                         'mode':       'w', }'''
 
     def test_18_SimpleContentAccessor(self,quiet=quiet, run=run_all_test):
@@ -1076,25 +1076,41 @@ class TestPropertySheet:
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
 
+      # edit once again (this time, with edit method), this time no new 
+      # organisation is created, the same is edited, and reindexed
+      self.assertEquals(1, len(person.objectIds()))
+      self.assertFalse(person._p_changed)
+      person.edit(default_organisation_title='New title 2')
+      self.assertEquals('New title 2',
+                        default_organisation.getTitle())
+      self.assertEquals(0, len([m for m in
+                        self.portal.portal_activities.getMessageList()]))
+      get_transaction().commit()
+      self.assertEquals(1, len([m for m in
+        self.portal.portal_activities.getMessageList()
+        if m.method_id == 'immediateReindexObject' 
+            and m.object_path == default_organisation.getPhysicalPath()]))
+      self.tic()
+
 
     def test_18_SimpleContentAccessorWithGeneratedAccessor(self):
       # test reindexing of content accessors, on acquired properties which are
       # _aq_dynamic generated accessors.
       # This is test is very similar to test_18_SimpleContentAccessor, but we
-      # use description instead of title, because Description accessors are
+      # use reference instead of title, because Reference accessors are
       # generated. 
       self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
-      self.assertTrue(hasattr(person, 'getDefaultOrganisationDescription'))
-      self.assertTrue(hasattr(person, 'setDefaultOrganisationDescription'))
-      person.setDefaultOrganisationDescription('The organisation desc')
+      self.assertTrue(hasattr(person, 'getDefaultOrganisationReference'))
+      self.assertTrue(hasattr(person, 'setDefaultOrganisationReference'))
+      person.setDefaultOrganisationReference('The organisation ref')
 
       default_organisation = person._getOb('default_organisation', None)
       self.assertNotEquals(None, default_organisation)
       self.assertEquals('Organisation',
                         default_organisation.getPortalTypeName())
-      self.assertEquals('The organisation desc',
-                        default_organisation.getDescription())
+      self.assertEquals('The organisation ref',
+                        default_organisation.getReference())
 
       # make sure this new organisation is indexed
       get_transaction().commit()
@@ -1108,9 +1124,25 @@ class TestPropertySheet:
       # edited, and reindexed
       self.assertEquals(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
-      person.setDefaultOrganisationDescription('New description')
-      self.assertEquals('New description',
-                        default_organisation.getDescription())
+      person.setDefaultOrganisationReference('New reference')
+      self.assertEquals('New reference',
+                        default_organisation.getReference())
+      get_transaction().commit()
+      self.assertEquals(1, len([m for m in
+        self.portal.portal_activities.getMessageList()
+        if m.method_id == 'immediateReindexObject' 
+            and m.object_path == default_organisation.getPhysicalPath()]))
+      self.tic()
+
+      # edit once again (this time, with edit method), this time no new 
+      # organisation is created, the same is edited, and reindexed
+      self.assertEquals(1, len(person.objectIds()))
+      self.assertFalse(person._p_changed)
+      person.edit(default_organisation_reference='New reference 2')
+      self.assertEquals('New reference 2',
+                        default_organisation.getReference())
+      self.assertEquals(0, len([m for m in
+                        self.portal.portal_activities.getMessageList()]))
       get_transaction().commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
