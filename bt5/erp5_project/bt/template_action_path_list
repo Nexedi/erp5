@@ -26,6 +26,7 @@ Project | document_list
 Project | jump_to_related_sale_order_lines
 Project | milestone
 Project | planning
+Project | project_monthly_report
 Project | project_task_report
 Project | report
 Project | task_fast_input_dialog
