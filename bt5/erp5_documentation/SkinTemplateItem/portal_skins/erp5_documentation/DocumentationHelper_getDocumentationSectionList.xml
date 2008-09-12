@@ -67,13 +67,9 @@
             <key> <string>_body</string> </key>
             <value> <string>def getTitle(url=\'\'):\n
   try:\n
-     obj = context.getPortalObject().restrictedTraverse(url)\n
-     if hasattr(obj,\'getTitle\'):\n
-       return obj.getTitle()\n
-     else:\n
-       return url.split(\'/\')[-1]\n
-  except:\n
-     return url.split(\'/\')[-1]\n
+    return context.getPortalObject().restrictedTraverse(url).getTitle()\n
+  except AttributeError:\n
+    return url.split(\'/\')[-1]\n
 \n
 \n
 from Products.ERP5Form.Report import ReportSection\n
