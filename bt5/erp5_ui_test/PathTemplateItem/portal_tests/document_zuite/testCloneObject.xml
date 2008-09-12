@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -39,12 +33,6 @@
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -89,7 +77,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>verifyPortalStatusMessage</td>\n
-  <td>Object Created.</td>\n
+  <td>Object created.</td>\n
   <td></td>\n
 </tr>\n
 <!-- then from view mode -->\n
@@ -110,7 +98,7 @@ have id "2". This is probably a bit too stupid. -->\n
 </tr>\n
 <tr>\n
   <td>verifyPortalStatusMessage</td>\n
-  <td>Object Created.</td>\n
+  <td>Object created.</td>\n
   <td></td>\n
 </tr>\n
 <!-- then from view mode, view mode doesn\'t create a subobject, but create\n

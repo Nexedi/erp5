@@ -3,21 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -107,7 +98,7 @@
 </tr>\n
 <tr>\n
 \t<td>verifyTextPresent</td>\n
-\t<td>Item(s) Copied.</td>\n
+\t<td>Item(s) copied.</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -122,7 +113,7 @@
 </tr>\n
 <tr>\n
 \t<td>verifyTextPresent</td>\n
-\t<td>Item(s) Pasted.</td>\n
+\t<td>Item(s) pasted.</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

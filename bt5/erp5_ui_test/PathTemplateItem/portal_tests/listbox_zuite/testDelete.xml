@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -129,7 +123,7 @@ It contains the same columns\n
 <tr>\n
 \t<td>assertText</td>\n
 \t<td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
-\t<td>No. Related Objects</td>\n
+\t<td>Number of Related Objects</td>\n
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
@@ -214,7 +208,7 @@ It contains the same columns\n
 </tr>\n
 <tr>\n
 \t<td>verifyTextPresent</td>\n
-\t<td>Sorry You Can Not Delete 1 Item.</td>\n
+\t<td>Sorry, you can not delete 1 item.</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
