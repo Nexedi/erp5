@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -110,15 +98,33 @@ if depth == 0:\n
                                                     ))\n
     i += 1\n
 \n
-elif depth == 1:\n
-  category_list = here.contentValues(portal_type=project_line_portal_type)\n
-\n
 else:\n
+  if depth == 1:\n
+    parent_category_list = [\'source_project/\' + here.getRelativeUrl()]\n
+  else:\n
+    parent_category_list = parent.getMembershipCriterionCategoryList()\n
   category_list = []\n
-  parent_category_list = parent.getMembershipCriterionCategoryList()\n
+  # Very specific to the monthly report, if no data, we do not display the current tree part\n
+  # sor first, for performance, build a dict with all relative urls of project line that will\n
+  # need to be displayed for this month\n
+  object_dict = here.object_dict\n
+  object_sub_dict = object_dict.get(getattr(parent, \'string_index\'), {})\n
+  object_url_dict = {}\n
+  for object_url in object_sub_dict.keys():\n
+    if not object_url_dict.has_key(object_url):\n
+      splitted_object_url = object_url.split(\'/\')\n
+      for x in xrange(0, len(splitted_object_url)):\n
+        object_url_dict[\'/\'.join(splitted_object_url[0:x+1])] = 1\n
   for parent_category in parent_category_list:\n
     parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
-    category_list.extend(context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type))\n
+    context.log(\'string_index\', getattr(parent, \'string_index\'))\n
+    context.log(\'parent_category\', parent_category)\n
+    context.log(\'object_sub_dict\', object_sub_dict)\n
+    if object_url_dict.has_key(parent_category):\n
+      category_child_list = context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type)\n
+      for category_child in category_child_list:\n
+        if object_url_dict.has_key(category_child.getRelativeUrl()):\n
+          category_list.append(category_child)\n
 \n
 \n
 i = 0\n
@@ -146,12 +152,6 @@ return domain_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -215,9 +215,19 @@ return domain_list\n
                             <string>month_dict_list</string>
                             <string>_getiter_</string>
                             <string>parent_category_list</string>
-                            <string>parent_category</string>
-                            <string>category</string>
+                            <string>object_dict</string>
                             <string>getattr</string>
+                            <string>object_sub_dict</string>
+                            <string>object_url_dict</string>
+                            <string>object_url</string>
+                            <string>splitted_object_url</string>
+                            <string>xrange</string>
+                            <string>len</string>
+                            <string>x</string>
+                            <string>parent_category</string>
+                            <string>category_child_list</string>
+                            <string>category_child</string>
+                            <string>category</string>
                             <string>string_index</string>
                             <string>domain</string>
                             <string>script</string>
@@ -238,12 +248,6 @@ return domain_list\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Project_generateMonthDomain</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
