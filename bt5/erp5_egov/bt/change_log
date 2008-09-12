@@ -1,5 +1,6 @@
 2008-09-12 fabien
-Change all indentation, thanks to julien patch
+* Change all indentation, thanks to julien patch
+* move annonymous_workflow from egov public bt to safi_egov private bt wich is a more appropriate place.
 
 2008-09-11 fabien
 * Make anonymous subscription safer using a login and password to check the application progress.
