@@ -66,7 +66,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_skin = context.REQUEST.get(\'portal_skin\')\n
-if portal_skin is None:\n
+if portal_skin is None or portal_skin==\'View\':\n
   return True\n
 else:\n
   return False\n

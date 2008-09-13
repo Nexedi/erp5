@@ -65,49 +65,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def getTitle(url=\'\'):\n
-  return url.split(\'/\')[-1]\n
+            <value> <string>def normalise(s):\n
+  while s.startswith(\'_\'):\n
+    s = s[1:]\n
+  return s\n
 \n
-from Products.ERP5Form.Report import ReportSection\n
-REQUEST = context.REQUEST\n
-REQUEST.set(\'is_documentation_report\', True)\n
-sub_result = []\n
-propertysheet_list = []\n
-class_method_list = []\n
-for uri in uri_list:\n
-    uri_object = context.getDocumentationHelper(class_name, uri)\n
-    if class_name in [\'PortalTypeDocumentationHelper\',\'PortalTypeInstanceDocumentationHelper\']:\n
-      for section in uri_object.getSectionList():\n
-        if section.class_name == \'ClassMethodDocumentationHelper\':\n
-          class_method_list+=section.uri_list\n
-        if section.class_name == \'PortalTypePropertySheetDocumentationHelper\':\n
-          propertysheet_list+=section.uri_list\n
-    sub_result.append(\n
-      ReportSection(\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        level=5,\n
-        title=getTitle(uri.split(\'.\')[-1]),\n
-        form_id=\'\')\n
-    )\n
-    sub_result.append(\n
-      ReportSection(\n
-        selection_params=dict(description=uri_object.getDescription()),\n
-        selection_name=\'documentation_helper_selection\',\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        form_id=\'DocumentationHelper_viewReportSubSectionTitleDescription\',\n
-        listbox_display_mode=\'FlatListMode\')\n
-    )\n
-    sub_result.append(\n
-      ReportSection(\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        level=4,\n
-        method_id=\'getDocumentationHelper\',\n
-        form_id=\'%s_view\' % class_name,\n
-        param_list=[class_name,\n
-                    uri],\n
-        listbox_display_mode=\'FlatListMode\')\n
-    )\n
-return (sub_result,class_method_list,propertysheet_list)\n
+def compareId(a, b):\n
+  return cmp(normalise(a.id), normalise(b.id))\n
+\n
+property_sheet_list = kw["property_sheet_list"]\n
+\n
+obj = kw["obj"]\n
+\n
+result = map(\n
+  lambda x: obj.asContext(id=x),\n
+  property_sheet_list \n
+)\n
+result.sort(compareId)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -124,7 +99,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>class_name=\'\', uri_list=[]</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,31 +119,21 @@ return (sub_result,class_method_list,propertysheet_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>class_name</string>
-                            <string>uri_list</string>
-                            <string>getTitle</string>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>REQUEST</string>
-                            <string>True</string>
-                            <string>sub_result</string>
-                            <string>propertysheet_list</string>
-                            <string>class_method_list</string>
-                            <string>_getiter_</string>
-                            <string>uri</string>
-                            <string>uri_object</string>
-                            <string>section</string>
-                            <string>_inplacevar_</string>
+                            <string>kw</string>
+                            <string>normalise</string>
+                            <string>compareId</string>
                             <string>_getitem_</string>
-                            <string>dict</string>
+                            <string>property_sheet_list</string>
+                            <string>obj</string>
+                            <string>map</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
@@ -180,15 +145,12 @@ return (sub_result,class_method_list,propertysheet_list)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-                <list/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DocumentationHelper_getDocumentationSectionListParams</string> </value>
+            <value> <string>DocumentationHelper_getAppendixPropertySheetList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -13,7 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>enabled</string>
+                <string>columns</string>
+                <string>list_method</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -56,10 +58,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key>                 <string>columns</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -70,7 +70,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key>                 <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -87,8 +95,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
+                    <key>                 <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -99,8 +114,20 @@
                     <value> <string>DocumentationHelper_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key>                 <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key>                 <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -111,15 +138,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here. PortalTypeDocumentationHeper_getListboxVisibilityFromContext()</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>DocumentationHelper_getAppendixClassMethodList</string> </value>
         </item>
       </dictionary>
     </pickle>

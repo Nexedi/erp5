@@ -77,6 +77,8 @@ REQUEST = context.REQUEST\n
 REQUEST.set(\'is_documentation_report\', True)\n
 result = []\n
 root_class_name =  REQUEST.get(\'class_name\')\n
+class_methods_list = []\n
+property_sheets_list = []\n
 documentation_helper = context.getDocumentationHelper(REQUEST.get(\'class_name\'), REQUEST.get(\'uri\'))\n
 section_list = documentation_helper.getSectionList()\n
 result.append(\n
@@ -149,11 +151,20 @@ for section in section_list:\n
     if portal_skin is None or portal_skin == \'View\':\n
       for child_uri in uri_object.getSectionList():\n
         class_name = child_uri.getClassName()\n
-        result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, child_uri.uri_list)\n
+        results =  context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
+                           child_uri.uri_list)\n
+        result+=results[0]\n
+        class_methods_list+=results[1]\n
+        property_sheets_list+=results[2]\n
         if root_class_name == "ERP5SiteDocumentationHelper":\n
-           for sub_child_uri in child_uri.getSectionList():\n
-              class_name = sub_child_uri.getClassName()\n
-              result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, sub_child_uri.uri_list)\n
+          for sub_child_uri in child_uri.getSectionList():\n
+            class_name = sub_child_uri.getClassName()\n
+            results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
+                            sub_child_uri.uri_list)\n
+            result+=results[0]\n
+            class_methods_list+=results[1]\n
+            property_sheets_list+=results[2]\n
+\n
     elif portal_skin == "ODT" and root_class_name == "ERP5SiteDocumentationHelper":\n
       for child_uri in uri_object.getSectionList():\n
         class_name = child_uri.getClassName()\n
@@ -167,7 +178,45 @@ for section in section_list:\n
             title=child_uri_title,\n
             form_id=\'\')\n
         )\n
-        result +=  context.DocumentationHelper_getDocumentationSectionListParams(class_name, child_uri.uri_list)\n
+        results =  context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
+                           child_uri.uri_list)\n
+        result+=results[0]\n
+        class_methods_list+=results[1]\n
+        property_sheets_list+=results[2]\n
+result.append(\n
+  ReportSection(\n
+    level=3,\n
+    title="Appendix",\n
+    form_id=\'\')\n
+)\n
+classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in class_methods_list]).keys()\n
+propertysheet = dict().fromkeys([x.split(\'/\')[-1].split(\'.\')[0] for x in property_sheets_list]).keys()\n
+result.append(\n
+  ReportSection(\n
+    level=4,\n
+    title="Class Methods",\n
+    form_id=\'\')\n
+)\n
+result.append(\n
+  ReportSection(\n
+    form_id=\'PortalTypeDocumentationHelperAppendixClassMethod_view\',\n
+    selection_params=dict(class_method_list=classmethod, obj=uri_object),\n
+    selection_name=\'class_method_selection\',\n
+    listbox_display_mode=\'FlatListMode\')\n
+)\n
+result.append(\n
+  ReportSection(\n
+    level=4,\n
+    title="Property Sheets",\n
+    form_id=\'\')\n
+)\n
+result.append(\n
+  ReportSection(\n
+    form_id=\'PortalTypeDocumentationHelperAppendixPropertySheet_view\',\n
+    selection_params=dict(property_sheet_list=propertysheet, obj=uri_object),\n
+    selection_name=\'property_sheet_selection\',\n
+    listbox_display_mode=\'FlatListMode\')\n
+)\n
 return result\n
 </string> </value>
         </item>
@@ -220,6 +269,8 @@ return result\n
                             <string>True</string>
                             <string>result</string>
                             <string>root_class_name</string>
+                            <string>class_methods_list</string>
+                            <string>property_sheets_list</string>
                             <string>documentation_helper</string>
                             <string>section_list</string>
                             <string>dict</string>
@@ -231,10 +282,17 @@ return result\n
                             <string>None</string>
                             <string>child_uri</string>
                             <string>class_name</string>
+                            <string>results</string>
                             <string>_inplacevar_</string>
+                            <string>_getitem_</string>
                             <string>sub_child_uri</string>
                             <string>getattr</string>
                             <string>child_uri_title</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>classmethod</string>
+                            <string>propertysheet</string>
                           </tuple>
                         </value>
                     </item>

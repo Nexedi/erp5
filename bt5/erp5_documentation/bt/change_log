@@ -1,3 +1,7 @@
+2008-09-13: mayoro
+- Adding Appendix on ODT mode to sumurise repetitif class_methods and property_sheets in documentation
+
+
 2008-07-05: mayoro
 - removing  erp5_documentation_odt_style
 - removing ListBox_asAccessorHTML in erp5_documentation_xhtml_style
