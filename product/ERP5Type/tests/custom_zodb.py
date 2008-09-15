@@ -14,12 +14,14 @@ if os.environ.get('erp5_load_data_fs'):
   else:
     Storage = DemoStorage(base=FileStorage(new_data_fs_path), quota=(1<<20))
   print("Restoring MySQL database ... ")
-  os.system("mysql %s < %s/dump.sql" % (getMySQLArguments(), instance_home))
+  assert os.system("mysql %s < %s/dump.sql" % (
+                getMySQLArguments(), instance_home)) == 0
   print("Restoring static files ... ")
   for dir in ('Constraint', 'Document', 'PropertySheet'):
     if os.path.exists('%s/%s.bak' % (instance_home, dir)):
-      os.system('rm -rf %s/%s' % (instance_home, dir))
-      os.system('cp -ar %s/%s.bak %s/%s' % (instance_home, dir, instance_home, dir))
+      assert os.system('rm -rf %s/%s' % (instance_home, dir)) == 0
+      assert os.system('cp -ar %s/%s.bak %s/%s' % (
+                instance_home, dir, instance_home, dir)) == 0
 elif os.environ.get('erp5_save_data_fs'):
   if os.path.exists(new_data_fs_path):
     os.remove(new_data_fs_path)
