@@ -110,7 +110,8 @@ js_string = """\n
        xhr_object.open( "GET",\n
                         "portal_wizard/getInstallationStatusReportFromClient?active_process_id=%s",\n
                         true);\n
-       xhr_object.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); \n
+       //xhr_object.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");\n
+       xhr_object.setRequestHeader("Content-Type", "text/html");  \n
        xhr_object.setRequestHeader("Cache-Control", "no-cache" ) \n
        xhr_object.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT" ) \n
        xhr_object.send(null);\n

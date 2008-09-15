@@ -106,10 +106,6 @@
                         <string>my_new_account_header</string>
                         <string>submit_init</string>
                         <string>my_login_header</string>
-                        <string>my_ac_name</string>
-                        <string>my_ac_password</string>
-                        <string>submit_login</string>
-                        <string>my_next_action_header</string>
                         <string>my_user_preferred_language</string>
                       </list>
                     </value>
@@ -117,7 +113,12 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_ac_name</string>
+                        <string>my_ac_password</string>
+                        <string>submit_login</string>
+                        <string>my_next_action_header</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

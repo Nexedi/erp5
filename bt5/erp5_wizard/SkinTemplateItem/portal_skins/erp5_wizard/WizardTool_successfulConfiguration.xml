@@ -58,7 +58,7 @@
   </p>\n
   <a i18n:translate=""\n
      i18n:domain="ui"\n
-     tal:attributes="href python: \'%s/logout_wizard\' %here.getPortalObject().absolute_url()"> \n
+     tal:attributes="href python: \'%s/login_form\' %here.getPortalObject().absolute_url()"> \n
     Start using your new ERP5 system\n
   </a>\n
 \n
