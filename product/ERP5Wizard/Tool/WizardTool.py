@@ -525,11 +525,12 @@ class WizardTool(BaseTool):
     #password = REQUEST.get('field_my_ac_password', '')
     return self.next(REQUEST, **kw)
     
-  security.declareProtected(Permissions.ModifyPortalContent, 'login')
+  #security.declareProtected(Permissions.ModifyPortalContent, 'login')
   def login(self, REQUEST):
     """ Login client and show next form. """
     client_id = None
-    user_id = REQUEST.get('field_my_ac_name', '')
+    user_id = REQUEST.get('field_my_ac_name', None) or self.getExpressConfigurationPreference('preferred_express_user_id')
+    REQUEST.form['field_my_ac_name'] =  user_id    
     password = REQUEST.get('field_my_ac_password', '')
     came_from_method = REQUEST.get('field_my_came_from_method', '')
     ## call remote server
@@ -557,7 +558,7 @@ class WizardTool(BaseTool):
             %(came_from_method, user_id, response['server_buffer']['message']))
       return 
               
-  security.declareProtected(Permissions.ModifyPortalContent, 'next')
+  #security.declareProtected(Permissions.ModifyPortalContent, 'next')
   def next(self, REQUEST):
     """ Validate settings and return a new form to the user.  """
     response = self._callRemoteMethod("next")
@@ -579,7 +580,7 @@ class WizardTool(BaseTool):
     elif command == "install":
       return self.startInstallation(REQUEST=REQUEST)
             
-  security.declareProtected(Permissions.ModifyPortalContent, 'previous')
+  #security.declareProtected(Permissions.ModifyPortalContent, 'previous')
   def previous(self, REQUEST):
     """ Display the previous form. """
     response = self._callRemoteMethod('previous')
