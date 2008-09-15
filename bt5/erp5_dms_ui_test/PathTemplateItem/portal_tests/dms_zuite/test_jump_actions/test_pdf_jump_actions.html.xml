@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -73,7 +67,7 @@
 </tr>\n
 <tr>\n
         <td>assertTextPresent</td>\n
-        <td>Object Created.</td>\n
+        <td>Object created.</td>\n
         <td></td>\n
 </tr>\n
 <tr>\n
