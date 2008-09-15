@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -42,17 +36,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+           i18n:domain="ui"\n
            tal:define="info_dict here/ERP5Site_getCategorizedModuleActionInformationDict;\n
                        module_category_list info_dict/report;\n
                        dummy python:module_category_list.sort();\n
@@ -69,7 +58,7 @@
             tal:define="module_list python:module_category[1]">\n
           <ul style="list-style-type:none; padding-left:10px;"\n
               tal:condition="python:module_list">\n
-            <li style="font-weight:bold; color:#002e3f;"\n
+            <li style="font-weight:bold; color:#002e3f;" i18n:translate=""\n
                 tal:content="python:module_category[0]" />\n
             <ul style="list-style-type:none; padding-left:0;">\n
               <tal:block tal:repeat="module module_list">\n
@@ -77,17 +66,17 @@
                                       default_action python:test(len(action_list) > 1, None, action_list[0])"\n
                           tal:condition="python:action_list">\n
                   <li style="color:#002e3f;">\n
-                    <span style="color:#002e3f;"\n
+                    <span style="color:#002e3f;" i18n:translate=""\n
                           tal:condition="not:default_action"\n
                           tal:content="python:module[0]"></span>\n
-                    <a tal:condition="default_action"\n
+                    <a tal:condition="default_action" i18n:translate=""\n
                       tal:content="python:module[0]"\n
                       tal:attributes="href python:default_action[1]"></a>\n
                   </li>\n
                   <ul tal:condition="not:default_action"\n
                       style="list-style-type:none; padding-left:15px;">\n
                     <li tal:repeat="action action_list">\n
-                      <a style="color:#3d7474"\n
+                      <a style="color:#3d7474" i18n:translate=""\n
                         tal:content="python:action[0]"\n
                         tal:attributes="href python:action[1]"></a>\n
                     </li>\n
@@ -121,12 +110,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>

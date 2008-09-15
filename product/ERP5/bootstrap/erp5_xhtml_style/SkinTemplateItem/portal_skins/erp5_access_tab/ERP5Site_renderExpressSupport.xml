@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -42,19 +36,15 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
            tal:define="configured_status_dict here/ERP5Site_getConfiguredStatusDict;\n
-                       express_mode configured_status_dict/express_mode;">\n
+                       express_mode configured_status_dict/express_mode;\n
+                       dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
+                                                                \'text/html;; charset=utf-8\');">\n
   <tal:block replace="structure python:here.ERP5Site_getExpressSupportHTML(express_mode)"></tal:block>\n
 </tal:block>\n
 
