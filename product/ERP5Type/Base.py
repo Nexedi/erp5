@@ -836,7 +836,8 @@ class Base( CopyContainer,
     ptype = self.portal_type
     klass = self.__class__
     aq_key = (ptype, klass) # We do not use _aq_key() here for speed
-    initializePortalTypeDynamicProperties(self, klass, ptype, aq_key)
+    initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, \
+        self.getPortalObject())
     from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
     createPreferenceToolAccessorList(self.getPortalObject())
 
