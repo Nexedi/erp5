@@ -53,31 +53,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get some information about the context\n
+            <value> <string>\'\'\'\n
+  This script generate some web page name related to the context\n
+  ex :\n
+  DeclarationTVA-Draft-PDFDocument_viewAttachmentList-Upload.Button-Citizen\n
+\'\'\'\n
+\n
+# get some information about the context\n
 absolute_url = context.getAbsoluteUrl()\n
 portal_type = context.getPortalType()\n
+request = context.REQUEST\n
+form_id = request.get(\'form_id\', None)\n
+\n
+# remove spaces\n
+portal_type = portal_type.replace(\' \', \'\')\n
 id = context.getId()\n
 \n
-# redirect to the good help webpage using context informations\n
-help_page_name = []\n
-help_page_name.append(\'HelpOn\')\n
+web_page_name = []\n
+web_page_name.append(portal_type)\n
+if getattr(context, \'getValidationStateTitle\', None) and context.getValidationStateTitle():\n
+  web_page_name.append(context.getValidationStateTitle())\n
 \n
-if portal_type != \'Web Site\':\n
-  state = context.getValidationState()\n
-  \n
-  #make the name of the page to link to\n
-  pt_name = portal_type.replace(\' \', \'_\')\n
-  pt_name = pt_name.lower()\n
-  # in a first version, we don\'t use portal type to not have so much\n
-  # documentation to write\n
-  #help_page_name.append(pt_name)\n
-  help_page_name.append(state)\n
+if form_id:\n
+  web_page_name.append(form_id)\n
 \n
-else:\n
-  help_page_name.append(id)\n
-help_page_name = \'_\'.join(help_page_name)\n
+web_site_id = context.getWebSiteValue().getId()\n
+if web_site_id == \'dgid\':\n
+  web_page_name.append(\'Agent\')\n
+if web_site_id == \'egov_portal\':\n
+  web_page_name.append(\'Citizen\')\n
 \n
-return help_page_name\n
+return \'-\'.join(web_page_name)\n
 </string> </value>
         </item>
         <item>
@@ -118,10 +124,13 @@ return help_page_name\n
                             <string>context</string>
                             <string>absolute_url</string>
                             <string>portal_type</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>form_id</string>
                             <string>id</string>
-                            <string>help_page_name</string>
-                            <string>state</string>
-                            <string>pt_name</string>
+                            <string>web_page_name</string>
+                            <string>getattr</string>
+                            <string>web_site_id</string>
                           </tuple>
                         </value>
                     </item>

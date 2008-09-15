@@ -82,7 +82,7 @@ Description:\n
           <input type="hidden" name="current_action" value="" \n
              tal:attributes="value request/current_action" />-->\n
     <div class="onright">\n
-        <div class="erp5_captcha" tal:condition="python: here.portal_membership.isAnonymousUser()">\n
+        <div class="erp5_captcha">\n
           <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
           <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
         </div>\n
