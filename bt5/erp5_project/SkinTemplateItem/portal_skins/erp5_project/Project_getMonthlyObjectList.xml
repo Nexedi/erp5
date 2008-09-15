@@ -60,7 +60,6 @@ object_domain = selection_report.asDomainItemDict()[\'project_report_monthly_dom
 object_dict = context.object_dict\n
 summary_dict = context.summary_dict\n
 \n
-context.log(\'object_domain.showDict\', object_domain.showDict())\n
 current_criterion = object_domain.getCriterionList()\n
 date = current_criterion[0].identity\n
 result_list = []\n
@@ -76,7 +75,6 @@ else:\n
       if object_domain.test(v, strict_membership=1):\n
         result_list.append(v)\n
 \n
-context.log(\'result_list\', [x.showDict() for x in result_list])\n
 return result_list\n
 </string> </value>
         </item>
@@ -134,9 +132,6 @@ return result_list\n
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
