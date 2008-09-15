@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -39,12 +33,6 @@
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -113,7 +101,7 @@ Test Account Transaction List then jump to accounting module.\n
 <!-- Jump to Accounting Module {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Transactions Related To This Account:</td>\n
+  <td>link=Transactions Related to This Account:</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
