@@ -1201,7 +1201,10 @@ class Base( CopyContainer,
             #LOG("method",0,str(id))
             method = getattr(self, id, None)
             if callable(method):
-              result = method()
+              try:
+                result = method(checked_permission=checked_permission)
+              except TypeError:
+                result = method()
               if result not in null_value:
                 if is_list_type:
                   if isinstance(result, (list, tuple)):
