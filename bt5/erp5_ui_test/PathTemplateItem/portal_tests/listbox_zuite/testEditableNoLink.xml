@@ -77,7 +77,7 @@
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
-  <td>Object Created.</td>\n
+  <td>Object created.</td>\n
   <td></td>\n
   <td>Verify that subobject was created</td>\n
 </tr>\n
