@@ -69,10 +69,6 @@ if not context.isCaptchaTextCorrect(captcha_text):\n
 module = context.getDefaultModule(portal_type=\'Subscription Form\')\n
 form = module.newContent(portal_type=\'Subscription Form\')\n
 \n
-# set in the request wich module is used for this annonymous application\n
-# this is use in PAS\n
-request.set(\'anonymous_module\', module.getId())\n
-\n
 # XXX this group is not good for a form\n
 # but it\'s used for security on subscription form module\n
 form.setGroup(\'dgid/di/cge\')\n
@@ -92,13 +88,11 @@ form.setPassword(password)\n
 \n
 # the ownership is the form itself\n
 form.manage_addLocalRoles(new_object_id, [\'Owner\',])\n
-#form.changeOwnership(new_object_id)\n
-\n
-\n
-\n
 \n
 # login with this new form\n
-redirect_url = \'%s/logged_in?__ac_name=%s&__ac_password=%s\' % (redirect_url, new_object_id, password)\n
+# set in the request wich module is used for this annonymous application\n
+# this is use in PAS\n
+redirect_url = \'%s/logged_in?__ac_name=%s&__ac_password=%s&anonymous_module=%s\' % (redirect_url, new_object_id, password, module.getId())\n
 \n
 result = request[\'RESPONSE\'].redirect(redirect_url) \n
 return result\n
