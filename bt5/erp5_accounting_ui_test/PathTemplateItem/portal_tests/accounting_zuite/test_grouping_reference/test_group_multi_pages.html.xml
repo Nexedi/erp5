@@ -152,7 +152,7 @@ Grouping with multiple pages\n
 </tr>\n
 <tr>\n
   <td>assertPortalStatusMessage</td>\n
-  <td>2 lines grouped</td>\n
+  <td>2 lines grouped.</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -276,7 +276,7 @@ lines -->\n
 </tr>\n
 <tr>\n
   <td>assertPortalStatusMessage</td>\n
-  <td>2 Lines Ungrouped</td>\n
+  <td>2 lines ungrouped.</td>\n
   <td></td>\n
 </tr>\n
 \n
