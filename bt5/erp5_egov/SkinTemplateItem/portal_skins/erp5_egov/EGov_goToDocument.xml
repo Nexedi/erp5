@@ -59,13 +59,22 @@ N_ = portal.Base_translateString\n
 if not application_number and id:\n
   application_number = id\n
 \n
+keep_items = {}\n
+\n
 if application_number:\n
   document = context.portal_catalog.getResultValue(id=application_number)\n
+  context.log(\'document : %s\' % document)\n
   if document is not None:\n
-    if document.getValidationState() == \'draft\':\n
-      return document.Base_redirect(form_id=\'view\')\n
-    return document.Base_redirect(form_id=\'PDFDocument_viewHistory\')\n
 \n
+    if document.getValidationState() == \'draft\':\n
+      form_id=\'view\'\n
+    form_id=\'PDFDocument_viewHistory\'\n
+    if document.getPortalType() == \'Subscription Form\':\n
+      context.log(\'pouet\')\n
+      keep_items = dict(__ac_name=application_number, __ac_password=pin_number)\n
+\n
+      #form_id = \'subscription_form_module/%s/%s\' % (application_number, form_id)\n
+    return document.Base_redirect(form_id=form_id, keep_items=keep_items)\n
 # Prepare message\n
 msg = N_(\'Sorry, this document is not available\')\n
 return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg})\n
@@ -79,7 +88,7 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>application_number=None, id=None, **kw</string> </value>
+            <value> <string>application_number=None, pin_number=None, id=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -107,21 +116,25 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>application_number</string>
+                            <string>pin_number</string>
                             <string>id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>keep_items</string>
                             <string>document</string>
                             <string>None</string>
+                            <string>form_id</string>
+                            <string>dict</string>
                             <string>msg</string>
                           </tuple>
                         </value>
@@ -135,6 +148,7 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>
