@@ -355,8 +355,10 @@ class CopyContainer:
           # Set also many columns in order to make sure lines
           # marked as deleted will not be selected
           catalog.beforeUnindexObject(None,path=path,uid=uid)
-          # Then start activty in order to remove lines in catalog,
+          # Then start activity in order to remove lines in catalog,
           # sql wich generate locks
+          # - serialization_tag is used in order to prevent unindexation to 
+          # happen before/in parallel with reindexations of the same object.
           catalog.activate(activity='SQLQueue',
                            tag='%s' % uid,
                            serialization_tag=self.getRootDocumentPath()).unindexObject(None, 
