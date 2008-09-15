@@ -98,7 +98,12 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
 
   def _getPropertyHolder(self):
     from Products.ERP5Type.Base import Base
-    return Base.aq_portal_type[(self.getPortalType(), self.getInstance().__class__)]
+    property_holder = None
+    key = (self.getPortalType(), self.getInstance().__class__)
+    if not(Base.aq_portal_type.has_key(key)):
+      self.getInstance().initializePortalTypeDynamicProperties()
+    property_holder =  Base.aq_portal_type[(self.getPortalType(), self.getInstance().__class__)]
+    return property_holder
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodItemList' )
   def getAccessorMethodItemList(self):

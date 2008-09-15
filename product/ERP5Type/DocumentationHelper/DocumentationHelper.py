@@ -66,7 +66,7 @@ class TempObjectLibrary(object):
         container = self(random.choice(possible_parent_list))
       else:
         container = self.root
-      temp_object = container.newContent(portal_type=portal_type, temp_object=1, id=portal_type)
+      temp_object = container.newContent(portal_type=portal_type, temp_object=1)
       self.portal_type_dict[portal_type] = temp_object
     return temp_object
 
