@@ -10,13 +10,9 @@ Cache Tool | Cache Factory
 Category Tool | Base Category
 Category | Category
 Contribution Registry Tool | Contribution Predicate
-Delivery Builder | Predicate
-Delivery Tool | Delivery Builder
 Domain Tool | Base Domain
 Domain | Domain
 Domain | Domain Generator
-Order Builder | Predicate
-Order Tool | Order Builder
 Preference Tool | Preference
 Preference Tool | System Preference
 Simulation Movement | Applied Rule

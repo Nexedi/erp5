@@ -23,26 +23,17 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
-Category Divergence Tester | view
 Category Tool | fast_input
 Category Tool | view
 Category | view
 Contribution Predicate | view
 Contribution Registry Tool | view
-Delivery Builder | view
-Delivery Builder | view_predicate_group
-Delivery Builder | view_profile
-Delivery Tool | view
 Distributed Ram Cache | view
 Document | view
 Domain Generator | view
 Domain Tool | view
 Domain | view
 Folder | view
-Order Builder | view
-Order Builder | view_predicate_group
-Order Builder | view_profile
-Order Tool | view
 Password Tool | view
 Predicate | view
 Preference Tool | advanced
@@ -50,8 +41,6 @@ Preference Tool | view
 Preference | html_style_preferences
 Preference | view
 Preference | view_template
-Property Divergence Tester | view
-Quantity Divergence Tester | view
 Ram Cache | statistics
 Ram Cache | view
 Rule Tool | view
