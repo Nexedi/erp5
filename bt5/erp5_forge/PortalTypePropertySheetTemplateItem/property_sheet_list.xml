@@ -3,6 +3,7 @@
   <item>Bug</item>
  </portal_type>
  <portal_type id="Glossary Term">
+  <item>Comment</item>
   <item>Reference</item>
  </portal_type>
 </property_sheet_list>
