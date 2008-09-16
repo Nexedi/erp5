@@ -27,6 +27,7 @@
 ##############################################################################
 
 from types import StringType
+from mimetypes import guess_extension
 from zLOG import LOG
 from zLOG import PROBLEM
 from OFS.Image import File
@@ -242,7 +243,7 @@ class OOoTemplate(ZopePageTemplate):
 
   def renderIncludes(self, here, text, sub_document=None):
     attached_files_dict = {}
-    arguments_re = re.compile('(\S+?)\s*=\s*"(.*?)"\s*',re.DOTALL)
+    arguments_re = re.compile('''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
       ret = []
       for opt_name in opts_names:
@@ -257,9 +258,8 @@ class OOoTemplate(ZopePageTemplate):
       return ret
 
     def replaceIncludes(match):
-      tag_string = match.group(1)
       # Build a dictionary with tag parameters
-      options_dict = dict(arguments_re.findall(tag_string))
+      options_dict = dict((x[0], x[2]) for x in arguments_re.findall(match.group(1)))
       # Find the page template based on the path and remove path from dict
       document = self._resolvePath(options_dict['path'].encode())
       document_text = ZopePageTemplate.pt_render(document) # extra_context is missing
@@ -339,7 +339,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
     def replaceIncludesImg(match):
       options_dict = { 'text:anchor-type': 'paragraph' }
-      options_dict.update(arguments_re.findall(match.group(1)))
+      options_dict.update((x[0], x[2]) for x in arguments_re.findall(match.group(1)))
       for old_name, name, default in (('x', 'svg:x', '0cm'),
                                       ('y', 'svg:y', '0cm'),
                                       ('style', 'draw:style-name', 'fr1')):
@@ -373,9 +373,6 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         if not is_standard_filetype:
           picture_type = picture_type()
 
-      if '/' not in picture_type:
-        picture_type = 'image/' + picture_type
-
       w, h, maxwidth, maxheight = getLengthInfos(options_dict,
                                   ('width', 'height', 'maxwidth', 'maxheight'))
 
@@ -407,7 +404,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         w = h * aspect_ratio
 
       actual_idx = self.document_counter.next()
-      pic_name = 'Pictures/picture%d.%s' % (actual_idx, picture_type.split('/')[-1])
+      pic_name = 'Pictures/picture%d%s' \
+                 % (actual_idx, guess_extension(picture_type) or '')
 
       # XXX: Pictures directory not managed (seems facultative)
       #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>

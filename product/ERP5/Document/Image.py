@@ -31,6 +31,7 @@
 
 import os
 import string
+import struct
 import sys
 import time
 import subprocess
@@ -118,10 +119,16 @@ class Image(File, OFSImage):
       TODO:
       - use image magick or PIL
     """
+    self.size = len(self.data)
     content_type, width, height = getImageInfo(self.data)
+    if not content_type:
+      if self.size >= 30 and self.data[:2] == 'BM':
+        header = struct.unpack('<III', self.data[14:26])
+        if header[0] >= 12:
+          content_type = 'image/x-bmp'
+          width, height = header[1:]
     self.height = height
     self.width = width
-    self.size = len(self.data)
     self._setContentType(content_type)
 
   
