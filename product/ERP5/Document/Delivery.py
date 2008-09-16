@@ -856,3 +856,15 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       """
       pass
 
+    def getBuilderList(self):
+      """Returns appropriate builder list."""
+      return self._getTypeBasedMethod('getBuilderList')()
+
+    def getRuleReference(self):
+      """Returns an appropriate rule reference."""
+      method = self._getTypeBasedMethod('getRuleReference')
+      if method is not None:
+        return method()
+      else:
+        raise 'SimulationError', '%s_getRuleReference script is missing.' \
+              % self.getPortalType()

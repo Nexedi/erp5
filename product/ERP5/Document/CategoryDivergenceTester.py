@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type.ObjectMessage import ObjectMessage
+from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5.Document.PropertyDivergenceTester import \
                                                PropertyDivergenceTester
@@ -69,12 +69,6 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
     divergence_message_list = []
     tested_property = self.getTestedPropertyList()
 
-    # Get the solver script list
-    solver_script_list = self.getSolverScriptList()
-    if solver_script_list is None:
-      solver_script_list = []
-    solver_script_list = self._splitStringList(solver_script_list)
-
     delivery_mvt = simulation_movement.getDeliveryValue()
     for tested_property_id, tested_property_title in \
                                   self._splitStringList(tested_property):
@@ -107,17 +101,16 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
             else:
               simulation_category_title_list.append(category_value.getTitle())
 
-        delivery_mvt_property = ' , '.join(delivery_mvt_category_title_list)
-        simulation_mvt_property = ' , '.join(simulation_category_title_list)
-
-        message = ObjectMessage(
+        message = DivergenceMessage(
+                     divergence_scope='category',
                      object_relative_url=delivery_mvt.getRelativeUrl(),
                      simulation_movement=simulation_movement,
-                     decision_value=delivery_mvt_property ,
-                     prevision_value=simulation_mvt_property,
+                     decision_value=delivery_mvt_category_list,
+                     prevision_value=simulation_category_list,
+                     decision_title=', '.join(delivery_mvt_category_title_list),
+                     prevision_title=', '.join(simulation_category_title_list),
                      tested_property=tested_property_id,
                      message=tested_property_title,
-                     solver_script_list=solver_script_list
         )
 
         divergence_message_list.append(message)

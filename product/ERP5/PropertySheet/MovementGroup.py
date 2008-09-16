@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
-#               Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -26,16 +25,12 @@
 #
 ##############################################################################
 
-
-class DivergenceTester:
-  """
-    Divergence Tester are use for the divergence testers.
-  """
-
+class MovementGroup:
   _properties = (
     {  'id'          : 'tested_property',
        'description' : 'Property used to Test',
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
-  )
+    )
+  _categories = ('collect_order_group', 'divergence_scope',)

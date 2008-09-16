@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
-#               Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -22,20 +21,33 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
+from Products.ERP5.Document.MovementGroup import MovementGroup
 
-class DivergenceTester:
+class RootAppliedRuleCausalityMovementGroup(MovementGroup):
   """
-    Divergence Tester are use for the divergence testers.
-  """
+  The purpose of MovementGroup is to define how movements are grouped,
+  and how values are updated from simulation movements.
 
-  _properties = (
-    {  'id'          : 'tested_property',
-       'description' : 'Property used to Test',
-       'type'        : 'lines',
-       'default'     : (),
-       'mode'        : 'w' },
-  )
+  This movement group is used to group movements whose root apply rule
+  has the same causality.
+  """
+  meta_type = 'ERP5 Movement Group'
+  portal_type = 'Root Applied Rule Causality Movement Group'
+
+  def _getPropertyDict(self, movement, **kw):
+    property_dict = {}
+    root_causality_value = self._getRootCausalityValue(movement)
+    property_dict['root_causality_value_list'] = [root_causality_value]
+    return property_dict
+
+  def testToUpdate(self, movement, property_dict, **kw):
+    # We can always update
+    return True, property_dict
+
+  def _getRootCausalityValue(self, movement):
+    """ Get the causality value of the root applied rule for a movement """
+    return movement.getRootAppliedRule().getCausalityValue()

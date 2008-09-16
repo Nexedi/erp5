@@ -49,27 +49,27 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
 
   def stepAcceptDecisionSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
-    self.modifyPackingListState('accept_decision_action', sequence=sequence, packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'accept')
 
   def stepAcceptDecisionProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
-    self.modifyPackingListState('accept_decision_action', sequence=sequence, packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'accept')
 
   def stepAdoptPrevisionSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
-    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'adopt')
 
   def stepAdoptPrevisionProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
-    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'adopt')
 
   def stepAdoptPrevisionProducedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
-    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'adopt')
 
   def stepAdoptPrevisionConsumedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
-    self.modifyPackingListState('adopt_prevision_action', sequence=sequence, packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'adopt')
 
   def stepSetReadyProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')

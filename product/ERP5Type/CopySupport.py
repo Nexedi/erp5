@@ -20,8 +20,9 @@ from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import CopyError
 from OFS.CopySupport import eNotSupported, eNoItemsSpecified
 from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path
+from OFS.CopySupport import sanity_check
 from Products.ERP5Type import Permissions
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_inner, aq_parent
 from Products.CMFCore.utils import getToolByName
 from Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
@@ -357,6 +358,8 @@ class CopyContainer:
           catalog.beforeUnindexObject(None,path=path,uid=uid)
           # Then start activity in order to remove lines in catalog,
           # sql wich generate locks
+          if path is None:
+            path = self.getPath()
           # - serialization_tag is used in order to prevent unindexation to 
           # happen before/in parallel with reindexations of the same object.
           catalog.activate(activity='SQLQueue',
@@ -427,6 +430,92 @@ class CopyContainer:
                                          path_item_list=previous_path, 
                                          new_id=self.id)
 
+  def _duplicate(self, cp):
+    try:    cp = _cb_decode(cp)
+    except: raise CopyError, 'Clipboard Error'
+
+    oblist=[]
+    op=cp[0]
+    app = self.getPhysicalRoot()
+    result = []
+
+    for mdata in cp[1]:
+      m = Moniker.loadMoniker(mdata)
+      try: ob = m.bind(app)
+      except: raise CopyError, 'Not Found'
+      self._verifyObjectPaste(ob, validate_src=1)
+      oblist.append(ob)
+
+    if op==0:
+      for ob in oblist:
+        if not ob.cb_isCopyable():
+            raise CopyError, 'Not Supported'
+        try:    ob._notifyOfCopyTo(self, op=0)
+        except: raise CopyError, 'Copy Error'
+        ob = ob._getCopy(self)
+        orig_id = ob.getId()
+        id = self._get_id(ob.getId())
+        result.append({'id':orig_id, 'new_id':id})
+        ob._setId(id)
+        self._setObject(id, ob)
+        ob = self._getOb(id)
+        ob._postCopy(self, op=0)
+        ob._postDuplicate()
+        ob.wl_clearLocks()
+
+    if op==1:
+      # Move operation
+      for ob in oblist:
+        id = ob.getId()
+        if not ob.cb_isMoveable():
+          raise CopyError, 'Not Supported'
+        try:    ob._notifyOfCopyTo(self, op=1)
+        except: raise CopyError, 'Move Error'
+        if not sanity_check(self, ob):
+          raise CopyError, 'This object cannot be pasted into itself'
+
+        # try to make ownership explicit so that it gets carried
+        # along to the new location if needed.
+        ob.manage_changeOwnershipType(explicit=1)
+
+        aq_parent(aq_inner(ob))._delObject(id)
+        ob = aq_base(ob)
+        orig_id = id
+        id = self._get_id(id)
+        result.append({'id':orig_id, 'new_id':id })
+
+        ob._setId(id)
+        self._setObject(id, ob, set_owner=0)
+        ob = self._getOb(id)
+        ob._postCopy(self, op=1)
+
+        # try to make ownership implicit if possible
+        ob.manage_changeOwnershipType(explicit=0)
+
+    return result
+
+  def _postDuplicate(self):
+    self_base = aq_base(self)
+    portal_catalog = getToolByName(self, 'portal_catalog')
+    self_base.uid = portal_catalog.newUid()
+
+    # Give the Owner local role to the current user, zope only does this if no
+    # local role has been defined on the object, which breaks ERP5Security
+    if getattr(self_base, '__ac_local_roles__', None) is not None:
+      user = getSecurityManager().getUser()
+      if user is not None:
+        userid = user.getId()
+        if userid is not None:
+          #remove previous owners
+          dict = self.__ac_local_roles__
+          for key, value in dict.items():
+            if 'Owner' in value:
+              value.remove('Owner')
+          #add new owner
+          l = dict.setdefault(userid, [])
+          l.append('Owner')
+    self.__recurse('_postDuplicate')
+
 #### Helper methods
 
 def tryMethodCallWithTemporaryPermission(context, permission, method,
@@ -455,4 +544,3 @@ def tryMethodCallWithTemporaryPermission(context, permission, method,
       result = method(*method_argv, **method_kw)
       p.setRoles(old_role_list)
       return result
-

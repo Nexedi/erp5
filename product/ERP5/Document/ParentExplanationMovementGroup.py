@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
-#               Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -22,20 +21,30 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
+from Products.ERP5.Document.MovementGroup import MovementGroup
 
-class DivergenceTester:
+class ParentExplanationMovementGroup(MovementGroup):
   """
-    Divergence Tester are use for the divergence testers.
-  """
+  The purpose of MovementGroup is to define how movements are grouped,
+  and how values are updated from simulation movements.
 
-  _properties = (
-    {  'id'          : 'tested_property',
-       'description' : 'Property used to Test',
-       'type'        : 'lines',
-       'default'     : (),
-       'mode'        : 'w' },
-  )
+  This movement group was first created for building Sale invoices
+  transactions lines. We need to put accounting lines in the same
+  invoices than invoice lines.
+  """
+  meta_type = 'ERP5 Movement Group'
+  portal_type = 'Parent Explanation Movement Group'
+
+  def _getPropertyDict(self, movement, **kw):
+    property_dict = {}
+    parent_explanation_value = movement.getParentExplanationValue()
+    property_dict['parent_explanation_value'] = parent_explanation_value
+    return property_dict
+
+  def test(self, object, property_dict, property_list=None, **kw):
+    return object.getParentExplanationValue() == \
+           property_dict['parent_explanation_value']

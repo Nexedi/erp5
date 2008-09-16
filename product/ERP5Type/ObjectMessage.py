@@ -84,7 +84,7 @@ class ObjectMessage:
     if request is not None:
       for item in request:
         if item.meta_type == 'ERP5 Site':
-          return item.restrictedTraverse(self.object_relative_url)
+          return item.unrestrictedTraverse(self.object_relative_url)
 
     return None
 

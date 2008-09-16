@@ -27,15 +27,9 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
-from Products.ERP5 import MovementGroup
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.OrderBuilder import OrderBuilder
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-
-from zLOG import LOG
 
 class SelectMethodError(Exception): pass
 class SelectMovementError(Exception): pass
@@ -149,7 +143,8 @@ class DeliveryBuilder(OrderBuilder):
 
   def _setDeliveryMovementProperties(self, delivery_movement,
                                      simulation_movement, property_dict,
-                                     update_existing_movement=0):
+                                     update_existing_movement=0,
+                                     force_update=0):
     """
       Initialize or update delivery movement properties.
       Set delivery ratio on simulation movement.
@@ -159,116 +154,168 @@ class DeliveryBuilder(OrderBuilder):
     OrderBuilder._setDeliveryMovementProperties(
                             self, delivery_movement,
                             simulation_movement, property_dict,
-                            update_existing_movement=update_existing_movement)
-    # Check if simulation movement is not already linked to a existing
-    # movement
-    if simulation_movement.getDeliveryValue() is not None:
-      raise SelectMovementError,\
-            "simulation_movement '%s' must not be selected !" %\
-            simulation_movement.getRelativeUrl()
-    # Update simulation movement
+                            update_existing_movement=update_existing_movement,
+                            force_update=force_update)
     simulation_movement.edit(delivery_value=delivery_movement)
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateFromSimulation')
-  def updateFromSimulation(self, delivery_relative_url, create_new_delivery=1):
+  def updateFromSimulation(self, delivery_relative_url, **kw):
     """
       Update all lines of this transaction based on movements in the
       simulation related to this transaction.
     """
-    updateFromSimulation = UnrestrictedMethod(self._updateFromSimulation)
-    return updateFromSimulation(delivery_relative_url,
-                                create_new_delivery=create_new_delivery)
-
-  def _updateFromSimulation(self, delivery_relative_url, create_new_delivery=1):
     # We have to get a delivery, else, raise a Error
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
 
-    delivery_uid = delivery.getUid()
+    divergence_to_adopt_list = delivery.getDivergenceList()
+    return self.solveDivergence(
+      delivery_relative_url,
+      divergence_to_adopt_list=divergence_to_adopt_list)
+
+  def solveDeliveryGroupDivergence(self, *args, **kw):
+    """
+      solve each divergence according to users decision (accept, adopt
+      or do nothing).
+    """
+    solveDeliveryGroupDivergence = UnrestrictedMethod(self._solveDeliveryGroupDivergence)
+    return solveDeliveryGroupDivergence(*args, **kw)
+
+  def _solveDeliveryGroupDivergence(self, delivery_relative_url,
+                                    property_dict=None, comment=None):
+    if property_dict in (None, {}):
+      return
+    delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
+    delivery.edit(comment=comment, **property_dict)
+
+    # Try to remove existing properties/categories from Movements that
+    # should exist on Deliveries.
+    for movement in delivery.getMovementList():
+      for prop in property_dict.keys():
+        # XXX The following should be implemented in better way.
+        if movement.hasProperty(prop):
+          try:
+            # for Property
+            movement._delProperty(prop)
+          except AttributeError:
+            # for Category
+            movement.setProperty(prop, None)
+
+    divergence_to_accept_list = []
+    for divergence in delivery.getDivergenceList():
+      if divergence.getProperty('tested_property') not in property_dict.keys():
+        continue
+      divergence_to_accept_list.append(divergence)
+    self._solveDivergence(delivery_relative_url,
+                          divergence_to_accept_list=divergence_to_accept_list)
+
+  def solveDivergence(self, *args, **kw):
+    """
+      solve each divergence according to users decision (accept, adopt
+      or do nothing).
+    """
+    solveDivergence = UnrestrictedMethod(self._solveDivergence)
+    return solveDivergence(*args, **kw)
+
+  def _solveDivergence(self, delivery_relative_url,
+                       divergence_to_accept_list=None,
+                       divergence_to_adopt_list=None,
+                       **kw):
+    # We have to get a delivery, else, raise a Error
+    delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
+
+    if divergence_to_accept_list is None:
+      divergence_to_accept_list = []
+    if divergence_to_adopt_list is None:
+      divergence_to_adopt_list = []
+
+    if not len(divergence_to_accept_list) and \
+           not len(divergence_to_adopt_list):
+      return
+
+    # First, we update simulation movements according to
+    # divergence_to_accept_list.
+    if len(divergence_to_accept_list):
+      solver_script = delivery._getTypeBasedMethod('acceptDecision',
+                                                   'Delivery_acceptDecision')
+      solver_script(divergence_to_accept_list)
+
+    # Then, we update delivery/line/cell from simulation movements
+    # according to divergence_to_adopt_list.
+    if not len(divergence_to_adopt_list):
+      return
 
     # Select
+    movement_list = delivery.getMovementList()
     simulation_movement_list = []
-    for movement in delivery.getMovementList():
+    for movement in movement_list:
       movement.edit(quantity=0)
       for simulation_movement in movement.getDeliveryRelatedValueList(
                                             portal_type="Simulation Movement"):
-        simulation_movement.setDelivery(None)
         simulation_movement_list.append(simulation_movement)
 
     # Collect
     root_group = self.collectMovement(simulation_movement_list)
 
-    # Update delivery
-    rejected_movement_list = self._deliveryUpdateGroupProcessing(
-                                          delivery,
-                                          root_group)
+    # Build
+    portal = self.getPortalObject()
+    delivery_module = getattr(portal, self.getDeliveryModule())
+    delivery_to_update_list = [delivery]
+    self._resetUpdated()
+    delivery_list = self._deliveryGroupProcessing(
+      delivery_module,
+      root_group,
+      self.getDeliveryMovementGroupList(),
+      delivery_to_update_list=delivery_to_update_list,
+      divergence_list=divergence_to_adopt_list,
+      force_update=1)
 
-    for sim_mvt in root_group.getMovementList():
-      sim_mvt.immediateReindexObject()
+    # Then, we should re-apply quantity divergence according to 'Do
+    # nothing' quanity divergence list because all quantity are already
+    # calculated in adopt prevision phase.
+    quantity_dict = {}
+    for divergence in delivery.getDivergenceList():
+      if divergence.getProperty('divergence_scope') != 'quantity' or \
+             divergence in divergence_to_accept_list or \
+             divergence in divergence_to_adopt_list:
+        continue
+      s_m = divergence.getProperty('simulation_movement')
+      delivery_movement = s_m.getDeliveryValue()
+      quantity_gap = divergence.getProperty('decision_value') - \
+                     divergence.getProperty('prevision_value')
+      delivery_movement.setQuantity(delivery_movement.getQuantity() + \
+                                    quantity_gap)
+      quantity_dict[s_m] = \
+          divergence.getProperty('decision_value')
 
-    # Store the good quantity value on delivery line
-    for movement in delivery.getMovementList():
-      total_quantity = 0
-      sim_mvt_list = movement.getDeliveryRelatedValueList(
-                                             portal_type="Simulation Movement")
+    # Finally, recalculate delivery_ratio
+    #
+    # Here, created/updated movements are not indexed yet. So we try to
+    # gather delivery relations from simulation movements.
+    delivery_dict = {}
+    for s_m in simulation_movement_list:
+      delivery_path = s_m.getDelivery()
+      delivery_dict[delivery_path] = \
+                                   delivery_dict.get(delivery_path, []) + \
+                                   [s_m]
 
-      for simulation_movement in sim_mvt_list:
-        total_quantity += simulation_movement.getQuantity()
-
-      if total_quantity != 0:
-        for simulation_movement in sim_mvt_list:
-          quantity = simulation_movement.getQuantity()
-          #simulation_movement.setDeliveryRatio(quantity/total_quantity)
-          simulation_movement.edit(delivery_ratio=quantity/total_quantity)
+    for s_m_list_per_movement in delivery_dict.values():
+      total_quantity = reduce(lambda x, y: \
+                              x + quantity_dict.get(y, y.getQuantity()),
+                              s_m_list_per_movement, 0)
+      if total_quantity != 0.0:
+        for s_m in s_m_list_per_movement:
+          delivery_ratio = quantity_dict.get(s_m, s_m.getQuantity()) \
+                                             / total_quantity
+          s_m.edit(delivery_ratio=delivery_ratio)
       else:
-        if len(sim_mvt_list) != 0:
-          # Distribute equally ratio to all movement
-          mvt_ratio = 1 / len(sim_mvt_list)
-          for simulation_movement in sim_mvt_list:
-            #simulation_movement.setDeliveryRatio(mvt_ratio)
-            simulation_movement.edit(delivery_ratio=mvt_ratio)
+        for s_m in s_m_list_per_movement:
+          delivery_ratio = 1.0 / len(s_m_list_per_movement)
+          s_m.edit(delivery_ratio=delivery_ratio)
 
-      movement.edit(quantity=total_quantity)
-      # To update the divergence status, the simulation movements
-      # must be reindexed, and then the delivery must be touched
-      path_list = []
-    # Launch delivery creation
-    if (create_new_delivery == 1) and\
-       (rejected_movement_list != []):
-      movement_relative_url_list = []
-      for movement in rejected_movement_list:
-        # XXX FIXME Not very generic...
-        if movement.__class__.__name__ == "FakeMovement":
-          movement_relative_url_list.extend(
-                    [x.getRelativeUrl() for x in movement.getMovementList()])
-        else:
-          movement_relative_url_list.append(movement.getRelativeUrl())
-      self.activate(activity="SQLQueue").build(
-                        movement_relative_url_list=movement_relative_url_list)
+    # Call afterscript if new deliveries are created
+    new_delivery_list = [x for x in delivery_list if x != delivery]
+    self.callAfterBuildingScript(new_delivery_list, simulation_movement_list)
 
-  def _deliveryUpdateGroupProcessing(self, delivery, movement_group):
-    """
-      Update delivery movement
-    """
-    rejected_movement_list = []
-    property_dict = {}
-
-    for collect_order in self.getDeliveryCollectOrderList():
-      for group in movement_group.getGroupList()[1:]:
-        rejected_movement_list.extend(group.getMovementList())
-      movement_group = movement_group.getGroupList()[0]
-      property_dict.update(movement_group.getGroupEditDict())
-
-    # Put properties on delivery
-    delivery.edit(**property_dict)
-
-    # Then, reconnect simulation to delivery line
-    for group in movement_group.getGroupList():
-      self._deliveryLineGroupProcessing(
-                                  delivery,
-                                  group,
-                                  self.getDeliveryLineCollectOrderList()[1:],
-                                  {},
-                                  update_requested=1)
-    return rejected_movement_list
+    return delivery_list

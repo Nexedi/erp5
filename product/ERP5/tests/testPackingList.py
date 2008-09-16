@@ -250,9 +250,16 @@ class TestPackingListMixin(TestOrderMixin):
       Do the split and defer action
     """
     packing_list = sequence.get('packing_list')
-    packing_list.portal_workflow.doActionFor(packing_list,'split_prevision_action',
-                                             start_date=self.datetime + 15,
-                                             stop_date=self.datetime + 25)
+    kw = {'listbox':[
+      {'listbox_key':line.getRelativeUrl(),
+       'choice':'SplitAndDefer'} for line in packing_list.getMovementList() \
+      if line.isDivergent()]}
+    self.portal.portal_workflow.doActionFor(
+      packing_list,
+      'split_and_defer_action',
+      start_date=self.datetime + 15,
+      stop_date=self.datetime + 25,
+      **kw)
 
   def stepCheckPackingListSplitted(self, sequence=None, sequence_list=None, **kw):
     """
@@ -472,7 +479,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_line_list),1)
+#    self.assertEquals(len(simulation_line_list),1)
     for simulation_line in simulation_line_list:
       simulation_line.edit(quantity=self.default_quantity-1)
 
@@ -493,34 +500,110 @@ class TestPackingListMixin(TestOrderMixin):
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
     resource_list = sequence.get('resource_list')
-    self.assertEquals(len(simulation_line_list),len(resource_list))
     for simulation_line in simulation_line_list:
       simulation_line.edit(start_date=self.datetime+15)
 
-  def stepAdoptPrevision(self,sequence=None, sequence_list=None,
-                         packing_list=None,**kw):
+  def stepModifyOneSimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
     """
-    if packing_list is None:
-      packing_list = sequence.get('packing_list')
-    LOG('packing_list.getSimulationState()',0,packing_list.getSimulationState())
-    LOG('packing_list.getCausalityState()',0,packing_list.getCausalityState())
-    packing_list.portal_workflow.doActionFor(packing_list,'adopt_prevision_action')
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    resource_list = sequence.get('resource_list')
+    self.assertEquals(len(simulation_line_list),len(resource_list))
+    simulation_line_list[-1].edit(start_date=self.datetime+15)
 
-  def stepNewPackingListAdoptPrevision(self,sequence=None, sequence_list=None, **kw):
+  def stepModifySimulationLineResource(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    resource_list = sequence.get('resource_list')
+    for simulation_line in simulation_line_list:
+      simulation_line.edit(resource_value=resource_list[-1])
+
+  def stepModifyOneSimulationLineResource(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    resource_list = sequence.get('resource_list')
+    simulation_line_list[-1].edit(resource_value=resource_list[-1])
+
+  def stepNewPackingListAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('new_packing_list')
-    self.stepAdoptPrevision(sequence=sequence,packing_list=packing_list)
+    self._solveDivergence(packing_list, 'quantity', 'adopt')
 
-  def stepAcceptDecisionPackingList(self,sequence=None, sequence_list=None, **kw):
+  def stepUnifyDestinationWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('packing_list')
-    packing_list.portal_workflow.doActionFor(packing_list,'accept_decision_action')
+    self._solveDeliveryGroupDivergence(packing_list, 'destination',
+                                       packing_list.getRelativeUrl())
+
+  def stepUnifyStartDateWithDecision(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('packing_list')
+    self._solveDeliveryGroupDivergence(packing_list, 'start_date',
+                                  packing_list.getRelativeUrl())
+
+  def stepUnifyStartDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('packing_list')
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    self._solveDeliveryGroupDivergence(packing_list, 'start_date',
+                                  simulation_line_list[-1].getRelativeUrl())
+
+  def _solveDeliveryGroupDivergence(self, obj, property, target_url):
+    kw = {'delivery_group_listbox':
+          {property:{'choice':target_url}}}
+    self.portal.portal_workflow.doActionFor(
+      obj,
+      'solve_divergence_action',
+      **kw)
+
+  def stepAcceptDecisionResource(self,sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    self._solveDivergence(packing_list, 'resource', 'accept')
+
+  def stepAcceptDecisionQuantity(self,sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    self._solveDivergence(packing_list, 'quantity', 'accept')
+
+  def stepAdoptPrevisionResource(self,sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    self._solveDivergence(packing_list, 'resource', 'adopt')
+
+  def stepAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    self._solveDivergence(packing_list, 'quantity', 'adopt')
+
+  def _solveDivergence(self, obj, property, decision, group='line'):
+    """
+      Check if simulation movement are disconnected
+    """
+    kw = {'%s_group_listbox' % group:{}}
+    for divergence in obj.getDivergenceList():
+      if divergence.getProperty('tested_property') != property:
+        continue
+      sm_url = divergence.getProperty('simulation_movement').getRelativeUrl()
+      kw['line_group_listbox']['%s&%s' % (sm_url, property)] = {
+        'choice':decision}
+    self.portal.portal_workflow.doActionFor(
+      obj,
+      'solve_divergence_action',
+      **kw)
 
   def stepCheckPackingListLineWithNewQuantityPrevision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -536,6 +619,42 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list_line = sequence.get('packing_list_line')
     self.assertEquals(packing_list_line.getQuantity(),(self.default_quantity-1)*2)
 
+  def stepCheckPackingListLineWithDifferentResource(self,sequence=None, sequence_list=None, **kw):
+    """
+      Look if the packing list has new previsions
+    """
+    packing_list_line = sequence.get('packing_list_line')
+    new_resource = sequence.get('resource')
+    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity)
+    self.assertNotEquals(packing_list_line.getResourceValue(), new_resource)
+    simulation_line_list = packing_list_line.getDeliveryRelatedValueList()
+    order_line_list = [x.getOrder() for x in simulation_line_list]
+    self.assertEquals(sorted(packing_list_line.getCausalityList()),
+                      sorted(order_line_list))
+    new_packing_list_line = packing_list_line.aq_parent[str(int(packing_list_line.getId())+1)]
+    self.assertEquals(new_packing_list_line.getQuantity(), self.default_quantity)
+    self.assertEquals(new_packing_list_line.getResourceValue(), new_resource)
+    simulation_line_list = new_packing_list_line.getDeliveryRelatedValueList()
+    order_line_list = [x.getOrder() for x in simulation_line_list]
+    self.assertEquals(sorted(new_packing_list_line.getCausalityList()),
+                      sorted(order_line_list))
+
+  def stepCheckPackingListLineWithSameResource(self,sequence=None, sequence_list=None, **kw):
+    """
+      Look if the packing list has new previsions
+    """
+    old_packing_list_line = sequence.get('packing_list_line')
+    packing_list_line = old_packing_list_line.aq_parent[str(int(old_packing_list_line.getId())-1)]
+    resource = sequence.get('resource')
+    self.assertEquals(old_packing_list_line.getQuantity(), 0)
+    self.assertNotEquals(old_packing_list_line.getResourceValue(), resource)
+    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity * 2)
+    self.assertEquals(packing_list_line.getResourceValue(), resource)
+    simulation_line_list = packing_list_line.getDeliveryRelatedValueList()
+    order_line_list = [x.getOrder() for x in simulation_line_list]
+    self.assertEquals(sorted(packing_list_line.getCausalityList()),
+                      sorted(order_line_list))
+
   def stepCheckNewPackingListAfterStartDateAdopt(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
@@ -547,6 +666,34 @@ class TestPackingListMixin(TestOrderMixin):
     LOG('CheckNewPackingList, packing_list.getStartDate',0,packing_list.getStartDate())
     self.assertEquals(packing_list_line.getQuantity(),self.default_quantity)
     self.assertEquals(packing_list.getStartDate(),self.datetime+15)
+    simulation_line_list = applied_rule.objectValues()
+    resource_list = sequence.get('resource_list')
+    self.assertEquals(len(simulation_line_list),len(resource_list))
+    delivery_value_list = []
+    for simulation_line in simulation_line_list:
+#      self.assertNotEquals(simulation_line.getDeliveryValue(),None)
+      delivery_value = simulation_line.getDeliveryValue()
+      if delivery_value not in delivery_value_list:
+        delivery_value_list.append(delivery_value_list)
+#      new_packing_list = delivery_value.getParent()
+#      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
+    self.assertEquals(len(delivery_value_list),len(resource_list))
+
+  def stepCheckNewSplitPackingListAfterStartDateAdopt(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    applied_rule = sequence.get('applied_rule')
+    packing_list = sequence.get('packing_list')
+    packing_list_line = [x for x in packing_list.getMovementList() \
+                         if x.getQuantity()][0]
+    new_packing_list = self.portal.sale_packing_list_module[str(int(packing_list.getId())-1)]
+    new_packing_list_line = [x for x in new_packing_list.getMovementList() \
+                             if x.getQuantity()][0]
+    self.assertEquals(packing_list_line.getQuantity(),self.default_quantity)
+    self.assertEquals(packing_list.getStartDate(),self.datetime+10)
+    self.assertEquals(new_packing_list_line.getQuantity(),self.default_quantity)
+    self.assertEquals(new_packing_list.getStartDate(),self.datetime+15)
     simulation_line_list = applied_rule.objectValues()
     resource_list = sequence.get('resource_list')
     self.assertEquals(len(simulation_line_list),len(resource_list))
@@ -743,7 +890,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCheckPackingListIsCalculating \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAcceptDecisionPackingList \
+                      stepUnifyDestinationWithDecision \
                       stepTic \
                       stepCheckPackingListIsSolved \
                       stepCheckPackingListIsNotDivergent \
@@ -763,7 +910,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCheckPackingListIsCalculating \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAcceptDecisionPackingList \
+                      stepUnifyStartDateWithDecision \
                       stepTic \
                       stepCheckPackingListIsSolved \
                       stepCheckPackingListIsNotDivergent \
@@ -798,7 +945,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepModifySimulationLineQuantity \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAdoptPrevision \
+                      stepAdoptPrevisionQuantity \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
@@ -817,7 +964,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepModifySimulationLineQuantity \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAcceptDecisionPackingList \
+                      stepAcceptDecisionQuantity \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
@@ -836,7 +983,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepModifySimulationLineQuantityForMergedLine \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAdoptPrevision \
+                      stepAdoptPrevisionQuantity \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
@@ -855,7 +1002,74 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepModifySimulationLineQuantityForMergedLine \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAcceptDecisionPackingList \
+                      stepAcceptDecisionQuantity \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationQuantityUpdatedForMergedLine \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05d_SimulationChangeResourceOnOneSimulationMovementForMergedLine(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence_with_duplicated_lines + '\
+                      stepCreateNotVariatedResource \
+                      stepModifyOneSimulationLineResource \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevisionResource \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListLineWithDifferentResource \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05e_SimulationUnifyResourceOnSimulationMovementsForNonMergedLines(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence_with_two_lines + '\
+                      stepModifySimulationLineResource \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevisionResource \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListLineWithSameResource \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_05f_SimulationChangeAndPartialAcceptDecision(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence_with_duplicated_lines + '\
+                      stepCreateNotVariatedResource \
+                      stepModifySimulationLineQuantityForMergedLine \
+                      stepModifyOneSimulationLineResource \
+                      stepModifySimulationLineStartDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionResource \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepUnifyStartDateWithDecision \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
@@ -874,7 +1088,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepModifySimulationLineStartDate \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepAdoptPrevision \
+                      stepUnifyStartDateWithPrevision \
                       stepTic \
                       stepCheckPackingListIsSolved \
                       stepCheckNewPackingListAfterStartDateAdopt \
@@ -894,7 +1108,28 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepTic \
                       stepCheckPackingListIsDiverged \
                       stepCheckPackingListIsDivergent \
-                      stepAdoptPrevision \
+                      stepUnifyStartDateWithPrevision \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckNewPackingListAfterStartDateAdopt \
+                      '
+    # XXX Check if there is a new packing list created
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_07a_SimulationChangeStartDateWithTwoOrderLine(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence_with_two_lines + '\
+                      stepModifyOneSimulationLineStartDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepCheckPackingListIsDivergent \
+                      stepUnifyStartDateWithPrevision \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
@@ -937,6 +1172,12 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepSetContainerFullQuantity \
                       stepTic \
                       stepCheckPackingListIsPacked \
+                      stepModifySimulationLineStartDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepCheckPackingListIsDivergent \
+                      stepUnifyStartDateWithPrevision \
+                      stepTic \
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
@@ -1000,7 +1241,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepSplitAndDeferPackingList \
                       stepTic \
                       stepCheckNewPackingListIsDivergent \
-                      stepNewPackingListAdoptPrevision \
+                      stepNewPackingListAdoptPrevisionQuantity \
                       stepTic \
                       stepCheckPackingListIsSolved \
                       stepCheckPackingListSplittedTwoTimes \
@@ -1110,4 +1351,3 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestPackingList))
   suite.addTest(unittest.makeSuite(TestPurchasePackingList))
   return suite
-

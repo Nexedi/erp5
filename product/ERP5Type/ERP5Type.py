@@ -193,6 +193,8 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
       'project',
       # Module
       'module',
+      # Movement Group
+      'movement_group',
     )
     group_list = ()
 

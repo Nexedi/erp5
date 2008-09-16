@@ -28,10 +28,6 @@
 #
 ##############################################################################
 
-"""
-Define in this file all classes intended to group every kind of movement
-"""
-
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
 
@@ -39,72 +35,54 @@ class MovementRejected(Exception) : pass
 class FakeMovementError(Exception) : pass
 class MovementGroupError(Exception) : pass
 
-class RootMovementGroup:
-
-  def __init__(self, class_list, movement=None, last_line_class_name=None,
-               separate_method_name_list=[]):
-    self._nested_class = None
-    self.setNestedClass(class_list=class_list)
+class MovementGroupNode:
+  def __init__(self, movement_group_list=None, movement_list=None,
+               last_line_movement_group=None,
+               separate_method_name_list=[], movement_group=None):
     self._movement_list = []
     self._group_list = []
-
-    self._class_list = class_list
-    self._last_line_class_name = last_line_class_name
+    self._movement_group = movement_group
+    self._movement_group_list = movement_group_list
+    self._last_line_movement_group = last_line_movement_group
     self._separate_method_name_list = separate_method_name_list
+    if movement_list is not None :
+      self.append(movement_list)
 
-    if movement is not None :
-      self.append(movement)
-
-  def getNestedClass(self, class_list):
-    if len(class_list)>0:
-      return class_list[0]
-    return None
-
-  def setNestedClass(self,class_list):
-    """
-      This sets an appropriate nested class.
-    """
-    self._nested_class = self.getNestedClass(class_list)
-
-  def _appendGroup(self, movement):
-    nested_instance = self._nested_class(
-                    movement=movement,
-                    class_list=self._class_list[1:],
-                    last_line_class_name=self._last_line_class_name,
-                    separate_method_name_list=self._separate_method_name_list)
+  def _appendGroup(self, movement_list, property_dict):
+    nested_instance = MovementGroupNode(
+      movement_group=self._movement_group_list[0],
+      movement_group_list=self._movement_group_list[1:],
+      last_line_movement_group=self._last_line_movement_group,
+      separate_method_name_list=self._separate_method_name_list)
+    nested_instance.setGroupEdit(**property_dict)
+    split_movement_list = nested_instance.append(movement_list)
     self._group_list.append(nested_instance)
+    return split_movement_list
 
-  def append(self, movement):
-    is_movement_in_group = 0
-    for group in self.getGroupList():
-      if group.test(movement) :
-        try:
-          group.append(movement)
-          is_movement_in_group = 1
-          break
-        except MovementRejected:
-          if self.__class__.__name__ == self._last_line_class_name:
-            pass
+  def append(self, movement_list):
+    all_split_movement_list = []
+    if len(self._movement_group_list):
+      for separate_movement_list, property_dict in \
+          self._movement_group_list[0].separate(movement_list):
+        split_movement_list = self._appendGroup(separate_movement_list,
+                                                property_dict)
+        if len(split_movement_list):
+          if self._movement_group == self._last_line_movement_group:
+            self.append(split_movement_list)
           else:
-            raise MovementRejected
-    if is_movement_in_group == 0 :
-      if self._nested_class is not None:
-        self._appendGroup(movement)
-      else:
-        # We are on a node group
-        movement_list = self.getMovementList()
-        if len(movement_list) > 0:
-          # We have a conflict here, because it is forbidden to have
-          # 2 movements on the same node group
-          tmp_result = self._separate(movement)
-          self._movement_list, split_movement_list = tmp_result
-          if split_movement_list != [None]:
-            # We rejected a movement, we need to put it on another line
-            # Or to create a new one
-            raise MovementRejected
-        else:
-          # No movement on this node, we can add it
-          self._movement_list.append(movement)
+            all_split_movement_list.extend(split_movement_list)
+    else:
+      self._movement_list.append(movement_list[0])
+      for movement in movement_list[1:]:
+        # We have a conflict here, because it is forbidden to have
+        # 2 movements on the same node group
+        tmp_result = self._separate(movement)
+        self._movement_list, split_movement = tmp_result
+        if split_movement is not None:
+          # We rejected a movement, we need to put it on another line
+          # Or to create a new one
+          all_split_movement_list.append(split_movement)
+    return all_split_movement_list
 
   def getGroupList(self):
     return self._group_list
@@ -125,7 +103,11 @@ class RootMovementGroup:
     """
       Get property dict for the futur created object
     """
-    return getattr(self, '_property_dict', {})
+    property_dict = getattr(self, '_property_dict', {}).copy()
+    for key in property_dict.keys():
+      if key.startswith('_'):
+        del(property_dict[key])
+    return property_dict
 
   def getMovementList(self):
     """
@@ -139,6 +121,59 @@ class RootMovementGroup:
       for group in group_list:
         movement_list.extend(group.getMovementList())
       return movement_list
+
+  def getMovement(self):
+    """
+      Return first movement of the movement list in the current group
+    """
+    movement = self.getMovementList()[0]
+    if movement.__class__.__name__ == 'FakeMovement':
+      return movement.getMovementList()[0]
+    else:
+      return movement
+
+  def testToUpdate(self, movement, divergence_list):
+    # Try to check if movement is updatable or not.
+    #
+    # 1. if Divergence has no scope: update anyway.
+    # 2. if Divergence has a scope: update in related Movement Group only.
+    #
+    # return value is:
+    #   [updatable? (True/False), property dict for update]
+    if self._movement_group is not None:
+      property_list = []
+      if len(divergence_list):
+        divergence_scope = self._movement_group.getDivergenceScope()
+        if divergence_scope is None:
+          # Update anyway (eg. CausalityAssignmentMovementGroup etc.)
+          pass
+        else:
+          related_divergence_list = [
+            x for x in divergence_list \
+            if divergence_scope == x.divergence_scope and \
+            self.hasSimulationMovement(x.simulation_movement)]
+          if not len(related_divergence_list):
+            return True, {}
+          property_list = [x.tested_property for x in related_divergence_list]
+      return self._movement_group.testToUpdate(movement, self._property_dict,
+                                               property_list=property_list)
+    else:
+      return True, {}
+
+  def getDivergenceScope(self):
+    if self._movement_group is not None:
+      return self._movement_group.getDivergenceScope()
+    else:
+      return None
+
+  def hasSimulationMovement(self, simulation_movement):
+    for movement in self.getMovementList():
+      if movement.__class__.__name__ == "FakeMovement":
+        if simulation_movement in movement.getMovementList():
+          return True
+      elif simulation_movement == movement:
+        return True
+    return False
 
   def _separate(self, movement):
     """
@@ -165,7 +200,7 @@ class RootMovementGroup:
         else:
           break
 
-      return [new_stored_movement], [rejected_movement]
+      return [new_stored_movement], rejected_movement
 
   ########################################################
   # Separate methods
@@ -210,6 +245,7 @@ class RootMovementGroup:
 
   def __repr__(self):
     repr_str = '<%s object at 0x%x\n' % (self.__class__.__name__, id(self))
+    repr_str += ' _movement_group = %r,\n' % self._movement_group
     if getattr(self, '_property_dict', None) is not None:
       repr_str += ' _property_dict = %r,\n' % self._property_dict
     if self._movement_list:
@@ -218,558 +254,11 @@ class RootMovementGroup:
       repr_str += ' _group_list = [\n%s]>' % (
         '\n'.join(['   %s' % x for x in (',\n'.join([repr(i) for i in self._group_list])).split('\n')]))
     else:
-      repr_str += ' _last_line_class_name = %r,\n' % self._last_line_class_name
-      repr_str += ' _separate_method_name_list = %r,\n' % self._separate_method_name_list
-      repr_str += ' _group_list = []>'
+      repr_str += ' _last_line_movement_group = %r,\n' % self._last_line_movement_group
+      repr_str += ' _separate_method_name_list = %r>' % self._separate_method_name_list
     return repr_str
 
-allow_class(RootMovementGroup)
-
-class OrderMovementGroup(RootMovementGroup):
-  """ Group movements that comes from the same Order. """
-  def __init__(self,movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    order_value = self._getOrderValue(movement)
-    if order_value is None:
-      order_relative_url = None
-    else:
-      # get the id of the enclosing delivery
-      # for this cell or line
-      order_relative_url = order_value.getRelativeUrl()
-    self.order = order_relative_url
-    self.setGroupEdit(causality_value=order_value)
-
-  def _getOrderValue(self, movement):
-    if hasattr(movement, 'getRootAppliedRule'):
-      # This is a simulation movement
-      order_value = movement.getRootAppliedRule().getCausalityValue(
-                        portal_type=movement.getPortalOrderTypeList())
-      if order_value is None:
-        # In some cases (ex. DeliveryRule), there is no order
-        # we may consider a PackingList as the order in the OrderGroup
-        order_value = movement.getRootAppliedRule().getCausalityValue(
-                        portal_type=movement.getPortalDeliveryTypeList())
-    else:
-      # This is a temp movement
-      order_value = None
-    return order_value
-
-  def test(self,movement):
-    order_value = self._getOrderValue(movement)
-    if order_value is None:
-      order_relative_url = None
-    else:
-      # get the id of the enclosing delivery
-      # for this cell or line
-      order_relative_url = order_value.getRelativeUrl()
-    return order_relative_url == self.order
-
-allow_class(OrderMovementGroup)
-
-class CausalityAssignmentMovementGroup(RootMovementGroup):
-  """
-  This movement group is used in order to define the causality
-  on lines and cells.
-  """
-
-  def addCausalityToEdit(self, movement):
-    parent = movement
-    # Go upper into the simulation tree in order to find an order link
-    while parent.getOrderValue() is None and not(parent.isRootAppliedRule()):
-      parent = parent.getParentValue()
-    order_movement = parent.getOrderValue()
-    if order_movement is not None:
-      causality = self.getGroupEditDict().get('causality_list', [])
-      order_movement_url = order_movement.getRelativeUrl()
-      if order_movement_url not in causality:
-        causality.append(order_movement_url)
-        self.setGroupEdit(causality_list=causality)
-
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.addCausalityToEdit(movement)
-
-  def test(self, movement):
-    self.addCausalityToEdit(movement)
-    return 1
-
-allow_class(CausalityAssignmentMovementGroup)
-
-class CausalityMovementGroup(RootMovementGroup):
-  """ TODO: docstring """
-
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    explanation_relative_url = self._getExplanationRelativeUrl(movement)
-    self.explanation = explanation_relative_url
-
-  def _getExplanationRelativeUrl(self, movement):
-    """ Get the order value for a movement """
-    if hasattr(movement, 'getParentValue'):
-      # This is a simulation movement
-      if movement.getParentValue() != movement.getRootAppliedRule() :
-        # get the explanation of parent movement if we have not been
-        # created by the root applied rule.
-        movement = movement.getParentValue().getParentValue()
-      explanation_value = movement.getExplanationValue()
-      if explanation_value is None:
-        raise ValueError, 'No explanation for movement %s' % movement.getPath()
-    else:
-      # This is a temp movement
-      explanation_value = None
-    if explanation_value is None:
-      explanation_relative_url = None
-    else:
-      # get the enclosing delivery for this cell or line
-      if hasattr(explanation_value, 'getExplanationValue') :
-        explanation_value = explanation_value.getExplanationValue()
-
-      explanation_relative_url = explanation_value.getRelativeUrl()
-    return explanation_relative_url
-
-  def test(self,movement):
-    return self._getExplanationRelativeUrl(movement) == self.explanation
-
-allow_class(CausalityMovementGroup)
-
-class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
-  """ Group movement whose root apply rules have the same causality."""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    explanation_relative_url = self._getExplanationRelativeUrl(movement)
-    self.explanation = explanation_relative_url
-    explanation_value = movement.getPortalObject().unrestrictedTraverse(
-                                        explanation_relative_url)
-    self.setGroupEdit(
-      root_causality_value_list = [explanation_value]
-    )
-
-  def _getExplanationRelativeUrl(self, movement):
-    """ TODO: docstring; method name is bad; variables names are bad """
-    root_applied_rule = movement.getRootAppliedRule()
-    explanation_value = root_applied_rule.getCausalityValue()
-    explanation_relative_url = None
-    if explanation_value is not None:
-      explanation_relative_url = explanation_value.getRelativeUrl()
-    return explanation_relative_url
-
-  def test(self,movement):
-    return self._getExplanationRelativeUrl(movement) == self.explanation
-
-allow_class(RootAppliedRuleCausalityMovementGroup)
-
-# Again add a strange movement group, it was first created for building
-# Sale invoices transactions lines. We need to put accounting lines
-# in the same invoices than invoice lines.
-class ParentExplanationMovementGroup(RootMovementGroup):
-  """ TODO: docstring """
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    explanation_value = self._getParentExplanationValue(movement)
-    self.explanation_value = explanation_value
-    self.setGroupEdit(
-      parent_explanation_value = explanation_value
-    )
-
-  def _getParentExplanationValue(self, movement):
-    """ Get the order value for a movement """
-    return movement.getParentValue().getExplanationValue()
-
-  def test(self,movement):
-    return self._getParentExplanationValue(movement) == self.explanation_value
-
-allow_class(ParentExplanationMovementGroup)
-
-class PathMovementGroup(RootMovementGroup):
-  """ Group movements that have the same source and the same destination."""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    source_list = movement.getSourceList()
-    destination_list = movement.getDestinationList()
-    source_list.sort()
-    destination_list.sort()
-
-    self.source_list = source_list
-    self.destination_list = destination_list
-
-    self.setGroupEdit(
-        source_list=source_list,
-        destination_list=destination_list
-    )
-
-  def test(self, movement):
-    source_list = movement.getSourceList()
-    destination_list = movement.getDestinationList()
-    source_list.sort()
-    destination_list.sort()
-    return source_list == self.source_list and \
-        destination_list == self.destination_list
-
-allow_class(PathMovementGroup)
-
-class SectionPathMovementGroup(RootMovementGroup):
-  """ Groups movement that have the same source_section and
-  destination_section."""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    source_section_list = movement.getSourceSectionList()
-    destination_section_list = movement.getDestinationSectionList()
-    source_section_list.sort()
-    destination_section_list.sort()
-
-    self.source_section_list = source_section_list
-    self.destination_section_list = destination_section_list
-
-    self.setGroupEdit(
-        source_section_list=source_section_list,
-        destination_section_list=destination_section_list
-    )
-
-  def test(self, movement):
-    source_section_list = movement.getSourceSectionList()
-    destination_section_list = movement.getDestinationSectionList()
-    source_section_list.sort()
-    destination_section_list.sort()
-    return source_section_list == self.source_section_list and \
-        destination_section_list == self.destination_section_list
-
-allow_class(SectionPathMovementGroup)
-
-class PaymentPathMovementGroup(RootMovementGroup):
-  """ Groups movement that have the same source_payment and
-  destination_payment"""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    source_payment_list = movement.getSourcePaymentList()
-    destination_payment_list = movement.getDestinationPaymentList()
-    source_payment_list.sort()
-    destination_payment_list.sort()
-
-    self.source_payment_list = source_payment_list
-    self.destination_payment_list = destination_payment_list
-
-    self.setGroupEdit(
-        source_payment_list=source_payment_list,
-        destination_payment_list=destination_payment_list
-    )
-
-  def test(self, movement):
-    source_payment_list = movement.getSourcePaymentList()
-    destination_payment_list = movement.getDestinationPaymentList()
-    source_payment_list.sort()
-    destination_payment_list.sort()
-    return source_payment_list == self.source_payment_list and \
-        destination_payment_list == self.destination_payment_list
-
-class AdministrationPathMovementGroup(RootMovementGroup):
-  """ Groups movement that have the same source_administration and
-  destination_administration."""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    source_administration_list = movement.getSourceAdministrationList()
-    destination_administration_list = movement.getDestinationAdministrationList()
-    source_administration_list.sort()
-    destination_administration_list.sort()
-
-    self.source_administration_list = source_administration_list
-    self.destination_administration_list = destination_administration_list
-
-    self.setGroupEdit(
-        source_administration_list=source_administration_list,
-        destination_administration_list=destination_administration_list
-    )
-
-  def test(self, movement):
-    source_administration_list = movement.getSourceAdministrationList()
-    destination_administration_list = movement.getDestinationAdministrationList()
-    source_administration_list.sort()
-    destination_administration_list.sort()
-    return source_administration_list == self.source_administration_list and \
-        destination_administration_list == self.destination_administration_list
-
-class DecisionPathMovementGroup(RootMovementGroup):
-  """ Groups movement that have the same source_decision and
-  destination_decision."""
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    source_decision_list = movement.getSourceDecisionList()
-    destination_decision_list = movement.getDestinationDecisionList()
-    source_decision_list.sort()
-    destination_decision_list.sort()
-
-    self.source_decision_list = source_decision_list
-    self.destination_decision_list = destination_decision_list
-
-    self.setGroupEdit(
-        source_decision_list=source_decision_list,
-        destination_decision_list=destination_decision_list
-    )
-
-  def test(self, movement):
-    source_decision_list = movement.getSourceDecisionList()
-    destination_decision_list = movement.getDestinationDecisionList()
-    source_decision_list.sort()
-    destination_decision_list.sort()
-    return source_decision_list == self.source_decision_list and \
-        destination_decision_list == self.destination_decision_list
-
-
-class TradePathMovementGroup(RootMovementGroup):
-  """
-  Group movements that have the same source_trade and the same
-  destination_trade.
-  """
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    source_trade_list = movement.getSourceTradeList()
-    destination_trade_list = movement.getDestinationTradeList()
-    source_trade_list.sort()
-    destination_trade_list.sort()
-
-    self.source_trade_list = source_trade_list
-    self.destination_trade_list = destination_trade_list
-
-    self.setGroupEdit(
-        source_trade_list=source_trade_list,
-        destination_trade_list=destination_trade_list
-    )
-
-  def test(self, movement):
-    source_trade_list = movement.getSourceTradeList()
-    destination_trade_list = movement.getDestinationTradeList()
-    source_trade_list.sort()
-    destination_trade_list.sort()
-    return source_trade_list == self.source_trade_list and \
-        destination_trade_list == self.destination_trade_list
-
-allow_class(TradePathMovementGroup)
-
-# XXX Naming issue ?
-class QuantitySignMovementGroup(RootMovementGroup):
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    quantity = movement.getQuantity()
-    self.sign = cmp(quantity, 0)
-    self.setGroupEdit(quantity_sign=self.sign)
-
-  def test(self, movement):
-    quantity = movement.getQuantity()
-    sign = cmp(quantity, 0)
-    if sign == 0:
-      return 1
-    if self.sign == 0:
-      self.sign = sign
-      self.setGroupEdit(quantity_sign=self.sign)
-      return 1
-    return self.sign == sign
-
-allow_class(QuantitySignMovementGroup)
-
-class DateMovementGroup(RootMovementGroup):
-  """ Group movements that have exactly the same dates. """
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.start_date = movement.getStartDate()
-    self.stop_date = movement.getStopDate()
-    self.setGroupEdit(
-        start_date=movement.getStartDate(),
-        stop_date=movement.getStopDate()
-    )
-
-  def test(self,movement):
-    if movement.getStartDate() == self.start_date and \
-      movement.getStopDate() == self.stop_date :
-      return 1
-    else :
-      return 0
-
-allow_class(DateMovementGroup)
-
-class CriterionMovementGroup(RootMovementGroup):
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    if hasattr(movement, 'getGroupCriterion'):
-      self.criterion = movement.getGroupCriterion()
-    else:
-      self.criterion = None
-
-  def test(self,movement):
-    # we must have the same criterion
-    if hasattr(movement, 'getGroupCriterion'):
-      criterion = movement.getGroupCriterion()
-    else:
-      criterion = None
-    return self.criterion == criterion
-
-allow_class(CriterionMovementGroup)
-
-class PropertyMovementGroup(RootMovementGroup):
-  """Abstract movement group for movement that share the same value for
-  a property.
-  """
-  _property = [] # Subclasses must override this
-
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    if self._property is PropertyMovementGroup._property :
-      raise ValueError, 'PropertyMovementGroup: property not defined'
-    assert isinstance(self._property, str)
-    prop_value = movement.getProperty(self._property)
-    self._property_dict = { self._property : prop_value }
-    self.setGroupEdit(
-        **self._property_dict
-    )
-
-  def test(self, movement) :
-    return self._property_dict[self._property] == \
-            movement.getProperty(self._property)
-
-class ResourceMovementGroup(RootMovementGroup):
-  """ Group movements that have the same resource. """
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.resource = movement.getResource()
-    self.setGroupEdit(
-        resource_value=movement.getResourceValue()
-    )
-
-  def test(self, movement):
-    return movement.getResource() == self.resource
-
-allow_class(ResourceMovementGroup)
-
-class SplitResourceMovementGroup(RootMovementGroup):
-
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.resource = movement.getResource()
-
-  def test(self, movement):
-    return movement.getResource() == self.resource
-
-allow_class(SplitResourceMovementGroup)
-
-class BaseVariantMovementGroup(RootMovementGroup):
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.base_category_list = movement.getVariationBaseCategoryList()
-    if self.base_category_list is None:
-      self.base_category_list = []
-    self.base_category_list.sort()
-
-  def test(self,movement):
-    movement_base_category_list = movement.getVariationBaseCategoryList()
-    if movement_base_category_list is None:
-      movement_base_category_list = []
-    movement_base_category_list.sort()
-    return movement_base_category_list == self.base_category_list
-
-allow_class(BaseVariantMovementGroup)
-
-class VariantMovementGroup(RootMovementGroup):
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.category_list = movement.getVariationCategoryList()
-    if self.category_list is None:
-      self.category_list = []
-    self.category_list.sort()
-    self.setGroupEdit(
-        variation_category_list=self.category_list
-    )
-
-  def test(self,movement):
-    movement_category_list = movement.getVariationCategoryList()
-    if movement_category_list is None:
-      movement_category_list = []
-    movement_category_list.sort()
-    return movement_category_list == self.category_list
-
-allow_class(VariantMovementGroup)
-
-class CategoryMovementGroup(RootMovementGroup):
-  """
-    This seems to be a useless class
-  """
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.category_list = list(movement.getCategoryList())
-    if self.category_list is None:
-      self.category_list = []
-    self.category_list.sort()
-
-  def test(self,movement):
-    movement_category_list = list(movement.getCategoryList())
-    if movement_category_list is None:
-      movement_category_list = []
-    movement_category_list.sort()
-    return movement_category_list == self.category_list
-
-allow_class(CategoryMovementGroup)
-
-class OptionMovementGroup(RootMovementGroup):
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    self.option_category_list = movement.getVariationCategoryList(
-                                  base_category_list=option_base_category_list)
-    if self.option_category_list is None:
-      self.option_category_list = []
-    self.option_category_list.sort()
-    # XXX This is very bad, but no choice today.
-    self.setGroupEdit(industrial_phase_list = self.option_category_list)
-
-  def test(self,movement):
-    option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    movement_option_category_list = movement.getVariationCategoryList(
-                              base_category_list=option_base_category_list)
-    if movement_option_category_list is None:
-      movement_option_category_list = []
-    movement_option_category_list.sort()
-    return movement_option_category_list == self.option_category_list
-
-allow_class(OptionMovementGroup)
-
-class VariationPropertyMovementGroup(RootMovementGroup):
-  """
-  Compare variation property dict of movement.
-  """
-
-  def __init__(self, movement, **kw):
-    """
-    Store variation property dict of the first movement.
-    """
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.property_dict = movement.getVariationPropertyDict()
-    self.setGroupEdit(
-      variation_property_dict = self.property_dict
-    )
-
-  def test(self, movement):
-    """
-    Check if the movement can be inserted in the group.
-    """
-    identity = 0
-    variation_property_dict = movement.getVariationPropertyDict()
-    variation_property_list = variation_property_dict.keys()
-    if len(variation_property_list) == len(self.property_dict):
-      # Same number of property. Good point.
-      for variation_property in variation_property_list:
-        try:
-          if variation_property_dict[variation_property] != \
-              self.property_dict[variation_property]:
-            # Value is not the same for both movements
-            break
-        except KeyError:
-          # Key is not common to both movements
-          break
-      else:
-        identity = 1
-    return identity
-
-allow_class(VariationPropertyMovementGroup)
+allow_class(MovementGroupNode)
 
 class FakeMovement:
   """
@@ -795,21 +284,12 @@ class FakeMovement:
     # But, if DeliveryBuilder is well configured, this can never append ;)
     reference_variation_category_list = movement_list[0].\
                                            getVariationCategoryList()
-    error_raising_needed = 0
+    reference_variation_category_list.sort()
     for movement in movement_list[1:]:
       variation_category_list = movement.getVariationCategoryList()
-      if len(variation_category_list) !=\
-         len(reference_variation_category_list):
-        error_raising_needed = 1
-        break
-
-      for variation_category in variation_category_list:
-        if variation_category not in reference_variation_category_list:
-          error_raising_needed = 1
-          break
-
-    if error_raising_needed == 1:
-      raise ValueError, "FakeMovement not well used."
+      variation_category_list.sort()
+      if variation_category_list != reference_variation_category_list:
+        raise ValueError, "FakeMovement not well used."
 
   def append(self, movement):
     """
@@ -1000,28 +480,108 @@ class FakeMovement:
         raise FakeMovementError,\
               "Could not call edit on Fakemovement with parameters: %r" % key
 
-class TitleMovementGroup(RootMovementGroup):
+  def __repr__(self):
+    repr_str = '<%s object at 0x%x for %r' % (self.__class__.__name__,
+                                              id(self),
+                                              self.getMovementList())
+    return repr_str
 
-  def getTitle(self,movement):
-    order_value = movement.getOrderValue()
-    title = ''
-    if order_value is not None:
-      if "Line" in order_value.getPortalType():
-        title = order_value.getTitle()
-      elif "Cell" in order_value.getPortalType():
-        title = order_value.getParentValue().getTitle()
-    return title
+# The following classes are not ported to Document/XxxxMovementGroup.py yet.
+
+class RootMovementGroup(MovementGroupNode):
+  pass
+
+class CriterionMovementGroup(RootMovementGroup):
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    if hasattr(movement, 'getGroupCriterion'):
+      self.criterion = movement.getGroupCriterion()
+    else:
+      self.criterion = None
+
+  def test(self,movement):
+    # we must have the same criterion
+    if hasattr(movement, 'getGroupCriterion'):
+      criterion = movement.getGroupCriterion()
+    else:
+      criterion = None
+    return self.criterion == criterion
+
+allow_class(CriterionMovementGroup)
+
+class SplitResourceMovementGroup(RootMovementGroup):
+
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.resource = movement.getResource()
+
+  def test(self, movement):
+    return movement.getResource() == self.resource
+
+allow_class(SplitResourceMovementGroup)
+
+class OptionMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
-    title = self.getTitle(movement)
-    self.title = title
-    self.setGroupEdit(
-        title=title
-    )
+    option_base_category_list = movement.getPortalOptionBaseCategoryList()
+    self.option_category_list = movement.getVariationCategoryList(
+                                  base_category_list=option_base_category_list)
+    if self.option_category_list is None:
+      self.option_category_list = []
+    self.option_category_list.sort()
+    # XXX This is very bad, but no choice today.
+    self.setGroupEdit(industrial_phase_list = self.option_category_list)
 
   def test(self,movement):
-    return self.getTitle(movement) == self.title
+    option_base_category_list = movement.getPortalOptionBaseCategoryList()
+    movement_option_category_list = movement.getVariationCategoryList(
+                              base_category_list=option_base_category_list)
+    if movement_option_category_list is None:
+      movement_option_category_list = []
+    movement_option_category_list.sort()
+    return movement_option_category_list == self.option_category_list
+
+allow_class(OptionMovementGroup)
+
+class VariationPropertyMovementGroup(RootMovementGroup):
+  """
+  Compare variation property dict of movement.
+  """
+
+  def __init__(self, movement, **kw):
+    """
+    Store variation property dict of the first movement.
+    """
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.property_dict = movement.getVariationPropertyDict()
+    self.setGroupEdit(
+      variation_property_dict = self.property_dict
+    )
+
+  def test(self, movement):
+    """
+    Check if the movement can be inserted in the group.
+    """
+    identity = 0
+    variation_property_dict = movement.getVariationPropertyDict()
+    variation_property_list = variation_property_dict.keys()
+    if len(variation_property_list) == len(self.property_dict):
+      # Same number of property. Good point.
+      for variation_property in variation_property_list:
+        try:
+          if variation_property_dict[variation_property] != \
+              self.property_dict[variation_property]:
+            # Value is not the same for both movements
+            break
+        except KeyError:
+          # Key is not common to both movements
+          break
+      else:
+        identity = 1
+    return identity
+
+allow_class(VariationPropertyMovementGroup)
 
 # XXX This should not be here
 # I (seb) have commited this because movement groups are not
@@ -1050,52 +610,6 @@ class IntIndexMovementGroup(RootMovementGroup):
     return self.getIntIndex(movement) == self.int_index
 
 allow_class(IntIndexMovementGroup)
-
-# XXX This should not be here
-# I (seb) have commited this because movement groups are not
-# yet configurable through the zope web interface
-class DecisionMovementGroup(PropertyMovementGroup):
-  _property = 'decision'
-allow_class(DecisionMovementGroup)
-
-# XXX This should not be here
-# I (seb) have commited this because movement groups are not
-# yet configurable through the zope web interface
-class BrandMovementGroup(PropertyMovementGroup):
-  _property = 'brand'
-allow_class(BrandMovementGroup)
-
-class AggregateMovementGroup(RootMovementGroup):
-
-  def getAggregateList(self,movement):
-    aggregate_list = movement.getAggregateList()
-    aggregate_list.sort()
-    return aggregate_list
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    aggregate = self.getAggregateList(movement)
-    self.aggregate_list = aggregate
-    self.setGroupEdit(
-        aggregate_list=aggregate
-    )
-
-  def test(self,movement):
-    if self.getAggregateList(movement) == self.aggregate_list:
-      return 1
-    else :
-      return 0
-
-allow_class(AggregateMovementGroup)
-
-class SplitMovementGroup(RootMovementGroup):
-  def __init__(self,movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-
-  def test(self, movement):
-    return 0
-
-allow_class(SplitMovementGroup)
 
 class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
   """
@@ -1126,6 +640,8 @@ class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
 
 allow_class(TransformationAppliedRuleCausalityMovementGroup)
 
+class ParentExplanationMovementGroup(RootMovementGroup): pass
+
 class ParentExplanationCausalityMovementGroup(ParentExplanationMovementGroup):
   """
   Like ParentExplanationMovementGroup, and set the causality.
@@ -1137,71 +653,3 @@ class ParentExplanationCausalityMovementGroup(ParentExplanationMovementGroup):
     )
 
 allow_class(ParentExplanationCausalityMovementGroup)
-
-class SourceMovementGroup(PropertyMovementGroup):
-  """Group movements having the same source."""
-  _property = 'source'
-allow_class(SourceMovementGroup)
-
-class DestinationMovementGroup(PropertyMovementGroup):
-  """Group movements having the same destination."""
-  _property = 'destination'
-allow_class(DestinationMovementGroup)
-
-class DestinationDecisionMovementGroup(PropertyMovementGroup):
-  """Group movements having the same destination decision."""
-  _property = 'destination_decision'
-allow_class(DestinationDecisionMovementGroup)
-
-class SourceProjectMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same source project ."""
-  _property = 'source_project'
-allow_class(SourceProjectMovementGroup)
-
-class RequirementMovementGroup(RootMovementGroup):
-  """
-  Group movements that have same Requirement.
-  """
-  def getRequirementList(self,movement):
-    order_value = movement.getOrderValue()
-    requirement_list = []
-    if order_value is not None:
-      if "Line" in order_value.getPortalType():
-        requirement_list = order_value.getRequirementList()
-    return requirement_list
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    requirement_list = self.getRequirementList(movement)
-    self.requirement_list = requirement_list
-    self.setGroupEdit(
-        requirement=requirement_list
-    )
-
-  def test(self,movement):
-    return self.getRequirementList(movement) == self.requirement_list
-
-class BaseContributionMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same base contributions."""
-  _property = 'base_contribution_list'
-
-class BaseApplicationMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same base applications."""
-  _property = 'base_application_list'
-
-class PriceCurrencyMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same price currency."""
-  _property = 'price_currency'
-
-class QuantityUnitMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same quantity unit."""
-  _property = 'quantity_unit'
-allow_class(QuantityUnitMovementGroup)
-
-class PaymentModeMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same payment mode."""
-  _property = 'payment_mode'
-
-class ColourMovementGroup(PropertyMovementGroup):
-  """ Group movements that have the same colour category."""
-  _property = 'colour'

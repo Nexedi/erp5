@@ -1436,10 +1436,23 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     """
     portal = self.getPortal()
     builder = portal.portal_deliveries.sale_invoice_transaction_builder
-    previous_list = builder.getDeliveryCollectOrderList()
-    new_list = [x for x in previous_list if x != 'DateMovementGroup']
-    new_list.append('ParentExplanationMovementGroup')
-    builder.setDeliveryCollectOrderList(new_list)
+    delivery_movement_group_list = builder.getDeliveryMovementGroupList()
+    uf = self.getPortal().acl_users
+    uf._doAddUser('admin', '', ['Manager'], [])
+    user = uf.getUserById('admin').__of__(uf)
+    newSecurityManager(None, user)
+    for movement_group in delivery_movement_group_list:
+      if movement_group.getPortalType() == 'Property Movement Group':
+        # it contains 'start_date' and 'stop_date' only, so we remove
+        # movement group itself.
+        builder.deleteContent(movement_group.getId())
+    builder.newContent(
+      portal_type = 'Parent Explanation Movement Group',
+      collect_order_group='delivery',
+      int_index=len(delivery_movement_group_list)+1
+      )
+    user = uf.getUserById('test_invoice_user').__of__(uf)
+    newSecurityManager(None, user)
 
   def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
     """Edit the current invoice, to trigger updateAppliedRule."""
@@ -1582,8 +1595,27 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     split and defer at the invoice level
     """
     invoice = sequence.get('invoice')
-    invoice.portal_workflow.doActionFor(invoice,'split_prevision_action',
-        start_date=self.datetime + 15, stop_date=self.datetime + 25)
+    kw = {'listbox':[
+      {'listbox_key':line.getRelativeUrl(),
+       'choice':'SplitAndDefer'} for line in invoice.getMovementList()]}
+    self.portal.portal_workflow.doActionFor(
+      invoice,
+      'split_and_defer_action',
+      start_date=self.datetime + 15,
+      stop_date=self.datetime + 25,
+      **kw)
+    pass
+
+  def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
+                                            sequence_list=None):
+    invoice = sequence.get('invoice')
+    self._solveDeliveryGroupDivergence(invoice, 'start_date',
+                                       invoice.getRelativeUrl())
+
+  def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
+    invoice = sequence.get('invoice')
+    print repr(invoice.getDivergenceList())
+    self._solveDivergence(invoice, 'quantity', 'accept')
 
   def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
       **kw):
@@ -1772,7 +1804,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
   RUN_ALL_TESTS = 1
-  quiet = 1
+  quiet = 0
 
   # fix inheritance
   login = TestInvoiceMixin.login
@@ -2038,7 +2070,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckInvoiceIsCalculating
     stepTic
     stepCheckInvoiceIsDiverged
-    stepAcceptDecisionInvoice
+    stepUnifyStartDateWithDecisionInvoice
     stepTic
 
     stepCheckInvoiceNotSplitted
@@ -2079,7 +2111,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckInvoiceIsCalculating
     stepTic
     stepCheckInvoiceIsDiverged
-    stepAcceptDecisionInvoice
+    stepUnifyStartDateWithDecisionInvoice
     stepTic
 
     stepCheckInvoiceNotSplitted
@@ -2111,7 +2143,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckPackingListIsCalculating
     stepTic
     stepCheckPackingListIsDiverged
-    stepAcceptDecisionPackingList
+    stepAcceptDecisionQuantity
     stepTic
     stepCheckPackingListIsSolved
     stepCheckPackingListNotSplitted
@@ -2181,7 +2213,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckPackingListIsCalculating
     stepTic
     stepCheckPackingListIsDiverged
-    stepAcceptDecisionPackingList
+    stepAcceptDecisionQuantity
     stepTic
     stepCheckPackingListIsSolved
     stepCheckPackingListNotSplitted
@@ -2205,8 +2237,10 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     end_sequence = \
     """
     stepCheckInvoiceIsDiverged
-    stepAcceptDecisionInvoice
+    stepAcceptDecisionQuantityInvoice
     stepTic
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
     stepStartInvoice
     stepTic
     stepStopInvoice
@@ -2300,7 +2334,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckInvoiceIsCalculating
     stepTic
     stepCheckInvoiceIsDiverged
-    stepAcceptDecisionInvoice
+    stepAcceptDecisionQuantityInvoice
     stepTic
     stepStartInvoice
     stepTic
@@ -2340,7 +2374,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckInvoiceIsCalculating
     stepTic
     stepCheckInvoiceIsDiverged
-    stepAcceptDecisionInvoice
+    stepAcceptDecisionQuantityInvoice
     stepTic
     stepStartInvoice
     stepTic
@@ -2464,7 +2498,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     stepCheckInvoiceIsCalculating
     stepTic
     stepCheckInvoiceIsDiverged
-    stepAcceptDecisionInvoice
+    stepAcceptDecisionQuantityInvoice
     stepTic
     stepStartInvoice
     stepTic
@@ -2624,4 +2658,3 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestSaleInvoice))
   suite.addTest(unittest.makeSuite(TestPurchaseInvoice))
   return suite
-

@@ -509,6 +509,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
 
 
 class TestPayroll(TestPayrollMixin):
+  quiet = 0
 
   def test_01_modelCreation(self):
     '''

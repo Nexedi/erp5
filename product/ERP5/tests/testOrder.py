@@ -57,6 +57,9 @@ class TestOrderMixin:
   def getBusinessTemplateList(self):
     """
     """
+    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',
+            'erp5_accounting', 'erp5_invoicing',
+            'erp5_project', 'erp5_payroll', 'erp5_mrp')
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',)
 
   def login(self, quiet=0, run=1):
@@ -122,7 +125,7 @@ class TestOrderMixin:
     resource_module = portal.getDefaultModule(self.resource_portal_type)
     resource = resource_module.newContent(portal_type=self.resource_portal_type)
     resource.edit(
-      title = "NotVariatedResource",
+      title = "NotVariatedResource%s" % resource.getId(),
       industrial_phase_list=["phase1", "phase2"],
       product_line = 'apparel'
     )
@@ -141,7 +144,7 @@ class TestOrderMixin:
     resource_module = portal.getDefaultModule(self.resource_portal_type)
     resource = resource_module.newContent(portal_type=self.resource_portal_type)
     resource.edit(
-      title = "VariatedResource",
+      title = "VariatedResource%s" % resource.getId(),
       industrial_phase_list=["phase1", "phase2"],
       product_line = 'apparel'
     )
@@ -169,7 +172,7 @@ class TestOrderMixin:
     sequence.edit( resource_list = resource_list )
 
   def stepCreateOrganisation(self, sequence=None, sequence_list=None,
-                             title='organisation', **kw):
+                             title=None, **kw):
     """
       Create a empty organisation
     """
@@ -180,11 +183,12 @@ class TestOrderMixin:
                                    portal_type=organisation_portal_type)
     organisation = organisation_module.newContent( \
                                    portal_type=organisation_portal_type)
-    organisation.edit(
-      title=title,
-    )
-    #sequence.edit(organisation=organisation)
-    sequence.edit(**{title:organisation})
+    if title is None:
+      organisation.edit(title='organisation%s' % organisation.getId())
+      sequence.edit(organisation=organisation)
+    else:
+      organisation.edit(title=title)
+      sequence.edit(**{title:organisation})
 
   def stepCreateOrder(self,sequence=None, sequence_list=None, **kw):
     """
@@ -196,7 +200,7 @@ class TestOrderMixin:
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
     order = order_module.newContent(portal_type=self.order_portal_type)
     order.edit(
-      title = "Order",
+      title = "Order%s" % order.getId(),
       start_date = self.datetime + 10,
       stop_date = self.datetime + 20,
     )

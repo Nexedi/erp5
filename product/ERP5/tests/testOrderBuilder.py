@@ -51,12 +51,6 @@ class TestOrderBuilderMixin(TestOrderMixin):
   packing_list_line_portal_type = 'Internal Packing List Line'
   packing_list_cell_portal_type = 'Internal Packing List Cell'
 
-  delivery_cell_collect_order_tuple = ('VariantMovementGroup',)
-  delivery_collect_order_tuple = ('PathMovementGroup',
-      'SectionPathMovementGroup', 'DateMovementGroup')
-  delivery_line_collect_order_tuple = ('ResourceMovementGroup',
-      'BaseVariantMovementGroup')
-
   # hardcoded values
   order_builder_hardcoded_time_diff = 10.0
 
@@ -109,14 +103,42 @@ class TestOrderBuilderMixin(TestOrderMixin):
       delivery_line_portal_type = self.order_line_portal_type,
       delivery_cell_portal_type = self.order_cell_portal_type,
 
-      delivery_collect_order = self.delivery_collect_order_tuple,
-      delivery_line_collect_order = self.delivery_line_collect_order_tuple,
-      delivery_cell_collect_order = self.delivery_cell_collect_order_tuple,
-
       destination_value = organisation,
 
       resource_portal_type = self.resource_portal_type,
     )
+
+    order_builder.newContent(
+      portal_type = 'Category Movement Group',
+      collect_order_group='delivery',
+      tested_property=['source', 'destination',
+                       'source_section', 'destination_section'],
+      int_index=1
+      )
+    order_builder.newContent(
+      portal_type = 'Property Movement Group',
+      collect_order_group='delivery',
+      tested_property=['start_date', 'stop_date'],
+      int_index=2
+      )
+
+    order_builder.newContent(
+      portal_type = 'Category Movement Group',
+      collect_order_group='line',
+      tested_property=['resource'],
+      int_index=1
+      )
+    order_builder.newContent(
+      portal_type = 'Base Variant Movement Group',
+      collect_order_group='line',
+      int_index=2
+      )
+
+    order_builder.newContent(
+      portal_type = 'Variant Movement Group',
+      collect_order_group='cell',
+      int_index=1
+      )
 
   def stepCheckGeneratedDocumentListVariated(self, sequence=None, sequence_list=None,
                           **kw):

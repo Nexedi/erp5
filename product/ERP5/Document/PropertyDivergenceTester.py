@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Products.ERP5Type.ObjectMessage import ObjectMessage
+from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, Interface
 
 class PropertyDivergenceTester(XMLObject):
@@ -75,26 +75,20 @@ class PropertyDivergenceTester(XMLObject):
     divergence_message_list = []
     tested_property = self.getTestedPropertyList()
 
-    # Get the list of solvers callable in this case
-    solver_script_list = self.getSolverScriptList()
-    if solver_script_list is None:
-      solver_script_list = []
-    solver_script_list = self._splitStringList(solver_script_list)
-
     delivery_mvt = simulation_movement.getDeliveryValue()
     for tested_property_id, tested_property_title in \
                        self._splitStringList(tested_property):
       delivery_mvt_property = delivery_mvt.getProperty(tested_property_id)
       simulation_mvt_property = simulation_movement.getProperty(tested_property_id)
       if delivery_mvt_property != simulation_mvt_property:
-        message = ObjectMessage(
+        message = DivergenceMessage(
+                   divergence_scope='property',
                    object_relative_url=delivery_mvt.getRelativeUrl(),
                    simulation_movement=simulation_movement,
                    decision_value=delivery_mvt_property ,
                    prevision_value=simulation_mvt_property,
                    tested_property=tested_property_id,
                    message=tested_property_title,
-                   solver_script_list=solver_script_list
         )
         divergence_message_list.append(message)
 

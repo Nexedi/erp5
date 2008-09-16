@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type.ObjectMessage import ObjectMessage
+from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.PropertyDivergenceTester import \
                                               PropertyDivergenceTester
@@ -73,17 +73,13 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
     quantity = simulation_movement.getCorrectedQuantity()
     d_error = simulation_movement.getDeliveryError()
 
-    solver_script_list = self.getSolverScriptList()
-    if solver_script_list is None:
-      solver_script_list = []
-
-    message = ObjectMessage(object_relative_url= delivery.getRelativeUrl(),
+    message = DivergenceMessage(object_relative_url= delivery.getRelativeUrl(),
+                 divergence_scope='quantity',
                  simulation_movement = simulation_movement,
                  decision_value = d_quantity ,
                  prevision_value = quantity,
                  tested_property='quantity',
                  message='Quantity',
-                 solver_script_list=self._splitStringList(solver_script_list)
                  )
 
 

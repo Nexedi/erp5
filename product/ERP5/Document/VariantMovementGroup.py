@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
-#               Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -22,20 +21,32 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
+from Products.ERP5.Document.MovementGroup import MovementGroup
 
-class DivergenceTester:
+class VariantMovementGroup(MovementGroup):
   """
-    Divergence Tester are use for the divergence testers.
+  The purpose of MovementGroup is to define how movements are grouped,
+  and how values are updated from simulation movements.
   """
+  meta_type = 'ERP5 Movement Group'
+  portal_type = 'Variant Movement Group'
 
-  _properties = (
-    {  'id'          : 'tested_property',
-       'description' : 'Property used to Test',
-       'type'        : 'lines',
-       'default'     : (),
-       'mode'        : 'w' },
-  )
+  def _getPropertyDict(self, movement, **kw):
+    property_dict = {}
+    category_list = movement.getVariationCategoryList()
+    if category_list is None:
+      category_list = []
+    category_list.sort()
+    property_dict['variation_category_list'] = category_list
+    return property_dict
+
+  def test(self, object, property_dict, **kw):
+    category_list = object.getVariationCategoryList()
+    if category_list is None:
+      category_list = []
+    category_list.sort()
+    return property_dict['variation_category_list'] == category_list
