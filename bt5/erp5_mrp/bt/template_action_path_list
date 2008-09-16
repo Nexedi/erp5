@@ -22,7 +22,6 @@ Production Packing List Line | quantity_view
 Production Packing List Line | view
 Production Packing List Line | view_price
 Production Packing List Module | view
-Production Packing List | choose_solve_actions
 Production Packing List | packing_list_print
 Production Packing List | view
 Production Packing List | view_stock
@@ -32,7 +31,6 @@ Production Report Line | quantity_view
 Production Report Line | view
 Production Report Line | view_price
 Production Report Module | view
-Production Report | choose_solve_actions
 Production Report | packing_list_print
 Production Report | view
 Production Report | view_stock

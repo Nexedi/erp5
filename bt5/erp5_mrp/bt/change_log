@@ -1,3 +1,7 @@
+2008-09-16 Kazuhiko
+* revise production_packing_list_builder and production_report_builder using new API.
+* use  delivery_causality_workflow instead of invoice_causality_workflow in Production Packing List and Production Report.
+
 2008-07-18 luke
 * bugfix release 1.0rc2 - delete all production_order_* selections from system after updating
 
