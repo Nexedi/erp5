@@ -1,13 +1,13 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -43,38 +43,38 @@ class SelectMovementError(Exception): pass
 class DeliveryBuilder(OrderBuilder):
   """
     Delivery Builder objects allow to gather multiple Simulation Movements
-    into a single Delivery. 
+    into a single Delivery.
 
     The initial quantity property of the Delivery Line is calculated by
     summing quantities of related Simulation Movements.
 
     Delivery Builders are called for example whenever an order is confirmed.
-    They are also called globaly in order to gather any confirmed or above 
-    Simulation Movement which was not associated to any Delivery Line. 
+    They are also called globaly in order to gather any confirmed or above
+    Simulation Movement which was not associated to any Delivery Line.
     Such movements are called orphaned Simulation Movements.
 
-    Delivery Builder objects are provided with a set a parameters to achieve 
+    Delivery Builder objects are provided with a set a parameters to achieve
     their goal:
 
-    A path definition: source, destination, etc. which defines the general 
+    A path definition: source, destination, etc. which defines the general
     kind of movements it applies.
 
-    simulation_select_method which defines how to query all Simulation 
-    Movements which meet certain criteria (including the above path path 
+    simulation_select_method which defines how to query all Simulation
+    Movements which meet certain criteria (including the above path path
     definition).
 
-    collect_order_list which defines how to group selected movements 
+    collect_order_list which defines how to group selected movements
     according to gathering rules.
 
-    delivery_select_method which defines how to select existing Delivery 
+    delivery_select_method which defines how to select existing Delivery
     which may eventually be updated with selected simulation movements.
 
-    delivery_module, delivery_type and delivery_line_type which define the 
+    delivery_module, delivery_type and delivery_line_type which define the
     module and portal types for newly built Deliveries and Delivery Lines.
 
-    Delivery Builders can also be provided with optional parameters to 
+    Delivery Builders can also be provided with optional parameters to
     restrict selection to a given root Applied Rule caused by a single Order
-    or to Simulation Movements related to a limited set of existing 
+    or to Simulation Movements related to a limited set of existing
     Deliveries.
   """
 
@@ -103,7 +103,7 @@ class DeliveryBuilder(OrderBuilder):
       done before building Delivery.
     """
     pass
-  
+
   def searchMovementList(self, applied_rule_uid=None,**kw):
     """
       defines how to query all Simulation Movements which meet certain criteria
@@ -157,7 +157,7 @@ class DeliveryBuilder(OrderBuilder):
       and delivery movement.
     """
     OrderBuilder._setDeliveryMovementProperties(
-                            self, delivery_movement, 
+                            self, delivery_movement,
                             simulation_movement, property_dict,
                             update_existing_movement=update_existing_movement)
     # Check if simulation movement is not already linked to a existing
@@ -170,11 +170,11 @@ class DeliveryBuilder(OrderBuilder):
     simulation_movement.edit(delivery_value=delivery_movement)
 
   # Simulation consistency propagation
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'updateFromSimulation')
   def updateFromSimulation(self, delivery_relative_url, create_new_delivery=1):
     """
-      Update all lines of this transaction based on movements in the 
+      Update all lines of this transaction based on movements in the
       simulation related to this transaction.
     """
     updateFromSimulation = UnrestrictedMethod(self._updateFromSimulation)
@@ -194,7 +194,7 @@ class DeliveryBuilder(OrderBuilder):
       for simulation_movement in movement.getDeliveryRelatedValueList(
                                             portal_type="Simulation Movement"):
         simulation_movement.setDelivery(None)
-        simulation_movement_list.append(simulation_movement) 
+        simulation_movement_list.append(simulation_movement)
 
     # Collect
     root_group = self.collectMovement(simulation_movement_list)
@@ -259,7 +259,7 @@ class DeliveryBuilder(OrderBuilder):
         rejected_movement_list.extend(group.getMovementList())
       movement_group = movement_group.getGroupList()[0]
       property_dict.update(movement_group.getGroupEditDict())
-    
+
     # Put properties on delivery
     delivery.edit(**property_dict)
 

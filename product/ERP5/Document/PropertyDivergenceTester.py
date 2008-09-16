@@ -1,13 +1,13 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -35,7 +35,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Interface
 
 class PropertyDivergenceTester(XMLObject):
   """
-  The purpose of this divergence tester is to check the 
+  The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
   for some specific properties.
   """
@@ -44,7 +44,7 @@ class PropertyDivergenceTester(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -73,12 +73,12 @@ class PropertyDivergenceTester(XMLObject):
     the divergence of the Delivery Line.
     """
     divergence_message_list = []
-    tested_property = self.getTestedPropertyList()     
+    tested_property = self.getTestedPropertyList()
 
     # Get the list of solvers callable in this case
     solver_script_list = self.getSolverScriptList()
     if solver_script_list is None:
-      solver_script_list = [] 
+      solver_script_list = []
     solver_script_list = self._splitStringList(solver_script_list)
 
     delivery_mvt = simulation_movement.getDeliveryValue()
@@ -96,13 +96,13 @@ class PropertyDivergenceTester(XMLObject):
                    message=tested_property_title,
                    solver_script_list=solver_script_list
         )
-        divergence_message_list.append(message)  
-    
+        divergence_message_list.append(message)
+
     return divergence_message_list
 
   def _splitStringList(self, string_list):
      """
      Convert a list of string with a pipe (ex: ["azert | qsdfg", ] )
      to a list of tuple (ex: [("azert", "qsdfg"), ] )
-     """ 
+     """
      return [tuple([x.strip() for x in x.split('|')]) for x in string_list]

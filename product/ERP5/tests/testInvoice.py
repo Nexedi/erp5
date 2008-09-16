@@ -1,14 +1,14 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2008 Nexedi SA and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #          Jerome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -287,7 +287,7 @@ class TestInvoice(TestInvoiceMixin):
                                   resource_value=resource,
                                   quantity=1,
                                   price=2)
-    
+
     other_entity = self.portal.organisation_module.newContent(
                                       portal_type='Organisation',
                                       title='Other Entity')
@@ -301,7 +301,7 @@ class TestInvoice(TestInvoiceMixin):
     delivery_movement = related_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    
+
     order_line.setSourceValue(other_entity)
     get_transaction().commit()
     self.tic()
@@ -497,7 +497,7 @@ class TestInvoice(TestInvoiceMixin):
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
     invoice_transaction_movement =\
          invoice_transaction_applied_rule._getOb('income')
-    
+
     order_line.setSourceSectionValue(other_entity)
     get_transaction().commit()
     self.tic()
@@ -655,7 +655,7 @@ class TestInvoice(TestInvoiceMixin):
     invoice.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = invoice.Invoice_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
@@ -719,7 +719,7 @@ class TestInvoice(TestInvoiceMixin):
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
     self.assertNotEquals(related_packing_list, None)
-    
+
     related_packing_list.start()
     related_packing_list.stop()
     get_transaction().commit()
@@ -733,7 +733,7 @@ class TestInvoice(TestInvoiceMixin):
                      portal_type=self.invoice_line_portal_type)
     self.assertEquals(1, len(line_list))
     invoice_line = line_list[0]
-    
+
     self.assertEquals(resource, invoice_line.getResourceValue())
     self.assertEquals(['size'], invoice_line.getVariationBaseCategoryList())
     self.assertEquals(2,
@@ -791,7 +791,7 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
   invoice_line_portal_type = 'Invoice Line'
   invoice_cell_portal_type = 'Invoice Cell'
   invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
-  
+
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateEntities
@@ -1239,7 +1239,7 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
           resource_precision = line.getResourceValue().getQuantityPrecision()
           self.assertEquals(round(line.getQuantity(), resource_precision),
               round(expected_price * line_ratio, resource_precision))
-  
+
   def stepCheckInvoiceLineHasReferenceAndIntIndex(self, sequence=None, **kw):
     """Check that the unique invoice line in the invoice has reference and int
     index.
@@ -1254,9 +1254,9 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
 
   def stepCheckPackingListInvoice(
                       self, sequence=None, sequence_list=None, **kw):
-    """ Checks if the delivery builder is working as expected, 
+    """ Checks if the delivery builder is working as expected,
         coping the atributes from packing list to invoice."""
-    packing_list = sequence.get('packing_list') 
+    packing_list = sequence.get('packing_list')
     related_invoice_list = packing_list.getCausalityRelatedValueList(
                      portal_type=self.invoice_portal_type)
     self.assertEquals(len(related_invoice_list), 1)
@@ -2520,7 +2520,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
 
     # We could generate a better reference here.
     self.assertEquals('1', invoice.getReference())
-    
+
   def test_16_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that adding invoice lines and accounting lines to one invoice

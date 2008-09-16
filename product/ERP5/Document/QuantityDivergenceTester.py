@@ -4,10 +4,10 @@
 #                    Rafael M. Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -35,7 +35,7 @@ from Products.ERP5.Document.PropertyDivergenceTester import \
 
 class QuantityDivergenceTester(PropertyDivergenceTester):
   """
-  The purpose of this divergence tester is to check the 
+  The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
   for the property quantity.
   """
@@ -44,14 +44,14 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative interfaces  
+  # Declarative interfaces
   __implements__ = ( Interface.DivergenceTester, )
-   
+
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
@@ -61,7 +61,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
                       , PropertySheet.DivergenceTester
                      )
 
-  
+
   def explain(self, simulation_movement):
     """
     This method returns a list of messages that contains
@@ -72,11 +72,11 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
     d_quantity = delivery.getQuantity()
     quantity = simulation_movement.getCorrectedQuantity()
     d_error = simulation_movement.getDeliveryError()
-    
+
     solver_script_list = self.getSolverScriptList()
     if solver_script_list is None:
       solver_script_list = []
- 
+
     message = ObjectMessage(object_relative_url= delivery.getRelativeUrl(),
                  simulation_movement = simulation_movement,
                  decision_value = d_quantity ,
@@ -85,8 +85,8 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
                  message='Quantity',
                  solver_script_list=self._splitStringList(solver_script_list)
                  )
- 
-   
+
+
     if quantity is None:
       if d_quantity is None:
         return []

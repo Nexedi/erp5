@@ -1,14 +1,14 @@
 ##############################################################################
 # -*- coding: utf8 -*-
-# Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2008 Nexedi SA and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #          Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -571,7 +571,7 @@ class TestOrderMixin:
     self.assertEquals( order.getTotalPrice(fast = 0),
                        order.getTotalPrice(fast = 1) )
 
-  def stepCheckOrderTotalPriceAndQuantityFastParameter(self, 
+  def stepCheckOrderTotalPriceAndQuantityFastParameter(self,
                                   sequence=None, sequence_list=None, **kw):
     """
       Check the method getTotalPrice on a order .
@@ -682,7 +682,7 @@ class TestOrderMixin:
     """
     self.checkOrderRuleSimulation(rule_id = 'default_order_rule', sequence=sequence, \
         sequence_list=sequence_list, **kw)
-    
+
   def checkOrderRuleSimulation(self, rule_id, sequence=None, sequence_list=None, **kw):
     """
       Test if simulation is matching order, be sure that rule_id is used
@@ -953,7 +953,7 @@ class TestOrderMixin:
     for applied_rule in related_applied_rule_list.keys():
       self.assertTrue(applied_rule.isStable())
 
-  def stepPackingListAdoptPrevision(self,sequence=None, sequence_list=None, 
+  def stepPackingListAdoptPrevision(self,sequence=None, sequence_list=None,
                                     **kw):
     """
     Check if simulation movement are disconnected
@@ -998,7 +998,7 @@ class TestOrderMixin:
   variated_order_creation_without_tic = variated_order_line_creation + \
     variated_line_completion_without_tic
 
-  def stepCheckCatalogued(self, sequence=None, 
+  def stepCheckCatalogued(self, sequence=None,
                           sequence_list=None, **kw):
     """
     Check that order is catalogued
@@ -1010,10 +1010,10 @@ class TestOrderMixin:
     result = sql_connection.manage_test(sql)
     simulation_state_list = [x['simulation_state'] for x in result]
     self.assertEquals(1, len(simulation_state_list))
-    self.assertEquals(order.getSimulationState(), 
+    self.assertEquals(order.getSimulationState(),
                       simulation_state_list[0])
 
-  def stepCheckCataloguedSimulation(self, sequence=None, 
+  def stepCheckCataloguedSimulation(self, sequence=None,
                                     sequence_list=None, **kw):
     """
     Check that simulation is catalogued
@@ -1027,7 +1027,7 @@ class TestOrderMixin:
         result = sql_connection.manage_test(sql)
         simulation_state_list = [x['simulation_state'] for x in result]
         self.assertEquals(1, len(simulation_state_list))
-        self.assertEquals(order.getSimulationState(), 
+        self.assertEquals(order.getSimulationState(),
                           simulation_state_list[0])
 
 class TestOrder(TestOrderMixin, ERP5TypeTestCase):
@@ -1883,7 +1883,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order_line = order.newContent(portal_type=self.order_line_portal_type)
     self.assertEquals(1, len(order.getMovementList()))
 
-    # If a sub line is created, its parent should not be considered 
+    # If a sub line is created, its parent should not be considered
     # as a movement
     sub_order_line = order_line.newContent(
                portal_type=self.order_line_portal_type)
@@ -1894,7 +1894,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                portal_type=self.order_line_portal_type)
     self.assertEquals(2, len(order.getMovementList()))
 
-    # Create recursively sub lines, and check that the ovement number 
+    # Create recursively sub lines, and check that the ovement number
     # is still the same.
     for i in range(5):
       sub_order_line = sub_order_line.newContent(
@@ -1930,7 +1930,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     cell_key_list.sort()
     for cell_key in cell_key_list:
       cell = sub_order_line.newCell(base_id=base_id,
-                                portal_type=self.order_cell_portal_type, 
+                                portal_type=self.order_cell_portal_type,
                                 *cell_key)
     self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
 
@@ -1944,7 +1944,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     cell_key_list.sort()
     for cell_key in cell_key_list:
       cell = order_line.newCell(base_id=base_id,
-                                portal_type=self.order_cell_portal_type, 
+                                portal_type=self.order_cell_portal_type,
                                 *cell_key)
     self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
 
@@ -2002,7 +2002,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     cell_key = order_line.getCellKeyList(base_id=base_id)[0]
     cell = order_line.newCell(
         base_id=base_id,
-        portal_type=self.order_cell_portal_type, 
+        portal_type=self.order_cell_portal_type,
         *cell_key)
     cell.edit(mapped_value_property_list=['price', 'quantity'],
         price=3, quantity=4,
@@ -2121,7 +2121,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sub_cell_key = sub_order_line.getCellKeyList(base_id=base_id)[0]
     sub_cell = sub_order_line.newCell(
         base_id=base_id,
-        portal_type=self.order_cell_portal_type, 
+        portal_type=self.order_cell_portal_type,
         *cell_key)
     sub_cell.edit(mapped_value_property_list=['price', 'quantity'],
         price=5, quantity=6,
@@ -2220,7 +2220,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         title="Sub Order Line")
     sequence.edit(order_line=order_line)
 
-  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0, 
+  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0,
                                                          run=run_all_test):
     """
     Test generation and update of an hierarchical order applied rule.
@@ -2286,7 +2286,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  
+
   def test_order_cell_getTotalPrice(self):
     # test getTotalPrice and getTotalQuantity on a line with cells
     # More precisely, it tests a previous bug where creating a line with
@@ -2315,7 +2315,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(0, line.getTotalPrice())
     self.assertEquals(0, order.getTotalQuantity())
     self.assertEquals(0, order.getTotalPrice())
-    
+
     self.assertTrue(line.hasInRange('size/Baby', base_id='movement'))
     cell_baby = line.newCell('size/Baby', base_id='movement',
                              portal_type=self.order_cell_portal_type)
@@ -2408,7 +2408,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = order.Order_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
@@ -2440,7 +2440,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = order.Order_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
@@ -2477,7 +2477,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = order.Order_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
@@ -2517,7 +2517,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = order.Order_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
@@ -2559,7 +2559,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = order.Order_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
@@ -2586,7 +2586,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               destination_section_value=client)
     line = order.newContent(portal_type=self.order_line_portal_type,
                             description='Content')
-    if self.order_line_portal_type not in [x.getId() for x in 
+    if self.order_line_portal_type not in [x.getId() for x in
                                            line.allowedContentTypes()]:
       return # skip this test if hierarchical orders are not available (eg.
              # for Purchase Order)
@@ -2598,7 +2598,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = order.Order_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()

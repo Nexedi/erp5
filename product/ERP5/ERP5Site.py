@@ -1369,7 +1369,7 @@ class ERP5Generator(PortalGenerator):
       addMessageCatalog('default', 'ERP5 Localized Messages', ('en',))
       addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en',))
       addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
-    
+
     # Add an error_log
     if 'error_log' not in p.objectIds():
       manage_addErrorLog(p)

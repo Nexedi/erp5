@@ -1,13 +1,13 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -42,33 +42,33 @@ class MatrixError(Exception): pass
 class OrderBuilder(XMLObject, Amount, Predicate):
   """
     Order Builder objects allow to gather multiple Simulation Movements
-    into a single Delivery. 
+    into a single Delivery.
 
     The initial quantity property of the Delivery Line is calculated by
     summing quantities of related Simulation Movements.
 
-    Order Builder objects are provided with a set a parameters to achieve 
+    Order Builder objects are provided with a set a parameters to achieve
     their goal:
 
-    A path definition: source, destination, etc. which defines the general 
+    A path definition: source, destination, etc. which defines the general
     kind of movements it applies.
 
-    simulation_select_method which defines how to query all Simulation 
-    Movements which meet certain criteria (including the above path path 
+    simulation_select_method which defines how to query all Simulation
+    Movements which meet certain criteria (including the above path path
     definition).
 
-    collect_order_list which defines how to group selected movements 
+    collect_order_list which defines how to group selected movements
     according to gathering rules.
 
-    delivery_select_method which defines how to select existing Delivery 
+    delivery_select_method which defines how to select existing Delivery
     which may eventually be updated with selected simulation movements.
 
-    delivery_module, delivery_type and delivery_line_type which define the 
+    delivery_module, delivery_type and delivery_line_type which define the
     module and portal types for newly built Deliveries and Delivery Lines.
 
-    Order Builders can also be provided with optional parameters to 
+    Order Builders can also be provided with optional parameters to
     restrict selection to a given root Applied Rule caused by a single Order
-    or to Simulation Movements related to a limited set of existing 
+    or to Simulation Movements related to a limited set of existing
     Deliveries.
   """
 
@@ -90,7 +90,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.Comment
                     , PropertySheet.DeliveryBuilder
                     )
- 
+
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
             delivery_relative_url_list=None,**kw):
@@ -129,10 +129,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 
   def callBeforeBuildingScript(self):
     """
-      Call a script on the module, for example, to remove some 
+      Call a script on the module, for example, to remove some
       auto_planned Order.
-      This part can only be done with a script, because user may want 
-      to keep existing auto_planned Order, and only update lines in 
+      This part can only be done with a script, because user may want
+      to keep existing auto_planned Order, and only update lines in
       them.
       No activities are used when deleting a object, so, current
       implementation should be OK.
@@ -147,9 +147,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
       Defines how to query all Simulation Movements which meet certain
       criteria (including the above path path definition).
-      First, select movement matching to criteria define on 
+      First, select movement matching to criteria define on
       DeliveryBuilder.
-      Then, call script simulation_select_method to restrict 
+      Then, call script simulation_select_method to restrict
       movement_list.
     """
     from Products.ERP5Type.Document import newTempMovement
@@ -175,7 +175,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       if (inventory_item.inventory is not None):
         dumb_movement = inventory_item.getObject()
         # Create temporary movement
-        movement = newTempMovement(self.getPortalObject(), 
+        movement = newTempMovement(self.getPortalObject(),
                                    str(id_count))
         id_count += 1
         movement.edit(
@@ -224,7 +224,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 
   def collectMovement(self, movement_list):
     """
-      group movements in the way we want. Thanks to this method, we are able 
+      group movements in the way we want. Thanks to this method, we are able
       to retrieve movement classed by order, resource, criterion,....
       movement_list : the list of movement wich we want to group
       check_list : the list of classes used to group movements. The order
@@ -295,7 +295,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                           **kw)
     return delivery_list
 
-  def _deliveryGroupProcessing(self, delivery_module, movement_group, 
+  def _deliveryGroupProcessing(self, delivery_module, movement_group,
                                collect_order_list, property_dict,
                                delivery_to_update_list=None,
                                activate_kw=None,**kw):
@@ -321,7 +321,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                               activate_kw=activate_kw)
         delivery_list.extend(new_delivery_list)
     else:
-      # Test if we can update a existing delivery, or if we need to create 
+      # Test if we can update a existing delivery, or if we need to create
       # a new one
       delivery = None
       for delivery_to_update in delivery_to_update_list:
@@ -352,7 +352,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 activate_kw=activate_kw,**kw)
       delivery_list.append(delivery)
     return delivery_list
-      
+
   def _deliveryLineGroupProcessing(self, delivery, movement_group,
                                    collect_order_list, property_dict,
                                    activate_kw=None,**kw):
@@ -403,7 +403,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       group_list = movement_group.getGroupList()
-      # If no group is defined for cell, we need to continue, in order to 
+      # If no group is defined for cell, we need to continue, in order to
       # save the quantity value
       if list(group_list) != []:
         for group in group_list:
@@ -438,9 +438,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Get sorted movement for each delivery line
       for group in movement_group.getGroupList():
         self._deliveryCellGroupProcessing(
-                                    delivery_line, 
-                                    group, 
-                                    collect_order_list[1:], 
+                                    delivery_line,
+                                    group,
+                                    collect_order_list[1:],
                                     property_dict.copy(),
                                     update_existing_line=update_existing_line,
                                     activate_kw=activate_kw)
@@ -473,7 +473,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
               cell = delivery_line.getCell(base_id=base_id, *cell_key)
               if self.testObjectProperties(cell, property_dict):
                 # We update a existing cell
-                # delivery_ratio of new related movement to this cell 
+                # delivery_ratio of new related movement to this cell
                 # must be updated to 0.
                 update_existing_movement = 1
                 object_to_update = cell
@@ -484,7 +484,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
               omit_optional_variation=1)
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = delivery_line.newCell(base_id=base_id, \
-                       portal_type=self.getDeliveryCellPortalType(), 
+                       portal_type=self.getDeliveryCellPortalType(),
                        activate_kw=activate_kw,*cell_key)
             vcl = movement.getVariationCategoryList()
             cell._edit(category_list=vcl,

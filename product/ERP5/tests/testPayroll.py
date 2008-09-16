@@ -1,13 +1,13 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2008 Nexedi SA and Contributors. All Rights Reserved.
 #          Fabien Morin <fabien.morin@gmail.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -30,17 +30,17 @@
 
 TODO:
   - review naming of new methods
-  - in the test test_04_paySheetCalculation, add sub_object (annotation_line, 
-  ratio_line and payment conditioni), and verify that before the script 
-  'PaySheetTransaction_applyModel' is called, subobjects are not in the 
+  - in the test test_04_paySheetCalculation, add sub_object (annotation_line,
+  ratio_line and payment conditioni), and verify that before the script
+  'PaySheetTransaction_applyModel' is called, subobjects are not in the
   paysheet, and after that there are copied in.
   - use ratio settings and test it (there is a method getRatioQuantityList, see
   the file Document/PaySheetTransaction.py)
-  - test with bonus which participate on the base_salary and see if the 
+  - test with bonus which participate on the base_salary and see if the
   contribution are applied on the real base_salary or on the base_salary + bonus
   (it should).
 
-WARNING: 
+WARNING:
   - current API naming may change although model should be stable.
 
 """
@@ -402,7 +402,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
       values = [[[1000, 1], [1000, 1]], [[2000, None], [None, 0.5]]]
 
       next, two representations to well understand :
-      
+
        'employee_share', 'employer_share'
       [[  1470, None  ], [  2100, None  ]]
        'salary_range/france/forfait'
@@ -411,7 +411,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
 [ [   None, 0.01   ], [   None, 0.02   ],[   None, 0.01  ], [   None, 0.02  ] ]
 'salary_range/france/tranche_a''salary_range/france/tranche_b'
     '''
-    
+
     # verify if category used in this model line are selected in the resource
     resource_list = resource.getVariationCategoryList(base=1)
     msg='%r != %r' % (resource_list, variation_category_list)
@@ -517,7 +517,7 @@ class TestPayroll(TestPayrollMixin):
 
     if hasattr(self.paysheet_model_module, self.model_id):
       self.paysheet_model_module.manage_delObjects([self.model_id])
-    
+
     model_count_before_add = \
         len(self.paysheet_model_module.contentValues(portal_type=\
         self.paysheet_model_portal_type))
@@ -745,7 +745,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(paysheet_line_count_before_calculation, 0)
     self.assertEqual(paysheet_line_count_after_calculation,
         pay_sheet_line_count)
-    
+
     # check the amount in the cells of the created paysheet lines
     for pay_sheet_line in pay_sheet_line_list:
       service = pay_sheet_line.getResourceId()
@@ -777,10 +777,10 @@ class TestPayroll(TestPayrollMixin):
        - a model can have some DATA's
        - a model can inherite from another, that's mean :
          o At the calculation step, each DATA of the parent model will be
-           checked : the DATA with a REFERENCE that's already in the child 
+           checked : the DATA with a REFERENCE that's already in the child
            model will not entered in the calcul. The other will.
-         o This will be repeated on each parent model and on each parent of 
-           the parent model,... until there is no parent model to inherite 
+         o This will be repeated on each parent model and on each parent of
+           the parent model,... until there is no parent model to inherite
            (or until a max loop number has been reached).
     '''
     # create 3 models
@@ -939,7 +939,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEqual(len(number_of_different_references), 11) # here, there is
     # 8 differents annotation lines, and with the 3 ones have been had before
     # that's make 11 !
-    
+
     # check the model number
     self.assertEqual(len(model_reference_dict), 6) # there is 7 model, but the
     # model_d is not take into account because it have no annotation line wich
@@ -1001,7 +1001,7 @@ class TestPayroll(TestPayrollMixin):
     # get a list of all this subObjects:
     sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     self.assertEqual(len(sub_object_list), 11)
-    
+
   def test_07_model_getCell(self):
     '''
       Model objects have a overload method called getCell. This method first
@@ -1049,7 +1049,7 @@ class TestPayroll(TestPayrollMixin):
 
     self.addSlice(model_country, 'salary_range/%s' % \
         self.france_settings_slice_c, 4, 5)
-    
+
     # inherite from each other
     model_employee.setSpecialiseValueList((model_company, model_company_alt))
     model_company.setSpecialiseValue(model_country)
@@ -1143,7 +1143,7 @@ class TestPayroll(TestPayrollMixin):
                     base_id='cell')
     cell.setQuantityRangeMin(1)
     cell.setQuantityRangeMax(2)
-    
+
     # model 2 gets cell values from model 1 (see test_07_model_getCell)
     self.assertEquals(1,
         model_2.getCell('salary_range/france/tranche_a').getQuantityRangeMin())
@@ -1198,7 +1198,7 @@ class TestPayroll(TestPayrollMixin):
     cell1.setVariationCategoryList(('tax_category/employer_share',))
     cell1.setPrice(4)
     cell1.setQuantity(5)
-    
+
     movement_list = pay_sheet.PaySheetTransaction_getMovementList()
     self.assertEquals(1, len(movement_list))
     movement = movement_list[0]
@@ -1229,7 +1229,7 @@ class TestPayroll(TestPayrollMixin):
     cell.setPrice(1)
 
     pay_sheet = self.createPaySheet(self.model)
-    
+
     # PaySheetTransaction_getEditableObjectLineList is the script used as list
     # method to display editable lines in the dialog listbox
     editable_line_list = pay_sheet\
@@ -1241,7 +1241,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals('paysheet_model_module/model_one/line',
                       editable_line.model_line)
     self.assertEquals(None, editable_line.salary_range_relative_url)
-    
+
     # PaySheetTransaction_createAllPaySheetLineList is the script used to create line and cells in the
     # paysheet using the listbox input
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
@@ -1259,7 +1259,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertNotEquals(None, cell)
     self.assertEquals(1, cell.getPrice())
     self.assertEquals(2, cell.getQuantity())
-    
+
     # if the script is called again, previous content is erased.
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
       listbox=[dict(listbox_key='0',
@@ -1276,7 +1276,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertNotEquals(None, cell)
     self.assertEquals(0.5, cell.getPrice())
     self.assertEquals(10, cell.getQuantity())
-    
+
     # If the user enters a null quantity, the line will not be created
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
       listbox=[dict(listbox_key='0',
@@ -1326,7 +1326,7 @@ class TestPayroll(TestPayrollMixin):
     cell.setPrice(1)
 
     pay_sheet = self.createPaySheet(self.model)
-    
+
     # PaySheetTransaction_getEditableObjectLineList is the script used as list
     # method to display editable lines in the dialog listbox
     editable_line_list = pay_sheet\
@@ -1338,7 +1338,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals('paysheet_model_module/model_one/line2',
                       editable_line.model_line)
     self.assertEquals(None, editable_line.salary_range_relative_url)
-    
+
     # PaySheetTransaction_createAllPaySheetLineList is the script used to create line and cells in the
     # paysheet using the listbox input
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
@@ -1357,7 +1357,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertNotEquals(None, cell)
     self.assertEquals(1, cell.getPrice())
     self.assertEquals(100, cell.getQuantity())
-    
+
     pay_sheet_line2 = [l for l in pay_sheet_line_list
                          if l.getIntIndex() == 2][0]
     self.assertEquals(self.labour, pay_sheet_line2.getResourceValue())
@@ -1384,7 +1384,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertNotEquals(None, cell)
     self.assertEquals(1, cell.getPrice())
     self.assertEquals(100, cell.getQuantity())
-    
+
     pay_sheet_line2 = [l for l in pay_sheet_line_list
                          if l.getIntIndex() == 2][0]
     self.assertEquals(self.labour, pay_sheet_line2.getResourceValue())
@@ -1393,7 +1393,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertNotEquals(None, cell)
     self.assertEquals(0.6, cell.getPrice())
     self.assertEquals(10, cell.getQuantity())
-    
+
     # If the user enters a null quantity, the line will not be created
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList(
       listbox=[dict(listbox_key='0',
@@ -1429,7 +1429,7 @@ class TestPayroll(TestPayrollMixin):
     cell.setQuantity(5)
 
     pay_sheet = self.createPaySheet(self.model)
-    
+
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList()
     pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEquals(1, len(pay_sheet_line_list))
@@ -1440,7 +1440,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertNotEquals(None, cell)
     self.assertEquals(1, cell.getPrice())
     self.assertEquals(5, cell.getQuantity())
-    
+
   def test_createPaySheetLineZeroPrice(self):
     # test the creation of lines when the price is set to zero: the line should
     # not be created.
@@ -1459,11 +1459,11 @@ class TestPayroll(TestPayrollMixin):
     cell.setPrice(0)
 
     pay_sheet = self.createPaySheet(self.model)
-    
+
     pay_sheet.PaySheetTransaction_createAllPaySheetLineList()
     pay_sheet_line_list = pay_sheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEquals(0, len(pay_sheet_line_list))
-    
+
   def test_paysheet_consistency(self):
     # minimal test for checkConsistency on a Pay Sheet Transaction and its
     # subdocuments (may have to be updated when we'll add more constraints).
@@ -1475,7 +1475,7 @@ class TestPayroll(TestPayrollMixin):
     paysheet.newContent(portal_type='Pay Sheet Model Ratio Line')
     paysheet.newContent(portal_type='Payment Condition')
     self.assertEquals([], paysheet.checkConsistency())
-  
+
   def test_paysheet_model_consistency(self):
     # minimal test for checkConsistency on a Pay Sheet Model and its
     # subdocuments (may have to be updated when we'll add more constraints).
@@ -1520,7 +1520,7 @@ class TestPayroll(TestPayrollMixin):
     paysheet = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       specialise_value=model)
-    
+
     paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(employee, paysheet.getSourceSectionValue())
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
@@ -1544,7 +1544,7 @@ class TestPayroll(TestPayrollMixin):
     paysheet = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       specialise_value=other_model)
-    
+
     paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(employee, paysheet.getSourceSectionValue())
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
@@ -1583,7 +1583,7 @@ class TestPayroll(TestPayrollMixin):
     paysheet = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       specialise_value=employee_model)
-    
+
     paysheet.PaySheetTransaction_applyModel()
     self.assertEquals(employee, paysheet.getSourceSectionValue())
     self.assertEquals(employer, paysheet.getDestinationSectionValue())
@@ -1639,7 +1639,7 @@ class TestPayroll(TestPayrollMixin):
     paysheet = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       specialise_value=model)
-    
+
     paysheet.PaySheetTransaction_applyModel()
     paysheet.createPaySheetLineList()
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
@@ -1653,7 +1653,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(['tax_category/employee_share'],
                       paysheet_line.getVariationCategoryList())
 
-  
+
   def test_PayrollTaxesReport(self):
     eur = self.portal.currency_module.EUR
     payroll_service = self.portal.payroll_service_module.newContent(
@@ -1760,19 +1760,19 @@ class TestPayroll(TestPayrollMixin):
     get_transaction().commit()
     self.tic()
 
-    # set request variables and render                 
+    # set request variables and render
     request_form = self.portal.REQUEST
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
     request_form['simulation_state'] = ['draft', 'planned']
     request_form['resource'] = payroll_service.getRelativeUrl()
     request_form['mirror_section'] = provider.getRelativeUrl()
-    
+
     report_section_list = self.getReportSectionList(
                              self.portal.accounting_module,
                              'AccountingTransactionModule_viewPaySheetLineReport')
     self.assertEquals(1, len(report_section_list))
-      
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(2, len(data_line_list))
@@ -1781,7 +1781,7 @@ class TestPayroll(TestPayrollMixin):
     # precision is 3
     precision = self.portal.REQUEST.get('precision')
     self.assertEquals(3, precision)
-    
+
     self.checkLineProperties(data_line_list[0],
                             id=1,
                             employee_career_reference='E1',
@@ -1798,14 +1798,14 @@ class TestPayroll(TestPayrollMixin):
                             employee_share=3000 * .50,
                             employer_share=3000 * .40,
                             total=(3000 * .50 + 3000 * .40))
-    # stat line 
+    # stat line
     self.checkLineProperties(line_list[-1],
                             base=3000 + 2000,
                             employee_share=(3000 + 2000) * .50,
                             employer_share=(3000 + 2000) * .40,
                             total=((3000 + 2000) * .50 + (3000 + 2000) * .40))
 
-  
+
   def test_PayrollTaxesReportDifferentSalaryRange(self):
     eur = self.portal.currency_module.EUR
     payroll_service = self.portal.payroll_service_module.newContent(
@@ -1949,23 +1949,23 @@ class TestPayroll(TestPayrollMixin):
     get_transaction().commit()
     self.tic()
 
-    # set request variables and render                 
+    # set request variables and render
     request_form = self.portal.REQUEST
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
     request_form['simulation_state'] = ['draft', 'planned']
     request_form['resource'] = payroll_service.getRelativeUrl()
     request_form['mirror_section'] = provider.getRelativeUrl()
-    
+
     report_section_list = self.getReportSectionList(
                              self.portal.accounting_module,
                              'AccountingTransactionModule_viewPaySheetLineReport')
     self.assertEquals(1, len(report_section_list))
-      
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(6, len(data_line_list))
-    
+
     self.checkLineProperties(data_line_list[0],
                             id=1,
                             employee_career_reference='E1',
@@ -2014,7 +2014,7 @@ class TestPayroll(TestPayrollMixin):
                             #total=(3500 * .20 + 3500 * .32),
                             )
 
-    # stat line 
+    # stat line
     self.checkLineProperties(line_list[-1],
                             base=2000 + 3500,
                             employee_share=(2000 * .50 + 3500 * .20),
@@ -2147,17 +2147,17 @@ class TestPayroll(TestPayrollMixin):
     get_transaction().commit()
     self.tic()
 
-    # set request variables and render                 
+    # set request variables and render
     request_form = self.portal.REQUEST
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
     request_form['simulation_state'] = ['draft', 'planned']
-    
+
     report_section_list = self.getReportSectionList(
                              self.portal.accounting_module,
                              'AccountingTransactionModule_viewNetSalaryReport')
     self.assertEquals(1, len(report_section_list))
-      
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(2, len(data_line_list))
@@ -2166,7 +2166,7 @@ class TestPayroll(TestPayrollMixin):
     # precision is 3
     precision = self.portal.REQUEST.get('precision')
     self.assertEquals(3, precision)
-    
+
     self.checkLineProperties(data_line_list[0],
                             employee_career_reference='E1',
                             employee_title='Employee One',
@@ -2177,7 +2177,7 @@ class TestPayroll(TestPayrollMixin):
                             employee_title='Employee Two',
                             employee_bank_account='Bank 2',
                             total_price=3000 - (3000 * .5),)
-    # stat line 
+    # stat line
     self.checkLineProperties(
             line_list[-1],
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
@@ -2333,7 +2333,7 @@ class TestPayroll(TestPayrollMixin):
                       destination_section_value=employer,
                       source_section_value=employee,
                       start_date=DateTime(2006, 1, 1),)
-    
+
     # base salary = 2000
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Base salary',
@@ -2354,7 +2354,7 @@ class TestPayroll(TestPayrollMixin):
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
     cell_employer.edit(price=1, quantity=2000, tax_category='employer_share')
-    
+
     # base_salary += 100 (bonus)
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Bonus',
@@ -2397,7 +2397,7 @@ class TestPayroll(TestPayrollMixin):
                                                             'quantity'),)
     cell_employer.edit(price=-1, quantity=50, tax_category='employer_share')
 
-    # tax1 = 10% for employee ( 205 ) 
+    # tax1 = 10% for employee ( 205 )
     #        20% for employer ( 410 )
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Tax 1',
@@ -2424,11 +2424,11 @@ class TestPayroll(TestPayrollMixin):
 
     get_transaction().commit()
     self.tic()
-    
+
     related_applied_rule = ps.getCausalityRelatedValue(
                                 portal_type='Applied Rule')
     self.assertNotEquals(related_applied_rule, None)
-    
+
     # build accounting lines
     ps.confirm()
     ps.start()
@@ -2438,7 +2438,7 @@ class TestPayroll(TestPayrollMixin):
     accounting_line_list = ps.contentValues(
         portal_type='Pay Sheet Transaction Line')
     self.assertEquals(len(accounting_line_list), 4)
-    
+
     line = [l for l in accounting_line_list
             if l.getDestinationValue() == account_payroll_wages_expense][0]
     self.assertEquals(2050, line.getDestinationDebit())
@@ -2449,7 +2449,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(2050 - 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(employee, line.getSourceSectionValue())
-    
+
     line = [l for l in accounting_line_list
             if l.getDestinationValue() == account_payroll_taxes_expense][0]
     self.assertEquals(410, line.getDestinationDebit())
@@ -2460,7 +2460,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(410 + 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(provider, line.getSourceSectionValue())
-    
+
 
 
 import unittest

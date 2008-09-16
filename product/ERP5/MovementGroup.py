@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Yoshinori Okuji <yo@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>

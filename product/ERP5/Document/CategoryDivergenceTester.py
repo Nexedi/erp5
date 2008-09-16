@@ -1,13 +1,13 @@
 #############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -35,7 +35,7 @@ from Products.ERP5.Document.PropertyDivergenceTester import \
 
 class CategoryDivergenceTester(PropertyDivergenceTester):
   """
-  The purpose of this divergence tester is to check the 
+  The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
   for some specific categories.
   """
@@ -44,7 +44,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -60,7 +60,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
                       , PropertySheet.DivergenceTester
   )
 
-  
+
   def explain(self, simulation_movement):
     """
     This method returns a list of messages that contains
@@ -83,21 +83,21 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
           delivery_mvt.getPropertyList(tested_property_id)
       simulation_category_list = \
           simulation_movement.getPropertyList(tested_property_id)
-      
+
       # XXX Don't we need to check the order too ?
       delivery_mvt_category_list.sort()
       simulation_category_list.sort()
-      
-      if delivery_mvt_category_list != simulation_category_list: 
+
+      if delivery_mvt_category_list != simulation_category_list:
         delivery_mvt_category_title_list = []
         for mvt_category in delivery_mvt_category_list:
-          category_value = delivery_mvt.resolveCategory(mvt_category) 
+          category_value = delivery_mvt.resolveCategory(mvt_category)
           if category_value is not None:
             if category_value.getPortalType() == 'Category':
               delivery_mvt_category_title_list.append(category_value.getTranslatedTitle())
             else:
               delivery_mvt_category_title_list.append(category_value.getTitle())
-         
+
         simulation_category_title_list = []
         for mvt_category in simulation_category_list:
           category_value = delivery_mvt.resolveCategory(mvt_category)
@@ -106,20 +106,20 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
               simulation_category_title_list.append(category_value.getTranslatedTitle())
             else:
               simulation_category_title_list.append(category_value.getTitle())
-        
+
         delivery_mvt_property = ' , '.join(delivery_mvt_category_title_list)
         simulation_mvt_property = ' , '.join(simulation_category_title_list)
-        
+
         message = ObjectMessage(
-                     object_relative_url=delivery_mvt.getRelativeUrl(),   
+                     object_relative_url=delivery_mvt.getRelativeUrl(),
                      simulation_movement=simulation_movement,
                      decision_value=delivery_mvt_property ,
                      prevision_value=simulation_mvt_property,
-                     tested_property=tested_property_id, 
+                     tested_property=tested_property_id,
                      message=tested_property_title,
                      solver_script_list=solver_script_list
         )
 
-        divergence_message_list.append(message)  
-        
+        divergence_message_list.append(message)
+
     return divergence_message_list

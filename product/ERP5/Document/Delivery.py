@@ -1,14 +1,14 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -140,7 +140,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['portal_type'] = self.getPortalTaxMovementTypeList()
       return total_price + self.getTotalPrice(fast=fast, src__=src__, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalQuantity')
     def getTotalQuantity(self, fast=0, src__=0, **kw):
       """ Returns the total quantity of this order.
@@ -294,7 +294,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
             return 0
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
-    
+
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self, fast=0, **kw):
       """
@@ -440,7 +440,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           resource_dict[r] = 1
       return resource_dict.keys()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventory')
     def getInventory(self, **kw):
       """
@@ -449,7 +449,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventory')
     def getCurrentInventory(self, **kw):
       """
@@ -458,7 +458,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventory')
     def getAvailableInventory(self, **kw):
       """
@@ -468,7 +468,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getAvailableInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventory')
     def getFutureInventory(self, **kw):
       """
@@ -477,7 +477,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
     def getInventoryList(self, **kw):
       """
@@ -486,7 +486,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')
     def getCurrentInventoryList(self, **kw):
       """
@@ -495,7 +495,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryList')
     def getFutureInventoryList(self, **kw):
       """
@@ -504,7 +504,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryStat')
     def getInventoryStat(self, **kw):
       """
@@ -513,7 +513,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
       """
@@ -522,7 +522,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryStat')
     def getFutureInventoryStat(self, **kw):
       """
@@ -531,7 +531,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryChart')
     def getInventoryChart(self, **kw):
       """
@@ -540,7 +540,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, **kw):
       """
@@ -549,7 +549,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryChart')
     def getFutureInventoryChart(self, **kw):
       """
@@ -558,7 +558,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryList')
     def getInventoryHistoryList(self, **kw):
       """
@@ -567,7 +567,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, **kw):
       """
@@ -576,7 +576,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryHistoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryList')
     def getMovementHistoryList(self, **kw):
       """
@@ -585,7 +585,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getMovementHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
     def getMovementHistoryStat(self, **kw):
       """
@@ -607,7 +607,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 #       """
 #       kw['category'] = self._getMovementResourceList()
 #       return self.portal_simulation.getInventoryAssetPrice(**kw)
-# 
+#
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
 #     def getFutureInventoryAssetPrice(self, **kw):
 #       """
@@ -615,7 +615,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 #       """
 #       kw['category'] = self._getMovementResourceList()
 #       return self.portal_simulation.getFutureInventoryAssetPrice(**kw)
-# 
+#
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
 #     def getCurrentInventoryAssetPrice(self, **kw):
 #       """
@@ -623,7 +623,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 #       """
 #       kw['category'] = self._getMovementResourceList()
 #       return self.portal_simulation.getCurrentInventoryAssetPrice(**kw)
-# 
+#
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
 #     def getAvailableInventoryAssetPrice(self, **kw):
 #       """
@@ -704,8 +704,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           portal_type='Applied Rule')
       my_applied_rule = None
       if len(my_applied_rule_list) == 0:
-        if self.isSimulated(): 
-          # No need to create a DeliveryRule 
+        if self.isSimulated():
+          # No need to create a DeliveryRule
           # if we are already in the simulation process
           pass
         else:
@@ -743,7 +743,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     def expand(self, *args,**kw):
       """
         Reexpand applied rule
-        
+
         Also reexpand all rules related to movements
       """
       expand = UnrestrictedMethod(self._expand)
@@ -820,7 +820,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           # (e.g. item)
           if hasattr(causality, 'getRootCausalityValueList'):
             tmp_causality_list = causality.getRootCausalityValueList()
-            initial_list.extend([x for x in tmp_causality_list 
+            initial_list.extend([x for x in tmp_causality_list
                                  if x not in initial_list])
       return initial_list
 

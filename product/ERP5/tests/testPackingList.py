@@ -1,13 +1,13 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2008 Nexedi SA and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -35,7 +35,7 @@ from testOrder import TestOrderMixin
 
 class TestPackingListMixin(TestOrderMixin):
   """
-    Test business template erp5_trade 
+    Test business template erp5_trade
   """
   container_portal_type = 'Container'
   container_line_portal_type = 'Container Line'
@@ -126,7 +126,7 @@ class TestPackingListMixin(TestOrderMixin):
 
   def enableLightInstall(self):
     """
-    You can override this. 
+    You can override this.
     Return if we should do a light install (1) or not (0)
     """
     return 1
@@ -160,7 +160,7 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(packing_list.getPriceCurrency(), \
                                        order.getPriceCurrency())
 
-  def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None, 
+  def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None,
                                       packing_list=None,**kw):
     """
       Test if packing list is divergent
@@ -206,7 +206,7 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     self.assertFalse(packing_list.isDivergent())
 
-  def stepChangePackingListLineResource(self, sequence=None, 
+  def stepChangePackingListLineResource(self, sequence=None,
                                         sequence_list=None, **kw):
     """
     Change the resource of the packing list.
@@ -344,7 +344,7 @@ class TestPackingListMixin(TestOrderMixin):
       self.assertEquals(self.default_quantity,
           simulation_movement.getCorrectedQuantity())
 
-  def stepChangePackingListDestination(self, sequence=None, 
+  def stepChangePackingListDestination(self, sequence=None,
                                        sequence_list=None, **kw):
     """
       Test if packing list is divergent
@@ -453,7 +453,7 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list_line = sequence.get('packing_list_line')
     for simulation_line in simulation_line_list:
       self.assertEquals(simulation_line.getDeliveryValue(),packing_list_line)
-      self.assertEquals(packing_list_line.getCausalityValue(), 
+      self.assertEquals(packing_list_line.getCausalityValue(),
                         simulation_line.getOrderValue())
 
   def stepCheckSimulationDisconnected(self,sequence=None, sequence_list=None, **kw):
@@ -497,7 +497,7 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_line in simulation_line_list:
       simulation_line.edit(start_date=self.datetime+15)
 
-  def stepAdoptPrevision(self,sequence=None, sequence_list=None, 
+  def stepAdoptPrevision(self,sequence=None, sequence_list=None,
                          packing_list=None,**kw):
     """
       Check if simulation movement are disconnected
@@ -560,7 +560,7 @@ class TestPackingListMixin(TestOrderMixin):
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
     self.assertEquals(len(delivery_value_list),len(resource_list))
 
-  def stepAddPackingListContainer(self,sequence=None, 
+  def stepAddPackingListContainer(self,sequence=None,
                                   packing_list=None,sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
@@ -596,7 +596,7 @@ class TestPackingListMixin(TestOrderMixin):
     container_line = sequence.get('container_line')
     container_line.edit(quantity=self.default_quantity-1)
 
-  def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None, 
+  def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None,
                                        quantity=None,**kw):
     """
       Check if simulation movement are disconnected
@@ -607,7 +607,7 @@ class TestPackingListMixin(TestOrderMixin):
     container_line.edit(quantity=quantity)
     container_line.immediateReindexObject()
 
-  def stepSetContainerFullQuantity(self,sequence=None, sequence_list=None, 
+  def stepSetContainerFullQuantity(self,sequence=None, sequence_list=None,
                                        quantity=None,**kw):
     """
       Really fills the container
@@ -657,7 +657,7 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(0,packing_list.isPacked())
     self.assertEquals('missing',packing_list.getContainerState())
 
-  def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None, 
+  def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None,
                                    packing_list=None,**kw):
     """
       Check that the number of objects in containers are
@@ -690,7 +690,7 @@ class TestPackingListMixin(TestOrderMixin):
     else:
       currency = currency_module._getOb('EUR')
     sequence.edit(currency=currency)
- 
+
   def stepSetOrderPriceCurrency(self, sequence, **kw) :
     """Set the price currency of the order.
 
@@ -703,7 +703,7 @@ class TestPackingListMixin(TestOrderMixin):
     order.setPriceCurrency(currency.getRelativeUrl())
 
 
- 
+
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
   run_all_test = 1
@@ -940,7 +940,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
-    
+
     sequence_list.play(self, quiet=quiet)
 
   def test_10_PackingListIncreaseQuantity(self, quiet=quiet, run=run_all_test):
@@ -1037,7 +1037,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     pl = self.getPortal().getDefaultModule(self.packing_list_portal_type
                ).newContent(portal_type=self.packing_list_portal_type)
     self.failUnless(hasattr(pl, 'getPriceCurrency'))
-    
+
   def test_PackingList_viewAsODT(self):
     # tests packing list printout
     resource = self.portal.getDefaultModule(
@@ -1063,14 +1063,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     packing_list.confirm()
     get_transaction().commit()
     self.tic()
-    
+
     odt = packing_list.PackingList_viewAsODT()
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:
       self.fail(''.join(err_list))
-  
+
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
@@ -1085,7 +1085,7 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
   container_portal_type = None
   container_line_portal_type = None
   container_cell_portal_type = None
-  
+
   # all steps related to packing and container does not apply on purchase
   def ignored_step(self, **kw):
     return
