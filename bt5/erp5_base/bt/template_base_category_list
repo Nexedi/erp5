@@ -1,7 +1,9 @@
 agent
 agent_privilege
+collect_order_group
 currency_exchange_type
 destination_region
+divergence_scope
 economical_class
 follow_up
 function

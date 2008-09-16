@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+delivery = state_change[\'object\']\n
+divergence_list =  delivery.getDivergenceList()\n
+Base_translateString = delivery.Base_translateString\n
+if not len(divergence_list):\n
+  delivery.converge()\n
+  raise ValidationFailed(Base_translateString(\'No divergence found.\'))\n
+\n
+delivery_solve_property_dict = {}\n
+listbox = state_change[\'kwargs\'].get(\'delivery_group_listbox\')\n
+if listbox is not None:\n
+  for k, v in listbox.items():\n
+    object_url = v[\'choice\']\n
+    if object_url != \'ignore\':\n
+      object = delivery.restrictedTraverse(object_url)\n
+      delivery_solve_property_dict[k] = object.getPropertyList(k)\n
+\n
+divergence_to_accept_list = []\n
+divergence_to_adopt_list = []\n
+\n
+divergence_dict = {}\n
+for divergence in divergence_list:\n
+  simulation_movement_url = divergence.getProperty(\'simulation_movement\').getRelativeUrl()\n
+  property = divergence.getProperty(\'tested_property\')\n
+  divergence_dict[\'%s&%s\' % (simulation_movement_url, property)] = divergence\n
+\n
+for listbox in [state_change[\'kwargs\'].get(\'line_group_listbox\'),\n
+                state_change[\'kwargs\'].get(\'cell_group_listbox\')]:\n
+  if listbox is None:\n
+    continue\n
+  for k, v in listbox.items():\n
+    divergence = divergence_dict.get(k, None)\n
+    if divergence is None:\n
+      raise ValidationFailed(Base_translateString(\'Some divergences seem already solved. Please retry.\'))\n
+    choice = v[\'choice\']\n
+    if choice == \'accept\':\n
+      divergence_to_accept_list.append(divergence)\n
+    elif choice == \'adopt\':\n
+      divergence_to_adopt_list.append(divergence)\n
+\n
+delivery.solveDivergence(delivery_solve_property_dict=delivery_solve_property_dict,\n
+                         divergence_to_accept_list=divergence_to_accept_list,\n
+                         divergence_to_adopt_list=divergence_to_adopt_list,\n
+                         comment=\'\')\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getitem_</string>
+                            <string>delivery</string>
+                            <string>_getattr_</string>
+                            <string>divergence_list</string>
+                            <string>Base_translateString</string>
+                            <string>len</string>
+                            <string>delivery_solve_property_dict</string>
+                            <string>listbox</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>object_url</string>
+                            <string>object</string>
+                            <string>_write_</string>
+                            <string>divergence_to_accept_list</string>
+                            <string>divergence_to_adopt_list</string>
+                            <string>divergence_dict</string>
+                            <string>divergence</string>
+                            <string>simulation_movement_url</string>
+                            <string>property</string>
+                            <string>choice</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_callSolveDivergenceTransition</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

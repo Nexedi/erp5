@@ -3,13 +3,20 @@ Agent
 Agent Privilege
 Assignment
 Bank Account
+Base Variant Movement Group
 Career
+Category Divergence Tester
+Category Movement Group
+Causality Assignment Movement Group
+Causality Movement Group
 Chat Address
 Credit Card
 Currency
 Currency Exchange Cell
 Currency Exchange Line
 Currency Module
+Delivery Builder
+Delivery Tool
 Email
 Fax
 File
@@ -17,11 +24,24 @@ Image
 Link
 Notification Message
 Notification Message Module
+Order Builder
+Order Movement Group
+Order Tool
 Organisation
 Organisation Module
+Parent Explanation Movement Group
 Person
 Person Module
+Property Divergence Tester
+Property Movement Group
+Quantity Divergence Tester
+Quantity Sign Movement Group
 Query
 Query Module
+Requirement Movement Group
 Role Definition
+Root Applied Rule Causality Movement Group
+Split Movement Group
 Telephone
+Title Movement Group
+Variant Movement Group
