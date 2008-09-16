@@ -42,6 +42,9 @@ from AccessControl.SecurityManagement import newSecurityManager, noSecurityManag
 import zLOG
 import cookielib
 from urlparse import urlparse, urlunparse
+from base64 import encodestring, decodestring
+from urllib import quote, unquote
+from DateTime import DateTime
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -413,11 +416,19 @@ class WizardTool(BaseTool):
     """Updates parameter_dict to include local saved server info settings. """
     global _server_to_preference_ids_map
     for key, value in _server_to_preference_ids_map.items():
-      parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
+      if key != 'password':
+        parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
+      else:
+        parameter_dict['password'] = ''
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
     # add user preffered language
     parameter_dict['user_preferred_language'] = getattr(self, 'user_preferred_language', 'en')
+    # add password from cookie
+    __ac_express = self.REQUEST.get('__ac_express', None)
+    if __ac_express is not None: 
+      __ac_express = decodestring(unquote(__ac_express))
+      parameter_dict['password'] = __ac_express
       
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
@@ -518,13 +529,7 @@ class WizardTool(BaseTool):
   ######################################################
   ##               Navigation                         ##
   ######################################################
-  security.declareProtected(Permissions.ModifyPortalContent, 'init')
-  def init(self, REQUEST=None, **kw):
-    """ Unconditionaly reset client_id and start new configuration process. """
-    #user_id = REQUEST.get('field_my_ac_name', '')
-    #password = REQUEST.get('field_my_ac_password', '')
-    return self.next(REQUEST, **kw)
-    
+   
   #security.declareProtected(Permissions.ModifyPortalContent, 'login')
   def login(self, REQUEST):
     """ Login client and show next form. """
@@ -547,9 +552,16 @@ class WizardTool(BaseTool):
       return self.WizardTool_dialogForm(form_html=response["data"])
     elif command == "next":
       self._setServerInfo(user_id=user_id, \
-                          password=password, \
+                          #password=password, \
                           client_id=response['server_buffer'].get('client_id', None), \
                           current_bc_index=response['server_buffer'].get('current_bc_index', None))
+      # set encoded __ac_express cookie at client's browser
+      __ac_express = quote(encodestring(password))
+      expires = (DateTime() + 1).toZone('GMT').rfc822()
+      REQUEST.RESPONSE.setCookie('__ac_express',
+                                 __ac_express,
+                                 expires = expires)
+      REQUEST.set('__ac_express', __ac_express)
       return self.next(REQUEST=REQUEST)
     elif command == "login":
       ## invalid user/password
@@ -624,15 +636,18 @@ class WizardTool(BaseTool):
        what's happening. """
     active_process = self.portal_activities.newActiveProcess()
     REQUEST.set('active_process_id', active_process.getId())
-    self.activate(active_process=active_process, tag = 'initialERP5Setup').initialERP5Setup()
+    request_restore_dict = {'__ac_express': self.REQUEST.get('__ac_express', None),}
+    self.activate(active_process=active_process, tag = 'initialERP5Setup').initialERP5Setup(request_restore_dict)
     return self.Wizard_viewInstallationStatus(REQUEST)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'initialERP5Setup')
-  def initialERP5Setup(self):
+  def initialERP5Setup(self,  request_restore_dict={}):
     """ Get from remote generation server customized bt5 template files 
         and then install them. """
-    # TODO: the installation have to be splitted into 1 activity per business
-    # template install.
+    # restore some REQUEST variables as this method is executed in an activity
+    # and there's no access to real original REQUEST
+    for key, value in request_restore_dict.items():
+      self.REQUEST.set(key, value)
     self.REQUEST.form['wizard_request_type'] = 'initial_setup'
     # calculate server_url, because after bt5 installation reindexing is started
     # which will make it impossible to get preferences items    
