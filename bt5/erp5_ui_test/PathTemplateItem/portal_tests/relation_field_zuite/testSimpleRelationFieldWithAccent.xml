@@ -50,12 +50,14 @@
 <tr><td rowspan="1" colspan="3">Test Simple Relation Field, using metadata tab\n
 to set categories</td></tr>\n
 </thead><tbody>\n
-\n
+<tal:block\n
+metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
+/>\n
     <tr>\n
-      <td>store</td>\n
-      <td>/erp5</td>\n
-      <td>base_url</td>\n
-    </tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
     <tr>\n
       <td>open</td>\n
       <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
