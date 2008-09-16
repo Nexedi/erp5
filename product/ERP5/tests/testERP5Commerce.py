@@ -98,11 +98,6 @@ class TestCommerce(ERP5TypeTestCase):
     request = self.app.REQUEST
     default_product = self.getDefaultProduct()
     
-    # XXX: update cache manually only once in first test
-    # in normal Zope it will be updated at startup
-    # This is needed as Commerce uses its own Cache Factory
-    portal.portal_caches.updateCache()
-    
     # set 'session_id' to simulate browser (cookie) environment 
     request.set('session_id', SESSION_ID)
 
