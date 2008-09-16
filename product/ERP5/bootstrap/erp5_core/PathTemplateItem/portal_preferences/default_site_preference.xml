@@ -342,14 +342,14 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
         </item>
         <item>
             <key> <string>preferred_subversion_user_name</string> </key>
-            <value> <string>kazuhiko</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>preferred_subversion_working_copy</string> </key>
             <value>
-              <tuple>
-                <string>/home/kazuhiko/Zope/test/bt5</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
