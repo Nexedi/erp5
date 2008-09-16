@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -69,34 +57,28 @@
 \n
 # Set relative simulation movements profit_quantity to 0\n
 movement_list = transaction.getMovementList()\n
+all_simulation_movement_path_list = []\n
 for movement in movement_list:\n
   simulation_movement_list = movement.getDeliveryRelatedValueList(portal_type=\'Simulation Movement\')\n
   for simulation_movement in simulation_movement_list:\n
     simulation_movement.edit(profit_quantity=0)\n
+  all_simulation_movement_path_list.extend([x.getPath() for x in simulation_movement_list])\n
 \n
 # Update from simulation, then adapt causality value\n
 builder = transaction.portal_deliveries.amortisation_transaction_builder\n
 builder.updateFromSimulation(transaction.getRelativeUrl())\n
-transaction.AmortisationTransaction_afterBuild()\n
+tag = \'%s_afterBuild\' % transaction.getRelativeUrl()\n
+transaction.activate(tag=tag,\n
+    after_path_and_method_id=(\n
+    all_simulation_movement_path_list,\n
+    (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).AmortisationTransaction_afterBuild()\n
 \n
 # Automatic workflow\n
-transaction.activate().updateCausalityState()\n
+transaction.activate(after_tag=tag).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -134,11 +116,16 @@ transaction.activate().updateCausalityState()\n
                             <string>transaction</string>
                             <string>_getattr_</string>
                             <string>movement_list</string>
+                            <string>all_simulation_movement_path_list</string>
                             <string>_getiter_</string>
                             <string>movement</string>
                             <string>simulation_movement_list</string>
                             <string>simulation_movement</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>builder</string>
+                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>

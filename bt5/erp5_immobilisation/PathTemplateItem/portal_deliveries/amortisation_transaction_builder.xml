@@ -3,21 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.DeliveryBuilder</string>
-          <string>DeliveryBuilder</string>
-        </tuple>
-        <none/>
+        <global name="DeliveryBuilder" module="Products.ERP5Type.Document.DeliveryBuilder"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_count</string> </key>
             <value>
@@ -28,12 +19,6 @@
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -144,7 +129,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>0</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -164,36 +149,18 @@
             <key> <string>title</string> </key>
             <value> <string>Amortisation Transaction Builder</string> </value>
         </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -201,13 +168,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
