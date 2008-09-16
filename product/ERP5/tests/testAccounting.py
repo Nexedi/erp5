@@ -216,9 +216,10 @@ class AccountingTestCase(ERP5TypeTestCase):
           self.account_module.objectIds() if x not in ('bank', 'collected_vat',
             'equity', 'fixed_assets', 'goods_purchase', 'goods_sales',
             'payable', 'receivable', 'refundable_vat', 'stocks',)])
-    self.portal.portal_preferences.manage_delObjects([x for x in
-          self.portal.portal_preferences.objectIds() if x not in
-          ('accounting_zuite_preference', 'default_site_preference')])
+    self.portal.portal_preferences.manage_delObjects([x.getId() for x in
+          self.portal.portal_preferences.objectValues()
+          if x.getId() not in ('accounting_zuite_preference', 'default_site_preference')
+          and x.getPriority() != Priority.SITE])
     self.portal.portal_simulation.manage_delObjects(list(
           self.portal.portal_simulation.objectIds()))
     get_transaction().commit()
@@ -2271,7 +2272,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     self.pref = self.portal.portal_preferences.newContent(
          portal_type='Preference', preferred_section_category='group/vendor',
          preferred_accounting_transaction_section_category='group/vendor',
-         priority=3 )
+         priority=Priority.USER )
     self.workflow_tool.doActionFor(self.pref, 'enable_action')
 
     self.login()
