@@ -864,6 +864,12 @@ class ObjectTemplateItem(BaseTemplateItem):
             # skip transforms that couldn't have been initialized
             if obj.title != 'BROKEN':
               container._mapTransform(obj)
+          elif obj.meta_type in ('ERP5 Ram Cache',
+                                 'ERP5 Distributed Ram Cache',
+                                 'ERP5 SQL Cache'):
+            assert container.meta_type == 'ERP5 Cache Factory'
+            container.getParentValue().updateCache()
+           
           recurse(restoreHook, obj)
       # now put original order group
       # we remove object not added in forms
