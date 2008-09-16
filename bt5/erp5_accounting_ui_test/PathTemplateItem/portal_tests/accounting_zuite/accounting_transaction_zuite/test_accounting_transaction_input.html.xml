@@ -130,7 +130,7 @@ Test Simple view of an Accounting Transaction\n
 <!-- Check values we just entered {{{ -->\n
 <tr>\n
   <td>assertPortalStatusMessage</td>\n
-  <td>Data Updated.</td>\n
+  <td>Data updated.</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

@@ -125,7 +125,7 @@ Test for Creating Payment Transactions related to some Invoices\n
 </tr>\n
 <tr>\n
   <td>assertPortalStatusMessage</td>\n
-  <td>Payments creation for 2 on 2 invoices in progress</td>\n
+  <td>Payments creation for 2 on 2 invoices in progress.</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
