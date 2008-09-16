@@ -57,9 +57,6 @@ class TestOrderMixin:
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',
-            'erp5_accounting', 'erp5_invoicing',
-            'erp5_project', 'erp5_payroll', 'erp5_mrp')
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',)
 
   def login(self, quiet=0, run=1):
