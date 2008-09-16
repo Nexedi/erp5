@@ -119,7 +119,7 @@ class GeneratorCall(UserDict):
     binary_decoder = xmlrpclib.Binary()
     binary_decoder.decode(data)
     return binary_decoder.data
-    
+
   def _encodeData(self, data):
     """ Encode data to transmitable text. """
     fp = StringIO()
@@ -140,7 +140,7 @@ def _generateErrorXML(error_message):
   """ Generate HTML for displaying an error. """
   log_message = traceback.format_exc()
   return '<table><tr><td class="error">%s</td></tr></table>' % error_message
-      
+
 ## server to local preferences id translation table
 _server_to_preference_ids_map = {'client_id': 'preferred_express_client_uid',
                                  'current_bc_index': 'preferred_express_erp5_uid',
@@ -150,7 +150,7 @@ _server_to_preference_ids_map = {'client_id': 'preferred_express_client_uid',
 
 class WizardTool(BaseTool):
   """ WizardTool is able to generate custom business templates. """
-  
+
   id = 'portal_wizard'
   meta_type = 'ERP5 Wizard Tool'
   portal_type = 'Wizard Tool'
@@ -160,7 +160,7 @@ class WizardTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainWizardTool', _dtmldir )
-  
+
   # Stop traversing a concatenated path after the proxy method.
   def __before_publishing_traverse__(self, self2, request):
     path = request['TraversalRequestNameStack']
@@ -255,7 +255,7 @@ class WizardTool(BaseTool):
       data = None
 
     content_type = self.REQUEST.get_header('content-type')
-  
+
     # XXX if ":method" trick is used, then remove it from subpath.
     if self.REQUEST.traverse_subpath:
       if data is not None:
@@ -411,7 +411,7 @@ class WizardTool(BaseTool):
         ## save persistently (as preference)
         self.setExpressConfigurationPreference(_server_to_preference_ids_map[item],
                                                value)
-      
+
   def _updateParameterDictWithServerInfo(self, parameter_dict):
     """Updates parameter_dict to include local saved server info settings. """
     global _server_to_preference_ids_map
@@ -429,7 +429,7 @@ class WizardTool(BaseTool):
     if __ac_express is not None: 
       __ac_express = decodestring(unquote(__ac_express))
       parameter_dict['password'] = __ac_express
-      
+
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
     encoded as XML-RPC Binary
@@ -456,7 +456,7 @@ class WizardTool(BaseTool):
     #install bt5
     portal_workflow =  getToolByName(self.getPortalObject(), 'portal_workflow')
     business_template.install()
-  
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'installBT5FilesFromServer')
   def installBT5FilesFromServer(self,
@@ -504,7 +504,7 @@ class WizardTool(BaseTool):
       ## we already have stored after setup script id
       bt5_after_setup_script_id = self.getExpressConfigurationPreference(
                            'preferred_express_after_setup_script_id', None)
-      
+
     if execute_after_setup_script and bt5_after_setup_script_id is not None:
       ## Execute script provided (if) in customer specific business template.
       bt5_customer_template_id = server_response["server_buffer"]['filenames'][-1]
@@ -525,11 +525,11 @@ class WizardTool(BaseTool):
               "Completed installation for %s" %' '.join(bt5_filenames))
     if use_super_manager:
       noSecurityManager()
-                  
+
   ######################################################
   ##               Navigation                         ##
   ######################################################
-   
+
   #security.declareProtected(Permissions.ModifyPortalContent, 'login')
   def login(self, REQUEST):
     """ Login client and show next form. """
@@ -569,7 +569,7 @@ class WizardTool(BaseTool):
           'portal_wizard/%s?field_my_ac_name=%s&portal_status_message=%s' \
             %(came_from_method, user_id, response['server_buffer']['message']))
       return 
-              
+
   #security.declareProtected(Permissions.ModifyPortalContent, 'next')
   def next(self, REQUEST):
     """ Validate settings and return a new form to the user.  """
@@ -591,7 +591,7 @@ class WizardTool(BaseTool):
       return self.view(REQUEST=REQUEST)
     elif command == "install":
       return self.startInstallation(REQUEST=REQUEST)
-            
+
   #security.declareProtected(Permissions.ModifyPortalContent, 'previous')
   def previous(self, REQUEST):
     """ Display the previous form. """
@@ -605,7 +605,7 @@ class WizardTool(BaseTool):
     elif command == "login":
       REQUEST.set('portal_status_message', html)
       return self.view(REQUEST=REQUEST)
-      
+
   security.declarePublic(Permissions.AccessContentsInformation,
                          'getInstallationStatusReportFromClient')
   def getInstallationStatusReportFromClient(self,
@@ -621,14 +621,14 @@ class WizardTool(BaseTool):
     else:
       html = self.WizardTool_viewRunningInstallationMessageRenderer()
     return html
-    
+
   security.declarePublic(Permissions.AccessContentsInformation, 'getInstallationStatusReportFromServer')
   def getInstallationStatusReportFromServer(self, active_process_id=None, REQUEST=None):
     """ Query remote server (usually only once for some installation status report """
     response = self._callRemoteMethod("getInstallationStatusReport")
     html = response["data"]
     return html
-      
+
   security.declareProtected(Permissions.ModifyPortalContent, 'startInstallation')
   def startInstallation(self, REQUEST):
     """ Start installation process as an activity which will query generation server and
@@ -696,13 +696,13 @@ class WizardTool(BaseTool):
   security.declareProtected(Permissions.View, 'getServerRoot')
   def getServerRoot(self):
     return self.getExpressConfigurationPreference('preferred_witch_tool_server_root', '')
-  
+
   security.declareProtected(Permissions.View, 'getExpressConfigurationPreference')
   def getExpressConfigurationPreference(self, preference_id, default = None):
     """ Get Express configuration preference """
     portal_preferences = getToolByName(self, 'portal_preferences')
     return portal_preferences.getPreference(preference_id, default)
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 'setExpressConfigurationPreference')
   def setExpressConfigurationPreference(self, preference_id, value):
     """ Set Express configuration preference """
