@@ -10,24 +10,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_function</string> </key>
             <value> <string>getListModeProxyListMethodName</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
             <value> <string>ERP5Form.ListBox_getListModeProxyListMethodName</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

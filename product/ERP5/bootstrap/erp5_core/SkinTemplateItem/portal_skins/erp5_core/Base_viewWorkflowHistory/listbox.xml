@@ -62,11 +62,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -78,15 +78,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_action</string> </key>
+                    <key> <string>list_action</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,13 +94,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>url_columns</string> </key>
+                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -121,7 +121,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -156,7 +156,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -187,11 +187,11 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_action</string> </key>
+                    <key> <string>list_action</string> </key>
                     <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -205,7 +205,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>base_workflow_history_selection</string> </value>
                 </item>
                 <item>
@@ -213,24 +213,24 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Workflow History</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>url_columns</string> </key>
+                    <key> <string>url_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>action</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>state</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>actor</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>time</string>
@@ -238,11 +238,11 @@
                         </tuple>
                         <tuple>
                           <string>comment</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>error_message</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

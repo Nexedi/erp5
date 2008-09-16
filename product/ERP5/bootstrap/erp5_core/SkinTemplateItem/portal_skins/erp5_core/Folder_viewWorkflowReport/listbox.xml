@@ -500,15 +500,15 @@
                       <list>
                         <tuple>
                           <string>translated_portal_type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>state</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>count</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

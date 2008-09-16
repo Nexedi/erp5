@@ -519,15 +519,15 @@
                         </tuple>
                         <tuple>
                           <string>object_class</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>bt_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>object_state</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

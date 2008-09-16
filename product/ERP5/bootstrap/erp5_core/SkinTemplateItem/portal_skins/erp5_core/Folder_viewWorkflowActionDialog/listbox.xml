@@ -104,15 +104,15 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>state_var</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>workflow_state</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
@@ -123,15 +123,15 @@
                       <list>
                         <tuple>
                           <string>portal_type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>state_var</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>workflow_state</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>workflow_action</string>
