@@ -714,13 +714,12 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST, render_prefi
   selected_found = {}
 
   items = field.get_value('items',REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None)) # Added request
-  if not items:
-    if not isinstance(self, MultiLinkFieldWidget):
-      # multi items widget should have at least one child in order to produce
-      # valid XHTML; disable it so user can not select it.
-      # This cannot be applied to MultiLinkFields, which are just some <a>
-      # links
-      return [self.render_item('', '', '', '', 'disabled="disabled"')]
+  if not items and not isinstance(self, MultiLinkFieldWidget):
+    # multi items widget should have at least one child in order to produce
+    # valid XHTML; disable it so user can not select it.
+    # This cannot be applied to MultiLinkFields, which are just some <a>
+    # links
+    return [self.render_item('', '', '', '', 'disabled="disabled"')]
 
   css_class = field.get_value('css_class')
   extra_item = field.get_value('extra_item')
