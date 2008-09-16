@@ -22,9 +22,9 @@ Internal Packing List Line | edit_workflow
 Internal Packing List Line | pricing_interaction_workflow
 Internal Packing List Line | trade_matrix_workflow
 Internal Packing List | delivery_causality_interaction_workflow
+Internal Packing List | delivery_causality_workflow
 Internal Packing List | delivery_simulation_interaction_workflow
 Internal Packing List | edit_workflow
-Internal Packing List | packing_list_causality_workflow
 Internal Packing List | packing_list_workflow
 Inventory Cell | pricing_interaction_workflow
 Inventory Line | edit_workflow
@@ -56,9 +56,9 @@ Purchase Packing List Line | edit_workflow
 Purchase Packing List Line | pricing_interaction_workflow
 Purchase Packing List Line | trade_matrix_workflow
 Purchase Packing List | delivery_causality_interaction_workflow
+Purchase Packing List | delivery_causality_workflow
 Purchase Packing List | delivery_simulation_interaction_workflow
 Purchase Packing List | edit_workflow
-Purchase Packing List | packing_list_causality_workflow
 Purchase Packing List | packing_list_workflow
 Purchase Trade Condition | edit_workflow
 Purchase Trade Condition | validation_workflow
@@ -89,9 +89,9 @@ Sale Packing List Line | edit_workflow
 Sale Packing List Line | pricing_interaction_workflow
 Sale Packing List Line | trade_matrix_workflow
 Sale Packing List | delivery_causality_interaction_workflow
+Sale Packing List | delivery_causality_workflow
 Sale Packing List | delivery_simulation_interaction_workflow
 Sale Packing List | edit_workflow
-Sale Packing List | packing_list_causality_workflow
 Sale Packing List | packing_list_container_workflow
 Sale Packing List | packing_list_workflow
 Sale Trade Condition | edit_workflow
