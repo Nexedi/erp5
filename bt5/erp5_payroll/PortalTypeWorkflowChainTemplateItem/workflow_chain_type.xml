@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Pay Sheet Transaction</type>
-  <workflow>invoice_causality_workflow, edit_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, accounting_workflow</workflow>
+  <workflow>edit_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, accounting_workflow, delivery_causality_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Transaction Line</type>
